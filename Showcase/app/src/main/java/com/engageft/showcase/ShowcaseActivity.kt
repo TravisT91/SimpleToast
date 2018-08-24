@@ -5,7 +5,7 @@ import android.util.Log
 import androidx.navigation.fragment.NavHostFragment
 import com.engageft.apptoolbox.LotusActivity
 
-class CareActivity : LotusActivity() {
+class ShowcaseActivity : LotusActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 

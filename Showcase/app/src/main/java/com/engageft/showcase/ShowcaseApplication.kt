@@ -10,6 +10,6 @@ import com.engageft.apptoolbox.LotusApplication
  * Created by joeyhutchins on 8/21/18.
  * Copyright (c) 2018 Engage FT. All rights reserved.
  */
-class CareApplication : LotusApplication() {
+class ShowcaseApplication : LotusApplication() {
     override val navigationType: NavigationType = NavigationType.SIDE
 }
