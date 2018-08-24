@@ -1,0 +1,2 @@
+include ':app', ':apptoolbox'
+project(':apptoolbox').projectDir = new File('../apptoolbox')

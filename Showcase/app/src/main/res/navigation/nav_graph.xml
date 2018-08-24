@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_graph"
+    app:startDestination="@+id/splash_fragment">
+
+    <fragment
+        android:id="@+id/splash_fragment"
+        android:name="com.engageft.showcase.SplashFragment"
+        android:label="Splash Fragment"
+        tools:layout="@layout/fragment_splash">
+        <action
+            android:id="@+id/action_splash_fragment_to_get_started_fragment"
+            app:destination="@id/get_started_fragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/get_started_fragment"
+        android:name="com.engageft.showcase.GetStartedFragment"
+        android:label="Get Started Fragment"
+        tools:layout="@layout/fragment_get_started"/>
+
+</navigation>

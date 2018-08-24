@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Showcase Override of EngageFT Lotus Color Palette Reserved!
+           -->
+    <color name="lotusColorPrimary">#FF2D89C3</color>
+    <color name="lotusColorSecondary">#FF21587A</color>
+    <color name="lotusColorInfo">#FF87C8EE</color>
+    <color name="lotusColorError">#FFDB4D54</color>
+    <color name="lotusColorWarning">#FFFFAC63</color>
+    <color name="lotusColorSuccess">#FF2DBD88</color>
+    <color name="lotusColorStructure1">#FFF2F3F4</color>
+    <color name="lotusColorStructure2">#FFE9EBEF</color>
+    <color name="lotusColorStructure3">#FFCAD0D9</color>
+    <color name="lotusColorStructure4">#FF929CA8</color>
+    <color name="lotusColorStructure5">#FF68707A</color>
+    <color name="lotusColorStructure6">#FF2B2D30</color>
+    <color name="lotusColorWhite">#FFFFFFFF</color>
+    <color name="lotusColorBlack">#FF000000</color>
+    <!-- End Lotus Color Palette Reserved -->
+
+</resources>
