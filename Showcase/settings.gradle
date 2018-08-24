@@ -1,2 +1,2 @@
 include ':app', ':apptoolbox'
-project(':apptoolbox').projectDir = new File('../apptoolbox')
+project(':apptoolbox').projectDir = new File('../../android-apptoolbox/apptoolbox')
