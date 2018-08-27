@@ -1,2 +1,4 @@
-include ':app', ':apptoolbox'
+include ':app', ':apptoolbox', ':engagekit', 'onbudget-dom'
 project(':apptoolbox').projectDir = new File('../../android-apptoolbox/apptoolbox')
+project(':engagekit').projectDir = new File('../../android-engagekit/engagekit')
+project(':onbudget-dom').projectDir = new File('../../android-engagekit/onbudget-dom')
