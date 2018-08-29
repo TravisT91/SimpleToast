@@ -18,8 +18,10 @@ buildscript {
         ktxVersion = '0.3'
 
         // The following version redefinitions for engagekit:
-        android_support_lib_version = supportDesignVersion
-        archLifecycleVersion = supportDesignVersion
+        android_support_lib_version = "27.1.1"
+        //archLifecycleExtensionsPath = "androidx.lifecycle:lifecycle-extensions"
+        //archLifecycleCompilerPath = "androidx.lifecycle:lifecycle-compiler"
+        archLifecycleVersion = "1.1.1" // We'll have to make this match the app later, potentially.
         kotlin_version = kotlinVersion
         // End engagekit versions
     }
