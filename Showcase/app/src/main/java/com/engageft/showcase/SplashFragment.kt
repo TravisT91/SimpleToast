@@ -9,6 +9,7 @@ import androidx.navigation.findNavController
 import com.engageft.apptoolbox.BaseToolbarConfig
 import com.engageft.apptoolbox.LotusFullScreenFragment
 import com.engageft.apptoolbox.LotusFullScreenFragmentConfig
+import com.engageft.apptoolbox.view.InputWithLabel
 
 /**
  * TODO(joeyhutchins): ClassName
@@ -30,6 +31,9 @@ class SplashFragment : LotusFullScreenFragment() {
         val view = inflater.inflate(R.layout.fragment_splash, container, false)
         val button = view.findViewById<Button>(R.id.button)
         button.setOnClickListener{ view.findNavController().navigate(R.id.action_splash_fragment_to_get_started_fragment) }
+
+        val input1 = view.findViewById<InputWithLabel>(R.id.input1)
+        input1.setError("This is an error.\nThis is a second error.\nThis is a third error.\nThis is a fourth error.")
         return view
     }
 }
