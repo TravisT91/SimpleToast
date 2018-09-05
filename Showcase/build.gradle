@@ -12,10 +12,18 @@ buildscript {
         kotlinVersion = '1.2.61'
 
         constraintLayoutVersion = '1.1.2'
-        appCompatVersion = "1.0.0-rc01"
+        appCompatVersion = "1.0.0-rc02"
         supportDesignVersion = "1.0.0-rc01"
         navigationVersion = '1.0.0-alpha05'
         ktxVersion = '0.3'
+
+        // The following version redefinitions for engagekit:
+        android_support_lib_version = "27.1.1"
+        //archLifecycleExtensionsPath = "androidx.lifecycle:lifecycle-extensions"
+        //archLifecycleCompilerPath = "androidx.lifecycle:lifecycle-compiler"
+        archLifecycleVersion = "1.1.1" // We'll have to make this match the app later, potentially.
+        kotlin_version = kotlinVersion
+        // End engagekit versions
     }
     repositories {
         google()
