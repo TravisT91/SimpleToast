@@ -18,10 +18,24 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 
     <item
-        android:id="@+id/splash_fragment"
-        android:title="Splash Fragment"/>
+        android:id="@+id/overview_fragment"
+        android:title="Overview"
+        android:icon="@drawable/ic_overview"/>
     <item
-        android:id="@+id/get_started_fragment"
-        android:title="Get Started Fragment"/>
+        android:id="@+id/budgets_fragment"
+        android:title="Budgets"
+        android:icon="@drawable/ic_budgets"/>
+    <item
+        android:id="@+id/spending_fragment"
+        android:title="Spending"
+        android:icon="@drawable/ic_deposits"/>
+    <item
+        android:id="@+id/goals_fragment"
+        android:title="Goals"
+        android:icon="@drawable/ic_goals"/>
+    <item
+        android:id="@+id/account_fragment"
+        android:title="Account"
+        android:icon="@drawable/ic_account"/>
 
 </menu>
