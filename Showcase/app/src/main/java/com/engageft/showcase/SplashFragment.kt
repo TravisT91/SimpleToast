@@ -10,7 +10,8 @@ import androidx.navigation.findNavController
 import com.engageft.apptoolbox.BaseToolbarConfig
 import com.engageft.apptoolbox.LotusFullScreenFragment
 import com.engageft.apptoolbox.LotusFullScreenFragmentConfig
-import com.engageft.apptoolbox.view.InputWithLabel
+import com.engageft.apptoolbox.view.PasswordInputWithLabel
+import com.engageft.apptoolbox.view.TextInputWithLabel
 
 /**
  * TODO(joeyhutchins): ClassName
@@ -33,16 +34,21 @@ class SplashFragment : LotusFullScreenFragment() {
         val button = view.findViewById<Button>(R.id.button)
         button.setOnClickListener{ view.findNavController().navigate(R.id.action_splash_fragment_to_get_started_fragment) }
 
-        val input1 = view.findViewById<InputWithLabel>(R.id.input1)
+        val input1 = view.findViewById<TextInputWithLabel>(R.id.input1)
         //input1.setHelperText("This is helper text.")
         //input1.setError("This is an error.\nThis is a second error.\nThis is a third error.\nThis is a fourth error.")
         //input1.setClearIcon(R.drawable.ic_clear)
         input1.setClearIcon(ContextCompat.getDrawable(activity!!, R.drawable.ic_clear))
 
 
-        val input2 = view.findViewById<InputWithLabel>(R.id.input2)
-        input2.setInputType(InputWithLabel.Companion.InputType.PASSWORD)
+        val input2 = view.findViewById<PasswordInputWithLabel>(R.id.input2)
         input2.setInputText("This is helper text.")
+
+        val input3 = view.findViewById<TextInputWithLabel>(R.id.input3)
+        input3.setClearIcon(ContextCompat.getDrawable(activity!!, R.drawable.ic_clear))
+
+        val input4 = view.findViewById<TextInputWithLabel>(R.id.input4)
+        input4.setClearIcon(ContextCompat.getDrawable(activity!!, R.drawable.ic_clear))
         return view
     }
 }
