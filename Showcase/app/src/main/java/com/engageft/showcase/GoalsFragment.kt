@@ -17,13 +17,6 @@ import com.engageft.apptoolbox.LotusFullScreenFragment
  * Copyright (c) 2018 Engage FT. All rights reserved.
  */
 class GoalsFragment : LotusFullScreenFragment() {
-    /*override val lotusFullScreenFragmentConfig = object : LotusFullScreenFragmentConfig() {
-        override val navigationVisible = true
-        override val toolbarConfig = object : BaseToolbarConfig() {
-            override val actionMenuRes = 0
-        }
-    }*/
-
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val view = inflater.inflate(R.layout.fragment_goals, container, false)
         val button = view.findViewById<Button>(R.id.button)

@@ -17,13 +17,6 @@ import com.engageft.apptoolbox.LotusFullScreenFragment
  * Copyright (c) 2018 Engage FT. All rights reserved.
  */
 class SignUp3Fragment : LotusFullScreenFragment() {
-    /*override val lotusFullScreenFragmentConfig = object : LotusFullScreenFragmentConfig() {
-        override val navigationVisible = false // This will be ignored
-        override val toolbarConfig = object : BaseToolbarConfig() {
-            override val actionMenuRes = 0
-        }
-    }*/
-
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val view = inflater.inflate(R.layout.fragment_sign_up_3, container, false)
         val button = view.findViewById<Button>(R.id.button)
