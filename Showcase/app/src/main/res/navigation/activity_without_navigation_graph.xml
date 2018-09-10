@@ -16,6 +16,9 @@
             app:clearTask="true"
             app:popUpTo="@null"
             app:popUpToInclusive="true" />
+        <argument
+            android:name="@string/navigation_hide_toolbar"
+            android:defaultValue="true" />
     </fragment>
 
     <fragment
@@ -29,6 +32,9 @@
         <action
             android:id="@+id/action_get_started_fragment_to_sign_up_1_fragment"
             app:destination="@id/sign_up_1_fragment" />
+        <argument
+            android:name="@string/navigation_override_up"
+            android:defaultValue="true" />
     </fragment>
 
     <fragment
