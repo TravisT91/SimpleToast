@@ -6,9 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import androidx.navigation.findNavController
-import com.engageft.apptoolbox.BaseToolbarConfig
 import com.engageft.apptoolbox.LotusFullScreenFragment
-import com.engageft.apptoolbox.LotusFullScreenFragmentConfig
 
 /**
  * TODO(joeyhutchins): ClassName
@@ -19,15 +17,6 @@ import com.engageft.apptoolbox.LotusFullScreenFragmentConfig
  * Copyright (c) 2018 Engage FT. All rights reserved.
  */
 class BudgetsFragment : LotusFullScreenFragment() {
-
-
-    override val lotusFullScreenFragmentConfig = object : LotusFullScreenFragmentConfig() {
-        override val navigationVisible = false
-        override val toolbarConfig = object : BaseToolbarConfig() {
-            override val toolbarType = ToolbarType.NONE
-        }
-    }
-
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val view = inflater.inflate(R.layout.fragment_budgets, container, false)
         val button = view.findViewById<Button>(R.id.button)
