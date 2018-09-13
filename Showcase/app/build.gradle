@@ -15,6 +15,7 @@ android {
         versionCode 1
         versionName "1.0"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        multiDexEnabled true
     }
     buildTypes {
         release {
@@ -45,4 +46,5 @@ dependencies {
     implementation "android.arch.navigation:navigation-ui-ktx:$rootProject.navigationVersion"
     implementation 'androidx.appcompat:appcompat:1.0.0-alpha1'
     implementation 'androidx.constraintlayout:constraintlayout:1.1.2'
+    implementation 'com.android.support:multidex:1.0.3'
 }
