@@ -15,50 +15,5 @@
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"
             android:text="Get Started!"/>
-
-
-        <com.engageft.apptoolbox.view.TextInputWithLabel
-            android:id="@+id/input1"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            app:errorTextAppearance="@style/ErrorText"
-            app:labelTextAppearance="@style/HintText"
-            app:labelText="I am a styled input"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintBottom_toTopOf="@id/input2"/>
-
-        <com.engageft.apptoolbox.view.PasswordInputWithLabel
-            android:id="@+id/input2"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            app:helperTextAppearance="@style/HelperText"
-            app:errorTextAppearance="@style/ErrorText"
-            app:labelTextAppearance="@style/HintText"
-            app:inputTextAppearance="@style/ErrorText"
-            app:labelText="I show a helper from style!"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/input1"/>
-
-        <com.engageft.apptoolbox.view.PhoneInputWithLabel
-            android:id="@+id/input3"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/input2"/>
-
-        <com.engageft.apptoolbox.view.EmailInputWithLabel
-            android:id="@+id/input4"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            app:clearIcon="@drawable/ic_clear"
-            app:clearIconTint="@color/error"
-            app:labelText="I am an email input"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/input3"/>
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>
