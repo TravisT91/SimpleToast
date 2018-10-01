@@ -11,7 +11,7 @@
         android:supportsRtl="true"
         android:theme="@style/LotusTheme">
         <activity
-            android:name=".ActivityWithoutNavigation"
+            android:name=".ShowcaseActivity"
             android:theme="@style/LotusTheme">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
