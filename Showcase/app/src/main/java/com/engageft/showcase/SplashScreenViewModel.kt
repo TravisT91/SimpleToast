@@ -5,8 +5,8 @@ import android.os.Handler
 import android.preference.PreferenceManager
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import com.engageft.engagekit.EngageService
+import com.ob.ws.dom.LoginResponse
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
@@ -20,31 +20,34 @@ import io.reactivex.schedulers.Schedulers
  * Copyright (c) 2018 Engage FT. All rights reserved.
  */
 class SplashScreenViewModel(application: Application) : AndroidViewModel(application) {
-
+    companion object {
+        private const val SPLASH_SCREEN_MINIMUM_MS = 1000L
+    }
     enum class SplashNavigationEvent {
         LOGGED_IN,
         FIRST_USE,
         NOT_LOGGED_IN
     }
 
-    val compositeDisposable = CompositeDisposable()
+    private val compositeDisposable = CompositeDisposable()
+    private val handler = Handler()
 
-    val navigationObservable = MutableLiveData<SplashNavigationEvent>()
+    val navigationObservable = SplashNavigationLiveData()
 
-    inner class SplashInitializeLiveData : LiveData<SplashNavigationEvent>() {
+    inner class SplashNavigationLiveData : LiveData<SplashNavigationEvent>() {
         override fun onActive() {
             super.onActive()
+            doSplashInitialize()
         }
 
         override fun onInactive() {
             super.onInactive()
+            handler.removeCallbacksAndMessages(null)
+            compositeDisposable.clear()
         }
 
         private fun doSplashInitialize() {
-            EngageService.initService(BuildConfig.VERSION_CODE.toString())
-
-            Handler().postDelayed({
-
+            handler.postDelayed({
                 val defaultSharedPrefs = PreferenceManager.getDefaultSharedPreferences(getApplication())
 
                 if (!defaultSharedPrefs.getBoolean("SHARED_PREFS_VIEW_GET_STARTED_KEY", false)) {
@@ -56,27 +59,22 @@ class SplashScreenViewModel(application: Application) : AndroidViewModel(applica
                                         .subscribeOn(Schedulers.io())
                                         .observeOn(AndroidSchedulers.mainThread())
                                         .subscribe({ response ->
-                                            if (response.isSuccess && response is LoginResponse) {
-                                                value = SplashNavigationEvent.LOGGED_IN
+                                            value = if (response.isSuccess && response is LoginResponse) {
+                                                SplashNavigationEvent.LOGGED_IN
                                             } else {
-                                                value = SplashNavigationEvent.NOT_LOGGED_IN
+                                                EngageService.getInstance().authManager.logout()
+                                                SplashNavigationEvent.NOT_LOGGED_IN
                                             }
-//                                            if (response.isSuccess() && response.getClass().equals(LoginResponse::class.java)) {
-//                                                startActivity(OverviewActivity::class.java)
-//                                            } else {
-//                                                EngageService.getInstance().authManager.logout()
-//                                                startActivity(LoginActivity::class.java)
-//                                            }
                                         }, { e ->
-//                                            EngageService.getInstance().authManager.logout()
-//                                            startActivity(LoginActivity::class.java)
+                                            EngageService.getInstance().authManager.logout()
+                                            value = SplashNavigationEvent.NOT_LOGGED_IN
                                         })
                         )
                     } else {
                         value = SplashNavigationEvent.NOT_LOGGED_IN
                     }
                 }
-            }, 2000)
+            }, SPLASH_SCREEN_MINIMUM_MS)
         }
     }
 }

@@ -22,6 +22,12 @@
         <argument
             android:name="@string/navigation_view_gone"
             android:defaultValue="true" />
+        <action
+            android:id="@+id/action_splash_fragment_to_login_fragment"
+            app:destination="@id/login_fragment" />
+        <action
+            android:id="@+id/action_splash_fragment_to_activityWithNavigation"
+            app:destination="@id/activityWithNavigation" />
     </fragment>
 
     <fragment

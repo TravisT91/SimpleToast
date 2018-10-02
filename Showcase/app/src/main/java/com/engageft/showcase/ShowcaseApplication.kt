@@ -1,6 +1,7 @@
 package com.engageft.showcase
 
 import com.engageft.apptoolbox.LotusApplication
+import com.engageft.engagekit.EngageService
 import com.heapanalytics.android.Heap
 
 /**
@@ -18,5 +19,6 @@ class ShowcaseApplication : LotusApplication() {
         super.onCreate()
 
         Heap.init(this, "TEMP ID")
+        EngageService.initService(BuildConfig.VERSION_CODE.toString(), this)
     }
 }

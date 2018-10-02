@@ -41,7 +41,7 @@ android {
 }
 
 dependencies {
-    implementation fileTree(dir: 'libs', include: ['*.jar'])
+    implementation fileTree(include: ['*.jar'], dir: 'libs')
     implementation project(':engagekit')
     implementation project(':apptoolbox')
     implementation "androidx.appcompat:appcompat:$rootProject.appCompatVersion"
@@ -51,10 +51,8 @@ dependencies {
     implementation "android.arch.navigation:navigation-fragment-ktx:$rootProject.navigationVersion"
     implementation "android.arch.navigation:navigation-ui-ktx:$rootProject.navigationVersion"
     implementation 'com.android.support:multidex:1.0.3'
-
     // Dependencies for Android Architectural Components
     implementation "androidx.lifecycle:lifecycle-extensions:$rootProject.archLifecycleVersion"
     kapt "androidx.lifecycle:lifecycle-compiler:$rootProject.archLifecycleVersion"
-
     implementation "com.heapanalytics.android:heap-android-client:$rootProject.heapVersion"
 }
