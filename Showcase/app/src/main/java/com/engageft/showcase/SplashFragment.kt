@@ -14,7 +14,8 @@ import com.engageft.apptoolbox.LotusFullScreenFragment
 /**
  * SplashFragment
  * <p>
- * TODO(joeyhutchins): Class description.
+ * First fragment in the navigation of the application. Here, we determine where to navigate the user
+ * after initialization.
  * </p>
  * Created by joeyhutchins on 8/22/18.
  * Copyright (c) 2018 Engage FT. All rights reserved.

@@ -12,9 +12,10 @@ import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
 
 /**
- * TODO(joeyhutchins): ClassName
+ * SplashScreenViewModel
  * <p>
- * TODO(joeyhutchins): Class description.
+ * ViewModel for the Splash Fragment. Here, we check where to navigate the user after the Splash sequence
+ * completes.
  * </p>
  * Created by joeyhutchins on 10/1/18.
  * Copyright (c) 2018 Engage FT. All rights reserved.
