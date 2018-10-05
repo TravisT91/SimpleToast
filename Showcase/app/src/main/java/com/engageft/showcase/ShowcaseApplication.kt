@@ -2,7 +2,7 @@ package com.engageft.showcase
 
 import com.engageft.apptoolbox.LotusApplication
 import com.engageft.engagekit.EngageService
-import com.heapanalytics.android.Heap
+import com.engageft.showcase.feature.HeapUtils
 
 /**
  * TODO(joeyhutchins): ClassName
@@ -22,7 +22,7 @@ class ShowcaseApplication : LotusApplication() {
         super.onCreate()
         sInstance = this
 
-        Heap.init(this, "TEMP ID")
+        HeapUtils.initHeap(this)
         EngageService.initService(BuildConfig.VERSION_CODE.toString(), this)
     }
 }

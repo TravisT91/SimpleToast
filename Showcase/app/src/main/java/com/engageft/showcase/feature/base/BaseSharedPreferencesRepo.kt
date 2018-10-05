@@ -9,7 +9,7 @@ import com.engageft.showcase.ShowcaseApplication
  * <p>
  * Base class that all SharedPreference repositories or helper classes should inherit from. This
  * base object ensures that all these preferences are registered with the SharedPreferenceReferenceRepo
- * to enable convenience method for clearing all app shared preferences. 
+ * to enable convenience method for clearing all app shared preferences.
  * </p>
  * Created by joeyhutchins on 10/5/18.
  * Copyright (c) 2018 Engage FT. All rights reserved.
