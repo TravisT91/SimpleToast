@@ -1,4 +1,4 @@
-package com.engageft.showcase
+package com.engageft.showcase.feature.enrollment
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -8,7 +8,7 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.navigation.findNavController
 import com.engageft.apptoolbox.LotusFullScreenFragment
-
+import com.engageft.showcase.R
 
 
 /**

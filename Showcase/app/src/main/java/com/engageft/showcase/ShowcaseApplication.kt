@@ -13,10 +13,14 @@ import com.heapanalytics.android.Heap
  * Copyright (c) 2018 Engage FT. All rights reserved.
  */
 class ShowcaseApplication : LotusApplication() {
+    companion object {
+        lateinit var sInstance: ShowcaseApplication
+    }
     override val navigationType: NavigationType = NavigationType.SIDE
 
     override fun onCreate() {
         super.onCreate()
+        sInstance = this
 
         Heap.init(this, "TEMP ID")
         EngageService.initService(BuildConfig.VERSION_CODE.toString(), this)

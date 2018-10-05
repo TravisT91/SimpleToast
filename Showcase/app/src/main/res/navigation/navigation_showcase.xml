@@ -7,7 +7,7 @@
 
     <fragment
         android:id="@+id/splash_fragment"
-        android:name="com.engageft.showcase.SplashFragment"
+        android:name="com.engageft.showcase.feature.enrollment.SplashFragment"
         android:label="Splash Fragment"
         tools:layout="@layout/fragment_splash">
         <action

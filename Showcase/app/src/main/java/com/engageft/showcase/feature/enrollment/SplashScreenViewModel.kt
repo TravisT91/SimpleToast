@@ -1,10 +1,8 @@
-package com.engageft.showcase
+package com.engageft.showcase.feature.enrollment
 
-import android.app.Application
 import android.os.Handler
-import android.preference.PreferenceManager
-import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
+import androidx.lifecycle.ViewModel
 import com.engageft.engagekit.EngageService
 import com.ob.ws.dom.LoginResponse
 import io.reactivex.android.schedulers.AndroidSchedulers
@@ -20,7 +18,7 @@ import io.reactivex.schedulers.Schedulers
  * Created by joeyhutchins on 10/1/18.
  * Copyright (c) 2018 Engage FT. All rights reserved.
  */
-class SplashScreenViewModel(application: Application) : AndroidViewModel(application) {
+class SplashScreenViewModel : ViewModel() {
     companion object {
         private const val SPLASH_SCREEN_MINIMUM_MS = 1000L
     }
@@ -49,9 +47,9 @@ class SplashScreenViewModel(application: Application) : AndroidViewModel(applica
 
         private fun doSplashInitialize() {
             handler.postDelayed({
-                val defaultSharedPrefs = PreferenceManager.getDefaultSharedPreferences(getApplication())
-
-                if (!defaultSharedPrefs.getBoolean("SHARED_PREFS_VIEW_GET_STARTED_KEY", false)) {
+                if (!EnrollmentSharedPreferencesRepo.hasSeenGetStarted()) {
+                    // TODO(jhutchins): Eventually we want to set that the user has seen the Get Started
+                    // Screen. Probably inside the GetStartedFragment after it's inflated?
                     value = SplashNavigationEvent.FIRST_USE
                 } else {
                     if (EngageService.getInstance().authManager.isLoggedIn) {
@@ -66,7 +64,7 @@ class SplashScreenViewModel(application: Application) : AndroidViewModel(applica
                                                 EngageService.getInstance().authManager.logout()
                                                 SplashNavigationEvent.NOT_LOGGED_IN
                                             }
-                                        }, { e ->
+                                        }, { _ ->
                                             EngageService.getInstance().authManager.logout()
                                             value = SplashNavigationEvent.NOT_LOGGED_IN
                                         })
