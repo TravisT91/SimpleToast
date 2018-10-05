@@ -1,8 +1,7 @@
-package com.engageft.showcase.feature
+package com.engageft.showcase
 
 import android.content.Context
 import com.engageft.engagekit.utils.DeviceUtils
-import com.engageft.showcase.BuildConfig
 import com.heapanalytics.android.Heap
 
 /**

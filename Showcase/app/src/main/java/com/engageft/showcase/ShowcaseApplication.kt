@@ -2,7 +2,6 @@ package com.engageft.showcase
 
 import com.engageft.apptoolbox.LotusApplication
 import com.engageft.engagekit.EngageService
-import com.engageft.showcase.feature.HeapUtils
 
 /**
  * TODO(joeyhutchins): ClassName
