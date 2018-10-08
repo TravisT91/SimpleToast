@@ -4,10 +4,10 @@ import android.os.Bundle
 import com.engageft.apptoolbox.LotusActivity
 import com.engageft.apptoolbox.LotusActivityConfig
 
-class ActivityWithoutNavigation : LotusActivity() {
+class ShowcaseActivity : LotusActivity() {
     private val lotusActivityConfig = object : LotusActivityConfig() {
-        override val navigationMenuResourceId = 0 // Not using a nav view!
-        override val navigationGraphResourceId = R.navigation.activity_without_navigation_graph
+        override val navigationMenuResourceId = R.menu.menu_navigation
+        override val navigationGraphResourceId = R.navigation.navigation_showcase
     }
 
     override fun getLotusActivityConfig(): LotusActivityConfig {

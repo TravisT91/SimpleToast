@@ -19,3 +19,16 @@
 # If you keep the line number information, uncomment this to
 # hide the original source file name.
 #-renamesourcefileattribute SourceFile
+-keep public class com.heapanalytics.android.internal.HeapInternal {
+    public static void captureClick(...);
+}
+-keep public class com.heapanalytics.android.internal.HeapImpl {
+    private static void unsafeInit(...);
+    private static void markInstrumentorRan(...);
+}
+-keep public class **.BuildConfig {
+    *;
+}
+-keepnames public class android.support.design.widget.TabLayout** {
+    *;
+}
