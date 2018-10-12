@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.navigation.findNavController
+import com.engageft.apptoolbox.BaseViewModel
 import com.engageft.apptoolbox.LotusFullScreenFragment
 import com.engageft.showcase.R
 
@@ -21,11 +22,14 @@ import com.engageft.showcase.R
  * Copyright (c) 2018 Engage FT. All rights reserved.
  */
 class SplashFragment : LotusFullScreenFragment() {
+
+    override fun createViewModel(): BaseViewModel? {
+        return ViewModelProviders.of(this).get(SplashScreenViewModel::class.java)
+    }
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val view = inflater.inflate(R.layout.fragment_splash, container, false)
 
-        val model = ViewModelProviders.of(this).get(SplashScreenViewModel::class.java)
-        model.navigationObservable.observe(this, Observer { splashNavigationEvent : SplashScreenViewModel.SplashNavigationEvent ->
+        (viewModel!! as SplashScreenViewModel).navigationObservable.observe(this, Observer { splashNavigationEvent : SplashScreenViewModel.SplashNavigationEvent ->
             val navDestinationId = when (splashNavigationEvent) {
                 SplashScreenViewModel.SplashNavigationEvent.NOT_LOGGED_IN -> {
                     R.id.action_splash_fragment_to_login_fragment
