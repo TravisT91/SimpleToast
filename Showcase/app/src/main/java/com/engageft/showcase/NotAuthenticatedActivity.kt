@@ -5,7 +5,7 @@ import com.engageft.apptoolbox.LotusActivityConfig
 
 class NotAuthenticatedActivity : LotusActivity() {
     private val lotusActivityConfig = object : LotusActivityConfig() {
-        override val navigationMenuResourceId = R.menu.menu_navigation
+        override val navigationMenuResourceId = 0
         override val navigationGraphResourceId = R.navigation.navigation_not_authenticated
     }
 
