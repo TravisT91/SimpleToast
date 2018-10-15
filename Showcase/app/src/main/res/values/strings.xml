@@ -1,3 +1,13 @@
 <resources>
     <string name="app_name">EngageFT Showcase</string>
+
+    <!-- Login Fragment -->
+    <string name="login_title">Log in</string>
+    <string name="login_email_label">Email</string>
+    <string name="login_password_label">Password</string>
+    <string name="login_forgot_password">Forgot password?</string>
+    <string name="login_remember_me">Remember me</string>
+    <string name="login_issuer_statement">Issuer Statement</string>
+    <string name="login_footer_separator">|</string>
+    <string name="login_disclosures">Disclosures</string>
 </resources>

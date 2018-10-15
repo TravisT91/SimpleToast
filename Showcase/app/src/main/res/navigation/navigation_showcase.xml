@@ -52,7 +52,6 @@
     <fragment
         android:id="@+id/login_fragment"
         android:name="com.engageft.showcase.feature.authentication.LoginFragment"
-        android:label="Login Fragment"
         tools:layout="@layout/fragment_login">
         <action
             android:id="@+id/action_login_fragment_to_activityWithNavigation"

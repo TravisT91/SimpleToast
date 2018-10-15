@@ -19,7 +19,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintVertical_bias="0.05"
-            android:text="Log in"/>
+            android:text="@string/login_title"/>
 
         <LinearLayout
             android:id="@+id/loginInputForm"
@@ -39,14 +39,14 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="20dp"
-                app:labelText="Email"/>
+                app:labelText="@string/login_email_label"/>
 
             <com.engageft.apptoolbox.view.PasswordInputWithLabel
                 style="@style/TextInputWithLabelStyle"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="20dp"
-                app:labelText="Password"/>
+                app:labelText="@string/login_password_label"/>
         </LinearLayout>
 
         <Button
@@ -60,8 +60,8 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="@id/rememberMeCheckbox"
             app:layout_constraintBottom_toBottomOf="@id/rememberMeCheckbox"
-            android:layout_marginLeft="16dp"
-            android:text="Forgot password?"/>
+            android:layout_marginStart="16dp"
+            android:text="@string/login_forgot_password"/>
 
         <androidx.appcompat.widget.AppCompatCheckBox
             style="@style/Caption1Medium"
@@ -72,10 +72,10 @@
             app:layout_constraintTop_toBottomOf="@id/loginInputForm"
             app:layout_constraintEnd_toEndOf="parent"
             android:button="@drawable/checkbox_selector"
-            android:paddingLeft="9dp"
+            android:paddingStart="9dp"
             android:layout_marginTop="32dp"
-            android:layout_marginRight="16dp"
-            android:text="Remember me"/>
+            android:layout_marginEnd="16dp"
+            android:text="@string/login_remember_me"/>
 
         <LinearLayout
             android:layout_width="wrap_content"
@@ -94,15 +94,15 @@
                 android:textColor="@color/pill_button_secondary_text"
                 android:background="@null"
                 android:textAllCaps="false"
-                android:layout_marginRight="8dp"
-                android:text="Issuer Statement"
+                android:layout_marginEnd="8dp"
+                android:text="@string/login_issuer_statement"
                 />
             <androidx.appcompat.widget.AppCompatTextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 style="@style/Caption1Medium"
                 android:textColor="@color/black"
-                android:text="|"/>
+                android:text="@string/login_footer_separator"/>
 
             <Button
                 android:id="@+id/btn_disclosures"
@@ -112,8 +112,8 @@
                 android:textColor="@color/pill_button_secondary_text"
                 android:background="@null"
                 android:textAllCaps="false"
-                android:layout_marginLeft="8dp"
-                android:text="Disclosures"
+                android:layout_marginStart="8dp"
+                android:text="@string/login_disclosures"
                 />
 
         </LinearLayout>
