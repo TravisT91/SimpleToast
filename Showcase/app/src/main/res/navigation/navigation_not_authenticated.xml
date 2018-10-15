@@ -26,8 +26,8 @@
             android:id="@+id/action_splash_fragment_to_login_fragment"
             app:destination="@id/login_fragment" />
         <action
-            android:id="@+id/action_splash_fragment_to_activityWithNavigation"
-            app:destination="@id/activityWithNavigation" />
+            android:id="@+id/action_splash_fragment_to_authenticatedActivity"
+            app:destination="@id/authenticatedActivity" />
     </fragment>
 
     <fragment
@@ -54,8 +54,8 @@
         android:name="com.engageft.showcase.feature.authentication.LoginFragment"
         tools:layout="@layout/fragment_login">
         <action
-            android:id="@+id/action_login_fragment_to_activityWithNavigation"
-            app:destination="@id/activityWithNavigation" />
+            android:id="@+id/action_login_fragment_to_authenticatedActivity"
+            app:destination="@id/authenticatedActivity" />
         <argument
             android:name="@string/navigation_view_gone"
             android:defaultValue="true" />
@@ -101,61 +101,7 @@
             android:defaultValue="true" />
     </fragment>
     <activity
-        android:id="@+id/activityWithNavigation"
-        android:name="com.engageft.showcase.ActivityWithNavigation"
+        android:id="@+id/authenticatedActivity"
+        android:name="com.engageft.showcase.AuthenticatedActivity"
         android:label="ActivityWithNavigation" />
-
-    <fragment
-        android:id="@+id/overview_fragment"
-        android:name="com.engageft.showcase.OverviewFragment"
-        android:label="Overview"
-        tools:layout="@layout/fragment_overview"/>
-    <fragment
-        android:id="@+id/spending_fragment"
-        android:name="com.engageft.showcase.SpendingFragment"
-        android:label="Spending"
-        tools:layout="@layout/fragment_spending">
-        <argument
-            android:name="@string/navigation_override_up"
-            android:defaultValue="true" />
-    </fragment>
-    <fragment
-        android:id="@+id/budgets_fragment"
-        android:name="com.engageft.showcase.BudgetsFragment"
-        android:label="Budgets"
-        tools:layout="@layout/fragment_budgets">
-        <argument
-            android:name="@string/navigation_override_up"
-            android:defaultValue="true" />
-    </fragment>
-    <fragment
-        android:id="@+id/goals_fragment"
-        android:name="com.engageft.showcase.GoalsFragment"
-        android:label="Goals"
-        tools:layout="@layout/fragment_goals">
-        <action
-            android:id="@+id/action_goals_fragment_to_goalAdd1Fragment"
-            app:destination="@id/goalAdd1Fragment" />
-        <argument
-            android:name="@string/navigation_override_up"
-            android:defaultValue="true" />
-    </fragment>
-    <fragment
-        android:id="@+id/account_fragment"
-        android:name="com.engageft.showcase.AccountFragment"
-        android:label="Account"
-        tools:layout="@layout/fragment_account">
-        <argument
-            android:name="@string/navigation_override_up"
-            android:defaultValue="true" />
-    </fragment>
-    <fragment
-        android:id="@+id/goalAdd1Fragment"
-        android:name="com.engageft.showcase.GoalAdd1Fragment"
-        android:label="GoalAdd1Fragment"
-        tools:layout="@layout/fragment_goal_add_1" >
-        <argument
-            android:name="@string/navigation_view_gone"
-            android:defaultValue="true" />
-    </fragment>
 </navigation>
