@@ -1,19 +1,122 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
-        <Button
-            android:id="@+id/button"
+
+        <androidx.appcompat.widget.AppCompatTextView
+            style="@style/Title1Quiet"
+            android:textColor="@color/structure6"
+            android:id="@+id/loginTextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"
-            android:text="Go to Nav Activity"/>
+            app:layout_constraintVertical_bias="0.05"
+            android:text="Log in"/>
+
+        <LinearLayout
+            android:id="@+id/loginInputForm"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toBottomOf="@id/loginTextView"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_marginTop="14dp"
+            android:orientation="vertical"
+            android:background="@color/white"
+            android:paddingLeft="16dp"
+            android:paddingRight="16dp">
+
+            <com.engageft.apptoolbox.view.EmailInputWithLabel
+                style="@style/TextInputWithLabelStyle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                app:labelText="Email"/>
+
+            <com.engageft.apptoolbox.view.PasswordInputWithLabel
+                style="@style/TextInputWithLabelStyle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                app:labelText="Password"/>
+        </LinearLayout>
+
+        <Button
+            style="@style/Caption1Medium"
+            android:textColor="@color/primary"
+            android:background="@null"
+            android:textAllCaps="false"
+            android:id="@+id/forgotPasswordText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@id/rememberMeCheckbox"
+            app:layout_constraintBottom_toBottomOf="@id/rememberMeCheckbox"
+            android:layout_marginLeft="16dp"
+            android:text="Forgot password?"/>
+
+        <androidx.appcompat.widget.AppCompatCheckBox
+            style="@style/Caption1Medium"
+            android:textColor="@color/primary"
+            android:id="@+id/rememberMeCheckbox"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toBottomOf="@id/loginInputForm"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:button="@drawable/checkbox_selector"
+            android:paddingLeft="9dp"
+            android:layout_marginTop="32dp"
+            android:layout_marginRight="16dp"
+            android:text="Remember me"/>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_gravity="center_horizontal"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_marginBottom="32dp">
+            <Button
+                android:id="@+id/btn_issuer_statement"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                style="@style/Caption1Medium"
+                android:textColor="@color/structure4"
+                android:background="@null"
+                android:textAllCaps="false"
+                android:layout_marginRight="8dp"
+                android:text="Issuer Statement"
+                />
+            <androidx.appcompat.widget.AppCompatTextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                style="@style/Caption1Medium"
+                android:textColor="@color/black"
+                android:text="|"/>
+
+            <Button
+                android:id="@+id/btn_disclosures"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                style="@style/Caption1Medium"
+                android:textColor="@color/structure4"
+                android:background="@null"
+                android:textAllCaps="false"
+                android:layout_marginLeft="8dp"
+                android:text="Disclosures"
+                />
+
+        </LinearLayout>
+
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>
