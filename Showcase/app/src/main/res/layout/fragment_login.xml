@@ -51,7 +51,7 @@
 
         <Button
             style="@style/Caption1Medium"
-            android:textColor="@color/primary"
+            android:textColor="@color/pill_button_secondary_text"
             android:background="@null"
             android:textAllCaps="false"
             android:id="@+id/forgotPasswordText"
@@ -65,7 +65,7 @@
 
         <androidx.appcompat.widget.AppCompatCheckBox
             style="@style/Caption1Medium"
-            android:textColor="@color/primary"
+            android:textColor="@color/pill_button_secondary_text"
             android:id="@+id/rememberMeCheckbox"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -91,7 +91,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 style="@style/Caption1Medium"
-                android:textColor="@color/structure4"
+                android:textColor="@color/pill_button_secondary_text"
                 android:background="@null"
                 android:textAllCaps="false"
                 android:layout_marginRight="8dp"
@@ -109,7 +109,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 style="@style/Caption1Medium"
-                android:textColor="@color/structure4"
+                android:textColor="@color/pill_button_secondary_text"
                 android:background="@null"
                 android:textAllCaps="false"
                 android:layout_marginLeft="8dp"
