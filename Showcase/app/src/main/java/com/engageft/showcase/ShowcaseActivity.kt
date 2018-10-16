@@ -1,6 +1,5 @@
 package com.engageft.showcase
 
-import android.os.Bundle
 import com.engageft.apptoolbox.LotusActivity
 import com.engageft.apptoolbox.LotusActivityConfig
 
@@ -13,12 +12,4 @@ class ShowcaseActivity : LotusActivity() {
     override fun getLotusActivityConfig(): LotusActivityConfig {
         return lotusActivityConfig
     }
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-    }
-
-    /*override fun instantiateNavHostFragment(): NavHostFragment {
-        return NavHostFragment.create(R.navigation.nav_graph)
-    }*/
 }
