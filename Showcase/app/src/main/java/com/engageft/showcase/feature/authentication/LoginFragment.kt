@@ -4,8 +4,11 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.databinding.DataBindingUtil
+import androidx.lifecycle.ViewModelProviders
 import com.engageft.apptoolbox.LotusFullScreenFragment
 import com.engageft.showcase.R
+import com.engageft.showcase.databinding.FragmentLoginBinding
 
 /**
  * TODO(joeyhutchins): ClassName
@@ -17,9 +20,35 @@ import com.engageft.showcase.R
  */
 class LoginFragment : LotusFullScreenFragment() {
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        val view = inflater.inflate(R.layout.fragment_login, container, false)
-//        val button = view.findViewById<Button>(R.id.button)
-//        button.setOnClickListener{ view.findNavController().navigate(R.id.action_login_fragment_to_activityWithNavigation) }
-        return view
+
+        val binding = DataBindingUtil.inflate<FragmentLoginBinding>(layoutInflater, R.layout.fragment_login, container, false)
+
+
+        val model = ViewModelProviders.of(this).get(LoginViewModel::class.java)
+        //binding.viewModel = model
+        /*model.navigationObservable.observe(this, Observer { splashNavigationEvent : LoginViewModel.LoginNavigationEvent ->
+            val navDestinationId = when (splashNavigationEvent) {
+                LoginViewModel.LoginNavigationEvent.AUTHENTICATED_ACTIVITY -> {
+                    R.id.action_login_fragment_to_authenticatedActivity
+                }
+                LoginViewModel.LoginNavigationEvent.ISSUER_STATEMENT -> {
+                    // TODO(jhutchins): Navigate to Issuer Statement
+                    Toast.makeText(context!!, "TODO: Navigate to Issuer Statement", Toast.LENGTH_SHORT).show()
+                    0
+                }
+                LoginViewModel.LoginNavigationEvent.DISCLOSURES -> {
+                    // TODO(jhutchins): Navigate to Disclosures
+                    Toast.makeText(context!!, "TODO: Navigate to Disclosures", Toast.LENGTH_SHORT).show()
+                    0
+                }
+            }
+            if (navDestinationId != 0) {
+                view.findNavController().navigate(navDestinationId)
+            }
+        })
+        model.emailError.observe(this, Observer { error: String ->
+
+        })*/
+        return binding.root
     }
 }
