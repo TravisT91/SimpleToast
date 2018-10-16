@@ -1,7 +1,7 @@
 package com.engageft.showcase
 
 import android.content.Context
-import com.engageft.engagekit.utils.DeviceUtils
+import com.engageft.showcase.config.EngageAppConfig
 import com.heapanalytics.android.Heap
 
 /**
@@ -13,7 +13,7 @@ import com.heapanalytics.android.Heap
  *  Copyright (c) 2018 Engage FT. All rights reserved.
  */
 object HeapUtils {
-    private val heapAppId: String = if (BuildConfig.DEBUG || DeviceUtils.isEmulator()) "" else ""
+    private val heapAppId: String = EngageAppConfig.heapAppId
     private val isHeapEnabled = heapAppId.isNotBlank()
 
     fun initHeap(context: Context) {

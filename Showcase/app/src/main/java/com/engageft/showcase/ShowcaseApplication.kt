@@ -2,6 +2,7 @@ package com.engageft.showcase
 
 import com.engageft.apptoolbox.LotusApplication
 import com.engageft.engagekit.EngageService
+import com.engageft.showcase.config.EngageAppConfig
 
 /**
  * TODO(joeyhutchins): ClassName
@@ -22,6 +23,6 @@ class ShowcaseApplication : LotusApplication() {
         sInstance = this
 
         HeapUtils.initHeap(this)
-        EngageService.initService(BuildConfig.VERSION_CODE.toString(), this)
+        EngageService.initService(BuildConfig.VERSION_CODE.toString(), this, EngageAppConfig.engageKitConfig)
     }
 }
