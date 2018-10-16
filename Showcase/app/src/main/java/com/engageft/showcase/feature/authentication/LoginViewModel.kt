@@ -26,13 +26,10 @@ class LoginViewModel : ViewModel() {
 
     val navigationObservable = MutableLiveData<LoginNavigationEvent>()
 
-    var email : String = ""
+    var email : CharSequence = "testing 123"
         set(value) {
             field = value
             validateEmail()
-        }
-        get() {
-            return field
         }
     var emailError : MutableLiveData<String> = MutableLiveData()
 

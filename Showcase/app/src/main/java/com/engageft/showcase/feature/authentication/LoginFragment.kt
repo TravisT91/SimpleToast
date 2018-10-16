@@ -4,11 +4,15 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.databinding.DataBindingUtil
+import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
+import androidx.navigation.findNavController
 import com.engageft.apptoolbox.LotusFullScreenFragment
 import com.engageft.showcase.R
 import com.engageft.showcase.databinding.FragmentLoginBinding
+import kotlinx.android.synthetic.main.fragment_login.*
 
 /**
  * TODO(joeyhutchins): ClassName
@@ -25,8 +29,8 @@ class LoginFragment : LotusFullScreenFragment() {
 
 
         val model = ViewModelProviders.of(this).get(LoginViewModel::class.java)
-        //binding.viewModel = model
-        /*model.navigationObservable.observe(this, Observer { splashNavigationEvent : LoginViewModel.LoginNavigationEvent ->
+        binding.viewModel = model
+        model.navigationObservable.observe(this, Observer { splashNavigationEvent : LoginViewModel.LoginNavigationEvent ->
             val navDestinationId = when (splashNavigationEvent) {
                 LoginViewModel.LoginNavigationEvent.AUTHENTICATED_ACTIVITY -> {
                     R.id.action_login_fragment_to_authenticatedActivity
@@ -43,12 +47,15 @@ class LoginFragment : LotusFullScreenFragment() {
                 }
             }
             if (navDestinationId != 0) {
-                view.findNavController().navigate(navDestinationId)
+                binding.root.findNavController().navigate(navDestinationId)
             }
         })
         model.emailError.observe(this, Observer { error: String ->
-
-        })*/
+            emailInput.setError(error)
+        })
+        model.passwordError.observe(this, Observer { error: String ->
+            passwordInput.setError(error)
+        })
         return binding.root
     }
 }
