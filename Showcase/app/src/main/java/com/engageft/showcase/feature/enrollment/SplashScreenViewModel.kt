@@ -2,7 +2,7 @@ package com.engageft.showcase.feature.enrollment
 
 import android.os.Handler
 import androidx.lifecycle.LiveData
-import androidx.lifecycle.ViewModel
+import com.engageft.apptoolbox.BaseViewModel
 import com.engageft.engagekit.EngageService
 import com.ob.ws.dom.LoginResponse
 import io.reactivex.android.schedulers.AndroidSchedulers
@@ -18,7 +18,7 @@ import io.reactivex.schedulers.Schedulers
  * Created by joeyhutchins on 10/1/18.
  * Copyright (c) 2018 Engage FT. All rights reserved.
  */
-class SplashScreenViewModel : ViewModel() {
+class SplashScreenViewModel : BaseViewModel() {
     companion object {
         private const val SPLASH_SCREEN_MINIMUM_MS = 1000L
     }
