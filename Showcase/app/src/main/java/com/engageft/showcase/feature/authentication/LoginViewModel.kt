@@ -31,6 +31,9 @@ class LoginViewModel : ViewModel() {
             field = value
             validateEmail()
         }
+        get() {
+            return field
+        }
     var emailError : MutableLiveData<String> = MutableLiveData()
 
     var password : CharSequence = ""
