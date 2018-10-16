@@ -9,28 +9,31 @@ import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.navigation.findNavController
+import com.engageft.apptoolbox.BaseViewModel
 import com.engageft.apptoolbox.LotusFullScreenFragment
 import com.engageft.showcase.R
 import com.engageft.showcase.databinding.FragmentLoginBinding
 import kotlinx.android.synthetic.main.fragment_login.*
 
 /**
- * TODO(joeyhutchins): ClassName
+ * LoginFragment
  * <p>
- * TODO(joeyhutchins): Class description.
+ * UI Fragment for Login screen.
  * </p>
  * Created by joeyhutchins on 8/24/18.
  * Copyright (c) 2018 Engage FT. All rights reserved.
  */
 class LoginFragment : LotusFullScreenFragment() {
+    override fun createViewModel(): BaseViewModel? {
+        return ViewModelProviders.of(this).get(LoginViewModel::class.java)
+    }
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
 
         val binding = DataBindingUtil.inflate<FragmentLoginBinding>(layoutInflater, R.layout.fragment_login, container, false)
 
-
-        val model = ViewModelProviders.of(this).get(LoginViewModel::class.java)
-        binding.viewModel = model
-        model.navigationObservable.observe(this, Observer { splashNavigationEvent : LoginViewModel.LoginNavigationEvent ->
+        val vm = (viewModel as LoginViewModel)
+        binding.viewModel = vm
+        vm.navigationObservable.observe(this, Observer { splashNavigationEvent : LoginViewModel.LoginNavigationEvent ->
             val navDestinationId = when (splashNavigationEvent) {
                 LoginViewModel.LoginNavigationEvent.AUTHENTICATED_ACTIVITY -> {
                     R.id.action_login_fragment_to_authenticatedActivity
@@ -50,12 +53,19 @@ class LoginFragment : LotusFullScreenFragment() {
                 binding.root.findNavController().navigate(navDestinationId)
             }
         })
-        model.emailError.observe(this, Observer { error: String ->
-            emailInput.setError(error)
+        vm.emailError.observe(this, Observer { error: LoginViewModel.EmailValidationError ->
+            when (error) {
+                LoginViewModel.EmailValidationError.NONE -> emailInput.setError("")
+                LoginViewModel.EmailValidationError.INVALID_CREDENTIALS -> emailInput.setError("I am not ready yet!") // Localize this
+            }
         })
-        model.passwordError.observe(this, Observer { error: String ->
-            passwordInput.setError(error)
+        vm.passwordError.observe(this, Observer { error: LoginViewModel.PasswordValidationError ->
+            when (error) {
+                LoginViewModel.PasswordValidationError.NONE -> passwordInput.setError("")
+                LoginViewModel.PasswordValidationError.INVALID_CREDENTIALS -> passwordInput.setError("I am not ready yet!") // Localize this
+            }
         })
+        binding.rememberMeCheckbox.isChecked
         return binding.root
     }
 }

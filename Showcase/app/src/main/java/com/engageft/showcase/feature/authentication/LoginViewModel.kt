@@ -1,19 +1,21 @@
 package com.engageft.showcase.feature.authentication
 
 import android.os.Handler
+import androidx.databinding.Observable
+import androidx.databinding.ObservableField
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
+import com.engageft.apptoolbox.BaseViewModel
 import io.reactivex.disposables.CompositeDisposable
 
 /**
- * TODO(joeyhutchins): ClassName
+ * LoginViewModel
  * <p>
- * TODO(joeyhutchins): Class description.
+ * ViewModel for Login screen.
  * </p>
  * Created by joeyhutchins on 10/15/18.
  * Copyright (c) 2018 Engage FT. All rights reserved.
  */
-class LoginViewModel : ViewModel() {
+class LoginViewModel : BaseViewModel() {
 
     enum class LoginNavigationEvent {
         AUTHENTICATED_ACTIVITY,
@@ -21,32 +23,64 @@ class LoginViewModel : ViewModel() {
         DISCLOSURES
     }
 
+    enum class EmailValidationError {
+        NONE,
+        INVALID_CREDENTIALS, // Generic username/password not valid error type.
+        INVALID_EMAIL // TODO(jhutchins): Error type for as-you-type formatting?
+    }
+
+    enum class PasswordValidationError {
+        NONE,
+        INVALID_CREDENTIALS // Generic username/password not valid error type.
+    }
+
     private val compositeDisposable = CompositeDisposable()
     private val handler = Handler()
 
     val navigationObservable = MutableLiveData<LoginNavigationEvent>()
 
-    var email : CharSequence = "testing 123"
-        set(value) {
-            field = value
-            validateEmail()
-        }
-    var emailError : MutableLiveData<String> = MutableLiveData()
+    val email : ObservableField<String> = ObservableField("")
+    var emailError : MutableLiveData<EmailValidationError> = MutableLiveData()
 
-    var password : CharSequence = ""
-        set(value) {
-            field = value
-            validatePassword()
-        }
-    var passwordError : MutableLiveData<String> = MutableLiveData()
+    var password : ObservableField<String> = ObservableField("")
+    var passwordError : MutableLiveData<PasswordValidationError> = MutableLiveData()
+
+    val rememberMe: ObservableField<Boolean> = ObservableField(false)
+
+    init {
+        email.addOnPropertyChangedCallback(object : Observable.OnPropertyChangedCallback(){
+            override fun onPropertyChanged(observable: Observable?, field: Int) {
+                validateEmail()
+            }
+        })
+        password.addOnPropertyChangedCallback(object : Observable.OnPropertyChangedCallback(){
+            override fun onPropertyChanged(observable: Observable?, field: Int) {
+                validatePassword()
+            }
+        })
+        rememberMe.addOnPropertyChangedCallback(object : Observable.OnPropertyChangedCallback(){
+            override fun onPropertyChanged(observable: Observable?, field: Int) {
+                // TODO(jhutchins): Maybe we don't need to do anything every time this value is
+                // changed?
+            }
+        })
+    }
 
     private fun validateEmail() {
-        val error = if (email.isNotEmpty()) "I'm not ready yet!" else ""
-        emailError.value = error
+        // TODO(jhutchins): Real validation.
+        if (email.get()!!.isNotEmpty()) {
+            emailError.value = EmailValidationError.INVALID_CREDENTIALS
+        } else {
+            emailError.value = EmailValidationError.NONE
+        }
     }
 
     private fun validatePassword() {
-        val error = if (password.isNotEmpty()) "I'm not ready yet!" else ""
-        passwordError.value = error
+        // TODO(jhutchins): Real validation.
+        if (password.get()!!.isNotEmpty()) {
+            passwordError.value = PasswordValidationError.INVALID_CREDENTIALS
+        } else {
+            passwordError.value = PasswordValidationError.NONE
+        }
     }
 }
