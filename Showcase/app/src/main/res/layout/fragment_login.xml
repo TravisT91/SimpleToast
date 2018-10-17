@@ -66,9 +66,10 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="@id/rememberMeCheckbox"
-            app:layout_constraintBottom_toBottomOf="@id/rememberMeCheckbox"
+            app:layout_constraintTop_toBottomOf="@id/loginInputForm"
+            android:minHeight="@dimen/pill_button_min_height_default"
             android:layout_marginStart="16dp"
+            android:layout_marginTop="19dp"
             android:text="@string/login_forgot_password"/>
 
         <androidx.appcompat.widget.AppCompatCheckBox
@@ -77,11 +78,11 @@
             android:id="@+id/rememberMeCheckbox"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            app:layout_constraintTop_toBottomOf="@id/loginInputForm"
+            app:layout_constraintTop_toTopOf="@id/forgotPasswordText"
+            app:layout_constraintBottom_toBottomOf="@id/forgotPasswordText"
             app:layout_constraintEnd_toEndOf="parent"
             android:button="@drawable/checkbox_selector"
             android:paddingStart="9dp"
-            android:layout_marginTop="32dp"
             android:layout_marginEnd="16dp"
             android:checked="@={viewModel.rememberMe}"
             android:text="@string/login_remember_me"/>
@@ -106,7 +107,7 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            android:layout_marginBottom="32dp">
+            android:layout_marginBottom="13dp">
             <Button
                 android:id="@+id/btn_issuer_statement"
                 android:layout_width="wrap_content"
@@ -115,6 +116,7 @@
                 android:textColor="@color/pill_button_secondary_text"
                 android:background="@null"
                 android:textAllCaps="false"
+                android:minHeight="@dimen/pill_button_min_height_default"
                 android:layout_marginEnd="8dp"
                 android:text="@string/login_issuer_statement"
                 />
@@ -133,6 +135,7 @@
                 android:textColor="@color/pill_button_secondary_text"
                 android:background="@null"
                 android:textAllCaps="false"
+                android:minHeight="@dimen/pill_button_min_height_default"
                 android:layout_marginStart="8dp"
                 android:text="@string/login_disclosures"
                 />

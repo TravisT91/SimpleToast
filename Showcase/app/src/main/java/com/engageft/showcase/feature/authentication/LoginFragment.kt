@@ -87,7 +87,7 @@ class LoginFragment : LotusFullScreenFragment() {
                     constraintSet1.clone(constraintLayout)
                     val constraintSet2 = ConstraintSet()
                     constraintSet2.clone(constraintLayout)
-                    constraintSet2.connect(R.id.loginButton, ConstraintSet.TOP, R.id.rememberMeCheckbox, ConstraintSet.BOTTOM, 0)
+                    constraintSet2.connect(R.id.loginButton, ConstraintSet.TOP, R.id.forgotPasswordText, ConstraintSet.BOTTOM, 0)
                     constraintSet2.connect(R.id.loginButton, ConstraintSet.BOTTOM, R.id.loginFooter, ConstraintSet.TOP, 0)
                     constraintSet2.centerVertically(R.id.image, 0)
 
