@@ -16,7 +16,7 @@ object EngageAppConfig : BaseAppConfig() {
         override val serviceUrl: String = if (environment == Environment.DEV) "https://appdemo.onbudget.com" else "https://app.onbudget.com"
         override val websiteUrl: String = if (environment == Environment.DEV) "https://dev-millennial.engageft.com" else "https://account.myengageft.com"
         override val ipCheckUrl: String = if (environment == Environment.DEV) "https://api.ipify.org/" else "https://api.ipify.org/"
-        override val serviceRefCode: String = "showcase"
+        override val refCode: String = "showcase"
         override val appPushParameter: String = "SHOWCASE"
     }
 
