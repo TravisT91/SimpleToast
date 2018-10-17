@@ -96,7 +96,7 @@ class LoginViewModel : BaseViewModel() {
 
     /**
      * TODO(jhutchins): Update the button state based on whether or not there is text in both email and
-     * password. We should update this probably based on smarter validation. 
+     * password. We should update this probably based on smarter validation.
      */
     private fun updateButtonState() {
         val emailText = email.get()!!
