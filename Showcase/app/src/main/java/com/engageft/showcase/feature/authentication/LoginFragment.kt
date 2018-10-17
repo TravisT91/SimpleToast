@@ -102,6 +102,9 @@ class LoginFragment : LotusFullScreenFragment() {
             }
         })
 
+        binding.btnIssuerStatement.setOnClickListener { vm.issuerStatementClicked() }
+        binding.btnDisclosures.setOnClickListener { vm.disclosuresClicked() }
+
         binding.root.systemUiVisibility = View.SYSTEM_UI_FLAG_LAYOUT_STABLE
         return binding.root
     }

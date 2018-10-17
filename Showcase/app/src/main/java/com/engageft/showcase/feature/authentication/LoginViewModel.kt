@@ -74,6 +74,21 @@ class LoginViewModel : BaseViewModel() {
         })
     }
 
+    fun issuerStatementClicked() {
+        // TODO(jhutchins): Should we directly databind this?
+        navigationObservable.value = LoginNavigationEvent.ISSUER_STATEMENT
+    }
+
+    fun disclosuresClicked() {
+        // TODO(jhutchins): Should we directly databind this?
+        navigationObservable.value = LoginNavigationEvent.DISCLOSURES
+    }
+
+    fun forgotPasswordClicked() {
+        // TODO(jhutchins): Should we directly databind this?
+        // TODO(jhutchins): Launch a dialog somehow.
+    }
+
     private fun validateEmail() {
         // TODO(jhutchins): Real validation.
         if (email.get()!!.isNotEmpty()) {
