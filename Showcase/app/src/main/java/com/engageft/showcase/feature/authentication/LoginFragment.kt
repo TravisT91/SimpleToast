@@ -4,7 +4,6 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.view.WindowManager
 import android.widget.Toast
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.constraintlayout.widget.ConstraintSet
@@ -29,12 +28,16 @@ import kotlinx.android.synthetic.main.fragment_login.*
  * Copyright (c) 2018 Engage FT. All rights reserved.
  */
 class LoginFragment : LotusFullScreenFragment() {
+    private lateinit var constraintSet: ConstraintSet
+    private lateinit var binding: FragmentLoginBinding
+
     override fun createViewModel(): BaseViewModel? {
         return ViewModelProviders.of(this).get(LoginViewModel::class.java)
     }
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        val binding = DataBindingUtil.inflate<FragmentLoginBinding>(layoutInflater, R.layout.fragment_login, container, false)
-
+        binding = DataBindingUtil.inflate(layoutInflater, R.layout.fragment_login, container, false)
+        constraintSet = ConstraintSet()
+        constraintSet.clone(binding.root as ConstraintLayout)
 
         val vm = (viewModel as LoginViewModel)
         binding.viewModel = vm
@@ -64,9 +67,7 @@ class LoginFragment : LotusFullScreenFragment() {
                 LoginViewModel.EmailValidationError.INVALID_CREDENTIALS -> emailInput.setError("I am not ready yet!") // Localize this
             }
             // Make sure error is animated
-            val transition = AutoTransition()
-            transition.duration = 250
-            TransitionManager.beginDelayedTransition(binding.root as ConstraintLayout, transition)
+            setLayoutTransitions()
         })
         vm.passwordError.observe(this, Observer { error: LoginViewModel.PasswordValidationError ->
             when (error) {
@@ -74,43 +75,29 @@ class LoginFragment : LotusFullScreenFragment() {
                 LoginViewModel.PasswordValidationError.INVALID_CREDENTIALS -> passwordInput.setError("I am not ready yet!") // Localize this
             }
             // Make sure error is animated
-            val transition = AutoTransition()
-            transition.duration = 250
-            TransitionManager.beginDelayedTransition(binding.root as ConstraintLayout, transition)
+            setLayoutTransitions()
         })
         vm.loginButtonState.observe(this, Observer { loginButtonState: LoginViewModel.LoginButtonState ->
             when (loginButtonState) {
                 LoginViewModel.LoginButtonState.SHOW -> {
                     // Animate the login button onto the screen.
                     val constraintLayout = binding.root as ConstraintLayout
-                    val constraintSet1 = ConstraintSet()
-                    constraintSet1.clone(constraintLayout)
-                    val constraintSet2 = ConstraintSet()
-                    constraintSet2.clone(constraintLayout)
-                    constraintSet2.connect(R.id.loginButton, ConstraintSet.TOP, R.id.forgotPasswordText, ConstraintSet.BOTTOM, 0)
-                    constraintSet2.connect(R.id.loginButton, ConstraintSet.BOTTOM, R.id.loginFooter, ConstraintSet.TOP, 0)
-                    constraintSet2.centerVertically(R.id.image, 0)
+                    constraintSet = ConstraintSet()
+                    constraintSet.clone(constraintLayout)
+                    constraintSet.connect(R.id.loginButton, ConstraintSet.TOP, R.id.forgotPasswordText, ConstraintSet.BOTTOM, 0)
+                    constraintSet.connect(R.id.loginButton, ConstraintSet.BOTTOM, R.id.loginFooter, ConstraintSet.TOP, 0)
 
-                    val transition = AutoTransition()
-                    transition.duration = 250
-                    TransitionManager.beginDelayedTransition(constraintLayout, transition)
-                    constraintSet2.applyTo(constraintLayout)
+                    setLayoutTransitions()
                 }
                 LoginViewModel.LoginButtonState.HIDE -> {
                     // Animate the login button off the screen.
                     val constraintLayout = binding.root as ConstraintLayout
-                    val constraintSet1 = ConstraintSet()
-                    constraintSet1.clone(constraintLayout)
-                    val constraintSet2 = ConstraintSet()
-                    constraintSet2.clone(constraintLayout)
-                    constraintSet2.connect(R.id.loginButton, ConstraintSet.TOP, constraintLayout.id, ConstraintSet.BOTTOM, 0)
-                    constraintSet2.clear(R.id.loginButton, ConstraintSet.BOTTOM)
-                    constraintSet2.centerVertically(R.id.image, 0)
+                    constraintSet = ConstraintSet()
+                    constraintSet.clone(constraintLayout)
+                    constraintSet.connect(R.id.loginButton, ConstraintSet.TOP, constraintLayout.id, ConstraintSet.BOTTOM, 0)
+                    constraintSet.clear(R.id.loginButton, ConstraintSet.BOTTOM)
 
-                    val transition = AutoTransition()
-                    transition.duration = 250
-                    TransitionManager.beginDelayedTransition(constraintLayout, transition)
-                    constraintSet2.applyTo(constraintLayout)
+                    setLayoutTransitions()
                 }
             }
         })
@@ -119,12 +106,11 @@ class LoginFragment : LotusFullScreenFragment() {
         return binding.root
     }
 
-    override fun onResume() {
-        super.onResume()
-    }
-
-    override fun onStop() {
-        super.onStop()
-        activity!!.window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_UNSPECIFIED)
+    private fun setLayoutTransitions() {
+        val constraintLayout = binding.root as ConstraintLayout
+        val transition = AutoTransition()
+        transition.duration = 250
+        TransitionManager.beginDelayedTransition(constraintLayout, transition)
+        constraintSet.applyTo(constraintLayout)
     }
 }
