@@ -105,7 +105,7 @@ class LoginViewModel : BaseViewModel() {
 
         if (emailText.isNotEmpty() && passwordText.isNotEmpty() && (currentState == LoginButtonState.HIDE)) {
             loginButtonState.value = LoginButtonState.SHOW
-        } else if (emailText.isEmpty() && passwordText.isEmpty() &&currentState == LoginButtonState.SHOW) {
+        } else if (emailText.isEmpty() || passwordText.isEmpty() &&currentState == LoginButtonState.SHOW) {
             loginButtonState.value = LoginButtonState.HIDE
         }
     }
