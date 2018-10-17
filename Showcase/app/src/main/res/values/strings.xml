@@ -10,4 +10,5 @@
     <string name="login_issuer_statement">Issuer Statement</string>
     <string name="login_footer_separator">|</string>
     <string name="login_disclosures">Disclosures</string>
+    <string name="login_submit_button">Log in</string>
 </resources>

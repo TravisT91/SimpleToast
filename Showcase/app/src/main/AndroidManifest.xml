@@ -12,7 +12,12 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/LotusTheme">
+
+        <!--If a Fragment doesn't want adjustResize, add
+            activity!!.window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN)
+            to the onCreateView method. The inverse does not work for unknown reason. -->
         <activity
+            android:windowSoftInputMode="adjustResize"
             android:name=".NotAuthenticatedActivity"
             android:theme="@style/LotusTheme">
             <intent-filter>

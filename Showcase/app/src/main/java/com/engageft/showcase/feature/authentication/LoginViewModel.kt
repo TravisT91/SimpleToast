@@ -34,6 +34,11 @@ class LoginViewModel : BaseViewModel() {
         INVALID_CREDENTIALS // Generic username/password not valid error type.
     }
 
+    enum class LoginButtonState {
+        SHOW,
+        HIDE
+    }
+
     private val compositeDisposable = CompositeDisposable()
     private val handler = Handler()
 
@@ -47,7 +52,10 @@ class LoginViewModel : BaseViewModel() {
 
     val rememberMe: ObservableField<Boolean> = ObservableField(false)
 
+    val loginButtonState: MutableLiveData<LoginButtonState> = MutableLiveData()
+
     init {
+        loginButtonState.value = LoginButtonState.HIDE
         email.addOnPropertyChangedCallback(object : Observable.OnPropertyChangedCallback(){
             override fun onPropertyChanged(observable: Observable?, field: Int) {
                 validateEmail()
@@ -73,6 +81,7 @@ class LoginViewModel : BaseViewModel() {
         } else {
             emailError.value = EmailValidationError.NONE
         }
+        updateButtonState()
     }
 
     private fun validatePassword() {
@@ -81,6 +90,23 @@ class LoginViewModel : BaseViewModel() {
             passwordError.value = PasswordValidationError.INVALID_CREDENTIALS
         } else {
             passwordError.value = PasswordValidationError.NONE
+        }
+        updateButtonState()
+    }
+
+    /**
+     * TODO(jhutchins): Update the button state based on whether or not there is text in both email and
+     * password. We should update this probably based on smarter validation. 
+     */
+    private fun updateButtonState() {
+        val emailText = email.get()!!
+        val passwordText = password.get()!!
+        val currentState = loginButtonState.value
+
+        if (emailText.isNotEmpty() && passwordText.isNotEmpty() && (currentState == LoginButtonState.HIDE)) {
+            loginButtonState.value = LoginButtonState.SHOW
+        } else if (currentState == LoginButtonState.SHOW) {
+            loginButtonState.value = LoginButtonState.HIDE
         }
     }
 }
