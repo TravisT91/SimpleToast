@@ -4,9 +4,10 @@ import com.engageft.engagekit.config.EngageKitConfig
 import com.engageft.showcase.BuildConfig
 
 /**
- * TODO(joeyhutchins): ClassName
+ * EngageAppConfig
  * <p>
- * TODO(joeyhutchins): Class description.
+ * Configuration for an EngageApplication. Feature specific configurations should be put into
+ * feature specific config files.
  * </p>
  * Created by joeyhutchins on 10/16/18.
  * Copyright (c) 2018 Engage FT. All rights reserved.
@@ -15,9 +16,11 @@ object EngageAppConfig : BaseAppConfig() {
     override val engageKitConfig: EngageKitConfig = object : EngageKitConfig(object : EngageKitConfig.EngageKitEnvironment() {
         override val serviceUrl: String = "https://appdemo.onbudget.com"
         override val websiteUrl: String = "https://dev-millennial.engageft.com"
+        override val mixPanelToken: String = ""
     }, object : EngageKitConfig.EngageKitEnvironment() {
         override val serviceUrl: String = "https://app.onbudget.com"
         override val websiteUrl: String = "https://account.myengageft.com"
+        override val mixPanelToken: String = ""
     }) {
         override val ipCheckUrl: String = "https://api.ipify.org/"
         override val refCode: String = "showcase"
