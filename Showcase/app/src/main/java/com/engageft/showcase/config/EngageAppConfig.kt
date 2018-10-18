@@ -18,6 +18,7 @@ object EngageAppConfig : BaseAppConfig() {
         override val ipCheckUrl: String = if (environment == Environment.DEV) "https://api.ipify.org/" else "https://api.ipify.org/"
         override val refCode: String = "showcase"
         override val appPushParameter: String = "SHOWCASE"
+        override val brand: String = "SHOWCASE"
     }
 
     override val environment: EngageKitConfig.Environment = engageKitConfig.environment
