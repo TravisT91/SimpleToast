@@ -101,9 +101,15 @@ class LoginFragment : LotusFullScreenFragment() {
                 }
             }
         })
+        vm.shouldShowEmailVerification.observe(this, Observer {
+            if (it.first) {
+                //TODO(aHashimi): show dialog
+            }
+        })
 
         binding.btnIssuerStatement.setOnClickListener { vm.issuerStatementClicked() }
         binding.btnDisclosures.setOnClickListener { vm.disclosuresClicked() }
+        binding.loginButton.setOnClickListener { vm.login() }
 
         binding.root.systemUiVisibility = View.SYSTEM_UI_FLAG_LAYOUT_STABLE
         return binding.root

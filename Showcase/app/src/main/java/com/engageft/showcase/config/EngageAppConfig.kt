@@ -27,11 +27,13 @@ object EngageAppConfig : BaseAppConfig() {
     }
 
     override val heapAppId: String = if (BuildConfig.DEBUG) "" else ""
+    override val requiredEmailVerification = false
 }
 
 abstract class BaseAppConfig {
     abstract val engageKitConfig: EngageKitConfig
     abstract val heapAppId: String
+    abstract val requiredEmailVerification: Boolean
 
     // Defaults:
     open val supportPhone: String = "18662392008"
