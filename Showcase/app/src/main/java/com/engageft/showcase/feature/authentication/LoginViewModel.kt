@@ -68,6 +68,9 @@ class LoginViewModel : BaseViewModel() {
     val loginButtonState: MutableLiveData<LoginButtonState> = MutableLiveData()
 
     val shouldShowEmailVerification: MutableLiveData<Pair<Boolean, String>> = MutableLiveData()
+    val promptRequireAcceptTerms: MutableLiveData<Boolean> = MutableLiveData()
+    val promptTwoFactorAuth: MutableLiveData<DeviceFailResponse> = MutableLiveData()
+    val loginErrorFromServer: MutableLiveData<Boolean> = MutableLiveData()
 
     init {
         loginButtonState.value = LoginButtonState.HIDE
@@ -108,15 +111,7 @@ class LoginViewModel : BaseViewModel() {
         // Make sure there's no stale data. Might want to keep some around, but for now, just wipe it all out.
         EngageService.getInstance().authManager.logout()
 
-        // Clear webview cookies, otherwise previously logged-in user cookies may cause conflicts
-//        BaseActivity.clearCookies(this)
-
-//        clearErrorMessage()
-//        usernameEditText.clearFocus()
-//        passwordEditText.clearFocus()
-//        hideKeyboard()
-//        showProgressOverlay()
-        //TODO(aHashimi): temp value, must be changed when working on SHOW-322
+        //TODO(aHashimi): temp value, must be changed when working on SHOW-322 RememberMe implementation
         val rememberMe = false
         progressOverlayShownObservable.value = true
         compositeDisposable.add(
@@ -127,24 +122,16 @@ class LoginViewModel : BaseViewModel() {
                                 { response ->
                                     progressOverlayShownObservable.value = false
                                     if (response.isSuccess && response is LoginResponse) {
-                                        Log.e(TAG, "response = success ")
                                         handleLoginResponse(response)
-//                                        navigationObservable.value = LoginNavigationEvent.AUTHENTICATED_ACTIVITY
                                     } else if (response is DeviceFailResponse) {
-                                        Log.e(TAG, "response = DeviceFailResponse ")
-
-//                                        hideProgressOverlay()
-//                                        showTwoFactorAuthentication(username, password, rememberMeCheckBox.isChecked(), (response as DeviceFailResponse).phone)
+                                        promptTwoFactorAuth.value = response
                                     } else {
-                                        Log.e(TAG, "response = error ")
-
-//                                        hideProgressOverlay()
-//                                        handleErrorResponse(response)
+                                        loginErrorFromServer.value = true
                                     }
                                 }, { e ->
-                            Log.e(TAG, "Error logging in: " + e.message)
                             progressOverlayShownObservable.value = false
-//                            handleThrowable(e)
+                            // TODO(aHahsimi) handle throwable
+                            loginErrorFromServer.value = false
                         })
         )
     }
@@ -157,9 +144,10 @@ class LoginViewModel : BaseViewModel() {
         this.loginResponse = loginResponse
 
         val mixpanel = EngageService.getInstance().mixpanel
-        if (!DeviceUtils.isEmulator()) {
-            mixpanel.identifyOnLogin(loginResponse)
-        }
+        //TODO(aHashimi): enable/ask runtime fingerprint permission auth to run otherwise fails to login https://engageft.atlassian.net/browse/SHOW-261
+//        if (!DeviceUtils.isEmulator()) {
+//            mixpanel.identifyOnLogin(loginResponse)
+//        }
         mixpanel.track(MixpanelEvent.mpEventLoggedIn)
 
         // Setup unique user identifier for Heap analytics
@@ -168,7 +156,7 @@ class LoginViewModel : BaseViewModel() {
             HeapUtils.identifyUser(accountInfo.accountId.toString())
         }
 
-        //TODO(aHashimi): Does it still make sense to keep this here? Must consider when working on SHOW-322
+        //TODO(aHashimi): Does it still make sense to keep this here? Must consider when working on RememberMe implementation SHOW-322
         // This is exclusively used to enable defaulting rememberMeCheckbox to on for first use,
         // and then tracking it later by whether there's a saved username, which was original logic. See
         // updateSavedUsernameAndRememberMe().
@@ -176,14 +164,11 @@ class LoginViewModel : BaseViewModel() {
 
         if (EngageAppConfig.requiredEmailVerification && LoginResponseUtils.requireEmailVerification(loginResponse)) {
             shouldShowEmailVerification.value = Pair(true, loginResponse.token)
-        } else if (!loginResponse.isRequireAcceptTerms) {
-            
+        } else if (loginResponse.isRequireAcceptTerms) {
+            promptRequireAcceptTerms.value = true
+        } else {
+            navigationObservable.value = LoginNavigationEvent.AUTHENTICATED_ACTIVITY
         }
-//        if (requireEmailVerification(loginResponse)) {
-//            showEmailVerificationRequiredDialog(loginResponse.token)
-//        } else if (!loginResponse.isRequireAcceptTerms) {
-//            finishLoginSuccess(false)
-//        }
     }
 
     private fun validateEmail() {

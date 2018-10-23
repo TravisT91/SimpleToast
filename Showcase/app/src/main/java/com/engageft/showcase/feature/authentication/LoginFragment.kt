@@ -44,6 +44,7 @@ class LoginFragment : LotusFullScreenFragment() {
         vm.navigationObservable.observe(this, Observer { splashNavigationEvent : LoginViewModel.LoginNavigationEvent ->
             val navDestinationId = when (splashNavigationEvent) {
                 LoginViewModel.LoginNavigationEvent.AUTHENTICATED_ACTIVITY -> {
+                    activity!!.finish()
                     R.id.action_login_fragment_to_authenticatedActivity
                 }
                 LoginViewModel.LoginNavigationEvent.ISSUER_STATEMENT -> {
@@ -104,6 +105,21 @@ class LoginFragment : LotusFullScreenFragment() {
         vm.shouldShowEmailVerification.observe(this, Observer {
             if (it.first) {
                 //TODO(aHashimi): show dialog
+            }
+        })
+        vm.promptRequireAcceptTerms.observe(this, Observer {
+            if (it) {
+                //TODO(aHashimi): launch screen to accept app terms
+            }
+        })
+        vm.promptTwoFactorAuth.observe(this, Observer {
+            //TODO(aHashimi): launch two-factor auth dialog
+        })
+        vm.loginErrorFromServer.observe(this, Observer {
+            if (it) {
+                // TODO(aHashimi) show an appropriate message
+            } else {
+                // TODO(aHashimi) show an app error message?
             }
         })
 
