@@ -8,7 +8,7 @@ import com.engageft.apptoolbox.view.DialogInfo
 import com.engageft.engagekit.EngageService
 import com.engageft.engagekit.utils.LoginResponseUtils
 import com.engageft.showcase.HeapUtils
-import com.engageft.showcase.config.EngageAppConfig
+import com.engageft.showcase.config.AuthenticationConfig
 import com.ob.ws.dom.DeviceFailResponse
 import com.ob.ws.dom.LoginResponse
 import io.reactivex.android.schedulers.AndroidSchedulers
@@ -133,7 +133,7 @@ class LoginViewModel : BaseViewModel() {
         // updateSavedUsernameAndRememberMe().
         EngageService.getInstance().storageManager.setUsedFirstTime()
 
-        if (EngageAppConfig.requiredEmailVerification && LoginResponseUtils.requireEmailVerification(loginResponse)) {
+        if (AuthenticationConfig.requireEmailConfirmation && LoginResponseUtils.requireEmailVerification(loginResponse)) {
             dialogInfoObservable.value = LoginDialogInfo(dialogType = LoginDialogInfo.DialogType.EMAIL_VERIFICATION)
         } else if (loginResponse.isRequireAcceptTerms) {
             navigationObservable.value = LoginNavigationEvent.ACCEPT_TERMS
