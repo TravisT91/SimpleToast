@@ -130,7 +130,7 @@ class LoginViewModel : BaseViewModel() {
                                     }
                                 }, { e ->
                             progressOverlayShownObservable.value = false
-                            // TODO(aHahsimi) handle throwable and/or show dialog?
+                            // TODO(aHahsimi) Proper error handling handle throwable and/or show dialog? https://engageft.atlassian.net/browse/SHOW-364
                             dialogInfoObservable.value = LoginDialogInfo()
                         })
         )
