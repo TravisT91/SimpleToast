@@ -42,9 +42,6 @@ class SplashFragment : LotusFullScreenFragment() {
                 SplashScreenViewModel.SplashNavigationEvent.LOGGED_IN -> {
                     R.id.action_splash_fragment_to_authenticatedActivity
                 }
-                SplashScreenViewModel.SplashNavigationEvent.FIRST_USE -> {
-                    R.id.action_splash_fragment_to_get_started_fragment
-                }
             }
             view.findNavController().navigate(navDestinationId)
         })

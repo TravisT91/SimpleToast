@@ -3,25 +3,16 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/activity_with_navigation_graph"
-    app:startDestination="@id/overview_fragment">
+    app:startDestination="@id/dashboard_fragment">
 
     <fragment
-        android:id="@+id/overview_fragment"
-        android:name="com.engageft.onetomany.OverviewFragment"
+        android:id="@+id/dashboard_fragment"
+        android:name="com.engageft.feature.DashboardFragment"
         android:label="Overview"
-        tools:layout="@layout/fragment_overview"/>
-    <fragment
-        android:id="@+id/spending_fragment"
-        android:name="com.engageft.onetomany.SpendingFragment"
-        android:label="Spending"
-        tools:layout="@layout/fragment_spending">
-        <argument
-            android:name="@string/navigation_override_up"
-            android:defaultValue="true" />
-    </fragment>
+        tools:layout="@layout/fragment_dashboard"/>
     <fragment
         android:id="@+id/budgets_fragment"
-        android:name="com.engageft.onetomany.BudgetsFragment"
+        android:name="com.engageft.feature.BudgetsFragment"
         android:label="Budgets"
         tools:layout="@layout/fragment_budgets">
         <argument
@@ -30,7 +21,7 @@
     </fragment>
     <fragment
         android:id="@+id/goals_fragment"
-        android:name="com.engageft.onetomany.GoalsFragment"
+        android:name="com.engageft.feature.GoalsFragment"
         android:label="Goals"
         tools:layout="@layout/fragment_goals">
         <action
@@ -42,7 +33,7 @@
     </fragment>
     <fragment
         android:id="@+id/account_fragment"
-        android:name="com.engageft.onetomany.AccountFragment"
+        android:name="com.engageft.feature.AccountFragment"
         android:label="Account"
         tools:layout="@layout/fragment_account">
         <argument
@@ -51,7 +42,7 @@
     </fragment>
     <fragment
         android:id="@+id/goalAdd1Fragment"
-        android:name="com.engageft.onetomany.GoalAdd1Fragment"
+        android:name="com.engageft.feature.GoalAdd1Fragment"
         android:label="GoalAdd1Fragment"
         tools:layout="@layout/fragment_goal_add_1" >
         <argument
