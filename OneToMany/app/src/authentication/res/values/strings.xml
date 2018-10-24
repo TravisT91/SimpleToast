@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Login Fragment -->
+    <string name="login_title">Log in</string>
+    <string name="login_email_label">Email</string>
+    <string name="login_password_label">Password</string>
+    <string name="login_forgot_password">Forgot password?</string>
+    <string name="login_remember_me">Remember me</string>
+    <string name="login_issuer_statement">Issuer Statement</string>
+    <string name="login_footer_separator">|</string>
+    <string name="login_disclosures">Disclosures</string>
+    <string name="login_submit_button">Log in</string>
+    <!--Login error messages-->
+    <string name="error_message_invalid_credentials">Invalid Credentials</string>
+</resources>
