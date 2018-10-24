@@ -34,6 +34,16 @@ class LoginViewModel : BaseViewModel() {
         ACCEPT_TERMS
     }
 
+    enum class EmailValidationError {
+        NONE,
+        INVALID_CREDENTIALS, // Generic username/password not valid error type.
+    }
+
+    enum class PasswordValidationError {
+        NONE,
+        INVALID_CREDENTIALS // Generic username/password not valid error type.
+    }
+
     enum class LoginButtonState {
         SHOW,
         HIDE
@@ -44,8 +54,10 @@ class LoginViewModel : BaseViewModel() {
     val navigationObservable = MutableLiveData<LoginNavigationEvent>()
 
     val email : ObservableField<String> = ObservableField("")
+    var emailError : MutableLiveData<EmailValidationError> = MutableLiveData()
 
     var password : ObservableField<String> = ObservableField("")
+    var passwordError : MutableLiveData<PasswordValidationError> = MutableLiveData()
 
     val rememberMe: ObservableField<Boolean> = ObservableField(false)
 
@@ -92,6 +104,9 @@ class LoginViewModel : BaseViewModel() {
         // Make sure there's no stale data. Might want to keep some around, but for now, just wipe it all out.
         EngageService.getInstance().authManager.logout()
 
+        // let's clear previous credentials error messages if applicable
+        clearPreviousErrorMessages()
+
         //TODO(aHashimi): temp value, must be changed when working on https://engageft.atlassian.net/browse/SHOW-322 RememberMe implementation
         val rememberMe = false
         progressOverlayShownObservable.value = true
@@ -107,8 +122,11 @@ class LoginViewModel : BaseViewModel() {
                                     } else if (response is DeviceFailResponse) {
                                         navigationObservable.value = LoginNavigationEvent.TWO_FACTOR_AUTHENTICATION
                                     } else {
-                                        dialogInfoObservable.value = LoginDialogInfo(message = response.message,
-                                                dialogType = LoginDialogInfo.DialogType.SERVER_ERROR)
+                                        // we’re not yet truly parsing error types, and instead assume any error means invalid credentials.
+                                        // so set backend error response message as "invalid credentials" for now until true error handling has been implemented.
+                                        // https://engageft.atlassian.net/browse/SHOW-364
+                                        emailError.value = EmailValidationError.INVALID_CREDENTIALS
+                                        passwordError.value = PasswordValidationError.INVALID_CREDENTIALS
                                     }
                                 }, { e ->
                             progressOverlayShownObservable.value = false
@@ -116,6 +134,19 @@ class LoginViewModel : BaseViewModel() {
                             dialogInfoObservable.value = LoginDialogInfo()
                         })
         )
+    }
+
+    private fun clearPreviousErrorMessages() {
+        emailError.value?.let {
+            if (it == EmailValidationError.INVALID_CREDENTIALS) {
+                emailError.value = EmailValidationError.NONE
+            }
+        }
+        passwordError.value?.let {
+            if (it == PasswordValidationError.INVALID_CREDENTIALS) {
+                passwordError.value = PasswordValidationError.NONE
+            }
+        }
     }
 
     private fun handleLoginResponse(loginResponse: LoginResponse) {
