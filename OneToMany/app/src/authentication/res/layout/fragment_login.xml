@@ -1,0 +1,146 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+        <variable name="viewModel" type="com.engageft.feature.LoginViewModel"/>
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/loginParent"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <androidx.appcompat.widget.AppCompatTextView
+            style="@style/Title1Quiet"
+            android:textColor="@color/structure6"
+            android:id="@+id/loginTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintVertical_bias="0.05"
+            android:text="@string/login_title"/>
+
+        <LinearLayout
+            android:id="@+id/loginInputForm"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toBottomOf="@id/loginTextView"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_marginTop="14dp"
+            android:orientation="vertical"
+            android:background="@color/white"
+            android:paddingLeft="16dp"
+            android:paddingRight="16dp">
+
+            <com.engageft.apptoolbox.view.EmailInputWithLabel
+                android:id="@+id/emailInput"
+                style="@style/TextInputWithLabelStyle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                app:labelText="@string/login_email_label"
+                app:inputText="@={viewModel.email}"/>
+
+            <com.engageft.apptoolbox.view.PasswordInputWithLabel
+                android:id="@+id/passwordInput"
+                style="@style/TextInputWithLabelStyle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                app:labelText="@string/login_password_label"
+                app:inputText="@={viewModel.password}"/>
+        </LinearLayout>
+
+        <Button
+            style="@style/Caption1Medium"
+            android:textColor="@color/pill_button_secondary_text"
+            android:background="@null"
+            android:textAllCaps="false"
+            android:id="@+id/forgotPasswordText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/loginInputForm"
+            android:minHeight="@dimen/pill_button_min_height_default"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="19dp"
+            android:text="@string/login_forgot_password"/>
+
+        <androidx.appcompat.widget.AppCompatCheckBox
+            style="@style/Caption1Medium"
+            android:textColor="@color/pill_button_secondary_text"
+            android:id="@+id/rememberMeCheckbox"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toTopOf="@id/forgotPasswordText"
+            app:layout_constraintBottom_toBottomOf="@id/forgotPasswordText"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:button="@drawable/checkbox_selector"
+            android:paddingStart="9dp"
+            android:layout_marginEnd="16dp"
+            android:checked="@={viewModel.rememberMe}"
+            android:text="@string/login_remember_me"/>
+
+        <!--This gets animated in the fragment.-->
+        <com.engageft.apptoolbox.view.PillButton
+            android:id="@+id/loginButton"
+            style="@style/ButtonPillPrimaryFilledDefault"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:text="@string/login_submit_button"/>
+
+        <LinearLayout
+            android:id="@+id/loginFooter"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_gravity="center_horizontal"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_marginBottom="13dp">
+            <Button
+                android:id="@+id/btn_issuer_statement"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                style="@style/Caption1Medium"
+                android:textColor="@color/pill_button_secondary_text"
+                android:background="@null"
+                android:textAllCaps="false"
+                android:minHeight="@dimen/pill_button_min_height_default"
+                android:layout_marginEnd="8dp"
+                android:text="@string/login_issuer_statement"
+                />
+            <androidx.appcompat.widget.AppCompatTextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                style="@style/Caption1Medium"
+                android:textColor="@color/black"
+                android:text="@string/login_footer_separator"/>
+
+            <Button
+                android:id="@+id/btn_disclosures"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                style="@style/Caption1Medium"
+                android:textColor="@color/pill_button_secondary_text"
+                android:background="@null"
+                android:textAllCaps="false"
+                android:minHeight="@dimen/pill_button_min_height_default"
+                android:layout_marginStart="8dp"
+                android:text="@string/login_disclosures"
+                />
+
+        </LinearLayout>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>
