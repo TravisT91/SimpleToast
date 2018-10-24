@@ -1,9 +1,10 @@
-package com.engageft.showcase.feature.enrollment
+package com.engageft.feature
 
 import android.os.Handler
 import androidx.lifecycle.LiveData
 import com.engageft.apptoolbox.BaseViewModel
 import com.engageft.engagekit.EngageService
+import com.engageft.showcase.feature.enrollment.EnrollmentSharedPreferencesRepo
 import com.ob.ws.dom.LoginResponse
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable

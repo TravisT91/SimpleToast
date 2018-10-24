@@ -1,4 +1,4 @@
-package com.engageft.showcase.feature.base
+package com.engageft.feature
 
 import android.content.Context
 import android.content.SharedPreferences

@@ -1,4 +1,4 @@
-package com.engageft.showcase.config
+package com.engageft.feature
 
 /**
  * AuthenticationConfig

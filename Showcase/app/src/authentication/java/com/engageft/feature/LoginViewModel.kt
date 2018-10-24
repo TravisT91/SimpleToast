@@ -1,4 +1,4 @@
-package com.engageft.showcase.feature.authentication
+package com.engageft.feature
 
 import android.os.Handler
 import androidx.databinding.Observable

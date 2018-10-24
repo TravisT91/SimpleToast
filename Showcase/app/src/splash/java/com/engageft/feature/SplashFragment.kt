@@ -1,4 +1,4 @@
-package com.engageft.showcase.feature.enrollment
+package com.engageft.feature
 
 import android.os.Bundle
 import android.view.LayoutInflater

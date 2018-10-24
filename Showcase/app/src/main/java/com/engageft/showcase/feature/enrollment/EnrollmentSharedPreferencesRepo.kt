@@ -1,6 +1,6 @@
 package com.engageft.showcase.feature.enrollment
 
-import com.engageft.showcase.feature.base.BaseSharedPreferencesRepo
+import com.engageft.feature.BaseSharedPreferencesRepo
 
 /**
  * EnrollmentSharedPreferencesRepo

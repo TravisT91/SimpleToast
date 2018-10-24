@@ -7,7 +7,7 @@
 
     <fragment
         android:id="@+id/splash_fragment"
-        android:name="com.engageft.showcase.feature.enrollment.SplashFragment"
+        android:name="com.engageft.feature.SplashFragment"
         android:label="Splash Fragment"
         tools:layout="@layout/fragment_splash">
         <action
@@ -51,7 +51,7 @@
 
     <fragment
         android:id="@+id/login_fragment"
-        android:name="com.engageft.showcase.feature.authentication.LoginFragment"
+        android:name="com.engageft.feature.LoginFragment"
         tools:layout="@layout/fragment_login">
         <action
             android:id="@+id/action_login_fragment_to_authenticatedActivity"
