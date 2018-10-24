@@ -43,8 +43,12 @@ android {
 
     sourceSets {
         main {
-            java.srcDirs = ['src/main/java', 'src/authentication/java', 'src/common/java', 'src/splash/java', 'src/dashboard/java', 'src/budgets/java', 'src/account/java', 'src/goals/java']
-            res.srcDirs = ['src/main/res', 'src/authentication/res', 'src/common/res', 'src/splash/res', 'src/dashboard/res', 'src/budgets/res', 'src/account/res', 'src/goals/res']
+            java.srcDirs = ['src/main/java', 'src/authentication/java', 'src/common/java', 'src/splash/java',
+                            'src/dashboard/java', 'src/budgets/java', 'src/account/java', 'src/goals/java',
+                            'src/help/java', 'src/cardmanagement/java']
+            res.srcDirs = ['src/main/res', 'src/authentication/res', 'src/common/res', 'src/splash/res',
+                           'src/dashboard/res', 'src/budgets/res', 'src/account/res', 'src/goals/res',
+                           'src/help/res', 'src/cardmanagement/res']
         }
     }
 }

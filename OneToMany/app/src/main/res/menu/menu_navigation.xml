@@ -19,23 +19,27 @@
 
     <item
         android:id="@+id/dashboard_fragment"
-        android:title="Overview"
+        android:title="@string/nav_drawer_title_dashboard"
         android:icon="@drawable/ic_overview"/>
     <item
         android:id="@+id/budgets_fragment"
-        android:title="Budgets"
+        android:title="@string/nav_drawer_title_budgets"
         android:icon="@drawable/ic_budgets"/>
     <item
-        android:id="@+id/spending_fragment"
-        android:title="Spending"
-        android:icon="@drawable/ic_deposits"/>
-    <item
         android:id="@+id/goals_fragment"
-        android:title="Goals"
+        android:title="@string/nav_drawer_title_goals"
         android:icon="@drawable/ic_goals"/>
     <item
+        android:id="@+id/cardManagementFragment"
+        android:title="@string/nav_drawer_title_cardmanagement"
+        android:icon="@drawable/ic_account"/>
+    <item
         android:id="@+id/account_fragment"
-        android:title="Account"
+        android:title="@string/nav_drawer_title_account"
+        android:icon="@drawable/ic_account"/>
+    <item
+        android:id="@+id/helpFragment"
+        android:title="@string/nav_drawer_title_help"
         android:icon="@drawable/ic_account"/>
 
 </menu>
