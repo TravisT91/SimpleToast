@@ -1,6 +1,7 @@
 package com.engageft.feature
 
 import android.os.Handler
+import android.util.Log
 import androidx.databinding.Observable
 import androidx.databinding.ObservableField
 import androidx.lifecycle.MutableLiveData
@@ -142,6 +143,7 @@ class LoginViewModel : BaseViewModel() {
     }
 
     private fun synchronizeTestMode(useTestMode: Boolean) {
+        Log.e("Joey", "isUsingTestMode? " +useTestMode)
         testMode.set(useTestMode)
         EngageService.getInstance().engageConfig.isUsingProdEnvironment = !useTestMode
 

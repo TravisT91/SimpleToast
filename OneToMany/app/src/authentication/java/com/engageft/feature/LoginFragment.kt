@@ -1,7 +1,6 @@
 package com.engageft.feature
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -103,14 +102,19 @@ class LoginFragment : LotusFullScreenFragment() {
                 }
             }
         })
+        // If testMode was saved as enabled, make the switch visible initially.
+        if (vm.testMode.get()!!) {
+            constraintSet.setVisibility(R.id.testSwitch, View.VISIBLE)
+            setLayoutTransitions()
+        }
+        // The gestureDetector does not enable or disable anything, it merely controls visibility of the
+        // switch so it CAN be changed. 
         gestureDetector = EasterEggGestureDetector(context!!, binding.root, object : EasterEggGestureListener {
             override fun onEasterEggActivated() {
-                Log.e("Joey", "activated")
                 constraintSet.setVisibility(R.id.testSwitch, View.VISIBLE)
                 setLayoutTransitions()
             }
             override fun onEasterEggDeactivated() {
-                Log.e("Joey", "deactivated")
                 constraintSet.setVisibility(R.id.testSwitch, View.INVISIBLE)
                 setLayoutTransitions()
             }

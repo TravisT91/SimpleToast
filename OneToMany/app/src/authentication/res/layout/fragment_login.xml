@@ -20,6 +20,7 @@
             android:text="@string/login_test_switch"
             android:textColor="@color/black"
             android:textAppearance="@style/Body"
+            android:checked="@={viewModel.testMode}"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             android:visibility="invisible"/>
