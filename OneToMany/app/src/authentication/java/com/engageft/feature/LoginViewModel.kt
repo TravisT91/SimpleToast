@@ -5,6 +5,7 @@ import androidx.databinding.Observable
 import androidx.databinding.ObservableField
 import androidx.lifecycle.MutableLiveData
 import com.engageft.apptoolbox.BaseViewModel
+import com.engageft.engagekit.EngageService
 import io.reactivex.disposables.CompositeDisposable
 
 /**
@@ -54,6 +55,8 @@ class LoginViewModel : BaseViewModel() {
 
     val loginButtonState: MutableLiveData<LoginButtonState> = MutableLiveData()
 
+    val testMode: ObservableField<Boolean> = ObservableField(false)
+
     init {
         loginButtonState.value = LoginButtonState.HIDE
         email.addOnPropertyChangedCallback(object : Observable.OnPropertyChangedCallback(){
@@ -70,6 +73,19 @@ class LoginViewModel : BaseViewModel() {
             override fun onPropertyChanged(observable: Observable?, field: Int) {
                 // TODO(jhutchins): Maybe we don't need to do anything every time this value is
                 // changed?
+            }
+        })
+        synchronizeTestMode(AuthenticationSharedPreferencesRepo.isUsingDemoServer())
+        testMode.addOnPropertyChangedCallback(object : Observable.OnPropertyChangedCallback() {
+            override fun onPropertyChanged(sender: Observable?, propertyId: Int) {
+                val useTestMode = testMode.get()!!
+                AuthenticationSharedPreferencesRepo.applyUsingDemoServer(useTestMode)
+                synchronizeTestMode(useTestMode)
+
+                updateButtonState()
+
+                // TODO(jhutchins): SHOW_268: Fingerprint auth.
+                //showFingerprintAuthIfEnrolled()
             }
         })
     }
@@ -122,6 +138,23 @@ class LoginViewModel : BaseViewModel() {
             loginButtonState.value = LoginButtonState.SHOW
         } else if (emailText.isEmpty() || passwordText.isEmpty() &&currentState == LoginButtonState.SHOW) {
             loginButtonState.value = LoginButtonState.HIDE
+        }
+    }
+
+    private fun synchronizeTestMode(useTestMode: Boolean) {
+        testMode.set(useTestMode)
+        EngageService.getInstance().engageConfig.isUsingProdEnvironment = !useTestMode
+
+        updateSavedUsernameAndRememberMe()
+    }
+
+    private fun updateSavedUsernameAndRememberMe() {
+        val useTestMode = testMode.get()!!
+        if (useTestMode) {
+            email.set(AuthenticationSharedPreferencesRepo.getDemoSavedUsername())
+        } else {
+            // TODO(jhutchins): Check is normal username saved, then set that if it is.
+            email.set("")
         }
     }
 }

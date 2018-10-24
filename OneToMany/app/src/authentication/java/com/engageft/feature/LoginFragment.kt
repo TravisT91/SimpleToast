@@ -1,6 +1,7 @@
 package com.engageft.feature
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -30,6 +31,7 @@ import kotlinx.android.synthetic.main.fragment_login.*
 class LoginFragment : LotusFullScreenFragment() {
     private lateinit var constraintSet: ConstraintSet
     private lateinit var binding: FragmentLoginBinding
+    private lateinit var gestureDetector: EasterEggGestureDetector
 
     override fun createViewModel(): BaseViewModel? {
         return ViewModelProviders.of(this).get(LoginViewModel::class.java)
@@ -99,6 +101,18 @@ class LoginFragment : LotusFullScreenFragment() {
 
                     setLayoutTransitions()
                 }
+            }
+        })
+        gestureDetector = EasterEggGestureDetector(context!!, binding.root, object : EasterEggGestureListener {
+            override fun onEasterEggActivated() {
+                Log.e("Joey", "activated")
+                constraintSet.setVisibility(R.id.testSwitch, View.VISIBLE)
+                setLayoutTransitions()
+            }
+            override fun onEasterEggDeactivated() {
+                Log.e("Joey", "deactivated")
+                constraintSet.setVisibility(R.id.testSwitch, View.INVISIBLE)
+                setLayoutTransitions()
             }
         })
 
