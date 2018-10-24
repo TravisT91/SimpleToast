@@ -1,14 +1,11 @@
 package com.engageft.showcase.feature.authentication
 
-import android.os.Handler
-import android.util.Log
 import androidx.databinding.Observable
 import androidx.databinding.ObservableField
 import androidx.lifecycle.MutableLiveData
 import com.engageft.apptoolbox.BaseViewModel
+import com.engageft.apptoolbox.view.DialogInfo
 import com.engageft.engagekit.EngageService
-import com.engageft.engagekit.tools.MixpanelEvent
-import com.engageft.engagekit.utils.DeviceUtils
 import com.engageft.engagekit.utils.LoginResponseUtils
 import com.engageft.showcase.HeapUtils
 import com.engageft.showcase.config.EngageAppConfig
@@ -27,24 +24,14 @@ import io.reactivex.schedulers.Schedulers
  * Copyright (c) 2018 Engage FT. All rights reserved.
  */
 class LoginViewModel : BaseViewModel() {
-    private val TAG = LoginViewModel::class.java.simpleName
     private var loginResponse: LoginResponse? = null
 
     enum class LoginNavigationEvent {
         AUTHENTICATED_ACTIVITY,
         ISSUER_STATEMENT,
-        DISCLOSURES
-    }
-
-    enum class EmailValidationError {
-        NONE,
-        INVALID_CREDENTIALS, // Generic username/password not valid error type.
-        INVALID_EMAIL // TODO(jhutchins): Error type for as-you-type formatting?
-    }
-
-    enum class PasswordValidationError {
-        NONE,
-        INVALID_CREDENTIALS // Generic username/password not valid error type.
+        DISCLOSURES,
+        TWO_FACTOR_AUTHENTICATION,
+        ACCEPT_TERMS
     }
 
     enum class LoginButtonState {
@@ -53,24 +40,18 @@ class LoginViewModel : BaseViewModel() {
     }
 
     private val compositeDisposable = CompositeDisposable()
-    private val handler = Handler()
 
     val navigationObservable = MutableLiveData<LoginNavigationEvent>()
 
     val email : ObservableField<String> = ObservableField("")
-    var emailError : MutableLiveData<EmailValidationError> = MutableLiveData()
 
     var password : ObservableField<String> = ObservableField("")
-    var passwordError : MutableLiveData<PasswordValidationError> = MutableLiveData()
 
     val rememberMe: ObservableField<Boolean> = ObservableField(false)
 
     val loginButtonState: MutableLiveData<LoginButtonState> = MutableLiveData()
 
-    val shouldShowEmailVerification: MutableLiveData<Pair<Boolean, String>> = MutableLiveData()
-    val promptRequireAcceptTerms: MutableLiveData<Boolean> = MutableLiveData()
-    val promptTwoFactorAuth: MutableLiveData<DeviceFailResponse> = MutableLiveData()
-    val loginErrorFromServer: MutableLiveData<Boolean> = MutableLiveData()
+    val dialogInfoObservable: MutableLiveData<LoginDialogInfo> = MutableLiveData()
 
     init {
         loginButtonState.value = LoginButtonState.HIDE
@@ -107,11 +88,11 @@ class LoginViewModel : BaseViewModel() {
         // TODO(jhutchins): Launch a dialog somehow.
     }
 
-    fun login() {
+    fun loginClicked() {
         // Make sure there's no stale data. Might want to keep some around, but for now, just wipe it all out.
         EngageService.getInstance().authManager.logout()
 
-        //TODO(aHashimi): temp value, must be changed when working on SHOW-322 RememberMe implementation
+        //TODO(aHashimi): temp value, must be changed when working on https://engageft.atlassian.net/browse/SHOW-322 RememberMe implementation
         val rememberMe = false
         progressOverlayShownObservable.value = true
         compositeDisposable.add(
@@ -124,31 +105,21 @@ class LoginViewModel : BaseViewModel() {
                                     if (response.isSuccess && response is LoginResponse) {
                                         handleLoginResponse(response)
                                     } else if (response is DeviceFailResponse) {
-                                        promptTwoFactorAuth.value = response
+                                        navigationObservable.value = LoginNavigationEvent.TWO_FACTOR_AUTHENTICATION
                                     } else {
-                                        loginErrorFromServer.value = true
+                                        dialogInfoObservable.value = LoginDialogInfo(message = response.message,
+                                                dialogType = LoginDialogInfo.DialogType.SERVER_ERROR)
                                     }
                                 }, { e ->
                             progressOverlayShownObservable.value = false
-                            // TODO(aHahsimi) handle throwable
-                            loginErrorFromServer.value = false
+                            // TODO(aHahsimi) handle throwable and/or show dialog?
+                            dialogInfoObservable.value = LoginDialogInfo()
                         })
         )
     }
 
     private fun handleLoginResponse(loginResponse: LoginResponse) {
-        // Must set Alias and create People object in order to identify the User with
-        // new non-anonymous Distinct ID.
-        // https://mixpanel.com/help/reference/android#identify
-
         this.loginResponse = loginResponse
-
-        val mixpanel = EngageService.getInstance().mixpanel
-        //TODO(aHashimi): enable/ask runtime fingerprint permission auth to run otherwise fails to login https://engageft.atlassian.net/browse/SHOW-261
-//        if (!DeviceUtils.isEmulator()) {
-//            mixpanel.identifyOnLogin(loginResponse)
-//        }
-        mixpanel.track(MixpanelEvent.mpEventLoggedIn)
 
         // Setup unique user identifier for Heap analytics
         val accountInfo = LoginResponseUtils.getCurrentAccountInfo(loginResponse)
@@ -163,31 +134,19 @@ class LoginViewModel : BaseViewModel() {
         EngageService.getInstance().storageManager.setUsedFirstTime()
 
         if (EngageAppConfig.requiredEmailVerification && LoginResponseUtils.requireEmailVerification(loginResponse)) {
-            shouldShowEmailVerification.value = Pair(true, loginResponse.token)
+            dialogInfoObservable.value = LoginDialogInfo(dialogType = LoginDialogInfo.DialogType.EMAIL_VERIFICATION)
         } else if (loginResponse.isRequireAcceptTerms) {
-            promptRequireAcceptTerms.value = true
+            navigationObservable.value = LoginNavigationEvent.ACCEPT_TERMS
         } else {
             navigationObservable.value = LoginNavigationEvent.AUTHENTICATED_ACTIVITY
         }
     }
 
     private fun validateEmail() {
-        // TODO(jhutchins): Real validation.
-        if (email.get()!!.isNotEmpty()) {
-            emailError.value = EmailValidationError.INVALID_CREDENTIALS
-        } else {
-            emailError.value = EmailValidationError.NONE
-        }
         updateButtonState()
     }
 
     private fun validatePassword() {
-        // TODO(jhutchins): Real validation.
-        if (password.get()!!.isNotEmpty()) {
-            passwordError.value = PasswordValidationError.INVALID_CREDENTIALS
-        } else {
-            passwordError.value = PasswordValidationError.NONE
-        }
         updateButtonState()
     }
 
@@ -196,14 +155,28 @@ class LoginViewModel : BaseViewModel() {
      * password. We should update this probably based on smarter validation.
      */
     private fun updateButtonState() {
-        val emailText = email.get()!!
-        val passwordText = password.get()!!
+        val emailText = email.get()
+        val passwordText = password.get()
         val currentState = loginButtonState.value
 
-        if (emailText.isNotEmpty() && passwordText.isNotEmpty() && (currentState == LoginButtonState.HIDE)) {
+        if (!emailText.isNullOrEmpty() && !passwordText.isNullOrEmpty() && (currentState == LoginButtonState.HIDE)) {
             loginButtonState.value = LoginButtonState.SHOW
-        } else if (emailText.isEmpty() || passwordText.isEmpty() &&currentState == LoginButtonState.SHOW) {
+        } else if (emailText.isNullOrEmpty() || passwordText.isNullOrEmpty() &&currentState == LoginButtonState.SHOW) {
             loginButtonState.value = LoginButtonState.HIDE
         }
     }
 }
+
+class LoginDialogInfo(title: String? = null,
+                      message: String? = null,
+                      tag: String? = null,
+                      val dialogType: DialogType = DialogType.GENERIC_ERROR) : DialogInfo(title, message, tag) {
+    enum class DialogType {
+        GENERIC_ERROR,
+        SERVER_ERROR,
+        EMAIL_VERIFICATION
+    }
+}
+
+
+
