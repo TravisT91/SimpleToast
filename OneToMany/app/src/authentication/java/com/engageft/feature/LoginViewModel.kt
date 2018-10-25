@@ -1,6 +1,5 @@
 package com.engageft.feature
 
-import android.util.Log
 import androidx.databinding.Observable
 import androidx.databinding.ObservableField
 import androidx.lifecycle.MutableLiveData
@@ -86,14 +85,16 @@ class LoginViewModel : BaseViewModel() {
             }
         })
         synchronizeTestMode(AuthenticationSharedPreferencesRepo.isUsingDemoServer())
+        updatePrefilledUsernameAndRememberMe()
         testMode.addOnPropertyChangedCallback(object : Observable.OnPropertyChangedCallback() {
             override fun onPropertyChanged(sender: Observable?, propertyId: Int) {
                 val useTestMode = testMode.get()!!
+                EngageService.getInstance().engageConfig.isUsingProdEnvironment = !useTestMode
                 AuthenticationSharedPreferencesRepo.applyUsingDemoServer(useTestMode)
                 synchronizeTestMode(useTestMode)
 
                 updateButtonState()
-
+                updatePrefilledUsernameAndRememberMe()
                 // TODO(jhutchins): SHOW_268: Fingerprint auth.
                 //showFingerprintAuthIfEnrolled()
             }
@@ -120,20 +121,18 @@ class LoginViewModel : BaseViewModel() {
         EngageService.getInstance().authManager.logout()
 
         // let's clear previous credentials error messages if applicable
-        clearPreviousErrorMessages()
+        clearErrorTexts()
 
-        //TODO(aHashimi): temp value, must be changed when working on https://engageft.atlassian.net/browse/SHOW-322 RememberMe implementation
-        val rememberMe = false
         progressOverlayShownObservable.value = true
         compositeDisposable.add(
-                EngageService.getInstance().loginObservable(email.get()!!, password.get()!!, null, rememberMe)
+                EngageService.getInstance().loginObservable(email.get()!!, password.get()!!, null)
                         .subscribeOn(Schedulers.io())
                         .observeOn(AndroidSchedulers.mainThread())
                         .subscribe(
                                 { response ->
                                     progressOverlayShownObservable.value = false
                                     if (response.isSuccess && response is LoginResponse) {
-                                        handleLoginResponse(response)
+                                        handleSuccessfulLoginResponse(response)
                                     } else if (response is DeviceFailResponse) {
                                         navigationObservable.value = LoginNavigationEvent.TWO_FACTOR_AUTHENTICATION
                                     } else {
@@ -151,7 +150,7 @@ class LoginViewModel : BaseViewModel() {
         )
     }
 
-    private fun clearPreviousErrorMessages() {
+    private fun clearErrorTexts() {
         emailError.value?.let {
             if (it == EmailValidationError.INVALID_CREDENTIALS) {
                 emailError.value = EmailValidationError.NONE
@@ -164,7 +163,7 @@ class LoginViewModel : BaseViewModel() {
         }
     }
 
-    private fun handleLoginResponse(loginResponse: LoginResponse) {
+    private fun handleSuccessfulLoginResponse(loginResponse: LoginResponse) {
         this.loginResponse = loginResponse
 
         // Setup unique user identifier for Heap analytics
@@ -173,11 +172,11 @@ class LoginViewModel : BaseViewModel() {
             HeapUtils.identifyUser(accountInfo.accountId.toString())
         }
 
-        //TODO(aHashimi): Does it still make sense to keep this here? Must consider when working on RememberMe implementation SHOW-322
-        // This is exclusively used to enable defaulting rememberMeCheckbox to on for first use,
-        // and then tracking it later by whether there's a saved username, which was original logic. See
-        // updateSavedUsernameAndRememberMe().
-        EngageService.getInstance().storageManager.setUsedFirstTime()
+        if (AuthenticationSharedPreferencesRepo.isFirstUse()) {
+            rememberMe.set(true)
+            AuthenticationSharedPreferencesRepo.applyFirstUse()
+        }
+        conditionallySaveUsername()
 
         if (AuthenticationConfig.requireEmailConfirmation && LoginResponseUtils.requireEmailVerification(loginResponse)) {
             dialogInfoObservable.value = LoginDialogInfo(dialogType = LoginDialogInfo.DialogType.EMAIL_VERIFICATION)
@@ -212,21 +211,43 @@ class LoginViewModel : BaseViewModel() {
         }
     }
 
+    /*
+    Synchronize the test mode switch with the useTestMode setting.
+     */
     private fun synchronizeTestMode(useTestMode: Boolean) {
-        Log.e("Joey", "isUsingTestMode? " +useTestMode)
         testMode.set(useTestMode)
         EngageService.getInstance().engageConfig.isUsingProdEnvironment = !useTestMode
-
-        updateSavedUsernameAndRememberMe()
     }
 
-    private fun updateSavedUsernameAndRememberMe() {
+    private fun updatePrefilledUsernameAndRememberMe() {
         val useTestMode = testMode.get()!!
         if (useTestMode) {
+            val rememberMeEnabled = AuthenticationSharedPreferencesRepo.getDemoSavedUsername().isNotEmpty()
             email.set(AuthenticationSharedPreferencesRepo.getDemoSavedUsername())
+            rememberMe.set(rememberMeEnabled)
         } else {
-            // TODO(jhutchins): Check is normal username saved, then set that if it is.
-            email.set("")
+            val rememberMeEnabled = AuthenticationSharedPreferencesRepo.getSavedUsername().isNotEmpty()
+            email.set(AuthenticationSharedPreferencesRepo.getSavedUsername())
+            rememberMe.set(rememberMeEnabled)
+        }
+    }
+
+    private fun conditionallySaveUsername() {
+        val emailAddressToSave = email.get()!!
+        val usingTestMode = testMode.get()!!
+        val saveUsername = rememberMe.get()!!
+        if (usingTestMode) {
+            if (saveUsername) {
+                AuthenticationSharedPreferencesRepo.applyDemoSavedUsername(emailAddressToSave)
+            } else {
+                AuthenticationSharedPreferencesRepo.applyDemoSavedUsername("")
+            }
+        } else {
+            if (saveUsername) {
+                AuthenticationSharedPreferencesRepo.applySavedUsername(emailAddressToSave)
+            } else {
+                AuthenticationSharedPreferencesRepo.applySavedUsername("")
+            }
         }
     }
 }
