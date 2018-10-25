@@ -1,5 +1,5 @@
 package com.engageft.feature
 
-open class DialogInfo(title: String? = null,
-                 message: String? = null,
-                 tag: String? = null)
+open class DialogInfo(var title: String? = null,
+                 var message: String? = null,
+                 var tag: String? = null)
