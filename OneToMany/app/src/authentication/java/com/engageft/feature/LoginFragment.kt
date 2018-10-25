@@ -63,16 +63,16 @@ class LoginFragment : LotusFullScreenFragment() {
         })
         vm.emailError.observe(this, Observer { error: LoginViewModel.EmailValidationError ->
             when (error) {
-                LoginViewModel.EmailValidationError.NONE -> emailInput.setErrors(null)
-                LoginViewModel.EmailValidationError.INVALID_CREDENTIALS -> emailInput.setErrors(listOf("I am not ready yet!")) // Localize this
+                LoginViewModel.EmailValidationError.NONE -> emailInput.setErrorTexts(null)
+                LoginViewModel.EmailValidationError.INVALID_CREDENTIALS -> emailInput.setErrorTexts(listOf("I am not ready yet!")) // Localize this
             }
             // Make sure error is animated
             setLayoutTransitions()
         })
         vm.passwordError.observe(this, Observer { error: LoginViewModel.PasswordValidationError ->
             when (error) {
-                LoginViewModel.PasswordValidationError.NONE -> passwordInput.setErrors(null)
-                LoginViewModel.PasswordValidationError.INVALID_CREDENTIALS -> passwordInput.setErrors(listOf("I am not ready yet!")) // Localize this
+                LoginViewModel.PasswordValidationError.NONE -> passwordInput.setErrorTexts(null)
+                LoginViewModel.PasswordValidationError.INVALID_CREDENTIALS -> passwordInput.setErrorTexts(listOf("I am not ready yet!")) // Localize this
             }
             // Make sure error is animated
             setLayoutTransitions()
