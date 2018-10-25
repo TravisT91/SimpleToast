@@ -3,32 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/navigation_graph"
-    app:startDestination="@+id/splash_fragment">
-
-    <fragment
-        android:id="@+id/splash_fragment"
-        android:name="com.engageft.feature.SplashFragment"
-        android:label="Splash Fragment"
-        tools:layout="@layout/fragment_splash">
-        <action
-            android:id="@+id/action_splash_fragment_to_get_started_fragment"
-            app:destination="@id/get_started_fragment"
-            app:clearTask="true"
-            app:popUpTo="@null"
-            app:popUpToInclusive="true" />
-        <argument
-            android:name="@string/navigation_hide_toolbar"
-            android:defaultValue="true" />
-        <argument
-            android:name="@string/navigation_view_gone"
-            android:defaultValue="true" />
-        <action
-            android:id="@+id/action_splash_fragment_to_login_fragment"
-            app:destination="@id/login_fragment" />
-        <action
-            android:id="@+id/action_splash_fragment_to_authenticatedActivity"
-            app:destination="@id/authenticatedActivity" />
-    </fragment>
+    app:startDestination="@+id/get_started_fragment">
 
     <fragment
         android:id="@+id/get_started_fragment"
