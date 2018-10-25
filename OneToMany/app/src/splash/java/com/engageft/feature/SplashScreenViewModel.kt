@@ -4,7 +4,6 @@ import android.os.Handler
 import androidx.lifecycle.LiveData
 import com.engageft.apptoolbox.BaseViewModel
 import com.engageft.engagekit.EngageService
-import com.engageft.onetomany.feature.enrollment.EnrollmentSharedPreferencesRepo
 import com.ob.ws.dom.LoginResponse
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
@@ -25,7 +24,6 @@ class SplashScreenViewModel : BaseViewModel() {
     }
     enum class SplashNavigationEvent {
         LOGGED_IN,
-        FIRST_USE,
         NOT_LOGGED_IN
     }
 
@@ -48,11 +46,12 @@ class SplashScreenViewModel : BaseViewModel() {
 
         private fun doSplashInitialize() {
             handler.postDelayed({
-                if (!EnrollmentSharedPreferencesRepo.hasSeenGetStarted()) {
-                    // TODO(jhutchins): Eventually we want to set that the user has seen the Get Started
-                    // Screen. Probably inside the GetStartedFragment after it's inflated?
-                    value = SplashNavigationEvent.FIRST_USE
-                } else {
+                // TODO(jhutchins): If we ever do enrollment, we'll need this check.
+//                if (!EnrollmentSharedPreferencesRepo.hasSeenGetStarted()) {
+//                    // TODO(jhutchins): Eventually we want to set that the user has seen the Get Started
+//                    // Screen. Probably inside the GetStartedFragment after it's inflated?
+//                    value = SplashNavigationEvent.FIRST_USE
+//                } else {
                     if (EngageService.getInstance().authManager.isLoggedIn) {
                         compositeDisposable.add(
                                 EngageService.getInstance().loginResponseAsObservable
@@ -73,7 +72,7 @@ class SplashScreenViewModel : BaseViewModel() {
                     } else {
                         value = SplashNavigationEvent.NOT_LOGGED_IN
                     }
-                }
+//                }
             }, SPLASH_SCREEN_MINIMUM_MS)
         }
     }
