@@ -4,11 +4,9 @@ import androidx.databinding.Observable
 import androidx.databinding.ObservableField
 import androidx.lifecycle.MutableLiveData
 import com.engageft.apptoolbox.BaseViewModel
-import com.engageft.apptoolbox.view.DialogInfo
 import com.engageft.engagekit.EngageService
 import com.engageft.engagekit.utils.LoginResponseUtils
 import com.engageft.onetomany.HeapUtils
-import com.engageft.feature.AuthenticationConfig
 import com.ob.ws.dom.DeviceFailResponse
 import com.ob.ws.dom.LoginResponse
 import io.reactivex.android.schedulers.AndroidSchedulers
