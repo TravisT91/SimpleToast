@@ -1,3 +1,21 @@
 <resources>
     <string name="app_name">One To Many</string>
+
+    <!-- Navigation Drawer Titles -->
+    <string name="nav_drawer_title_dashboard">Overview</string>
+    <string name="nav_drawer_title_budgets">Budgets</string>
+    <string name="nav_drawer_title_goals">Goals</string>
+    <string name="nav_drawer_title_cardmanagement">Card Management</string>
+    <string name="nav_drawer_title_account">Account</string>
+    <string name="nav_drawer_title_help">Help Center</string>
+
+    <!-- Navigation Fragment Titles -->
+    <string name="fragment_title_dashboard">Overview</string>
+    <string name="fragment_title_budgets">Budgets</string>
+    <string name="fragment_title_goals">Goals</string>
+    <string name="fragment_title_cardmanagement">Card Management</string>
+    <string name="fragment_title_account">Account</string>
+    <string name="fragment_title_help">Help Center</string>
+    <string name="fragment_title_goals_add_step_1">Adding Goal: Step 1</string>
+
 </resources>

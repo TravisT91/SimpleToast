@@ -1,13 +1,12 @@
-package com.engageft.onetomany
+package com.engageft.feature
 
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
-import androidx.navigation.findNavController
 import com.engageft.apptoolbox.BaseViewModel
 import com.engageft.apptoolbox.LotusFullScreenFragment
+import com.engageft.onetomany.R
 
 /**
  * TODO(joeyhutchins): ClassName
@@ -17,15 +16,13 @@ import com.engageft.apptoolbox.LotusFullScreenFragment
  * Created by joeyhutchins on 8/24/18.
  * Copyright (c) 2018 Engage FT. All rights reserved.
  */
-class SignUp3Fragment : LotusFullScreenFragment() {
+class DashboardFragment : LotusFullScreenFragment() {
 
     override fun createViewModel(): BaseViewModel? {
         return null
     }
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        val view = inflater.inflate(R.layout.fragment_sign_up_3, container, false)
-        val button = view.findViewById<Button>(R.id.button)
-        button.setOnClickListener{ view.findNavController().navigate(R.id.action_sign_up_3_fragment_to_login_fragment) }
+        val view = inflater.inflate(R.layout.fragment_dashboard, container, false)
         return view
     }
 }

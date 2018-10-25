@@ -45,6 +45,7 @@ class LoginFragment : LotusFullScreenFragment() {
         vm.navigationObservable.observe(this, Observer { splashNavigationEvent : LoginViewModel.LoginNavigationEvent ->
             val navDestinationId = when (splashNavigationEvent) {
                 LoginViewModel.LoginNavigationEvent.AUTHENTICATED_ACTIVITY -> {
+                    activity!!.finish()
                     R.id.action_login_fragment_to_authenticatedActivity
                 }
                 LoginViewModel.LoginNavigationEvent.ISSUER_STATEMENT -> {
@@ -57,6 +58,14 @@ class LoginFragment : LotusFullScreenFragment() {
                     Toast.makeText(context!!, "TODO: Navigate to Disclosures", Toast.LENGTH_SHORT).show()
                     0
                 }
+                LoginViewModel.LoginNavigationEvent.TWO_FACTOR_AUTHENTICATION -> {
+                    //TODO(aHashimi): https://engageft.atlassian.net/browse/SHOW-273
+                    0
+                }
+                LoginViewModel.LoginNavigationEvent.ACCEPT_TERMS -> {
+                    //TODO(aHashimi): https://engageft.atlassian.net/browse/SHOW-354
+                    0
+                }
             }
             if (navDestinationId != 0) {
                 binding.root.findNavController().navigate(navDestinationId)
@@ -65,7 +74,7 @@ class LoginFragment : LotusFullScreenFragment() {
         vm.emailError.observe(this, Observer { error: LoginViewModel.EmailValidationError ->
             when (error) {
                 LoginViewModel.EmailValidationError.NONE -> emailInput.setError("")
-                LoginViewModel.EmailValidationError.INVALID_CREDENTIALS -> emailInput.setError("I am not ready yet!") // Localize this
+                LoginViewModel.EmailValidationError.INVALID_CREDENTIALS -> emailInput.setError(getString(R.string.error_message_invalid_credentials)) // Localize this
             }
             // Make sure error is animated
             setLayoutTransitions()
@@ -73,7 +82,7 @@ class LoginFragment : LotusFullScreenFragment() {
         vm.passwordError.observe(this, Observer { error: LoginViewModel.PasswordValidationError ->
             when (error) {
                 LoginViewModel.PasswordValidationError.NONE -> passwordInput.setError("")
-                LoginViewModel.PasswordValidationError.INVALID_CREDENTIALS -> passwordInput.setError("I am not ready yet!") // Localize this
+                LoginViewModel.PasswordValidationError.INVALID_CREDENTIALS -> passwordInput.setError(getString(R.string.error_message_invalid_credentials)) // Localize this
             }
             // Make sure error is animated
             setLayoutTransitions()
@@ -114,14 +123,33 @@ class LoginFragment : LotusFullScreenFragment() {
                 constraintSet.setVisibility(R.id.testSwitch, View.VISIBLE)
                 setLayoutTransitions()
             }
+
             override fun onEasterEggDeactivated() {
                 constraintSet.setVisibility(R.id.testSwitch, View.INVISIBLE)
                 setLayoutTransitions()
             }
         })
+        vm.dialogInfoObservable.observe(this, Observer {
+            when (it.dialogType) {
+                LoginDialogInfo.DialogType.GENERIC_ERROR -> {
+                    //TODO(aHashimi): show dialog
+                }
+                LoginDialogInfo.DialogType.SERVER_ERROR -> {
+                    // TODO(aHashimi): https@//engageft.atlassian.net/browse/SHOW-364
+                    // check title
+                    if (!it.message.isNullOrEmpty()) {
+                        // TODO(aHashimi): show dialog with message
+                    }
+                }
+                LoginDialogInfo.DialogType.EMAIL_VERIFICATION -> {
+                    //TODO(aHashimi): show dialog: https://engageft.atlassian.net/browse/SHOW-261
+                }
+            }
+        })
 
         binding.btnIssuerStatement.setOnClickListener { vm.issuerStatementClicked() }
         binding.btnDisclosures.setOnClickListener { vm.disclosuresClicked() }
+        binding.loginButton.setOnClickListener { vm.loginClicked() }
 
         binding.root.systemUiVisibility = View.SYSTEM_UI_FLAG_LAYOUT_STABLE
         return binding.root
