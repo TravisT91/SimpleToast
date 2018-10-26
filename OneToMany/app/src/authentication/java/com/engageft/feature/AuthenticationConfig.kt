@@ -9,5 +9,5 @@ package com.engageft.feature
  * Copyright (c) 2018 Engage FT. All rights reserved.
  */
 object AuthenticationConfig {
-    val requireEmailConfirmation: Boolean = true
+    val requireEmailConfirmation: Boolean = false
 }
