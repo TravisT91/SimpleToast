@@ -4,7 +4,6 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.navigation.findNavController
@@ -30,8 +29,6 @@ class SplashFragment : LotusFullScreenFragment() {
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val view = inflater.inflate(R.layout.fragment_splash, container, false)
 
-        (activity as? AppCompatActivity)!!.supportActionBar?.hide()
-
         (viewModel as SplashScreenViewModel).navigationObservable.observe(this, Observer { splashNavigationEvent : SplashScreenViewModel.SplashNavigationEvent ->
             val navDestinationId = when (splashNavigationEvent) {
                 SplashScreenViewModel.SplashNavigationEvent.NOT_LOGGED_IN -> {
@@ -41,8 +38,8 @@ class SplashFragment : LotusFullScreenFragment() {
                     R.id.action_splashFragment_to_notAuthenticatedActivity
                 }
             }
-            activity!!.finish()
             view.findNavController().navigate(navDestinationId)
+            activity!!.finish()
         })
 
         return view
