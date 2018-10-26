@@ -35,14 +35,13 @@ class SplashFragment : LotusFullScreenFragment() {
         (viewModel as SplashScreenViewModel).navigationObservable.observe(this, Observer { splashNavigationEvent : SplashScreenViewModel.SplashNavigationEvent ->
             val navDestinationId = when (splashNavigationEvent) {
                 SplashScreenViewModel.SplashNavigationEvent.NOT_LOGGED_IN -> {
-                    activity!!.finish()
                     R.id.action_splashFragment_to_notAuthenticatedActivity
                 }
                 SplashScreenViewModel.SplashNavigationEvent.LOGGED_IN -> {
-                    activity!!.finish()
                     R.id.action_splashFragment_to_notAuthenticatedActivity
                 }
             }
+            activity!!.finish()
             view.findNavController().navigate(navDestinationId)
         })
 
