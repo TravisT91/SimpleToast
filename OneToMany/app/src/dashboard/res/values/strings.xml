@@ -19,4 +19,6 @@
     <string name="OVERVIEW_DEPOSITS">DEPOSITS</string>
 
     <string name="OPTIONS_MENU_NOTIFICATIONS">Notifications</string>
+    <string name="TRANSACTIONS_NONE">No Transactions</string>
+    <string name="TRANSACTIONS_PAY">Pay</string>
 </resources>
