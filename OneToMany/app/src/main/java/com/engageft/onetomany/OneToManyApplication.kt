@@ -13,6 +13,9 @@ import com.engageft.onetomany.config.EngageAppConfig
  * Copyright (c) 2018 Engage FT. All rights reserved.
  */
 class OneToManyApplication : LotusApplication() {
+    override val navigationType: NavigationType
+        get() = NavigationType.SIDE
+
     companion object {
         lateinit var sInstance: OneToManyApplication
     }
