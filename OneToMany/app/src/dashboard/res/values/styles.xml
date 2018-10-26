@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="OverviewCardItemTextView" parent="Body">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textColor">@color/structure6</item>
+    </style>
+
+    <style name="OverviewBalanceAmountTextView" parent="LargeTitleQuiet">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textColor">@color/structure6</item>
+    </style>
+
+    <style name="OverviewBalanceLabelTextView" parent="Body">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textColor">@color/structure5</item>
+    </style>
+
+    <style name="TabLayoutTextStyle" parent="BodyLoud">
+        <item name="android:textColor">@color/structure6</item>
+        <item name="android:textAllCaps">true</item>
+    </style>
+</resources>

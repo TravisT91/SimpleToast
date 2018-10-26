@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="OVERVIEW_LOADING_CARD_DETAILS">Updating...</string>
+    <string name="OVERVIEW_SHOW_CARD_DETAILS">Show card details</string>
+    <string name="OVERVIEW_HIDE_CARD_DETAILS">Hide card details</string>
+    <string name="OVERVIEW_CARD_ERROR_DIALOG_MESSAGE">There was an error updating card info. Please try again.</string>
+    <string name="OVERVIEW_DIRECT_DEPOSIT_INFO">Direct deposit info</string>
+    <string name="OVERVIEW_ADD_MONEY">Add money</string>
+    <string name="OVERVIEW_LOCK_MY_CARD">Lock my card</string>
+    <string name="OVERVIEW_UNLOCK_MY_CARD">Unlock my card</string>
+    <string name="OVERVIEW_CHANGE_PIN">Change PIN</string>
+    <string name="OVERVIEW_CHANGE_PIN_ICON">* * *</string>
+
+    <string name="OVERVIEW_SPENDING_BALANCE">Spending balance</string>
+    <string name="OVERVIEW_GOALS_BALANCE">Goals balance</string>
+    <string name="OVERVIEW_BALANCE_LOADING">--</string>
+    <string name="OVERVIEW_BALANCE_ERROR">\?</string>
+    <string name="OVERVIEW_ALL_ACTIVITY">ALL ACTIVITY</string>
+    <string name="OVERVIEW_DEPOSITS">DEPOSITS</string>
+
+    <string name="OPTIONS_MENU_NOTIFICATIONS">Notifications</string>
+</resources>

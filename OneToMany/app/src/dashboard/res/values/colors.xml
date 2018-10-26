@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="overview_obscuring_overlay">#99000000</color>
+    <color name="overview_tinted_background">@color/structure1</color>
+    <color name="overview_cardview_background">@color/structure1</color>
+</resources>

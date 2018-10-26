@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <integer name="overview_disclose_hide_duration_ms">250</integer>
+    <!-- it looks nice if the button rotation takes a little longer to complete than the
+    expand/contract animations, as it draws attention to the fact that the button has now
+    changed and does something else. Otherwise the rotation can get lost because the button
+    is moving at the same time it is rotating. -->
+    <integer name="overview_button_rotation_duration_ms">400</integer>
+</resources>

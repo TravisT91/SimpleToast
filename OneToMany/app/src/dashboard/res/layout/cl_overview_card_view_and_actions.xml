@@ -1,0 +1,158 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="@dimen/overview_card_and_actions_height_collapsed"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:background="@color/overview_cardview_background">
+
+    <com.engageft.apptoolbox.view.ProductCardView
+        android:id="@+id/cv_overview"
+        android:layout_width="wrap_content"
+        android:layout_height="@dimen/overview_card_view_height"
+        android:layout_marginTop="@dimen/overview_card_view_top_margin_collapsed"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:providerLogoDrawable="@drawable/cardview_provider_logo_mc"
+        app:condensed="true"
+        android:elevation="8dp"/>
+
+    <LinearLayout
+        android:id="@+id/layout_card_actions"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:paddingLeft="16dp"
+        android:paddingStart="16dp"
+        android:layout_marginTop="@dimen/overview_actions_top_margin"
+        android:paddingRight="16dp"
+        android:paddingEnd="16dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        >
+
+        <LinearLayout
+            android:id="@+id/overviewShowHideCardDetailsLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <androidx.appcompat.widget.AppCompatImageView
+                android:layout_width="@dimen/overview_action_item_icon_width"
+                android:layout_height="@dimen/overview_action_item_icon_height"
+                android:scaleType="center"
+                android:layout_marginEnd="8dp"
+                app:srcCompat="@drawable/ic_overview_card"/>
+
+            <TextView
+                android:id="@+id/overviewShowHideCardDetailsLabel"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                style="@style/OverviewCardItemTextView"
+                android:text="@string/OVERVIEW_SHOW_CARD_DETAILS"
+                android:gravity="center_vertical"/>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/overviewDirectDepositInfoLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginTop="16dp">
+
+            <androidx.appcompat.widget.AppCompatImageView
+                android:layout_width="@dimen/overview_action_item_icon_width"
+                android:layout_height="@dimen/overview_action_item_icon_height"
+                android:scaleType="center"
+                android:layout_marginEnd="8dp"
+                app:srcCompat="@drawable/ic_overview_direct_deposit"/>
+
+            <TextView
+                android:id="@+id/overviewDirectDepositInfoLabel"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                style="@style/OverviewCardItemTextView"
+                android:text="@string/OVERVIEW_DIRECT_DEPOSIT_INFO"
+                android:gravity="center_vertical"/>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/overviewAddMoneyLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginTop="16dp">
+
+            <androidx.appcompat.widget.AppCompatImageView
+                android:layout_width="@dimen/overview_action_item_icon_width"
+                android:layout_height="@dimen/overview_action_item_icon_height"
+                android:scaleType="center"
+                android:layout_marginEnd="8dp"
+                app:srcCompat="@drawable/ic_overview_plus"/>
+
+            <TextView
+                android:id="@+id/overviewAddMoneyLabel"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                style="@style/OverviewCardItemTextView"
+                android:text="@string/OVERVIEW_ADD_MONEY"
+                android:gravity="center_vertical"/>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/overviewLockUnlockCardLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginTop="16dp">
+
+            <androidx.appcompat.widget.AppCompatImageView
+                android:layout_width="@dimen/overview_action_item_icon_width"
+                android:layout_height="@dimen/overview_action_item_icon_height"
+                android:scaleType="center"
+                android:layout_marginEnd="8dp"
+                app:srcCompat="@drawable/ic_overview_lock"/>
+
+            <TextView
+                android:id="@+id/overviewLockUnlockCardLabel"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                style="@style/OverviewCardItemTextView"
+                tools:text="@string/OVERVIEW_LOCK_MY_CARD"
+                android:gravity="center_vertical"/>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/overviewChangePinLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginTop="16dp">
+
+            <TextView
+                android:layout_width="@dimen/overview_action_item_icon_width"
+                android:layout_height="@dimen/overview_action_item_icon_height"
+                style="@style/OverviewCardItemTextView"
+                android:layout_marginEnd="8dp"
+                android:text="@string/OVERVIEW_CHANGE_PIN_ICON"
+                android:gravity="center_horizontal"/>
+
+            <TextView
+                android:id="@+id/overviewChangePinLabel"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                style="@style/OverviewCardItemTextView"
+                android:text="@string/OVERVIEW_CHANGE_PIN"
+                android:gravity="center_vertical"/>
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

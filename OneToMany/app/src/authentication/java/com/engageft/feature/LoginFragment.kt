@@ -136,6 +136,12 @@ class LoginFragment : LotusFullScreenFragment() {
         return binding.root
     }
 
+    override fun onResume() {
+        super.onResume()
+
+        binding.root.findNavController().navigate(R.id.action_login_fragment_to_authenticatedActivity)
+    }
+
     private fun setLayoutTransitions() {
         val constraintLayout = binding.root as ConstraintLayout
         val transition = AutoTransition()
