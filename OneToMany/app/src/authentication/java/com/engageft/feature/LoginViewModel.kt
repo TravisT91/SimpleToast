@@ -32,7 +32,7 @@ class LoginViewModel : BaseViewModel() {
         ACCEPT_TERMS
     }
 
-    enum class EmailValidationError {
+    enum class UsernameValidationError {
         NONE,
         INVALID_CREDENTIALS, // Generic username/password not valid error type.
     }
@@ -51,8 +51,8 @@ class LoginViewModel : BaseViewModel() {
 
     val navigationObservable = MutableLiveData<LoginNavigationEvent>()
 
-    val email : ObservableField<String> = ObservableField("")
-    var emailError : MutableLiveData<EmailValidationError> = MutableLiveData()
+    val username : ObservableField<String> = ObservableField("")
+    var usernameError : MutableLiveData<UsernameValidationError> = MutableLiveData()
 
     var password : ObservableField<String> = ObservableField("")
     var passwordError : MutableLiveData<PasswordValidationError> = MutableLiveData()
@@ -61,11 +61,14 @@ class LoginViewModel : BaseViewModel() {
 
     val loginButtonState: MutableLiveData<LoginButtonState> = MutableLiveData()
 
+    val testMode: ObservableField<Boolean> = ObservableField(false)
+
     val dialogInfoObservable: MutableLiveData<LoginDialogInfo> = MutableLiveData()
+
 
     init {
         loginButtonState.value = LoginButtonState.HIDE
-        email.addOnPropertyChangedCallback(object : Observable.OnPropertyChangedCallback(){
+        username.addOnPropertyChangedCallback(object : Observable.OnPropertyChangedCallback(){
             override fun onPropertyChanged(observable: Observable?, field: Int) {
                 validateEmail()
             }
@@ -81,6 +84,25 @@ class LoginViewModel : BaseViewModel() {
                 // changed?
             }
         })
+        synchronizeTestMode(AuthenticationSharedPreferencesRepo.isUsingDemoServer())
+        updatePrefilledUsernameAndRememberMe()
+        testMode.addOnPropertyChangedCallback(object : Observable.OnPropertyChangedCallback() {
+            override fun onPropertyChanged(sender: Observable?, propertyId: Int) {
+                val useTestMode = testMode.get()!!
+                EngageService.getInstance().engageConfig.isUsingProdEnvironment = !useTestMode
+                AuthenticationSharedPreferencesRepo.applyUsingDemoServer(useTestMode)
+                synchronizeTestMode(useTestMode)
+
+                updateButtonState()
+                updatePrefilledUsernameAndRememberMe()
+                // TODO(jhutchins): SHOW_268: Fingerprint auth.
+                //showFingerprintAuthIfEnrolled()
+            }
+        })
+        if (AuthenticationSharedPreferencesRepo.isFirstUse()) {
+            rememberMe.set(true)
+            AuthenticationSharedPreferencesRepo.clearFirstUse()
+        }
     }
 
     fun issuerStatementClicked() {
@@ -103,27 +125,25 @@ class LoginViewModel : BaseViewModel() {
         EngageService.getInstance().authManager.logout()
 
         // let's clear previous credentials error messages if applicable
-        clearPreviousErrorMessages()
+        clearErrorTexts()
 
-        //TODO(aHashimi): temp value, must be changed when working on https://engageft.atlassian.net/browse/SHOW-322 RememberMe implementation
-        val rememberMe = false
         progressOverlayShownObservable.value = true
         compositeDisposable.add(
-                EngageService.getInstance().loginObservable(email.get()!!, password.get()!!, null, rememberMe)
+                EngageService.getInstance().loginObservable(username.get()!!, password.get()!!, null)
                         .subscribeOn(Schedulers.io())
                         .observeOn(AndroidSchedulers.mainThread())
                         .subscribe(
                                 { response ->
                                     progressOverlayShownObservable.value = false
                                     if (response.isSuccess && response is LoginResponse) {
-                                        handleLoginResponse(response)
+                                        handleSuccessfulLoginResponse(response)
                                     } else if (response is DeviceFailResponse) {
                                         navigationObservable.value = LoginNavigationEvent.TWO_FACTOR_AUTHENTICATION
                                     } else {
                                         // we’re not yet truly parsing error types, and instead assume any error means invalid credentials.
                                         // so set backend error response message as "invalid credentials" for now until true error handling has been implemented.
                                         // https://engageft.atlassian.net/browse/SHOW-364
-                                        emailError.value = EmailValidationError.INVALID_CREDENTIALS
+                                        usernameError.value = UsernameValidationError.INVALID_CREDENTIALS
                                         passwordError.value = PasswordValidationError.INVALID_CREDENTIALS
                                     }
                                 }, { e ->
@@ -134,10 +154,10 @@ class LoginViewModel : BaseViewModel() {
         )
     }
 
-    private fun clearPreviousErrorMessages() {
-        emailError.value?.let {
-            if (it == EmailValidationError.INVALID_CREDENTIALS) {
-                emailError.value = EmailValidationError.NONE
+    private fun clearErrorTexts() {
+        usernameError.value?.let {
+            if (it == UsernameValidationError.INVALID_CREDENTIALS) {
+                usernameError.value = UsernameValidationError.NONE
             }
         }
         passwordError.value?.let {
@@ -147,7 +167,7 @@ class LoginViewModel : BaseViewModel() {
         }
     }
 
-    private fun handleLoginResponse(loginResponse: LoginResponse) {
+    private fun handleSuccessfulLoginResponse(loginResponse: LoginResponse) {
         this.loginResponse = loginResponse
 
         // Setup unique user identifier for Heap analytics
@@ -156,11 +176,7 @@ class LoginViewModel : BaseViewModel() {
             HeapUtils.identifyUser(accountInfo.accountId.toString())
         }
 
-        //TODO(aHashimi): Does it still make sense to keep this here? Must consider when working on RememberMe implementation SHOW-322
-        // This is exclusively used to enable defaulting rememberMeCheckbox to on for first use,
-        // and then tracking it later by whether there's a saved username, which was original logic. See
-        // updateSavedUsernameAndRememberMe().
-        EngageService.getInstance().storageManager.setUsedFirstTime()
+        conditionallySaveUsername()
 
         if (AuthenticationConfig.requireEmailConfirmation && LoginResponseUtils.requireEmailVerification(loginResponse)) {
             dialogInfoObservable.value = LoginDialogInfo(dialogType = LoginDialogInfo.DialogType.EMAIL_VERIFICATION)
@@ -180,18 +196,58 @@ class LoginViewModel : BaseViewModel() {
     }
 
     /**
-     * TODO(jhutchins): Update the button state based on whether or not there is text in both email and
+     * TODO(jhutchins): Update the button state based on whether or not there is text in both username and
      * password. We should update this probably based on smarter validation.
      */
     private fun updateButtonState() {
-        val emailText = email.get()
+        val usernameText = username.get()
         val passwordText = password.get()
         val currentState = loginButtonState.value
 
-        if (!emailText.isNullOrEmpty() && !passwordText.isNullOrEmpty() && (currentState == LoginButtonState.HIDE)) {
+        if (!usernameText.isNullOrEmpty() && !passwordText.isNullOrEmpty() && (currentState == LoginButtonState.HIDE)) {
             loginButtonState.value = LoginButtonState.SHOW
-        } else if (emailText.isNullOrEmpty() || passwordText.isNullOrEmpty() &&currentState == LoginButtonState.SHOW) {
+        } else if (usernameText.isNullOrEmpty() || passwordText.isNullOrEmpty() &&currentState == LoginButtonState.SHOW) {
             loginButtonState.value = LoginButtonState.HIDE
+        }
+    }
+
+    /*
+    Synchronize the test mode switch with the useTestMode setting.
+     */
+    private fun synchronizeTestMode(useTestMode: Boolean) {
+        testMode.set(useTestMode)
+        EngageService.getInstance().engageConfig.isUsingProdEnvironment = !useTestMode
+    }
+
+    private fun updatePrefilledUsernameAndRememberMe() {
+        val useTestMode = testMode.get()!!
+        if (useTestMode) {
+            val rememberMeEnabled = AuthenticationSharedPreferencesRepo.getDemoSavedUsername().isNotEmpty()
+            username.set(AuthenticationSharedPreferencesRepo.getDemoSavedUsername())
+            rememberMe.set(rememberMeEnabled)
+        } else {
+            val rememberMeEnabled = AuthenticationSharedPreferencesRepo.getSavedUsername().isNotEmpty()
+            username.set(AuthenticationSharedPreferencesRepo.getSavedUsername())
+            rememberMe.set(rememberMeEnabled)
+        }
+    }
+
+    private fun conditionallySaveUsername() {
+        val usernameToSave = username.get()!!
+        val usingTestMode = testMode.get()!!
+        val saveUsername = rememberMe.get()!!
+        if (usingTestMode) {
+            if (saveUsername) {
+                AuthenticationSharedPreferencesRepo.applyDemoSavedUsername(usernameToSave)
+            } else {
+                AuthenticationSharedPreferencesRepo.applyDemoSavedUsername("")
+            }
+        } else {
+            if (saveUsername) {
+                AuthenticationSharedPreferencesRepo.applySavedUsername(usernameToSave)
+            } else {
+                AuthenticationSharedPreferencesRepo.applySavedUsername("")
+            }
         }
     }
 }
@@ -206,6 +262,3 @@ class LoginDialogInfo(title: String? = null,
         EMAIL_VERIFICATION
     }
 }
-
-
-
