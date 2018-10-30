@@ -30,6 +30,7 @@ import kotlinx.android.synthetic.main.fragment_login.*
 class LoginFragment : LotusFullScreenFragment() {
     private lateinit var constraintSet: ConstraintSet
     private lateinit var binding: FragmentLoginBinding
+    private lateinit var gestureDetector: EasterEggGestureDetector
 
     override fun createViewModel(): BaseViewModel? {
         return ViewModelProviders.of(this).get(LoginViewModel::class.java)
@@ -70,10 +71,10 @@ class LoginFragment : LotusFullScreenFragment() {
                 binding.root.findNavController().navigate(navDestinationId)
             }
         })
-        vm.emailError.observe(this, Observer { error: LoginViewModel.EmailValidationError ->
+        vm.usernameError.observe(this, Observer { error: LoginViewModel.UsernameValidationError ->
             when (error) {
-                LoginViewModel.EmailValidationError.NONE -> emailInput.setErrorTexts(null)
-                LoginViewModel.EmailValidationError.INVALID_CREDENTIALS -> emailInput.setErrorTexts(listOf(getString(R.string.error_message_invalid_credentials)))
+                LoginViewModel.UsernameValidationError.NONE -> usernameInput.setErrorTexts(null)
+                LoginViewModel.UsernameValidationError.INVALID_CREDENTIALS -> usernameInput.setErrorTexts(listOf(getString(R.string.error_message_invalid_credentials)))
             }
             // Make sure error is animated
             setLayoutTransitions()
@@ -108,6 +109,24 @@ class LoginFragment : LotusFullScreenFragment() {
 
                     setLayoutTransitions()
                 }
+            }
+        })
+        // If testMode was saved as enabled, make the switch visible initially.
+        if (vm.testMode.get()!!) {
+            constraintSet.setVisibility(R.id.testSwitch, View.VISIBLE)
+            setLayoutTransitions()
+        }
+        // The gestureDetector does not enable or disable anything, it merely controls visibility of the
+        // switch so it CAN be changed. 
+        gestureDetector = EasterEggGestureDetector(context!!, binding.root, object : EasterEggGestureListener {
+            override fun onEasterEggActivated() {
+                constraintSet.setVisibility(R.id.testSwitch, View.VISIBLE)
+                setLayoutTransitions()
+            }
+
+            override fun onEasterEggDeactivated() {
+                constraintSet.setVisibility(R.id.testSwitch, View.INVISIBLE)
+                setLayoutTransitions()
             }
         })
         vm.dialogInfoObservable.observe(this, Observer {
