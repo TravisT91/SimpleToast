@@ -52,7 +52,7 @@
             android:paddingRight="16dp">
 
             <com.engageft.apptoolbox.view.EmailInputWithLabel
-                android:id="@+id/emailInput"
+                android:id="@+id/usernameInput"
                 style="@style/TextInputWithLabelStyle"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"

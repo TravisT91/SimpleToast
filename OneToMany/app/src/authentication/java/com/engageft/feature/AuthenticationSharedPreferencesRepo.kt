@@ -1,9 +1,9 @@
 package com.engageft.feature
 
 /**
- * TODO(joeyhutchins): ClassName
+ * AuthenticationSharedPreferencesRepo
  * <p>
- * TODO(joeyhutchins): Class description.
+ * Saved SharedPreferences for Authentication feature.
  * </p>
  * Created by joeyhutchins on 10/24/18.
  * Copyright (c) 2018 Engage FT. All rights reserved.
@@ -40,7 +40,7 @@ object AuthenticationSharedPreferencesRepo : BaseSharedPreferencesRepo() {
         return sharedPreferences.getBoolean(IS_FIRST_USE, IS_FIRST_USE_DEF)
     }
 
-    fun applyFirstUse() {
+    fun clearFirstUse() {
         sharedPreferences.edit().putBoolean(IS_FIRST_USE, false).apply()
     }
 

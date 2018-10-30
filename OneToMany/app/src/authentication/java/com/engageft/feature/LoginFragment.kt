@@ -71,10 +71,10 @@ class LoginFragment : LotusFullScreenFragment() {
                 binding.root.findNavController().navigate(navDestinationId)
             }
         })
-        vm.emailError.observe(this, Observer { error: LoginViewModel.EmailValidationError ->
+        vm.usernameError.observe(this, Observer { error: LoginViewModel.UsernameValidationError ->
             when (error) {
-                LoginViewModel.EmailValidationError.NONE -> emailInput.setError("")
-                LoginViewModel.EmailValidationError.INVALID_CREDENTIALS -> emailInput.setError(getString(R.string.error_message_invalid_credentials)) // Localize this
+                LoginViewModel.UsernameValidationError.NONE -> usernameInput.setError("")
+                LoginViewModel.UsernameValidationError.INVALID_CREDENTIALS -> usernameInput.setError(getString(R.string.error_message_invalid_credentials)) // Localize this
             }
             // Make sure error is animated
             setLayoutTransitions()

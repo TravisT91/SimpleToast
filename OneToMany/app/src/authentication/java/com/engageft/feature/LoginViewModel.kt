@@ -32,7 +32,7 @@ class LoginViewModel : BaseViewModel() {
         ACCEPT_TERMS
     }
 
-    enum class EmailValidationError {
+    enum class UsernameValidationError {
         NONE,
         INVALID_CREDENTIALS, // Generic username/password not valid error type.
     }
@@ -51,8 +51,8 @@ class LoginViewModel : BaseViewModel() {
 
     val navigationObservable = MutableLiveData<LoginNavigationEvent>()
 
-    val email : ObservableField<String> = ObservableField("")
-    var emailError : MutableLiveData<EmailValidationError> = MutableLiveData()
+    val username : ObservableField<String> = ObservableField("")
+    var usernameError : MutableLiveData<UsernameValidationError> = MutableLiveData()
 
     var password : ObservableField<String> = ObservableField("")
     var passwordError : MutableLiveData<PasswordValidationError> = MutableLiveData()
@@ -68,7 +68,7 @@ class LoginViewModel : BaseViewModel() {
 
     init {
         loginButtonState.value = LoginButtonState.HIDE
-        email.addOnPropertyChangedCallback(object : Observable.OnPropertyChangedCallback(){
+        username.addOnPropertyChangedCallback(object : Observable.OnPropertyChangedCallback(){
             override fun onPropertyChanged(observable: Observable?, field: Int) {
                 validateEmail()
             }
@@ -99,6 +99,10 @@ class LoginViewModel : BaseViewModel() {
                 //showFingerprintAuthIfEnrolled()
             }
         })
+        if (AuthenticationSharedPreferencesRepo.isFirstUse()) {
+            rememberMe.set(true)
+            AuthenticationSharedPreferencesRepo.clearFirstUse()
+        }
     }
 
     fun issuerStatementClicked() {
@@ -125,7 +129,7 @@ class LoginViewModel : BaseViewModel() {
 
         progressOverlayShownObservable.value = true
         compositeDisposable.add(
-                EngageService.getInstance().loginObservable(email.get()!!, password.get()!!, null)
+                EngageService.getInstance().loginObservable(username.get()!!, password.get()!!, null)
                         .subscribeOn(Schedulers.io())
                         .observeOn(AndroidSchedulers.mainThread())
                         .subscribe(
@@ -139,7 +143,7 @@ class LoginViewModel : BaseViewModel() {
                                         // we’re not yet truly parsing error types, and instead assume any error means invalid credentials.
                                         // so set backend error response message as "invalid credentials" for now until true error handling has been implemented.
                                         // https://engageft.atlassian.net/browse/SHOW-364
-                                        emailError.value = EmailValidationError.INVALID_CREDENTIALS
+                                        usernameError.value = UsernameValidationError.INVALID_CREDENTIALS
                                         passwordError.value = PasswordValidationError.INVALID_CREDENTIALS
                                     }
                                 }, { e ->
@@ -151,9 +155,9 @@ class LoginViewModel : BaseViewModel() {
     }
 
     private fun clearErrorTexts() {
-        emailError.value?.let {
-            if (it == EmailValidationError.INVALID_CREDENTIALS) {
-                emailError.value = EmailValidationError.NONE
+        usernameError.value?.let {
+            if (it == UsernameValidationError.INVALID_CREDENTIALS) {
+                usernameError.value = UsernameValidationError.NONE
             }
         }
         passwordError.value?.let {
@@ -172,10 +176,6 @@ class LoginViewModel : BaseViewModel() {
             HeapUtils.identifyUser(accountInfo.accountId.toString())
         }
 
-        if (AuthenticationSharedPreferencesRepo.isFirstUse()) {
-            rememberMe.set(true)
-            AuthenticationSharedPreferencesRepo.applyFirstUse()
-        }
         conditionallySaveUsername()
 
         if (AuthenticationConfig.requireEmailConfirmation && LoginResponseUtils.requireEmailVerification(loginResponse)) {
@@ -196,17 +196,17 @@ class LoginViewModel : BaseViewModel() {
     }
 
     /**
-     * TODO(jhutchins): Update the button state based on whether or not there is text in both email and
+     * TODO(jhutchins): Update the button state based on whether or not there is text in both username and
      * password. We should update this probably based on smarter validation.
      */
     private fun updateButtonState() {
-        val emailText = email.get()
+        val usernameText = username.get()
         val passwordText = password.get()
         val currentState = loginButtonState.value
 
-        if (!emailText.isNullOrEmpty() && !passwordText.isNullOrEmpty() && (currentState == LoginButtonState.HIDE)) {
+        if (!usernameText.isNullOrEmpty() && !passwordText.isNullOrEmpty() && (currentState == LoginButtonState.HIDE)) {
             loginButtonState.value = LoginButtonState.SHOW
-        } else if (emailText.isNullOrEmpty() || passwordText.isNullOrEmpty() &&currentState == LoginButtonState.SHOW) {
+        } else if (usernameText.isNullOrEmpty() || passwordText.isNullOrEmpty() &&currentState == LoginButtonState.SHOW) {
             loginButtonState.value = LoginButtonState.HIDE
         }
     }
@@ -223,28 +223,28 @@ class LoginViewModel : BaseViewModel() {
         val useTestMode = testMode.get()!!
         if (useTestMode) {
             val rememberMeEnabled = AuthenticationSharedPreferencesRepo.getDemoSavedUsername().isNotEmpty()
-            email.set(AuthenticationSharedPreferencesRepo.getDemoSavedUsername())
+            username.set(AuthenticationSharedPreferencesRepo.getDemoSavedUsername())
             rememberMe.set(rememberMeEnabled)
         } else {
             val rememberMeEnabled = AuthenticationSharedPreferencesRepo.getSavedUsername().isNotEmpty()
-            email.set(AuthenticationSharedPreferencesRepo.getSavedUsername())
+            username.set(AuthenticationSharedPreferencesRepo.getSavedUsername())
             rememberMe.set(rememberMeEnabled)
         }
     }
 
     private fun conditionallySaveUsername() {
-        val emailAddressToSave = email.get()!!
+        val usernameToSave = username.get()!!
         val usingTestMode = testMode.get()!!
         val saveUsername = rememberMe.get()!!
         if (usingTestMode) {
             if (saveUsername) {
-                AuthenticationSharedPreferencesRepo.applyDemoSavedUsername(emailAddressToSave)
+                AuthenticationSharedPreferencesRepo.applyDemoSavedUsername(usernameToSave)
             } else {
                 AuthenticationSharedPreferencesRepo.applyDemoSavedUsername("")
             }
         } else {
             if (saveUsername) {
-                AuthenticationSharedPreferencesRepo.applySavedUsername(emailAddressToSave)
+                AuthenticationSharedPreferencesRepo.applySavedUsername(usernameToSave)
             } else {
                 AuthenticationSharedPreferencesRepo.applySavedUsername("")
             }
