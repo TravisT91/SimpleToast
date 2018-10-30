@@ -69,4 +69,5 @@ dependencies {
     kapt "androidx.lifecycle:lifecycle-compiler:$rootProject.archLifecycleVersion"
     implementation "com.heapanalytics.android:heap-android-client:$rootProject.heapVersion"
     implementation 'com.eightbitlab:blurview:1.4.0'
+    implementation 'com.eightbitlab:supportrenderscriptblur:1.0.1'
 }

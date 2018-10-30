@@ -1,4 +1,4 @@
-package com.engageft.feature
+package utilGen1
 
 import android.content.Context
 import android.text.TextUtils

@@ -11,6 +11,7 @@ import com.engageft.engagekit.tools.StorageManager
 import com.engageft.onetomany.R
 import com.ob.domain.lookup.TransactionType
 import com.ob.ws.dom.utility.TransactionInfo
+import utilGen1.TransactionInfoUtils
 import java.util.*
 import kotlin.math.min
 
