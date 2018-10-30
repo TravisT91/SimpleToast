@@ -72,16 +72,16 @@ class LoginFragment : LotusFullScreenFragment() {
         })
         vm.emailError.observe(this, Observer { error: LoginViewModel.EmailValidationError ->
             when (error) {
-                LoginViewModel.EmailValidationError.NONE -> emailInput.setError("")
-                LoginViewModel.EmailValidationError.INVALID_CREDENTIALS -> emailInput.setError(getString(R.string.error_message_invalid_credentials)) // Localize this
+                LoginViewModel.EmailValidationError.NONE -> emailInput.setErrorTexts(null)
+                LoginViewModel.EmailValidationError.INVALID_CREDENTIALS -> emailInput.setErrorTexts(listOf(getString(R.string.error_message_invalid_credentials)))
             }
             // Make sure error is animated
             setLayoutTransitions()
         })
         vm.passwordError.observe(this, Observer { error: LoginViewModel.PasswordValidationError ->
             when (error) {
-                LoginViewModel.PasswordValidationError.NONE -> passwordInput.setError("")
-                LoginViewModel.PasswordValidationError.INVALID_CREDENTIALS -> passwordInput.setError(getString(R.string.error_message_invalid_credentials)) // Localize this
+                LoginViewModel.PasswordValidationError.NONE -> passwordInput.setErrorTexts(null)
+                LoginViewModel.PasswordValidationError.INVALID_CREDENTIALS -> passwordInput.setErrorTexts(listOf(getString(R.string.error_message_invalid_credentials)))
             }
             // Make sure error is animated
             setLayoutTransitions()
@@ -118,9 +118,9 @@ class LoginFragment : LotusFullScreenFragment() {
                 LoginDialogInfo.DialogType.SERVER_ERROR -> {
                     // TODO(aHashimi): https@//engageft.atlassian.net/browse/SHOW-364
                     // check title
-                    if (!it.message.isNullOrEmpty()) {
+                    //if (!it.message.isNullOrEmpty()) {
                         // TODO(aHashimi): show dialog with message
-                    }
+                    //}
                 }
                 LoginDialogInfo.DialogType.EMAIL_VERIFICATION -> {
                     //TODO(aHashimi): show dialog: https://engageft.atlassian.net/browse/SHOW-261
