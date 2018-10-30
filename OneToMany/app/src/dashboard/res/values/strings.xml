@@ -21,4 +21,16 @@
     <string name="OPTIONS_MENU_NOTIFICATIONS">Notifications</string>
     <string name="TRANSACTIONS_NONE">No Transactions</string>
     <string name="TRANSACTIONS_PAY">Pay</string>
+
+    <string name="TRANSACTION_TYPE_LOAD">Card Load</string>
+    <string name="TRANSACTION_TYPE_REVERSE_LOAD">Reverse Load</string>
+    <string name="TRANSACTION_TYPE_FEE">Card Fee</string>
+    <string name="TRANSACTION_TYPE_TRANSFER">Transfer</string>
+    <string name="TRANSACTION_TYPE_ATM">ATM Withdrawal</string>
+    <string name="TRANSACTION_TYPE_RETURN">Purchase Return</string>
+
+    <string name="TRANSACTION_LIST_OFFBUDGET_LABEL">Off-Budget</string>
+
+    <string name="TRANSACTION_STATUS_PENDING_TEXT">Pending</string>
+    <string name="TRANSACTION_STATUS_DECLINED_TEXT">Declined</string>
 </resources>
