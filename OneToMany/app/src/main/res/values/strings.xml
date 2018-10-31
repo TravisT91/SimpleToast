@@ -18,4 +18,16 @@
     <string name="fragment_title_help">Help Center</string>
     <string name="fragment_title_goals_add_step_1">Adding Goal: Step 1</string>
 
+
+    <string name="SETTINGS_PROFILE">Profile</string>
+    <string name="SETTINGS_PASSWORD">Password</string>
+    <string name="SETTINGS_PASSCODE">Passcode</string>
+    <string name="SETTINGS_TOUCH_ID">Touch ID</string>
+    <string name="SETTINGS_SECURITY_QUESTIONS">Security Questions</string>
+    <string name="SETTINGS_ID_THEFT_PROTECTION">ID theft protection</string>
+    <string name="SETTINGS_NOTIFICATIONS">Notifications</string>
+    <string name="SETTINGS_STATEMENTS">Statements</string>
+    <string name="SETTINGS_SECONDARY_ACCOUNT">Secondary Account</string>
+    <string name="SETTINGS_LOG_OUT">Log Out</string>
+
 </resources>

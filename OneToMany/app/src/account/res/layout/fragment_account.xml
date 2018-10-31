@@ -1,19 +1,219 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
 
-    <androidx.constraintlayout.widget.ConstraintLayout
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
-        <Button
-            android:id="@+id/button"
-            android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:background="@color/viewBackground">
+
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent"
-            android:text="Get Started!"/>
-    </androidx.constraintlayout.widget.ConstraintLayout>
+            android:background="@android:color/transparent"
+            android:orientation="vertical">
+
+            <include layout="@layout/divider" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/cellBackground"
+                android:orientation="vertical"
+                android:paddingStart="@dimen/listPaddingStart"
+                tools:ignore="RtlSymmetry">
+
+                <TextView
+                    android:id="@+id/profile"
+                    style="@style/Body"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingTop="@dimen/listItemPaddingTop"
+                    android:paddingBottom="@dimen/listItemPaddingBottom"
+                    android:text="@string/SETTINGS_PROFILE"
+                    android:textColor="@color/structure6" />
+
+                <include layout="@layout/divider" />
+
+                <TextView
+                    android:id="@+id/password"
+                    style="@style/Body"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingTop="@dimen/listItemPaddingTop"
+                    android:paddingBottom="@dimen/listItemPaddingBottom"
+                    android:text="@string/SETTINGS_PASSWORD"
+                    android:textColor="@color/structure6" />
+
+                <include layout="@layout/divider" />
+
+                <TextView
+                    android:id="@+id/passcode"
+                style="@style/Body"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingTop="@dimen/listItemPaddingTop"
+                android:paddingBottom="@dimen/listItemPaddingBottom"
+                android:text="@string/SETTINGS_PASSCODE"
+                android:textColor="@color/structure6" />
+
+                <include layout="@layout/divider" />
+
+                <FrameLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <TextView
+                        android:id="@+id/touchId"
+                        style="@style/Body"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:paddingTop="@dimen/listItemPaddingTop"
+                        android:paddingBottom="@dimen/listItemPaddingBottom"
+                        android:text="@string/SETTINGS_TOUCH_ID"
+                        android:textColor="@color/structure6" />
+
+                    <Switch
+                        android:id="@+id/touchIdSwitch"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:checked="true"
+                        android:layout_gravity="center_vertical|end"
+                        android:paddingEnd="@dimen/listPaddingStart"/>
+
+                </FrameLayout>
+
+                <include layout="@layout/divider" />
+
+                <TextView
+                    android:id="@+id/securityQuestions"
+                    style="@style/Body"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingTop="@dimen/listItemPaddingTop"
+                    android:paddingBottom="@dimen/listItemPaddingBottom"
+                    android:text="@string/SETTINGS_SECURITY_QUESTIONS"
+                    android:textColor="@color/structure6" />
+
+                <include layout="@layout/divider" />
+
+                <TextView
+                    android:id="@+id/idTheftProtection"
+                    style="@style/Body"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingTop="@dimen/listItemPaddingTop"
+                    android:paddingBottom="@dimen/listItemPaddingBottom"
+                    android:text="@string/SETTINGS_ID_THEFT_PROTECTION"
+                    android:textColor="@color/structure6" />
+
+                <include layout="@layout/divider" />
+
+
+                <TextView
+                    android:id="@+id/notifications"
+                    style="@style/Body"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingTop="@dimen/listItemPaddingTop"
+                    android:paddingBottom="@dimen/listItemPaddingBottom"
+                    android:text="@string/SETTINGS_NOTIFICATIONS"
+                    android:textColor="@color/structure6" />
+
+                <include layout="@layout/divider" />
+
+
+                <TextView
+                    android:id="@+id/statements"
+                    style="@style/Body"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingTop="@dimen/listItemPaddingTop"
+                    android:paddingBottom="@dimen/listItemPaddingBottom"
+                    android:text="@string/SETTINGS_STATEMENTS"
+                    android:textColor="@color/structure6" />
+
+                <include layout="@layout/divider" />
+
+
+                <TextView
+                    android:id="@+id/secondaryAccount"
+                    style="@style/Body"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingTop="@dimen/listItemPaddingTop"
+                    android:paddingBottom="@dimen/listItemPaddingBottom"
+                    android:text="@string/SETTINGS_SECONDARY_ACCOUNT"
+                    android:textColor="@color/structure6" />
+
+            </LinearLayout>
+
+            <include layout="@layout/divider" />
+
+            <Space
+                android:layout_width="match_parent"
+                android:layout_height="32dp" />
+
+            <include layout="@layout/divider" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/cellBackground"
+                android:orientation="vertical"
+                android:paddingStart="@dimen/listPaddingStart"
+                tools:ignore="RtlSymmetry">
+
+                <TextView
+                    android:id="@+id/profile2"
+                    style="@style/Body"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingTop="@dimen/listItemPaddingTop"
+                    android:paddingBottom="@dimen/listItemPaddingBottom"
+                    android:text="@string/SETTINGS_PROFILE"
+                    android:textColor="@color/structure6" />
+
+                <include layout="@layout/divider" />
+
+                <TextView
+                    style="@style/Body"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingTop="@dimen/listItemPaddingTop"
+                    android:paddingBottom="@dimen/listItemPaddingBottom"
+                    android:text="@string/SETTINGS_PASSWORD"
+                    android:textColor="@color/structure6" />
+
+            </LinearLayout>
+
+            <include layout="@layout/divider" />
+
+            <Space
+                android:layout_width="match_parent"
+                android:layout_height="32dp" />
+
+            <include layout="@layout/divider" />
+
+            <TextView
+                style="@style/Body"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/cellBackground"
+                android:gravity="center_horizontal"
+                android:paddingTop="@dimen/listItemPaddingTop"
+                android:paddingBottom="@dimen/listItemPaddingBottom"
+                android:text="@string/SETTINGS_LOG_OUT"
+                android:textColor="@color/error" />
+
+            <include layout="@layout/divider" />
+
+            <Space
+                android:layout_width="match_parent"
+                android:layout_height="64dp" />
+
+        </LinearLayout>
+
+    </ScrollView>
+
 </layout>

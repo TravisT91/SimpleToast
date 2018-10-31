@@ -23,7 +23,7 @@
             android:checked="@={viewModel.testMode}"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            android:visibility="invisible"/>
+            android:visibility="visible" />
 
         <androidx.appcompat.widget.AppCompatTextView
             style="@style/Title1Quiet"
