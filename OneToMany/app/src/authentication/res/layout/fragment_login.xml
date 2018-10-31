@@ -1,10 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
 
     <data>
         <variable name="viewModel" type="com.engageft.feature.LoginViewModel"/>
+        <variable
+            name="themeUtils"
+            type="com.engageft.feature.ThemeUtils"/>
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -25,9 +28,10 @@
             app:layout_constraintEnd_toEndOf="parent"
             android:visibility="visible" />
 
-        <androidx.appcompat.widget.AppCompatTextView
-            style="@style/Title1Quiet"
-            android:textColor="@color/structure6"
+        <TextView
+            tools:style="@style/Title1Quiet"
+            parisStyle="@{themeUtils.title1Quiet}"
+            android:textColor="@{themeUtils.primaryColor}"
             android:id="@+id/loginTextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

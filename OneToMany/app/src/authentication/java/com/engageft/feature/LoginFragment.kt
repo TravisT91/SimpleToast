@@ -37,6 +37,8 @@ class LoginFragment : LotusFullScreenFragment() {
     }
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         binding = DataBindingUtil.inflate(layoutInflater, R.layout.fragment_login, container, false)
+        binding.themeUtils = ThemeUtils
+
         constraintSet = ConstraintSet()
         constraintSet.clone(binding.root as ConstraintLayout)
 
