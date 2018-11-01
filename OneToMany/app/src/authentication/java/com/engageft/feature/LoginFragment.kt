@@ -87,9 +87,9 @@ class LoginFragment : LotusFullScreenFragment() {
             // Make sure error is animated
             setLayoutTransitions()
         })
-        vm.loginButtonState.observe(this, Observer { loginButtonState: LoginViewModel.LoginButtonState ->
+        vm.loginButtonState.observe(this, Observer { loginButtonState: LoginViewModel.ButtonState ->
             when (loginButtonState) {
-                LoginViewModel.LoginButtonState.SHOW -> {
+                LoginViewModel.ButtonState.SHOW -> {
                     // Animate the login button onto the screen.
                     val constraintLayout = binding.root as ConstraintLayout
                     constraintSet = ConstraintSet()
@@ -99,7 +99,7 @@ class LoginFragment : LotusFullScreenFragment() {
 
                     setLayoutTransitions()
                 }
-                LoginViewModel.LoginButtonState.HIDE -> {
+                LoginViewModel.ButtonState.HIDE -> {
                     // Animate the login button off the screen.
                     val constraintLayout = binding.root as ConstraintLayout
                     constraintSet = ConstraintSet()
@@ -109,6 +109,12 @@ class LoginFragment : LotusFullScreenFragment() {
 
                     setLayoutTransitions()
                 }
+            }
+        })
+        vm.demoAccountButtonState.observe(this, Observer { buttonState: LoginViewModel.ButtonState ->
+            when (buttonState) {
+                LoginViewModel.ButtonState.SHOW -> demoAccountButton.visibility = View.VISIBLE
+                LoginViewModel.ButtonState.HIDE -> demoAccountButton.visibility = View.GONE
             }
         })
         // If testMode was saved as enabled, make the switch visible initially.
@@ -146,10 +152,23 @@ class LoginFragment : LotusFullScreenFragment() {
                 }
             }
         })
+        vm.loadingOverlayDialogObservable.observe(this, Observer { loadingOverlayDialog ->
+            when (loadingOverlayDialog) {
+                LoginViewModel.LoadingOverlayDialog.CREATING_DEMO_ACCOUNT -> {
+                    //TODO(aHashimi): must show message once that's ready
+                    // showProgressOverlay(getString(R.string.login_preview_wait_message))
+                    showProgressOverlay()
+                }
+                LoginViewModel.LoadingOverlayDialog.DISMISS_DIALOG -> {
+                    dismissProgressOverlay()
+                }
+            }
+        })
 
         binding.btnIssuerStatement.setOnClickListener { vm.issuerStatementClicked() }
         binding.btnDisclosures.setOnClickListener { vm.disclosuresClicked() }
         binding.loginButton.setOnClickListener { vm.loginClicked() }
+        binding.demoAccountButton.setOnClickListener { vm.createDemoAccount() }
 
         binding.root.systemUiVisibility = View.SYSTEM_UI_FLAG_LAYOUT_STABLE
         return binding.root
