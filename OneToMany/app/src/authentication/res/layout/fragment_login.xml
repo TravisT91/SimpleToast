@@ -31,7 +31,6 @@
         <TextView
             tools:style="@style/Title1Quiet"
             parisStyle="@{themeUtils.title1Quiet}"
-            android:textColor="@{themeUtils.primaryColor}"
             android:id="@+id/loginTextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

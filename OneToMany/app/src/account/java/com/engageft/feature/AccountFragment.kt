@@ -6,7 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import com.engageft.apptoolbox.BaseViewModel
 import com.engageft.apptoolbox.LotusFullScreenFragment
-import com.engageft.onetomany.R
+import com.engageft.onetomany.databinding.FragmentAccountBinding
 
 /**
  * TODO(joeyhutchins): ClassName
@@ -21,8 +21,10 @@ class AccountFragment : LotusFullScreenFragment() {
     override fun createViewModel(): BaseViewModel? {
         return null
     }
+
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        val view = inflater.inflate(R.layout.fragment_account, container, false)
-        return view
+        val binding = FragmentAccountBinding.inflate(inflater, container, false)
+        binding.themeUtils = ThemeUtils
+        return binding.root
     }
 }

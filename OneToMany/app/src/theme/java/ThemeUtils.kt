@@ -1,8 +1,12 @@
 package com.engageft.feature
 
+import android.content.res.ColorStateList
+import android.graphics.PorterDuff
 import android.graphics.Typeface
+import android.widget.Switch
 import android.widget.TextView
 import androidx.annotation.ColorInt
+import androidx.core.content.ContextCompat
 import androidx.databinding.BindingAdapter
 import com.airbnb.paris.extensions.fontFamily
 import com.airbnb.paris.extensions.lineSpacingExtra
@@ -10,9 +14,11 @@ import com.airbnb.paris.extensions.style
 import com.airbnb.paris.extensions.textSizeDp
 import com.airbnb.paris.extensions.textViewStyle
 import com.airbnb.paris.styles.Style
+import com.engageft.apptoolbox.R
+import com.engageft.apptoolbox.view.PillButton
 
 object ThemeUtils {
-    const val NOT_SET = 0
+    private const val NOT_SET = 0
 
     //COLORS
     @ColorInt
@@ -351,9 +357,52 @@ object ThemeUtils {
 
 }
 
-@BindingAdapter("parisStyle")
+@BindingAdapter("parisStyle", requireAll = true)
 fun TextView.setParisStyle(style: Style?){
     style?.let {
         this.style(it)
     }
+}
+
+@BindingAdapter("switchButtonTint",requireAll = true)
+fun Switch.setButtonTint(@ColorInt color: Int){
+    this.thumbDrawable.setColorFilter(color,PorterDuff.Mode.MULTIPLY)
+    this.trackDrawable.setColorFilter(color,PorterDuff.Mode.MULTIPLY)
+}
+
+@BindingAdapter("isFilled", requireAll = true)
+fun PillButton.setFilled(isFilled: Boolean){
+    if (isFilled){
+        this.setColorStateList(
+                fillPressed = ThemeUtils.secondaryColor,
+                strokePressed = ThemeUtils.secondaryColor,
+                fillEnabled = ThemeUtils.primaryColor,
+                strokeEnabled = ThemeUtils.primaryColor,
+                fillDisabled = ContextCompat.getColor(this.context, R.color.structure2),
+                strokeDisabled = ContextCompat.getColor(this.context, R.color.structure2))
+        this.setTextColor(
+                getTextStateList(
+                        pressedColor = ContextCompat.getColor(this.context, R.color.white),
+                        enabledColor = ContextCompat.getColor(this.context, R.color.white),
+                        disabledColor = ContextCompat.getColor(this.context, R.color.structure4)))
+    } else {
+        this.setColorStateList(
+                fillPressed = ContextCompat.getColor(this.context, android.R.color.transparent),
+                strokePressed = ThemeUtils.secondaryColor,
+                fillEnabled = ContextCompat.getColor(this.context, android.R.color.transparent),
+                strokeEnabled = ThemeUtils.primaryColor,
+                fillDisabled = ContextCompat.getColor(this.context, android.R.color.transparent),
+                strokeDisabled = ContextCompat.getColor(this.context, R.color.structure2))
+        this.setTextColor(
+                getTextStateList(
+                        pressedColor = ThemeUtils.secondaryColor,
+                        enabledColor = ThemeUtils.primaryColor,
+                        disabledColor = ContextCompat.getColor(this.context, R.color.structure4)))
+    }
+}
+
+fun getTextStateList(@ColorInt pressedColor : Int, @ColorInt disabledColor : Int, @ColorInt enabledColor: Int) : ColorStateList {
+    val s = arrayOf(intArrayOf(android.R.attr.state_pressed), intArrayOf(-android.R.attr.state_enabled), intArrayOf(android.R.attr.state_enabled))
+    val c = intArrayOf(pressedColor, disabledColor,enabledColor)
+    return ColorStateList(s,c)
 }

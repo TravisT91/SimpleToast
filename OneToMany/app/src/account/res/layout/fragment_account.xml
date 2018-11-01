@@ -2,6 +2,12 @@
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
 
+    <data>
+        <variable
+            name="themeUtils"
+            type="com.engageft.feature.ThemeUtils"/>
+    </data>
+
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -25,7 +31,8 @@
 
                 <TextView
                     android:id="@+id/profile"
-                    style="@style/Body"
+                    parisStyle="@{themeUtils.body}"
+                    tools:style="@style/Body"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:paddingTop="@dimen/listItemPaddingTop"
@@ -37,7 +44,8 @@
 
                 <TextView
                     android:id="@+id/password"
-                    style="@style/Body"
+                    tools:style="@style/Body"
+                    parisStyle="@{themeUtils.body}"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:paddingTop="@dimen/listItemPaddingTop"
@@ -49,7 +57,8 @@
 
                 <TextView
                     android:id="@+id/passcode"
-                style="@style/Body"
+                tools:style="@style/Body"
+                    parisStyle="@{themeUtils.body}"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:paddingTop="@dimen/listItemPaddingTop"
@@ -65,7 +74,8 @@
 
                     <TextView
                         android:id="@+id/touchId"
-                        style="@style/Body"
+                        tools:style="@style/Body"
+                        parisStyle="@{themeUtils.body}"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:paddingTop="@dimen/listItemPaddingTop"
@@ -77,9 +87,10 @@
                         android:id="@+id/touchIdSwitch"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:checked="true"
                         android:layout_gravity="center_vertical|end"
-                        android:paddingEnd="@dimen/listPaddingStart"/>
+                        switchButtonTint="@{themeUtils.successColor}"
+                        android:checked="true"
+                        android:paddingEnd="@dimen/listPaddingStart" />
 
                 </FrameLayout>
 
@@ -87,7 +98,8 @@
 
                 <TextView
                     android:id="@+id/securityQuestions"
-                    style="@style/Body"
+                    tools:style="@style/Body"
+                    parisStyle="@{themeUtils.body}"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:paddingTop="@dimen/listItemPaddingTop"
@@ -99,7 +111,8 @@
 
                 <TextView
                     android:id="@+id/idTheftProtection"
-                    style="@style/Body"
+                    tools:style="@style/Body"
+                    parisStyle="@{themeUtils.body}"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:paddingTop="@dimen/listItemPaddingTop"
@@ -112,7 +125,8 @@
 
                 <TextView
                     android:id="@+id/notifications"
-                    style="@style/Body"
+                    tools:style="@style/Body"
+                    parisStyle="@{themeUtils.body}"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:paddingTop="@dimen/listItemPaddingTop"
@@ -125,7 +139,8 @@
 
                 <TextView
                     android:id="@+id/statements"
-                    style="@style/Body"
+                    tools:style="@style/Body"
+                    parisStyle="@{themeUtils.body}"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:paddingTop="@dimen/listItemPaddingTop"
@@ -138,7 +153,8 @@
 
                 <TextView
                     android:id="@+id/secondaryAccount"
-                    style="@style/Body"
+                    tools:style="@style/Body"
+                    parisStyle="@{themeUtils.body}"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:paddingTop="@dimen/listItemPaddingTop"
@@ -166,7 +182,8 @@
 
                 <TextView
                     android:id="@+id/profile2"
-                    style="@style/Body"
+                    tools:style="@style/Body"
+                    parisStyle="@{themeUtils.body}"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:paddingTop="@dimen/listItemPaddingTop"
@@ -177,7 +194,8 @@
                 <include layout="@layout/divider" />
 
                 <TextView
-                    style="@style/Body"
+                    tools:style="@style/Body"
+                    parisStyle="@{themeUtils.body}"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:paddingTop="@dimen/listItemPaddingTop"
@@ -196,7 +214,8 @@
             <include layout="@layout/divider" />
 
             <TextView
-                style="@style/Body"
+                tools:style="@style/Body"
+                parisStyle="@{themeUtils.body}"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@color/cellBackground"
@@ -204,14 +223,14 @@
                 android:paddingTop="@dimen/listItemPaddingTop"
                 android:paddingBottom="@dimen/listItemPaddingBottom"
                 android:text="@string/SETTINGS_LOG_OUT"
-                android:textColor="@color/error" />
+                android:textColor="@{themeUtils.errorColor}"
+                tools:textColor="@color/error"/>
 
             <include layout="@layout/divider" />
 
             <Space
                 android:layout_width="match_parent"
                 android:layout_height="64dp" />
-
         </LinearLayout>
 
     </ScrollView>
