@@ -11,6 +11,8 @@
     <string name="OVERVIEW_CHANGE_PIN">Change PIN</string>
     <string name="OVERVIEW_CHANGE_PIN_ICON">* * *</string>
 
+    <string name="MONTH_YEAR_FORMAT">%1$d/%2$d</string>
+
     <string name="OVERVIEW_SPENDING_BALANCE">Spending balance</string>
     <string name="OVERVIEW_GOALS_BALANCE">Goals balance</string>
     <string name="OVERVIEW_BALANCE_LOADING">--</string>

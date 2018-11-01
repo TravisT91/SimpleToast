@@ -5,6 +5,7 @@ import androidx.lifecycle.MutableLiveData
 import com.engageft.apptoolbox.BaseViewModel
 import com.engageft.apptoolbox.view.ProductCardModel
 import com.engageft.engagekit.EngageService
+import com.engageft.engagekit.utils.BackendDateTimeUtils
 import com.engageft.engagekit.utils.DebitCardInfoUtils
 import com.engageft.engagekit.utils.LoginResponseUtils
 import com.ob.ws.dom.LoginResponse
@@ -12,6 +13,7 @@ import com.ob.ws.dom.SecureCardInfoResponse
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
+import utilGen1.StringUtils
 
 /**
  *  CardViewViewModel
@@ -25,6 +27,8 @@ class CardViewViewModel : BaseViewModel() {
 
     var cardInfoModelObservable: MutableLiveData<ProductCardModel> = MutableLiveData()
     var cardStateObservable: MutableLiveData<CardState> = MutableLiveData()
+
+    var expirationDateFormatString = "%1\$d/%2\$d" // provide a sensible default, and allow to be overridden
 
     private val compositeDisposable = CompositeDisposable()
 
@@ -52,27 +56,31 @@ class CardViewViewModel : BaseViewModel() {
                         .subscribe({ response ->
                             if (response.isSuccess && response is LoginResponse) {
                                 val debitCardInfo = LoginResponseUtils.getCurrentCard(response)
-                                var cardInfoModel = ProductCardModel()
-                                cardInfoModel.cardholderName = LoginResponseUtils.getUserFullname(response)
+                                var productCardModel = ProductCardModel()
+                                productCardModel.cardholderName = LoginResponseUtils.getUserFullname(response)
                                 debitCardInfo?.let { cardInfo ->
-                                    // TODO(jhutchins): This viewModel shouldn't try to inflate text resources.
-                                    cardInfoModel.cardStatusText = "TODO"
-//                                    cardInfoModel.cardStatusText = StringUtils.getDebitCardInfoFriendlyStatus(cardInfo)
-                                    cardInfoModel.cardStatusOkay = DebitCardInfoUtils.displayCardStatusAsOkay(cardInfo)
-                                    cardInfoModel.cardLocked = DebitCardInfoUtils.isLocked(cardInfo)
-                                    cardInfoModel.cardPendingActivation = DebitCardInfoUtils.isPendingActivation(cardInfo)
+                                    /**
+                                     * StringUtils accesses app context to get the app-specific status String. In pure MVVM this may be
+                                     * frowned upon, but the view that this populates (ProductCardView) is in apptoolbox so doesn't have
+                                     * access to the app's string resources. So, view model must set the actual string, not
+                                     * pass an enum to the view that it can use to set the string.
+                                     */
+                                    productCardModel.cardStatusText = StringUtils.getDebitCardInfoFriendlyStatus(cardInfo)
+                                    productCardModel.cardStatusOkay = DebitCardInfoUtils.displayCardStatusAsOkay(cardInfo)
+                                    productCardModel.cardLocked = DebitCardInfoUtils.isLocked(cardInfo)
+                                    productCardModel.cardPendingActivation = DebitCardInfoUtils.isPendingActivation(cardInfo)
                                     secureCardInfoResponse?.let { response ->
-                                        cardInfoModel.cardCvv = response.cvv
-                                        // TODO(jhutchins): This viewModel shouldn't try to inflate text resources.
-                                        cardInfoModel.cardExpirationMonthYear = "TODO"
-//                                        cardInfoModel.cardExpirationMonthYear = DisplayDateTimeUtils.getExpirationMonthYear(BackendDateTimeUtils.parseDateTimeFromIso8601String(response.expiration))
-                                        cardInfoModel.cardNumberFull = response.pan
+                                        productCardModel.cardCvv = response.cvv
+                                        BackendDateTimeUtils.parseDateTimeFromIso8601String(response.expiration)?.let { expirationDate ->
+                                            productCardModel.cardExpirationMonthYear = String.format(expirationDateFormatString, expirationDate.monthOfYear, expirationDate.year)
+                                        }
+                                        productCardModel.cardNumberFull = response.pan
                                         cardStateObservable.postValue(CardState.DETAILS_SHOWN)
                                     } ?: run {
-                                        cardInfoModel.cardNumberPartial = cardInfo.lastFour
+                                        productCardModel.cardNumberPartial = cardInfo.lastFour
                                         cardStateObservable.postValue(CardState.DETAILS_HIDDEN)
                                     }
-                                    cardInfoModelObservable.postValue(cardInfoModel)
+                                    cardInfoModelObservable.postValue(productCardModel)
                                 }
                             } else {
                                 cardStateObservable.postValue(CardState.ERROR)
@@ -83,6 +91,27 @@ class CardViewViewModel : BaseViewModel() {
 
         )
     }
+
+//    private fun getCardStatus(debitCardInfo: DebitCardInfo): ProductCardModelCardStatus {
+//        return if (DebitCardInfoUtils.hasVirtualCard(debitCardInfo) && EngageService.getInstance().engageConfig.virtualCardEnabled)
+//            ProductCardModelCardStatus.CARD__STATUS_VIRTUAL
+//        else if (DebitCardInfoUtils.isLocked(debitCardInfo))
+//            ProductCardModelCardStatus.CARD__STATUS_LOCKED
+//        else if (DebitCardInfoUtils.isPendingActivation(debitCardInfo))
+//            ProductCardModelCardStatus.CARD__STATUS_PENDING
+//        else if (DebitCardInfoUtils.isLostStolen(debitCardInfo))
+//            ProductCardModelCardStatus.CARD__STATUS_REPLACED
+//        else if (DebitCardInfoUtils.isCancelled(debitCardInfo))
+//            ProductCardModelCardStatus.CARD__STATUS_CANCELED
+//        else if (DebitCardInfoUtils.isSuspended(debitCardInfo))
+//            ProductCardModelCardStatus.CARD__STATUS_SUSPENDED
+//        else if (DebitCardInfoUtils.isFraudStatus(debitCardInfo))
+//            ProductCardModelCardStatus.CARD__STATUS_CLOSED
+//        else if (DebitCardInfoUtils.isOrdered(debitCardInfo))
+//            ProductCardModelCardStatus.CARD__STATUS_ORDERED
+//        else
+//            ProductCardModelCardStatus.CARD__STATUS_ACTIVE
+//    }
 
     fun showCardDetails() {
         val debitCardInfo = LoginResponseUtils.getCurrentCard(EngageService.getInstance().storageManager.loginResponse)

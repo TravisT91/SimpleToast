@@ -18,7 +18,6 @@ import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
-import com.eightbitlab.supportrenderscriptblur.SupportRenderScriptBlur
 import com.engageft.apptoolbox.BaseViewModel
 import com.engageft.apptoolbox.LotusFullScreenFragment
 import com.engageft.apptoolbox.view.ProductCardModel
@@ -27,6 +26,7 @@ import com.engageft.onetomany.databinding.FragmentDashboardBinding
 import com.google.android.material.tabs.TabLayout
 import com.ob.ws.dom.utility.TransactionInfo
 import eightbitlab.com.blurview.BlurView
+import eightbitlab.com.blurview.RenderScriptBlur
 import utilGen1.StringUtils
 import java.math.BigDecimal
 
@@ -82,7 +82,7 @@ class DashboardFragment : LotusFullScreenFragment(), OverviewView.OverviewViewLi
     private lateinit var spendingBalanceAmount: TextView
     private lateinit var savingsBalanceLayout: ViewGroup
     private lateinit var savingsBalanceAmount: TextView
-    private lateinit var transactionsTabLayout: TabLayout
+    private var transactionsTabLayout: TabLayout? = null
     private lateinit var swipeRefreshLayout: SwipeRefreshLayout
     private lateinit var blurView: BlurView
     // for displaying a message view, like CARE-399 waiting for card activation message
@@ -158,7 +158,7 @@ class DashboardFragment : LotusFullScreenFragment(), OverviewView.OverviewViewLi
             }
         }
 
-        transactionsTabLayout.addOnTabSelectedListener(object:TabLayout.OnTabSelectedListener {
+        transactionsTabLayout!!.addOnTabSelectedListener(object:TabLayout.OnTabSelectedListener {
             override fun onTabReselected(tab: TabLayout.Tab?) {
                 // intentionally left blank
             }
@@ -168,7 +168,7 @@ class DashboardFragment : LotusFullScreenFragment(), OverviewView.OverviewViewLi
             }
 
             override fun onTabSelected(tab: TabLayout.Tab?) {
-                when (transactionsTabLayout.selectedTabPosition) {
+                when (transactionsTabLayout!!.selectedTabPosition) {
                     OverviewViewModel.TRANSACTIONS_TAB_POSITION_ALL -> {
                         transactionsAdapter.showDepositsOnly = false
                     }
@@ -177,7 +177,7 @@ class DashboardFragment : LotusFullScreenFragment(), OverviewView.OverviewViewLi
                     }
                 }
                 // update view model with position, so that it can be set correctly when fragment is restored
-                overviewViewModel.transactionsTabPosition = transactionsTabLayout.selectedTabPosition
+                overviewViewModel.transactionsTabPosition = transactionsTabLayout!!.selectedTabPosition
             }
         })
 
@@ -193,17 +193,17 @@ class DashboardFragment : LotusFullScreenFragment(), OverviewView.OverviewViewLi
         resources.getValue(R.dimen.blur_radius, outValue, true)
         val blurRadius = outValue.float
         blurView.setupWith(rootLayout)
-                .blurAlgorithm(SupportRenderScriptBlur(context))
-                .blurRadius(blurRadius)
+                .setBlurAlgorithm(RenderScriptBlur(context))
+                .setBlurRadius(blurRadius)
 
         messageContainer = view.findViewById(R.id.message_container)
     }
 
-    private fun updateForCardInfo(cardInfo: ProductCardModel) {
-        overviewView.cardView.updateWithCardInfoModel(cardInfo)
+    private fun updateForCardInfo(productCardModel: ProductCardModel) {
+        overviewView.cardView.updateWithProductCardModel(productCardModel)
 
         overviewView.overviewLockUnlockCardLabel.text = getString(
-                if (cardInfo.cardLocked) R.string.OVERVIEW_UNLOCK_MY_CARD else R.string.OVERVIEW_LOCK_MY_CARD
+                if (productCardModel.cardLocked) R.string.OVERVIEW_UNLOCK_MY_CARD else R.string.OVERVIEW_LOCK_MY_CARD
         )
     }
 
@@ -351,25 +351,26 @@ class DashboardFragment : LotusFullScreenFragment(), OverviewView.OverviewViewLi
 
     private fun initViewModel() {
         cardViewViewModel = ViewModelProviders.of(activity!!).get(CardViewViewModel::class.java)
-        cardViewViewModel.cardInfoModelObservable.reObserve(this, cardInfoModelObserver)
-        cardViewViewModel.cardStateObservable.reObserve(this, cardStateObserver)
+        cardViewViewModel.expirationDateFormatString = getString(R.string.MONTH_YEAR_FORMAT)
+        cardViewViewModel.cardInfoModelObservable.observe(this, cardInfoModelObserver)
+        cardViewViewModel.cardStateObservable.observe(this, cardStateObserver)
         // TODO(jhutchins): Error handling
-//        cardViewViewModel.errorObservable.reObserve(this, cardErrorObserver)
+//        cardViewViewModel.errorObservable.observe(this, cardErrorObserver)
         cardViewViewModel.initCardView()
 
-        overviewViewModel.spendingBalanceObservable.reObserve(this, spendingBalanceObserver)
-        overviewViewModel.spendingBalanceStateObservable.reObserve(this, spendingBalanceStateObserver)
+        overviewViewModel.spendingBalanceObservable.observe(this, spendingBalanceObserver)
+        overviewViewModel.spendingBalanceStateObservable.observe(this, spendingBalanceStateObserver)
 
-        overviewViewModel.savingsBalanceObservable.reObserve(this, savingsBalanceObserver)
-        overviewViewModel.savingsBalanceStateObservable.reObserve(this, savingsBalanceStateObserver)
+        overviewViewModel.savingsBalanceObservable.observe(this, savingsBalanceObserver)
+        overviewViewModel.savingsBalanceStateObservable.observe(this, savingsBalanceStateObserver)
 
-        overviewViewModel.allTransactionsObservable.reObserve(this, allTransactionsObserver)
-        overviewViewModel.retrievingTransactionsFinishedObservable.reObserve(this, retrievingTransactionsFinishedObserver)
+        overviewViewModel.allTransactionsObservable.observe(this, allTransactionsObserver)
+        overviewViewModel.retrievingTransactionsFinishedObservable.observe(this, retrievingTransactionsFinishedObserver)
 
-        overviewViewModel.notificationsCountObservable.reObserve(this, notificationsObserver)
+        overviewViewModel.notificationsCountObservable.observe(this, notificationsObserver)
 
         // make sure correct tab is showing, after return from TransactionDetailFragment, in particular
-        transactionsTabLayout.getTabAt(overviewViewModel.transactionsTabPosition)?.select()
+        transactionsTabLayout?.getTabAt(overviewViewModel.transactionsTabPosition)?.select()
 
         overviewViewModel.initBalancesAndNotifications()
         overviewViewModel.initTransactions()
@@ -445,9 +446,4 @@ class DashboardFragment : LotusFullScreenFragment(), OverviewView.OverviewViewLi
     override fun onTransactionInfoSelected(transactionInfo: TransactionInfo) {
         listener?.onTransactionInfoSelected(transactionInfo)
     }
-}
-
-fun <T> LiveData<T>.reObserve(owner: LifecycleOwner, observer: Observer<T>) {
-    removeObserver(observer)
-    observe(owner, observer)
 }
