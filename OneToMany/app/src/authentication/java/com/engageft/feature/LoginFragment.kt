@@ -15,6 +15,7 @@ import androidx.transition.AutoTransition
 import androidx.transition.TransitionManager
 import com.engageft.apptoolbox.BaseViewModel
 import com.engageft.apptoolbox.LotusFullScreenFragment
+import com.engageft.engagekit.utils.DeviceUtils
 import com.engageft.onetomany.R
 import com.engageft.onetomany.databinding.FragmentLoginBinding
 import kotlinx.android.synthetic.main.fragment_login.*
@@ -118,7 +119,7 @@ class LoginFragment : LotusFullScreenFragment() {
             }
         })
         // If testMode was saved as enabled, make the switch visible initially.
-        if (vm.testMode.get()!!) {
+        if (vm.testMode.get()!! || DeviceUtils.isEmulator()) {
             constraintSet.setVisibility(R.id.testSwitch, View.VISIBLE)
             setLayoutTransitions()
         }
