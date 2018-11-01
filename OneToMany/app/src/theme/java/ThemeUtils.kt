@@ -370,8 +370,8 @@ fun Switch.setButtonTint(@ColorInt color: Int){
     this.trackDrawable.setColorFilter(color,PorterDuff.Mode.MULTIPLY)
 }
 
-@BindingAdapter("isFilled", requireAll = true)
-fun PillButton.setFilled(isFilled: Boolean){
+@BindingAdapter("setThemeWithFill", requireAll = true)
+fun PillButton.setThemeWithFill(isFilled: Boolean){
     if (isFilled){
         this.setColorStateList(
                 fillPressed = ThemeUtils.secondaryColor,
