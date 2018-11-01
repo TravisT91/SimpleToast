@@ -29,5 +29,8 @@
     <string name="SETTINGS_STATEMENTS">Statements</string>
     <string name="SETTINGS_SECONDARY_ACCOUNT">Secondary Account</string>
     <string name="SETTINGS_LOG_OUT">Log Out</string>
+    <string name="SETTINGS_COPYRIGHT">Copyright</string>
+    <string name="SETTINGS_DISCLOSURES">Disclosures</string>
+    <string name="TITLE_SETTINGS">Settings</string>
 
 </resources>

@@ -181,26 +181,27 @@
                 tools:ignore="RtlSymmetry">
 
                 <TextView
-                    android:id="@+id/profile2"
+                    android:id="@+id/copyright"
                     tools:style="@style/Body"
                     parisStyle="@{themeUtils.body}"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:paddingTop="@dimen/listItemPaddingTop"
                     android:paddingBottom="@dimen/listItemPaddingBottom"
-                    android:text="@string/SETTINGS_PROFILE"
+                    android:text="@string/SETTINGS_COPYRIGHT"
                     android:textColor="@color/structure6" />
 
                 <include layout="@layout/divider" />
 
                 <TextView
+                    android:id="@+id/disclosures"
                     tools:style="@style/Body"
                     parisStyle="@{themeUtils.body}"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:paddingTop="@dimen/listItemPaddingTop"
                     android:paddingBottom="@dimen/listItemPaddingBottom"
-                    android:text="@string/SETTINGS_PASSWORD"
+                    android:text="@string/SETTINGS_DISCLOSURES"
                     android:textColor="@color/structure6" />
 
             </LinearLayout>
@@ -214,6 +215,7 @@
             <include layout="@layout/divider" />
 
             <TextView
+                android:id="@+id/logout"
                 tools:style="@style/Body"
                 parisStyle="@{themeUtils.body}"
                 android:layout_width="match_parent"
