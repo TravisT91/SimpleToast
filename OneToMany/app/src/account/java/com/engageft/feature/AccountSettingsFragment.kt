@@ -21,6 +21,7 @@ import com.engageft.onetomany.databinding.FragmentAccountBinding
  * Created by joeyhutchins on 8/24/18.
  * Copyright (c) 2018 Engage FT. All rights reserved.
  */
+
 class AccountSettingsFragment : LotusFullScreenFragment() {
 
     override fun createViewModel(): BaseViewModel? {
@@ -29,7 +30,7 @@ class AccountSettingsFragment : LotusFullScreenFragment() {
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val binding = FragmentAccountBinding.inflate(inflater, container, false)
-        binding.themeUtils = Palette
+        binding.palette = Palette
         binding.apply {
             profile.setOnClickListener {
                 //TODO(ttkachuk) implement onCLick
