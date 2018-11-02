@@ -35,6 +35,10 @@
         <activity android:name="com.engageft.onetomany.AuthenticatedActivity">
 
         </activity>
+
+        <activity android:name="com.engageft.feature.WelcomeActivity"
+            android:screenOrientation="portrait">
+        </activity>
     </application>
 
 </manifest>

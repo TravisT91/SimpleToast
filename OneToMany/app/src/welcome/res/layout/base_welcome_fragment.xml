@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    android:id="@+id/rl_welcome_pager_main_content"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <ScrollView android:id="@+id/welcomeMainScrollView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@id/controlsLinearLayout"
+        android:fillViewport="true">
+
+        <!-- BaseWelcomePagerSimpleFragment will insert main content view here dynamically -->
+
+    </ScrollView>
+
+    <LinearLayout
+        android:id="@+id/controlsLinearLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_alignParentBottom="true">
+
+        <LinearLayout
+            android:id="@+id/indicatorDotsLinearLayout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:orientation="horizontal"
+            android:layout_marginTop="16dp"
+            android:layout_marginBottom="16dp">
+
+            <!--<android.support.v7.widget.AppCompatImageView-->
+                <!--android:id="@+id/pageIndicator1ImageView"-->
+                <!--android:layout_width="wrap_content"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--app:srcCompat="@drawable/pager_indicator_dot"/>-->
+
+            <!--<android.support.v4.widget.Space-->
+                <!--android:layout_width="8dp"-->
+                <!--android:layout_height="match_parent" />-->
+
+            <!--<android.support.v7.widget.AppCompatImageView-->
+                <!--android:id="@+id/pageIndicator2ImageView"-->
+                <!--android:layout_width="wrap_content"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--app:srcCompat="@drawable/pager_indicator_dot"/>-->
+
+            <!--<android.support.v4.widget.Space-->
+                <!--android:layout_width="8dp"-->
+                <!--android:layout_height="match_parent" />-->
+
+            <!--<android.support.v7.widget.AppCompatImageView-->
+                <!--android:id="@+id/pageIndicator3ImageView"-->
+                <!--android:layout_width="wrap_content"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--app:srcCompat="@drawable/pager_indicator_dot"/>-->
+
+            <!--<android.support.v4.widget.Space-->
+                <!--android:layout_width="8dp"-->
+                <!--android:layout_height="match_parent" />-->
+
+            <!--<android.support.v7.widget.AppCompatImageView-->
+                <!--android:id="@+id/pageIndicator4ImageView"-->
+                <!--android:layout_width="wrap_content"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--app:srcCompat="@drawable/pager_indicator_dot"/>-->
+
+        </LinearLayout>
+
+        <com.engageft.app.view.PillButton
+            android:id="@+id/nextButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"/>
+
+        <!--<Button-->
+            <!--style="@style/FontButton"-->
+            <!--android:id="@+id/signUpButton"-->
+            <!--android:layout_gravity="center_horizontal"-->
+            <!--android:layout_marginTop="@dimen/material_left_right_padding_margin_half"-->
+            <!--android:layout_marginBottom="@dimen/material_left_right_padding_margin_double"-->
+            <!--android:text="@string/WELCOME_BUTTON_SIGN_UP"/>-->
+    </LinearLayout>
+</RelativeLayout>

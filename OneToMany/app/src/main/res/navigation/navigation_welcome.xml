@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto" android:id="@+id/navigation_welcome"
+    app:startDestination="@id/viewPagerFragment">
+
+    <fragment
+        android:id="@+id/viewPagerFragment"
+        android:name="com.engageft.feature.ViewPagerFragment"
+        android:label="ViewPagerFragment" >
+        <action
+            android:id="@+id/action_viewPagerFragment_to_loginFragment"
+            app:destination="@id/loginFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/loginFragment"
+        android:name="com.engageft.feature.LoginFragment"
+        android:label="LoginFragment" />
+</navigation>

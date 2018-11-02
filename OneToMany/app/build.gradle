@@ -45,10 +45,10 @@ android {
         main {
             java.srcDirs = ['src/main/java', 'src/authentication/java', 'src/common/java', 'src/splash/java',
                             'src/dashboard/java', 'src/budgets/java', 'src/account/java', 'src/goals/java',
-                            'src/help/java', 'src/cardmanagement/java']
+                            'src/help/java', 'src/cardmanagement/java', 'src/welcome/java']
             res.srcDirs = ['src/main/res', 'src/authentication/res', 'src/common/res', 'src/splash/res',
                            'src/dashboard/res', 'src/budgets/res', 'src/account/res', 'src/goals/res',
-                           'src/help/res', 'src/cardmanagement/res']
+                           'src/help/res', 'src/cardmanagement/res', 'src/welcome/res']
         }
     }
 }
