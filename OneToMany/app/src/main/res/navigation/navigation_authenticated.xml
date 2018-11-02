@@ -33,7 +33,7 @@
     </fragment>
     <fragment
         android:id="@+id/account_fragment"
-        android:name="com.engageft.feature.SettingsFragment"
+        android:name="com.engageft.feature.AccountSettingsFragment"
         android:label="@string/fragment_title_account"
         tools:layout="@layout/fragment_account">
         <argument

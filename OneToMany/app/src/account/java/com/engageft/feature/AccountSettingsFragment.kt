@@ -13,7 +13,7 @@ import com.engageft.onetomany.R
 import com.engageft.onetomany.databinding.FragmentAccountBinding
 
 /**
- * SettingsFragment
+ * AccountSettingsFragment
  * <p>
  * This fragment presents the user with settings options which will navigate them to the appropriate
  * fragment to adjust that setting.
@@ -21,7 +21,7 @@ import com.engageft.onetomany.databinding.FragmentAccountBinding
  * Created by joeyhutchins on 8/24/18.
  * Copyright (c) 2018 Engage FT. All rights reserved.
  */
-class SettingsFragment : LotusFullScreenFragment() {
+class AccountSettingsFragment : LotusFullScreenFragment() {
 
     override fun createViewModel(): BaseViewModel? {
         return null
