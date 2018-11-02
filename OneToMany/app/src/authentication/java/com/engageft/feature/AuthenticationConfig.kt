@@ -12,7 +12,7 @@ object AuthenticationConfig {
     const val requireEmailConfirmation: Boolean = false
 
     // TODO(aHashimi): cases such as when the app doesn't allow demo either in production or demo
-    const val shouldShowDemoAccountCreateButton: Boolean = true
+    const val demoAccountAvailable: Boolean = true
 
     // TODO(aHashimi): Maybe need to set this to false once in production
     // this is when demo account creation is forbidden in production

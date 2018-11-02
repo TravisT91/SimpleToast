@@ -37,6 +37,8 @@ class LoginFragment : LotusFullScreenFragment() {
         return ViewModelProviders.of(this).get(LoginViewModel::class.java)
     }
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+        //TODO(aHashimi): needs to fix the problem of the buttons overlapping other views when keyboard is shown
+        // https://engageft.atlassian.net/browse/SHOW-363
         binding = DataBindingUtil.inflate(layoutInflater, R.layout.fragment_login, container, false)
         constraintSet = ConstraintSet()
         constraintSet.clone(binding.root as ConstraintLayout)
@@ -156,9 +158,8 @@ class LoginFragment : LotusFullScreenFragment() {
         vm.loadingOverlayDialogObservable.observe(this, Observer { loadingOverlayDialog ->
             when (loadingOverlayDialog) {
                 LoginViewModel.LoadingOverlayDialog.CREATING_DEMO_ACCOUNT -> {
-                    //TODO(aHashimi): must show message once that's ready
-                    // showProgressOverlay(getString(R.string.login_preview_wait_message))
-                    showProgressOverlay()
+                    //TODO(aHashimi) message textView runs to the edges of screen. https://engageft.atlassian.net/browse/SHOW-399
+                    showProgressOverlay(getString(R.string.login_preview_wait_message), R.style.LoadingOverlayDialogStyle)
                 }
                 LoginViewModel.LoadingOverlayDialog.DISMISS_DIALOG -> {
                     dismissProgressOverlay()

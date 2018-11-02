@@ -78,6 +78,8 @@ class LoginViewModel : BaseViewModel() {
 
     init {
         loginButtonState.value = ButtonState.HIDE
+        demoAccountButtonState.value = ButtonState.HIDE
+
         username.addOnPropertyChangedCallback(object : Observable.OnPropertyChangedCallback(){
             override fun onPropertyChanged(observable: Observable?, field: Int) {
                 validateEmail()
@@ -137,8 +139,16 @@ class LoginViewModel : BaseViewModel() {
 
     fun createDemoAccount() {
         val refCode = EngageService.getInstance().engageConfig.refCode
-        val isAllowedDemoAccountCreation = !(EngageAppConfig.isUsingProdEnvironment && !AuthenticationConfig.shouldAllowDemoAccountCreationInProd)
-        if (isAllowedDemoAccountCreation && refCode.isNotEmpty()) {
+
+        var isAllowedDemoAccountCreation = false
+
+        if (EngageAppConfig.isUsingProdEnvironment && AuthenticationConfig.shouldAllowDemoAccountCreationInProd && AuthenticationConfig.demoAccountAvailable) {
+            isAllowedDemoAccountCreation = true
+        } else if (!EngageAppConfig.isUsingProdEnvironment && AuthenticationConfig.demoAccountAvailable) {
+            isAllowedDemoAccountCreation = true
+        }
+
+        if (isAllowedDemoAccountCreation) {
             loadingOverlayDialogObservable.value = LoadingOverlayDialog.CREATING_DEMO_ACCOUNT
             compositeDisposable.add(
                     EngageService.getInstance().engageApiInterface.postDemoCreate(CreateDemoAccountRequest(refCode).fieldMap)
@@ -173,32 +183,30 @@ class LoginViewModel : BaseViewModel() {
 
         progressOverlayShownObservable.value = true
 
-        if (username.isNotEmpty() && password.isNotEmpty()) {
-            compositeDisposable.add(
-                    EngageService.getInstance().loginObservable(username, password, null)
-                            .subscribeOn(Schedulers.io())
-                            .observeOn(AndroidSchedulers.mainThread())
-                            .subscribe(
-                                    { response ->
-                                        progressOverlayShownObservable.value = false
-                                        if (response.isSuccess && response is LoginResponse) {
-                                            handleSuccessfulLoginResponse(response)
-                                        } else if (response is DeviceFailResponse) {
-                                            navigationObservable.value = LoginNavigationEvent.TWO_FACTOR_AUTHENTICATION
-                                        } else {
-                                            // we’re not yet truly parsing error types, and instead assume any error means invalid credentials.
-                                            // so set backend error response message as "invalid credentials" for now until true error handling has been implemented.
-                                            // https://engageft.atlassian.net/browse/SHOW-364
-                                            usernameError.value = UsernameValidationError.INVALID_CREDENTIALS
-                                            passwordError.value = PasswordValidationError.INVALID_CREDENTIALS
-                                        }
-                                    }, { _ ->
-                                progressOverlayShownObservable.value = false
-                                // TODO(aHahsimi) Proper error handling handle throwable and/or show dialog? https://engageft.atlassian.net/browse/SHOW-364
-                                dialogInfoObservable.value = LoginDialogInfo()
-                            })
-            )
-        }
+        compositeDisposable.add(
+                EngageService.getInstance().loginObservable(username, password, null)
+                        .subscribeOn(Schedulers.io())
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .subscribe(
+                                { response ->
+                                    progressOverlayShownObservable.value = false
+                                    if (response.isSuccess && response is LoginResponse) {
+                                        handleSuccessfulLoginResponse(response)
+                                    } else if (response is DeviceFailResponse) {
+                                        navigationObservable.value = LoginNavigationEvent.TWO_FACTOR_AUTHENTICATION
+                                    } else {
+                                        // we’re not yet truly parsing error types, and instead assume any error means invalid credentials.
+                                        // so set backend error response message as "invalid credentials" for now until true error handling has been implemented.
+                                        // https://engageft.atlassian.net/browse/SHOW-364
+                                        usernameError.value = UsernameValidationError.INVALID_CREDENTIALS
+                                        passwordError.value = PasswordValidationError.INVALID_CREDENTIALS
+                                    }
+                                }, { _ ->
+                            progressOverlayShownObservable.value = false
+                            // TODO(aHahsimi) Proper error handling handle throwable and/or show dialog? https://engageft.atlassian.net/browse/SHOW-364
+                            dialogInfoObservable.value = LoginDialogInfo()
+                        })
+        )
     }
 
     private fun clearErrorTexts() {
@@ -247,7 +255,7 @@ class LoginViewModel : BaseViewModel() {
     private fun updateDemoAccountButtonState() {
         val testModeToggled = testMode.get()!!
 
-        if (AuthenticationConfig.shouldShowDemoAccountCreateButton
+        if (AuthenticationConfig.demoAccountAvailable
                 && testModeToggled && username.get().isNullOrEmpty() && password.get().isNullOrEmpty()) {
             demoAccountButtonState.value = ButtonState.SHOW
         } else {
