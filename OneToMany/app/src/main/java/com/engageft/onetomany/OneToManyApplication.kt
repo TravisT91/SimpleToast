@@ -1,7 +1,6 @@
 package com.engageft.onetomany
 
 import com.engageft.apptoolbox.LotusApplication
-import com.engageft.apptoolbox.NavigationType
 import com.engageft.engagekit.EngageService
 import com.engageft.onetomany.config.EngageAppConfig
 
