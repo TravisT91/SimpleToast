@@ -403,6 +403,6 @@ fun PillButton.setThemeWithFill(isFilled: Boolean){
 
 fun getTextStateList(@ColorInt pressedColor : Int, @ColorInt disabledColor : Int, @ColorInt enabledColor: Int) : ColorStateList {
     val s = arrayOf(intArrayOf(android.R.attr.state_pressed), intArrayOf(-android.R.attr.state_enabled), intArrayOf(android.R.attr.state_enabled))
-    val c = intArrayOf(pressedColor, disabledColor,enabledColor)
+    val c = intArrayOf(pressedColor, disabledColor, enabledColor)
     return ColorStateList(s,c)
 }

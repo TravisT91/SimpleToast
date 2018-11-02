@@ -40,7 +40,9 @@
                     android:text="@string/SETTINGS_PROFILE"
                     android:textColor="@color/structure6" />
 
-                <include layout="@layout/divider" />
+                <include
+                    android:id="@+id/profileDivider"
+                    layout="@layout/divider" />
 
                 <TextView
                     android:id="@+id/password"
@@ -53,20 +55,24 @@
                     android:text="@string/SETTINGS_PASSWORD"
                     android:textColor="@color/structure6" />
 
-                <include layout="@layout/divider" />
+                <include
+                    android:id="@+id/passwordDivider"
+                    layout="@layout/divider" />
 
                 <TextView
                     android:id="@+id/passcode"
-                tools:style="@style/Body"
+                    tools:style="@style/Body"
                     parisStyle="@{themeUtils.body}"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:paddingTop="@dimen/listItemPaddingTop"
-                android:paddingBottom="@dimen/listItemPaddingBottom"
-                android:text="@string/SETTINGS_PASSCODE"
-                android:textColor="@color/structure6" />
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingTop="@dimen/listItemPaddingTop"
+                    android:paddingBottom="@dimen/listItemPaddingBottom"
+                    android:text="@string/SETTINGS_PASSCODE"
+                    android:textColor="@color/structure6" />
 
-                <include layout="@layout/divider" />
+                <include
+                    android:id="@+id/passcodeDivider"
+                    layout="@layout/divider" />
 
                 <FrameLayout
                     android:layout_width="match_parent"
@@ -94,7 +100,9 @@
 
                 </FrameLayout>
 
-                <include layout="@layout/divider" />
+                <include
+                    android:id="@+id/touchIdDivider"
+                    layout="@layout/divider" />
 
                 <TextView
                     android:id="@+id/securityQuestions"
@@ -107,7 +115,9 @@
                     android:text="@string/SETTINGS_SECURITY_QUESTIONS"
                     android:textColor="@color/structure6" />
 
-                <include layout="@layout/divider" />
+                <include
+                    android:id="@+id/securityQuestionsDivider"
+                    layout="@layout/divider" />
 
                 <TextView
                     android:id="@+id/idTheftProtection"
@@ -120,7 +130,9 @@
                     android:text="@string/SETTINGS_ID_THEFT_PROTECTION"
                     android:textColor="@color/structure6" />
 
-                <include layout="@layout/divider" />
+                <include
+                    android:id="@+id/idTheftProtectionDivider"
+                    layout="@layout/divider" />
 
 
                 <TextView
@@ -134,7 +146,9 @@
                     android:text="@string/SETTINGS_NOTIFICATIONS"
                     android:textColor="@color/structure6" />
 
-                <include layout="@layout/divider" />
+                <include
+                    android:id="@+id/notificationsDivider"
+                    ayout="@layout/divider" />
 
 
                 <TextView
@@ -148,7 +162,9 @@
                     android:text="@string/SETTINGS_STATEMENTS"
                     android:textColor="@color/structure6" />
 
-                <include layout="@layout/divider" />
+                <include
+                    android:id="@+id/statementsDivider"
+                    layout="@layout/divider" />
 
 
                 <TextView
@@ -191,7 +207,9 @@
                     android:text="@string/SETTINGS_COPYRIGHT"
                     android:textColor="@color/structure6" />
 
-                <include layout="@layout/divider" />
+                <include
+                    android:id="@+id/copyrightDivider"
+                    layout="@layout/divider" />
 
                 <TextView
                     android:id="@+id/disclosures"
