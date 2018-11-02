@@ -7,7 +7,7 @@
         <variable name="viewModel" type="com.engageft.feature.LoginViewModel"/>
         <variable
             name="themeUtils"
-            type="com.engageft.feature.ThemeUtils"/>
+            type="com.engageft.feature.Palette"/>
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout

@@ -5,7 +5,7 @@ import androidx.core.content.res.ResourcesCompat
 import com.engageft.apptoolbox.LotusApplication
 import com.engageft.apptoolbox.R
 import com.engageft.engagekit.EngageService
-import com.engageft.feature.ThemeUtils
+import com.engageft.feature.Palette
 import com.engageft.onetomany.config.EngageAppConfig
 
 /**
@@ -30,7 +30,7 @@ class OneToManyApplication : LotusApplication() {
         HeapUtils.initHeap(this)
         EngageService.initService(BuildConfig.VERSION_CODE.toString(), this, EngageAppConfig.engageKitConfig)
 
-        ThemeUtils.apply {
+        Palette.apply {
             primaryColor = ContextCompat.getColor(this@OneToManyApplication, R.color.primary)
             secondaryColor = ContextCompat.getColor(this@OneToManyApplication, R.color.secondary)
             successColor = ContextCompat.getColor(this@OneToManyApplication, R.color.success)
@@ -47,9 +47,9 @@ class OneToManyApplication : LotusApplication() {
     }
 
     fun setFonts(fontName: String){
-        ThemeUtils.apply {
+        Palette.apply {
             when (fontName) {
-                ThemeUtils.FontType.ARIAL.fontName -> run {
+                Palette.FontType.ARIAL.fontName -> run {
                     font_regular = ResourcesCompat.getFont(this@OneToManyApplication, R.font.font_regular)
                     font_bold = ResourcesCompat.getFont(this@OneToManyApplication, R.font.font_bold)
                     font_italic = ResourcesCompat.getFont(this@OneToManyApplication, R.font.font_italic)

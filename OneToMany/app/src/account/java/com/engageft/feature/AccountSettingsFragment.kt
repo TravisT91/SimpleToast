@@ -29,7 +29,7 @@ class AccountSettingsFragment : LotusFullScreenFragment() {
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val binding = FragmentAccountBinding.inflate(inflater, container, false)
-        binding.themeUtils = ThemeUtils
+        binding.themeUtils = Palette
         binding.apply {
             profile.setOnClickListener {
                 //TODO(ttkachuk) implement onCLick

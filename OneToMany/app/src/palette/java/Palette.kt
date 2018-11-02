@@ -17,7 +17,7 @@ import com.airbnb.paris.styles.Style
 import com.engageft.apptoolbox.R
 import com.engageft.apptoolbox.view.PillButton
 
-object ThemeUtils {
+object Palette {
     private const val NOT_SET = 0
 
     //COLORS
@@ -341,14 +341,14 @@ object ThemeUtils {
 
 //    fun updateWithAccountPropertiesResponse(accountPropertiesResponse: AccountPropertiesResponse?) {
 //        accountPropertiesResponse?.apply {
-//            if (primaryColor != 0) this@ThemeUtils.primaryColor = primaryColor
-//            if (secondaryColor != 0) this@ThemeUtils.secondaryColor = secondaryColor
-//            if (successColor != 0) this@ThemeUtils.successColor = successColor
-//            if (warningColor != 0) this@ThemeUtils.warningColor = warningColor
-//            if (errorColor != 0) this@ThemeUtils.errorColor = errorColor
-//            if (infoColor != 0) this@ThemeUtils.infoColor = infoColor
-//            if (!cardImageUrl.isNullOrEmpty()) this@ThemeUtils.cardImageUrl = cardImageUrl
-//            if (!typefaceName.isNullOrEmpty()) this@ThemeUtils.typefaceName = typefaceName
+//            if (primaryColor != 0) this@Palette.primaryColor = primaryColor
+//            if (secondaryColor != 0) this@Palette.secondaryColor = secondaryColor
+//            if (successColor != 0) this@Palette.successColor = successColor
+//            if (warningColor != 0) this@Palette.warningColor = warningColor
+//            if (errorColor != 0) this@Palette.errorColor = errorColor
+//            if (infoColor != 0) this@Palette.infoColor = infoColor
+//            if (!cardImageUrl.isNullOrEmpty()) this@Palette.cardImageUrl = cardImageUrl
+//            if (!typefaceName.isNullOrEmpty()) this@Palette.typefaceName = typefaceName
 //
 //            updateStyles()
 //        }
@@ -374,10 +374,10 @@ fun Switch.setButtonTint(@ColorInt color: Int){
 fun PillButton.setThemeWithFill(isFilled: Boolean){
     if (isFilled){
         this.setColorStateList(
-                fillPressed = ThemeUtils.secondaryColor,
-                strokePressed = ThemeUtils.secondaryColor,
-                fillEnabled = ThemeUtils.primaryColor,
-                strokeEnabled = ThemeUtils.primaryColor,
+                fillPressed = Palette.secondaryColor,
+                strokePressed = Palette.secondaryColor,
+                fillEnabled = Palette.primaryColor,
+                strokeEnabled = Palette.primaryColor,
                 fillDisabled = ContextCompat.getColor(this.context, R.color.structure2),
                 strokeDisabled = ContextCompat.getColor(this.context, R.color.structure2))
         this.setTextColor(
@@ -388,15 +388,15 @@ fun PillButton.setThemeWithFill(isFilled: Boolean){
     } else {
         this.setColorStateList(
                 fillPressed = ContextCompat.getColor(this.context, android.R.color.transparent),
-                strokePressed = ThemeUtils.secondaryColor,
+                strokePressed = Palette.secondaryColor,
                 fillEnabled = ContextCompat.getColor(this.context, android.R.color.transparent),
-                strokeEnabled = ThemeUtils.primaryColor,
+                strokeEnabled = Palette.primaryColor,
                 fillDisabled = ContextCompat.getColor(this.context, android.R.color.transparent),
                 strokeDisabled = ContextCompat.getColor(this.context, R.color.structure2))
         this.setTextColor(
                 getTextStateList(
-                        pressedColor = ThemeUtils.secondaryColor,
-                        enabledColor = ThemeUtils.primaryColor,
+                        pressedColor = Palette.secondaryColor,
+                        enabledColor = Palette.primaryColor,
                         disabledColor = ContextCompat.getColor(this.context, R.color.structure4)))
     }
 }

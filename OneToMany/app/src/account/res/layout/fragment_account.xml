@@ -5,7 +5,7 @@
     <data>
         <variable
             name="themeUtils"
-            type="com.engageft.feature.ThemeUtils"/>
+            type="com.engageft.feature.Palette"/>
     </data>
 
     <ScrollView
