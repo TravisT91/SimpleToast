@@ -1,6 +1,7 @@
 package com.engageft.onetomany
 
 import com.engageft.apptoolbox.LotusApplication
+import com.engageft.apptoolbox.NavigationType
 import com.engageft.engagekit.EngageService
 import com.engageft.onetomany.config.EngageAppConfig
 
@@ -17,7 +18,6 @@ class OneToManyApplication : LotusApplication() {
     companion object {
         lateinit var sInstance: OneToManyApplication
     }
-    override val navigationType: NavigationType = NavigationType.SIDE
 
     override fun onCreate() {
         super.onCreate()
