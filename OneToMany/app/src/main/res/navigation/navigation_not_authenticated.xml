@@ -15,9 +15,6 @@
         <argument
             android:name="@string/navigation_view_gone"
             android:defaultValue="true" />
-        <argument
-            android:name="@string/navigation_hide_toolbar"
-            android:defaultValue="true" />
     </fragment>
 
     <activity

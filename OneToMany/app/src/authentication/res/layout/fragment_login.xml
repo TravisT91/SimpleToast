@@ -26,21 +26,23 @@
             android:visibility="invisible"/>
 
         <androidx.appcompat.widget.AppCompatTextView
-            android:id="@+id/loginTextView"
             style="@style/Title1Quiet"
+            android:textColor="@color/structure6"
+            android:id="@+id/loginTextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/login_title"
-            android:textColor="@color/structure6"
-            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/testSwitch" />
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintVertical_bias="0.05"
+            android:text="@string/login_title"/>
 
         <LinearLayout
             android:id="@+id/loginInputForm"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:layout_constraintTop_toBottomOf="@+id/loginTextView"
+            app:layout_constraintTop_toBottomOf="@id/loginTextView"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             android:layout_marginTop="14dp"
@@ -69,32 +71,34 @@
         </LinearLayout>
 
         <Button
-            android:id="@+id/forgotPasswordText"
             style="@style/Caption1Medium"
+            android:textColor="@color/pill_button_secondary_text"
+            android:background="@null"
+            android:textAllCaps="false"
+            android:id="@+id/forgotPasswordText"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="16dp"
-            android:background="@null"
-            android:minHeight="@dimen/pill_button_min_height_default"
-            android:text="@string/login_forgot_password"
-            android:textAllCaps="false"
-            android:textColor="@color/pill_button_secondary_text"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/loginInputForm" />
+            app:layout_constraintTop_toBottomOf="@id/loginInputForm"
+            android:minHeight="@dimen/pill_button_min_height_default"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="19dp"
+            android:text="@string/login_forgot_password"/>
 
         <androidx.appcompat.widget.AppCompatCheckBox
-            android:id="@+id/rememberMeCheckbox"
             style="@style/Caption1Medium"
+            android:textColor="@color/pill_button_secondary_text"
+            android:id="@+id/rememberMeCheckbox"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="16dp"
+            app:layout_constraintTop_toTopOf="@id/forgotPasswordText"
+            app:layout_constraintBottom_toBottomOf="@id/forgotPasswordText"
+            app:layout_constraintEnd_toEndOf="parent"
             android:button="@drawable/checkbox_selector"
-            android:checked="@={viewModel.rememberMe}"
             android:paddingStart="9dp"
-            android:text="@string/login_remember_me"
-            android:textColor="@color/pill_button_secondary_text"
-            app:layout_constraintBaseline_toBaselineOf="@+id/forgotPasswordText"
-            app:layout_constraintEnd_toEndOf="parent" />
+            android:layout_marginEnd="16dp"
+            android:checked="@={viewModel.rememberMe}"
+            android:text="@string/login_remember_me"/>
 
         <!--This gets animated in the fragment.-->
         <com.engageft.apptoolbox.view.PillButton
@@ -102,11 +106,10 @@
             style="@style/ButtonPillPrimaryFilledDefault"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="8dp"
-            android:text="@string/login_submit_button"
-            app:layout_constraintBottom_toTopOf="@+id/loginFooter"
+            app:layout_constraintTop_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent" />
+            android:text="@string/login_submit_button"/>
 
         <com.engageft.apptoolbox.view.PillButton
             android:id="@+id/demoAccountButton"
@@ -132,7 +135,6 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             android:layout_marginBottom="13dp">
-
             <Button
                 android:id="@+id/btn_issuer_statement"
                 android:layout_width="wrap_content"
@@ -143,8 +145,8 @@
                 android:textAllCaps="false"
                 android:minHeight="@dimen/pill_button_min_height_default"
                 android:layout_marginEnd="8dp"
-                android:text="@string/login_issuer_statement" />
-
+                android:text="@string/login_issuer_statement"
+                />
             <androidx.appcompat.widget.AppCompatTextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
