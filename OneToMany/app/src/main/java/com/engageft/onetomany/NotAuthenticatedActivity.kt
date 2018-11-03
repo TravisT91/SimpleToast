@@ -12,4 +12,6 @@ class NotAuthenticatedActivity : LotusActivity() {
     override fun getLotusActivityConfig(): LotusActivityConfig {
         return lotusActivityConfig
     }
+
+
 }

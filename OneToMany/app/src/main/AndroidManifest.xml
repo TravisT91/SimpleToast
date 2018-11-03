@@ -37,6 +37,7 @@
         </activity>
 
         <activity android:name="com.engageft.feature.WelcomeActivity"
+            android:theme="@style/WelcomeTheme"
             android:screenOrientation="portrait">
         </activity>
     </application>

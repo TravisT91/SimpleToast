@@ -5,17 +5,20 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
 import android.widget.ImageView
+import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentPagerAdapter
+import androidx.navigation.findNavController
 import androidx.viewpager.widget.ViewPager
 import com.engageft.apptoolbox.BaseViewModel
 import com.engageft.apptoolbox.LotusFullScreenFragment
 import com.engageft.onetomany.R
 
-class ViewPagerFragment: LotusFullScreenFragment() {
+class WelcomeViewPagerFragment: LotusFullScreenFragment() {
 
     companion object {
        private const val WELCOME_FRAGMENT_COUNT = 5
@@ -38,9 +41,8 @@ class ViewPagerFragment: LotusFullScreenFragment() {
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val view = inflater.inflate(R.layout.welcome_viewpager_fragment, container, false)
         val viewPager = view.findViewById<ViewPager>(R.id.welcomeViewPager)
-
         viewPager.adapter = EducationPagerAdapter(childFragmentManager)
-
+        (activity as? AppCompatActivity)!!.supportActionBar?.hide()
         pageIndicator1 = view.findViewById(R.id.pageIndicator1ImageView)
         pageIndicator2 = view.findViewById(R.id.pageIndicator2ImageView)
         pageIndicator3 = view.findViewById(R.id.pageIndicator3ImageView)
@@ -62,6 +64,12 @@ class ViewPagerFragment: LotusFullScreenFragment() {
         viewPager.addOnPageChangeListener(pageChangeListener)
         unselectedDot = ContextCompat.getDrawable(context!!, R.drawable.pager_indicator_dot)!!
         selectedDot = ContextCompat.getDrawable(context!!, R.drawable.pager_indicator_dot_selected)!!
+
+        val loginButton = view.findViewById<Button>(R.id.loginButton)
+        loginButton.setOnClickListener {
+            view.findNavController().navigate(R.id.action_viewPagerFragment_to_loginFragment)
+        }
+
         return view
     }
 
