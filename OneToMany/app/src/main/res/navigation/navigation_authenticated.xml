@@ -68,7 +68,7 @@
     <fragment
         android:id="@+id/moveMoneyFragment"
         android:name="com.engageft.feature.MoveMoneyFragment"
-        android:label="@string/fragment_title_help">
+        android:label="@string/TITLE_MOVE_MONEY">
         <argument
             android:name="@string/navigation_override_up"
             android:defaultValue="true" />

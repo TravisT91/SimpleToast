@@ -6,7 +6,6 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
-import com.engageft.onetomany.R
 import com.engageft.onetomany.databinding.FragmentMoveMoneyBinding
 
 /**
@@ -37,10 +36,5 @@ class MoveMoneyFragment : Fragment() {
             }
         }
         return binding.root
-    }
-
-    override fun onResume() {
-        super.onResume()
-        activity?.title = getString(R.string.TITLE_MOVE_MONEY)
     }
 }
