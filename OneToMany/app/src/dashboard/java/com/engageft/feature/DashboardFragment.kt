@@ -19,6 +19,7 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.engageft.apptoolbox.BaseViewModel
 import com.engageft.apptoolbox.LotusFullScreenFragment
 import com.engageft.apptoolbox.view.ProductCardModel
+import com.engageft.apptoolbox.view.ProductCardModelCardStatus
 import com.engageft.onetomany.R
 import com.engageft.onetomany.databinding.FragmentDashboardBinding
 import com.google.android.material.tabs.TabLayout
@@ -37,14 +38,12 @@ import java.math.BigDecimal
  * Copyright (c) 2018 Engage FT. All rights reserved.
  */
 class DashboardFragment : LotusFullScreenFragment(), OverviewView.OverviewViewListener, TransactionsAdapter.OnTransactionsAdapterListener {
-//    private lateinit var dashboardViewModel: DashboardViewModel
     private lateinit var binding: FragmentDashboardBinding
 
     private lateinit var overviewViewModel: OverviewViewModel
-    private lateinit var cardViewViewModel: CardViewViewModel
 
-    private val cardInfoModelObserver = Observer<ProductCardModel> { updateForCardInfo(it!!) }
-    private val cardStateObserver = Observer<CardViewViewModel.CardState> { updateForCardState(it!!) }
+    private val cardModelObserver = Observer<ProductCardModel> { updateForCardModel(it!!) }
+    private val cardStateObserver = Observer<OverviewViewModel.CardState> { updateForCardState(it!!) }
     private val cardErrorObserver = Observer<Any> { error ->
         // TODO(jhutchins): SHOW-382: Implement error handling
 //        if (error != null && error is String) showErrorDialog(error)
@@ -197,7 +196,8 @@ class DashboardFragment : LotusFullScreenFragment(), OverviewView.OverviewViewLi
         messageContainer = view.findViewById(R.id.message_container)
     }
 
-    private fun updateForCardInfo(productCardModel: ProductCardModel) {
+    private fun updateForCardModel(productCardModel: ProductCardModel) {
+        productCardModel.cardStatusText = cardStatusStringFromCardStatus(productCardModel.cardStatus)
         overviewView.cardView.updateWithProductCardModel(productCardModel)
 
         overviewView.overviewLockUnlockCardLabel.text = getString(
@@ -205,24 +205,40 @@ class DashboardFragment : LotusFullScreenFragment(), OverviewView.OverviewViewLi
         )
     }
 
-    private fun updateForCardState(cardState: CardViewViewModel.CardState) {
+    private fun cardStatusStringFromCardStatus(productCardModelCardStatus: ProductCardModelCardStatus): String {
+        return getString(
+                when (productCardModelCardStatus) {
+                    ProductCardModelCardStatus.CARD_STATUS_ACTIVE -> R.string.CARD_STATUS_DISPLAY_ACTIVE
+                    ProductCardModelCardStatus.CARD_STATUS_VIRTUAL -> R.string.CARD_STATUS_DISPLAY_VIRTUAL
+                    ProductCardModelCardStatus.CARD_STATUS_PENDING -> R.string.CARD_STATUS_DISPLAY_PENDING
+                    ProductCardModelCardStatus.CARD_STATUS_LOCKED -> R.string.CARD_STATUS_DISPLAY_LOCKED
+                    ProductCardModelCardStatus.CARD_STATUS_REPLACED -> R.string.CARD_STATUS_DISPLAY_REPLACED
+                    ProductCardModelCardStatus.CARD_STATUS_CANCELED -> R.string.CARD_STATUS_DISPLAY_CANCELLED
+                    ProductCardModelCardStatus.CARD_STATUS_SUSPENDED -> R.string.CARD_STATUS_DISPLAY_SUSPENDED
+                    ProductCardModelCardStatus.CARD_STATUS_CLOSED -> R.string.CARD_STATUS_DISPLAY_CLOSED
+                    ProductCardModelCardStatus.CARD_STATUS_ORDERED -> R.string.CARD_STATUS_DISPLAY_ORDERED
+                }
+        )
+    }
+
+    private fun updateForCardState(cardState: OverviewViewModel.CardState) {
         when (cardState) {
-            CardViewViewModel.CardState.LOADING -> {
+            OverviewViewModel.CardState.LOADING -> {
                 showProgressOverlay()
                 overviewView.overviewShowHideCardDetailsLabel.text = getString(R.string.OVERVIEW_LOADING_CARD_DETAILS)
             }
-            CardViewViewModel.CardState.DETAILS_HIDDEN -> {
+            OverviewViewModel.CardState.DETAILS_HIDDEN -> {
                 dismissProgressOverlay()
                 overviewView.overviewShowHideCardDetailsLabel.text = getString(R.string.OVERVIEW_SHOW_CARD_DETAILS)
             }
-            CardViewViewModel.CardState.DETAILS_SHOWN -> {
+            OverviewViewModel.CardState.DETAILS_SHOWN -> {
                 dismissProgressOverlay()
                 overviewView.overviewShowHideCardDetailsLabel.text = getString(R.string.OVERVIEW_HIDE_CARD_DETAILS)
             }
-            CardViewViewModel.CardState.ERROR -> {
+            OverviewViewModel.CardState.ERROR -> {
                 dismissProgressOverlay()
                 overviewView.overviewShowHideCardDetailsLabel.text = getString(
-                        if (cardViewViewModel.isShowingCardDetails()) R.string.OVERVIEW_HIDE_CARD_DETAILS else R.string.OVERVIEW_SHOW_CARD_DETAILS
+                        if (overviewViewModel.isShowingCardDetails()) R.string.OVERVIEW_HIDE_CARD_DETAILS else R.string.OVERVIEW_SHOW_CARD_DETAILS
                 )
 
                 // TODO(jhutchins): SHOW-382: Implement error handling
@@ -232,7 +248,7 @@ class DashboardFragment : LotusFullScreenFragment(), OverviewView.OverviewViewLi
         }
 
         // don't show screen image in task switcher if showing card details
-        preventScreenCapture(cardViewViewModel.isShowingCardDetails())
+        preventScreenCapture(overviewViewModel.isShowingCardDetails())
     }
 
     fun updateSpendingBalance(spendingBalance: BigDecimal?) {
@@ -348,13 +364,13 @@ class DashboardFragment : LotusFullScreenFragment(), OverviewView.OverviewViewLi
     }
 
     private fun initViewModel() {
-        cardViewViewModel = ViewModelProviders.of(activity!!).get(CardViewViewModel::class.java)
-        cardViewViewModel.expirationDateFormatString = getString(R.string.MONTH_YEAR_FORMAT)
-        cardViewViewModel.cardInfoModelObservable.observe(this, cardInfoModelObserver)
-        cardViewViewModel.cardStateObservable.observe(this, cardStateObserver)
+        overviewViewModel = ViewModelProviders.of(activity!!).get(OverviewViewModel::class.java)
+        overviewViewModel.expirationDateFormatString = getString(R.string.MONTH_YEAR_FORMAT)
+        overviewViewModel.cardInfoModelObservable.observe(this, cardModelObserver)
+        overviewViewModel.cardStateObservable.observe(this, cardStateObserver)
         // TODO(jhutchins): Error handling
-//        cardViewViewModel.errorObservable.observe(this, cardErrorObserver)
-        cardViewViewModel.initCardView()
+//        overviewViewModel.errorObservable.observe(this, cardErrorObserver)
+        overviewViewModel.initCardView()
 
         overviewViewModel.spendingBalanceObservable.observe(this, spendingBalanceObserver)
         overviewViewModel.spendingBalanceStateObservable.observe(this, spendingBalanceStateObserver)
@@ -402,7 +418,7 @@ class DashboardFragment : LotusFullScreenFragment(), OverviewView.OverviewViewLi
     }
 
     override fun onCollapseStart() {
-        cardViewViewModel.hideCardDetails()
+        overviewViewModel.hideCardDetails()
         showObscuringOverlay(false)
         listener?.onOverviewViewCollapseStart()
     }
@@ -416,8 +432,8 @@ class DashboardFragment : LotusFullScreenFragment(), OverviewView.OverviewViewLi
 
     override fun onShowHideCardDetails() {
         // TODO(jhutchins):
-//        if (cardViewViewModel.isShowingCardDetails()) {
-//            cardViewViewModel.hideCardDetails()
+//        if (overviewViewModel.isShowingCardDetails()) {
+//            overviewViewModel.hideCardDetails()
 //        } else {
 //            val dialogFragment = PasswordAuthenticationDialogFragment.newInstance(AUTHENTICATION_REVEAL_CARD_DIALOG_TAG, getString(R.string.BUTTON_CANCEL))
 //            dialogFragment.show(childFragmentManager, AUTHENTICATION_REVEAL_CARD_DIALOG_TAG)

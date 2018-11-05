@@ -368,7 +368,7 @@ object StringUtils {
         else if (DebitCardInfoUtils.isPendingActivation(debitCardInfo))
             resId = R.string.CARD_STATUS_DISPLAY_PENDING
         else if (DebitCardInfoUtils.isLostStolen(debitCardInfo))
-            resId = R.string.CARD_STATUS_DISPLAY_LOST
+            resId = R.string.CARD_STATUS_DISPLAY_REPLACED
         else if (DebitCardInfoUtils.isCancelled(debitCardInfo))
             resId = R.string.CARD_STATUS_DISPLAY_CANCELLED
         else if (DebitCardInfoUtils.isSuspended(debitCardInfo))

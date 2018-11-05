@@ -6,7 +6,7 @@
     <string name="TOTAL_SPENT_LABEL">Total Spent</string>
     <string name="CARD_STATUS_DISPLAY_LOCKED">Locked</string>
     <string name="CARD_STATUS_DISPLAY_PENDING">Inactive</string>
-    <string name="CARD_STATUS_DISPLAY_LOST">Replaced</string>
+    <string name="CARD_STATUS_DISPLAY_REPLACED">Replaced</string>
     <string name="CARD_STATUS_DISPLAY_ACTIVE">Active</string>
     <string name="CARD_STATUS_DISPLAY_CANCELLED">Canceled</string>
     <string name="CARD_STATUS_DISPLAY_ACTIVATE">Activate</string>
