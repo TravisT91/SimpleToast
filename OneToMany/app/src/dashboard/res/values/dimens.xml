@@ -26,4 +26,7 @@
 
     <!-- radius of BlurView blur -->
     <item name="blur_radius" format="float" type="dimen">6.0</item>
+
+    <!-- overview transactions list -->
+    <dimen name="transactions_tab_indicator_height">3dp</dimen>
 </resources>

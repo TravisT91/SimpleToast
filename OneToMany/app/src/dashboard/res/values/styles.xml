@@ -18,8 +18,16 @@
         <item name="android:textColor">@color/structure5</item>
     </style>
 
+    <style name="OverviewTransactionsTabLayoutStyle" parent="Widget.MaterialComponents.TabLayout">
+        <item name="tabIndicatorHeight">@dimen/transactions_tab_indicator_height</item>
+        <item name="tabIndicatorColor">@color/primary</item>
+        <item name="android:background">@color/structure1</item>
+        <item name="tabSelectedTextColor">@color/primary</item>
+        <item name="tabTextColor">@color/structure6</item>
+        <item name="tabTextAppearance">@style/TabLayoutTextStyle</item>
+    </style>
+
     <style name="TabLayoutTextStyle" parent="BodyLoud">
-        <item name="android:textColor">@color/structure6</item>
         <item name="android:textAllCaps">true</item>
     </style>
 </resources>

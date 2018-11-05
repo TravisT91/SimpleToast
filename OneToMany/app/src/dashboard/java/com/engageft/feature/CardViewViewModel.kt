@@ -92,27 +92,6 @@ class CardViewViewModel : BaseViewModel() {
         )
     }
 
-//    private fun getCardStatus(debitCardInfo: DebitCardInfo): ProductCardModelCardStatus {
-//        return if (DebitCardInfoUtils.hasVirtualCard(debitCardInfo) && EngageService.getInstance().engageConfig.virtualCardEnabled)
-//            ProductCardModelCardStatus.CARD__STATUS_VIRTUAL
-//        else if (DebitCardInfoUtils.isLocked(debitCardInfo))
-//            ProductCardModelCardStatus.CARD__STATUS_LOCKED
-//        else if (DebitCardInfoUtils.isPendingActivation(debitCardInfo))
-//            ProductCardModelCardStatus.CARD__STATUS_PENDING
-//        else if (DebitCardInfoUtils.isLostStolen(debitCardInfo))
-//            ProductCardModelCardStatus.CARD__STATUS_REPLACED
-//        else if (DebitCardInfoUtils.isCancelled(debitCardInfo))
-//            ProductCardModelCardStatus.CARD__STATUS_CANCELED
-//        else if (DebitCardInfoUtils.isSuspended(debitCardInfo))
-//            ProductCardModelCardStatus.CARD__STATUS_SUSPENDED
-//        else if (DebitCardInfoUtils.isFraudStatus(debitCardInfo))
-//            ProductCardModelCardStatus.CARD__STATUS_CLOSED
-//        else if (DebitCardInfoUtils.isOrdered(debitCardInfo))
-//            ProductCardModelCardStatus.CARD__STATUS_ORDERED
-//        else
-//            ProductCardModelCardStatus.CARD__STATUS_ACTIVE
-//    }
-
     fun showCardDetails() {
         val debitCardInfo = LoginResponseUtils.getCurrentCard(EngageService.getInstance().storageManager.loginResponse)
         if (debitCardInfo != null) {

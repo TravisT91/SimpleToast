@@ -1,16 +1,20 @@
 package com.engageft.feature
 
 import android.content.Context
+import android.graphics.PorterDuff
 import android.text.TextUtils
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.engageft.engagekit.tools.StorageManager
 import com.engageft.onetomany.R
+import com.ob.domain.lookup.TransactionStatus
 import com.ob.domain.lookup.TransactionType
 import com.ob.ws.dom.utility.TransactionInfo
+import utilGen1.StringUtils
 import utilGen1.TransactionInfoUtils
 import java.util.*
 import kotlin.math.min
@@ -118,7 +122,7 @@ class TransactionsAdapter(private val context: Context, private val listener: On
 
             val transactionType = TransactionInfoUtils.getTransactionType(transactionInfo)
 
-            /*holder.dayAndMonthTextView.text = StringUtils.formatDateMonthDayForTransactionRow(transactionInfo.isoDate)
+            holder.dayAndMonthTextView.text = StringUtils.formatDateMonthDayForTransactionRow(transactionInfo.isoDate)
             holder.storeTextView.text = StringUtils.removeRedundantWhitespace(transactionInfo.store)
             holder.categoryTextView.text = TransactionInfoUtils.getTransactionTypeText(context, transactionInfo, transactionType!!)
 
@@ -126,27 +130,25 @@ class TransactionsAdapter(private val context: Context, private val listener: On
             val amountString = StringUtils.formatCurrencyStringWithFractionDigits(transactionAmount, true)
             if (transactionAmount > 0) {
                 holder.amountTextView.text = "+$amountString"
-                holder.amountTextView.setTextColor(ContextCompat.getColor(context, R.color.themeGreenStatus))
+                holder.amountTextView.setTextColor(ContextCompat.getColor(context, R.color.transactionAmountTextPositive))
             } else {
                 holder.amountTextView.text = amountString
-                holder.amountTextView.setTextColor(ContextCompat.getColor(context, R.color.themeDefaultTextDark))
+                holder.amountTextView.setTextColor(ContextCompat.getColor(context, R.color.transactionAmountTextDefault))
             }
 
             val transactionStatus = TransactionInfoUtils.getTransactionStatus(transactionInfo)
-            holder.statusTextView.visibility = View.INVISIBLE
+            holder.statusTextView.visibility = View.GONE
             when (transactionStatus) {
                 TransactionStatus.DECLINED -> {
                     holder.statusTextView.visibility = View.VISIBLE
                     holder.statusTextView.text = TransactionInfoUtils.getTransactionStatusText(context, transactionStatus)
-                    holder.itemView.background.setColorFilter(ContextCompat.getColor(context, R.color.themePendingBackground), PorterDuff.Mode.SRC_ATOP)
+                    holder.itemView.background.setColorFilter(ContextCompat.getColor(context, R.color.transactionRowBackgroundDeclined), PorterDuff.Mode.SRC_ATOP)
                 }
-                TransactionStatus.PENDING -> holder.itemView.background.setColorFilter(ContextCompat.getColor(context, R.color.themePendingBackground), PorterDuff.Mode.SRC_ATOP)
-                else -> holder.itemView.background.setColorFilter(ContextCompat.getColor(context, R.color.themeCardBackground), PorterDuff.Mode.SRC_ATOP)
+                TransactionStatus.PENDING -> holder.itemView.background.setColorFilter(ContextCompat.getColor(context, R.color.transactionRowBackgroundPending), PorterDuff.Mode.SRC_ATOP)
+                else -> holder.itemView.background.setColorFilter(ContextCompat.getColor(context, R.color.transactionRowBackgroundDefault), PorterDuff.Mode.SRC_ATOP)
             }
 
-            holder.bottomRule.visibility = if (position == itemCount - 1) View.INVISIBLE else View.VISIBLE*/
-        } else if (holder is NoTransactionsViewHolder) {
-            //holder.noTransactionsTextView.text = context.getString(R.string.TRANSACTION_LIST_MONTH_NO_TRANSACTIONS)
+            holder.bottomRule.visibility = if (position == itemCount - 1) View.INVISIBLE else View.VISIBLE
         }
     }
 

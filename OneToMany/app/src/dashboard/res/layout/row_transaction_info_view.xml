@@ -7,31 +7,38 @@
     android:id="@+id/rowParentLayout"
     android:background="@color/structure1">
 
-    <RelativeLayout android:id="@+id/rl_no_transactions"
+    <androidx.constraintlayout.widget.ConstraintLayout android:id="@+id/rl_no_transactions"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:visibility="gone">
+        android:layout_height="match_parent"
+        android:visibility="gone"
+        tools:visibility="visible">
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/iv_transactions_placeholder"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintBottom_toTopOf="@id/tv_no_transactions"
+            app:layout_constraintVertical_chainStyle="packed"
+            app:srcCompat="@drawable/ic_transactions_placeholder" />
 
         <TextView android:id="@+id/tv_no_transactions"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_alignParentStart="true"
-            android:layout_alignParentTop="true"
-            android:layout_alignParentEnd="true"
-            android:padding="16dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/iv_transactions_placeholder"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            android:gravity="center_horizontal"
+            android:paddingStart="32dp"
+            android:paddingEnd="32dp"
             style="@style/Footnote"
-            android:textColor="@color/structure4"
-            android:text="@string/TRANSACTIONS_NONE"
-            android:fontFamily="@font/font_regular"/>
+            android:textColor="@color/transactionsPlaceholderText"
+            android:text="@string/OVERVIEW_NO_TRANSACTIONS_PLACEHOLDER" />
 
-        <View android:id="@+id/view_horizontal_rule_bottom_no_transactions"
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:background="@color/structure1"
-            android:layout_alignParentBottom="true"
-            android:layout_below="@+id/tv_no_transactions" />
-
-    </RelativeLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/cl_transactions"
@@ -49,8 +56,8 @@
             app:layout_constraintBottom_toBottomOf="parent"
             android:layout_margin="16dp"
             android:gravity="center"
-            style="@style/Caption1Loud"
-            android:textColor="@color/structure6"
+            style="@style/Title3Loud"
+            android:textColor="@color/transactionDateText"
             tools:text="MAR\n20"/>
 
         <LinearLayout
@@ -62,6 +69,7 @@
             app:layout_constraintEnd_toStartOf="@id/ll_amount_right_column"
             app:layout_constraintBottom_toBottomOf="parent"
             android:layout_marginTop="16dp"
+            android:layout_marginEnd="16dp"
             android:layout_marginBottom="16dp"
             android:orientation="vertical">
 
@@ -70,8 +78,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 style="@style/Body"
-                android:textColor="@color/structure6"
-                android:maxLines="2"
+                android:textColor="@color/transactionStoreText"
+                android:maxLines="1"
                 android:ellipsize="end"
                 tools:text="Sent Money"/>
 
@@ -81,8 +89,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="4dp"
                 style="@style/Caption1Medium"
-                android:textColor="@color/structure4"
-                android:lineSpacingExtra="2dp"
+                android:textColor="@color/transactionCategoryText"
                 tools:text="from sender to recipient"
                 tools:visibility="gone"/>
 
@@ -107,7 +114,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 style="@style/FootnoteMedium"
-                android:textColor="@color/structure6"
+                android:textColor="@color/transactionAmountTextDefault"
                 android:lines="1"
                 tools:text="$23.98"/>
 
