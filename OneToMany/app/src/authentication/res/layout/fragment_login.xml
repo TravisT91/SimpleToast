@@ -28,7 +28,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             android:visibility="visible" />
 
-        <TextView
+        <androidx.appcompat.widget.AppCompatTextView
             tools:style="@style/Title1Quiet"
             parisStyle="@{themeUtils.title1Quiet}"
             android:id="@+id/loginTextView"
