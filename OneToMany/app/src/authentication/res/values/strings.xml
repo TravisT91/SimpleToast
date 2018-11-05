@@ -10,7 +10,8 @@
     <string name="login_footer_separator">|</string>
     <string name="login_disclosures">Disclosures</string>
     <string name="login_submit_button">Log in</string>
-
+    <string name="login_demo_account_button">Create a Demo Account</string>
+    <string name="login_preview_wait_message">Please wait while we create a preview account for you.\u0020\u0020This may take a minute.</string>
     <string name="login_test_switch">Test</string>
 
     <!--Login error messages-->
