@@ -48,8 +48,7 @@ class SplashScreenViewModel : BaseViewModel() {
 
         private fun doSplashInitialize() {
             handler.postDelayed({
-//                if (!EnrollmentSharedPreferencesRepo.hasSeenGetStarted()) {
-                if (true) {
+                if (!EnrollmentSharedPreferencesRepo.hasSeenGetStarted()) {
                     value = SplashNavigationEvent.FIRST_TIME
                     EnrollmentSharedPreferencesRepo.applyHasSeenGetStarted(true)
                 } else if (EngageService.getInstance().authManager.isLoggedIn) {
