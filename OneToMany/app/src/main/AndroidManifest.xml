@@ -14,7 +14,8 @@
         android:theme="@style/LotusTheme">
 
         <activity android:name="com.engageft.feature.SplashActivity"
-            android:theme="@style/SplashTheme">
+            android:theme="@style/SplashTheme"
+            android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <action android:name="android.intent.action.VIEW" />
@@ -29,11 +30,12 @@
         <activity
             android:windowSoftInputMode="adjustResize"
             android:name="com.engageft.onetomany.NotAuthenticatedActivity"
+            android:screenOrientation="portrait"
             android:theme="@style/LotusTheme">
         </activity>
 
-        <activity android:name="com.engageft.onetomany.AuthenticatedActivity">
-
+        <activity android:name="com.engageft.onetomany.AuthenticatedActivity"
+            android:screenOrientation="portrait">
         </activity>
     </application>
 
