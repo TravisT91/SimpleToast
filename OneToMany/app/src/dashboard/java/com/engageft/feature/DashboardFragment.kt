@@ -431,13 +431,14 @@ class DashboardFragment : LotusFullScreenFragment(), OverviewView.OverviewViewLi
     }
 
     override fun onShowHideCardDetails() {
-        // TODO(jhutchins):
-//        if (overviewViewModel.isShowingCardDetails()) {
-//            overviewViewModel.hideCardDetails()
-//        } else {
-//            val dialogFragment = PasswordAuthenticationDialogFragment.newInstance(AUTHENTICATION_REVEAL_CARD_DIALOG_TAG, getString(R.string.BUTTON_CANCEL))
-//            dialogFragment.show(childFragmentManager, AUTHENTICATION_REVEAL_CARD_DIALOG_TAG)
-//        }
+        if (overviewViewModel.isShowingCardDetails()) {
+            overviewViewModel.hideCardDetails()
+        } else {
+            //val dialogFragment = PasswordAuthenticationDialogFragment.newInstance(AUTHENTICATION_REVEAL_CARD_DIALOG_TAG, getString(R.string.BUTTON_CANCEL))
+            //dialogFragment.show(childFragmentManager, AUTHENTICATION_REVEAL_CARD_DIALOG_TAG)
+            // TODO(kurt): hide this behind password auth, once we have PasswordAuthDialogFragment
+            overviewViewModel.showCardDetails()
+        }
     }
 
     override fun onDirectDepositInfo() {
