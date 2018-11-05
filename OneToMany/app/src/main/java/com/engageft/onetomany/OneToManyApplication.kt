@@ -21,7 +21,7 @@ class OneToManyApplication : LotusApplication() {
     companion object {
         lateinit var sInstance: OneToManyApplication
     }
-    override val navigationType: NavigationType = NavigationType.SIDE
+
 
     override fun onCreate() {
         super.onCreate()
