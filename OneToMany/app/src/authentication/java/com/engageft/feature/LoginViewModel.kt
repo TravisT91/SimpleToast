@@ -206,8 +206,9 @@ class LoginViewModel : BaseViewModel() {
                                         usernameError.value = UsernameValidationError.INVALID_CREDENTIALS
                                         passwordError.value = PasswordValidationError.INVALID_CREDENTIALS
                                     }
-                                }, { _ ->
-                            Log.e("Joey", "login error")
+                                }, { e ->
+                            Log.e("Joey", "login error throwable " + e.message)
+                            e.printStackTrace()
                             progressOverlayShownObservable.value = false
                             // TODO(aHahsimi) Proper error handling handle throwable and/or show dialog? https://engageft.atlassian.net/browse/SHOW-364
                             dialogInfoObservable.value = LoginDialogInfo()
