@@ -22,7 +22,6 @@ class OneToManyApplication : LotusApplication() {
         lateinit var sInstance: OneToManyApplication
     }
 
-
     override fun onCreate() {
         super.onCreate()
         sInstance = this

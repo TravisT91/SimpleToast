@@ -9,5 +9,12 @@ package com.engageft.feature
  * Copyright (c) 2018 Engage FT. All rights reserved.
  */
 object AuthenticationConfig {
-    val requireEmailConfirmation: Boolean = false
+    const val requireEmailConfirmation: Boolean = false
+
+    // TODO(aHashimi): cases such as when the app doesn't allow demo either in production or demo
+    const val demoAccountAvailable: Boolean = true
+
+    // TODO(aHashimi): Maybe need to set this to false once in production
+    // this is when demo account creation is forbidden in production
+    const val shouldAllowDemoAccountCreationInProd: Boolean = true
 }
