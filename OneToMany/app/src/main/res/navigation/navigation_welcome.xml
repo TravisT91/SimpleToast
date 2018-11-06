@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <navigation xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto" android:id="@+id/navigation_welcome"
-    app:startDestination="@id/viewPagerFragment">
+    app:startDestination="@id/welcomeViewPagerFragment">
 
     <fragment
-        android:id="@+id/viewPagerFragment"
+        android:id="@+id/welcomeViewPagerFragment"
         android:name="com.engageft.feature.WelcomeViewPagerFragment">
         <action
-            android:id="@+id/action_viewPagerFragment_to_loginFragment"
+            android:id="@+id/action_welcomeViewPagerFragment_to_loginFragment"
             app:destination="@id/loginFragment" />
         <argument
             android:name="@string/navigation_hide_toolbar"

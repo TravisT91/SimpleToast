@@ -55,7 +55,7 @@ class WelcomeViewPagerFragment: LotusFullScreenFragment() {
         selectedDot = ContextCompat.getDrawable(context!!, R.drawable.pager_indicator_dot_selected)!!
 
         binding.loginButton.setOnClickListener {
-            binding.root.findNavController().navigate(R.id.action_viewPagerFragment_to_loginFragment)
+            binding.root.findNavController().navigate(R.id.action_welcomeViewPagerFragment_to_loginFragment)
         }
 
         binding.getStartedButton.setOnClickListener {

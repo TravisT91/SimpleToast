@@ -10,7 +10,14 @@ import com.engageft.apptoolbox.BaseViewModel
 import com.engageft.apptoolbox.LotusFullScreenFragment
 import com.engageft.onetomany.R
 import com.engageft.onetomany.databinding.Welcome2FragmentBinding
-
+/**
+ * Welcome3Fragment
+ *
+ * Welcome screen 3.
+ *
+ * Created by Atia Hashimi 11/6/2018.
+ * Copyright (c) 2018 Engage FT. All rights reserved.
+ */
 class Welcome3Fragment: LotusFullScreenFragment() {
 
     lateinit var binding: Welcome2FragmentBinding

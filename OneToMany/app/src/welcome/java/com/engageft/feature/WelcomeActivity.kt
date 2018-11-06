@@ -7,9 +7,9 @@ import com.engageft.onetomany.R
 /**
  * WelcomeActivity
  *
- * Manages sequence of fragments leading up to enrollment for SB.
+ * Activity that has navigation graph for Welcome screen flow.
  *
- * Created by Joseph Hutchins on 3/28/18.
+ * Created by Atia Hashimi 11/6/2018.
  * Copyright (c) 2018 Engage FT. All rights reserved.
  */
 class WelcomeActivity : LotusActivity() {
