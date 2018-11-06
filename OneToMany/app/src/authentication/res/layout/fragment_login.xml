@@ -6,7 +6,7 @@
     <data>
         <variable name="viewModel" type="com.engageft.feature.LoginViewModel"/>
         <variable
-            name="themeUtils"
+            name="palette"
             type="com.engageft.feature.Palette"/>
     </data>
 
@@ -30,7 +30,7 @@
 
         <androidx.appcompat.widget.AppCompatTextView
             tools:style="@style/Title1Quiet"
-            parisStyle="@{themeUtils.title1Quiet}"
+            parisStyle="@{palette.title1Quiet}"
             android:id="@+id/loginTextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
