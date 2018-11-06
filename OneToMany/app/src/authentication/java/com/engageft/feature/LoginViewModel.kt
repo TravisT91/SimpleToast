@@ -174,6 +174,17 @@ class LoginViewModel : BaseViewModel() {
         }
     }
 
+    fun updateDemoAccountButtonState() {
+        val testModeToggled = testMode.get()!!
+
+        if (AuthenticationConfig.demoAccountAvailable
+                && testModeToggled && username.get().isNullOrEmpty() && password.get().isNullOrEmpty()) {
+            demoAccountButtonState.value = ButtonState.SHOW
+        } else {
+            demoAccountButtonState.value = ButtonState.HIDE
+        }
+    }
+
     private fun login(username: String, password: String) {
         // Make sure there's no stale data. Might want to keep some around, but for now, just wipe it all out.
         EngageService.getInstance().authManager.logout()
@@ -250,17 +261,6 @@ class LoginViewModel : BaseViewModel() {
     private fun validatePassword() {
         updateButtonState()
         updateDemoAccountButtonState()
-    }
-
-    private fun updateDemoAccountButtonState() {
-        val testModeToggled = testMode.get()!!
-
-        if (AuthenticationConfig.demoAccountAvailable
-                && testModeToggled && username.get().isNullOrEmpty() && password.get().isNullOrEmpty()) {
-            demoAccountButtonState.value = ButtonState.SHOW
-        } else {
-            demoAccountButtonState.value = ButtonState.HIDE
-        }
     }
 
     /**

@@ -176,6 +176,11 @@ class LoginFragment : LotusFullScreenFragment() {
         return binding.root
     }
 
+    override fun onResume() {
+        super.onResume()
+        binding.viewModel?.updateDemoAccountButtonState()
+    }
+
     private fun setLayoutTransitions() {
         val constraintLayout = binding.root as ConstraintLayout
         val transition = AutoTransition()
