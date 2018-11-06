@@ -1,6 +1,7 @@
 package com.engageft.onetomany
 
 import android.os.Bundle
+import android.util.Log
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import com.engageft.apptoolbox.LotusActivity
@@ -22,7 +23,12 @@ abstract class BaseAuthenticatedActivity : LotusActivity() {
         authViewModel = ViewModelProviders.of(this).get(AuthenticationViewModel::class.java)
 
         authViewModel.authNavigationObservable.observe(this, Observer { splashNavigationEvent : AuthenticationViewModel.AuthNavigationEvent ->
-            // TODO(jhutchins):
+            Log.e("Joey", "Activity: event!")
         })
+    }
+
+    override fun onUserInteraction() {
+        super.onUserInteraction()
+        authViewModel.onUserInteraction()
     }
 }

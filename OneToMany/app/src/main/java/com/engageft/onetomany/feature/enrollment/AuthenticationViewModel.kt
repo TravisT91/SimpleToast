@@ -1,5 +1,6 @@
 package com.engageft.onetomany.feature.enrollment
 
+import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModel
@@ -22,25 +23,31 @@ class AuthenticationViewModel : ViewModel() {
     }
 
     val authNavigationObservable = MutableLiveData<AuthNavigationEvent>()
+    private val authManager = EngageService.getInstance().authManager
 
-    private val authenticationObserver = object : Observer<Boolean> {
-        override fun onChanged(t: Boolean?) {
-            if (!t!!) {
-                // For now, prompt password, but eventually deduce user settings.
-                authNavigationObservable.value = AuthNavigationEvent.PROMPT_PASSWORD
-            } else {
-                authNavigationObservable.value = AuthNavigationEvent.PROMPT_NONE
-            }
+    private val authenticationObserver = Observer<Boolean> { t ->
+        Log.e("Joey", "viewModelObserver")
+        if (!t!!) {
+            Log.e("Joey", "viewModelObserver: logged out")
+            // For now, prompt password, but eventually deduce user settings.
+            authNavigationObservable.value = AuthNavigationEvent.PROMPT_PASSWORD
+        } else {
+            Log.e("Joey", "viewModelObserver: logged in")
+            authNavigationObservable.value = AuthNavigationEvent.PROMPT_NONE
         }
     }
 
     init {
         authNavigationObservable.value = AuthNavigationEvent.PROMPT_NONE
-        EngageService.getInstance().authManager.authenticationStateObservable.observeForever(this.authenticationObserver)
+        authManager.authenticationStateObservable.observeForever(this.authenticationObserver)
     }
 
     override fun onCleared() {
         super.onCleared()
-        EngageService.getInstance().authManager.authenticationStateObservable.removeObserver(this.authenticationObserver)
+        authManager.authenticationStateObservable.removeObserver(this.authenticationObserver)
+    }
+
+    fun onUserInteraction() {
+        authManager.onUserInteraction()
     }
 }
