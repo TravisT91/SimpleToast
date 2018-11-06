@@ -1,6 +1,10 @@
 package com.engageft.onetomany
 
-import com.engageft.apptoolbox.BaseActivity
+import android.os.Bundle
+import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProviders
+import com.engageft.apptoolbox.LotusActivity
+import com.engageft.onetomany.feature.enrollment.AuthenticationViewModel
 
 /**
  * TODO(joeyhutchins): ClassName
@@ -10,6 +14,15 @@ import com.engageft.apptoolbox.BaseActivity
  * Created by joeyhutchins on 10/30/18.
  * Copyright (c) 2018 Engage FT. All rights reserved.
  */
-abstract class BaseAuthenticatedActivity : BaseActivity() {
+abstract class BaseAuthenticatedActivity : LotusActivity() {
+    private lateinit var authViewModel: AuthenticationViewModel
 
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        authViewModel = ViewModelProviders.of(this).get(AuthenticationViewModel::class.java)
+
+        authViewModel.authNavigationObservable.observe(this, Observer { splashNavigationEvent : AuthenticationViewModel.AuthNavigationEvent ->
+            // TODO(jhutchins):
+        })
+    }
 }
