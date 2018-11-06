@@ -13,6 +13,8 @@
     This may change if/when the button image includes a shadow, which it currently doesn't. -->
     <dimen name="overview_transparent_bar_below_card_view_height">24dp</dimen>
 
+    <dimen name="overview_disclosure_button_width_height">30dp</dimen>
+
     <dimen name="overview_action_item_icon_width">50dp</dimen>
     <dimen name="overview_action_item_icon_height">30dp</dimen>
 

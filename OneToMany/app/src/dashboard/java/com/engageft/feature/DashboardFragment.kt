@@ -441,12 +441,8 @@ class DashboardFragment : LotusFullScreenFragment(), OverviewView.OverviewViewLi
         }
     }
 
-    override fun onDirectDepositInfo() {
-        overviewViewModel.showDirectDepositInfo()
-    }
-
-    override fun onAddMoney() {
-        overviewViewModel.showAddMoney()
+    override fun onMoveMoney() {
+        overviewViewModel.showMoveMoney()
     }
 
     override fun onLockUnlockCard() {
@@ -455,6 +451,18 @@ class DashboardFragment : LotusFullScreenFragment(), OverviewView.OverviewViewLi
 
     override fun onChangePin() {
         overviewViewModel.showChangePin()
+    }
+
+    override fun onReplaceCard() {
+        overviewViewModel.showReplaceCard()
+    }
+
+    override fun onReportCardLostStolen() {
+        overviewViewModel.showReportLostStolen()
+    }
+
+    override fun onCancelCard() {
+        overviewViewModel.showCancelCard()
     }
 
     // TransactionsAdapter.OnTransactionsAdapterListener

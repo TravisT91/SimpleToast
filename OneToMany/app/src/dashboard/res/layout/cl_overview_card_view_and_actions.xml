@@ -71,31 +71,7 @@
         </LinearLayout>
 
         <LinearLayout
-            android:id="@+id/overviewDirectDepositInfoLayout"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:layout_marginTop="16dp">
-
-            <androidx.appcompat.widget.AppCompatImageView
-                android:layout_width="@dimen/overview_action_item_icon_width"
-                android:layout_height="@dimen/overview_action_item_icon_height"
-                android:scaleType="center"
-                android:layout_marginEnd="8dp"
-                app:srcCompat="@drawable/ic_overview_direct_deposit"/>
-
-            <TextView
-                android:id="@+id/overviewDirectDepositInfoLabel"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                style="@style/OverviewCardItemTextView"
-                android:text="@string/OVERVIEW_DIRECT_DEPOSIT_INFO"
-                android:gravity="center_vertical"/>
-
-        </LinearLayout>
-
-        <LinearLayout
-            android:id="@+id/overviewAddMoneyLayout"
+            android:id="@+id/overviewMoveMoneyLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
@@ -109,11 +85,11 @@
                 app:srcCompat="@drawable/ic_overview_plus"/>
 
             <TextView
-                android:id="@+id/overviewAddMoneyLabel"
+                android:id="@+id/overviewMoveMoneyLabel"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 style="@style/OverviewCardItemTextView"
-                android:text="@string/OVERVIEW_ADD_MONEY"
+                android:text="@string/OVERVIEW_MOVE_MONEY"
                 android:gravity="center_vertical"/>
 
         </LinearLayout>
@@ -143,26 +119,25 @@
         </LinearLayout>
 
         <LinearLayout
-            android:id="@+id/overviewChangePinLayout"
+            android:id="@+id/overviewMoreOptionsLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
             android:layout_marginTop="16dp">
 
-            <TextView
+            <androidx.appcompat.widget.AppCompatImageView
                 android:layout_width="@dimen/overview_action_item_icon_width"
                 android:layout_height="@dimen/overview_action_item_icon_height"
-                style="@style/OverviewCardItemTextView"
+                android:scaleType="center"
                 android:layout_marginEnd="8dp"
-                android:text="@string/OVERVIEW_CHANGE_PIN_ICON"
-                android:gravity="center_horizontal"/>
+                app:srcCompat="@drawable/ic_overview_lock"/>
 
             <TextView
-                android:id="@+id/overviewChangePinLabel"
+                android:id="@+id/overviewMoreOptionsLabel"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 style="@style/OverviewCardItemTextView"
-                android:text="@string/OVERVIEW_CHANGE_PIN"
+                android:text="@string/OVERVIEW_MORE_OPTIONS"
                 android:gravity="center_vertical"/>
 
         </LinearLayout>

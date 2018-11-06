@@ -30,4 +30,22 @@
     <style name="TabLayoutTextStyle" parent="BodyLoud">
         <item name="android:textAllCaps">true</item>
     </style>
+
+    <style name="OverviewMoreOptionsBottomSheetDialogFragmentTitleStyle" parent="Body">
+        <item name="android:textColor">@color/structure5</item>
+    </style>
+
+    <style name="OverviewMoreOptionsBottomSheetDialogFragmentStyle" parent="BaseListOptionsBottomSheetDialogFragmentStyle">
+        <item name="listOptionItemTextAppearance">@style/ListOptionsBottomSheetDialogFragmentOptionStyle</item>
+        <item name="listOptionTitleTextAppearance">@style/OverviewMoreOptionsBottomSheetDialogFragmentTitleStyle</item>
+        <item name="listOptionSubtitleTextAppearance">@style/ListOptionsBottomSheetDialogFragmentSubtitleStyle</item>
+        <item name="listOptionBackground">@drawable/dialog_bottom_sheet_option_selector</item>
+        <item name="listOptionHeaderMarginTop">20dp</item>
+        <item name="listOptionHeaderMarginBottom">12dp</item>
+        <item name="listOptionHeaderMarginStart">16dp</item>
+        <item name="listOptionHeaderMarginEnd">16dp</item>
+        <item name="listOptionHeaderTitleSubtitleMargin">9dp</item>
+        <item name="listOptionItemPadding">13dp</item>
+        <item name="listOptionMarginBottom">15dp</item>
+    </style>
 </resources>

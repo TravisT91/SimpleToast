@@ -14,10 +14,13 @@ import android.view.animation.AlphaAnimation
 import android.widget.TextView
 import androidx.appcompat.widget.AppCompatImageButton
 import androidx.constraintlayout.widget.ConstraintLayout
+import com.engageft.apptoolbox.BaseActivity
+import com.engageft.apptoolbox.view.ListBottomSheetDialogFragment
 import com.engageft.apptoolbox.view.ProductCardView
 import com.engageft.engagekit.EngageService
 import com.engageft.engagekit.tools.MixpanelEvent
 import com.engageft.onetomany.R
+import com.engageft.onetomany.R.style.OverviewMoreOptionsBottomSheetDialogFragmentStyle
 
 /**
  *  OverviewView
@@ -63,6 +66,10 @@ class OverviewView : ConstraintLayout {
 
     constructor(context: Context, attributeSet: AttributeSet, defStyleAttr: Int) : super(context, attributeSet, defStyleAttr) {
         initializeViews()
+    }
+
+    companion object {
+        const val MORE_CARD_OPTIONS_DIALOG_TAG = "MORE_CARD_OPTIONS_DIALOG_TAG"
     }
 
     // Must save expanded/collapsed state so that it is shown correctly after returning to Overview from
@@ -142,22 +149,11 @@ class OverviewView : ConstraintLayout {
             }
         }
 
-        findViewById<ViewGroup>(R.id.overviewDirectDepositInfoLayout).apply {
-            if (DashboardConfig.CARD_MANAGEMENT_DIRECT_DEPOSIT_INFO_ENABLED) {
+        findViewById<ViewGroup>(R.id.overviewMoveMoneyLayout).apply {
+            if (DashboardConfig.CARD_MANAGEMENT_MOVE_MONEY_ENABLED) {
                 setOnClickListener {
-                    EngageService.getInstance().mixpanel.track(MixpanelEvent.getTapsDashboardMenuEvent(findViewById<TextView>(R.id.overviewDirectDepositInfoLabel).text))
-                    listener?.onDirectDepositInfo()
-                }
-            } else {
-                visibility = View.GONE
-            }
-        }
-
-        findViewById<ViewGroup>(R.id.overviewAddMoneyLayout).apply {
-            if (DashboardConfig.FEATURE_ADD_MONEY_ENABLED) {
-                setOnClickListener {
-                    EngageService.getInstance().mixpanel.track(MixpanelEvent.getTapsDashboardMenuEvent(findViewById<TextView>(R.id.overviewAddMoneyLabel).text))
-                    listener?.onAddMoney()
+                    EngageService.getInstance().mixpanel.track(MixpanelEvent.getTapsDashboardMenuEvent(findViewById<TextView>(R.id.overviewMoveMoneyLabel).text))
+                    listener?.onMoveMoney()
                 }
             } else {
                 visibility = View.GONE
@@ -175,14 +171,10 @@ class OverviewView : ConstraintLayout {
             }
         }
 
-        findViewById<ViewGroup>(R.id.overviewChangePinLayout).apply {
-            if (DashboardConfig.CARD_MANAGEMENT_CHANGE_PIN_ENABLED) {
-                setOnClickListener {
-                    EngageService.getInstance().mixpanel.track(MixpanelEvent.getTapsDashboardMenuEvent(findViewById<TextView>(R.id.overviewChangePinLabel).text))
-                    listener?.onChangePin()
-                }
-            } else {
-                visibility = View.GONE
+        findViewById<ViewGroup>(R.id.overviewMoreOptionsLayout).apply {
+            setOnClickListener {
+                EngageService.getInstance().mixpanel.track(MixpanelEvent.getTapsDashboardMenuEvent(findViewById<TextView>(R.id.overviewMoreOptionsLabel).text))
+                showMoreOptionsBottomNav()
             }
         }
 
@@ -198,6 +190,35 @@ class OverviewView : ConstraintLayout {
         animationDurationMs = resources.getInteger(R.integer.overview_disclose_hide_duration_ms).toLong()
         cardViewAnimationDelayMs = animationDurationMs * 7 / 10
         buttonRotationAnimationDurationMs = resources.getInteger(R.integer.overview_button_rotation_duration_ms).toLong()
+    }
+
+    private fun showMoreOptionsBottomNav() {
+        val changeCardPinOption = context.getString(R.string.OVERVIEW_CHANGE_CARD_PIN)
+        val replaceCardOption = context.getString(R.string.OVERVIEW_REPLACE_CARD)
+        val reportLostStolenOption = context.getString(R.string.OVERVIEW_REPORT_LOST_STOLEN)
+        val cancelCardOption = context.getString(R.string.OVERVIEW_CANCEL_CARD)
+        val stringOptions = ArrayList<String>().apply {
+            add(changeCardPinOption)
+            add(replaceCardOption)
+            add(reportLostStolenOption)
+            add(cancelCardOption)
+        }
+        val dialog = ListBottomSheetDialogFragment.newInstance(
+                object : ListBottomSheetDialogFragment.ListBottomSheetDialogListener{
+                    override fun onOptionSelected(index: Int, optionText: CharSequence) {
+                        when (optionText) {
+                            changeCardPinOption -> listener?.onChangePin()
+                            replaceCardOption -> listener?.onReplaceCard()
+                            reportLostStolenOption -> listener?.onReportCardLostStolen()
+                            cancelCardOption -> listener?.onCancelCard()
+                        }
+                    }
+
+                    override fun onDialogCancelled() {
+                        // Do nothing.
+                    }
+                }, context.getString(R.string.OVERVIEW_MORE_CARD_OPTIONS), stringOptions, null, OverviewMoreOptionsBottomSheetDialogFragmentStyle)
+        dialog.show((context as BaseActivity).supportFragmentManager, MORE_CARD_OPTIONS_DIALOG_TAG)
     }
 
     // use when restoring state of view to show it expanded immediately
@@ -403,9 +424,11 @@ class OverviewView : ConstraintLayout {
         fun onCollapseEnd()
 
         fun onShowHideCardDetails()
-        fun onDirectDepositInfo()
-        fun onAddMoney()
+        fun onMoveMoney()
         fun onLockUnlockCard()
         fun onChangePin()
+        fun onReplaceCard()
+        fun onReportCardLostStolen()
+        fun onCancelCard()
     }
 }

@@ -23,11 +23,11 @@
         app:layout_constraintBottom_toTopOf="@id/view_transparent_bar_below_card_view"
         />
 
-    <ImageButton
+    <androidx.appcompat.widget.AppCompatImageButton
         android:id="@+id/btn_disclose_hide_card_actions"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:srcCompat="@drawable/ic_overview_disclosure_temp"
+        app:srcCompat="@drawable/ic_overview_disclosure_button"
         android:background="@drawable/round_button_background_for_elevation"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintBottom_toBottomOf="@+id/view_transparent_bar_below_card_view"

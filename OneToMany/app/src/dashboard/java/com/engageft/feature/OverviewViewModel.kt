@@ -88,12 +88,6 @@ class OverviewViewModel : BaseViewModel() {
                                 var productCardModel = ProductCardModel()
                                 productCardModel.cardholderName = LoginResponseUtils.getUserFullname(response)
                                 debitCardInfo?.let { cardInfo ->
-                                    /**
-                                     * StringUtils accesses app context to get the app-specific status String. In pure MVVM this may be
-                                     * frowned upon, but the view that this populates (ProductCardView) is in apptoolbox so doesn't have
-                                     * access to the app's string resources. So, view model must set the actual string, not
-                                     * pass an enum to the view that it can use to set the string.
-                                     */
                                     productCardModel.cardStatus = getCardModelStatusFromDebitCardInfo(cardInfo)
                                     productCardModel.cardStatusOkay = DebitCardInfoUtils.displayCardStatusAsOkay(cardInfo)
                                     productCardModel.cardLocked = DebitCardInfoUtils.isLocked(cardInfo)
@@ -374,13 +368,9 @@ class OverviewViewModel : BaseViewModel() {
         return count
     }
 
-    // These are called by OverviewFragment in response to user presses in OverviewView
-    fun showDirectDepositInfo() {
-        navigationObservable.value = OverviewNavigationEvent.SHOW_DIRECT_DEPOSIT_INFO
-    }
-
-    fun showAddMoney() {
-        navigationObservable.value = OverviewNavigationEvent.SHOW_ADD_MONEY
+    // These are called by DashboardFragment in response to user presses in OverviewView
+    fun showMoveMoney() {
+        navigationObservable.value = OverviewNavigationEvent.SHOW_MOVE_MONEY
     }
 
     fun showLockUnlockCard() {
@@ -391,7 +381,19 @@ class OverviewViewModel : BaseViewModel() {
         navigationObservable.value = OverviewNavigationEvent.SHOW_CHANGE_PIN
     }
 
-    fun datesAreSameMonthAndYear(date1: DateTime?, date2: DateTime?): Boolean {
+    fun showReplaceCard() {
+        navigationObservable.value = OverviewNavigationEvent.SHOW_REPLACE_CARD
+    }
+
+    fun showReportLostStolen() {
+        navigationObservable.value = OverviewNavigationEvent.SHOW_REPORT_LOST_STOLEN
+    }
+
+    fun showCancelCard() {
+        navigationObservable.value = OverviewNavigationEvent.SHOW_CANCEL_CARD
+    }
+
+    private fun datesAreSameMonthAndYear(date1: DateTime?, date2: DateTime?): Boolean {
         return date1 != null && date2 != null && date1.year == date2.year && date1.monthOfYear == date2.monthOfYear
     }
 
@@ -425,7 +427,7 @@ class OverviewViewModel : BaseViewModel() {
 }
 
 enum class OverviewNavigationEvent {
-    SHOW_DIRECT_DEPOSIT_INFO, SHOW_ADD_MONEY, SHOW_LOCK_UNLOCK_CARD, SHOW_CHANGE_PIN
+    SHOW_MOVE_MONEY, SHOW_LOCK_UNLOCK_CARD, SHOW_CHANGE_PIN, SHOW_REPLACE_CARD, SHOW_REPORT_LOST_STOLEN, SHOW_CANCEL_CARD
 }
 
 enum class OverviewBalanceState {
