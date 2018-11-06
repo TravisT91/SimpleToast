@@ -50,7 +50,6 @@ class SplashScreenViewModel : BaseViewModel() {
             handler.postDelayed({
                 if (!EnrollmentSharedPreferencesRepo.hasSeenGetStarted()) {
                     value = SplashNavigationEvent.FIRST_TIME
-                    EnrollmentSharedPreferencesRepo.applyHasSeenGetStarted(true)
                 } else if (EngageService.getInstance().authManager.isLoggedIn) {
                     compositeDisposable.add(
                             EngageService.getInstance().loginResponseAsObservable

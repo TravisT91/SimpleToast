@@ -5,7 +5,7 @@ import com.engageft.apptoolbox.LotusActivityConfig
 import com.engageft.onetomany.R
 
 /**
- * EducationTourActivity
+ * WelcomeActivity
  *
  * Manages sequence of fragments leading up to enrollment for SB.
  *

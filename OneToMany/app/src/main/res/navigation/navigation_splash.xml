@@ -18,8 +18,8 @@
             android:name="@string/navigation_hide_toolbar"
             android:defaultValue="true" />
         <action
-            android:id="@+id/action_splashFragment_to_welcomePagerActivity"
-            app:destination="@id/welcomePagerActivity" />
+            android:id="@+id/action_splashFragment_to_welcomeActivity"
+            app:destination="@id/welcomeActivity" />
     </fragment>
     <activity
         android:id="@+id/authenticatedActivity"
@@ -30,7 +30,7 @@
         android:name="com.engageft.onetomany.NotAuthenticatedActivity"
         android:label="NotAuthenticatedActivity" />
     <activity
-        android:id="@+id/welcomePagerActivity"
+        android:id="@+id/welcomeActivity"
         android:name="com.engageft.feature.WelcomeActivity"
-        android:label="WelcomePagerActivity" />
+        android:label="WelcomeActivity" />
 </navigation>

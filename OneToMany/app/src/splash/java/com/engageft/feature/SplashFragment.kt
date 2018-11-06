@@ -4,12 +4,14 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.navigation.findNavController
 import com.engageft.apptoolbox.BaseViewModel
 import com.engageft.apptoolbox.LotusFullScreenFragment
 import com.engageft.onetomany.R
+import com.engageft.onetomany.databinding.FragmentSplashBinding
 
 
 /**
@@ -22,29 +24,30 @@ import com.engageft.onetomany.R
  * Copyright (c) 2018 Engage FT. All rights reserved.
  */
 class SplashFragment : LotusFullScreenFragment() {
+    lateinit var binding: FragmentSplashBinding
 
     override fun createViewModel(): BaseViewModel? {
         return ViewModelProviders.of(this).get(SplashScreenViewModel::class.java)
     }
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        val view = inflater.inflate(R.layout.fragment_splash, container, false)
+        binding = DataBindingUtil.inflate(inflater, R.layout.fragment_splash, container, false)
 
         (viewModel as SplashScreenViewModel).navigationObservable.observe(this, Observer { splashNavigationEvent : SplashScreenViewModel.SplashNavigationEvent ->
-            val navDestinationId = when (splashNavigationEvent) {
+            val destinationId = when (splashNavigationEvent) {
                 SplashScreenViewModel.SplashNavigationEvent.FIRST_TIME -> {
-                    R.id.action_splashFragment_to_welcomePagerActivity
+                    R.id.action_splashFragment_to_welcomeActivity
                 }
                 SplashScreenViewModel.SplashNavigationEvent.NOT_LOGGED_IN -> {
                     R.id.action_splashFragment_to_notAuthenticatedActivity
                 }
                 SplashScreenViewModel.SplashNavigationEvent.LOGGED_IN -> {
-                    R.id.action_splashFragment_to_notAuthenticatedActivity
+                    R.id.action_splashFragment_to_authenticatedActivity
                 }
             }
-            view.findNavController().navigate(navDestinationId)
+            binding.root.findNavController().navigate(destinationId)
             activity!!.finish()
         })
 
-        return view
+        return binding.root
     }
 }

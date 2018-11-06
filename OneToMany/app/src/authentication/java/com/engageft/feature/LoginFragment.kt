@@ -47,7 +47,7 @@ class LoginFragment : LotusFullScreenFragment() {
             val navDestinationId = when (splashNavigationEvent) {
                 LoginViewModel.LoginNavigationEvent.AUTHENTICATED_ACTIVITY -> {
                     activity!!.finish()
-                    R.id.action_login_fragment_to_authenticatedActivity
+                    R.id.action_loginFragment_to_authenticatedActivity
                 }
                 LoginViewModel.LoginNavigationEvent.ISSUER_STATEMENT -> {
                     // TODO(jhutchins): Navigate to Issuer Statement

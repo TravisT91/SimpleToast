@@ -7,6 +7,7 @@ import com.engageft.apptoolbox.BaseViewModel
 import com.engageft.engagekit.EngageService
 import com.engageft.engagekit.utils.LoginResponseUtils
 import com.engageft.onetomany.HeapUtils
+import com.engageft.onetomany.feature.enrollment.EnrollmentSharedPreferencesRepo
 import com.ob.ws.dom.DeviceFailResponse
 import com.ob.ws.dom.LoginResponse
 import io.reactivex.android.schedulers.AndroidSchedulers
@@ -169,6 +170,9 @@ class LoginViewModel : BaseViewModel() {
 
     private fun handleSuccessfulLoginResponse(loginResponse: LoginResponse) {
         this.loginResponse = loginResponse
+
+        // set the Get started flag to true after the successful login, so the Welcome screen doesn't get displayed again
+        EnrollmentSharedPreferencesRepo.applyHasSeenGetStarted(true)
 
         // Setup unique user identifier for Heap analytics
         val accountInfo = LoginResponseUtils.getCurrentAccountInfo(loginResponse)

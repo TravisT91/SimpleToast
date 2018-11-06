@@ -9,17 +9,19 @@
         <action
             android:id="@+id/action_viewPagerFragment_to_loginFragment"
             app:destination="@id/loginFragment" />
-        <action
-            android:id="@string/navigation_hide_toolbar"
-            android:defaultValue="true">
-        </action>
+        <argument
+            android:name="@string/navigation_hide_toolbar"
+            android:defaultValue="true" />
     </fragment>
     <fragment
         android:id="@+id/loginFragment"
-        android:name="com.engageft.feature.LoginFragment"
-        android:label="LoginFragment" >
+        android:name="com.engageft.feature.LoginFragment">
         <action
-            android:id="@+id/action_loginFragment_to_viewPagerFragment"
-            app:destination="@id/viewPagerFragment" />
+            android:id="@+id/action_loginFragment_to_authenticatedActivity"
+            app:destination="@id/authenticatedActivity" />
     </fragment>
+    <activity
+        android:id="@+id/authenticatedActivity"
+        android:name="com.engageft.onetomany.AuthenticatedActivity"
+        android:label="AuthenticatedActivity" />
 </navigation>

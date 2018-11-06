@@ -10,26 +10,15 @@
         android:name="com.engageft.feature.LoginFragment"
         tools:layout="@layout/fragment_login">
         <action
-            android:id="@+id/action_login_fragment_to_authenticatedActivity"
+            android:id="@+id/action_loginFragment_to_authenticatedActivity"
             app:destination="@id/authenticatedActivity" />
         <argument
             android:name="@string/navigation_view_gone"
             android:defaultValue="true" />
-        <action
-            android:id="@+id/action_login_fragment_to_welcomeViewPagerFragment2"
-            app:destination="@id/welcomeViewPagerFragment2" />
     </fragment>
 
     <activity
         android:id="@+id/authenticatedActivity"
         android:name="com.engageft.onetomany.AuthenticatedActivity"
         android:label="ActivityWithNavigation" />
-    <fragment
-        android:id="@+id/welcomeViewPagerFragment2"
-        android:name="com.engageft.feature.WelcomeViewPagerFragment"
-        android:label="WelcomeViewPagerFragment" >
-        <action
-            android:id="@+id/action_welcomeViewPagerFragment2_to_login_fragment"
-            app:destination="@id/login_fragment" />
-    </fragment>
 </navigation>
