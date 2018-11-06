@@ -15,6 +15,7 @@ import androidx.transition.AutoTransition
 import androidx.transition.TransitionManager
 import com.engageft.apptoolbox.BaseViewModel
 import com.engageft.apptoolbox.LotusFullScreenFragment
+import com.engageft.engagekit.utils.DeviceUtils
 import com.engageft.onetomany.R
 import com.engageft.onetomany.databinding.FragmentLoginBinding
 import kotlinx.android.synthetic.main.fragment_login.*
@@ -36,6 +37,8 @@ class LoginFragment : LotusFullScreenFragment() {
         return ViewModelProviders.of(this).get(LoginViewModel::class.java)
     }
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+        //TODO(aHashimi): needs to fix the problem of the buttons overlapping other views when keyboard is shown
+        // https://engageft.atlassian.net/browse/SHOW-363
         binding = DataBindingUtil.inflate(layoutInflater, R.layout.fragment_login, container, false)
         constraintSet = ConstraintSet()
         constraintSet.clone(binding.root as ConstraintLayout)
@@ -87,9 +90,9 @@ class LoginFragment : LotusFullScreenFragment() {
             // Make sure error is animated
             setLayoutTransitions()
         })
-        vm.loginButtonState.observe(this, Observer { loginButtonState: LoginViewModel.LoginButtonState ->
+        vm.loginButtonState.observe(this, Observer { loginButtonState: LoginViewModel.ButtonState ->
             when (loginButtonState) {
-                LoginViewModel.LoginButtonState.SHOW -> {
+                LoginViewModel.ButtonState.SHOW -> {
                     // Animate the login button onto the screen.
                     val constraintLayout = binding.root as ConstraintLayout
                     constraintSet = ConstraintSet()
@@ -99,7 +102,7 @@ class LoginFragment : LotusFullScreenFragment() {
 
                     setLayoutTransitions()
                 }
-                LoginViewModel.LoginButtonState.HIDE -> {
+                LoginViewModel.ButtonState.HIDE -> {
                     // Animate the login button off the screen.
                     val constraintLayout = binding.root as ConstraintLayout
                     constraintSet = ConstraintSet()
@@ -111,8 +114,14 @@ class LoginFragment : LotusFullScreenFragment() {
                 }
             }
         })
+        vm.demoAccountButtonState.observe(this, Observer { buttonState: LoginViewModel.ButtonState ->
+            when (buttonState) {
+                LoginViewModel.ButtonState.SHOW -> demoAccountButton.visibility = View.VISIBLE
+                LoginViewModel.ButtonState.HIDE -> demoAccountButton.visibility = View.GONE
+            }
+        })
         // If testMode was saved as enabled, make the switch visible initially.
-        if (vm.testMode.get()!!) {
+        if (vm.testMode.get()!! || DeviceUtils.isEmulator()) {
             constraintSet.setVisibility(R.id.testSwitch, View.VISIBLE)
             setLayoutTransitions()
         }
@@ -146,10 +155,22 @@ class LoginFragment : LotusFullScreenFragment() {
                 }
             }
         })
+        vm.loadingOverlayDialogObservable.observe(this, Observer { loadingOverlayDialog ->
+            when (loadingOverlayDialog) {
+                LoginViewModel.LoadingOverlayDialog.CREATING_DEMO_ACCOUNT -> {
+                    //TODO(aHashimi) message textView runs to the edges of screen. https://engageft.atlassian.net/browse/SHOW-399
+                    showProgressOverlay(getString(R.string.login_preview_wait_message), R.style.LoadingOverlayDialogStyle)
+                }
+                LoginViewModel.LoadingOverlayDialog.DISMISS_DIALOG -> {
+                    dismissProgressOverlay()
+                }
+            }
+        })
 
         binding.btnIssuerStatement.setOnClickListener { vm.issuerStatementClicked() }
         binding.btnDisclosures.setOnClickListener { vm.disclosuresClicked() }
         binding.loginButton.setOnClickListener { vm.loginClicked() }
+        binding.demoAccountButton.setOnClickListener { vm.createDemoAccount() }
 
         binding.root.systemUiVisibility = View.SYSTEM_UI_FLAG_LAYOUT_STABLE
         return binding.root

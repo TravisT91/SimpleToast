@@ -111,6 +111,20 @@
             app:layout_constraintEnd_toEndOf="parent"
             android:text="@string/login_submit_button"/>
 
+        <com.engageft.apptoolbox.view.PillButton
+            android:id="@+id/demoAccountButton"
+            style="@style/ButtonPillPrimaryFilledDefault"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:layout_marginBottom="8dp"
+            android:text="@string/login_demo_account_button"
+            android:visibility="visible"
+            app:layout_constraintBottom_toTopOf="@+id/loginFooter"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/forgotPasswordText" />
+
         <LinearLayout
             android:id="@+id/loginFooter"
             android:layout_width="wrap_content"

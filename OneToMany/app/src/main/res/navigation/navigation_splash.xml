@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/navigation_graph"
+    app:startDestination="@+id/splashFragment">
+
+    <fragment
+        android:id="@+id/splashFragment"
+        android:name="com.engageft.feature.SplashFragment"
+        android:label="SplashFragment" >
+        <action
+            android:id="@+id/action_splashFragment_to_authenticatedActivity"
+            app:destination="@id/authenticatedActivity" />
+        <action
+            android:id="@+id/action_splashFragment_to_notAuthenticatedActivity"
+            app:destination="@id/notAuthenticatedActivity" />
+        <argument
+            android:name="@string/navigation_hide_toolbar"
+            android:defaultValue="true" />
+    </fragment>
+    <activity
+        android:id="@+id/authenticatedActivity"
+        android:name="com.engageft.onetomany.AuthenticatedActivity"
+        android:label="AuthenticatedActivity" />
+    <activity
+        android:id="@+id/notAuthenticatedActivity"
+        android:name="com.engageft.onetomany.NotAuthenticatedActivity"
+        android:label="NotAuthenticatedActivity" />
+</navigation>

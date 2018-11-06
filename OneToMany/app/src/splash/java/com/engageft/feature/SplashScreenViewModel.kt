@@ -46,33 +46,26 @@ class SplashScreenViewModel : BaseViewModel() {
 
         private fun doSplashInitialize() {
             handler.postDelayed({
-                // TODO(jhutchins): If we ever do enrollment, we'll need this check.
-//                if (!EnrollmentSharedPreferencesRepo.hasSeenGetStarted()) {
-//                    // TODO(jhutchins): Eventually we want to set that the user has seen the Get Started
-//                    // Screen. Probably inside the GetStartedFragment after it's inflated?
-//                    value = SplashNavigationEvent.FIRST_USE
-//                } else {
-                    if (EngageService.getInstance().authManager.isLoggedIn) {
-                        compositeDisposable.add(
-                                EngageService.getInstance().loginResponseAsObservable
-                                        .subscribeOn(Schedulers.io())
-                                        .observeOn(AndroidSchedulers.mainThread())
-                                        .subscribe({ response ->
-                                            value = if (response.isSuccess && response is LoginResponse) {
-                                                SplashNavigationEvent.LOGGED_IN
-                                            } else {
-                                                EngageService.getInstance().authManager.logout()
-                                                SplashNavigationEvent.NOT_LOGGED_IN
-                                            }
-                                        }, { _ ->
+                if (EngageService.getInstance().authManager.isLoggedIn) {
+                    compositeDisposable.add(
+                            EngageService.getInstance().loginResponseAsObservable
+                                    .subscribeOn(Schedulers.io())
+                                    .observeOn(AndroidSchedulers.mainThread())
+                                    .subscribe({ response ->
+                                        value = if (response.isSuccess && response is LoginResponse) {
+                                            SplashNavigationEvent.LOGGED_IN
+                                        } else {
                                             EngageService.getInstance().authManager.logout()
-                                            value = SplashNavigationEvent.NOT_LOGGED_IN
-                                        })
-                        )
-                    } else {
-                        value = SplashNavigationEvent.NOT_LOGGED_IN
-                    }
-//                }
+                                            SplashNavigationEvent.NOT_LOGGED_IN
+                                        }
+                                    }, { _ ->
+                                        EngageService.getInstance().authManager.logout()
+                                        value = SplashNavigationEvent.NOT_LOGGED_IN
+                                    })
+                    )
+                } else {
+                    value = SplashNavigationEvent.NOT_LOGGED_IN
+                }
             }, SPLASH_SCREEN_MINIMUM_MS)
         }
     }
