@@ -5,8 +5,10 @@ import androidx.databinding.ObservableField
 import androidx.lifecycle.MutableLiveData
 import com.engageft.apptoolbox.BaseViewModel
 import com.engageft.engagekit.EngageService
+import com.engageft.engagekit.rest.request.CreateDemoAccountRequest
 import com.engageft.engagekit.utils.LoginResponseUtils
 import com.engageft.onetomany.HeapUtils
+import com.engageft.onetomany.config.EngageAppConfig
 import com.engageft.onetomany.feature.enrollment.EnrollmentSharedPreferencesRepo
 import com.ob.ws.dom.DeviceFailResponse
 import com.ob.ws.dom.LoginResponse
@@ -43,9 +45,14 @@ class LoginViewModel : BaseViewModel() {
         INVALID_CREDENTIALS // Generic username/password not valid error type.
     }
 
-    enum class LoginButtonState {
+    enum class ButtonState {
         SHOW,
         HIDE
+    }
+
+    enum class LoadingOverlayDialog {
+        CREATING_DEMO_ACCOUNT,
+        DISMISS_DIALOG
     }
 
     private val compositeDisposable = CompositeDisposable()
@@ -60,15 +67,20 @@ class LoginViewModel : BaseViewModel() {
 
     val rememberMe: ObservableField<Boolean> = ObservableField(false)
 
-    val loginButtonState: MutableLiveData<LoginButtonState> = MutableLiveData()
+    val loginButtonState: MutableLiveData<ButtonState> = MutableLiveData()
+
+    val demoAccountButtonState: MutableLiveData<ButtonState> = MutableLiveData()
 
     val testMode: ObservableField<Boolean> = ObservableField(false)
 
     val dialogInfoObservable: MutableLiveData<LoginDialogInfo> = MutableLiveData()
 
+    val loadingOverlayDialogObservable: MutableLiveData<LoadingOverlayDialog> = MutableLiveData()
 
     init {
-        loginButtonState.value = LoginButtonState.HIDE
+        loginButtonState.value = ButtonState.HIDE
+        demoAccountButtonState.value = ButtonState.HIDE
+
         username.addOnPropertyChangedCallback(object : Observable.OnPropertyChangedCallback(){
             override fun onPropertyChanged(observable: Observable?, field: Int) {
                 validateEmail()
@@ -95,6 +107,7 @@ class LoginViewModel : BaseViewModel() {
                 synchronizeTestMode(useTestMode)
 
                 updateButtonState()
+                updateDemoAccountButtonState()
                 updatePrefilledUsernameAndRememberMe()
                 // TODO(jhutchins): SHOW_268: Fingerprint auth.
                 //showFingerprintAuthIfEnrolled()
@@ -122,6 +135,47 @@ class LoginViewModel : BaseViewModel() {
     }
 
     fun loginClicked() {
+        login(username.get()!!, password.get()!!)
+    }
+
+    fun createDemoAccount() {
+        val refCode = EngageService.getInstance().engageConfig.refCode
+
+        var isAllowedDemoAccountCreation = false
+
+        if (EngageAppConfig.isUsingProdEnvironment && AuthenticationConfig.shouldAllowDemoAccountCreationInProd && AuthenticationConfig.demoAccountAvailable) {
+            isAllowedDemoAccountCreation = true
+        } else if (!EngageAppConfig.isUsingProdEnvironment && AuthenticationConfig.demoAccountAvailable) {
+            isAllowedDemoAccountCreation = true
+        }
+
+        if (isAllowedDemoAccountCreation) {
+            loadingOverlayDialogObservable.value = LoadingOverlayDialog.CREATING_DEMO_ACCOUNT
+            compositeDisposable.add(
+                    EngageService.getInstance().engageApiInterface.postDemoCreate(CreateDemoAccountRequest(refCode).fieldMap)
+                            .subscribeOn(Schedulers.io())
+                            .observeOn(AndroidSchedulers.mainThread())
+                            .subscribe({ response ->
+                                if (response.isSuccess) {
+                                    username.set(response.message)
+                                    EngageService.getInstance().storageManager.isDemoMode = true
+                                    EngageService.getInstance().storageManager.username = username.get()!!
+                                    rememberMe.set(true)
+                                    login(response.message, createTempPassword())
+                                } else {
+                                    loadingOverlayDialogObservable.value = LoadingOverlayDialog.DISMISS_DIALOG
+                                    dialogInfoObservable.value = LoginDialogInfo(dialogType = LoginDialogInfo.DialogType.SERVER_ERROR)
+                                }
+                            }, { e ->
+                                loadingOverlayDialogObservable.value = LoadingOverlayDialog.DISMISS_DIALOG
+                                // TODO(aHahsimi) Proper error handling handle throwable and/or show dialog? https://engageft.atlassian.net/browse/SHOW-364
+                                dialogInfoObservable.value = LoginDialogInfo()
+                            })
+            )
+        }
+    }
+
+    private fun login(username: String, password: String) {
         // Make sure there's no stale data. Might want to keep some around, but for now, just wipe it all out.
         EngageService.getInstance().authManager.logout()
 
@@ -129,8 +183,9 @@ class LoginViewModel : BaseViewModel() {
         clearErrorTexts()
 
         progressOverlayShownObservable.value = true
+
         compositeDisposable.add(
-                EngageService.getInstance().loginObservable(username.get()!!, password.get()!!, null)
+                EngageService.getInstance().loginObservable(username, password, null)
                         .subscribeOn(Schedulers.io())
                         .observeOn(AndroidSchedulers.mainThread())
                         .subscribe(
@@ -147,7 +202,7 @@ class LoginViewModel : BaseViewModel() {
                                         usernameError.value = UsernameValidationError.INVALID_CREDENTIALS
                                         passwordError.value = PasswordValidationError.INVALID_CREDENTIALS
                                     }
-                                }, { e ->
+                                }, { _ ->
                             progressOverlayShownObservable.value = false
                             // TODO(aHahsimi) Proper error handling handle throwable and/or show dialog? https://engageft.atlassian.net/browse/SHOW-364
                             dialogInfoObservable.value = LoginDialogInfo()
@@ -193,10 +248,23 @@ class LoginViewModel : BaseViewModel() {
 
     private fun validateEmail() {
         updateButtonState()
+        updateDemoAccountButtonState()
     }
 
     private fun validatePassword() {
         updateButtonState()
+        updateDemoAccountButtonState()
+    }
+
+    private fun updateDemoAccountButtonState() {
+        val testModeToggled = testMode.get()!!
+
+        if (AuthenticationConfig.demoAccountAvailable
+                && testModeToggled && username.get().isNullOrEmpty() && password.get().isNullOrEmpty()) {
+            demoAccountButtonState.value = ButtonState.SHOW
+        } else {
+            demoAccountButtonState.value = ButtonState.HIDE
+        }
     }
 
     /**
@@ -208,10 +276,10 @@ class LoginViewModel : BaseViewModel() {
         val passwordText = password.get()
         val currentState = loginButtonState.value
 
-        if (!usernameText.isNullOrEmpty() && !passwordText.isNullOrEmpty() && (currentState == LoginButtonState.HIDE)) {
-            loginButtonState.value = LoginButtonState.SHOW
-        } else if (usernameText.isNullOrEmpty() || passwordText.isNullOrEmpty() &&currentState == LoginButtonState.SHOW) {
-            loginButtonState.value = LoginButtonState.HIDE
+        if (!usernameText.isNullOrEmpty() && !passwordText.isNullOrEmpty() && (currentState == ButtonState.HIDE)) {
+            loginButtonState.value = ButtonState.SHOW
+        } else if (usernameText.isNullOrEmpty() || passwordText.isNullOrEmpty() &&currentState == ButtonState.SHOW) {
+            loginButtonState.value = ButtonState.HIDE
         }
     }
 
@@ -253,6 +321,10 @@ class LoginViewModel : BaseViewModel() {
                 AuthenticationSharedPreferencesRepo.applySavedUsername("")
             }
         }
+    }
+
+    private fun createTempPassword(): String {
+        return String.format("%c%c%c%c%d%d%d%d", '\u0064', '\u0065', '\u006D', '\u006F', 1, 0, 0, 0)
     }
 }
 
