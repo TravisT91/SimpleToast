@@ -5,6 +5,7 @@ import android.util.Log
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import com.engageft.apptoolbox.LotusActivity
+import com.engageft.feature.AuthExpiredPasswordDialog
 import com.engageft.onetomany.feature.enrollment.AuthenticationViewModel
 
 /**
@@ -22,8 +23,17 @@ abstract class BaseAuthenticatedActivity : LotusActivity() {
         super.onCreate(savedInstanceState)
         authViewModel = ViewModelProviders.of(this).get(AuthenticationViewModel::class.java)
 
-        authViewModel.authNavigationObservable.observe(this, Observer { splashNavigationEvent : AuthenticationViewModel.AuthNavigationEvent ->
+        authViewModel.authNavigationObservable.observe(this, Observer { authNavigationEvent : AuthenticationViewModel.AuthNavigationEvent ->
             Log.e("Joey", "Activity: event!")
+            when(authNavigationEvent) {
+                AuthenticationViewModel.AuthNavigationEvent.PROMPT_PASSWORD -> {
+                    val dialog = AuthExpiredPasswordDialog()
+                    dialog.show(supportFragmentManager, "TAG")
+                }
+                AuthenticationViewModel.AuthNavigationEvent.PROMPT_NONE -> {
+
+                }
+            }
         })
     }
 
