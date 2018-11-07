@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="listPaddingStart">16dp</dimen>
+    <dimen name="listItemPaddingTop">14dp</dimen>
+    <dimen name="listItemPaddingBottom">12dp</dimen>
+</resources>
