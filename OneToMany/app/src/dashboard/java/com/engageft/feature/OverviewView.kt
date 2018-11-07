@@ -11,6 +11,7 @@ import android.view.ViewGroup
 import android.view.animation.AccelerateDecelerateInterpolator
 import android.view.animation.AccelerateInterpolator
 import android.view.animation.AlphaAnimation
+import android.widget.ImageView
 import android.widget.TextView
 import androidx.appcompat.widget.AppCompatImageButton
 import androidx.constraintlayout.widget.ConstraintLayout
@@ -39,8 +40,10 @@ class OverviewView : ConstraintLayout {
     private lateinit var expandCollapseButton: AppCompatImageButton
     private lateinit var transparentBarBelowCardView: View
     private lateinit var shadowAboveTransparentBar: View
-    lateinit var overviewLockUnlockCardLabel: TextView
+    lateinit var overviewShowHideCardDetailsIcon: ImageView
     lateinit var overviewShowHideCardDetailsLabel: TextView
+    lateinit var overviewLockUnlockCardIcon: ImageView
+    lateinit var overviewLockUnlockCardLabel: TextView
 
     var showingActions = false
         private set
@@ -135,8 +138,10 @@ class OverviewView : ConstraintLayout {
         expandCollapseButton = findViewById(R.id.btn_disclose_hide_card_actions)
         transparentBarBelowCardView = findViewById(R.id.view_transparent_bar_below_card_view)
         shadowAboveTransparentBar = findViewById(R.id.view_shadow_above_transparent_bar)
-        overviewLockUnlockCardLabel = findViewById(R.id.overviewLockUnlockCardLabel)
+        overviewShowHideCardDetailsIcon = findViewById(R.id.overviewShowHideCardDetailsIcon)
         overviewShowHideCardDetailsLabel = findViewById(R.id.overviewShowHideCardDetailsLabel)
+        overviewLockUnlockCardIcon = findViewById(R.id.overviewLockUnlockCardIcon)
+        overviewLockUnlockCardLabel = findViewById(R.id.overviewLockUnlockCardLabel)
 
         findViewById<ViewGroup>(R.id.overviewShowHideCardDetailsLayout).apply {
             if (DashboardConfig.CARD_MANAGEMENT_SHOW_CARD_DETAILS_ENABLED) {

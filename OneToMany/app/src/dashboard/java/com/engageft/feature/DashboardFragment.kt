@@ -8,6 +8,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.WindowManager
 import android.widget.TextView
+import androidx.core.content.ContextCompat
 import androidx.core.view.ViewCompat
 import androidx.core.widget.NestedScrollView
 import androidx.databinding.DataBindingUtil
@@ -200,6 +201,9 @@ class DashboardFragment : LotusFullScreenFragment(), OverviewView.OverviewViewLi
         productCardModel.cardStatusText = cardStatusStringFromCardStatus(productCardModel.cardStatus)
         overviewView.cardView.updateWithProductCardModel(productCardModel)
 
+        overviewView.overviewLockUnlockCardIcon.setImageDrawable(
+                ContextCompat.getDrawable(context!!, if (productCardModel.cardLocked) R.drawable.ic_overview_card_unlock else R.drawable.ic_overview_card_lock)
+        )
         overviewView.overviewLockUnlockCardLabel.text = getString(
                 if (productCardModel.cardLocked) R.string.OVERVIEW_UNLOCK_MY_CARD else R.string.OVERVIEW_LOCK_MY_CARD
         )
@@ -229,10 +233,12 @@ class DashboardFragment : LotusFullScreenFragment(), OverviewView.OverviewViewLi
             }
             OverviewViewModel.CardState.DETAILS_HIDDEN -> {
                 dismissProgressOverlay()
+                overviewView.overviewShowHideCardDetailsIcon.setImageDrawable(ContextCompat.getDrawable(context!!, R.drawable.ic_overview_card_details_show))
                 overviewView.overviewShowHideCardDetailsLabel.text = getString(R.string.OVERVIEW_SHOW_CARD_DETAILS)
             }
             OverviewViewModel.CardState.DETAILS_SHOWN -> {
                 dismissProgressOverlay()
+                overviewView.overviewShowHideCardDetailsIcon.setImageDrawable(ContextCompat.getDrawable(context!!, R.drawable.ic_overview_card_details_hide))
                 overviewView.overviewShowHideCardDetailsLabel.text = getString(R.string.OVERVIEW_HIDE_CARD_DETAILS)
             }
             OverviewViewModel.CardState.ERROR -> {
@@ -436,7 +442,7 @@ class DashboardFragment : LotusFullScreenFragment(), OverviewView.OverviewViewLi
         } else {
             //val dialogFragment = PasswordAuthenticationDialogFragment.newInstance(AUTHENTICATION_REVEAL_CARD_DIALOG_TAG, getString(R.string.BUTTON_CANCEL))
             //dialogFragment.show(childFragmentManager, AUTHENTICATION_REVEAL_CARD_DIALOG_TAG)
-            // TODO(kurt): hide this behind password auth, once we have PasswordAuthDialogFragment
+            // TODO(kurt): hide this behind password auth, once we have PasswordAuthDialogFragment (SHOW-376)
             overviewViewModel.showCardDetails()
         }
     }

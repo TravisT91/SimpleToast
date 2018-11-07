@@ -28,13 +28,13 @@
         app:cardLockedIcon="@drawable/ic_card_locked"
         app:productLogoDrawable="@drawable/showcase_logo"
         app:cvvMask="CVC %s"
-        app:cardNumberMask="**** %s"
+        app:cardNumberMask="•••• %s"
         app:cardValidMask="Good Thru %s"
         android:elevation="8dp"/>
 
     <LinearLayout
         android:id="@+id/layout_card_actions"
-        android:layout_width="wrap_content"
+        android:layout_width="@dimen/overview_action_list_width"
         android:layout_height="wrap_content"
         android:orientation="vertical"
         android:paddingLeft="16dp"
@@ -54,11 +54,12 @@
             android:orientation="horizontal">
 
             <androidx.appcompat.widget.AppCompatImageView
+                android:id="@+id/overviewShowHideCardDetailsIcon"
                 android:layout_width="@dimen/overview_action_item_icon_width"
                 android:layout_height="@dimen/overview_action_item_icon_height"
                 android:scaleType="center"
                 android:layout_marginEnd="8dp"
-                app:srcCompat="@drawable/ic_overview_card"/>
+                app:srcCompat="@drawable/ic_overview_card_details_show"/>
 
             <TextView
                 android:id="@+id/overviewShowHideCardDetailsLabel"
@@ -82,7 +83,7 @@
                 android:layout_height="@dimen/overview_action_item_icon_height"
                 android:scaleType="center"
                 android:layout_marginEnd="8dp"
-                app:srcCompat="@drawable/ic_overview_plus"/>
+                app:srcCompat="@drawable/ic_overview_move_money"/>
 
             <TextView
                 android:id="@+id/overviewMoveMoneyLabel"
@@ -102,11 +103,12 @@
             android:layout_marginTop="16dp">
 
             <androidx.appcompat.widget.AppCompatImageView
+                android:id="@+id/overviewLockUnlockCardIcon"
                 android:layout_width="@dimen/overview_action_item_icon_width"
                 android:layout_height="@dimen/overview_action_item_icon_height"
                 android:scaleType="center"
                 android:layout_marginEnd="8dp"
-                app:srcCompat="@drawable/ic_overview_lock"/>
+                app:srcCompat="@drawable/ic_overview_card_lock"/>
 
             <TextView
                 android:id="@+id/overviewLockUnlockCardLabel"
@@ -130,7 +132,7 @@
                 android:layout_height="@dimen/overview_action_item_icon_height"
                 android:scaleType="center"
                 android:layout_marginEnd="8dp"
-                app:srcCompat="@drawable/ic_overview_lock"/>
+                app:srcCompat="@drawable/ic_overview_more_options"/>
 
             <TextView
                 android:id="@+id/overviewMoreOptionsLabel"
