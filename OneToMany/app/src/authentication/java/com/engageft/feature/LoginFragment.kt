@@ -159,10 +159,10 @@ class LoginFragment : LotusFullScreenFragment() {
             when (loadingOverlayDialog) {
                 LoginViewModel.LoadingOverlayDialog.CREATING_DEMO_ACCOUNT -> {
                     //TODO(aHashimi) message textView runs to the edges of screen. https://engageft.atlassian.net/browse/SHOW-399
-                    showProgressOverlay(getString(R.string.login_preview_wait_message), R.style.LoadingOverlayDialogStyle)
+                    progressOverlayDelegate.showProgressOverlay(getString(R.string.login_preview_wait_message), R.style.LoadingOverlayDialogStyle)
                 }
                 LoginViewModel.LoadingOverlayDialog.DISMISS_DIALOG -> {
-                    dismissProgressOverlay()
+                    progressOverlayDelegate.dismissProgressOverlay()
                 }
             }
         })

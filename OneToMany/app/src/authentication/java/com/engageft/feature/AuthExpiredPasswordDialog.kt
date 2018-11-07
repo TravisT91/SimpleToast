@@ -10,6 +10,7 @@ import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.DialogFragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
+import com.engageft.apptoolbox.ProgressOverlayDelegate
 import com.engageft.onetomany.NotAuthenticatedActivity
 import com.engageft.onetomany.R
 import com.engageft.onetomany.databinding.DialogExpiredPasswordBinding
@@ -25,6 +26,9 @@ import com.engageft.onetomany.databinding.DialogExpiredPasswordBinding
 class AuthExpiredPasswordDialog : DialogFragment() {
     private lateinit var authExpiredViewModel: AuthExpiredViewModel
     private lateinit var binding: DialogExpiredPasswordBinding
+
+    private val progressOverlayStyle: Int = com.engageft.apptoolbox.R.style.LoadingOverlayDialogStyle
+    protected lateinit var progressOverlayDelegate: ProgressOverlayDelegate
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -60,8 +64,12 @@ class AuthExpiredPasswordDialog : DialogFragment() {
             }
         })
 
-        // TODO(jhutchins): Need progress overlay. 
-
         return binding.root
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        progressOverlayDelegate = ProgressOverlayDelegate(progressOverlayStyle, this, authExpiredViewModel)
     }
 }
