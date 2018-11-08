@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.inputmethod.EditorInfo
 import android.widget.Toast
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.constraintlayout.widget.ConstraintSet
@@ -168,6 +169,9 @@ class LoginFragment : LotusFullScreenFragment() {
                 }
             }
         })
+
+        binding.passwordInput.setImeOptions(EditorInfo.IME_ACTION_DONE)
+        binding.passwordInput.onImeAction(EditorInfo.IME_ACTION_DONE) { vm.loginClicked() }
 
         binding.btnIssuerStatement.setOnClickListener { vm.issuerStatementClicked() }
         binding.btnDisclosures.setOnClickListener { vm.disclosuresClicked() }
