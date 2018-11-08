@@ -4,7 +4,6 @@ import android.os.Handler
 import androidx.lifecycle.LiveData
 import com.engageft.apptoolbox.BaseViewModel
 import com.engageft.engagekit.EngageService
-import com.engageft.onetomany.feature.enrollment.EnrollmentSharedPreferencesRepo
 import com.ob.ws.dom.LoginResponse
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
@@ -48,7 +47,7 @@ class SplashScreenViewModel : BaseViewModel() {
 
         private fun doSplashInitialize() {
             handler.postDelayed({
-                if (!EnrollmentSharedPreferencesRepo.hasSeenGetStarted()) {
+                if (!WelcomeSharedPreferencesRepo.hasSeenGetStarted()) {
                     value = SplashNavigationEvent.FIRST_TIME
                 } else if (EngageService.getInstance().authManager.isLoggedIn) {
                     compositeDisposable.add(

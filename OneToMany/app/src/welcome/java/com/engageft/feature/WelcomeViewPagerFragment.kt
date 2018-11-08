@@ -16,7 +16,14 @@ import com.engageft.apptoolbox.BaseViewModel
 import com.engageft.apptoolbox.LotusFullScreenFragment
 import com.engageft.onetomany.R
 import com.engageft.onetomany.databinding.WelcomeViewpagerFragmentBinding
-
+/**
+ * WelcomeViewPagerFragment
+ *
+ * Manages showing of welcome screens, updates the page indicator, and invokes navigation based on button clicks.
+ *
+ * Created by Atia Hashimi 11/6/2018.
+ * Copyright (c) 2018 Engage FT. All rights reserved.
+ */
 class WelcomeViewPagerFragment: LotusFullScreenFragment() {
 
     companion object {
