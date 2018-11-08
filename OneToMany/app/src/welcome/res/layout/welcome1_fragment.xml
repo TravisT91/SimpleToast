@@ -12,7 +12,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
-            <ImageView
+            <androidx.appcompat.widget.AppCompatImageView
                 android:id="@+id/imageViewIcon"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -25,7 +25,7 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintVertical_bias="0.6"
-                tools:src="@drawable/ic_welcome1" />
+                app:srcCompat="@drawable/ic_welcome1" />
         </androidx.constraintlayout.widget.ConstraintLayout>
     </ScrollView>
 </layout>

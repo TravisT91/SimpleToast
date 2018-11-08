@@ -29,7 +29,6 @@ class Welcome4Fragment: LotusFullScreenFragment() {
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         binding = DataBindingUtil.inflate(inflater, R.layout.welcome2_fragment, container, false)
 
-//        binding.imageViewIcon.background = ContextCompat.getDrawable(context!!, R.drawable.welcome4_icon_background)
         binding.imageViewIcon.setImageResource(R.drawable.welcome4_icon_background)
         binding.titleTextView.text = getString(R.string.welcome_title4)
         binding.messageTextView.text = getString(R.string.welcome_message4)
