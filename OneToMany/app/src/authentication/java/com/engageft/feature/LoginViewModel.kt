@@ -3,7 +3,6 @@ package com.engageft.feature
 import androidx.databinding.Observable
 import androidx.databinding.ObservableField
 import androidx.lifecycle.MutableLiveData
-import com.engageft.apptoolbox.BaseViewModel
 import com.engageft.engagekit.EngageService
 import com.engageft.engagekit.rest.request.CreateDemoAccountRequest
 import com.engageft.engagekit.utils.LoginResponseUtils
@@ -23,7 +22,7 @@ import io.reactivex.schedulers.Schedulers
  * Created by joeyhutchins on 10/15/18.
  * Copyright (c) 2018 Engage FT. All rights reserved.
  */
-class LoginViewModel : BaseViewModel() {
+class LoginViewModel : BaseEngageViewModel() {
     private var loginResponse: LoginResponse? = null
 
     enum class LoginNavigationEvent {
@@ -72,8 +71,6 @@ class LoginViewModel : BaseViewModel() {
 
     val testMode: ObservableField<Boolean> = ObservableField(false)
 
-    val dialogInfoObservable: MutableLiveData<LoginDialogInfo> = MutableLiveData()
-
     val loadingOverlayDialogObservable: MutableLiveData<LoadingOverlayDialog> = MutableLiveData()
 
     init {
@@ -100,6 +97,8 @@ class LoginViewModel : BaseViewModel() {
         updatePrefilledUsernameAndRememberMe()
         testMode.addOnPropertyChangedCallback(object : Observable.OnPropertyChangedCallback() {
             override fun onPropertyChanged(sender: Observable?, propertyId: Int) {
+                dialogInfoObservable.value = LoginDialogInfo()
+
                 val useTestMode = testMode.get()!!
                 EngageService.getInstance().engageConfig.isUsingProdEnvironment = !useTestMode
                 AuthenticationSharedPreferencesRepo.applyUsingDemoServer(useTestMode)
@@ -163,15 +162,49 @@ class LoginViewModel : BaseViewModel() {
                                     login(response.message, createTempPassword())
                                 } else {
                                     loadingOverlayDialogObservable.value = LoadingOverlayDialog.DISMISS_DIALOG
-                                    dialogInfoObservable.value = LoginDialogInfo(dialogType = LoginDialogInfo.DialogType.SERVER_ERROR)
+                                    dialogInfoObservable.value = LoginDialogInfo(
+                                            message = response.message,
+                                            dialogType = DialogInfo.DialogType.SERVER_ERROR)
                                 }
                             }, { e ->
                                 loadingOverlayDialogObservable.value = LoadingOverlayDialog.DISMISS_DIALOG
-                                // TODO(aHahsimi) Proper error handling handle throwable and/or show dialog? https://engageft.atlassian.net/browse/SHOW-364
-                                dialogInfoObservable.value = LoginDialogInfo()
+                                handleThrowable(e)
                             })
             )
         }
+    }
+
+    fun onConfirmEmail() {
+
+        loginResponse?.let {
+            progressOverlayShownObservable.value = true
+            compositeDisposable.add(EngageService.getInstance().verificationEmailObservable(it.token)
+                    .subscribeOn(Schedulers.io())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe({ response ->
+                        progressOverlayShownObservable.value = false
+
+                        if (response.isSuccess) {
+                            dialogInfoObservable.value = LoginDialogInfo(dialogType = DialogInfo.DialogType.OTHER,
+                                    loginDialogType = LoginDialogInfo.LoginDialogType.EMAIL_VERIFICATION_SUCCESS)
+                        } else {
+                            dialogInfoObservable.value = LoginDialogInfo(
+                                    message = response.message,
+                                    dialogType = DialogInfo.DialogType.SERVER_ERROR)
+                        }
+                    }, { e ->
+                        progressOverlayShownObservable.value = false
+                        logout()
+                        handleThrowable(e)
+                    })
+            )
+        } ?: run {
+            dialogInfoObservable.value = LoginDialogInfo()
+        }
+    }
+
+    fun logout() {
+        EngageService.getInstance().authManager.logout()
     }
 
     private fun login(username: String, password: String) {
@@ -201,10 +234,9 @@ class LoginViewModel : BaseViewModel() {
                                         usernameError.value = UsernameValidationError.INVALID_CREDENTIALS
                                         passwordError.value = PasswordValidationError.INVALID_CREDENTIALS
                                     }
-                                }, { _ ->
+                                }, { e ->
                             progressOverlayShownObservable.value = false
-                            // TODO(aHahsimi) Proper error handling handle throwable and/or show dialog? https://engageft.atlassian.net/browse/SHOW-364
-                            dialogInfoObservable.value = LoginDialogInfo()
+                            handleThrowable(e)
                         })
         )
     }
@@ -234,7 +266,8 @@ class LoginViewModel : BaseViewModel() {
         conditionallySaveUsername()
 
         if (AuthenticationConfig.requireEmailConfirmation && LoginResponseUtils.requireEmailVerification(loginResponse)) {
-            dialogInfoObservable.value = LoginDialogInfo(dialogType = LoginDialogInfo.DialogType.EMAIL_VERIFICATION)
+            dialogInfoObservable.value = LoginDialogInfo(dialogType = DialogInfo.DialogType.OTHER,
+                    loginDialogType = LoginDialogInfo.LoginDialogType.EMAIL_VERIFICATION_PROMPT)
         } else if (loginResponse.isRequireAcceptTerms) {
             navigationObservable.value = LoginNavigationEvent.ACCEPT_TERMS
         } else {
@@ -327,10 +360,10 @@ class LoginViewModel : BaseViewModel() {
 class LoginDialogInfo(title: String? = null,
                       message: String? = null,
                       tag: String? = null,
-                      val dialogType: DialogType = DialogType.GENERIC_ERROR) : DialogInfo(title, message, tag) {
-    enum class DialogType {
-        GENERIC_ERROR,
-        SERVER_ERROR,
-        EMAIL_VERIFICATION
+                      dialogType: DialogType = DialogType.GENERIC_ERROR,
+                      var loginDialogType: LoginDialogInfo.LoginDialogType = LoginDialogType.EMAIL_VERIFICATION_PROMPT) : DialogInfo(title, message, tag, dialogType) {
+    enum class LoginDialogType {
+        EMAIL_VERIFICATION_PROMPT,
+        EMAIL_VERIFICATION_SUCCESS
     }
 }
