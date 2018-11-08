@@ -33,7 +33,7 @@
     </fragment>
     <fragment
         android:id="@+id/account_fragment"
-        android:name="com.engageft.feature.AccountFragment"
+        android:name="com.engageft.feature.AccountSettingsFragment"
         android:label="@string/fragment_title_account"
         tools:layout="@layout/fragment_account">
         <argument
@@ -65,5 +65,14 @@
             android:name="@string/navigation_override_up"
             android:defaultValue="true" />
     </fragment>
+    <fragment
+        android:id="@+id/moveMoneyFragment"
+        android:name="com.engageft.feature.MoveMoneyFragment"
+        android:label="@string/TITLE_MOVE_MONEY">
+        <argument
+            android:name="@string/navigation_override_up"
+            android:defaultValue="true" />
+    </fragment>
+
 
 </navigation>

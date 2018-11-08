@@ -18,6 +18,7 @@ import com.engageft.apptoolbox.LotusFullScreenFragment
 import com.engageft.engagekit.utils.DeviceUtils
 import com.engageft.feature.EasterEggGestureDetector
 import com.engageft.feature.EasterEggGestureListener
+import com.engageft.feature.Palette
 import com.engageft.onetomany.R
 import com.engageft.onetomany.databinding.FragmentLoginBinding
 import kotlinx.android.synthetic.main.fragment_login.*
@@ -42,6 +43,8 @@ class LoginFragment : LotusFullScreenFragment() {
         //TODO(aHashimi): needs to fix the problem of the buttons overlapping other views when keyboard is shown
         // https://engageft.atlassian.net/browse/SHOW-363
         binding = DataBindingUtil.inflate(layoutInflater, R.layout.fragment_login, container, false)
+        binding.palette = Palette
+
         constraintSet = ConstraintSet()
         constraintSet.clone(binding.root as ConstraintLayout)
 
