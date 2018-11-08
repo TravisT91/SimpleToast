@@ -76,6 +76,12 @@ class LoginViewModel : BaseViewModel() {
 
     val loadingOverlayDialogObservable: MutableLiveData<LoadingOverlayDialog> = MutableLiveData()
 
+    var isSwitchVisible: Boolean = false
+    set(value) {
+        field = value
+        updateDemoAccountButtonState()
+    }
+
     init {
         loginButtonState.value = ButtonState.HIDE
         demoAccountButtonState.value = ButtonState.HIDE
@@ -174,10 +180,10 @@ class LoginViewModel : BaseViewModel() {
         }
     }
 
-    fun updateDemoAccountButtonState() {
+    private fun updateDemoAccountButtonState() {
         val testModeToggled = testMode.get()!!
 
-        if (AuthenticationConfig.demoAccountAvailable
+        if (AuthenticationConfig.demoAccountAvailable && isSwitchVisible
                 && testModeToggled && username.get().isNullOrEmpty() && password.get().isNullOrEmpty()) {
             demoAccountButtonState.value = ButtonState.SHOW
         } else {

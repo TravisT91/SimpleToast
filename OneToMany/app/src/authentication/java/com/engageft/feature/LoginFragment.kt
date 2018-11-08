@@ -116,9 +116,10 @@ class LoginFragment : LotusFullScreenFragment() {
         })
         vm.demoAccountButtonState.observe(this, Observer { buttonState: LoginViewModel.ButtonState ->
             when (buttonState) {
-                LoginViewModel.ButtonState.SHOW -> demoAccountButton.visibility = View.VISIBLE
-                LoginViewModel.ButtonState.HIDE -> demoAccountButton.visibility = View.GONE
+                LoginViewModel.ButtonState.SHOW -> constraintSet.setVisibility(R.id.demoAccountButton, View.VISIBLE)
+                LoginViewModel.ButtonState.HIDE -> constraintSet.setVisibility(R.id.demoAccountButton, View.GONE)
             }
+            setLayoutTransitions()
         })
         // If testMode was saved as enabled, make the switch visible initially.
         if (vm.testMode.get()!! || DeviceUtils.isEmulator()) {
@@ -130,11 +131,13 @@ class LoginFragment : LotusFullScreenFragment() {
         gestureDetector = EasterEggGestureDetector(context!!, binding.root, object : EasterEggGestureListener {
             override fun onEasterEggActivated() {
                 constraintSet.setVisibility(R.id.testSwitch, View.VISIBLE)
+                vm.isSwitchVisible = true
                 setLayoutTransitions()
             }
 
             override fun onEasterEggDeactivated() {
                 constraintSet.setVisibility(R.id.testSwitch, View.INVISIBLE)
+                vm.isSwitchVisible = false
                 setLayoutTransitions()
             }
         })
@@ -173,12 +176,9 @@ class LoginFragment : LotusFullScreenFragment() {
         binding.demoAccountButton.setOnClickListener { vm.createDemoAccount() }
 
         binding.root.systemUiVisibility = View.SYSTEM_UI_FLAG_LAYOUT_STABLE
-        return binding.root
-    }
 
-    override fun onResume() {
-        super.onResume()
-        binding.viewModel?.updateDemoAccountButtonState()
+        vm.isSwitchVisible = binding.testSwitch.visibility == View.VISIBLE
+        return binding.root
     }
 
     private fun setLayoutTransitions() {
