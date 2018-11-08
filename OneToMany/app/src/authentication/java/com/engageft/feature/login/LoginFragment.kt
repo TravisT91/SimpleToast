@@ -1,4 +1,4 @@
-package com.engageft.feature
+package com.engageft.feature.login
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -16,6 +16,8 @@ import androidx.transition.TransitionManager
 import com.engageft.apptoolbox.BaseViewModel
 import com.engageft.apptoolbox.LotusFullScreenFragment
 import com.engageft.engagekit.utils.DeviceUtils
+import com.engageft.feature.EasterEggGestureDetector
+import com.engageft.feature.EasterEggGestureListener
 import com.engageft.onetomany.R
 import com.engageft.onetomany.databinding.FragmentLoginBinding
 import kotlinx.android.synthetic.main.fragment_login.*

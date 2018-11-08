@@ -1,4 +1,4 @@
-package com.engageft.feature
+package com.engageft.feature.authentication
 
 import android.os.Bundle
 import androidx.fragment.app.DialogFragment

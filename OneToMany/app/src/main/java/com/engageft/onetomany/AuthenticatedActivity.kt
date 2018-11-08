@@ -2,6 +2,7 @@ package com.engageft.onetomany
 
 
 import com.engageft.apptoolbox.LotusActivityConfig
+import com.engageft.feature.authentication.BaseAuthenticatedActivity
 
 class AuthenticatedActivity : BaseAuthenticatedActivity() {
 

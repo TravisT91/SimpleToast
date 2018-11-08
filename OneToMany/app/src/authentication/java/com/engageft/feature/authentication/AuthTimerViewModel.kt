@@ -1,4 +1,4 @@
-package com.engageft.onetomany.feature.enrollment
+package com.engageft.feature.authentication
 
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
@@ -14,7 +14,7 @@ import com.engageft.engagekit.tools.AuthManager
  * Created by joeyhutchins on 10/30/18.
  * Copyright (c) 2018 Engage FT. All rights reserved.
  */
-class AuthenticationViewModel : ViewModel() {
+class AuthTimerViewModel : ViewModel() {
     enum class AuthNavigationEvent {
         PROMPT_PASSWORD,
         PROMPT_PASSCODE,

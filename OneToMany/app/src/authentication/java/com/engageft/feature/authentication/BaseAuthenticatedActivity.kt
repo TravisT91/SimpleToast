@@ -1,16 +1,13 @@
-package com.engageft.onetomany
+package com.engageft.feature.authentication
 
 import android.os.Bundle
-import androidx.fragment.app.DialogFragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import com.engageft.apptoolbox.LotusActivity
 import com.engageft.engagekit.EngageService
-import com.engageft.feature.AuthExpiredPasswordDialog
 import com.engageft.feature.EasterEggGestureDetector
 import com.engageft.feature.EasterEggGestureListener
-import com.engageft.onetomany.feature.enrollment.AuthenticationViewModel
-
+import com.engageft.onetomany.R
 
 
 /**
@@ -22,20 +19,20 @@ import com.engageft.onetomany.feature.enrollment.AuthenticationViewModel
  * Copyright (c) 2018 Engage FT. All rights reserved.
  */
 abstract class BaseAuthenticatedActivity : LotusActivity() {
-    private lateinit var authViewModel: AuthenticationViewModel
+    private lateinit var authViewModel: AuthTimerViewModel
     private lateinit var gestureDetector: EasterEggGestureDetector
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        authViewModel = ViewModelProviders.of(this).get(AuthenticationViewModel::class.java)
+        authViewModel = ViewModelProviders.of(this).get(AuthTimerViewModel::class.java)
 
-        authViewModel.authNavigationObservable.observe(this, Observer { authNavigationEvent : AuthenticationViewModel.AuthNavigationEvent ->
+        authViewModel.authNavigationObservable.observe(this, Observer { authNavigationEvent : AuthTimerViewModel.AuthNavigationEvent ->
             when(authNavigationEvent) {
-                AuthenticationViewModel.AuthNavigationEvent.PROMPT_PASSWORD -> {
+                AuthTimerViewModel.AuthNavigationEvent.PROMPT_PASSWORD -> {
                     val dialog = AuthExpiredPasswordDialog()
                     dialog.show(supportFragmentManager, "TAG")
                 }
-                AuthenticationViewModel.AuthNavigationEvent.PROMPT_NONE -> {
+                AuthTimerViewModel.AuthNavigationEvent.PROMPT_NONE -> {
 
                 }
             }
