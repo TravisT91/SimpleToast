@@ -184,7 +184,7 @@ class LoginFragment : LotusFullScreenFragment() {
                                     message = getString(R.string.login_confirm_email_alert_message),
                                     positiveButton = getString(R.string.login_confirm_email_send_button),
                                     negativeButton = getString(R.string.dialog_information_cancel_button),
-                                    layoutType = InformationDialogFragment.LayoutType.BUTTONS_VERTICAL,
+                                    layoutType = InformationDialogFragment.LayoutType.BUTTONS_STACKED,
                                     listener = listener))
                         }
                         LoginDialogInfo.LoginDialogType.EMAIL_VERIFICATION_SUCCESS -> {
