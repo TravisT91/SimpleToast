@@ -18,7 +18,7 @@ open class BaseEngageViewModel: BaseViewModel() {
 
     val dialogInfoObservable: MutableLiveData<DialogInfo> = MutableLiveData()
 
-    fun handleThrowable(e: Throwable)  {
+    fun setDialogInfoForThrowable(e: Throwable)  {
         when (e) {
             is UnknownHostException -> {
                 dialogInfoObservable.value = DialogInfo(dialogType = DialogInfo.DialogType.NO_INTERNET_CONNECTION)

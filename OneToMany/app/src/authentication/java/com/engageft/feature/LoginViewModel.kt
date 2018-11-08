@@ -97,7 +97,6 @@ class LoginViewModel : BaseEngageViewModel() {
         updatePrefilledUsernameAndRememberMe()
         testMode.addOnPropertyChangedCallback(object : Observable.OnPropertyChangedCallback() {
             override fun onPropertyChanged(sender: Observable?, propertyId: Int) {
-                dialogInfoObservable.value = LoginDialogInfo()
 
                 val useTestMode = testMode.get()!!
                 EngageService.getInstance().engageConfig.isUsingProdEnvironment = !useTestMode
@@ -168,7 +167,7 @@ class LoginViewModel : BaseEngageViewModel() {
                                 }
                             }, { e ->
                                 loadingOverlayDialogObservable.value = LoadingOverlayDialog.DISMISS_DIALOG
-                                handleThrowable(e)
+                                setDialogInfoForThrowable(e)
                             })
             )
         }
@@ -195,7 +194,7 @@ class LoginViewModel : BaseEngageViewModel() {
                     }, { e ->
                         progressOverlayShownObservable.value = false
                         logout()
-                        handleThrowable(e)
+                        setDialogInfoForThrowable(e)
                     })
             )
         } ?: run {
@@ -236,7 +235,7 @@ class LoginViewModel : BaseEngageViewModel() {
                                     }
                                 }, { e ->
                             progressOverlayShownObservable.value = false
-                            handleThrowable(e)
+                            setDialogInfoForThrowable(e)
                         })
         )
     }
