@@ -41,5 +41,9 @@
         android:id="@+id/helpFragment"
         android:title="@string/nav_drawer_title_help"
         android:icon="@drawable/ic_account"/>
+    <item
+        android:id="@+id/moveMoneyFragment"
+        android:title="@string/TITLE_MOVE_MONEY"
+        />
 
 </menu>
