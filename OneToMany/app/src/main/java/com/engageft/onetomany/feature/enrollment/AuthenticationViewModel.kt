@@ -1,10 +1,10 @@
 package com.engageft.onetomany.feature.enrollment
 
-import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModel
 import com.engageft.engagekit.EngageService
+import com.engageft.engagekit.tools.AuthManager
 
 /**
  * TODO(joeyhutchins): ClassName
@@ -25,26 +25,30 @@ class AuthenticationViewModel : ViewModel() {
     val authNavigationObservable = MutableLiveData<AuthNavigationEvent>()
     private val authManager = EngageService.getInstance().authManager
 
-    private val authenticationObserver = Observer<Boolean> { t ->
-        Log.e("Joey", "viewModelObserver")
-        if (!t!!) {
-            Log.e("Joey", "viewModelObserver: logged out")
-            // For now, prompt password, but eventually deduce user settings.
-            authNavigationObservable.value = AuthNavigationEvent.PROMPT_PASSWORD
-        } else {
-            Log.e("Joey", "viewModelObserver: logged in")
-            authNavigationObservable.value = AuthNavigationEvent.PROMPT_NONE
+    private val authenticationObserver = Observer<AuthManager.AuthTimerState> { authTimerState ->
+        when (authTimerState) {
+            AuthManager.AuthTimerState.LOGGED_IN_EXPIRED -> {
+                // For now, prompt password, but eventually deduce user settings.
+                authNavigationObservable.value = AuthNavigationEvent.PROMPT_PASSWORD
+            }
+            AuthManager.AuthTimerState.LOGGED_IN_NOT_EXPIRED -> {
+                authNavigationObservable.value = AuthNavigationEvent.PROMPT_NONE
+            }
+            AuthManager.AuthTimerState.NOT_LOGGED_IN -> {
+                // Don't handle this case. An explicit call to logout was made, so there's no reason
+                // to show a dialog to user.
+            }
         }
     }
 
     init {
         authNavigationObservable.value = AuthNavigationEvent.PROMPT_NONE
-        authManager.authenticationStateObservable.observeForever(this.authenticationObserver)
+        authManager.authExpirationObservable.observeForever(this.authenticationObserver)
     }
 
     override fun onCleared() {
         super.onCleared()
-        authManager.authenticationStateObservable.removeObserver(this.authenticationObserver)
+        authManager.authExpirationObservable.removeObserver(this.authenticationObserver)
     }
 
     fun onUserInteraction() {
