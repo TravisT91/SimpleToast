@@ -76,12 +76,6 @@ class LoginViewModel : BaseViewModel() {
 
     val loadingOverlayDialogObservable: MutableLiveData<LoadingOverlayDialog> = MutableLiveData()
 
-    var isSwitchVisible: Boolean = false
-    set(value) {
-        field = value
-        updateDemoAccountButtonState()
-    }
-
     init {
         loginButtonState.value = ButtonState.HIDE
         demoAccountButtonState.value = ButtonState.HIDE
@@ -104,6 +98,7 @@ class LoginViewModel : BaseViewModel() {
         })
         synchronizeTestMode(AuthenticationSharedPreferencesRepo.isUsingDemoServer())
         updatePrefilledUsernameAndRememberMe()
+        updateDemoAccountButtonState()
         testMode.addOnPropertyChangedCallback(object : Observable.OnPropertyChangedCallback() {
             override fun onPropertyChanged(sender: Observable?, propertyId: Int) {
                 val useTestMode = testMode.get()!!
@@ -183,7 +178,7 @@ class LoginViewModel : BaseViewModel() {
     private fun updateDemoAccountButtonState() {
         val testModeToggled = testMode.get()!!
 
-        if (AuthenticationConfig.demoAccountAvailable && isSwitchVisible
+        if (AuthenticationConfig.demoAccountAvailable
                 && testModeToggled && username.get().isNullOrEmpty() && password.get().isNullOrEmpty()) {
             demoAccountButtonState.value = ButtonState.SHOW
         } else {

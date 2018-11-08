@@ -131,13 +131,11 @@ class LoginFragment : LotusFullScreenFragment() {
         gestureDetector = EasterEggGestureDetector(context!!, binding.root, object : EasterEggGestureListener {
             override fun onEasterEggActivated() {
                 constraintSet.setVisibility(R.id.testSwitch, View.VISIBLE)
-                vm.isSwitchVisible = true
                 setLayoutTransitions()
             }
 
             override fun onEasterEggDeactivated() {
                 constraintSet.setVisibility(R.id.testSwitch, View.INVISIBLE)
-                vm.isSwitchVisible = false
                 setLayoutTransitions()
             }
         })
@@ -177,7 +175,6 @@ class LoginFragment : LotusFullScreenFragment() {
 
         binding.root.systemUiVisibility = View.SYSTEM_UI_FLAG_LAYOUT_STABLE
 
-        vm.isSwitchVisible = binding.testSwitch.visibility == View.VISIBLE
         return binding.root
     }
 
