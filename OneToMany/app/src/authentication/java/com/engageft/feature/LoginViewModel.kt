@@ -1,6 +1,5 @@
 package com.engageft.feature
 
-import android.util.Log
 import androidx.databinding.Observable
 import androidx.databinding.ObservableField
 import androidx.lifecycle.MutableLiveData
@@ -184,7 +183,6 @@ class LoginViewModel : BaseViewModel() {
 
         progressOverlayShownObservable.value = true
 
-        Log.e("Joey", "login start")
         compositeDisposable.add(
                 EngageService.getInstance().loginObservable(username, password, null)
                         .subscribeOn(Schedulers.io())
@@ -193,13 +191,10 @@ class LoginViewModel : BaseViewModel() {
                                 { response ->
                                     progressOverlayShownObservable.value = false
                                     if (response.isSuccess && response is LoginResponse) {
-                                        Log.e("Joey", "login success")
                                         handleSuccessfulLoginResponse(response)
                                     } else if (response is DeviceFailResponse) {
-                                        Log.e("Joey", "DeviceFailResponse")
                                         navigationObservable.value = LoginNavigationEvent.TWO_FACTOR_AUTHENTICATION
                                     } else {
-                                        Log.e("Joey", "login error " + response.message)
                                         // we’re not yet truly parsing error types, and instead assume any error means invalid credentials.
                                         // so set backend error response message as "invalid credentials" for now until true error handling has been implemented.
                                         // https://engageft.atlassian.net/browse/SHOW-364
@@ -207,7 +202,6 @@ class LoginViewModel : BaseViewModel() {
                                         passwordError.value = PasswordValidationError.INVALID_CREDENTIALS
                                     }
                                 }, { e ->
-                            Log.e("Joey", "login error throwable " + e.message)
                             e.printStackTrace()
                             progressOverlayShownObservable.value = false
                             // TODO(aHahsimi) Proper error handling handle throwable and/or show dialog? https://engageft.atlassian.net/browse/SHOW-364

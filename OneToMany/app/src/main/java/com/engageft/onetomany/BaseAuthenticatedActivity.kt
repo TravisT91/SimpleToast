@@ -1,7 +1,7 @@
 package com.engageft.onetomany
 
 import android.os.Bundle
-import android.util.Log
+import androidx.fragment.app.DialogFragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import com.engageft.apptoolbox.LotusActivity
@@ -30,7 +30,6 @@ abstract class BaseAuthenticatedActivity : LotusActivity() {
         authViewModel = ViewModelProviders.of(this).get(AuthenticationViewModel::class.java)
 
         authViewModel.authNavigationObservable.observe(this, Observer { authNavigationEvent : AuthenticationViewModel.AuthNavigationEvent ->
-            Log.e("Joey", "Activity: event!")
             when(authNavigationEvent) {
                 AuthenticationViewModel.AuthNavigationEvent.PROMPT_PASSWORD -> {
                     val dialog = AuthExpiredPasswordDialog()
@@ -45,10 +44,8 @@ abstract class BaseAuthenticatedActivity : LotusActivity() {
         // Add a DEBUG ONLY gesture detector to simular authentication expiration.
         gestureDetector = EasterEggGestureDetector(this, findViewById(R.id.activityContainer), object : EasterEggGestureListener {
             override fun onEasterEggActivated() {
-                Log.e("Joey", "onEasterEggActivated")
             }
             override fun onEasterEggDeactivated() {
-                Log.e("Joey", "onEasterEggDeactivated")
                 // To simulate auth expiration.
                 EngageService.getInstance().authManager.setAuthExpired()
             }
