@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="pagerIndicatorDot">@color/structure3</color>
+    <color name="pagerIndicatorDotSelected">@color/primary</color>
+</resources>
