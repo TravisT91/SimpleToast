@@ -21,7 +21,6 @@ fun infoDialogSimpleMessageNoTitle(context: Context, message: String,
     return InformationDialogFragment.newLotusInstance(message = message, positiveButton = positiveButtonText)
 }
 
-
 fun infoDialogGenericErrorTitleMessageConditionalNewInstance(context: Context, dialogInfo: DialogInfo) : InformationDialogFragment {
     dialogInfo.message?.let { msg ->
         return infoDialogGenericErrorTitleMessageNewInstance(context, message = msg)

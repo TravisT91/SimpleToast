@@ -152,10 +152,10 @@ class LoginFragment : LotusFullScreenFragment() {
                 }
                 DialogInfo.DialogType.NO_INTERNET_CONNECTION -> {
                     showDialog(infoDialogGenericErrorTitleMessageNewInstance(
-                            context!!, message = loginDialogInfo.message ?: getString(R.string.alert_error_message_no_internet_connection)))
+                            context!!, message = getString(R.string.alert_error_message_no_internet_connection)))
                 }
                 DialogInfo.DialogType.CONNECTION_TIMEOUT -> {
-                    showDialog(infoDialogGenericErrorTitleMessageNewInstance(context!!, message = loginDialogInfo.message ?: getString(R.string.alert_error_message_connection_timeout)))
+                    showDialog(infoDialogGenericErrorTitleMessageNewInstance(context!!, getString(R.string.alert_error_message_connection_timeout)))
                 }
                 DialogInfo.DialogType.OTHER -> {
                     when (loginDialogInfo.loginDialogType) {

@@ -20,27 +20,27 @@ open class BaseEngageViewModel: BaseViewModel() {
     val dialogInfoObservable: MutableLiveData<DialogInfo> = MutableLiveData()
 
     fun handleThrowable(e: Throwable)  {
-        if (BuildConfig.DEBUG) {
-            dialogInfoObservable.value = DialogInfo(message = e.message)
-            e.printStackTrace()
-        } else {
-            when (e) {
-                is UnknownHostException -> {
-                    dialogInfoObservable.value = DialogInfo(dialogType = DialogInfo.DialogType.NO_INTERNET_CONNECTION)
-                }
-                is ConnectException -> {
-                    dialogInfoObservable.value = DialogInfo(dialogType = DialogInfo.DialogType.NO_INTERNET_CONNECTION)
-                }
-                is SocketTimeoutException -> {
-                    dialogInfoObservable.value = DialogInfo(dialogType = DialogInfo.DialogType.CONNECTION_TIMEOUT)
-                }
-                // Add more specific exceptions here, if needed
-                else -> {
-                    dialogInfoObservable.value = DialogInfo()
+        when (e) {
+            is UnknownHostException -> {
+                dialogInfoObservable.value = DialogInfo(dialogType = DialogInfo.DialogType.NO_INTERNET_CONNECTION)
+            }
+            is ConnectException -> {
+                dialogInfoObservable.value = DialogInfo(dialogType = DialogInfo.DialogType.NO_INTERNET_CONNECTION)
+            }
+            is SocketTimeoutException -> {
+                dialogInfoObservable.value = DialogInfo(dialogType = DialogInfo.DialogType.CONNECTION_TIMEOUT)
+            }
+            // Add more specific exceptions here, if needed
+            else -> {
+                if (BuildConfig.DEBUG) {
+                    dialogInfoObservable.value = DialogInfo(message = e.message)
+                    e.printStackTrace()
+                } else {
+                    // TODO(aHashimi): https://engageft.atlassian.net/browse/FOTM-26
+                    // Crashlytics.logException(e)
                 }
             }
-            // TODO(aHashimi): https://engageft.atlassian.net/browse/FOTM-26
-            // Crashlytics.logException(e)
         }
+
     }
 }
