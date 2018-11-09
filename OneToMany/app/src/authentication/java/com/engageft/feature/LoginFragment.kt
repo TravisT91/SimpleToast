@@ -145,22 +145,17 @@ class LoginFragment : LotusFullScreenFragment() {
             val loginDialogInfo = it as LoginDialogInfo
             when (loginDialogInfo.dialogType) {
                 DialogInfo.DialogType.GENERIC_ERROR -> {
-                    showDialog(infoDialogErrorMessageNewInstance(context!!))
+                    showDialog(infoDialogGenericErrorTitleMessageConditionalNewInstance(context!!, loginDialogInfo))
                 }
                 DialogInfo.DialogType.SERVER_ERROR -> {
-                    loginDialogInfo.message?.let { msg ->
-                        showDialog(infoDialogErrorMessageNewInstance(context!!, message = msg))
-                    } ?: run {
-                        showDialog(infoDialogErrorMessageNewInstance(context!!))
-                    }
+                    showDialog(infoDialogGenericErrorTitleMessageConditionalNewInstance(context!!, loginDialogInfo))
                 }
                 DialogInfo.DialogType.NO_INTERNET_CONNECTION -> {
-                    showDialog(infoDialogErrorMessageNewInstance(
-                            context!!, message = getString(R.string.alert_error_message_no_internet_connection)))
+                    showDialog(infoDialogGenericErrorTitleMessageNewInstance(
+                            context!!, message = loginDialogInfo.message ?: getString(R.string.alert_error_message_no_internet_connection)))
                 }
                 DialogInfo.DialogType.CONNECTION_TIMEOUT -> {
-                    showDialog(infoDialogErrorMessageNewInstance(context!!,
-                            message = getString(R.string.alert_error_message_connection_timeout)))
+                    showDialog(infoDialogGenericErrorTitleMessageNewInstance(context!!, message = loginDialogInfo.message ?: getString(R.string.alert_error_message_connection_timeout)))
                 }
                 DialogInfo.DialogType.OTHER -> {
                     when (loginDialogInfo.loginDialogType) {
@@ -188,7 +183,7 @@ class LoginFragment : LotusFullScreenFragment() {
                                     listener = listener))
                         }
                         LoginDialogInfo.LoginDialogType.EMAIL_VERIFICATION_SUCCESS -> {
-                            showDialog(infoDialogSimpleMessage(context!!,
+                            showDialog(infoDialogSimpleMessageNoTitle(context!!,
                                     message = getString(R.string.login_confirm_email_success)))
                         }
                     }
