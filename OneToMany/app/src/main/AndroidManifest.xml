@@ -11,7 +11,7 @@
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/AppTheme">
+        android:theme="@style/LotusTheme">
 
         <activity android:name="com.engageft.feature.SplashActivity"
             android:theme="@style/SplashTheme"
@@ -30,7 +30,8 @@
         <activity
             android:windowSoftInputMode="adjustResize"
             android:name="com.engageft.onetomany.NotAuthenticatedActivity"
-            android:screenOrientation="portrait">
+            android:screenOrientation="portrait"
+            android:theme="@style/LotusTheme">
         </activity>
 
         <activity android:name="com.engageft.onetomany.AuthenticatedActivity">
