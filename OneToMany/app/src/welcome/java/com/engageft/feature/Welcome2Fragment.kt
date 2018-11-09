@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.appcompat.widget.AppCompatImageView
 import androidx.databinding.DataBindingUtil
 import com.engageft.apptoolbox.BaseViewModel
 import com.engageft.apptoolbox.LotusFullScreenFragment
@@ -29,7 +30,9 @@ class Welcome2Fragment: LotusFullScreenFragment() {
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_welcome_shared, container, false)
 
-        binding.imageViewIcon.setImageResource(R.drawable.welcome2_icon_background)
+        binding.iconView.findViewById<AppCompatImageView>(R.id.imageViewIcon).apply {
+            setImageResource(R.drawable.ic_welcome2)
+        }
         binding.titleTextView.text = getString(R.string.welcome_title2)
         binding.messageTextView.text = getString(R.string.welcome_message2)
         return binding.root

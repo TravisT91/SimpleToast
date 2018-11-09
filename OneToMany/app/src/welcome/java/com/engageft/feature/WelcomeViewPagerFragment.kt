@@ -15,7 +15,7 @@ import androidx.viewpager.widget.ViewPager
 import com.engageft.apptoolbox.BaseViewModel
 import com.engageft.apptoolbox.LotusFullScreenFragment
 import com.engageft.onetomany.R
-import com.engageft.onetomany.databinding.WelcomeViewpagerFragmentBinding
+import com.engageft.onetomany.databinding.FragmentWelcomeViewpagerBinding
 /**
  * WelcomeViewPagerFragment
  *
@@ -30,7 +30,7 @@ class WelcomeViewPagerFragment: LotusFullScreenFragment() {
        private const val WELCOME_FRAGMENT_COUNT = 5
     }
 
-    private lateinit var binding: WelcomeViewpagerFragmentBinding
+    private lateinit var binding: FragmentWelcomeViewpagerBinding
     private lateinit var selectedDot: Drawable
     private lateinit var unselectedDot: Drawable
 
@@ -41,7 +41,7 @@ class WelcomeViewPagerFragment: LotusFullScreenFragment() {
     var pageIndicatorIndex = 0
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        binding = DataBindingUtil.inflate(inflater, R.layout.welcome_viewpager_fragment, container, false)
+        binding = DataBindingUtil.inflate(inflater, R.layout.fragment_welcome_viewpager, container, false)
 
         binding.welcomeViewPager.adapter = WelcomePagerAdapter(childFragmentManager)
 
