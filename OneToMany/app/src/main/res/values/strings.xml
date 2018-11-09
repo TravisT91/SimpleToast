@@ -4,10 +4,10 @@
     <!-- Navigation Drawer Titles -->
     <string name="nav_drawer_title_dashboard">Overview</string>
     <string name="nav_drawer_title_budgets">Budgets</string>
-    <string name="nav_drawer_title_goals">Goals</string>
+    <string name="nav_drawer_title_goals">Set-aside</string>
     <string name="nav_drawer_title_cardmanagement">Card Management</string>
     <string name="nav_drawer_title_account">Account settings</string>
-    <string name="nav_drawer_title_help">Help Center</string>
+    <string name="nav_drawer_title_help">Help</string>
 
     <!-- Navigation Fragment Titles -->
     <string name="fragment_title_dashboard">Overview</string>
