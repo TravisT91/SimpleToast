@@ -167,7 +167,7 @@ class LoginViewModel : BaseEngageViewModel() {
                                 }
                             }, { e ->
                                 loadingOverlayDialogObservable.value = LoadingOverlayDialog.DISMISS_DIALOG
-                                setDialogInfoForThrowable(e)
+                                handleThrowable(e)
                             })
             )
         }
@@ -194,7 +194,7 @@ class LoginViewModel : BaseEngageViewModel() {
                     }, { e ->
                         progressOverlayShownObservable.value = false
                         logout()
-                        setDialogInfoForThrowable(e)
+                        handleThrowable(e)
                     })
             )
         } ?: run {
@@ -235,7 +235,7 @@ class LoginViewModel : BaseEngageViewModel() {
                                     }
                                 }, { e ->
                             progressOverlayShownObservable.value = false
-                            setDialogInfoForThrowable(e)
+                            handleThrowable(e)
                         })
         )
     }
