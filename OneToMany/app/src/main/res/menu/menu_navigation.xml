@@ -34,18 +34,21 @@
         android:title="@string/nav_drawer_title_help"
         />
     <item
-        android:title="Card 3456">
-        <menu>
-            <item
-                android:id="@+id/budgets_fragment"
-                android:title="@string/nav_drawer_title_budgets"
-                />
-            <item
-                android:id="@+id/goals_fragment"
-                android:title="@string/nav_drawer_title_goals"
-                />
-        </menu>
-    </item>
-
+        android:id="@+id/space"
+        android:enabled="false"
+        android:title=""/>
+    <item
+        android:id="@+id/menuCardNumberHeader"
+        android:enabled="false"
+        android:title="Card 3456"/>
+    <!--<menu>-->
+    <item
+        android:id="@+id/budgets_fragment"
+        android:title="@string/nav_drawer_title_budgets"
+        />
+    <item
+        android:id="@+id/goals_fragment"
+        android:title="@string/nav_drawer_title_goals"
+        />
 
 </menu>
