@@ -58,6 +58,7 @@ class WelcomeViewPagerFragment: LotusFullScreenFragment() {
         }
 
         binding.welcomeViewPager.addOnPageChangeListener(pageChangeListener)
+        //TODO: use a library that handles this: https@ //engageft.atlassian.net/browse/SHOW-435
         unselectedDot = ContextCompat.getDrawable(context!!, R.drawable.pager_indicator_dot)!!
         selectedDot = ContextCompat.getDrawable(context!!, R.drawable.pager_indicator_dot_selected)!!
 
