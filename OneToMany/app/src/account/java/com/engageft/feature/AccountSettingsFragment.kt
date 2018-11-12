@@ -10,6 +10,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
+import androidx.navigation.findNavController
 import com.engageft.apptoolbox.BaseViewModel
 import com.engageft.apptoolbox.LotusFullScreenFragment
 import com.engageft.onetomany.NotAuthenticatedActivity
@@ -55,7 +56,7 @@ class AccountSettingsFragment : LotusFullScreenFragment() {
                 //TODO(ttkachuk) implement onCLick
             }
             securityQuestions.setOnClickListener {
-                //TODO(ttkachuk) implement onCLick
+                binding.root.findNavController().navigate(R.id.action_account_fragment_to_changeSecurityQuestionsFragment)
             }
             idTheftProtection.setOnClickListener {
                 //TODO(ttkachuk) implement onCLick

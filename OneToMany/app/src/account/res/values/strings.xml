@@ -15,4 +15,12 @@
     <string name="SETTINGS_COPYRIGHT">Copyright</string>
     <string name="SETTINGS_DISCLOSURES">Disclosures</string>
 
+    <!-- Change Security Questions: -->
+    <string name="CHANGE_SECURITY_QUESTIONS_HEADER">Reset your security questions by selecting new questions from the following lists.</string>
+    <string name="CHANGE_SECURITY_QUESTIONS_LIST_LABEL">Select Question</string>
+    <string name="CHANGE_SECURITY_QUESTIONS_ANSWER_LABEL">Answer</string>
+    <string name="CHANGE_SECURITY_QUESTIONS_BUTTON_SAVE">Save</string>
+    <string name="CHANGE_SECURITY_QUESTIONS_LIST_TITLE">Select Question</string>
+    <string name="CHANGE_SECURITY_QUESTIONS_LIST_SUBTITLE"></string>
+
 </resources>
