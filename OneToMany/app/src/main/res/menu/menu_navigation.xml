@@ -40,7 +40,7 @@
     <item
         android:id="@+id/menuCardNumberHeader"
         android:enabled="false"
-        android:title="Card 3456"/>
+        android:title="@string/nav_drawer_card_header_format"/>
     <!--<menu>-->
     <item
         android:id="@+id/budgets_fragment"
