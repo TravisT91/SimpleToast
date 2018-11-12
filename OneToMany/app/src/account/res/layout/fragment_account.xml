@@ -3,6 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
+        <variable name="viewModel" type="com.engageft.feature.AccountSettingsViewModel"/>
         <variable
             name="palette"
             type="com.engageft.feature.Palette"/>
@@ -244,6 +245,7 @@
                 android:paddingBottom="@dimen/listItemPaddingBottom"
                 android:text="@string/SETTINGS_LOG_OUT"
                 android:textColor="@{palette.errorColor}"
+                android:onClick="@{viewModel.onLogoutClicked}"
                 tools:textColor="@color/error"/>
 
             <include layout="@layout/divider" />
