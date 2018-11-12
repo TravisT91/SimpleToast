@@ -437,9 +437,5 @@ enum class OverviewBalanceState {
 class DashboardDialogInfo(title: String? = null,
                           message: String? = null,
                           tag: String? = null,
-                          val dialogType: DialogType = DialogType.GENERIC_ERROR) : DialogInfo(title, message, tag) {
-    enum class DialogType {
-        GENERIC_ERROR,
-        SERVER_ERROR
-    }
+                          dialogType: DialogType = DialogType.GENERIC_ERROR) : DialogInfo(title, message, tag, dialogType) {
 }
