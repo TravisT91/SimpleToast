@@ -24,7 +24,8 @@ class SplashScreenViewModel : BaseViewModel() {
     }
     enum class SplashNavigationEvent {
         LOGGED_IN,
-        NOT_LOGGED_IN
+        NOT_LOGGED_IN,
+        FIRST_TIME
     }
 
     private val compositeDisposable = CompositeDisposable()
@@ -46,7 +47,9 @@ class SplashScreenViewModel : BaseViewModel() {
 
         private fun doSplashInitialize() {
             handler.postDelayed({
-                if (EngageService.getInstance().authManager.isLoggedIn) {
+                if (!WelcomeSharedPreferencesRepo.hasSeenGetStarted()) {
+                    value = SplashNavigationEvent.FIRST_TIME
+                } else if (EngageService.getInstance().authManager.isLoggedIn) {
                     compositeDisposable.add(
                             EngageService.getInstance().loginResponseAsObservable
                                     .subscribeOn(Schedulers.io())

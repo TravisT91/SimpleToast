@@ -9,20 +9,20 @@ import com.engageft.apptoolbox.LotusFullScreenFragment
 import com.engageft.onetomany.R
 
 /**
- * TODO(joeyhutchins): ClassName
- * <p>
- * TODO(joeyhutchins): Class description.
- * </p>
- * Created by joeyhutchins on 8/24/18.
+ * Welcome1Fragment
+ *
+ * Welcome screen 1.
+ *
+ * Created by Atia Hashimi 11/6/2018.
  * Copyright (c) 2018 Engage FT. All rights reserved.
  */
-class AccountFragment : LotusFullScreenFragment() {
+class Welcome1Fragment: LotusFullScreenFragment() {
 
     override fun createViewModel(): BaseViewModel? {
         return null
     }
+
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        val view = inflater.inflate(R.layout.fragment_account, container, false)
-        return view
+        return inflater.inflate(R.layout.fragment_welcome1, container, false)
     }
 }

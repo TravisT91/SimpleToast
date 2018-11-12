@@ -34,7 +34,12 @@
             android:theme="@style/LotusTheme">
         </activity>
 
-        <activity android:name="com.engageft.onetomany.AuthenticatedActivity"
+        <activity android:name="com.engageft.onetomany.AuthenticatedActivity">
+
+        </activity>
+
+        <activity android:name="com.engageft.feature.WelcomeActivity"
+            android:windowSoftInputMode="adjustResize"
             android:screenOrientation="portrait">
         </activity>
     </application>
