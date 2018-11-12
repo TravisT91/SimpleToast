@@ -98,6 +98,7 @@ class LoginViewModel : BaseViewModel() {
         })
         synchronizeTestMode(AuthenticationSharedPreferencesRepo.isUsingDemoServer())
         updatePrefilledUsernameAndRememberMe()
+        updateDemoAccountButtonState()
         testMode.addOnPropertyChangedCallback(object : Observable.OnPropertyChangedCallback() {
             override fun onPropertyChanged(sender: Observable?, propertyId: Int) {
                 val useTestMode = testMode.get()!!

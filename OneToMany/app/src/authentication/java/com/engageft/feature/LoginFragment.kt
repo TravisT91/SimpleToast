@@ -119,9 +119,10 @@ class LoginFragment : LotusFullScreenFragment() {
         })
         vm.demoAccountButtonState.observe(this, Observer { buttonState: LoginViewModel.ButtonState ->
             when (buttonState) {
-                LoginViewModel.ButtonState.SHOW -> demoAccountButton.visibility = View.VISIBLE
-                LoginViewModel.ButtonState.HIDE -> demoAccountButton.visibility = View.GONE
+                LoginViewModel.ButtonState.SHOW -> constraintSet.setVisibility(R.id.demoAccountButton, View.VISIBLE)
+                LoginViewModel.ButtonState.HIDE -> constraintSet.setVisibility(R.id.demoAccountButton, View.GONE)
             }
+            setLayoutTransitions()
         })
         // If testMode was saved as enabled, make the switch visible initially.
         if (vm.testMode.get()!! || DeviceUtils.isEmulator()) {
@@ -179,6 +180,7 @@ class LoginFragment : LotusFullScreenFragment() {
         binding.demoAccountButton.setOnClickListener { vm.createDemoAccount() }
 
         binding.root.systemUiVisibility = View.SYSTEM_UI_FLAG_LAYOUT_STABLE
+
         return binding.root
     }
 
