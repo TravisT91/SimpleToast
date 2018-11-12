@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.inputmethod.EditorInfo
 import android.widget.Toast
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.constraintlayout.widget.ConstraintSet
@@ -15,6 +16,8 @@ import androidx.transition.AutoTransition
 import androidx.transition.TransitionManager
 import com.engageft.apptoolbox.BaseViewModel
 import com.engageft.apptoolbox.LotusFullScreenFragment
+import com.engageft.apptoolbox.ViewUtils.newLotusInstance
+import com.engageft.apptoolbox.view.InformationDialogFragment
 import com.engageft.engagekit.utils.DeviceUtils
 import com.engageft.onetomany.R
 import com.engageft.onetomany.databinding.FragmentLoginBinding
@@ -118,9 +121,10 @@ class LoginFragment : LotusFullScreenFragment() {
         })
         vm.demoAccountButtonState.observe(this, Observer { buttonState: LoginViewModel.ButtonState ->
             when (buttonState) {
-                LoginViewModel.ButtonState.SHOW -> demoAccountButton.visibility = View.VISIBLE
-                LoginViewModel.ButtonState.HIDE -> demoAccountButton.visibility = View.GONE
+                LoginViewModel.ButtonState.SHOW -> constraintSet.setVisibility(R.id.demoAccountButton, View.VISIBLE)
+                LoginViewModel.ButtonState.HIDE -> constraintSet.setVisibility(R.id.demoAccountButton, View.GONE)
             }
+            setLayoutTransitions()
         })
         // If testMode was saved as enabled, make the switch visible initially.
         if (vm.testMode.get()!! || DeviceUtils.isEmulator()) {
@@ -140,20 +144,53 @@ class LoginFragment : LotusFullScreenFragment() {
                 setLayoutTransitions()
             }
         })
+
         vm.dialogInfoObservable.observe(this, Observer {
-            when (it.dialogType) {
-                LoginDialogInfo.DialogType.GENERIC_ERROR -> {
-                    //TODO(aHashimi): show dialog
+            val loginDialogInfo = it as LoginDialogInfo
+            when (loginDialogInfo.dialogType) {
+                DialogInfo.DialogType.GENERIC_ERROR -> {
+                    showDialog(infoDialogGenericErrorTitleMessageConditionalNewInstance(context!!, loginDialogInfo))
                 }
-                LoginDialogInfo.DialogType.SERVER_ERROR -> {
-                    // TODO(aHashimi): https@//engageft.atlassian.net/browse/SHOW-364
-                    // check title
-                    //if (!it.message.isNullOrEmpty()) {
-                        // TODO(aHashimi): show dialog with message
-                    //}
+                DialogInfo.DialogType.SERVER_ERROR -> {
+                    showDialog(infoDialogGenericErrorTitleMessageConditionalNewInstance(context!!, loginDialogInfo))
                 }
-                LoginDialogInfo.DialogType.EMAIL_VERIFICATION -> {
-                    //TODO(aHashimi): show dialog: https://engageft.atlassian.net/browse/SHOW-261
+                DialogInfo.DialogType.NO_INTERNET_CONNECTION -> {
+                    showDialog(infoDialogGenericErrorTitleMessageNewInstance(
+                            context!!, message = getString(R.string.alert_error_message_no_internet_connection)))
+                }
+                DialogInfo.DialogType.CONNECTION_TIMEOUT -> {
+                    showDialog(infoDialogGenericErrorTitleMessageNewInstance(context!!, getString(R.string.alert_error_message_connection_timeout)))
+                }
+                DialogInfo.DialogType.OTHER -> {
+                    when (loginDialogInfo.loginDialogType) {
+
+                        LoginDialogInfo.LoginDialogType.EMAIL_VERIFICATION_PROMPT -> {
+                            val listener = object : InformationDialogFragment.InformationDialogFragmentListener {
+                                override fun onDialogFragmentNegativeButtonClicked() {
+                                    vm.logout()
+                                }
+
+                                override fun onDialogFragmentPositiveButtonClicked() {
+                                    vm.onConfirmEmail()
+                                }
+
+                                override fun onDialogCancelled() {
+                                    vm.logout()
+                                }
+                            }
+                            showDialog(InformationDialogFragment.newLotusInstance(
+                                    title = getString(R.string.login_confirm_email_alert_title),
+                                    message = getString(R.string.login_confirm_email_alert_message),
+                                    positiveButton = getString(R.string.login_confirm_email_send_button),
+                                    negativeButton = getString(R.string.dialog_information_cancel_button),
+                                    layoutType = InformationDialogFragment.LayoutType.BUTTONS_STACKED,
+                                    listener = listener))
+                        }
+                        LoginDialogInfo.LoginDialogType.EMAIL_VERIFICATION_SUCCESS -> {
+                            showDialog(infoDialogSimpleMessageNoTitle(context!!,
+                                    message = getString(R.string.login_confirm_email_success)))
+                        }
+                    }
                 }
             }
         })
@@ -169,12 +206,16 @@ class LoginFragment : LotusFullScreenFragment() {
             }
         })
 
+        binding.passwordInput.setImeOptions(EditorInfo.IME_ACTION_DONE)
+        binding.passwordInput.onImeAction(EditorInfo.IME_ACTION_DONE) { vm.loginClicked() }
+
         binding.btnIssuerStatement.setOnClickListener { vm.issuerStatementClicked() }
         binding.btnDisclosures.setOnClickListener { vm.disclosuresClicked() }
         binding.loginButton.setOnClickListener { vm.loginClicked() }
         binding.demoAccountButton.setOnClickListener { vm.createDemoAccount() }
 
         binding.root.systemUiVisibility = View.SYSTEM_UI_FLAG_LAYOUT_STABLE
+
         return binding.root
     }
 

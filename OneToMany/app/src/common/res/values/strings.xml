@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Error messages -->
+    <string name="alert_error_message_no_internet_connection">No Internet Connection</string>
+    <string name="alert_error_message_connection_timeout">Connection timeout. Please try again.</string>
+    <string name="alert_error_message_generic">There was an error. Please try again.</string>
+    <string name="alert_error_title_generic">Error</string>
+
+    <string name="dialog_information_cancel_button">Cancel</string>
+    <string name="dialog_information_ok_button">OK</string>
+</resources>

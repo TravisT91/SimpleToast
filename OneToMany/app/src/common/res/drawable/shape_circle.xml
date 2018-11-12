@@ -2,10 +2,10 @@
 <shape xmlns:android="http://schemas.android.com/apk/res/android"
     android:shape="oval">
 
-    <size android:height="@dimen/pager_indicator_dot" android:width="@dimen/pager_indicator_dot"/>
+    <size android:height="120dp" android:width="120dp"/>
 
     <solid
-        android:color="@color/pagerIndicatorDotSelected" >
+        android:color="@color/white" >
     </solid>
 
 </shape>

@@ -5,7 +5,7 @@
     <size android:height="@dimen/pager_indicator_dot" android:width="@dimen/pager_indicator_dot"/>
 
     <solid
-        android:color="@color/white" >
+        android:color="@color/pagerIndicatorDot" >
     </solid>
 
 </shape>
