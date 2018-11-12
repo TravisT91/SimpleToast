@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="welcome_get_started_button">Get Started</string>
+
+    <string name="welcome_title2">It\'s smart</string>
+    <string name="welcome_message2">With a powerful, dynamic dashboard, you\'ll always know where you stand, right from the get go.</string>
+    <string name="welcome_title3">It\'s flexible</string>
+    <string name="welcome_message3">Move money into your account via bank transfer, credit and debit card load, or direct deposit.</string>
+    <string name="welcome_title4">It\'s secure</string>
+    <string name="welcome_message4">Locking, unlocking, and other important card controls are designed to always be a single tap away.</string>
+    <string name="welcome_title5">It\'s you</string>
+    <string name="welcome_message5">Need a secondary or dependent card? You can order a new card for them right from the app.</string>
+</resources>

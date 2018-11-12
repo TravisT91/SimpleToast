@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto" android:id="@+id/navigation_welcome"
+    app:startDestination="@id/welcomeViewPagerFragment">
+
+    <fragment
+        android:id="@+id/welcomeViewPagerFragment"
+        android:name="com.engageft.feature.WelcomeViewPagerFragment">
+        <action
+            android:id="@+id/action_welcomeViewPagerFragment_to_loginFragment"
+            app:destination="@id/loginFragment" />
+        <argument
+            android:name="@string/navigation_hide_toolbar"
+            android:defaultValue="true" />
+    </fragment>
+    <fragment
+        android:id="@+id/loginFragment"
+        android:name="com.engageft.feature.LoginFragment">
+        <action
+            android:id="@+id/action_loginFragment_to_authenticatedActivity"
+            app:destination="@id/authenticatedActivity" />
+    </fragment>
+    <activity
+        android:id="@+id/authenticatedActivity"
+        android:name="com.engageft.onetomany.AuthenticatedActivity"
+        android:label="AuthenticatedActivity" />
+</navigation>

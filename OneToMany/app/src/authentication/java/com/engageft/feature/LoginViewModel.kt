@@ -257,6 +257,9 @@ class LoginViewModel : BaseEngageViewModel() {
     private fun handleSuccessfulLoginResponse(loginResponse: LoginResponse) {
         this.loginResponse = loginResponse
 
+        // set the Get started flag to true after the successful login, so the Welcome screen doesn't get displayed again
+        WelcomeSharedPreferencesRepo.applyHasSeenGetStarted(true)
+
         // Setup unique user identifier for Heap analytics
         val accountInfo = LoginResponseUtils.getCurrentAccountInfo(loginResponse)
         if (accountInfo != null && accountInfo.accountId != 0L) {
