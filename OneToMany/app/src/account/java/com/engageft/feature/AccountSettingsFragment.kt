@@ -46,20 +46,9 @@ class AccountSettingsFragment : LotusFullScreenFragment() {
             password.setOnClickListener {
                 //TODO(ttkachuk) implement onCLick
             }
-            passcode.setOnClickListener {
-                //TODO(ttkachuk) implement onCLick
-            }
-            touchId.setOnClickListener {
-                //TODO(ttkachuk) implement onCLick
-            }
-            touchIdSwitch.setOnClickListener {
-                //TODO(ttkachuk) implement onCLick
-            }
+
             securityQuestions.setOnClickListener {
                 binding.root.findNavController().navigate(R.id.action_account_fragment_to_changeSecurityQuestionsFragment)
-            }
-            idTheftProtection.setOnClickListener {
-                //TODO(ttkachuk) implement onCLick
             }
             notifications.setOnClickListener {
                 //TODO(ttkachuk) implement onCLick

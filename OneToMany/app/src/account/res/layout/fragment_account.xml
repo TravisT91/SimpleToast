@@ -60,50 +60,51 @@
                     android:id="@+id/passwordDivider"
                     layout="@layout/divider" />
 
-                <TextView
-                    android:id="@+id/passcode"
-                    tools:style="@style/Body"
-                    parisStyle="@{palette.body}"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:paddingTop="@dimen/listItemPaddingTop"
-                    android:paddingBottom="@dimen/listItemPaddingBottom"
-                    android:text="@string/SETTINGS_PASSCODE"
-                    android:textColor="@color/structure6" />
+                <!--TODO(jhutchins): Re-enable these when these features are added.-->
+                <!--<TextView-->
+                    <!--android:id="@+id/passcode"-->
+                    <!--tools:style="@style/Body"-->
+                    <!--parisStyle="@{palette.body}"-->
+                    <!--android:layout_width="match_parent"-->
+                    <!--android:layout_height="wrap_content"-->
+                    <!--android:paddingTop="@dimen/listItemPaddingTop"-->
+                    <!--android:paddingBottom="@dimen/listItemPaddingBottom"-->
+                    <!--android:text="@string/SETTINGS_PASSCODE"-->
+                    <!--android:textColor="@color/structure6" />-->
 
-                <include
-                    android:id="@+id/passcodeDivider"
-                    layout="@layout/divider" />
+                <!--<include-->
+                    <!--android:id="@+id/passcodeDivider"-->
+                    <!--layout="@layout/divider" />-->
 
-                <FrameLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
+                <!--<FrameLayout-->
+                    <!--android:layout_width="match_parent"-->
+                    <!--android:layout_height="wrap_content">-->
 
-                    <TextView
-                        android:id="@+id/touchId"
-                        tools:style="@style/Body"
-                        parisStyle="@{palette.body}"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:paddingTop="@dimen/listItemPaddingTop"
-                        android:paddingBottom="@dimen/listItemPaddingBottom"
-                        android:text="@string/SETTINGS_TOUCH_ID"
-                        android:textColor="@color/structure6" />
+                    <!--<TextView-->
+                        <!--android:id="@+id/touchId"-->
+                        <!--tools:style="@style/Body"-->
+                        <!--parisStyle="@{palette.body}"-->
+                        <!--android:layout_width="match_parent"-->
+                        <!--android:layout_height="wrap_content"-->
+                        <!--android:paddingTop="@dimen/listItemPaddingTop"-->
+                        <!--android:paddingBottom="@dimen/listItemPaddingBottom"-->
+                        <!--android:text="@string/SETTINGS_TOUCH_ID"-->
+                        <!--android:textColor="@color/structure6" />-->
 
-                    <Switch
-                        android:id="@+id/touchIdSwitch"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center_vertical|end"
-                        switchButtonTint="@{palette.successColor}"
-                        android:checked="true"
-                        android:paddingEnd="@dimen/listPaddingStart" />
+                    <!--<Switch-->
+                        <!--android:id="@+id/touchIdSwitch"-->
+                        <!--android:layout_width="wrap_content"-->
+                        <!--android:layout_height="wrap_content"-->
+                        <!--android:layout_gravity="center_vertical|end"-->
+                        <!--switchButtonTint="@{palette.successColor}"-->
+                        <!--android:checked="true"-->
+                        <!--android:paddingEnd="@dimen/listPaddingStart" />-->
 
-                </FrameLayout>
+                <!--</FrameLayout>-->
 
-                <include
-                    android:id="@+id/touchIdDivider"
-                    layout="@layout/divider" />
+                <!--<include-->
+                    <!--android:id="@+id/touchIdDivider"-->
+                    <!--layout="@layout/divider" />-->
 
                 <TextView
                     android:id="@+id/securityQuestions"
@@ -119,22 +120,6 @@
                 <include
                     android:id="@+id/securityQuestionsDivider"
                     layout="@layout/divider" />
-
-                <TextView
-                    android:id="@+id/idTheftProtection"
-                    tools:style="@style/Body"
-                    parisStyle="@{palette.body}"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:paddingTop="@dimen/listItemPaddingTop"
-                    android:paddingBottom="@dimen/listItemPaddingBottom"
-                    android:text="@string/SETTINGS_ID_THEFT_PROTECTION"
-                    android:textColor="@color/structure6" />
-
-                <include
-                    android:id="@+id/idTheftProtectionDivider"
-                    layout="@layout/divider" />
-
 
                 <TextView
                     android:id="@+id/notifications"
