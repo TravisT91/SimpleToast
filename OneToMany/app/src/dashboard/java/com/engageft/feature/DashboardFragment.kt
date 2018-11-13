@@ -76,10 +76,10 @@ class DashboardFragment : LotusFullScreenFragment(), OverviewView.OverviewViewLi
     private lateinit var transactionsRecyclerView: RecyclerView
     private lateinit var overviewNestedScrollView: NestedScrollView
     private lateinit var toolbarShadowView: View
-    private lateinit var spendingBalanceLayout: ViewGroup
     private lateinit var spendingBalanceAmount: TextView
-    private lateinit var savingsBalanceLayout: ViewGroup
+    private lateinit var spendingBalanceLabel: TextView
     private lateinit var savingsBalanceAmount: TextView
+    private lateinit var savingsBalanceLabel: TextView
     private var transactionsTabLayout: TabLayout? = null
     private lateinit var swipeRefreshLayout: SwipeRefreshLayout
     private lateinit var blurView: BlurView
@@ -104,10 +104,10 @@ class DashboardFragment : LotusFullScreenFragment(), OverviewView.OverviewViewLi
         transactionsRecyclerView = view.findViewById(R.id.transactionsRecyclerView)
         overviewNestedScrollView = view.findViewById(R.id.overviewNestedScrollView)
         toolbarShadowView = view.findViewById(R.id.toolbarShadowView)
-        spendingBalanceLayout = view.findViewById(R.id.spendingBalanceLayout)
         spendingBalanceAmount = view.findViewById(R.id.spendingBalanceAmount)
-        savingsBalanceLayout = view.findViewById(R.id.savingsBalanceLayout)
+        spendingBalanceLabel = view.findViewById(R.id.spendingBalanceLabel)
         savingsBalanceAmount = view.findViewById(R.id.savingsBalanceAmount)
+        savingsBalanceLabel = view.findViewById(R.id.savingsBalanceLabel)
         transactionsTabLayout = view.findViewById(R.id.transactionsTabLayout)
         swipeRefreshLayout = view.findViewById(R.id.swipeRefreshLayout)
         blurView = view.findViewById(R.id.blurView)
@@ -130,7 +130,7 @@ class DashboardFragment : LotusFullScreenFragment(), OverviewView.OverviewViewLi
             scrollDisabled
         }
 
-        overviewNestedScrollView.setOnScrollChangeListener { v: NestedScrollView?, scrollX: Int, scrollY: Int, oldScrollX: Int, oldScrollY: Int ->
+        overviewNestedScrollView.setOnScrollChangeListener { _: NestedScrollView?, _: Int, scrollY: Int, _X: Int, _: Int ->
             when {
                 scrollY == 0 -> toolbarShadowView.visibility = View.INVISIBLE
                 scrollY <= toolbarShadowAnimationScrollRange -> {
@@ -144,17 +144,21 @@ class DashboardFragment : LotusFullScreenFragment(), OverviewView.OverviewViewLi
             }
         }
 
-        spendingBalanceLayout.setOnClickListener {
+        val spendingClickListener = View.OnClickListener {
             if (!overviewView.showingActions) {
                 listener?.onSpendingBalanceSelected()
             }
         }
+        spendingBalanceAmount.setOnClickListener(spendingClickListener)
+        spendingBalanceLabel.setOnClickListener(spendingClickListener)
 
-        savingsBalanceLayout.setOnClickListener {
+        val savingsClickListener = View.OnClickListener {
             if (!overviewView.showingActions) {
                 listener?.onSavingsBalanceSelected()
             }
         }
+        savingsBalanceAmount.setOnClickListener(savingsClickListener)
+        savingsBalanceLabel.setOnClickListener(savingsClickListener)
 
         transactionsTabLayout!!.addOnTabSelectedListener(object:TabLayout.OnTabSelectedListener {
             override fun onTabReselected(tab: TabLayout.Tab?) {
@@ -277,9 +281,11 @@ class DashboardFragment : LotusFullScreenFragment(), OverviewView.OverviewViewLi
     fun updateSavingsBalance(savingsBalance: BigDecimal?) {
         savingsBalance?.let {
             savingsBalanceAmount.text = StringUtils.formatCurrencyStringFractionDigitsReducedHeight(savingsBalance.toFloat(), 0.5f, true)
-            savingsBalanceLayout.visibility = View.VISIBLE
+            savingsBalanceAmount.visibility = View.VISIBLE
+            savingsBalanceLabel.visibility = View.VISIBLE
         } ?: run {
-            savingsBalanceLayout.visibility = View.GONE
+            savingsBalanceAmount.visibility = View.GONE
+            savingsBalanceLabel.visibility = View.GONE
         }
     }
 
@@ -287,10 +293,17 @@ class DashboardFragment : LotusFullScreenFragment(), OverviewView.OverviewViewLi
         when (savingsBalanceState) {
             OverviewBalanceState.LOADING -> {
                 savingsBalanceAmount.text = getString(R.string.OVERVIEW_BALANCE_LOADING)
-                savingsBalanceLayout.visibility = View.VISIBLE
+                savingsBalanceAmount.visibility = View.VISIBLE
+                savingsBalanceLabel.visibility = View.VISIBLE
             }
-            OverviewBalanceState.HIDDEN -> savingsBalanceLayout.visibility = View.INVISIBLE
-            OverviewBalanceState.AVAILABLE -> savingsBalanceLayout.visibility = View.VISIBLE
+            OverviewBalanceState.HIDDEN -> {
+                savingsBalanceAmount.visibility = View.GONE
+                savingsBalanceLabel.visibility = View.GONE
+            }
+            OverviewBalanceState.AVAILABLE -> {
+                savingsBalanceAmount.visibility = View.VISIBLE
+                savingsBalanceLabel.visibility = View.VISIBLE
+            }
             OverviewBalanceState.ERROR -> savingsBalanceAmount.text = getString(R.string.OVERVIEW_BALANCE_ERROR)
         }
     }

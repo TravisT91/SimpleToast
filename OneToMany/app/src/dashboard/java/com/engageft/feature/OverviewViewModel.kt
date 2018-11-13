@@ -167,7 +167,7 @@ class OverviewViewModel : BaseViewModel() {
         compositeDisposable.add(
                 EngageService.getInstance().loginResponseAsObservable
                         .subscribeOn(Schedulers.io())
-                        .observeOn(AndroidSchedulers.mainThread()) // TODO: run on background thread, then postValues?
+                        .observeOn(AndroidSchedulers.mainThread())
                         .subscribe({ response ->
                             if (response.isSuccess && response is LoginResponse) {
                                 val debitCardInfo = LoginResponseUtils.getCurrentCard(response)
@@ -185,7 +185,7 @@ class OverviewViewModel : BaseViewModel() {
                                     spendingBalanceStateObservable.value = OverviewBalanceState.ERROR
                                 }
 
-                                try {
+                                try { // TODO(kurt): hide savings entirely if no goals/savings (criteria for hiding TBD -- see FOTM-230)
                                     val goalAmount = BigDecimal(response.goalsContributed)
                                     val savingsAmount = BigDecimal(response.savingsContributed)
                                     savingsBalanceObservable.value = goalAmount.plus(savingsAmount)

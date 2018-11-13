@@ -4,171 +4,144 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
 
-    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
-        android:id="@+id/swipeRefreshLayout"
+    <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <androidx.core.widget.NestedScrollView
-            android:id="@+id/overviewNestedScrollView"
+        <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+            android:id="@+id/swipeRefreshLayout"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:fillViewport="true">
+            android:layout_height="match_parent">
 
-            <FrameLayout
-                android:id="@+id/rootLayout"
+            <androidx.core.widget.NestedScrollView
+                android:id="@+id/overviewNestedScrollView"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent">
+                android:layout_height="match_parent"
+                android:fillViewport="true">
 
-                <!-- must set android:descendantFocusability="blocksDescendants" or create dummy view to gain focus so that -->
-                <!-- recyclerView doesn't get the focus. If the RecyclerView gains focus, it scrolls all the way up. -->
-                <androidx.constraintlayout.widget.ConstraintLayout
+                <FrameLayout
+                    android:id="@+id/rootLayout"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_marginTop="@dimen/overview_card_and_actions_height_collapsed"
-                    android:background="@color/overview_tinted_background"
-                    android:descendantFocusability="blocksDescendants">
+                    android:layout_height="match_parent">
 
-                    <!-- This LL was not needed in android-apps. Instead, spendingBalanceLayout and goalsBalanceLayout
-                    were children of ConstraintLayout, and used horizontal chainstyle=spread to evenly space. Not
-                    working here, for some reason, to reverting to old ways. -->
-                    <LinearLayout
-                        android:id="@+id/balancesLayout"
+                    <!-- must set android:descendantFocusability="blocksDescendants" or create dummy view to gain focus so that -->
+                    <!-- recyclerView doesn't get the focus. If the RecyclerView gains focus, it scrolls all the way up. -->
+                    <androidx.constraintlayout.widget.ConstraintLayout
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="horizontal"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toTopOf="parent"
-                        app:layout_constraintEnd_toEndOf="parent">
+                        android:layout_height="match_parent"
+                        android:layout_marginTop="@dimen/overview_card_and_actions_height_collapsed"
+                        android:background="@color/overview_tinted_background"
+                        android:descendantFocusability="blocksDescendants">
 
-                        <View
-                            android:layout_width="0dp"
-                            android:layout_height="match_parent"
-                            android:layout_weight="1"/>
+                        <TextView
+                            android:id="@+id/spendingBalanceAmount"
+                            style="@style/OverviewBalanceAmountTextView"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent"
+                            app:layout_constraintEnd_toStartOf="@id/savingsBalanceAmount"
+                            android:text="@string/OVERVIEW_BALANCE_LOADING"
+                            tools:text="$1,224.66" />
 
-                        <LinearLayout
-                            android:id="@+id/spendingBalanceLayout"
-                            android:layout_width="wrap_content"
+                        <TextView
+                            android:id="@+id/spendingBalanceLabel"
+                            style="@style/OverviewBalanceLabelTextView"
+                            app:layout_constraintStart_toStartOf="@id/spendingBalanceAmount"
+                            app:layout_constraintTop_toBottomOf="@id/spendingBalanceAmount"
+                            app:layout_constraintEnd_toEndOf="@id/spendingBalanceAmount"
+                            android:text="@string/OVERVIEW_SPENDING_BALANCE"/>
+
+                        <TextView
+                            android:id="@+id/savingsBalanceAmount"
+                            style="@style/OverviewBalanceAmountTextView"
+                            app:layout_constraintStart_toEndOf="@id/spendingBalanceAmount"
+                            app:layout_constraintTop_toTopOf="parent"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            android:text="@string/OVERVIEW_BALANCE_LOADING"
+                            tools:text="$620.00"/>
+
+                        <TextView
+                            android:id="@+id/savingsBalanceLabel"
+                            style="@style/OverviewBalanceLabelTextView"
+                            app:layout_constraintStart_toStartOf="@id/savingsBalanceAmount"
+                            app:layout_constraintTop_toBottomOf="@id/savingsBalanceAmount"
+                            app:layout_constraintEnd_toEndOf="@id/savingsBalanceAmount"
+                            android:text="@string/OVERVIEW_GOALS_BALANCE"/>
+
+                        <com.google.android.material.tabs.TabLayout
+                            android:id="@+id/transactionsTabLayout"
+                            android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:orientation="vertical"
-                            android:gravity="center_horizontal"
-                            android:layout_marginTop="16dp">
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toBottomOf="@id/spendingBalanceLabel"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintBottom_toTopOf="@+id/transactionsRecyclerView"
+                            android:layout_marginTop="8dp"
+                            style="@style/OverviewTransactionsTabLayoutStyle">
 
-                            <TextView
-                                android:id="@+id/spendingBalanceAmount"
-                                style="@style/OverviewBalanceAmountTextView"
-                                android:text="@string/OVERVIEW_BALANCE_LOADING"
-                                tools:text="$1,224.66" />
+                            <com.google.android.material.tabs.TabItem
+                                android:id="@+id/allActivityTabItem"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="@string/OVERVIEW_ALL_ACTIVITY" />
 
-                            <TextView
-                                style="@style/OverviewBalanceLabelTextView"
-                                android:text="@string/OVERVIEW_SPENDING_BALANCE"/>
+                            <com.google.android.material.tabs.TabItem
+                                android:id="@+id/depositsTabItem"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="@string/OVERVIEW_DEPOSITS" />
 
-                        </LinearLayout>
+                        </com.google.android.material.tabs.TabLayout>
 
-                        <View
-                            android:layout_width="0dp"
-                            android:layout_height="match_parent"
-                            android:layout_weight="1"/>
-
-                        <LinearLayout
-                            android:id="@+id/savingsBalanceLayout"
-                            android:layout_width="wrap_content"
+                        <androidx.recyclerview.widget.RecyclerView
+                            android:id="@+id/transactionsRecyclerView"
+                            android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:orientation="vertical"
-                            android:gravity="center_horizontal"
-                            android:layout_marginTop="16dp">
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toBottomOf="@+id/transactionsTabLayout"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            />
 
-                            <TextView
-                                android:id="@+id/savingsBalanceAmount"
-                                style="@style/OverviewBalanceAmountTextView"
-                                android:text="@string/OVERVIEW_BALANCE_LOADING"
-                                tools:text="$620.00"/>
-
-                            <TextView
-                                style="@style/OverviewBalanceLabelTextView"
-                                android:text="@string/OVERVIEW_GOALS_BALANCE"/>
-
-                        </LinearLayout>
-
-                        <View
+                        <!-- This can be used to display a message view, like when waiting for card activation. See CARE-399 for an example. -->
+                        <FrameLayout
+                            android:id="@+id/message_container"
                             android:layout_width="0dp"
-                            android:layout_height="match_parent"
-                            android:layout_weight="1"/>
+                            android:layout_height="0dp"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            android:visibility="invisible"/>
 
-                    </LinearLayout>
+                    </androidx.constraintlayout.widget.ConstraintLayout>
 
-                    <com.google.android.material.tabs.TabLayout
-                        android:id="@+id/transactionsTabLayout"
+                    <eightbitlab.com.blurview.BlurView
+                        android:id="@+id/blurView"
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@id/balancesLayout"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintBottom_toTopOf="@+id/transactionsRecyclerView"
-                        android:layout_marginTop="8dp"
-                        style="@style/OverviewTransactionsTabLayoutStyle">
+                        android:layout_height="match_parent"
+                        android:layout_marginTop="@dimen/overview_card_and_actions_height_collapsed"
+                        app:blurOverlayColor="@color/overview_obscuring_overlay"
+                        android:visibility="invisible"
+                        android:alpha="0" />
 
-                        <com.google.android.material.tabs.TabItem
-                            android:id="@+id/allActivityTabItem"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="@string/OVERVIEW_ALL_ACTIVITY" />
-
-                        <com.google.android.material.tabs.TabItem
-                            android:id="@+id/depositsTabItem"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="@string/OVERVIEW_DEPOSITS" />
-
-                    </com.google.android.material.tabs.TabLayout>
-
-                    <androidx.recyclerview.widget.RecyclerView
-                        android:id="@+id/transactionsRecyclerView"
+                    <com.engageft.feature.OverviewView
+                        android:id="@+id/overviewView"
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@+id/transactionsTabLayout"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        />
+                        android:layout_height="wrap_content"/>
 
-                    <!-- This can be used to display a message view, like when waiting for card activation. See CARE-399 for an example. -->
-                    <FrameLayout
-                        android:id="@+id/message_container"
-                        android:layout_width="0dp"
-                        android:layout_height="0dp"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toTopOf="parent"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintBottom_toBottomOf="parent"
-                        android:visibility="invisible"/>
+                </FrameLayout>
 
-                </androidx.constraintlayout.widget.ConstraintLayout>
+            </androidx.core.widget.NestedScrollView>
 
-                <eightbitlab.com.blurview.BlurView
-                    android:id="@+id/blurView"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_marginTop="@dimen/overview_card_and_actions_height_collapsed"
-                    app:blurOverlayColor="@color/overview_obscuring_overlay"
-                    android:visibility="invisible"
-                    android:alpha="0" />
-
-                <com.engageft.feature.OverviewView
-                    android:id="@+id/overviewView"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"/>
-
-            </FrameLayout>
-
-        </androidx.core.widget.NestedScrollView>
+        </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
         <View
             android:id="@+id/toolbarShadowView"
             android:layout_width="match_parent"
             android:layout_height="@dimen/overview_toolbar_shadow_height"
             android:background="@drawable/toolbar_shadow_gradient"
-            android:visibility="invisible"/>
+            android:visibility="invisible"
+            tools:visibility="visible"/>
 
-    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+    </FrameLayout>
+
 </layout>

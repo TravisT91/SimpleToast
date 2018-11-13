@@ -9,7 +9,7 @@
     <string name="OVERVIEW_UNLOCK_MY_CARD">Unlock card</string>
     <string name="OVERVIEW_MORE_OPTIONS">More options</string>
 
-    <string name="OVERVIEW_MORE_CARD_OPTIONS">More card options</string>
+    <string name="OVERVIEW_MORE_CARD_OPTIONS">More options</string>
     <string name="OVERVIEW_CHANGE_CARD_PIN">Change card PIN</string>
     <string name="OVERVIEW_REPLACE_CARD">Replace card</string>
     <string name="OVERVIEW_REPORT_LOST_STOLEN">Report lost/stolen</string>
@@ -24,8 +24,8 @@
 
     <string name="MONTH_YEAR_FORMAT">%1$d/%2$d</string>
 
-    <string name="OVERVIEW_SPENDING_BALANCE">Spending balance</string>
-    <string name="OVERVIEW_GOALS_BALANCE">Goals balance</string>
+    <string name="OVERVIEW_SPENDING_BALANCE">Available</string>
+    <string name="OVERVIEW_GOALS_BALANCE">Set-aside</string>
     <string name="OVERVIEW_BALANCE_LOADING">--</string>
     <string name="OVERVIEW_BALANCE_ERROR">\?</string>
     <string name="OVERVIEW_ALL_ACTIVITY">ALL ACTIVITY</string>

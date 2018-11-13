@@ -7,14 +7,25 @@
     </style>
 
     <style name="OverviewBalanceAmountTextView" parent="LargeTitleQuiet">
-        <item name="android:layout_width">wrap_content</item>
-        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_height">60dp</item>
+        <item name="android:layout_marginStart">@dimen/overview_balance_amount_margin_start_end</item>
+        <item name="android:layout_marginTop">@dimen/overview_balance_amount_margin_top_bottom</item>
+        <item name="android:layout_marginEnd">@dimen/overview_balance_amount_margin_start_end</item>
+        <item name="android:layout_marginBottom">@dimen/overview_balance_amount_margin_top_bottom</item>
         <item name="android:textColor">@color/structure6</item>
+        <item name="android:maxLines">1</item>
+        <item name="android:gravity">center_horizontal|bottom</item>
+        <item name="autoSizeTextType">uniform</item>
+        <item name="autoSizeMaxTextSize">38sp</item>
+        <item name="autoSizeMinTextSize">24sp</item>
+        <item name="autoSizeStepGranularity">2sp</item>
     </style>
 
     <style name="OverviewBalanceLabelTextView" parent="Body">
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_marginTop">@dimen/overview_balance_label_margin_top</item>
         <item name="android:textColor">@color/structure5</item>
     </style>
 
