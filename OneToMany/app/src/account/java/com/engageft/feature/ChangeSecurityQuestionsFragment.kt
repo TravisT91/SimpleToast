@@ -6,8 +6,10 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
+import androidx.navigation.findNavController
 import com.engageft.apptoolbox.BaseViewModel
 import com.engageft.apptoolbox.LotusFullScreenFragment
+import com.engageft.apptoolbox.ViewUtils.newLotusInstance
 import com.engageft.apptoolbox.view.InformationDialogFragment
 import com.engageft.onetomany.R
 import com.engageft.onetomany.databinding.FragmentChangeSecurityQuestionsBinding
@@ -49,14 +51,34 @@ class ChangeSecurityQuestionsFragment : LotusFullScreenFragment() {
             when (navEvent) {
                 ChangeSecurityQuestionsViewModel.ChangeSecurityQuestionsNavigation.NONE -> {}
                 ChangeSecurityQuestionsViewModel.ChangeSecurityQuestionsNavigation.CHANGE_SUCCESSFUL -> {
-                    showDialog(InformationDialogFragment.newInstance(title = getString(R.string.SECURITY_QUESTIONS_SUCCESS_TITLE),
+                    showDialog(InformationDialogFragment.newLotusInstance(title = getString(R.string.SECURITY_QUESTIONS_SUCCESS_TITLE),
                             message = getString(R.string.SECURITY_QUESTIONS_SUCCESS_MESSAGE_CHANGE),
-                            buttonPositiveText = getString(R.string.SECURITY_QUESTIONS_SUCCESS_MESSAGE_OK)))
+                            positiveButton = getString(R.string.SECURITY_QUESTIONS_SUCCESS_MESSAGE_OK), listener = object : InformationDialogFragment.InformationDialogFragmentListener {
+                        override fun onDialogCancelled() {
+                            binding.root.findNavController().navigateUp()
+                        }
+                        override fun onDialogFragmentNegativeButtonClicked() {
+                            binding.root.findNavController().navigateUp()
+                        }
+                        override fun onDialogFragmentPositiveButtonClicked() {
+                            binding.root.findNavController().navigateUp()
+                        }
+                    }))
                 }
                 ChangeSecurityQuestionsViewModel.ChangeSecurityQuestionsNavigation.CREATE_SUCCESSFUL -> {
-                    showDialog(InformationDialogFragment.newInstance(title = getString(R.string.SECURITY_QUESTIONS_SUCCESS_TITLE),
+                    showDialog(InformationDialogFragment.newLotusInstance(title = getString(R.string.SECURITY_QUESTIONS_SUCCESS_TITLE),
                             message = getString(R.string.SECURITY_QUESTIONS_SUCCESS_MESSAGE_CREATE),
-                            buttonPositiveText = getString(R.string.SECURITY_QUESTIONS_SUCCESS_MESSAGE_OK)))
+                            positiveButton = getString(R.string.SECURITY_QUESTIONS_SUCCESS_MESSAGE_OK), listener = object : InformationDialogFragment.InformationDialogFragmentListener {
+                        override fun onDialogCancelled() {
+                            binding.root.findNavController().navigateUp()
+                        }
+                        override fun onDialogFragmentNegativeButtonClicked() {
+                            binding.root.findNavController().navigateUp()
+                        }
+                        override fun onDialogFragmentPositiveButtonClicked() {
+                            binding.root.findNavController().navigateUp()
+                        }
+                    }))
                 }
             }
         })
