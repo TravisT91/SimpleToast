@@ -3,6 +3,7 @@ package com.engageft.feature
 import androidx.lifecycle.MutableLiveData
 import com.engageft.apptoolbox.BaseViewModel
 import com.engageft.apptoolbox.BuildConfig
+import io.reactivex.disposables.CompositeDisposable
 import java.net.ConnectException
 import java.net.SocketTimeoutException
 import java.net.UnknownHostException
@@ -16,6 +17,8 @@ import java.net.UnknownHostException
  * Copyright (c) 2018 Engage FT. All rights reserved.
  */
 open class BaseEngageViewModel: BaseViewModel() {
+    protected val compositeDisposable = CompositeDisposable()
+
 
     val dialogInfoObservable: MutableLiveData<DialogInfo> = MutableLiveData()
 

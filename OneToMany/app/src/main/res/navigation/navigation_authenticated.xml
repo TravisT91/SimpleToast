@@ -39,6 +39,9 @@
         <argument
             android:name="@string/navigation_override_up"
             android:defaultValue="true" />
+        <action
+            android:id="@+id/action_account_fragment_to_changePasswordFragment"
+            app:destination="@id/changePasswordFragment" />
     </fragment>
     <fragment
         android:id="@+id/goalAdd1Fragment"
@@ -73,6 +76,10 @@
             android:name="@string/navigation_override_up"
             android:defaultValue="true" />
     </fragment>
+    <fragment
+        android:id="@+id/changePasswordFragment"
+        android:name="com.engageft.feature.ChangePasswordFragment"
+        android:label="@string/change_password_title" />
 
 
 </navigation>
