@@ -2,11 +2,15 @@ package com.engageft.onetomany
 
 import androidx.core.content.ContextCompat
 import androidx.core.content.res.ResourcesCompat
+import com.crashlytics.android.Crashlytics
 import com.engageft.apptoolbox.LotusApplication
 import com.engageft.apptoolbox.R
 import com.engageft.engagekit.EngageService
 import com.engageft.feature.Palette
 import com.engageft.onetomany.config.EngageAppConfig
+import io.fabric.sdk.android.Fabric
+
+
 
 /**
  * TODO(joeyhutchins): ClassName
@@ -43,6 +47,8 @@ class OneToManyApplication : LotusApplication() {
             font_light = ResourcesCompat.getFont(this@OneToManyApplication, R.font.font_light)
             font_medium = ResourcesCompat.getFont(this@OneToManyApplication, R.font.font_medium)
         }
+
+        Fabric.with(this, Crashlytics())
     }
 
     fun setFonts(fontName: String){
