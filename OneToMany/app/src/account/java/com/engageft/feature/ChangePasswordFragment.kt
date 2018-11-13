@@ -4,16 +4,21 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.navigation.findNavController
 import com.engageft.apptoolbox.BaseViewModel
 import com.engageft.apptoolbox.LotusFullScreenFragment
 import com.engageft.apptoolbox.view.InformationDialogFragment
-import com.engageft.onetomany.R
 import com.engageft.onetomany.databinding.FragmentChangePasswordBinding
-
+/**
+ * ChangePasswordFragment
+ * <p>
+ * ViewModel for changing password Screen.
+ * </p>
+ * Created by Atia Hashimi on 11/13/18.
+ * Copyright (c) 2018 Engage FT. All rights reserved.
+ */
 class ChangePasswordFragment: LotusFullScreenFragment() {
 
     private lateinit var changePasswordViewModel: ChangePasswordViewModel
@@ -31,6 +36,17 @@ class ChangePasswordFragment: LotusFullScreenFragment() {
         binding.updatePasswordButton.setOnClickListener {
             changePasswordViewModel.updatePassword()
         }
+
+        changePasswordViewModel.buttonState.observe(this, Observer { buttonState ->
+            when (buttonState) {
+                BaseEngageViewModel.ButtonState.HIDE -> {
+                    binding.updatePasswordButton.visibility = View.GONE
+                }
+                BaseEngageViewModel.ButtonState.SHOW -> {
+                    binding.updatePasswordButton.visibility = View.VISIBLE
+                }
+            }
+        })
 
         changePasswordViewModel.dialogInfoObservable.observe(this, Observer { dialogInfo ->
             when (dialogInfo.dialogType) {

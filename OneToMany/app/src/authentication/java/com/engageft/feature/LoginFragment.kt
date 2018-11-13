@@ -95,9 +95,9 @@ class LoginFragment : LotusFullScreenFragment() {
             // Make sure error is animated
             setLayoutTransitions()
         })
-        vm.loginButtonState.observe(this, Observer { loginButtonState: LoginViewModel.ButtonState ->
+        vm.buttonState.observe(this, Observer { loginButtonState: BaseEngageViewModel.ButtonState ->
             when (loginButtonState) {
-                LoginViewModel.ButtonState.SHOW -> {
+                BaseEngageViewModel.ButtonState.SHOW -> {
                     // Animate the login button onto the screen.
                     val constraintLayout = binding.root as ConstraintLayout
                     constraintSet = ConstraintSet()
@@ -107,7 +107,7 @@ class LoginFragment : LotusFullScreenFragment() {
 
                     setLayoutTransitions()
                 }
-                LoginViewModel.ButtonState.HIDE -> {
+                BaseEngageViewModel.ButtonState.HIDE -> {
                     // Animate the login button off the screen.
                     val constraintLayout = binding.root as ConstraintLayout
                     constraintSet = ConstraintSet()
@@ -119,10 +119,10 @@ class LoginFragment : LotusFullScreenFragment() {
                 }
             }
         })
-        vm.demoAccountButtonState.observe(this, Observer { buttonState: LoginViewModel.ButtonState ->
+        vm.demoAccountButtonState.observe(this, Observer { buttonState: BaseEngageViewModel.ButtonState ->
             when (buttonState) {
-                LoginViewModel.ButtonState.SHOW -> constraintSet.setVisibility(R.id.demoAccountButton, View.VISIBLE)
-                LoginViewModel.ButtonState.HIDE -> constraintSet.setVisibility(R.id.demoAccountButton, View.GONE)
+                BaseEngageViewModel.ButtonState.SHOW -> constraintSet.setVisibility(R.id.demoAccountButton, View.VISIBLE)
+                BaseEngageViewModel.ButtonState.HIDE -> constraintSet.setVisibility(R.id.demoAccountButton, View.GONE)
             }
             setLayoutTransitions()
         })
@@ -191,7 +191,7 @@ class LoginFragment : LotusFullScreenFragment() {
                                     message = getString(R.string.login_confirm_email_success)))
                         }
                     }
-                }
+                } else -> {}
             }
         })
         vm.loadingOverlayDialogObservable.observe(this, Observer { loadingOverlayDialog ->

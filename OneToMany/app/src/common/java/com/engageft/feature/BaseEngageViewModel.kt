@@ -17,10 +17,17 @@ import java.net.UnknownHostException
  * Copyright (c) 2018 Engage FT. All rights reserved.
  */
 open class BaseEngageViewModel: BaseViewModel() {
+
+    enum class ButtonState {
+        SHOW,
+        HIDE
+    }
+
     protected val compositeDisposable = CompositeDisposable()
 
-
     val dialogInfoObservable: MutableLiveData<DialogInfo> = MutableLiveData()
+
+    val buttonState: MutableLiveData<ButtonState> = MutableLiveData()
 
     fun handleThrowable(e: Throwable)  {
         when (e) {

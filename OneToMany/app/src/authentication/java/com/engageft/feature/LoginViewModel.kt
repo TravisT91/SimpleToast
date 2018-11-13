@@ -11,7 +11,6 @@ import com.engageft.onetomany.config.EngageAppConfig
 import com.ob.ws.dom.DeviceFailResponse
 import com.ob.ws.dom.LoginResponse
 import io.reactivex.android.schedulers.AndroidSchedulers
-import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
 
 /**
@@ -43,11 +42,6 @@ class LoginViewModel : BaseEngageViewModel() {
         INVALID_CREDENTIALS // Generic username/password not valid error type.
     }
 
-    enum class ButtonState {
-        SHOW,
-        HIDE
-    }
-
     enum class LoadingOverlayDialog {
         CREATING_DEMO_ACCOUNT,
         DISMISS_DIALOG
@@ -63,8 +57,6 @@ class LoginViewModel : BaseEngageViewModel() {
 
     val rememberMe: ObservableField<Boolean> = ObservableField(false)
 
-    val loginButtonState: MutableLiveData<ButtonState> = MutableLiveData()
-
     val demoAccountButtonState: MutableLiveData<ButtonState> = MutableLiveData()
 
     val testMode: ObservableField<Boolean> = ObservableField(false)
@@ -72,7 +64,7 @@ class LoginViewModel : BaseEngageViewModel() {
     val loadingOverlayDialogObservable: MutableLiveData<LoadingOverlayDialog> = MutableLiveData()
 
     init {
-        loginButtonState.value = ButtonState.HIDE
+        buttonState.value = ButtonState.HIDE
         demoAccountButtonState.value = ButtonState.HIDE
 
         username.addOnPropertyChangedCallback(object : Observable.OnPropertyChangedCallback(){
@@ -304,12 +296,12 @@ class LoginViewModel : BaseEngageViewModel() {
     private fun updateButtonState() {
         val usernameText = username.get()
         val passwordText = password.get()
-        val currentState = loginButtonState.value
+        val currentState = buttonState.value
 
         if (!usernameText.isNullOrEmpty() && !passwordText.isNullOrEmpty() && (currentState == ButtonState.HIDE)) {
-            loginButtonState.value = ButtonState.SHOW
+            buttonState.value = ButtonState.SHOW
         } else if (usernameText.isNullOrEmpty() || passwordText.isNullOrEmpty() &&currentState == ButtonState.SHOW) {
-            loginButtonState.value = ButtonState.HIDE
+            buttonState.value = ButtonState.HIDE
         }
     }
 
