@@ -44,7 +44,6 @@ class AccountSettingsFragment : LotusFullScreenFragment() {
                 //TODO(ttkachuk) implement onCLick
             }
             password.setOnClickListener {
-                //TODO(ttkachuk) implement onCLick
                 findNavController().navigate(R.id.action_account_fragment_to_changePasswordFragment)
             }
             passcode.setOnClickListener {
