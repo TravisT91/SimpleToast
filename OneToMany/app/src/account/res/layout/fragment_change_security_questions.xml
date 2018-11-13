@@ -29,7 +29,6 @@
                 android:layout_height="wrap_content"
                 android:paddingTop="16dp"
                 android:paddingBottom="16dp"
-                android:text="@string/CHANGE_SECURITY_QUESTIONS_HEADER"
                 android:gravity="center"
                 android:textColor="@color/structure6" />
 
@@ -42,22 +41,25 @@
                 android:paddingRight="16dp">
 
                 <com.engageft.apptoolbox.view.BottomSheetListInputWithLabel
+                    android:id="@+id/questionsList1"
                     style="@style/BottomSheetListInputWithLabelStyle"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="20dp"
-                    app:labelText="@string/CHANGE_SECURITY_QUESTIONS_LIST_LABEL"
-                    app:bottomSheetDialogTitle="@string/CHANGE_SECURITY_QUESTIONS_LIST_TITLE"
-                    app:bottomSheetDialogSubtitle="@string/CHANGE_SECURITY_QUESTIONS_LIST_SUBTITLE"
+                    app:inputText="@={viewModel.question1}"
+                    app:labelText="@string/SECURITY_QUESTIONS_LIST_LABEL"
+                    app:bottomSheetDialogTitle="@string/SECURITY_QUESTIONS_LIST_TITLE"
+                    app:bottomSheetDialogSubtitle="@string/SECURITY_QUESTIONS_LIST_SUBTITLE"
                     app:bottomSheetDialogStyle="@style/ListOptionBottomSheetDialogFragmentStyle"/>
 
                 <com.engageft.apptoolbox.view.TextInputWithLabel
+                    android:id="@+id/answer1"
                     style="@style/TextInputWithLabelStyle"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="20dp"
                     app:inputText="@={viewModel.answer1}"
-                    app:labelText="@string/CHANGE_SECURITY_QUESTIONS_ANSWER_LABEL"/>
+                    app:labelText="@string/SECURITY_QUESTIONS_ANSWER_LABEL"/>
 
             </LinearLayout>
 
@@ -74,22 +76,25 @@
                 android:paddingRight="16dp">
 
                 <com.engageft.apptoolbox.view.BottomSheetListInputWithLabel
+                    android:id="@+id/questionsList2"
                     style="@style/BottomSheetListInputWithLabelStyle"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="20dp"
-                    app:labelText="@string/CHANGE_SECURITY_QUESTIONS_LIST_LABEL"
-                    app:bottomSheetDialogTitle="@string/CHANGE_SECURITY_QUESTIONS_LIST_TITLE"
-                    app:bottomSheetDialogSubtitle="@string/CHANGE_SECURITY_QUESTIONS_LIST_SUBTITLE"
+                    app:inputText="@={viewModel.question2}"
+                    app:labelText="@string/SECURITY_QUESTIONS_LIST_LABEL"
+                    app:bottomSheetDialogTitle="@string/SECURITY_QUESTIONS_LIST_TITLE"
+                    app:bottomSheetDialogSubtitle="@string/SECURITY_QUESTIONS_LIST_SUBTITLE"
                     app:bottomSheetDialogStyle="@style/ListOptionBottomSheetDialogFragmentStyle"/>
 
                 <com.engageft.apptoolbox.view.TextInputWithLabel
+                    android:id="@+id/answer2"
                     style="@style/TextInputWithLabelStyle"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="20dp"
                     app:inputText="@={viewModel.answer2}"
-                    app:labelText="@string/CHANGE_SECURITY_QUESTIONS_ANSWER_LABEL"/>
+                    app:labelText="@string/SECURITY_QUESTIONS_ANSWER_LABEL"/>
 
             </LinearLayout>
 
@@ -104,7 +109,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:enabled="@{viewModel.saveEnabled}"
-                android:text="@string/CHANGE_SECURITY_QUESTIONS_BUTTON_SAVE"/>
+                android:onClick="@{viewModel.onSaveClicked}"
+                android:text="@string/SECURITY_QUESTIONS_BUTTON_SAVE"/>
 
         </LinearLayout>
 

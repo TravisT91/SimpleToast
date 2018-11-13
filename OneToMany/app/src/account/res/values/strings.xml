@@ -16,11 +16,18 @@
     <string name="SETTINGS_DISCLOSURES">Disclosures</string>
 
     <!-- Change Security Questions: -->
-    <string name="CHANGE_SECURITY_QUESTIONS_HEADER">Reset your security questions by selecting new questions from the following lists.</string>
-    <string name="CHANGE_SECURITY_QUESTIONS_LIST_LABEL">Select Question</string>
-    <string name="CHANGE_SECURITY_QUESTIONS_ANSWER_LABEL">Answer</string>
-    <string name="CHANGE_SECURITY_QUESTIONS_BUTTON_SAVE">Save</string>
-    <string name="CHANGE_SECURITY_QUESTIONS_LIST_TITLE">Select Question</string>
-    <string name="CHANGE_SECURITY_QUESTIONS_LIST_SUBTITLE"></string>
+    <string name="SECURITY_QUESTIONS_HEADER_CHANGE">Reset your security questions by selecting new questions from the following lists.</string>
+    <string name="SECURITY_QUESTIONS_HEADER_CREATE">Select and answer any two of the security questions from the following lists.</string>
+    <string name="SECURITY_QUESTIONS_HEADER_FETCHING"></string>
+    <string name="SECURITY_QUESTIONS_LIST_LABEL">Select Question</string>
+    <string name="SECURITY_QUESTIONS_ANSWER_LABEL">Answer</string>
+    <string name="SECURITY_QUESTIONS_BUTTON_SAVE">Save</string>
+    <string name="SECURITY_QUESTIONS_LIST_TITLE">Select Question</string>
+    <string name="SECURITY_QUESTIONS_LIST_SUBTITLE"></string>
+
+    <string name="SECURITY_QUESTIONS_SUCCESS_TITLE">Success</string>
+    <string name="SECURITY_QUESTIONS_SUCCESS_MESSAGE_CHANGE">You have successfully changed your security questions.</string>
+    <string name="SECURITY_QUESTIONS_SUCCESS_MESSAGE_CREATE">You have successfully set your security questions.</string>
+    <string name="SECURITY_QUESTIONS_SUCCESS_MESSAGE_OK">Ok</string>
 
 </resources>
