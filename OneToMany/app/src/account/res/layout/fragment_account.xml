@@ -25,7 +25,7 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@color/cellBackground"
+                android:background="@color/accountSettingsItemBackgroundColor"
                 android:orientation="vertical"
                 android:paddingStart="@dimen/listPaddingStart"
                 tools:ignore="RtlSymmetry">
@@ -39,7 +39,7 @@
                     android:paddingTop="@dimen/listItemPaddingTop"
                     android:paddingBottom="@dimen/listItemPaddingBottom"
                     android:text="@string/SETTINGS_PROFILE"
-                    android:textColor="@color/structure6" />
+                    android:textColor="@color/accountSettingsItemTextColor" />
 
                 <include
                     android:id="@+id/profileDivider"
@@ -54,7 +54,7 @@
                     android:paddingTop="@dimen/listItemPaddingTop"
                     android:paddingBottom="@dimen/listItemPaddingBottom"
                     android:text="@string/SETTINGS_PASSWORD"
-                    android:textColor="@color/structure6" />
+                    android:textColor="@color/accountSettingsItemTextColor" />
 
                 <include
                     android:id="@+id/passwordDivider"
@@ -70,7 +70,7 @@
                     <!--android:paddingTop="@dimen/listItemPaddingTop"-->
                     <!--android:paddingBottom="@dimen/listItemPaddingBottom"-->
                     <!--android:text="@string/SETTINGS_PASSCODE"-->
-                    <!--android:textColor="@color/structure6" />-->
+                    <!--android:textColor="@color/accountSettingsItemTextColor" />-->
 
                 <!--<include-->
                     <!--android:id="@+id/passcodeDivider"-->
@@ -89,7 +89,7 @@
                         <!--android:paddingTop="@dimen/listItemPaddingTop"-->
                         <!--android:paddingBottom="@dimen/listItemPaddingBottom"-->
                         <!--android:text="@string/SETTINGS_TOUCH_ID"-->
-                        <!--android:textColor="@color/structure6" />-->
+                        <!--android:textColor="@color/accountSettingsItemTextColor" />-->
 
                     <!--<Switch-->
                         <!--android:id="@+id/touchIdSwitch"-->
@@ -115,7 +115,7 @@
                     android:paddingTop="@dimen/listItemPaddingTop"
                     android:paddingBottom="@dimen/listItemPaddingBottom"
                     android:text="@string/SETTINGS_SECURITY_QUESTIONS"
-                    android:textColor="@color/structure6" />
+                    android:textColor="@color/accountSettingsItemTextColor" />
 
                 <include
                     android:id="@+id/securityQuestionsDivider"
@@ -130,7 +130,7 @@
                     android:paddingTop="@dimen/listItemPaddingTop"
                     android:paddingBottom="@dimen/listItemPaddingBottom"
                     android:text="@string/SETTINGS_NOTIFICATIONS"
-                    android:textColor="@color/structure6" />
+                    android:textColor="@color/accountSettingsItemTextColor" />
 
                 <include
                     android:id="@+id/notificationsDivider"
@@ -146,7 +146,7 @@
                     android:paddingTop="@dimen/listItemPaddingTop"
                     android:paddingBottom="@dimen/listItemPaddingBottom"
                     android:text="@string/SETTINGS_STATEMENTS"
-                    android:textColor="@color/structure6" />
+                    android:textColor="@color/accountSettingsItemTextColor" />
 
                 <include
                     android:id="@+id/statementsDivider"
@@ -162,7 +162,7 @@
                     android:paddingTop="@dimen/listItemPaddingTop"
                     android:paddingBottom="@dimen/listItemPaddingBottom"
                     android:text="@string/SETTINGS_SECONDARY_ACCOUNT"
-                    android:textColor="@color/structure6" />
+                    android:textColor="@color/accountSettingsItemTextColor" />
 
             </LinearLayout>
 
@@ -177,7 +177,7 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@color/cellBackground"
+                android:background="@color/accountSettingsItemBackgroundColor"
                 android:orientation="vertical"
                 android:paddingStart="@dimen/listPaddingStart"
                 tools:ignore="RtlSymmetry">
@@ -191,7 +191,7 @@
                     android:paddingTop="@dimen/listItemPaddingTop"
                     android:paddingBottom="@dimen/listItemPaddingBottom"
                     android:text="@string/SETTINGS_COPYRIGHT"
-                    android:textColor="@color/structure6" />
+                    android:textColor="@color/accountSettingsItemTextColor" />
 
                 <include
                     android:id="@+id/copyrightDivider"
@@ -206,7 +206,7 @@
                     android:paddingTop="@dimen/listItemPaddingTop"
                     android:paddingBottom="@dimen/listItemPaddingBottom"
                     android:text="@string/SETTINGS_DISCLOSURES"
-                    android:textColor="@color/structure6" />
+                    android:textColor="@color/accountSettingsItemTextColor" />
 
             </LinearLayout>
 
@@ -224,7 +224,7 @@
                 parisStyle="@{palette.body}"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@color/cellBackground"
+                android:background="@color/accountSettingsItemBackgroundColor"
                 android:gravity="center_horizontal"
                 android:paddingTop="@dimen/listItemPaddingTop"
                 android:paddingBottom="@dimen/listItemPaddingBottom"
