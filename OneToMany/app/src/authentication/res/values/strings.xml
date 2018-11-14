@@ -16,4 +16,11 @@
 
     <!--Login error messages-->
     <string name="error_message_invalid_credentials">Invalid Credentials</string>
+
+    <!-- email confirmation -->
+    <string name="login_confirm_email_alert_title">Email Verification</string>
+    <string name="login_confirm_email_alert_message">You must confirm your email address before you can continue.</string>
+    <string name="login_confirm_email_send_button">Send Confirmation Email</string>
+    <string name="login_confirm_email_success">Please check your email to validate this account.</string>
+
 </resources>
