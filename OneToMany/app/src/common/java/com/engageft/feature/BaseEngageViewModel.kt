@@ -1,6 +1,7 @@
 package com.engageft.feature
 
 import androidx.lifecycle.MutableLiveData
+import com.crashlytics.android.Crashlytics
 import com.engageft.apptoolbox.BaseViewModel
 import com.engageft.apptoolbox.BuildConfig
 import java.net.ConnectException
@@ -36,8 +37,7 @@ open class BaseEngageViewModel: BaseViewModel() {
                     dialogInfoObservable.value = DialogInfo(message = e.message)
                     e.printStackTrace()
                 } else {
-                    // TODO(aHashimi): https://engageft.atlassian.net/browse/FOTM-26
-                    // Crashlytics.logException(e)
+                    Crashlytics.logException(e)
                 }
             }
         }

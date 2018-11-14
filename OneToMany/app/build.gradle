@@ -75,7 +75,7 @@ dependencies {
     // If you're using Paris annotations.
     annotationProcessor 'com.airbnb.android:paris-processor:1.1.0'
 
-    compile('com.crashlytics.sdk.android:crashlytics:2.9.6@aar') {
+    implementation('com.crashlytics.sdk.android:crashlytics:2.9.6@aar') {
         transitive = true
     }
 }
