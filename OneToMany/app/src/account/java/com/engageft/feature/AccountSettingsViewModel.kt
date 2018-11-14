@@ -1,6 +1,5 @@
 package com.engageft.feature
 
-import android.view.View
 import androidx.lifecycle.MutableLiveData
 import com.engageft.engagekit.EngageService
 
@@ -20,7 +19,7 @@ class AccountSettingsViewModel : BaseEngageViewModel() {
 
     val navigationObservable = MutableLiveData<AccountSettingsNavigation>()
 
-    fun onLogoutClicked(v: View) {
+    fun onLogoutClicked() {
         EngageService.getInstance().authManager.logout()
         navigationObservable.value = AccountSettingsNavigation.LOGOUT
     }

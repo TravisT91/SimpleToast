@@ -230,7 +230,7 @@
                 android:paddingBottom="@dimen/listItemPaddingBottom"
                 android:text="@string/SETTINGS_LOG_OUT"
                 android:textColor="@{palette.errorColor}"
-                android:onClick="@{viewModel.onLogoutClicked}"
+                android:onClick="@{() -> viewModel.onLogoutClicked()}"
                 tools:textColor="@color/error"/>
 
             <include layout="@layout/divider" />
