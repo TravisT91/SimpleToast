@@ -11,9 +11,9 @@ import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
 
 /**
- * TODO(joeyhutchins): ClassName
+ * AuthExpiredViewModel
  * <p>
- * TODO(joeyhutchins): Class description.
+ * ViewModel used for the PasswordAuthExpiredFragment.
  * </p>
  * Created by joeyhutchins on 11/6/18.
  * Copyright (c) 2018 Engage FT. All rights reserved.

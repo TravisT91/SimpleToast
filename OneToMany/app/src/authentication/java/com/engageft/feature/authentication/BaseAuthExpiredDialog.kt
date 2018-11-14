@@ -6,9 +6,10 @@ import com.engageft.engagekit.EngageService
 import com.engageft.onetomany.R
 
 /**
- * TODO(joeyhutchins): ClassName
+ * BaseAuthExpiredDialog
  * <p>
- * TODO(joeyhutchins): Class description.
+ * Base dialog for Auth expiration fragments to inherit from that contains shared functionality all dialogs
+ * must have.
  * </p>
  * Created by joeyhutchins on 11/7/18.
  * Copyright (c) 2018 Engage FT. All rights reserved.

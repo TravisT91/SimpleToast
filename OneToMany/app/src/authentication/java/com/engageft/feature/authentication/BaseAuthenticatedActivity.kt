@@ -11,9 +11,11 @@ import com.engageft.onetomany.R
 
 
 /**
- * TODO(joeyhutchins): ClassName
+ * BaseAuthenticatedActivity
  * <p>
- * TODO(joeyhutchins): Class description.
+ * Base Activity all authenticated activities should inherit from for this project. This activity
+ * manages the job of observing authentication state and interrupting the navigation flow if/when the
+ * authentication timer expires.
  * </p>
  * Created by joeyhutchins on 10/30/18.
  * Copyright (c) 2018 Engage FT. All rights reserved.

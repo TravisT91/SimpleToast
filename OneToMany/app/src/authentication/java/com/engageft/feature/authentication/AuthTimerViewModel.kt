@@ -7,9 +7,11 @@ import com.engageft.engagekit.EngageService
 import com.engageft.engagekit.tools.AuthManager
 
 /**
- * TODO(joeyhutchins): ClassName
+ * AuthTimerViewModel
  * <p>
- * TODO(joeyhutchins): Class description.
+ * This is an activity level ViewModel to be used only by BaserAuthenticatedActivity. This viewmodel
+ * managers an observer to authentication state and instructs the activity to interrupt navigation
+ * if and when authentication timers expire.
  * </p>
  * Created by joeyhutchins on 10/30/18.
  * Copyright (c) 2018 Engage FT. All rights reserved.

@@ -15,9 +15,9 @@ import com.engageft.onetomany.R
 import com.engageft.onetomany.databinding.DialogExpiredPasswordBinding
 
 /**
- * TODO(joeyhutchins): ClassName
+ * AuthExpiredPasswordDialog
  * <p>
- * TODO(joeyhutchins): Class description.
+ * AuthExpiredDialog implementation to be used when the user is authenticating via password.
  * </p>
  * Created by joeyhutchins on 11/6/18.
  * Copyright (c) 2018 Engage FT. All rights reserved.
