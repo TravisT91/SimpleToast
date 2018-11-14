@@ -1,0 +1,174 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+        <variable name="viewModel" type="com.engageft.feature.ProfileViewModel"/>
+        <variable
+            name="palette"
+            type="com.engageft.feature.Palette"/>
+    </data>
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/viewBackground">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:background="@android:color/transparent">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:background="@color/profileInputBackground"
+                android:paddingLeft="16dp"
+                android:paddingRight="16dp">
+
+                <com.engageft.apptoolbox.view.TextInputWithLabel
+                    android:id="@+id/legalNameInput"
+                    style="@style/TextInputWithLabelStyle"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="20dp"
+                    app:inputText="@={viewModel.legalName}"
+                    app:labelText="@string/PROFILE_LEGAL_NAME"/>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:background="@color/profileInputBackground"
+                android:paddingLeft="16dp"
+                android:paddingRight="16dp">
+
+                <com.engageft.apptoolbox.view.EmailInputWithLabel
+                    android:id="@+id/emailAddressInput"
+                    style="@style/TextInputWithLabelStyle"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="20dp"
+                    app:inputText="@={viewModel.emailAddress}"
+                    app:labelText="@string/PROFILE_EMAIL"/>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:background="@color/profileInputBackground"
+                android:paddingLeft="16dp"
+                android:paddingRight="16dp">
+
+                <com.engageft.apptoolbox.view.PhoneInputWithLabel
+                    android:id="@+id/phoneNumberInput"
+                    style="@style/TextInputWithLabelStyle"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="20dp"
+                    app:inputText="@={viewModel.phoneNumber}"
+                    app:labelText="@string/PROFILE_PHONE"/>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:background="@color/profileInputBackground"
+                android:paddingLeft="16dp"
+                android:paddingRight="16dp">
+
+                <com.engageft.apptoolbox.view.TextInputWithLabel
+                    android:id="@+id/streetAddressInput"
+                    style="@style/TextInputWithLabelStyle"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="20dp"
+                    app:inputText="@={viewModel.streetAddress}"
+                    app:labelText="@string/PROFILE_STREET"/>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:background="@color/profileInputBackground"
+                android:paddingLeft="16dp"
+                android:paddingRight="16dp">
+
+                <com.engageft.apptoolbox.view.TextInputWithLabel
+                    android:id="@+id/aptSuiteInput"
+                    style="@style/TextInputWithLabelStyle"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="20dp"
+                    app:inputText="@={viewModel.aptSuite}"
+                    app:labelText="@string/PROFILE_APT_SUITE"/>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:background="@color/profileInputBackground"
+                android:paddingLeft="16dp"
+                android:paddingRight="16dp">
+
+                <com.engageft.apptoolbox.view.TextInputWithLabel
+                    android:id="@+id/cityInput"
+                    style="@style/TextInputWithLabelStyle"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="20dp"
+                    app:inputText="@={viewModel.city}"
+                    app:labelText="@string/PROFILE_CITY"/>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:background="@color/profileInputBackground"
+                android:paddingLeft="16dp"
+                android:paddingRight="16dp">
+
+                <com.engageft.apptoolbox.view.BottomSheetListInputWithLabel
+                    android:id="@+id/stateInput"
+                    style="@style/BottomSheetListInputWithLabelStyle"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="20dp"
+                    app:inputText="@={viewModel.state}"
+                    app:labelText="@string/PROFILE_STATE"
+                    app:bottomSheetDialogOptions="@array/state_list_options"
+                    app:bottomSheetDialogTitle="@string/PROFILE_STATE_LIST_TITLE"
+                    app:bottomSheetDialogSubtitle="@string/PROFILE_LEGAL_NAME"
+                    app:bottomSheetDialogStyle="@style/ListOptionBottomSheetDialogFragmentStyle"/>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:background="@color/profileInputBackground"
+                android:paddingLeft="16dp"
+                android:paddingRight="16dp">
+
+                <com.engageft.apptoolbox.view.ZipCodeInputWithLabel
+                    android:id="@+id/zipcodeInput"
+                    style="@style/TextInputWithLabelStyle"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="20dp"
+                    app:inputText="@={viewModel.zip}"
+                    app:labelText="@string/PROFILE_ZIP"/>
+            </LinearLayout>
+        </LinearLayout>
+
+    </ScrollView>
+
+</layout>

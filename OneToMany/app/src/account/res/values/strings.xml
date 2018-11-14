@@ -30,4 +30,15 @@
     <string name="SECURITY_QUESTIONS_SUCCESS_MESSAGE_CREATE">You have successfully set your security questions.</string>
     <string name="SECURITY_QUESTIONS_SUCCESS_MESSAGE_OK">Ok</string>
 
+
+    <string name="PROFILE_LEGAL_NAME">Legal Name</string>
+    <string name="PROFILE_EMAIL">Email Address</string>
+    <string name="PROFILE_PHONE">Phone Number</string>
+    <string name="PROFILE_STREET">Street Address</string>
+    <string name="PROFILE_APT_SUITE">Apt/Suite# (optional)</string>
+    <string name="PROFILE_CITY">City</string>
+    <string name="PROFILE_STATE">State</string>
+    <string name="PROFILE_ZIP">Zip Code</string>
+    <string name="PROFILE_STATE_LIST_TITLE">Select State</string>
+    <string name="PROFILE_STATE_LIST_SUBTITLE"></string>
 </resources>

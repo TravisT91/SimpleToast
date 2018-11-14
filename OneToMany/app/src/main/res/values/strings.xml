@@ -19,5 +19,6 @@
     <string name="fragment_title_help">Help Center</string>
     <string name="fragment_title_goals_add_step_1">Adding Goal: Step 1</string>
     <string name="fragment_title_change_security_questions">Security Questions</string>
+    <string name="fragment_title_profile">Profile</string>
 
 </resources>

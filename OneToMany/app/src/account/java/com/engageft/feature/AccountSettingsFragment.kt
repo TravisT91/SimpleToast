@@ -41,12 +41,11 @@ class AccountSettingsFragment : LotusFullScreenFragment() {
         binding.palette = Palette
         binding.apply {
             profile.setOnClickListener {
-                //TODO(ttkachuk) implement onCLick
+                binding.root.findNavController().navigate(R.id.action_account_fragment_to_profileFragment)
             }
             password.setOnClickListener {
                 //TODO(ttkachuk) implement onCLick
             }
-
             securityQuestions.setOnClickListener {
                 binding.root.findNavController().navigate(R.id.action_account_fragment_to_changeSecurityQuestionsFragment)
             }
