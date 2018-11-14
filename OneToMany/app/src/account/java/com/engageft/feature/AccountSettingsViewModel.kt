@@ -1,13 +1,12 @@
 package com.engageft.feature
 
-import android.view.View
 import androidx.lifecycle.MutableLiveData
 import com.engageft.engagekit.EngageService
 
 /**
- * TODO(joeyhutchins): ClassName
+ * AccountSettingsViewModel
  * <p>
- * TODO(joeyhutchins): Class description.
+ * ViewModel for Account Settings landing screen.
  * </p>
  * Created by joeyhutchins on 11/12/18.
  * Copyright (c) 2018 Engage FT. All rights reserved.
@@ -20,7 +19,7 @@ class AccountSettingsViewModel : BaseEngageViewModel() {
 
     val navigationObservable = MutableLiveData<AccountSettingsNavigation>()
 
-    fun onLogoutClicked(v: View) {
+    fun onLogoutClicked() {
         EngageService.getInstance().authManager.logout()
         navigationObservable.value = AccountSettingsNavigation.LOGOUT
     }
