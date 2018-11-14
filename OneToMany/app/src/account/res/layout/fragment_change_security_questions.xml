@@ -30,7 +30,7 @@
                 android:paddingTop="16dp"
                 android:paddingBottom="16dp"
                 android:gravity="center"
-                android:textColor="@color/structure6" />
+                android:textColor="@color/changeSecurityQuestionsHeaderTextColor" />
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -71,7 +71,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
-                android:background="@color/white"
+                android:background="@color/changeSecurityQuestionsInputBackground"
                 android:paddingLeft="16dp"
                 android:paddingRight="16dp">
 
@@ -109,7 +109,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:enabled="@{viewModel.saveEnabled}"
-                android:onClick="@{viewModel.onSaveClicked}"
+                android:onClick="@{() -> viewModel.onSaveClicked()}"
                 android:text="@string/SECURITY_QUESTIONS_BUTTON_SAVE"/>
 
         </LinearLayout>

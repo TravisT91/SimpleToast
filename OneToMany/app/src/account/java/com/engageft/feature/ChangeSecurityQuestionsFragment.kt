@@ -15,9 +15,9 @@ import com.engageft.onetomany.R
 import com.engageft.onetomany.databinding.FragmentChangeSecurityQuestionsBinding
 
 /**
- * TODO(joeyhutchins): ClassName
+ * ChangeSecurityQuestionsFragment
  * <p>
- * TODO(joeyhutchins): Class description.
+ * Fragment for changing/setting a user's security questions.
  * </p>
  * Created by joeyhutchins on 11/12/18.
  * Copyright (c) 2018 Engage FT. All rights reserved.

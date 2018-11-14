@@ -1,6 +1,5 @@
 package com.engageft.feature
 
-import android.view.View
 import androidx.databinding.Observable
 import androidx.databinding.ObservableField
 import androidx.lifecycle.MutableLiveData
@@ -13,9 +12,9 @@ import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
 
 /**
- * TODO(joeyhutchins): ClassName
+ * ChangeSecurityQuestionsViewModel
  * <p>
- * TODO(joeyhutchins): Class description.
+ * ViewModel for change security questions.
  * </p>
  * Created by joeyhutchins on 11/12/18.
  * Copyright (c) 2018 Engage FT. All rights reserved.
@@ -76,7 +75,7 @@ class ChangeSecurityQuestionsViewModel : BaseEngageViewModel() {
     /**
      * Only possible when this has been set enabled.
      */
-    fun onSaveClicked(v: View) {
+    fun onSaveClicked() {
         progressOverlayShownObservable.value = true
 
 
