@@ -15,4 +15,10 @@
     <string name="SETTINGS_COPYRIGHT">Copyright</string>
     <string name="SETTINGS_DISCLOSURES">Disclosures</string>
 
+    <string name="statements_title_empty">There no statements available.</string>
+    <string name="statements_title_empty_substring">no statements</string>
+    <string name="statements_subtitle_empty">Please check back again soon.</string>
+    <string name="statements_title">Select a statement to view, save, or send.</string>
+    <string name="statements_title_substring">view, save, or send.</string>
+    <string name="statements_description_format">Statements for last month are not available until the %s of next month.</string>
 </resources>

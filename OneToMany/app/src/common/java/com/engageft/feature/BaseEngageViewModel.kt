@@ -3,6 +3,11 @@ package com.engageft.feature
 import androidx.lifecycle.MutableLiveData
 import com.engageft.apptoolbox.BaseViewModel
 import com.engageft.apptoolbox.BuildConfig
+import com.engageft.engagekit.EngageService
+import com.ob.ws.dom.LoginResponse
+import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.disposables.CompositeDisposable
+import io.reactivex.schedulers.Schedulers
 import java.net.ConnectException
 import java.net.SocketTimeoutException
 import java.net.UnknownHostException
@@ -17,7 +22,28 @@ import java.net.UnknownHostException
  */
 open class BaseEngageViewModel: BaseViewModel() {
 
+    protected val compositeDisposable = CompositeDisposable()
+
+    var loginResponse: LoginResponse? = null
+
     val dialogInfoObservable: MutableLiveData<DialogInfo> = MutableLiveData()
+
+    fun refreshLoginResponse() {
+        compositeDisposable.add(EngageService.getInstance().loginResponseAsObservable
+                        .subscribeOn(Schedulers.io())
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .subscribe({ response ->
+                            if (response is LoginResponse) {
+                                loginResponse = response
+                            } else {
+                                // TODO show error dialog
+                            }
+                        }, { e ->
+                            // TODO errorshow dialog
+                            handleThrowable(e)
+                        })
+        )
+    }
 
     fun handleThrowable(e: Throwable)  {
         when (e) {

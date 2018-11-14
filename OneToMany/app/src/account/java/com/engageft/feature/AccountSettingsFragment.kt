@@ -10,6 +10,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
+import androidx.navigation.fragment.findNavController
 import com.engageft.apptoolbox.BaseViewModel
 import com.engageft.apptoolbox.LotusFullScreenFragment
 import com.engageft.onetomany.NotAuthenticatedActivity
@@ -64,7 +65,7 @@ class AccountSettingsFragment : LotusFullScreenFragment() {
                 //TODO(ttkachuk) implement onCLick
             }
             statements.setOnClickListener {
-                //TODO(ttkachuk) implement onCLick
+                findNavController().navigate(R.id.action_account_fragment_to_statementsFragment)
             }
             secondaryAccount.setOnClickListener {
                 //TODO(ttkachuk) implement onCLick
