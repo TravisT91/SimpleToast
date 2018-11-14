@@ -36,7 +36,7 @@ abstract class BaseGateKeeper(val gateKeeperListener: GateKeeperListener) : Gate
     }
 
     fun isRunning(): Boolean {
-        return itemIndex == INDEX_NOT_STARTED
+        return itemIndex != INDEX_NOT_STARTED
     }
 
     private fun checkNextItem() {
