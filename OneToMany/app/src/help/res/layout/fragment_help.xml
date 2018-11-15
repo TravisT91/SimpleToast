@@ -3,17 +3,35 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
+    <data>
+        <variable name="palette" type="com.engageft.feature.Palette" />
+    </data>
+
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
-        <Button
+
+        <com.engageft.apptoolbox.view.TrackingPanel
+            style="@style/LotusTrackingPanel_Grandparent"
+            app:contentPadding="20dp"
+            android:layout_margin="16dp"
+            app:cardElevation="10dp"
             android:id="@+id/button"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent"
-            android:text="Get Started!"/>
+            android:text="Get Started!"
+            app:titleText="Total Earned"
+            app:trackingPanelTitleTextColor="@color/structure6"
+            app:rightSubtitleText="May 2018"
+            app:trackingPanelRightSubtitleColor="@color/structure5"
+            app:bottomSubtitleText="$2,994 of $3,656 avg"
+            app:trackingPanelBottomSubtitleTextColor="@color/structure6"
+            app:textButtonText="Income"
+            app:trackingPanelTextButtonTextColor="@color/structure5"
+            titleParisStyle="@{palette.footnoteLoud}"
+            rightSubtitleParisStyle="@{palette.caption1}"
+            bottomSubtitleParisStyle="@{palette.caption1}"
+            textButtonParisStyle="@{palette.footnoteMedium}"/>
+
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>
