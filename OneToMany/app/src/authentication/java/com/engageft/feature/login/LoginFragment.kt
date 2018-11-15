@@ -1,4 +1,4 @@
-package com.engageft.feature
+package com.engageft.feature.login
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -19,6 +19,13 @@ import com.engageft.apptoolbox.LotusFullScreenFragment
 import com.engageft.apptoolbox.ViewUtils.newLotusInstance
 import com.engageft.apptoolbox.view.InformationDialogFragment
 import com.engageft.engagekit.utils.DeviceUtils
+import com.engageft.feature.DialogInfo
+import com.engageft.feature.EasterEggGestureDetector
+import com.engageft.feature.EasterEggGestureListener
+import com.engageft.feature.Palette
+import com.engageft.feature.infoDialogGenericErrorTitleMessageConditionalNewInstance
+import com.engageft.feature.infoDialogGenericErrorTitleMessageNewInstance
+import com.engageft.feature.infoDialogSimpleMessageNoTitle
 import com.engageft.onetomany.R
 import com.engageft.onetomany.databinding.FragmentLoginBinding
 import kotlinx.android.synthetic.main.fragment_login.*
@@ -198,10 +205,10 @@ class LoginFragment : LotusFullScreenFragment() {
             when (loadingOverlayDialog) {
                 LoginViewModel.LoadingOverlayDialog.CREATING_DEMO_ACCOUNT -> {
                     //TODO(aHashimi) message textView runs to the edges of screen. https://engageft.atlassian.net/browse/SHOW-399
-                    showProgressOverlay(getString(R.string.login_preview_wait_message), R.style.LoadingOverlayDialogStyle)
+                    progressOverlayDelegate.showProgressOverlay(getString(R.string.login_preview_wait_message), R.style.LoadingOverlayDialogStyle)
                 }
                 LoginViewModel.LoadingOverlayDialog.DISMISS_DIALOG -> {
-                    dismissProgressOverlay()
+                    progressOverlayDelegate.dismissProgressOverlay()
                 }
             }
         })

@@ -81,6 +81,7 @@ class EasterEggGestureDetector(context: Context, viewToGestureDetect: View, priv
     }
 
     private fun handleSwipeUp() {
+        countSwipesDown = 0
         countSwipesUp = Math.min(countSwipesUp + 1, 2)
         countTaps = 0
     }
@@ -89,8 +90,10 @@ class EasterEggGestureDetector(context: Context, viewToGestureDetect: View, priv
         countTaps = Math.min(countTaps + 1, 2)
 
         if (countSwipesUp == 2 && countTaps == 2) {
-            Log.e("Joey", "Activated!")
             listener.onEasterEggActivated()
+            resetGestureCounts()
+        } else if (countSwipesDown == 2 && countTaps == 2) {
+            listener.onEasterEggDeactivated()
             resetGestureCounts()
         }
     }
@@ -99,12 +102,6 @@ class EasterEggGestureDetector(context: Context, viewToGestureDetect: View, priv
         countSwipesUp = 0
         countTaps = 0
         countSwipesDown = Math.min(countSwipesDown + 1, 2)
-
-        if (countSwipesDown == 2) {
-            Log.e("Joey", "Deactivated!")
-            listener.onEasterEggDeactivated()
-            resetGestureCounts()
-        }
     }
 }
 

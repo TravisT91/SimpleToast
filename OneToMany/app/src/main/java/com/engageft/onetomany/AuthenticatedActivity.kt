@@ -1,13 +1,14 @@
 package com.engageft.onetomany
 
-
 import android.os.Bundle
-import com.engageft.apptoolbox.LotusActivity
 import com.engageft.apptoolbox.LotusActivityConfig
 import com.engageft.engagekit.EngageService
 import com.engageft.engagekit.utils.LoginResponseUtils
+import com.engageft.feature.authentication.BaseAuthenticatedActivity
 
-class AuthenticatedActivity : LotusActivity() {
+
+class AuthenticatedActivity : BaseAuthenticatedActivity() {
+
     private val lotusActivityConfig = object : LotusActivityConfig() {
         override val navigationMenuResourceId = R.menu.menu_navigation
         override val navigationGraphResourceId = R.navigation.navigation_authenticated
