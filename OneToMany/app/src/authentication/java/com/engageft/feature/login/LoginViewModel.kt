@@ -1,4 +1,4 @@
-package com.engageft.feature
+package com.engageft.feature.login
 
 import androidx.databinding.Observable
 import androidx.databinding.ObservableField
@@ -6,6 +6,11 @@ import androidx.lifecycle.MutableLiveData
 import com.engageft.engagekit.EngageService
 import com.engageft.engagekit.rest.request.CreateDemoAccountRequest
 import com.engageft.engagekit.utils.LoginResponseUtils
+import com.engageft.feature.BaseEngageViewModel
+import com.engageft.feature.DialogInfo
+import com.engageft.feature.WelcomeSharedPreferencesRepo
+import com.engageft.feature.authentication.AuthenticationConfig
+import com.engageft.feature.authentication.AuthenticationSharedPreferencesRepo
 import com.engageft.onetomany.HeapUtils
 import com.engageft.onetomany.config.EngageAppConfig
 import com.ob.ws.dom.DeviceFailResponse

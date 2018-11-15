@@ -1,4 +1,6 @@
-package com.engageft.feature
+package com.engageft.feature.authentication
+
+import com.engageft.feature.BaseSharedPreferencesRepo
 
 /**
  * AuthenticationSharedPreferencesRepo
