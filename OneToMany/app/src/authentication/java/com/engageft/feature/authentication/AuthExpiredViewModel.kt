@@ -1,6 +1,5 @@
 package com.engageft.feature.authentication
 
-import android.view.View
 import androidx.databinding.Observable
 import androidx.databinding.ObservableField
 import androidx.lifecycle.MutableLiveData
@@ -43,12 +42,12 @@ class AuthExpiredViewModel : BaseViewModel() {
         })
     }
 
-    fun onLogoutClicked(v: View) {
+    fun onLogoutClicked() {
         EngageService.getInstance().authManager.logout()
         navigationObservable.value = AuthExpiredNavigationEvent.LOGOUT
     }
 
-    fun onSignInClicked(v: View) {
+    fun onSignInClicked() {
         // NOTE: This will only happen if signInEnabled was set to true.
         progressOverlayShownObservable.value = true
         val passwordText = password.get()!!
@@ -72,7 +71,7 @@ class AuthExpiredViewModel : BaseViewModel() {
                         }))
     }
 
-    fun onForgotPasswordClicked(v: View) {
+    fun onForgotPasswordClicked() {
         navigationObservable.value = AuthExpiredNavigationEvent.FORGOT_PASSWORD
     }
 
