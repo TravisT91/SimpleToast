@@ -78,47 +78,50 @@ class OverviewView : ConstraintLayout {
     // Must save expanded/collapsed state so that it is shown correctly after returning to Overview from
     // a fragment like card lock/unlock that is displayed while Overview is expanded. View is recreated
     // in this case, and will always be collapsed unless state is saved and restored.
+    // See https://medium.com/@kirillsuslov/how-to-save-android-view-state-in-kotlin-9dbe96074d49
     public override fun onSaveInstanceState(): Parcelable? {
         val superState = super.onSaveInstanceState()
 
         val ss = SavedState(superState)
 
-        ss.showingActions = if (this.showingActions) 1 else 0
+        ss.showingActions = this.showingActions
 
         return ss
     }
 
     public override fun onRestoreInstanceState(state: Parcelable) {
-        val ss = state as SavedState
-        super.onRestoreInstanceState(ss.superState)
-
-        this.showingActions = state.showingActions != 0
-        if (this.showingActions) {
-            showActionsImmediate()
+        if (state is SavedState) {
+            super.onRestoreInstanceState(state.superState)
+            this.showingActions = state.showingActions
+            if (this.showingActions) {
+                showActionsImmediate()
+            }
+        } else {
+            super.onRestoreInstanceState(state)
         }
     }
 
     internal class SavedState : View.BaseSavedState {
-        var showingActions: Int = 0
+        var showingActions: Boolean = false
 
-        constructor(superState: Parcelable) : super(superState) {}
+        constructor(superState: Parcelable) : super(superState)
 
-        private constructor(`in`: Parcel) : super(`in`) {
-            this.showingActions = `in`.readInt()
+        constructor(source: Parcel) : super(source) {
+            showingActions = source.readByte().toInt() != 0
         }
 
         override fun writeToParcel(out: Parcel, flags: Int) {
             super.writeToParcel(out, flags)
-            out.writeInt(this.showingActions)
+            out.writeByte((if (showingActions) 1 else 0).toByte())
         }
 
         companion object {
 
             //required field that makes Parcelables from a Parcel
             @JvmField
-            val CREATOR: Parcelable.Creator<SavedState> = object : Parcelable.Creator<SavedState> {
-                override fun createFromParcel(`in`: Parcel): SavedState {
-                    return SavedState(`in`)
+            val CREATOR = object : Parcelable.Creator<SavedState> {
+                override fun createFromParcel(source: Parcel): SavedState {
+                    return SavedState(source)
                 }
 
                 override fun newArray(size: Int): Array<SavedState?> {
