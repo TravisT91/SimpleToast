@@ -7,7 +7,8 @@ import android.view.ViewGroup
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import com.engageft.apptoolbox.BaseViewModel
-import com.engageft.apptoolbox.LotusFullScreenFragment
+import com.engageft.apptoolbox.ViewUtils.newLotusInstance
+import com.engageft.apptoolbox.view.InformationDialogFragment
 import com.engageft.onetomany.R
 import com.engageft.onetomany.databinding.FragmentProfileBinding
 
@@ -21,7 +22,7 @@ import com.engageft.onetomany.databinding.FragmentProfileBinding
  * Created by joeyhutchins on 11/12/18.
  * Copyright (c) 2018 Engage FT. All rights reserved.
  */
-class ProfileFragment : LotusFullScreenFragment() {
+class ProfileFragment : BaseEngageFullscreenFragment() {
     private lateinit var profileViewModel: ProfileViewModel
     override fun createViewModel(): BaseViewModel? {
         profileViewModel = ViewModelProviders.of(this).get(ProfileViewModel::class.java)
@@ -36,15 +37,26 @@ class ProfileFragment : LotusFullScreenFragment() {
         binding.legalNameInput.setEnable(false)
         profileViewModel.navigationObservable.observe(this, Observer { navigationEvent ->
             when (navigationEvent) {
+                ProfileViewModel.ProfileNavigation.NONE -> {
+
+                }
+                ProfileViewModel.ProfileNavigation.CHANGE_SUCCESSFUL -> {
+                    showDialog(InformationDialogFragment.newLotusInstance(title = getString(R.string.PROFILE_SUCCESS_TITLE),
+                            message = getString(R.string.PROFILE_SUCCESS_MESSAGE_CHANGE),
+                            positiveButton = getString(R.string.PROFILE_SUCCESS_MESSAGE_OK)))
+                }
             }
         })
         profileViewModel.emailValidationObservable.observe(this, Observer { error ->
             when (error) {
-                ProfileViewModel.InputValidationError.NONE -> {
+                ProfileViewModel.EmailInputValidationError.NONE -> {
                     binding.emailAddressInput.setErrorTexts(null)
                 }
-                ProfileViewModel.InputValidationError.EMPTY -> {
+                ProfileViewModel.EmailInputValidationError.EMPTY -> {
                     binding.emailAddressInput.setErrorTexts(arrayListOf(getString(R.string.PROFILE_INPUT_ERROR_EMTPY)))
+                }
+                ProfileViewModel.EmailInputValidationError.AT_REQUIRED -> {
+                    binding.emailAddressInput.setErrorTexts(arrayListOf(getString(R.string.PROFILE_INPUT_ERROR_EMAIL_AT_REQUIRED)))
                 }
             }
         })
