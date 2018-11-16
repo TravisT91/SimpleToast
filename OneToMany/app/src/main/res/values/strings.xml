@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">One To Many</string>
+    <string name="app_name">My Card Manager</string>
 
     <!-- Navigation Drawer Titles -->
     <string name="nav_drawer_title_dashboard">Overview</string>
