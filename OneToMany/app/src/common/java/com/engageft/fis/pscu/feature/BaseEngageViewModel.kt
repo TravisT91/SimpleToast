@@ -26,8 +26,7 @@ open class BaseEngageViewModel: BaseViewModel() {
             dialogInfoObservable.value = DialogInfo(message = response.message)
         } else {
             dialogInfoObservable.value = DialogInfo(dialogType = DialogInfo.DialogType.GENERIC_ERROR)
-            // TODO(aHashimi): https://engageft.atlassian.net/browse/FOTM-26
-            // Crashlytics.logException(e)
+            Crashlytics.log(response.message)
         }
     }
 

@@ -78,7 +78,7 @@
     </fragment>
     <fragment
         android:id="@+id/changeSecurityQuestionsFragment"
-        android:name="com.engageft.feature.ChangeSecurityQuestionsFragment"
+        android:name="com.engageft.fis.pscu.feature.ChangeSecurityQuestionsFragment"
         android:label="@string/fragment_title_change_security_questions" />
 
 
