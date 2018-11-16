@@ -79,7 +79,7 @@
     <fragment
         android:id="@+id/statementsFragment"
         android:name="com.engageft.feature.StatementsFragment"
-        android:label="StatementsFragment" >
+        android:label="@string/statements_screen_title" >
         <action
             android:id="@+id/action_statementsFragment_to_webViewFragment"
             app:destination="@id/webViewFragment" />
@@ -87,7 +87,7 @@
     <fragment
         android:id="@+id/webViewFragment"
         android:name="com.engageft.feature.WebViewFragment"
-        android:label="WebViewFragment" />
+        android:label="@string/statements_webView_screen_title" />
 
 
 </navigation>

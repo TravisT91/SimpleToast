@@ -1,6 +1,5 @@
 package com.engageft.feature
 
-import DisplayDateTimeUtils
 import android.os.Bundle
 import android.util.Log
 import android.view.Gravity
@@ -20,6 +19,7 @@ import com.engageft.apptoolbox.adapter.HorizontalRuleSection
 import com.engageft.apptoolbox.adapter.SelectableLabelsSection
 import com.engageft.apptoolbox.util.applyTypefaceAndColorToSubString
 import com.engageft.engagekit.EngageService
+import com.engageft.feature.util.DisplayDateTimeUtils
 import com.engageft.onetomany.R
 import com.engageft.onetomany.config.EngageAppConfig
 import com.engageft.onetomany.databinding.FragmentStatementsBinding
@@ -87,10 +87,10 @@ class StatementsFragment: LotusFullScreenFragment() {
                                 monthParam,
                                 selectedMonth.year.toString())
 
-                        Log.e(TAG, "statementUrl $statementUrl")
-
-                        val title = String.format(getString(R.string.STATEMENT_PDF_HEADER), DisplayDateTimeUtils.getMonthAbbrYear(selectedMonth.year, selectedMonth.monthOfYear))
-                        findNavController().navigate(R.id.action_statementsFragment_to_webViewFragment, WebViewFragment.getBundle(title, statementUrl, true, false))
+                        //TODO(aHashimi): can't change the toolbar title dynamically.
+                        val pdfTitle = String.format(getString(R.string.STATEMENT_PDF_HEADER), DisplayDateTimeUtils.getMonthAbbrYear(selectedMonth.year, selectedMonth.monthOfYear))
+                        findNavController().navigate(R.id.action_statementsFragment_to_webViewFragment,
+                                WebViewFragment.getBundle(pdfTitle, statementUrl, true, false))
                     }
                 }
             })
