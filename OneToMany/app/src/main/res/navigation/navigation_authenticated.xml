@@ -85,7 +85,7 @@
         android:label="@string/fragment_title_change_security_questions" />
     <fragment
         android:id="@+id/profileFragment"
-        android:name="com.engageft.feature.ProfileFragment"
+        android:name="com.engageft.fis.pscu.feature.ProfileFragment"
         android:label="@string/fragment_title_profile" />
 
 

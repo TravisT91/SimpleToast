@@ -1,4 +1,4 @@
-package com.engageft.feature
+package com.engageft.fis.pscu.feature
 
 import android.os.Handler
 import androidx.databinding.Observable
