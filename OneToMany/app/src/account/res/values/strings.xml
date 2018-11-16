@@ -46,6 +46,9 @@
     <string name="PROFILE_INPUT_ERROR_PHONE_NOT_TEN">Please enter a 10-digit phone number.</string>
     <string name="PROFILE_INPUT_ERROR_ZIP_NOT_FIVE">Please enter a 5-digit zip code.</string>
     <string name="PROFILE_SUCCESS_TITLE">Success</string>
-    <string name="PROFILE_SUCCESS_MESSAGE_CHANGE">You have successfully changed your profile settings.</string>
+    <string name="PROFILE_ERROR_TITLE">Error</string>
+    <string name="PROFILE_SUCCESS_MESSAGE_CHANGE_EMAIL">You have successfully changed your email.</string>
+    <string name="PROFILE_SUCCESS_MESSAGE_CHANGE_PHONE">You have successfully changed your phone number.</string>
+    <string name="PROFILE_SUCCESS_MESSAGE_CHANGE_ADDRESS">You have successfully changed your address.</string>
     <string name="PROFILE_SUCCESS_MESSAGE_OK">Ok</string>
 </resources>

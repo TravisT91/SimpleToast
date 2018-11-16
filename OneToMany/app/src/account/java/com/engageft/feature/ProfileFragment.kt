@@ -35,16 +35,41 @@ class ProfileFragment : BaseEngageFullscreenFragment() {
         binding.palette = Palette
 
         binding.legalNameInput.setEnable(false)
-        profileViewModel.navigationObservable.observe(this, Observer { navigationEvent ->
-            when (navigationEvent) {
-                ProfileViewModel.ProfileNavigation.NONE -> {
-
+        profileViewModel.saveEventObservable.observe(this, Observer { saveEvent ->
+            saveEvent?.let {
+                var wasError = false
+                val messages = ArrayList<String>()
+                saveEvent.emailResult?.let {
+                    if (it.isSuccess) {
+                        messages.add(getString(R.string.PROFILE_SUCCESS_MESSAGE_CHANGE_EMAIL))
+                    } else {
+                        wasError = true
+                        messages.add(it.message!!)
+                    }
                 }
-                ProfileViewModel.ProfileNavigation.CHANGE_SUCCESSFUL -> {
-                    showDialog(InformationDialogFragment.newLotusInstance(title = getString(R.string.PROFILE_SUCCESS_TITLE),
-                            message = getString(R.string.PROFILE_SUCCESS_MESSAGE_CHANGE),
-                            positiveButton = getString(R.string.PROFILE_SUCCESS_MESSAGE_OK)))
+                saveEvent.phoneResult?.let {
+                    if (it.isSuccess) {
+                        messages.add(getString(R.string.PROFILE_SUCCESS_MESSAGE_CHANGE_PHONE))
+                    } else {
+                        wasError = true
+                        messages.add(it.message!!)
+                    }
                 }
+                saveEvent.addressResult?.let {
+                    if (it.isSuccess) {
+                        messages.add(getString(R.string.PROFILE_SUCCESS_MESSAGE_CHANGE_ADDRESS))
+                    } else {
+                        wasError = true
+                        messages.add(it.message!!)
+                    }
+                }
+                var message = messages.removeAt(0)
+                for (m : String in messages) {
+                    message += "\n\n" + m
+                }
+                showDialog(InformationDialogFragment.newLotusInstance(title = if (wasError) getString(R.string.PROFILE_ERROR_TITLE) else getString(R.string.PROFILE_SUCCESS_TITLE),
+                        message = message,
+                        positiveButton = getString(R.string.PROFILE_SUCCESS_MESSAGE_OK)))
             }
         })
         profileViewModel.emailValidationObservable.observe(this, Observer { error ->
