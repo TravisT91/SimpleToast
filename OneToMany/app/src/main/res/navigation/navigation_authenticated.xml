@@ -86,7 +86,7 @@
     </fragment>
     <fragment
         android:id="@+id/webViewFragment"
-        android:name="com.engageft.apptoolbox.view.WebViewFragment"
+        android:name="com.engageft.feature.WebViewFragment"
         android:label="WebViewFragment" />
 
 

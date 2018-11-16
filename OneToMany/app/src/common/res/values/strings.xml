@@ -8,4 +8,10 @@
 
     <string name="dialog_information_cancel_button">Cancel</string>
     <string name="dialog_information_ok_button">OK</string>
+    <string name="dialog_information_yes_button">Yes</string>
+    <string name="dialog_information_no_button">No</string>
+
+    <string name="MENU_SHARE">Share</string>
+    <string name="NO_PDF_APP_FOUND_TITLE">No PDF Viewer Found</string>
+    <string name="NO_PDF_APP_FOUND_MESSAGE">Would you like to find an application to view PDF documents in the Play Store?</string>
 </resources>

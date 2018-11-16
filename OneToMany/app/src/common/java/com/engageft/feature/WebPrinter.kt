@@ -1,5 +1,4 @@
-
-import android.annotation.TargetApi
+package com.engageft.feature
 import android.content.Context
 import android.os.Build
 import android.print.*
@@ -24,13 +23,11 @@ class WebPrinter(private val context: Context) {
     private val mPrintJobs = ArrayList<PrintJob>()
 
     private val printAttributes: PrintAttributes
-        @TargetApi(19)
         get() = PrintAttributes.Builder()
                 .setMediaSize(PrintAttributes.MediaSize.NA_LETTER)
                 .setResolution(PrintAttributes.Resolution("pdf", "pdf", 600, 600))
                 .setMinMargins(PrintAttributes.Margins.NO_MARGINS).build()
 
-    @TargetApi(19)
     private fun createWebPrint(printAdapter: PrintDocumentAdapter) {
         // Get a PrintManager instance
         val printManager = context.getSystemService(Context.PRINT_SERVICE) as PrintManager
@@ -43,14 +40,14 @@ class WebPrinter(private val context: Context) {
         mPrintJobs.add(printJob)
     }
 
-    @TargetApi(16)
-    private fun createLegacyWebPrint(url: String, docTitle: String) {
+//    @TargetApi(16)
+//    private fun createLegacyWebPrint(url: String, docTitle: String) {
         // TODO: implement this without Optum PrintDialogActivity?
         //        final Intent printIntent = new Intent(context, PrintDialogActivity.class);
         //        printIntent.putExtra("url", url);
         //        printIntent.putExtra("title", docTitle);
         //        context.startActivity(printIntent);
-    }
+//    }
 
     //    @TargetApi(19)
     //    private void createPdfPrint(PrintDocumentAdapter printAdapter, @NonNull String docName, PdfPrint.Listener listener) {
@@ -60,7 +57,7 @@ class WebPrinter(private val context: Context) {
     //        pdfPrint.print(printAdapter, path, docName + ".pdf", listener);
     //    }
 
-    @TargetApi(19)
+//    @TargetApi(19)
     private fun createPdfPrint(printAdapter: PrintDocumentAdapter?, docName: String, fileObserver: DisposableObserver<File>) {
         val path = File(context.cacheDir.toString() + "/pdf/")
         val pdfPrint = PdfPrint(printAttributes)
@@ -91,17 +88,18 @@ class WebPrinter(private val context: Context) {
 
 
     fun createPdfPrint(webView: WebView, docName: String, fileObserver: DisposableObserver<File>) {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-            // Get a print adapter instance
-            var printAdapter: PrintDocumentAdapter? = null
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                printAdapter = webView.createPrintDocumentAdapter(docName)
-            } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-                printAdapter = webView.createPrintDocumentAdapter(docName)
-            }
-            createPdfPrint(printAdapter, docName, fileObserver)
-        } else {
-            createLegacyWebPrint(webView.url, docName)
-        }
+//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+//
+//            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+//            } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+//                printAdapter = webView.createPrintDocumentAdapter(docName)
+//            }
+//
+//        }
+        // Get a print adapter instance
+        var printAdapter: PrintDocumentAdapter? = null
+        printAdapter = webView.createPrintDocumentAdapter(docName)
+        createPdfPrint(printAdapter, docName, fileObserver)
+//        createPdfPrint(printAdapter, "atia_$docName", fileObserver)
     }
 }

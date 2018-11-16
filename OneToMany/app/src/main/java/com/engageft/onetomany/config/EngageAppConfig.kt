@@ -14,13 +14,13 @@ import com.engageft.onetomany.BuildConfig
  */
 object EngageAppConfig : BaseAppConfig() {
     override val engageKitConfig: EngageKitConfig = object : EngageKitConfig(object : EngageKitConfig.EngageKitEnvironment() {
-        override val serviceUrl: String = "https://appdemo.onbudget.com"
-        override val websiteUrl: String = "https://dev-millennial.engageft.com"
+        override val serviceUrl: String = "https://appdemo.engageft-007.com"
+        override val websiteUrl: String = "https://dev-tutuka.engageft.com"
     }, object : EngageKitConfig.EngageKitEnvironment() {
-        override val serviceUrl: String = "https://app.onbudget.com"
-        override val websiteUrl: String = "https://account.myengageft.com"
+        override val serviceUrl: String = "https://app.engageft-007.com"
+        override val websiteUrl: String = "https://account.thepaycard.co.za"
     }) {
-        override val ipCheckUrl: String = "https://api.ipify.org/"
+        override val ipCheckUrl: String = "https://account.myengageft.com"
         override val refCode: String = "showcase"
         override val appPushParameter: String = "SHOWCASE"
         override val brand: String = "SHOWCASE"

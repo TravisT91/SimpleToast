@@ -28,3 +28,15 @@ fun infoDialogGenericErrorTitleMessageConditionalNewInstance(context: Context, d
 
     return infoDialogGenericErrorTitleMessageNewInstance(context)
 }
+
+fun infoDialogYesNoNewInstance(context: Context, title: String?, message: String?,
+                               positiveButtonText: String = context.getString(R.string.dialog_information_yes_button),
+                               negativeButtonText: String = context.getString(R.string.dialog_information_no_button),
+                               listener: InformationDialogFragment.InformationDialogFragmentListener? = null): InformationDialogFragment {
+    return InformationDialogFragment.newLotusInstance(
+            title = title,
+            message = message,
+            positiveButton = positiveButtonText,
+            negativeButton = negativeButtonText,
+            listener = listener)
+}

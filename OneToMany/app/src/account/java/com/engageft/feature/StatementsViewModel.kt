@@ -13,6 +13,7 @@ class StatementsViewModel: BaseEngageViewModel() {
     private val dateOptions = mutableListOf<DateTime>()
 
     val statementsObservable = MutableLiveData<List<DateTime>>()
+    var dayOfMonthStatementAvailable = 0
 
     init {
         loginResponse?.let {
@@ -33,10 +34,15 @@ class StatementsViewModel: BaseEngageViewModel() {
 
             //TODO get from backend DayOfMonth
             // if before 11th, then don't show last month
-            if (currDay < 11) {
+//            if (currDay < 11) {
+//                // go back another month
+//                startDate = startDate.minusMonths(1)
+//            }
+            if (currDay < familyInfo.dayOfMonthStatementAvailable) {
                 // go back another month
                 startDate = startDate.minusMonths(1)
             }
+            dayOfMonthStatementAvailable = familyInfo.dayOfMonthStatementAvailable
 
             if (familyInfo != null && hasStatementsAvailable(familyInfo)) {
                 var lastDate = BackendDateTimeUtils.parseDateTimeFromIso8601String(familyInfo.isoCreateDate)

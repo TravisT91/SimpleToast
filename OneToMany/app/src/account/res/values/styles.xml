@@ -1,2 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources></resources>
+<resources>
+    <style name="StatementsDescriptionStyle" parent="Title1Quiet">
+        <item name="android:textColor">@color/textPrimary</item>
+        <item name="android:gravity">center_horizontal</item>
+    </style>
+
+    <style name="StatementsSubDescriptionStyle" parent="BodyQuiet">
+        <item name="android:textColor">@color/textPrimary</item>
+        <item name="android:gravity">center_horizontal</item>
+        <item name="android:lineSpacingExtra">0sp</item>
+    </style>
+
+    <style name="StatementsListItemsTextAppearance" parent="Footnote">
+        <item name="android:textColor">@color/textPrimary</item>
+    </style>
+
+</resources>

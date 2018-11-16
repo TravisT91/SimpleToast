@@ -26,6 +26,7 @@ public class PdfPrint {
     private final PrintAttributes printAttributes;
 
     public PdfPrint(PrintAttributes printAttributes) {
+        Log.e(TAG, "this should get called!");
         this.printAttributes = printAttributes;
     }
 
