@@ -18,6 +18,10 @@ android {
         targetSdkVersion rootProject.targetSdkVersion
         versionCode 1
         versionName "0.0"
+        // Below is the version string that tracks real releases for this app. When creating a build for
+        // QA or release, increment and use the version string below. the master branch should always
+        // use 0.0
+        //versionName "0.0"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         multiDexEnabled true
 
