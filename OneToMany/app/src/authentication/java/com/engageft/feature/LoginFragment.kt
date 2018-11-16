@@ -19,9 +19,10 @@ import com.engageft.apptoolbox.LotusFullScreenFragment
 import com.engageft.apptoolbox.ViewUtils.newLotusInstance
 import com.engageft.apptoolbox.view.InformationDialogFragment
 import com.engageft.engagekit.utils.DeviceUtils
+import com.engageft.feature.PaletteBindings.getTextSizeAndTypefaceFromParisStyle
 import com.engageft.onetomany.R
 import com.engageft.onetomany.databinding.FragmentLoginBinding
-import kotlinx.android.synthetic.main.fragment_login.*
+
 
 /**
  * LoginFragment
@@ -47,6 +48,18 @@ class LoginFragment : LotusFullScreenFragment() {
 
         constraintSet = ConstraintSet()
         constraintSet.clone(binding.root as ConstraintLayout)
+
+        /**
+         * TEST SHOULD BE REMOVED
+         */
+
+        getTextSizeAndTypefaceFromParisStyle(context!!, Palette.BodyLoud).apply {
+            binding.usernameInput.setInputAndLabelTypeface(this.second!!)
+        }
+
+        /**
+         * END TEST
+         */
 
         val vm = (viewModel as LoginViewModel)
         binding.viewModel = vm
@@ -81,16 +94,16 @@ class LoginFragment : LotusFullScreenFragment() {
         })
         vm.usernameError.observe(this, Observer { error: LoginViewModel.UsernameValidationError ->
             when (error) {
-                LoginViewModel.UsernameValidationError.NONE -> usernameInput.setErrorTexts(null)
-                LoginViewModel.UsernameValidationError.INVALID_CREDENTIALS -> usernameInput.setErrorTexts(listOf(getString(R.string.error_message_invalid_credentials)))
+                LoginViewModel.UsernameValidationError.NONE -> binding.usernameInput.setErrorTexts(null)
+                LoginViewModel.UsernameValidationError.INVALID_CREDENTIALS -> binding.usernameInput.setErrorTexts(listOf(getString(R.string.error_message_invalid_credentials)))
             }
             // Make sure error is animated
             setLayoutTransitions()
         })
         vm.passwordError.observe(this, Observer { error: LoginViewModel.PasswordValidationError ->
             when (error) {
-                LoginViewModel.PasswordValidationError.NONE -> passwordInput.setErrorTexts(null)
-                LoginViewModel.PasswordValidationError.INVALID_CREDENTIALS -> passwordInput.setErrorTexts(listOf(getString(R.string.error_message_invalid_credentials)))
+                LoginViewModel.PasswordValidationError.NONE -> binding.passwordInput.setErrorTexts(null)
+                LoginViewModel.PasswordValidationError.INVALID_CREDENTIALS -> binding.passwordInput.setErrorTexts(listOf(getString(R.string.error_message_invalid_credentials)))
             }
             // Make sure error is animated
             setLayoutTransitions()
