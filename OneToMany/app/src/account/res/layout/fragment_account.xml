@@ -3,10 +3,10 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
-        <variable name="viewModel" type="com.engageft.feature.AccountSettingsViewModel"/>
+        <variable name="viewModel" type="com.engageft.fis.pscu.feature.AccountSettingsViewModel"/>
         <variable
             name="palette"
-            type="com.engageft.feature.Palette"/>
+            type="com.engageft.fis.pscu.feature.Palette"/>
     </data>
 
     <ScrollView

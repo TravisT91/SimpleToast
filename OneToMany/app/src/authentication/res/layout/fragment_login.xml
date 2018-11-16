@@ -4,10 +4,10 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
-        <variable name="viewModel" type="com.engageft.feature.LoginViewModel"/>
+        <variable name="viewModel" type="com.engageft.fis.pscu.feature.login.LoginViewModel"/>
         <variable
             name="palette"
-            type="com.engageft.feature.Palette"/>
+            type="com.engageft.fis.pscu.feature.Palette"/>
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
