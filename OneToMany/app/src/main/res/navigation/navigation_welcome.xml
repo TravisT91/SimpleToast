@@ -15,7 +15,7 @@
     </fragment>
     <fragment
         android:id="@+id/loginFragment"
-        android:name="com.engageft.fis.pscu.feature.LoginFragment">
+        android:name="com.engageft.fis.pscu.feature.login.LoginFragment">
         <action
             android:id="@+id/action_loginFragment_to_authenticatedActivity"
             app:destination="@id/authenticatedActivity" />
