@@ -1,18 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <style name="OverviewCardItemTextView" parent="Body">
+    <style name="DashboardCardItemTextView" parent="Body">
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:textColor">@color/structure6</item>
     </style>
 
-    <style name="OverviewBalanceAmountTextView" parent="LargeTitleQuiet">
+    <style name="DashboardBalanceAmountTextView" parent="LargeTitleQuiet">
         <item name="android:layout_width">0dp</item>
         <item name="android:layout_height">60dp</item>
-        <item name="android:layout_marginStart">@dimen/overview_balance_amount_margin_start_end</item>
-        <item name="android:layout_marginTop">@dimen/overview_balance_amount_margin_top_bottom</item>
-        <item name="android:layout_marginEnd">@dimen/overview_balance_amount_margin_start_end</item>
-        <item name="android:layout_marginBottom">@dimen/overview_balance_amount_margin_top_bottom</item>
+        <item name="android:layout_marginStart">@dimen/dashboard_balance_amount_margin_start_end</item>
+        <item name="android:layout_marginTop">@dimen/dashboard_balance_amount_margin_top_bottom</item>
+        <item name="android:layout_marginEnd">@dimen/dashboard_balance_amount_margin_start_end</item>
+        <item name="android:layout_marginBottom">@dimen/dashboard_balance_amount_margin_top_bottom</item>
         <item name="android:textColor">@color/structure6</item>
         <item name="android:maxLines">1</item>
         <item name="android:gravity">center_horizontal|bottom</item>
@@ -22,14 +22,14 @@
         <item name="autoSizeStepGranularity">2sp</item>
     </style>
 
-    <style name="OverviewBalanceLabelTextView" parent="Body">
+    <style name="DashboardBalanceLabelTextView" parent="Body">
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
-        <item name="android:layout_marginTop">@dimen/overview_balance_label_margin_top</item>
+        <item name="android:layout_marginTop">@dimen/dashboard_balance_label_margin_top</item>
         <item name="android:textColor">@color/structure5</item>
     </style>
 
-    <style name="OverviewTransactionsTabLayoutStyle" parent="Widget.MaterialComponents.TabLayout">
+    <style name="DashboardTransactionsTabLayoutStyle" parent="Widget.MaterialComponents.TabLayout">
         <item name="tabIndicatorHeight">@dimen/transactions_tab_indicator_height</item>
         <item name="tabIndicatorColor">@color/primary</item>
         <item name="android:background">@color/structure1</item>
@@ -42,13 +42,13 @@
         <item name="android:textAllCaps">true</item>
     </style>
 
-    <style name="OverviewMoreOptionsBottomSheetDialogFragmentTitleStyle" parent="Body">
+    <style name="DashboardMoreOptionsBottomSheetDialogFragmentTitleStyle" parent="Body">
         <item name="android:textColor">@color/structure5</item>
     </style>
 
-    <style name="OverviewMoreOptionsBottomSheetDialogFragmentStyle" parent="BaseListOptionsBottomSheetDialogFragmentStyle">
+    <style name="DashboardMoreOptionsBottomSheetDialogFragmentStyle" parent="BaseListOptionsBottomSheetDialogFragmentStyle">
         <item name="listOptionItemTextAppearance">@style/ListOptionsBottomSheetDialogFragmentOptionStyle</item>
-        <item name="listOptionTitleTextAppearance">@style/OverviewMoreOptionsBottomSheetDialogFragmentTitleStyle</item>
+        <item name="listOptionTitleTextAppearance">@style/DashboardMoreOptionsBottomSheetDialogFragmentTitleStyle</item>
         <item name="listOptionSubtitleTextAppearance">@style/ListOptionsBottomSheetDialogFragmentSubtitleStyle</item>
         <item name="listOptionBackground">@drawable/dialog_bottom_sheet_option_selector</item>
         <item name="listOptionHeaderMarginTop">20dp</item>

@@ -8,9 +8,9 @@ import androidx.lifecycle.ViewModelProviders
 import com.engageft.apptoolbox.LotusActivityConfig
 import com.engageft.engagekit.EngageService
 import com.engageft.engagekit.utils.LoginResponseUtils
-import com.engageft.feature.OverviewAnimationEvent
-import com.engageft.feature.OverviewNavigationEvent
-import com.engageft.feature.OverviewViewModel
+import com.engageft.feature.DashboardAnimationEvent
+import com.engageft.feature.DashboardNavigationEvent
+import com.engageft.feature.DashboardViewModel
 import com.engageft.fis.pscu.feature.authentication.BaseAuthenticatedActivity
 import com.ob.ws.dom.utility.TransactionInfo
 
@@ -21,7 +21,7 @@ class AuthenticatedActivity : BaseAuthenticatedActivity() {
         override val navigationGraphResourceId = R.navigation.navigation_authenticated
     }
 
-    private lateinit var viewModel: OverviewViewModel
+    private lateinit var viewModel: DashboardViewModel
     private var navigationEnabled = true
 
     override fun getLotusActivityConfig(): LotusActivityConfig {
@@ -37,9 +37,9 @@ class AuthenticatedActivity : BaseAuthenticatedActivity() {
         val lastFour = LoginResponseUtils.getCurrentAccountInfo(loginResponse).debitCardInfo.lastFour
         header.title = getString(R.string.nav_drawer_card_header_format, lastFour.toInt())
 
-        viewModel = ViewModelProviders.of(this).get(OverviewViewModel::class.java)
-        setupOverviewNavigationObserving()
-        setupOverviewAnimationObserving()
+        viewModel = ViewModelProviders.of(this).get(DashboardViewModel::class.java)
+        setupDashboardNavigationObserving()
+        setupDashboardAnimationObserving()
     }
 
     override fun onSupportNavigateUp(): Boolean {
@@ -50,43 +50,43 @@ class AuthenticatedActivity : BaseAuthenticatedActivity() {
         }
     }
 
-    private fun setupOverviewNavigationObserving() {
+    private fun setupDashboardNavigationObserving() {
         viewModel.navigationObservable.observe(this, Observer { (navigationEvent, item) ->
             when (navigationEvent) {
-                OverviewNavigationEvent.MOVE_MONEY -> Toast.makeText(this, "Move money selected", Toast.LENGTH_SHORT).show()
-                OverviewNavigationEvent.LOCK_UNLOCK_CARD -> Toast.makeText(this, "Lock/unlock card selected", Toast.LENGTH_SHORT).show()
-                OverviewNavigationEvent.CHANGE_PIN -> Toast.makeText(this, "Change PIN selected", Toast.LENGTH_SHORT).show()
-                OverviewNavigationEvent.REPLACE_CARD -> Toast.makeText(this, "Replace card selected", Toast.LENGTH_SHORT).show()
-                OverviewNavigationEvent.REPORT_LOST_STOLEN -> Toast.makeText(this, "Report card lost/stolen selected", Toast.LENGTH_SHORT).show()
-                OverviewNavigationEvent.CANCEL_CARD -> Toast.makeText(this, "Cancel card selected", Toast.LENGTH_SHORT).show()
-                OverviewNavigationEvent.SPENDING -> Toast.makeText(this, "Spending balance selected", Toast.LENGTH_SHORT).show()
-                OverviewNavigationEvent.SET_ASIDE -> Toast.makeText(this, "Set aside balance selected", Toast.LENGTH_SHORT).show()
-                OverviewNavigationEvent.TRANSACTION_SELECTED -> Toast.makeText(this, "Transaction selected: " + (item as? TransactionInfo)!!.store, Toast.LENGTH_SHORT).show()
-                OverviewNavigationEvent.ALERTS -> Toast.makeText(this, "Alerts selected", Toast.LENGTH_SHORT).show()
-                OverviewNavigationEvent.TRANSACTION_SEARCH -> Toast.makeText(this, "Transactions search selected", Toast.LENGTH_SHORT).show()
+                DashboardNavigationEvent.MOVE_MONEY -> Toast.makeText(this, "Move money selected", Toast.LENGTH_SHORT).show()
+                DashboardNavigationEvent.LOCK_UNLOCK_CARD -> Toast.makeText(this, "Lock/unlock card selected", Toast.LENGTH_SHORT).show()
+                DashboardNavigationEvent.CHANGE_PIN -> Toast.makeText(this, "Change PIN selected", Toast.LENGTH_SHORT).show()
+                DashboardNavigationEvent.REPLACE_CARD -> Toast.makeText(this, "Replace card selected", Toast.LENGTH_SHORT).show()
+                DashboardNavigationEvent.REPORT_LOST_STOLEN -> Toast.makeText(this, "Report card lost/stolen selected", Toast.LENGTH_SHORT).show()
+                DashboardNavigationEvent.CANCEL_CARD -> Toast.makeText(this, "Cancel card selected", Toast.LENGTH_SHORT).show()
+                DashboardNavigationEvent.SPENDING -> Toast.makeText(this, "Spending balance selected", Toast.LENGTH_SHORT).show()
+                DashboardNavigationEvent.SET_ASIDE -> Toast.makeText(this, "Set aside balance selected", Toast.LENGTH_SHORT).show()
+                DashboardNavigationEvent.TRANSACTION_SELECTED -> Toast.makeText(this, "Transaction selected: " + (item as? TransactionInfo)!!.store, Toast.LENGTH_SHORT).show()
+                DashboardNavigationEvent.ALERTS -> Toast.makeText(this, "Alerts selected", Toast.LENGTH_SHORT).show()
+                DashboardNavigationEvent.TRANSACTION_SEARCH -> Toast.makeText(this, "Transactions search selected", Toast.LENGTH_SHORT).show()
             }
         })
     }
 
-    private fun setupOverviewAnimationObserving() {
+    private fun setupDashboardAnimationObserving() {
         viewModel.animationObservable.observe(this, Observer { animationEvent ->
             when (animationEvent) {
-                OverviewAnimationEvent.EXPAND_IMMEDIATE -> {
+                DashboardAnimationEvent.EXPAND_IMMEDIATE -> {
                     //navView.visibility = View.GONE // for bottom nav
                     showToolbar(show = false, animate = false)
                 }
-                OverviewAnimationEvent.EXPAND_START -> {
+                DashboardAnimationEvent.EXPAND_START -> {
                     //navView.visibility = View.GONE // for bottom nav
                     showToolbar(show = false, animate = true)
                 }
-                OverviewAnimationEvent.EXPAND_END -> {
+                DashboardAnimationEvent.EXPAND_END -> {
                     // intentionally left blank
                 }
-                OverviewAnimationEvent.COLLAPSE_START -> {
+                DashboardAnimationEvent.COLLAPSE_START -> {
                     //navView.visibility = View.VISIBLE // for bottom nav
                     showToolbar(show = true, animate = true)
                 }
-                OverviewAnimationEvent.COLLAPSE_END -> {
+                DashboardAnimationEvent.COLLAPSE_END -> {
                     // intentionally left blank
                 }
             }
@@ -94,7 +94,7 @@ class AuthenticatedActivity : BaseAuthenticatedActivity() {
     }
 
     private fun showToolbar(show: Boolean, animate: Boolean) {
-        // animate alpha of toolbar -- fade out as OverviewView expands
+        // animate alpha of toolbar -- fade out as DashboardExpandableView expands
         val alphaEnd = if (show) {
             1F
         } else {
@@ -103,7 +103,7 @@ class AuthenticatedActivity : BaseAuthenticatedActivity() {
 
         if (animate) {
             val alphaAnimator = ObjectAnimator.ofFloat(getToolbar(), "alpha", alphaEnd)
-            alphaAnimator.duration = resources.getInteger(R.integer.overview_disclose_hide_duration_ms).toLong()
+            alphaAnimator.duration = resources.getInteger(R.integer.dashboard_disclose_hide_duration_ms).toLong()
             alphaAnimator.start()
         } else {
             getToolbar()!!.alpha = alphaEnd

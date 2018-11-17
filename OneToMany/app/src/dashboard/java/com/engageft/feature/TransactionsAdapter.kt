@@ -22,7 +22,7 @@ import kotlin.math.min
 /**
  *  TransactionsAdapter
  *  </p>
- *  RecyclerView adapter for showing all transactions or just deposit transactions in the Overview
+ *  RecyclerView adapter for showing all transactions or just deposit transactions in the Dashboard
  *  </p>
  *  Created by Kurt Mueller on 4/18/18.
  *  Copyright (c) 2018 Engage FT. All rights reserved.

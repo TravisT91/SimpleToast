@@ -26,14 +26,14 @@ import org.joda.time.Months
 import java.math.BigDecimal
 
 /**
- *  OverviewViewModel
+ *  DashboardViewModel
  *  </p>
- *  Supports OverviewView, OverviewFragment, and OverviewView
+ *  Supports DashboardExpandableView, DashboardFragment, and AuthenticatedActivity
  *  </p>
  *  Created by Kurt Mueller on 4/18/18.
  *  Copyright (c) 2018 Engage FT. All rights reserved.
  */
-class OverviewViewModel : BaseViewModel() {
+class DashboardViewModel : BaseViewModel() {
     // ProductCardView
     var cardInfoModelObservable: MutableLiveData<ProductCardModel> = MutableLiveData()
     var cardStateObservable: MutableLiveData<CardState> = MutableLiveData()
@@ -42,10 +42,10 @@ class OverviewViewModel : BaseViewModel() {
 
     // Balances
     var spendingBalanceObservable: MutableLiveData<BigDecimal> = MutableLiveData()
-    var spendingBalanceStateObservable: MutableLiveData<OverviewBalanceState> = MutableLiveData()
+    var spendingBalanceStateObservable: MutableLiveData<DashboardBalanceState> = MutableLiveData()
 
     var savingsBalanceObservable: MutableLiveData<BigDecimal> = MutableLiveData()
-    var savingsBalanceStateObservable: MutableLiveData<OverviewBalanceState> = MutableLiveData()
+    var savingsBalanceStateObservable: MutableLiveData<DashboardBalanceState> = MutableLiveData()
 
     // Transactions
     var allTransactionsObservable: MutableLiveData<List<TransactionInfo>> = MutableLiveData()
@@ -59,9 +59,9 @@ class OverviewViewModel : BaseViewModel() {
 
     val dialogInfoObservable: MutableLiveData<DashboardDialogInfo> = MutableLiveData()
     // Use Pair with event type and optional object, to pass relevant object like TransactionInfo when selected from list
-    val navigationObservable = MutableLiveData<Pair<OverviewNavigationEvent, Any>>()
+    val navigationObservable = MutableLiveData<Pair<DashboardNavigationEvent, Any>>()
 
-    val animationObservable: MutableLiveData<OverviewAnimationEvent> = MutableLiveData()
+    val animationObservable: MutableLiveData<DashboardAnimationEvent> = MutableLiveData()
 
     private lateinit var debitCardInfo: DebitCardInfo
     private var transactionsInitialized = false
@@ -163,10 +163,10 @@ class OverviewViewModel : BaseViewModel() {
 
     // Balances
     fun initBalancesAndNotifications() {
-        spendingBalanceStateObservable.value = OverviewBalanceState.LOADING
+        spendingBalanceStateObservable.value = DashboardBalanceState.LOADING
         // only change savings state if already set. Otherwise it is currently hidden in UI, so don't show loading indicator
-        if (savingsBalanceStateObservable.value == OverviewBalanceState.AVAILABLE) {
-            savingsBalanceStateObservable.value = OverviewBalanceState.LOADING
+        if (savingsBalanceStateObservable.value == DashboardBalanceState.AVAILABLE) {
+            savingsBalanceStateObservable.value = DashboardBalanceState.LOADING
         }
         compositeDisposable.add(
                 EngageService.getInstance().loginResponseAsObservable
@@ -178,25 +178,25 @@ class OverviewViewModel : BaseViewModel() {
                                 debitCardInfo?.apply {
                                     try {
                                         spendingBalanceObservable.value = BigDecimal(currentBalance)
-                                        spendingBalanceStateObservable.value = OverviewBalanceState.AVAILABLE
+                                        spendingBalanceStateObservable.value = DashboardBalanceState.AVAILABLE
                                     } catch (e: Throwable) {
                                         spendingBalanceObservable.value = BigDecimal.ZERO
-                                        spendingBalanceStateObservable.value = OverviewBalanceState.ERROR
+                                        spendingBalanceStateObservable.value = DashboardBalanceState.ERROR
                                     }
                                 } ?: run {
                                     // error getting debit card info
                                     spendingBalanceObservable.value = BigDecimal.ZERO
-                                    spendingBalanceStateObservable.value = OverviewBalanceState.ERROR
+                                    spendingBalanceStateObservable.value = DashboardBalanceState.ERROR
                                 }
 
                                 try { // TODO(kurt): hide savings entirely if no goals/savings (criteria for hiding TBD -- see FOTM-230)
                                     val goalAmount = BigDecimal(response.goalsContributed)
                                     val savingsAmount = BigDecimal(response.savingsContributed)
                                     savingsBalanceObservable.value = goalAmount.plus(savingsAmount)
-                                    savingsBalanceStateObservable.value = OverviewBalanceState.AVAILABLE
+                                    savingsBalanceStateObservable.value = DashboardBalanceState.AVAILABLE
                                 } catch (e: Throwable) {
                                     savingsBalanceObservable.value = BigDecimal.ZERO
-                                    savingsBalanceStateObservable.value = OverviewBalanceState.ERROR
+                                    savingsBalanceStateObservable.value = DashboardBalanceState.ERROR
                                 }
 
                                 updateNotifications(response)
@@ -204,9 +204,9 @@ class OverviewViewModel : BaseViewModel() {
                                 // TODO(jhutchins): Proper error handling.
                                 dialogInfoObservable.value = DashboardDialogInfo()
                                 spendingBalanceObservable.value = BigDecimal.ZERO
-                                spendingBalanceStateObservable.value = OverviewBalanceState.ERROR
+                                spendingBalanceStateObservable.value = DashboardBalanceState.ERROR
                                 savingsBalanceObservable.value = BigDecimal.ZERO
-                                savingsBalanceStateObservable.value = OverviewBalanceState.ERROR
+                                savingsBalanceStateObservable.value = DashboardBalanceState.ERROR
 
                             }
                         })
@@ -214,9 +214,9 @@ class OverviewViewModel : BaseViewModel() {
                             // TODO(jhutchins): Proper error handling.
                             dialogInfoObservable.value = DashboardDialogInfo()
                             spendingBalanceObservable.value = BigDecimal.ZERO
-                            spendingBalanceStateObservable.value = OverviewBalanceState.ERROR
+                            spendingBalanceStateObservable.value = DashboardBalanceState.ERROR
                             savingsBalanceObservable.value = BigDecimal.ZERO
-                            savingsBalanceStateObservable.value = OverviewBalanceState.ERROR
+                            savingsBalanceStateObservable.value = DashboardBalanceState.ERROR
                         }
         )
     }
@@ -372,70 +372,70 @@ class OverviewViewModel : BaseViewModel() {
         return count
     }
 
-    // These are called by OverviewFragment in response to user presses in OverviewView
+    // These are called by DashboardFragment in response to user presses in DashboardExpandableView
     fun showMoveMoney() {
-        navigationObservable.value = Pair(OverviewNavigationEvent.MOVE_MONEY, Any())
+        navigationObservable.value = Pair(DashboardNavigationEvent.MOVE_MONEY, Any())
     }
 
     fun showLockUnlockCard() {
-        navigationObservable.value = Pair(OverviewNavigationEvent.LOCK_UNLOCK_CARD, Any())
+        navigationObservable.value = Pair(DashboardNavigationEvent.LOCK_UNLOCK_CARD, Any())
     }
 
     fun showChangePin() {
-        navigationObservable.value = Pair(OverviewNavigationEvent.CHANGE_PIN, Any())
+        navigationObservable.value = Pair(DashboardNavigationEvent.CHANGE_PIN, Any())
     }
 
     fun showReplaceCard() {
-        navigationObservable.value = Pair(OverviewNavigationEvent.REPLACE_CARD, Any())
+        navigationObservable.value = Pair(DashboardNavigationEvent.REPLACE_CARD, Any())
     }
 
     fun showReportLostStolen() {
-        navigationObservable.value = Pair(OverviewNavigationEvent.REPORT_LOST_STOLEN, Any())
+        navigationObservable.value = Pair(DashboardNavigationEvent.REPORT_LOST_STOLEN, Any())
     }
 
     fun showCancelCard() {
-        navigationObservable.value = Pair(OverviewNavigationEvent.CANCEL_CARD, Any())
+        navigationObservable.value = Pair(DashboardNavigationEvent.CANCEL_CARD, Any())
     }
 
     fun showSpending() {
-        navigationObservable.value = Pair(OverviewNavigationEvent.SPENDING, Any())
+        navigationObservable.value = Pair(DashboardNavigationEvent.SPENDING, Any())
     }
 
     fun showSetAside() {
-        navigationObservable.value = Pair(OverviewNavigationEvent.SET_ASIDE, Any())
+        navigationObservable.value = Pair(DashboardNavigationEvent.SET_ASIDE, Any())
     }
 
     fun showAlerts() {
-        navigationObservable.value = Pair(OverviewNavigationEvent.ALERTS, Any())
+        navigationObservable.value = Pair(DashboardNavigationEvent.ALERTS, Any())
     }
 
     fun showTransactionSearch() {
-        navigationObservable.value = Pair(OverviewNavigationEvent.TRANSACTION_SEARCH, Any())
+        navigationObservable.value = Pair(DashboardNavigationEvent.TRANSACTION_SEARCH, Any())
     }
 
     fun showTransactionDetails(transaction: TransactionInfo) {
-        navigationObservable.value = Pair(OverviewNavigationEvent.TRANSACTION_SELECTED, transaction)
+        navigationObservable.value = Pair(DashboardNavigationEvent.TRANSACTION_SELECTED, transaction)
     }
 
-    // OverviewView animation-related functions
+    // DashboardExpandableView animation-related functions
     fun expandImmediate() {
-        animationObservable.value = OverviewAnimationEvent.EXPAND_IMMEDIATE
+        animationObservable.value = DashboardAnimationEvent.EXPAND_IMMEDIATE
     }
 
     fun expandStart() {
-        animationObservable.value = OverviewAnimationEvent.EXPAND_START
+        animationObservable.value = DashboardAnimationEvent.EXPAND_START
     }
 
     fun expandEnd() {
-        animationObservable.value = OverviewAnimationEvent.EXPAND_END
+        animationObservable.value = DashboardAnimationEvent.EXPAND_END
     }
 
     fun collapseStart() {
-        animationObservable.value = OverviewAnimationEvent.COLLAPSE_START
+        animationObservable.value = DashboardAnimationEvent.COLLAPSE_START
     }
 
     fun collapseEnd() {
-        animationObservable.value = OverviewAnimationEvent.COLLAPSE_END
+        animationObservable.value = DashboardAnimationEvent.COLLAPSE_END
     }
 
     private fun datesAreSameMonthAndYear(date1: DateTime?, date2: DateTime?): Boolean {
@@ -471,15 +471,15 @@ class OverviewViewModel : BaseViewModel() {
     }
 }
 
-enum class OverviewAnimationEvent {
+enum class DashboardAnimationEvent {
     EXPAND_IMMEDIATE, EXPAND_START, EXPAND_END, COLLAPSE_START, COLLAPSE_END
 }
 
-enum class OverviewNavigationEvent {
+enum class DashboardNavigationEvent {
     MOVE_MONEY, LOCK_UNLOCK_CARD, CHANGE_PIN, REPLACE_CARD, REPORT_LOST_STOLEN, CANCEL_CARD, SPENDING, SET_ASIDE, TRANSACTION_SELECTED, ALERTS, TRANSACTION_SEARCH
 }
 
-enum class OverviewBalanceState {
+enum class DashboardBalanceState {
     LOADING, AVAILABLE, HIDDEN, ERROR
 }
 

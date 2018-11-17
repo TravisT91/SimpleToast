@@ -4,14 +4,14 @@
     <item>
         <shape android:shape="oval">
             <size
-                android:width="@dimen/overview_disclosure_button_width_height"
-                android:height="@dimen/overview_disclosure_button_width_height"/>
+                android:width="@dimen/dashboard_disclosure_button_width_height"
+                android:height="@dimen/dashboard_disclosure_button_width_height"/>
             <solid android:color="@color/white" />
         </shape>
     </item>
 
     <item>
-        <bitmap android:src="@drawable/ic_overview_disclosure_chevron" android:gravity="center"/>
+        <bitmap android:src="@drawable/ic_dashboard_disclosure_chevron" android:gravity="center"/>
     </item>
 
 </layer-list>

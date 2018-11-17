@@ -252,7 +252,7 @@ object StringUtils {
     //                debitCardInfo.getLastFour());
     //    }
 
-    // Overview date amount status row, when give input like $225.00, make .00 some percent height of rest of text
+    // Dashboard date amount status row, when give input like $225.00, make .00 some percent height of rest of text
     // TODO(kurt) This will need to be updated to deal with other currencies, some of which may be at end of string. Currently assumes that last two chars are fraction digits.
     fun formatCurrencyStringFractionDigitsReducedHeight(amount: Float, fractionDigitsPercentHeight: Float, showZeroDigits: Boolean): CharSequence {
         val amountStringWithCurrency = formatCurrencyStringWithFractionDigits(amount, showZeroDigits)
@@ -271,15 +271,15 @@ object StringUtils {
         return formatCurrencyStringFractionDigitsReducedHeight(getFloatFromString(amountString), fractionDigitsPercentHeight, showZeroDigits)
     }
 
-    // Overview daily living top row title (like "BUDGET OCTOBER" with "OCTOBER" smaller height);
-    fun formatOverviewBudgetMonthWithMonthReducedHeight(context: Context): CharSequence {
+    // Dashboard daily living top row title (like "BUDGET OCTOBER" with "OCTOBER" smaller height);
+    fun formatDashboardBudgetMonthWithMonthReducedHeight(context: Context): CharSequence {
         val budget = context.getString(R.string.BUDGET_SUMMARY_LABEL).toUpperCase()
         val monthFull = DisplayDateTimeUtils.currentMonthFullName.toUpperCase()
         return formatStringWithEndHalfHeight(budget, monthFull)
     }
 
-    // Overview all expenses top row title (like "TOTAL SPENT OCTOBER" with "OCTOBER" smaller height);
-    fun formatOverviewTotalSpentMonthWithMonthReducedHeight(context: Context): CharSequence {
+    // Dashboard all expenses top row title (like "TOTAL SPENT OCTOBER" with "OCTOBER" smaller height);
+    fun formatDashboardTotalSpentMonthWithMonthReducedHeight(context: Context): CharSequence {
         val totalSpent = context.getString(R.string.TOTAL_SPENT_LABEL).toUpperCase()
         val monthFull = DisplayDateTimeUtils.currentMonthFullName.toUpperCase()
         return formatStringWithEndHalfHeight(totalSpent, monthFull)
@@ -610,7 +610,7 @@ object StringUtils {
         }
     }
 
-    fun getSpannableStringForOverviewPagerTitle(context: Context, titleTextWithMarkup: String): CharSequence {
+    fun getSpannableStringForDashboardPagerTitle(context: Context, titleTextWithMarkup: String): CharSequence {
         val markupStart = titleTextWithMarkup.indexOf('[')
         val markupEnd = titleTextWithMarkup.indexOf(']')
         return if (markupStart != -1 && markupEnd != -1 && markupStart < markupEnd) {

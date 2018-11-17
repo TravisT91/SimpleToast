@@ -21,9 +21,9 @@ import com.engageft.apptoolbox.BaseViewModel
 import com.engageft.apptoolbox.LotusFullScreenFragment
 import com.engageft.apptoolbox.view.ProductCardModel
 import com.engageft.apptoolbox.view.ProductCardModelCardStatus
-import com.engageft.feature.OverviewBalanceState
-import com.engageft.feature.OverviewView
-import com.engageft.feature.OverviewViewModel
+import com.engageft.feature.DashboardBalanceState
+import com.engageft.feature.DashboardExpandableView
+import com.engageft.feature.DashboardViewModel
 import com.engageft.feature.TransactionsAdapter
 import com.engageft.fis.pscu.R
 import com.engageft.fis.pscu.databinding.FragmentDashboardBinding
@@ -35,30 +35,30 @@ import utilGen1.StringUtils
 import java.math.BigDecimal
 
 /**
- * OverviewFragment
+ * DashboardFragment
  * <p>
- * UI Fragment for the Dashboard (Overview).
+ * UI Fragment for the Dashboard.
  * </p>
  * Created by joeyhutchins on 8/24/18.
  * Copyright (c) 2018 Engage FT. All rights reserved.
  */
-class OverviewFragment : LotusFullScreenFragment(), OverviewView.OverviewViewListener, TransactionsAdapter.OnTransactionsAdapterListener {
+class DashboardFragment : LotusFullScreenFragment(), DashboardExpandableView.DashboardExpandableViewListener, TransactionsAdapter.OnTransactionsAdapterListener {
     private lateinit var binding: FragmentDashboardBinding
 
-    private lateinit var overviewViewModel: OverviewViewModel
+    private lateinit var dashboardViewModel: DashboardViewModel
 
     private val cardModelObserver = Observer<ProductCardModel> { updateForCardModel(it!!) }
-    private val cardStateObserver = Observer<OverviewViewModel.CardState> { updateForCardState(it!!) }
+    private val cardStateObserver = Observer<DashboardViewModel.CardState> { updateForCardState(it!!) }
     private val cardErrorObserver = Observer<Any> { error ->
         // TODO(jhutchins): SHOW-382: Implement error handling
 //        if (error != null && error is String) showErrorDialog(error)
     }
 
     private val spendingBalanceObserver = Observer<BigDecimal> { updateSpendingBalance(it) }
-    private val spendingBalanceStateObserver = Observer<OverviewBalanceState> { updateSpendingBalanceState(it!!) }
+    private val spendingBalanceStateObserver = Observer<DashboardBalanceState> { updateSpendingBalanceState(it!!) }
 
     private val savingsBalanceObserver = Observer<BigDecimal> { updateSavingsBalance(it) }
-    private val savingsBalanceStateObserver = Observer<OverviewBalanceState> { updateSavingsBalanceState(it!!) }
+    private val savingsBalanceStateObserver = Observer<DashboardBalanceState> { updateSavingsBalanceState(it!!) }
 
     private val allTransactionsObserver = Observer<List<TransactionInfo>> { updateTransactions(it)}
     private val retrievingTransactionsFinishedObserver = Observer<Boolean> { retrievingTransactionsFinished(it)}
@@ -74,7 +74,7 @@ class OverviewFragment : LotusFullScreenFragment(), OverviewView.OverviewViewLis
 
     // views, which can't be accessed using Kotlin Android plugin because the imports created for that are flavor-specific
     private lateinit var rootLayout: ViewGroup
-    lateinit var overviewView: OverviewView
+    lateinit var dashboardExpandableView: DashboardExpandableView
     private lateinit var transactionsRecyclerView: RecyclerView
     private lateinit var overviewNestedScrollView: NestedScrollView
     private lateinit var toolbarShadowView: View
@@ -89,7 +89,7 @@ class OverviewFragment : LotusFullScreenFragment(), OverviewView.OverviewViewLis
     lateinit var messageContainer: ViewGroup
 
     override fun createViewModel(): BaseViewModel? {
-        overviewViewModel = ViewModelProviders.of(activity!!).get(OverviewViewModel::class.java)
+        dashboardViewModel = ViewModelProviders.of(activity!!).get(DashboardViewModel::class.java)
         initViewModel()
         return null
     }
@@ -103,9 +103,9 @@ class OverviewFragment : LotusFullScreenFragment(), OverviewView.OverviewViewLis
         super.onViewCreated(view, savedInstanceState)
 
         rootLayout = view.findViewById(R.id.rootLayout)
-        overviewView = view.findViewById(R.id.overviewView)
+        dashboardExpandableView = view.findViewById(R.id.dashboardExpandableView)
         transactionsRecyclerView = view.findViewById(R.id.transactionsRecyclerView)
-        overviewNestedScrollView = view.findViewById(R.id.overviewNestedScrollView)
+        overviewNestedScrollView = view.findViewById(R.id.dashboardNestedScrollView)
         toolbarShadowView = view.findViewById(R.id.toolbarShadowView)
         spendingBalanceAmount = view.findViewById(R.id.spendingBalanceAmount)
         spendingBalanceLabel = view.findViewById(R.id.spendingBalanceLabel)
@@ -115,10 +115,10 @@ class OverviewFragment : LotusFullScreenFragment(), OverviewView.OverviewViewLis
         swipeRefreshLayout = view.findViewById(R.id.swipeRefreshLayout)
         blurView = view.findViewById(R.id.blurView)
 
-        toolbarShadowAnimationScrollRange = context!!.resources.getDimensionPixelSize(R.dimen.overview_toolbar_shadow_animation_scroll_range)
+        toolbarShadowAnimationScrollRange = context!!.resources.getDimensionPixelSize(R.dimen.dashboard_toolbar_shadow_animation_scroll_range)
         toolbarShadowAnimationScrollRangeFloat = toolbarShadowAnimationScrollRange.toFloat()
 
-        overviewView.listener = this
+        dashboardExpandableView.listener = this
 
         transactionsAdapter = TransactionsAdapter(context!!, this)
         transactionsRecyclerView.apply {
@@ -148,16 +148,16 @@ class OverviewFragment : LotusFullScreenFragment(), OverviewView.OverviewViewLis
         }
 
         val spendingClickListener = View.OnClickListener {
-            if (!overviewView.showingActions) {
-                overviewViewModel.showSpending()
+            if (!dashboardExpandableView.showingActions) {
+                dashboardViewModel.showSpending()
             }
         }
         spendingBalanceAmount.setOnClickListener(spendingClickListener)
         spendingBalanceLabel.setOnClickListener(spendingClickListener)
 
         val savingsClickListener = View.OnClickListener {
-            if (!overviewView.showingActions) {
-                overviewViewModel.showSetAside()
+            if (!dashboardExpandableView.showingActions) {
+                dashboardViewModel.showSetAside()
             }
         }
         savingsBalanceAmount.setOnClickListener(savingsClickListener)
@@ -174,20 +174,20 @@ class OverviewFragment : LotusFullScreenFragment(), OverviewView.OverviewViewLis
 
             override fun onTabSelected(tab: TabLayout.Tab?) {
                 when (transactionsTabLayout!!.selectedTabPosition) {
-                    OverviewViewModel.TRANSACTIONS_TAB_POSITION_ALL -> {
+                    DashboardViewModel.TRANSACTIONS_TAB_POSITION_ALL -> {
                         transactionsAdapter.showDepositsOnly = false
                     }
-                    OverviewViewModel.TRANSACTIONS_TAB_POSITION_DEPOSITS -> {
+                    DashboardViewModel.TRANSACTIONS_TAB_POSITION_DEPOSITS -> {
                         transactionsAdapter.showDepositsOnly = true
                     }
                 }
                 // update view model with position, so that it can be set correctly when fragment is restored
-                overviewViewModel.transactionsTabPosition = transactionsTabLayout!!.selectedTabPosition
+                dashboardViewModel.transactionsTabPosition = transactionsTabLayout!!.selectedTabPosition
             }
         })
 
         swipeRefreshLayout.setOnRefreshListener {
-            overviewViewModel.refreshBalancesAndNotifications()
+            dashboardViewModel.refreshBalancesAndNotifications()
             refreshTransactions()
             // viewModel will trigger showing regular activity indicator. Don't show swipe refresh indicator too.
             swipeRefreshLayout.isRefreshing = false
@@ -206,12 +206,12 @@ class OverviewFragment : LotusFullScreenFragment(), OverviewView.OverviewViewLis
 
     private fun updateForCardModel(productCardModel: ProductCardModel) {
         productCardModel.cardStatusText = cardStatusStringFromCardStatus(productCardModel.cardStatus)
-        overviewView.cardView.updateWithProductCardModel(productCardModel)
+        dashboardExpandableView.cardView.updateWithProductCardModel(productCardModel)
 
-        overviewView.overviewLockUnlockCardIcon.setImageDrawable(
-                ContextCompat.getDrawable(context!!, if (productCardModel.cardLocked) R.drawable.ic_overview_card_unlock else R.drawable.ic_overview_card_lock)
+        dashboardExpandableView.overviewLockUnlockCardIcon.setImageDrawable(
+                ContextCompat.getDrawable(context!!, if (productCardModel.cardLocked) R.drawable.ic_dashboard_card_unlock else R.drawable.ic_dashboard_card_lock)
         )
-        overviewView.overviewLockUnlockCardLabel.text = getString(
+        dashboardExpandableView.overviewLockUnlockCardLabel.text = getString(
                 if (productCardModel.cardLocked) R.string.OVERVIEW_UNLOCK_MY_CARD else R.string.OVERVIEW_LOCK_MY_CARD
         )
     }
@@ -232,26 +232,26 @@ class OverviewFragment : LotusFullScreenFragment(), OverviewView.OverviewViewLis
         )
     }
 
-    private fun updateForCardState(cardState: OverviewViewModel.CardState) {
+    private fun updateForCardState(cardState: DashboardViewModel.CardState) {
         when (cardState) {
-            OverviewViewModel.CardState.LOADING -> {
+            DashboardViewModel.CardState.LOADING -> {
                 progressOverlayDelegate.showProgressOverlay()
-                overviewView.overviewShowHideCardDetailsLabel.text = getString(R.string.OVERVIEW_LOADING_CARD_DETAILS)
+                dashboardExpandableView.overviewShowHideCardDetailsLabel.text = getString(R.string.OVERVIEW_LOADING_CARD_DETAILS)
             }
-            OverviewViewModel.CardState.DETAILS_HIDDEN -> {
+            DashboardViewModel.CardState.DETAILS_HIDDEN -> {
                 progressOverlayDelegate.dismissProgressOverlay()
-                overviewView.overviewShowHideCardDetailsIcon.setImageDrawable(ContextCompat.getDrawable(context!!, R.drawable.ic_overview_card_details_show))
-                overviewView.overviewShowHideCardDetailsLabel.text = getString(R.string.OVERVIEW_SHOW_CARD_DETAILS)
+                dashboardExpandableView.overviewShowHideCardDetailsIcon.setImageDrawable(ContextCompat.getDrawable(context!!, R.drawable.ic_dashboard_card_details_show))
+                dashboardExpandableView.overviewShowHideCardDetailsLabel.text = getString(R.string.OVERVIEW_SHOW_CARD_DETAILS)
             }
-            OverviewViewModel.CardState.DETAILS_SHOWN -> {
+            DashboardViewModel.CardState.DETAILS_SHOWN -> {
                 progressOverlayDelegate.dismissProgressOverlay()
-                overviewView.overviewShowHideCardDetailsIcon.setImageDrawable(ContextCompat.getDrawable(context!!, R.drawable.ic_overview_card_details_hide))
-                overviewView.overviewShowHideCardDetailsLabel.text = getString(R.string.OVERVIEW_HIDE_CARD_DETAILS)
+                dashboardExpandableView.overviewShowHideCardDetailsIcon.setImageDrawable(ContextCompat.getDrawable(context!!, R.drawable.ic_dashboard_card_details_hide))
+                dashboardExpandableView.overviewShowHideCardDetailsLabel.text = getString(R.string.OVERVIEW_HIDE_CARD_DETAILS)
             }
-            OverviewViewModel.CardState.ERROR -> {
+            DashboardViewModel.CardState.ERROR -> {
                 progressOverlayDelegate.dismissProgressOverlay()
-                overviewView.overviewShowHideCardDetailsLabel.text = getString(
-                        if (overviewViewModel.isShowingCardDetails()) R.string.OVERVIEW_HIDE_CARD_DETAILS else R.string.OVERVIEW_SHOW_CARD_DETAILS
+                dashboardExpandableView.overviewShowHideCardDetailsLabel.text = getString(
+                        if (dashboardViewModel.isShowingCardDetails()) R.string.OVERVIEW_HIDE_CARD_DETAILS else R.string.OVERVIEW_SHOW_CARD_DETAILS
                 )
 
                 // TODO(jhutchins): SHOW-382: Implement error handling
@@ -261,7 +261,7 @@ class OverviewFragment : LotusFullScreenFragment(), OverviewView.OverviewViewLis
         }
 
         // don't show screen image in task switcher if showing card details
-        preventScreenCapture(overviewViewModel.isShowingCardDetails())
+        preventScreenCapture(dashboardViewModel.isShowingCardDetails())
     }
 
     fun updateSpendingBalance(spendingBalance: BigDecimal?) {
@@ -273,10 +273,10 @@ class OverviewFragment : LotusFullScreenFragment(), OverviewView.OverviewViewLis
         }
     }
 
-    fun updateSpendingBalanceState(spendingBalanceState: OverviewBalanceState) {
+    fun updateSpendingBalanceState(spendingBalanceState: DashboardBalanceState) {
         when (spendingBalanceState) {
-            OverviewBalanceState.LOADING -> spendingBalanceAmount.text = getString(R.string.OVERVIEW_BALANCE_LOADING)
-            OverviewBalanceState.ERROR -> spendingBalanceAmount.text = getString(R.string.OVERVIEW_BALANCE_ERROR)
+            DashboardBalanceState.LOADING -> spendingBalanceAmount.text = getString(R.string.OVERVIEW_BALANCE_LOADING)
+            DashboardBalanceState.ERROR -> spendingBalanceAmount.text = getString(R.string.OVERVIEW_BALANCE_ERROR)
             // don't change for other states
         }
     }
@@ -292,22 +292,22 @@ class OverviewFragment : LotusFullScreenFragment(), OverviewView.OverviewViewLis
         }
     }
 
-    fun updateSavingsBalanceState(savingsBalanceState: OverviewBalanceState) {
+    fun updateSavingsBalanceState(savingsBalanceState: DashboardBalanceState) {
         when (savingsBalanceState) {
-            OverviewBalanceState.LOADING -> {
+            DashboardBalanceState.LOADING -> {
                 savingsBalanceAmount.text = getString(R.string.OVERVIEW_BALANCE_LOADING)
                 savingsBalanceAmount.visibility = View.VISIBLE
                 savingsBalanceLabel.visibility = View.VISIBLE
             }
-            OverviewBalanceState.HIDDEN -> {
+            DashboardBalanceState.HIDDEN -> {
                 savingsBalanceAmount.visibility = View.GONE
                 savingsBalanceLabel.visibility = View.GONE
             }
-            OverviewBalanceState.AVAILABLE -> {
+            DashboardBalanceState.AVAILABLE -> {
                 savingsBalanceAmount.visibility = View.VISIBLE
                 savingsBalanceLabel.visibility = View.VISIBLE
             }
-            OverviewBalanceState.ERROR -> savingsBalanceAmount.text = getString(R.string.OVERVIEW_BALANCE_ERROR)
+            DashboardBalanceState.ERROR -> savingsBalanceAmount.text = getString(R.string.OVERVIEW_BALANCE_ERROR)
         }
     }
 
@@ -330,22 +330,22 @@ class OverviewFragment : LotusFullScreenFragment(), OverviewView.OverviewViewLis
     fun showMessageContainerWithView(messageView: View) {
         messageContainer.addView(messageView)
         messageContainer.visibility = View.VISIBLE
-        overviewView.showExpandCollapseButton(false)
+        dashboardExpandableView.showExpandCollapseButton(false)
     }
 
     fun hideMessageContainer() {
         messageContainer.visibility = View.INVISIBLE
         messageContainer.removeAllViews()
-        overviewView.showExpandCollapseButton(true)
+        dashboardExpandableView.showExpandCollapseButton(true)
     }
 
     fun getAnimationDurationMs(): Long {
-        return overviewView.animationDurationMs
+        return dashboardExpandableView.animationDurationMs
     }
 
     fun refreshTransactions() {
         transactionsAdapter.notifyRetrievingTransactionsStarted()
-        overviewViewModel.refreshTransactions()
+        dashboardViewModel.refreshTransactions()
     }
 
     private fun preventScreenCapture(prevent: Boolean) {
@@ -357,7 +357,7 @@ class OverviewFragment : LotusFullScreenFragment(), OverviewView.OverviewViewLis
         }
     }
 
-    // for use when restoring OverviewView in onSaveInstanceState
+    // for use when restoring DashboardExpandableView in onSaveInstanceState
     private fun showObscuringOverlayImmediate() {
         scrollDisabled = true
         transactionsAdapter.transactionSelectionEnabled = false
@@ -366,18 +366,18 @@ class OverviewFragment : LotusFullScreenFragment(), OverviewView.OverviewViewLis
     }
 
     private fun showObscuringOverlay(show: Boolean) {
-        // animate alpha of obscuring overlay over transactions -- fade in as OverviewView expands
+        // animate alpha of obscuring overlay over transactions -- fade in as DashboardExpandableView expands
         val alphaEnd: Float
 
         if (show) {
             alphaEnd = 1F
 
-            // if the main scrollView is not at the top, scroll to top now. Otherwise expanded OverviewView
+            // if the main scrollView is not at the top, scroll to top now. Otherwise expanded DashboardExpandableView
             // may be partially offscreen.
             if (overviewNestedScrollView.scrollY != 0) {
                 overviewNestedScrollView.scrollTo(0, 0)
             }
-            // Don't let user scroll or click transactions when OverviewView is expanded
+            // Don't let user scroll or click transactions when DashboardExpandableView is expanded
             scrollDisabled = true
             transactionsAdapter.transactionSelectionEnabled = false
         } else {
@@ -385,64 +385,64 @@ class OverviewFragment : LotusFullScreenFragment(), OverviewView.OverviewViewLis
         }
 
         val alphaAnimator = ObjectAnimator.ofFloat(blurView,"alpha", alphaEnd)
-        alphaAnimator.duration = overviewView.animationDurationMs
+        alphaAnimator.duration = dashboardExpandableView.animationDurationMs
         blurView.visibility = View.VISIBLE
         alphaAnimator.start()
     }
 
     private fun initViewModel() {
-        overviewViewModel = ViewModelProviders.of(activity!!).get(OverviewViewModel::class.java)
-        overviewViewModel.expirationDateFormatString = getString(R.string.MONTH_YEAR_FORMAT)
-        overviewViewModel.cardInfoModelObservable.observe(this, cardModelObserver)
-        overviewViewModel.cardStateObservable.observe(this, cardStateObserver)
+        dashboardViewModel = ViewModelProviders.of(activity!!).get(DashboardViewModel::class.java)
+        dashboardViewModel.expirationDateFormatString = getString(R.string.MONTH_YEAR_FORMAT)
+        dashboardViewModel.cardInfoModelObservable.observe(this, cardModelObserver)
+        dashboardViewModel.cardStateObservable.observe(this, cardStateObserver)
         // TODO(jhutchins): Error handling
-//        overviewViewModel.errorObservable.observe(this, cardErrorObserver)
-        overviewViewModel.initCardView()
+//        dashboardViewModel.errorObservable.observe(this, cardErrorObserver)
+        dashboardViewModel.initCardView()
 
-        overviewViewModel.spendingBalanceObservable.observe(this, spendingBalanceObserver)
-        overviewViewModel.spendingBalanceStateObservable.observe(this, spendingBalanceStateObserver)
+        dashboardViewModel.spendingBalanceObservable.observe(this, spendingBalanceObserver)
+        dashboardViewModel.spendingBalanceStateObservable.observe(this, spendingBalanceStateObserver)
 
-        overviewViewModel.savingsBalanceObservable.observe(this, savingsBalanceObserver)
-        overviewViewModel.savingsBalanceStateObservable.observe(this, savingsBalanceStateObserver)
+        dashboardViewModel.savingsBalanceObservable.observe(this, savingsBalanceObserver)
+        dashboardViewModel.savingsBalanceStateObservable.observe(this, savingsBalanceStateObserver)
 
-        overviewViewModel.allTransactionsObservable.observe(this, allTransactionsObserver)
-        overviewViewModel.retrievingTransactionsFinishedObservable.observe(this, retrievingTransactionsFinishedObserver)
+        dashboardViewModel.allTransactionsObservable.observe(this, allTransactionsObserver)
+        dashboardViewModel.retrievingTransactionsFinishedObservable.observe(this, retrievingTransactionsFinishedObserver)
 
-        overviewViewModel.notificationsCountObservable.observe(this, notificationsObserver)
+        dashboardViewModel.notificationsCountObservable.observe(this, notificationsObserver)
 
         // make sure correct tab is showing, after return from TransactionDetailFragment, in particular
-        transactionsTabLayout?.getTabAt(overviewViewModel.transactionsTabPosition)?.select()
+        transactionsTabLayout?.getTabAt(dashboardViewModel.transactionsTabPosition)?.select()
 
-        overviewViewModel.initBalancesAndNotifications()
-        overviewViewModel.initTransactions()
+        dashboardViewModel.initBalancesAndNotifications()
+        dashboardViewModel.initTransactions()
     }
 
     override fun onExpandImmediate() {
         showObscuringOverlayImmediate()
-        overviewViewModel.expandImmediate()
+        dashboardViewModel.expandImmediate()
 
         blurView.setOnClickListener {
-            overviewView.showActions(false)
+            dashboardExpandableView.showActions(false)
         }
     }
 
     override fun onExpandStart() {
         showObscuringOverlay(true)
-        overviewViewModel.expandStart()
+        dashboardViewModel.expandStart()
 
         blurView.setOnClickListener {
-            overviewView.showActions(false)
+            dashboardExpandableView.showActions(false)
         }
     }
 
     override fun onExpandEnd() {
-        overviewViewModel.expandEnd()
+        dashboardViewModel.expandEnd()
     }
 
     override fun onCollapseStart() {
-        overviewViewModel.hideCardDetails()
+        dashboardViewModel.hideCardDetails()
         showObscuringOverlay(false)
-        overviewViewModel.collapseStart()
+        dashboardViewModel.collapseStart()
 
         blurView.setOnClickListener(null)
     }
@@ -451,46 +451,46 @@ class OverviewFragment : LotusFullScreenFragment(), OverviewView.OverviewViewLis
         blurView.visibility = View.INVISIBLE
         scrollDisabled = false
         transactionsAdapter.transactionSelectionEnabled = true
-        overviewViewModel.collapseEnd()
+        dashboardViewModel.collapseEnd()
     }
 
     override fun onShowHideCardDetails() {
-        if (overviewViewModel.isShowingCardDetails()) {
-            overviewViewModel.hideCardDetails()
+        if (dashboardViewModel.isShowingCardDetails()) {
+            dashboardViewModel.hideCardDetails()
         } else {
             //val dialogFragment = PasswordAuthenticationDialogFragment.newInstance(AUTHENTICATION_REVEAL_CARD_DIALOG_TAG, getString(R.string.BUTTON_CANCEL))
             //dialogFragment.show(childFragmentManager, AUTHENTICATION_REVEAL_CARD_DIALOG_TAG)
             // TODO(kurt): hide this behind password auth, once we have PasswordAuthDialogFragment (SHOW-376)
-            overviewViewModel.showCardDetails()
+            dashboardViewModel.showCardDetails()
         }
     }
 
     override fun onMoveMoney() {
-        overviewViewModel.showMoveMoney()
+        dashboardViewModel.showMoveMoney()
     }
 
     override fun onLockUnlockCard() {
-        overviewViewModel.showLockUnlockCard()
+        dashboardViewModel.showLockUnlockCard()
     }
 
     override fun onChangePin() {
-        overviewViewModel.showChangePin()
+        dashboardViewModel.showChangePin()
     }
 
     override fun onReplaceCard() {
-        overviewViewModel.showReplaceCard()
+        dashboardViewModel.showReplaceCard()
     }
 
     override fun onReportCardLostStolen() {
-        overviewViewModel.showReportLostStolen()
+        dashboardViewModel.showReportLostStolen()
     }
 
     override fun onCancelCard() {
-        overviewViewModel.showCancelCard()
+        dashboardViewModel.showCancelCard()
     }
 
     // TransactionsAdapter.OnTransactionsAdapterListener
     override fun onTransactionInfoSelected(transactionInfo: TransactionInfo) {
-        overviewViewModel.showTransactionDetails(transactionInfo)
+        dashboardViewModel.showTransactionDetails(transactionInfo)
     }
 }

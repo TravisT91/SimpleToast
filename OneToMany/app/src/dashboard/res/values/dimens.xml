@@ -1,35 +1,35 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <dimen name="overview_toolbar_shadow_height">6dp</dimen>
-    <dimen name="overview_toolbar_shadow_animation_scroll_range">28dp</dimen>
+    <dimen name="dashboard_toolbar_shadow_height">6dp</dimen>
+    <dimen name="dashboard_toolbar_shadow_animation_scroll_range">28dp</dimen>
 
-    <dimen name="overview_card_view_height">164dp</dimen>
+    <dimen name="dashboard_card_view_height">164dp</dimen>
 
-    <dimen name="overview_actions_top_margin">200dp</dimen>
+    <dimen name="dashboard_actions_top_margin">200dp</dimen>
 
-    <dimen name="overview_shadow_above_transparent_bar_height">12dp</dimen>
+    <dimen name="dashboard_shadow_above_transparent_bar_height">12dp</dimen>
     <!-- though button is 32dp tall, and this transparent view is intended to hold the bottom
     half of the button, it needs to be 16 + 8 = 24dp tall to accommodate the 8dp shadow on the button.
     This may change if/when the button image includes a shadow, which it currently doesn't. -->
-    <dimen name="overview_transparent_bar_below_card_view_height">24dp</dimen>
+    <dimen name="dashboard_transparent_bar_below_card_view_height">24dp</dimen>
 
-    <dimen name="overview_disclosure_button_width_height">30dp</dimen>
+    <dimen name="dashboard_disclosure_button_width_height">30dp</dimen>
 
-    <dimen name="overview_balance_amount_margin_start_end">4dp</dimen>
-    <dimen name="overview_balance_amount_margin_top_bottom">8dp</dimen>
-    <dimen name="overview_balance_label_margin_top">4dp</dimen>
+    <dimen name="dashboard_balance_amount_margin_start_end">4dp</dimen>
+    <dimen name="dashboard_balance_amount_margin_top_bottom">8dp</dimen>
+    <dimen name="dashboard_balance_label_margin_top">4dp</dimen>
 
-    <dimen name="overview_action_list_width">240dp</dimen>
-    <dimen name="overview_action_item_icon_width">50dp</dimen>
-    <dimen name="overview_action_item_icon_height">30dp</dimen>
+    <dimen name="dashboard_action_list_width">240dp</dimen>
+    <dimen name="dashboard_action_item_icon_width">50dp</dimen>
+    <dimen name="dashboard_action_item_icon_height">30dp</dimen>
 
-    <dimen name="overview_card_and_actions_height_collapsed">132dp</dimen>
-    <dimen name="overview_card_and_actions_height_expanded">444dp</dimen>
+    <dimen name="dashboard_card_and_actions_height_collapsed">132dp</dimen>
+    <dimen name="dashboard_card_and_actions_height_expanded">444dp</dimen>
 
     <!-- leave a little room when moving the card view to the top (expanded) for the shadow,
     otherwise it will be clipped -->
-    <dimen name="overview_card_view_top_margin_collapsed">30dp</dimen>
-    <dimen name="overview_card_view_top_margin_expanded">6dp</dimen>
+    <dimen name="dashboard_card_view_top_margin_collapsed">30dp</dimen>
+    <dimen name="dashboard_card_view_top_margin_expanded">6dp</dimen>
 
     <!-- radius of BlurView blur -->
     <item name="blur_radius" format="float" type="dimen">6.0</item>

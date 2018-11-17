@@ -6,19 +6,19 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <include layout="@layout/cl_overview_card_view_and_actions" android:id="@+id/cl_card_view_and_actions"/>
+    <include layout="@layout/cl_dashboard_card_view_and_actions" android:id="@+id/cl_card_view_and_actions"/>
 
     <View
         android:id="@+id/view_transparent_bar_below_card_view"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/overview_transparent_bar_below_card_view_height"
+        android:layout_height="@dimen/dashboard_transparent_bar_below_card_view_height"
         app:layout_constraintTop_toBottomOf="@id/cl_card_view_and_actions"
         android:background="@android:color/transparent" />
 
     <View
         android:id="@+id/view_shadow_above_transparent_bar"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/overview_shadow_above_transparent_bar_height"
+        android:layout_height="@dimen/dashboard_shadow_above_transparent_bar_height"
         android:background="@drawable/card_and_actions_bottom_shadow_gradient"
         app:layout_constraintBottom_toTopOf="@id/view_transparent_bar_below_card_view"
         />
@@ -27,7 +27,7 @@
         android:id="@+id/btn_disclose_hide_card_actions"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:srcCompat="@drawable/ic_overview_disclosure_button"
+        app:srcCompat="@drawable/ic_dashboard_disclosure_button"
         android:background="@drawable/round_button_background_for_elevation"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintBottom_toBottomOf="@+id/view_transparent_bar_below_card_view"

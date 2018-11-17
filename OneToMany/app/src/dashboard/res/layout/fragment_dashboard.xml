@@ -15,7 +15,7 @@
             android:layout_height="match_parent">
 
             <androidx.core.widget.NestedScrollView
-                android:id="@+id/overviewNestedScrollView"
+                android:id="@+id/dashboardNestedScrollView"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:fillViewport="true">
@@ -30,13 +30,13 @@
                     <androidx.constraintlayout.widget.ConstraintLayout
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:layout_marginTop="@dimen/overview_card_and_actions_height_collapsed"
-                        android:background="@color/overview_tinted_background"
+                        android:layout_marginTop="@dimen/dashboard_card_and_actions_height_collapsed"
+                        android:background="@color/dashboard_tinted_background"
                         android:descendantFocusability="blocksDescendants">
 
                         <TextView
                             android:id="@+id/spendingBalanceAmount"
-                            style="@style/OverviewBalanceAmountTextView"
+                            style="@style/DashboardBalanceAmountTextView"
                             app:layout_constraintStart_toStartOf="parent"
                             app:layout_constraintTop_toTopOf="parent"
                             app:layout_constraintEnd_toStartOf="@id/savingsBalanceAmount"
@@ -45,7 +45,7 @@
 
                         <TextView
                             android:id="@+id/spendingBalanceLabel"
-                            style="@style/OverviewBalanceLabelTextView"
+                            style="@style/DashboardBalanceLabelTextView"
                             app:layout_constraintStart_toStartOf="@id/spendingBalanceAmount"
                             app:layout_constraintTop_toBottomOf="@id/spendingBalanceAmount"
                             app:layout_constraintEnd_toEndOf="@id/spendingBalanceAmount"
@@ -53,7 +53,7 @@
 
                         <TextView
                             android:id="@+id/savingsBalanceAmount"
-                            style="@style/OverviewBalanceAmountTextView"
+                            style="@style/DashboardBalanceAmountTextView"
                             app:layout_constraintStart_toEndOf="@id/spendingBalanceAmount"
                             app:layout_constraintTop_toTopOf="parent"
                             app:layout_constraintEnd_toEndOf="parent"
@@ -62,7 +62,7 @@
 
                         <TextView
                             android:id="@+id/savingsBalanceLabel"
-                            style="@style/OverviewBalanceLabelTextView"
+                            style="@style/DashboardBalanceLabelTextView"
                             app:layout_constraintStart_toStartOf="@id/savingsBalanceAmount"
                             app:layout_constraintTop_toBottomOf="@id/savingsBalanceAmount"
                             app:layout_constraintEnd_toEndOf="@id/savingsBalanceAmount"
@@ -77,7 +77,7 @@
                             app:layout_constraintEnd_toEndOf="parent"
                             app:layout_constraintBottom_toTopOf="@+id/transactionsRecyclerView"
                             android:layout_marginTop="8dp"
-                            style="@style/OverviewTransactionsTabLayoutStyle">
+                            style="@style/DashboardTransactionsTabLayoutStyle">
 
                             <com.google.android.material.tabs.TabItem
                                 android:id="@+id/allActivityTabItem"
@@ -119,13 +119,13 @@
                         android:id="@+id/blurView"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:layout_marginTop="@dimen/overview_card_and_actions_height_collapsed"
-                        app:blurOverlayColor="@color/overview_obscuring_overlay"
+                        android:layout_marginTop="@dimen/dashboard_card_and_actions_height_collapsed"
+                        app:blurOverlayColor="@color/dashboard_obscuring_overlay"
                         android:visibility="invisible"
                         android:alpha="0" />
 
-                    <com.engageft.feature.OverviewView
-                        android:id="@+id/overviewView"
+                    <com.engageft.feature.DashboardExpandableView
+                        android:id="@+id/dashboardExpandableView"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"/>
 
@@ -138,7 +138,7 @@
         <View
             android:id="@+id/toolbarShadowView"
             android:layout_width="match_parent"
-            android:layout_height="@dimen/overview_toolbar_shadow_height"
+            android:layout_height="@dimen/dashboard_toolbar_shadow_height"
             android:background="@drawable/toolbar_shadow_gradient"
             android:visibility="invisible"
             tools:visibility="visible"/>

@@ -21,17 +21,17 @@ import com.engageft.apptoolbox.view.ProductCardView
 import com.engageft.engagekit.EngageService
 import com.engageft.engagekit.tools.MixpanelEvent
 import com.engageft.fis.pscu.R
-import com.engageft.fis.pscu.R.style.OverviewMoreOptionsBottomSheetDialogFragmentStyle
+import com.engageft.fis.pscu.R.style.DashboardMoreOptionsBottomSheetDialogFragmentStyle
 
 /**
- *  OverviewView
+ *  DashboardExpandableView
  *  </p>
- *  Manages Overview card view, action items list, and spend/save/transactions info
+ *  Manages Dashboard card view and action items list.
  *  </p>
  *  Created by Kurt Mueller on 4/18/18.
  *  Copyright (c) 2018 Engage FT. All rights reserved.
  */
-class OverviewView : ConstraintLayout {
+class DashboardExpandableView : ConstraintLayout {
 
     private lateinit var cardAndActionsView: ViewGroup
     lateinit var cardView: ProductCardView
@@ -57,7 +57,7 @@ class OverviewView : ConstraintLayout {
     private var cardViewAnimationDelayMs = 0L
     private var buttonRotationAnimationDurationMs = 0L
 
-    var listener: OverviewViewListener? = null
+    var listener: DashboardExpandableViewListener? = null
 
     constructor(context: Context) : super(context) {
         initializeViews()
@@ -75,8 +75,8 @@ class OverviewView : ConstraintLayout {
         const val MORE_CARD_OPTIONS_DIALOG_TAG = "MORE_CARD_OPTIONS_DIALOG_TAG"
     }
 
-    // Must save expanded/collapsed state so that it is shown correctly after returning to Overview from
-    // a fragment like card lock/unlock that is displayed while Overview is expanded. View is recreated
+    // Must save expanded/collapsed state so that it is shown correctly after returning to Dashboard from
+    // a fragment like card lock/unlock that is displayed while Dashboard is expanded. View is recreated
     // in this case, and will always be collapsed unless state is saved and restored.
     // See https://medium.com/@kirillsuslov/how-to-save-android-view-state-in-kotlin-9dbe96074d49
     public override fun onSaveInstanceState(): Parcelable? {
@@ -133,10 +133,10 @@ class OverviewView : ConstraintLayout {
 
     private fun initializeViews() {
         val inflater = context.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
-        inflater.inflate(R.layout.view_overview, this)
+        inflater.inflate(R.layout.view_dashboard_expandable, this)
 
         cardAndActionsView = findViewById(R.id.cl_card_view_and_actions)
-        cardView = findViewById(R.id.cv_overview)
+        cardView = findViewById(R.id.cv_dashboard)
         actionsView = findViewById(R.id.layout_card_actions)
         expandCollapseButton = findViewById(R.id.btn_disclose_hide_card_actions)
         transparentBarBelowCardView = findViewById(R.id.view_transparent_bar_below_card_view)
@@ -190,14 +190,14 @@ class OverviewView : ConstraintLayout {
             showActions(!showingActions)
         }
 
-        cardAndActionsViewCollapsedHeight = context.resources.getDimensionPixelSize(R.dimen.overview_card_and_actions_height_collapsed)
-        cardAndActionsViewExpandedHeight = context.resources.getDimensionPixelSize(R.dimen.overview_card_and_actions_height_expanded)
-        cardViewTopMarginCollapsed = context.resources.getDimensionPixelSize(R.dimen.overview_card_view_top_margin_collapsed)
-        cardViewTopMarginExpanded = context.resources.getDimensionPixelSize(R.dimen.overview_card_view_top_margin_expanded)
+        cardAndActionsViewCollapsedHeight = context.resources.getDimensionPixelSize(R.dimen.dashboard_card_and_actions_height_collapsed)
+        cardAndActionsViewExpandedHeight = context.resources.getDimensionPixelSize(R.dimen.dashboard_card_and_actions_height_expanded)
+        cardViewTopMarginCollapsed = context.resources.getDimensionPixelSize(R.dimen.dashboard_card_view_top_margin_collapsed)
+        cardViewTopMarginExpanded = context.resources.getDimensionPixelSize(R.dimen.dashboard_card_view_top_margin_expanded)
 
-        animationDurationMs = resources.getInteger(R.integer.overview_disclose_hide_duration_ms).toLong()
+        animationDurationMs = resources.getInteger(R.integer.dashboard_disclose_hide_duration_ms).toLong()
         cardViewAnimationDelayMs = animationDurationMs * 7 / 10
-        buttonRotationAnimationDurationMs = resources.getInteger(R.integer.overview_button_rotation_duration_ms).toLong()
+        buttonRotationAnimationDurationMs = resources.getInteger(R.integer.dashboard_button_rotation_duration_ms).toLong()
     }
 
     private fun showMoreOptionsBottomNav() {
@@ -225,7 +225,7 @@ class OverviewView : ConstraintLayout {
                     override fun onDialogCancelled() {
                         // Do nothing.
                     }
-                }, context.getString(R.string.OVERVIEW_MORE_CARD_OPTIONS), stringOptions, null, OverviewMoreOptionsBottomSheetDialogFragmentStyle)
+                }, context.getString(R.string.OVERVIEW_MORE_CARD_OPTIONS), stringOptions, null, DashboardMoreOptionsBottomSheetDialogFragmentStyle)
         dialog.show((context as BaseActivity).supportFragmentManager, MORE_CARD_OPTIONS_DIALOG_TAG)
     }
 
@@ -424,7 +424,7 @@ class OverviewView : ConstraintLayout {
         cardView.hideMessage()
     }
 
-    interface OverviewViewListener {
+    interface DashboardExpandableViewListener {
         fun onExpandImmediate()
         fun onExpandStart()
         fun onExpandEnd()
