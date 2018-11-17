@@ -20,8 +20,8 @@ import com.engageft.apptoolbox.view.ListBottomSheetDialogFragment
 import com.engageft.apptoolbox.view.ProductCardView
 import com.engageft.engagekit.EngageService
 import com.engageft.engagekit.tools.MixpanelEvent
-import com.engageft.onetomany.R
-import com.engageft.onetomany.R.style.OverviewMoreOptionsBottomSheetDialogFragmentStyle
+import com.engageft.fis.pscu.R
+import com.engageft.fis.pscu.R.style.OverviewMoreOptionsBottomSheetDialogFragmentStyle
 
 /**
  *  OverviewView

@@ -8,7 +8,7 @@ import com.engageft.engagekit.utils.PayPlanInfoUtils.PAY_PLAN_MONTH
 import com.engageft.engagekit.utils.PayPlanInfoUtils.PAY_PLAN_PAYCHECK
 import com.engageft.engagekit.utils.PayPlanInfoUtils.PAY_PLAN_QUARTER
 import com.engageft.engagekit.utils.PayPlanInfoUtils.PAY_PLAN_WEEK
-import com.engageft.onetomany.R
+import com.engageft.fis.pscu.R
 import com.ob.ws.dom.utility.BillInfo
 import com.ob.ws.dom.utility.GoalInfo
 import java.util.*

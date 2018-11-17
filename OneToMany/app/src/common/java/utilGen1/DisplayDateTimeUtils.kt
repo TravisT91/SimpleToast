@@ -3,8 +3,8 @@ package utilGen1
 import android.content.Context
 import android.text.TextUtils
 import android.util.Log
-import com.engageft.onetomany.OneToManyApplication
-import com.engageft.onetomany.R
+import com.engageft.fis.pscu.OneToManyApplication
+import com.engageft.fis.pscu.R
 import org.joda.time.DateTime
 import org.joda.time.Days
 import org.joda.time.Hours

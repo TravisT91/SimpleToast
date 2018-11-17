@@ -14,24 +14,20 @@ import android.text.style.ForegroundColorSpan
 import android.text.style.RelativeSizeSpan
 import androidx.core.content.ContextCompat
 import androidx.core.content.res.ResourcesCompat
-
 import com.engageft.apptoolbox.util.CurrencyUtils
 import com.engageft.engagekit.EngageService
 import com.engageft.engagekit.utils.BackendDateTimeUtils
 import com.engageft.engagekit.utils.DebitCardInfoUtils
-import com.engageft.onetomany.OneToManyApplication
-import com.engageft.onetomany.R
+import com.engageft.fis.pscu.OneToManyApplication
+import com.engageft.fis.pscu.R
 import com.ob.ws.dom.utility.AddressInfo
 import com.ob.ws.dom.utility.DebitCardInfo
 import com.ob.ws.dom.utility.GoalInfo
 import com.ob.ws.dom.utility.PayPlanInfo
-
 import org.joda.time.DateTime
-
 import java.text.DecimalFormatSymbols
 import java.text.NumberFormat
-import java.util.ArrayList
-import java.util.Currency
+import java.util.*
 
 /**
  * TODO: CLASS NAME

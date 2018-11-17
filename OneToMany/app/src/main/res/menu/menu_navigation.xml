@@ -20,30 +20,35 @@
     <item
         android:id="@+id/dashboard_fragment"
         android:title="@string/nav_drawer_title_dashboard"
-        android:icon="@drawable/ic_overview"/>
-    <item
-        android:id="@+id/budgets_fragment"
-        android:title="@string/nav_drawer_title_budgets"
-        android:icon="@drawable/ic_budgets"/>
-    <item
-        android:id="@+id/goals_fragment"
-        android:title="@string/nav_drawer_title_goals"
-        android:icon="@drawable/ic_goals"/>
-    <item
-        android:id="@+id/cardManagementFragment"
-        android:title="@string/nav_drawer_title_cardmanagement"
-        android:icon="@drawable/ic_account"/>
-    <item
-        android:id="@+id/account_fragment"
-        android:title="@string/nav_drawer_title_account"
-        android:icon="@drawable/ic_account"/>
-    <item
-        android:id="@+id/helpFragment"
-        android:title="@string/nav_drawer_title_help"
-        android:icon="@drawable/ic_account"/>
+        />
     <item
         android:id="@+id/moveMoneyFragment"
         android:title="@string/TITLE_MOVE_MONEY"
+        />
+    <item
+        android:id="@+id/account_fragment"
+        android:title="@string/nav_drawer_title_account"
+        />
+    <item
+        android:id="@+id/helpFragment"
+        android:title="@string/nav_drawer_title_help"
+        />
+    <item
+        android:id="@+id/space"
+        android:enabled="false"
+        android:title=""/>
+    <item
+        android:id="@+id/menuCardNumberHeader"
+        android:enabled="false"
+        android:title="@string/nav_drawer_card_header_format"/>
+    <!--<menu>-->
+    <item
+        android:id="@+id/budgets_fragment"
+        android:title="@string/nav_drawer_title_budgets"
+        />
+    <item
+        android:id="@+id/goals_fragment"
+        android:title="@string/nav_drawer_title_goals"
         />
 
 </menu>

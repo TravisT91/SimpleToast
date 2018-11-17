@@ -10,7 +10,7 @@ import android.widget.TextView
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.engageft.engagekit.tools.StorageManager
-import com.engageft.onetomany.R
+import com.engageft.fis.pscu.R
 import com.ob.domain.lookup.TransactionStatus
 import com.ob.domain.lookup.TransactionType
 import com.ob.ws.dom.utility.TransactionInfo
