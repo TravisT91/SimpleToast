@@ -1,19 +1,16 @@
 package com.engageft.feature
 
+import android.app.Activity.RESULT_OK
 import android.content.ActivityNotFoundException
 import android.content.Context
 import android.content.Intent
-import android.net.*
+import android.net.ConnectivityManager
+import android.net.MailTo
+import android.net.Uri
 import android.os.Build
 import android.os.Bundle
-import android.util.Log
 import android.util.TypedValue
-import android.view.MenuItem
-import android.view.MenuInflater
-import android.view.LayoutInflater
-import android.view.Menu
-import android.view.View
-import android.view.ViewGroup
+import android.view.*
 import android.webkit.WebResourceError
 import android.webkit.WebResourceRequest
 import android.webkit.WebView
@@ -21,29 +18,28 @@ import android.webkit.WebViewClient
 import androidx.core.content.ContextCompat
 import androidx.core.content.FileProvider
 import androidx.navigation.fragment.findNavController
-
 import com.engageft.apptoolbox.BaseViewModel
 import com.engageft.apptoolbox.LotusFullScreenFragment
+import com.engageft.apptoolbox.util.MenuTint
 import com.engageft.apptoolbox.view.InformationDialogFragment
 import com.engageft.apptoolbox.view.ScrollToBottomWebView
 import com.engageft.onetomany.R
 import io.reactivex.observers.DisposableObserver
-
 import org.jsoup.Jsoup
-
 import java.io.File
 import java.io.IOException
 import java.net.MalformedURLException
 import java.net.URL
-import java.util.ArrayList
+import java.util.*
 
 
 /**
- * TODO: CLASS NAME
+ * WebViewFragment
  *
- * TODO: CLASS DESCRIPTION
+ * TODO
  *
  * Created by Kurt Mueller on 2/20/17.
+ * Converted to Kotlin, imported partially by Atia Hashimi on 11/16/18.
  * Copyright (c) 2017 Engage FT. All rights reserved.
  */
 class WebViewFragment : LotusFullScreenFragment() {
@@ -86,8 +82,6 @@ class WebViewFragment : LotusFullScreenFragment() {
 
         val view = inflater.inflate(R.layout.fragment_webview, container, false)
         webView = view.findViewById(R.id.webView)
-        // todo set color is possible thru Paris
-//        webView.setBackgroundColor(ContextCompat.getColor(getContext(), R.color.themeBackground))
 
         webView.settings.javaScriptEnabled = true
 
@@ -188,8 +182,7 @@ class WebViewFragment : LotusFullScreenFragment() {
 
         val item = menu.findItem(R.id.menu_item_share)
         item.icon = drawable
-        //TODO: color paris?
-//        MenuTint.colorIcons(getActivity(), menu, ContextCompat.getColor(getContext(), R.color.themeNavigationTint))
+        MenuTint.colorIcons(activity, menu, ContextCompat.getColor(context!!, R.color.menuTint))
         super.onPrepareOptionsMenu(menu)
     }
 
@@ -256,6 +249,16 @@ class WebViewFragment : LotusFullScreenFragment() {
         }
     }
 
+    //TODO(aHashimi): Is there a way to intercept/override navigatioUp without ?
+//    fun goBack(): Boolean {
+//        if (webView != null && webView!!.canGoBack()) {
+//            webView!!.goBack()
+//
+//            return true
+//        }
+//        return false
+//    }
+
     fun exportPdfIntent() {
         WebPrinter(context!!).createPdfPrint(webView, title!!.replace(" ", "_"), object : DisposableObserver<File>() {
             override fun onNext(file: File) {
@@ -265,7 +268,6 @@ class WebViewFragment : LotusFullScreenFragment() {
                             context!!,
                             context!!.applicationContext.packageName + ".file_provider",
                             file)
-                    Log.d(TAG, "onImageClick() filePath: " + fileUri!!.path!!)
                 } catch (e: Exception) {
                     e.printStackTrace()
                 }
@@ -275,10 +277,8 @@ class WebViewFragment : LotusFullScreenFragment() {
                     // Grant temporary read permission to the content URI
                     intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
                     intent.setDataAndType(fileUri, "application/pdf")
-                    // if (intent.resolveActivity(activity!!.packageManager) != null) {
                     intent.resolveActivity(context!!.packageManager)?.let {
-                        startActivity(intent)
-//                        startActivityForResult(intent, 100)
+                        startActivityForResult(intent, 0)
                     } ?: run {
                         openPlayStoreForPdfApps()
                     }
@@ -294,12 +294,13 @@ class WebViewFragment : LotusFullScreenFragment() {
         })
     }
 
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent) {
-        Log.e(TAG, "requestCodpaye $requestCode")
-        if (requestCode == 0 && showPdfImmediately) {
-            findNavController().popBackStack()
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (resultCode != RESULT_OK) {
+            if (requestCode == 0 && showPdfImmediately) {
+                findNavController().popBackStack()
+            }
         }
-//        super.onActivityResult(requestCode, resultCode, data)
     }
 
     private fun openPlayStoreForPdfApps() {
@@ -327,8 +328,6 @@ class WebViewFragment : LotusFullScreenFragment() {
     }
 
     companion object {
-
-        val TAG = "WebViewFragment"
 
         private const val ARG_TITLE = "ARG_TITLE"
         private const val ARG_INITIAL_URL = "ARG_INITIAL_URL"

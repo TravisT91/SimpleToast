@@ -1,7 +1,6 @@
 package com.engageft.feature
 
 import android.os.Bundle
-import android.util.Log
 import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
@@ -49,10 +48,30 @@ class StatementsFragment: LotusFullScreenFragment() {
         statementsViewModel.statementsObservable.observe(this, Observer { statementsList ->
             updateRecyclerView(statementsList)
         })
+
+        //TODO(aHashimi): make this reusable.
+        statementsViewModel.dialogInfoObservable.observe(this, Observer { dialogInfo ->
+            when (dialogInfo.dialogType) {
+                DialogInfo.DialogType.GENERIC_ERROR -> {
+                    showDialog(infoDialogGenericErrorTitleMessageConditionalNewInstance(context!!, dialogInfo))
+                }
+                DialogInfo.DialogType.SERVER_ERROR -> {
+                    showDialog(infoDialogGenericErrorTitleMessageConditionalNewInstance(context!!, dialogInfo))
+                }
+                DialogInfo.DialogType.NO_INTERNET_CONNECTION -> {
+                    showDialog(infoDialogGenericErrorTitleMessageNewInstance(
+                            context!!, message = getString(R.string.alert_error_message_no_internet_connection)))
+                }
+                DialogInfo.DialogType.CONNECTION_TIMEOUT -> {
+                    showDialog(infoDialogGenericErrorTitleMessageNewInstance(context!!, getString(R.string.alert_error_message_connection_timeout)))
+                }
+                else -> {}
+            }
+        })
+
         return binding.root
     }
 
-    val TAG = "StatementsFragment"
     private fun updateRecyclerView(statementsList: List<DateTime>) {
         sectionAdapter.removeAllSections()
 
@@ -61,7 +80,7 @@ class StatementsFragment: LotusFullScreenFragment() {
                     .applyTypefaceAndColorToSubString(ResourcesCompat.getFont(context!!, R.font.font_bold)!!,
                             ContextCompat.getColor(context!!, R.color.statementSubstringDescription), getString(R.string.statements_description_substring))
             val subTitle = String.format(getString(R.string.statements_subDescription_format),
-                    statementsViewModel.dayOfMonthStatementAvailable)
+                    DisplayDateTimeUtils.getOrdinal(context!!, statementsViewModel.dayOfMonthStatementAvailable))
 
             sectionAdapter.addSection(HeaderLabelTitleWithSubtitleSection(title, subTitle, R.layout.statements_header_section))
 

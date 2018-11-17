@@ -29,23 +29,6 @@ open class BaseEngageViewModel: BaseViewModel() {
 
     val dialogInfoObservable: MutableLiveData<DialogInfo> = MutableLiveData()
 
-    fun refreshLoginResponse() {
-        compositeDisposable.add(EngageService.getInstance().loginResponseAsObservable
-                        .subscribeOn(Schedulers.io())
-                        .observeOn(AndroidSchedulers.mainThread())
-                        .subscribe({ response ->
-                            if (response is LoginResponse) {
-                                loginResponse = response
-                            } else {
-                                // TODO show error dialog
-                            }
-                        }, { e ->
-                            // TODO error show dialog
-                            handleThrowable(e)
-                        })
-        )
-    }
-
     fun handleThrowable(e: Throwable)  {
         when (e) {
             is UnknownHostException -> {

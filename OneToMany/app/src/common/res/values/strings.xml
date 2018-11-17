@@ -29,4 +29,9 @@
         <item quantity="one">1 hr</item>
         <item quantity="other">%d hrs</item>
     </plurals>
+
+    <string name="ORDINAL_ST">st</string>
+    <string name="ORDINAL_ND">nd</string>
+    <string name="ORDINAL_RD">rd</string>
+    <string name="ORDINAL_TH">th</string>
 </resources>
