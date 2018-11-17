@@ -14,6 +14,7 @@
     <string name="MENU_SHARE">Share</string>
     <string name="NO_PDF_APP_FOUND_TITLE">No PDF Viewer Found</string>
     <string name="NO_PDF_APP_FOUND_MESSAGE">Would you like to find an application to view PDF documents in the Play Store?</string>
+    <string name="WEBVIEW_NO_EMAIL_CLIENT_FOUND">No email client app found!</string>
 
     <!-- times -->
     <string name="DATE_JUST_NOW">just now</string>

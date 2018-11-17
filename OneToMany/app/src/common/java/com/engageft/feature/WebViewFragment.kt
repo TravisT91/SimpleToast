@@ -1,29 +1,29 @@
 package com.engageft.feature
 
-import android.app.Activity
 import android.content.ActivityNotFoundException
 import android.content.Context
 import android.content.Intent
 import android.net.*
-import android.os.AsyncTask
 import android.os.Build
 import android.os.Bundle
-import android.os.Handler
 import android.util.Log
 import android.util.TypedValue
-import android.view.*
+import android.view.MenuItem
+import android.view.MenuInflater
+import android.view.LayoutInflater
+import android.view.Menu
+import android.view.View
+import android.view.ViewGroup
 import android.webkit.WebResourceError
 import android.webkit.WebResourceRequest
 import android.webkit.WebView
 import android.webkit.WebViewClient
 import androidx.core.content.ContextCompat
 import androidx.core.content.FileProvider
-import androidx.lifecycle.ViewModelProviders
 import androidx.navigation.fragment.findNavController
 
 import com.engageft.apptoolbox.BaseViewModel
 import com.engageft.apptoolbox.LotusFullScreenFragment
-import com.engageft.apptoolbox.ViewUtils.newLotusInstance
 import com.engageft.apptoolbox.view.InformationDialogFragment
 import com.engageft.apptoolbox.view.ScrollToBottomWebView
 import com.engageft.onetomany.R
@@ -49,9 +49,7 @@ import java.util.ArrayList
 class WebViewFragment : LotusFullScreenFragment() {
 
     // Using custom WebView, even though only need its functionality when showing agreements.
-//    private var webView: AgreementsWebView? = null
     private lateinit var webView: ScrollToBottomWebView
-//    private lateinit var webViewViewModel: WebViewViewModel
     private var title: String? = null
     private var initialUrl: String? = null
 
@@ -65,20 +63,9 @@ class WebViewFragment : LotusFullScreenFragment() {
     private var listener: OnWebViewFragmentListener? = null
 
     override fun createViewModel(): BaseViewModel? {
-//        webViewViewModel = ViewModelProviders.of(this).get(WebViewViewModel::class.java)
         return null
     }
 
-    private var onBottomReachedListener: ScrollToBottomWebView.OnBottomReachedListener? = null
-//    private var minDistance: Int = 0
-
-//    fun setOnBottomReachedListener(listener: AgreementsWebView.OnBottomReachedListener, minDistance: Int) {
-//        onBottomReachedListener = listener
-//        this.minDistance = minDistance
-//        if (webView != null) {
-//            webView!!.setOnBottomReachedListener(listener, minDistance)
-//        }
-//    }
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let { args ->
@@ -103,8 +90,6 @@ class WebViewFragment : LotusFullScreenFragment() {
 //        webView.setBackgroundColor(ContextCompat.getColor(getContext(), R.color.themeBackground))
 
         webView.settings.javaScriptEnabled = true
-        // show progress until network is checked and url is loaded
-        showProgressOverlay()
 
         if (showPdfImmediately) {
             webView.visibility = View.GONE
@@ -137,57 +122,59 @@ class WebViewFragment : LotusFullScreenFragment() {
             }
         }
 
+        if (!initialUrl.isNullOrEmpty()) {
+            if (!isNetworkAvailable()) {
+                val listener = object: InformationDialogFragment.InformationDialogFragmentListener {
+                    override fun onDialogFragmentNegativeButtonClicked() {}
+
+                    override fun onDialogFragmentPositiveButtonClicked() {
+                        findNavController().popBackStack()
+                    }
+
+                    override fun onDialogCancelled() {
+                        findNavController().popBackStack()
+                    }
+
+                }
+                showDialog(infoDialogGenericErrorTitleMessageNewInstance(context!!,
+                        message = getString(R.string.alert_error_message_no_internet_connection),
+                        listener = listener))
+            } else {
+                showProgressOverlay()
+
+                if (forPrint) {
+                    Thread(Runnable {
+                        val result = extractOutHeadersAndProxyJS()
+
+                        activity?.let { currentActivity ->
+                            if (!currentActivity.isFinishing) {
+                                currentActivity.runOnUiThread {
+                                    result?.let { url ->
+                                        loadWebView(url)
+                                    } ?: run {
+                                        showDialog(infoDialogGenericErrorTitleMessageNewInstance(context!!))
+                                    }
+                                }
+                            }
+                        }
+                    }).start()
+                } else {
+                    webView.loadUrl(initialUrl)
+                }
+            }
+        }
+
         return view
     }
 
-    override fun onResume() {
-        super.onResume()
-        // todo does it need to be done here?
-        registerNetworkCallback()
-    }
-
-    private val networkCallback = object: ConnectivityManager.NetworkCallback() {
-        override fun onAvailable(network: Network?) {
-            super.onAvailable(network)
-            Log.e(TAG, "network = onAvailable")
-            loadUrl()
+    private fun isNetworkAvailable(): Boolean {
+        val connectivityManager = context!!.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+        var connected = false
+        if (connectivityManager.activeNetworkInfo != null && connectivityManager.activeNetworkInfo.isConnected) {
+            connected = true
         }
-
-        override fun onUnavailable() {
-            super.onUnavailable()
-            Log.e(TAG, "network = onUnavailable")
-        }
-        // todo: check lost/losing etc with nexus 5 phone
+        return connected
     }
-
-    private fun registerNetworkCallback() {
-        val cm = context!!.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
-        cm.registerNetworkCallback(NetworkRequest.Builder()
-                    .addTransportType(NetworkCapabilities.TRANSPORT_CELLULAR)
-                    .addTransportType(NetworkCapabilities.TRANSPORT_WIFI)
-                    .build(), networkCallback)
-    }
-
-    private fun loadUrl() {
-        if (forPrint) {
-            Thread(Runnable {
-                val result = extractOut()
-                (context as? Activity)?.runOnUiThread { result?.let { updateWebView(it) } }
-            }).start()
-        } else {
-            webView.loadUrl(initialUrl)
-        }
-    }
-
-    override fun onDestroyView() {
-        super.onDestroyView()
-        val cm = context!!.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
-        cm.unregisterNetworkCallback(networkCallback)
-    }
-
-    //
-//        return view
-//    }
 
     override fun onCreateOptionsMenu(menu: Menu, menuInflater: MenuInflater) {
         menu.clear()
@@ -230,7 +217,7 @@ class WebViewFragment : LotusFullScreenFragment() {
             if (infos.size > 0) {
                 startActivity(i)
             } else {
-//                showErrorDialog(getString(R.string.WEBVIEW_NO_EMAIL_CLIENT_FOUND))
+                showDialog(infoDialogGenericErrorTitleMessageNewInstance(context!!, message = getString(R.string.WEBVIEW_NO_EMAIL_CLIENT_FOUND)))
             }
 
             view.reload()
@@ -238,72 +225,6 @@ class WebViewFragment : LotusFullScreenFragment() {
         }
         return handled
     }
-
-
-
-//
-//    fun onAttach(context: Context) {
-//        super.onAttach(context)
-//
-//        try {
-//            listener = context as OnWebViewFragmentListener
-//        } catch (e: ClassCastException) {
-//            // okay if no listener here. Will use EventBus instead. See loadSuccess() and loadFailure(String errorMessage).
-//            // Because this fragment is used both in an Activity fragment container and in a fragment's child fragment container,
-//            // support both listener and EventBus. Otherwise for child fragment, activity would have to implement listener
-//            // interface and then find the parent fragment and send messages to it. EventBus is cleaner in this case.
-//        }
-//    }
-
-//    fun onResume() {
-//        super.onResume()
-//
-//        if (!TextUtils.isEmpty(title)) {
-//            setTitle(title)
-//        } else {
-//            clearTitleAndSubtitle()
-//        }
-//    }
-
-    fun goBack(): Boolean {
-        if (webView != null && webView!!.canGoBack()) {
-            webView!!.goBack()
-
-            return true
-        }
-
-        return false
-    }
-
-//    private fun htmlObservable(url: String): Observable<String> {
-//        return Observable.defer {
-//            try {
-//                return@Observable.defer Observable . just getHtml(url)
-//            } catch (e: IOException) {
-//                return@Observable.defer Observable . error e
-//            }
-//        }
-//    }
-
-//    @Throws(IOException::class)
-//    private fun getHtml(urlString: String): String {
-//        val url = URL(urlString)
-//        val connection = url.openConnection() as HttpURLConnection
-//        connection.requestMethod = "GET"
-//        val responseCode = connection.responseCode
-//        if (responseCode != 200) {
-//            throw IOException("Non-200 response code getting: $urlString")
-//        } else {
-//            val output = StringBuilder()
-//            val br = BufferedReader(InputStreamReader(connection.inputStream))
-//            var line: String
-//            while ((line = br.readLine()) != null) {
-//                output.append(line)
-//            }
-//            br.close()
-//            return output.toString()
-//        }
-//    }
 
     private fun removeHeadersAndFooter() {
         webView.loadUrl("javascript:(function() { " +
@@ -324,15 +245,12 @@ class WebViewFragment : LotusFullScreenFragment() {
     }
 
     private fun loadSuccess() {
-        Log.e(TAG, "loadSuccess")
         if (listener != null) {
             listener!!.onWebViewLoadSuccess()
         }
-
     }
 
     private fun loadFailure(errorMessage: String) {
-        Log.e(TAG, "errorMessage $errorMessage")
         if (listener != null) {
             listener!!.onWebViewLoadFailure(errorMessage)
         }
@@ -368,8 +286,8 @@ class WebViewFragment : LotusFullScreenFragment() {
             }
 
             override fun onError(e: Throwable) {
-//                handleThrowable(e)
-                e.printStackTrace()
+                handleGenericThrowable(e)
+                showDialog(infoDialogGenericErrorTitleMessageNewInstance(context!!))
             }
 
             override fun onComplete() {}
@@ -402,6 +320,7 @@ class WebViewFragment : LotusFullScreenFragment() {
                 message = getString(R.string.NO_PDF_APP_FOUND_MESSAGE), listener = listener))
     }
 
+    // TODO(aHashimi): can we change this to LiveData's?
     interface OnWebViewFragmentListener {
         fun onWebViewLoadSuccess()
         fun onWebViewLoadFailure(message: String)
@@ -411,15 +330,13 @@ class WebViewFragment : LotusFullScreenFragment() {
 
         val TAG = "WebViewFragment"
 
-        private val OPEN_PLAY_STORE_DIALOG_TAG = "OPEN_PLAY_STORE_DIALOG_TAG"
-
-        protected val ARG_TITLE = "ARG_TITLE"
-        protected val ARG_INITIAL_URL = "ARG_INITIAL_URL"
-        private val ARG_BASE_URL = "ARG_BASE_URL"
-        private val ARG_URLS_TO_MERGE = "ARG_URLS_TO_MERGE"
-        private val ARG_TITLES_TO_MERGE = "ARG_TITLES_TO_MERGE"
-        protected val ARG_FOR_PRINT = "ARG_FOR_PRINT"
-        private val ARG_SHOW_PDF_IMMEDIATELY = "ARG_SHOW_PDF_IMMEDIATELY"
+        private const val ARG_TITLE = "ARG_TITLE"
+        private const val ARG_INITIAL_URL = "ARG_INITIAL_URL"
+        private const val ARG_BASE_URL = "ARG_BASE_URL"
+        private const val ARG_URLS_TO_MERGE = "ARG_URLS_TO_MERGE"
+        private const val ARG_TITLES_TO_MERGE = "ARG_TITLES_TO_MERGE"
+        private const val ARG_FOR_PRINT = "ARG_FOR_PRINT"
+        private const val ARG_SHOW_PDF_IMMEDIATELY = "ARG_SHOW_PDF_IMMEDIATELY"
 
         fun newInstance(title: String, initialUrl: String): WebViewFragment {
             return newInstance(title, initialUrl, false, false)
@@ -432,7 +349,7 @@ class WebViewFragment : LotusFullScreenFragment() {
             args.putString(ARG_INITIAL_URL, initialUrl)
             args.putBoolean(ARG_FOR_PRINT, forPrint)
             args.putBoolean(ARG_SHOW_PDF_IMMEDIATELY, showPdfImmediately)
-            webViewFragment.setArguments(args)
+            webViewFragment.arguments = args
 
             return webViewFragment
         }
@@ -444,7 +361,7 @@ class WebViewFragment : LotusFullScreenFragment() {
             args.putString(ARG_BASE_URL, baseUrl)
             args.putStringArrayList(ARG_URLS_TO_MERGE, urlsToMerge)
             args.putStringArrayList(ARG_TITLES_TO_MERGE, titlesToMerge)
-            webViewFragment.setArguments(args)
+            webViewFragment.arguments = args
 
             return webViewFragment
         }
@@ -459,8 +376,7 @@ class WebViewFragment : LotusFullScreenFragment() {
         }
     }
 
-    //todo what happens when we don't this?
-    private fun extractOut() : String? {
+    private fun extractOutHeadersAndProxyJS() : String? {
         try {
             val doc = Jsoup.connect(initialUrl).get()
             doc.select("*.hidden-print").remove()
@@ -473,22 +389,23 @@ class WebViewFragment : LotusFullScreenFragment() {
                     element.remove()
                 }
             }
-            return doc.toString().replace("<h1", "<h3").replace("<h2", "<h3") // h1 and h2 styles render huge on the screen
+            // h1 and h2 styles render huge on the screen
+            return doc.toString().replace("<h1", "<h3").replace("<h2", "<h3")
         } catch (e: IOException) {
-            //TODO
-
-//                loadFailure(getString(R.string.ERROR_GENERIC))
+            handleGenericThrowable(e)
+            showDialog(infoDialogGenericErrorTitleMessageNewInstance(context!!))
             return null
         }
     }
 
-    private fun updateWebView(result: String) {
+    private fun loadWebView(result: String) {
         try {
             val url = URL(initialUrl)
             val protocolAndHost = url.protocol + "://" + url.host
             webView.loadDataWithBaseURL(protocolAndHost, result, "text/html", "utf-8", null)
         } catch (e: MalformedURLException) {
-//                loadFailure(getString(R.string.ERROR_GENERIC))
+            handleGenericThrowable(e)
+            showDialog(infoDialogGenericErrorTitleMessageNewInstance(context!!))
         }
     }
 }

@@ -8,11 +8,13 @@ import com.engageft.onetomany.R
 fun infoDialogGenericErrorTitleMessageNewInstance(context: Context,
                                                   title: String = context.getString(R.string.alert_error_title_generic),
                                                   message: String = context.getString(R.string.alert_error_message_generic),
-                                                  positiveButtonText: String = context.getString(R.string.dialog_information_ok_button)) : InformationDialogFragment {
+                                                  positiveButtonText: String = context.getString(R.string.dialog_information_ok_button),
+                                                  listener: InformationDialogFragment.InformationDialogFragmentListener? = null) : InformationDialogFragment {
     return InformationDialogFragment.newLotusInstance(
             title = title,
             message = message,
-            positiveButton = positiveButtonText)
+            positiveButton = positiveButtonText,
+            listener = listener)
 }
 
 fun infoDialogSimpleMessageNoTitle(context: Context, message: String,

@@ -4,6 +4,7 @@ import androidx.lifecycle.MutableLiveData
 import com.engageft.apptoolbox.BaseViewModel
 import com.engageft.apptoolbox.BuildConfig
 import com.engageft.engagekit.EngageService
+import com.engageft.engagekit.rest.exception.NoConnectivityException
 import com.ob.ws.dom.LoginResponse
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
@@ -39,7 +40,7 @@ open class BaseEngageViewModel: BaseViewModel() {
                                 // TODO show error dialog
                             }
                         }, { e ->
-                            // TODO errorshow dialog
+                            // TODO error show dialog
                             handleThrowable(e)
                         })
         )
@@ -50,7 +51,7 @@ open class BaseEngageViewModel: BaseViewModel() {
             is UnknownHostException -> {
                 dialogInfoObservable.value = DialogInfo(dialogType = DialogInfo.DialogType.NO_INTERNET_CONNECTION)
             }
-            is ConnectException -> {
+            is NoConnectivityException -> {
                 dialogInfoObservable.value = DialogInfo(dialogType = DialogInfo.DialogType.NO_INTERNET_CONNECTION)
             }
             is SocketTimeoutException -> {

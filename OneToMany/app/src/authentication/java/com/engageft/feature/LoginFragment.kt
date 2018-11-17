@@ -145,14 +145,13 @@ class LoginFragment : LotusFullScreenFragment() {
             }
         })
 
-        vm.dialogInfoObservable.observe(this, Observer {
-            val loginDialogInfo = it as LoginDialogInfo
-            when (loginDialogInfo.dialogType) {
+        vm.dialogInfoObservable.observe(this, Observer { dialogInfo ->
+            when (dialogInfo.dialogType) {
                 DialogInfo.DialogType.GENERIC_ERROR -> {
-                    showDialog(infoDialogGenericErrorTitleMessageConditionalNewInstance(context!!, loginDialogInfo))
+                    showDialog(infoDialogGenericErrorTitleMessageConditionalNewInstance(context!!, dialogInfo))
                 }
                 DialogInfo.DialogType.SERVER_ERROR -> {
-                    showDialog(infoDialogGenericErrorTitleMessageConditionalNewInstance(context!!, loginDialogInfo))
+                    showDialog(infoDialogGenericErrorTitleMessageConditionalNewInstance(context!!, dialogInfo))
                 }
                 DialogInfo.DialogType.NO_INTERNET_CONNECTION -> {
                     showDialog(infoDialogGenericErrorTitleMessageNewInstance(
@@ -162,7 +161,7 @@ class LoginFragment : LotusFullScreenFragment() {
                     showDialog(infoDialogGenericErrorTitleMessageNewInstance(context!!, getString(R.string.alert_error_message_connection_timeout)))
                 }
                 DialogInfo.DialogType.OTHER -> {
-                    when (loginDialogInfo.loginDialogType) {
+                    when ((dialogInfo as LoginDialogInfo).loginDialogType) {
 
                         LoginDialogInfo.LoginDialogType.EMAIL_VERIFICATION_PROMPT -> {
                             val listener = object : InformationDialogFragment.InformationDialogFragmentListener {
