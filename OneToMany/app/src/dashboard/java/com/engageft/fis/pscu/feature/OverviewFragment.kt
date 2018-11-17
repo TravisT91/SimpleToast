@@ -25,6 +25,7 @@ import com.engageft.feature.OverviewBalanceState
 import com.engageft.feature.OverviewView
 import com.engageft.feature.OverviewViewModel
 import com.engageft.feature.TransactionsAdapter
+import com.engageft.fis.pscu.R
 import com.engageft.fis.pscu.databinding.FragmentDashboardBinding
 import com.google.android.material.tabs.TabLayout
 import com.ob.ws.dom.utility.TransactionInfo
@@ -32,17 +33,16 @@ import eightbitlab.com.blurview.BlurView
 import eightbitlab.com.blurview.RenderScriptBlur
 import utilGen1.StringUtils
 import java.math.BigDecimal
-import com.engageft.fis.pscu.R
 
 /**
- * DashboardFragment
+ * OverviewFragment
  * <p>
  * UI Fragment for the Dashboard (Overview).
  * </p>
  * Created by joeyhutchins on 8/24/18.
  * Copyright (c) 2018 Engage FT. All rights reserved.
  */
-class DashboardFragment : LotusFullScreenFragment(), OverviewView.OverviewViewListener, TransactionsAdapter.OnTransactionsAdapterListener {
+class OverviewFragment : LotusFullScreenFragment(), OverviewView.OverviewViewListener, TransactionsAdapter.OnTransactionsAdapterListener {
     private lateinit var binding: FragmentDashboardBinding
 
     private lateinit var overviewViewModel: OverviewViewModel
@@ -64,8 +64,6 @@ class DashboardFragment : LotusFullScreenFragment(), OverviewView.OverviewViewLi
     private val retrievingTransactionsFinishedObserver = Observer<Boolean> { retrievingTransactionsFinished(it)}
 
     private val notificationsObserver = Observer<Int> { activity?.invalidateOptionsMenu() }
-
-    private var listener: OverviewFragmentListener? = null
 
     private var toolbarShadowAnimationScrollRange: Int = 0
     private var toolbarShadowAnimationScrollRangeFloat: Float = 0F
@@ -95,6 +93,7 @@ class DashboardFragment : LotusFullScreenFragment(), OverviewView.OverviewViewLi
         initViewModel()
         return null
     }
+
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         binding = DataBindingUtil.inflate(layoutInflater, R.layout.fragment_dashboard, container, false)
         return binding.root
@@ -150,7 +149,7 @@ class DashboardFragment : LotusFullScreenFragment(), OverviewView.OverviewViewLi
 
         val spendingClickListener = View.OnClickListener {
             if (!overviewView.showingActions) {
-                listener?.onSpendingBalanceSelected()
+                overviewViewModel.showSpending()
             }
         }
         spendingBalanceAmount.setOnClickListener(spendingClickListener)
@@ -158,7 +157,7 @@ class DashboardFragment : LotusFullScreenFragment(), OverviewView.OverviewViewLi
 
         val savingsClickListener = View.OnClickListener {
             if (!overviewView.showingActions) {
-                listener?.onSavingsBalanceSelected()
+                overviewViewModel.showSetAside()
             }
         }
         savingsBalanceAmount.setOnClickListener(savingsClickListener)
@@ -339,6 +338,11 @@ class DashboardFragment : LotusFullScreenFragment(), OverviewView.OverviewViewLi
         messageContainer.removeAllViews()
         overviewView.showExpandCollapseButton(true)
     }
+
+    fun getAnimationDurationMs(): Long {
+        return overviewView.animationDurationMs
+    }
+
     fun refreshTransactions() {
         transactionsAdapter.notifyRetrievingTransactionsStarted()
         overviewViewModel.refreshTransactions()
@@ -413,44 +417,41 @@ class DashboardFragment : LotusFullScreenFragment(), OverviewView.OverviewViewLi
         overviewViewModel.initTransactions()
     }
 
-    interface OverviewFragmentListener {
-        fun onOverviewViewCollapseStart()
-        fun onOverviewViewCollapseEnd()
-        fun onOverviewViewExpandImmediate()
-        fun onOverviewViewExpandStart()
-        fun onOverviewViewExpandEnd()
-        fun onSpendingBalanceSelected()
-        fun onSavingsBalanceSelected()
-        fun onTransactionInfoSelected(transactionInfo: TransactionInfo)
-        fun onAlertsNotificationsOptionsItem()
-        fun onTransactionsSearchOptionsItem()
-    }
-
     override fun onExpandImmediate() {
         showObscuringOverlayImmediate()
-        listener?.onOverviewViewExpandImmediate()
+        overviewViewModel.expandImmediate()
+
+        blurView.setOnClickListener {
+            overviewView.showActions(false)
+        }
     }
 
     override fun onExpandStart() {
         showObscuringOverlay(true)
-        listener?.onOverviewViewExpandStart()
+        overviewViewModel.expandStart()
+
+        blurView.setOnClickListener {
+            overviewView.showActions(false)
+        }
     }
 
     override fun onExpandEnd() {
-        listener?.onOverviewViewExpandEnd()
+        overviewViewModel.expandEnd()
     }
 
     override fun onCollapseStart() {
         overviewViewModel.hideCardDetails()
         showObscuringOverlay(false)
-        listener?.onOverviewViewCollapseStart()
+        overviewViewModel.collapseStart()
+
+        blurView.setOnClickListener(null)
     }
 
     override fun onCollapseEnd() {
         blurView.visibility = View.INVISIBLE
         scrollDisabled = false
         transactionsAdapter.transactionSelectionEnabled = true
-        listener?.onOverviewViewCollapseEnd()
+        overviewViewModel.collapseEnd()
     }
 
     override fun onShowHideCardDetails() {
@@ -490,6 +491,6 @@ class DashboardFragment : LotusFullScreenFragment(), OverviewView.OverviewViewLi
 
     // TransactionsAdapter.OnTransactionsAdapterListener
     override fun onTransactionInfoSelected(transactionInfo: TransactionInfo) {
-        listener?.onTransactionInfoSelected(transactionInfo)
+        overviewViewModel.showTransactionDetails(transactionInfo)
     }
 }

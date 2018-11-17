@@ -7,7 +7,7 @@
 
     <fragment
         android:id="@+id/dashboard_fragment"
-        android:name="com.engageft.fis.pscu.feature.DashboardFragment"
+        android:name="com.engageft.fis.pscu.feature.OverviewFragment"
         android:label="@string/fragment_title_dashboard"
         tools:layout="@layout/fragment_dashboard"/>
     <fragment

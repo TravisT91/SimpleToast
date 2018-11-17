@@ -47,7 +47,7 @@ class OverviewViewModel : BaseViewModel() {
     var savingsBalanceObservable: MutableLiveData<BigDecimal> = MutableLiveData()
     var savingsBalanceStateObservable: MutableLiveData<OverviewBalanceState> = MutableLiveData()
 
-    // Transctions
+    // Transactions
     var allTransactionsObservable: MutableLiveData<List<TransactionInfo>> = MutableLiveData()
     var retrievingTransactionsFinishedObservable: MutableLiveData<Boolean> = MutableLiveData()
 
@@ -58,7 +58,10 @@ class OverviewViewModel : BaseViewModel() {
     private val compositeDisposable = CompositeDisposable()
 
     val dialogInfoObservable: MutableLiveData<DashboardDialogInfo> = MutableLiveData()
-    val navigationObservable = MutableLiveData<OverviewNavigationEvent>()
+    // Use Pair with event type and optional object, to pass relevant object like TransactionInfo when selected from list
+    val navigationObservable = MutableLiveData<Pair<OverviewNavigationEvent, Any>>()
+
+    val animationObservable: MutableLiveData<OverviewAnimationEvent> = MutableLiveData()
 
     private lateinit var debitCardInfo: DebitCardInfo
     private var transactionsInitialized = false
@@ -369,29 +372,70 @@ class OverviewViewModel : BaseViewModel() {
         return count
     }
 
-    // These are called by DashboardFragment in response to user presses in OverviewView
+    // These are called by OverviewFragment in response to user presses in OverviewView
     fun showMoveMoney() {
-        navigationObservable.value = OverviewNavigationEvent.SHOW_MOVE_MONEY
+        navigationObservable.value = Pair(OverviewNavigationEvent.MOVE_MONEY, Any())
     }
 
     fun showLockUnlockCard() {
-        navigationObservable.value = OverviewNavigationEvent.SHOW_LOCK_UNLOCK_CARD
+        navigationObservable.value = Pair(OverviewNavigationEvent.LOCK_UNLOCK_CARD, Any())
     }
 
     fun showChangePin() {
-        navigationObservable.value = OverviewNavigationEvent.SHOW_CHANGE_PIN
+        navigationObservable.value = Pair(OverviewNavigationEvent.CHANGE_PIN, Any())
     }
 
     fun showReplaceCard() {
-        navigationObservable.value = OverviewNavigationEvent.SHOW_REPLACE_CARD
+        navigationObservable.value = Pair(OverviewNavigationEvent.REPLACE_CARD, Any())
     }
 
     fun showReportLostStolen() {
-        navigationObservable.value = OverviewNavigationEvent.SHOW_REPORT_LOST_STOLEN
+        navigationObservable.value = Pair(OverviewNavigationEvent.REPORT_LOST_STOLEN, Any())
     }
 
     fun showCancelCard() {
-        navigationObservable.value = OverviewNavigationEvent.SHOW_CANCEL_CARD
+        navigationObservable.value = Pair(OverviewNavigationEvent.CANCEL_CARD, Any())
+    }
+
+    fun showSpending() {
+        navigationObservable.value = Pair(OverviewNavigationEvent.SPENDING, Any())
+    }
+
+    fun showSetAside() {
+        navigationObservable.value = Pair(OverviewNavigationEvent.SET_ASIDE, Any())
+    }
+
+    fun showAlerts() {
+        navigationObservable.value = Pair(OverviewNavigationEvent.ALERTS, Any())
+    }
+
+    fun showTransactionSearch() {
+        navigationObservable.value = Pair(OverviewNavigationEvent.TRANSACTION_SEARCH, Any())
+    }
+
+    fun showTransactionDetails(transaction: TransactionInfo) {
+        navigationObservable.value = Pair(OverviewNavigationEvent.TRANSACTION_SELECTED, transaction)
+    }
+
+    // OverviewView animation-related functions
+    fun expandImmediate() {
+        animationObservable.value = OverviewAnimationEvent.EXPAND_IMMEDIATE
+    }
+
+    fun expandStart() {
+        animationObservable.value = OverviewAnimationEvent.EXPAND_START
+    }
+
+    fun expandEnd() {
+        animationObservable.value = OverviewAnimationEvent.EXPAND_END
+    }
+
+    fun collapseStart() {
+        animationObservable.value = OverviewAnimationEvent.COLLAPSE_START
+    }
+
+    fun collapseEnd() {
+        animationObservable.value = OverviewAnimationEvent.COLLAPSE_END
     }
 
     private fun datesAreSameMonthAndYear(date1: DateTime?, date2: DateTime?): Boolean {
@@ -427,8 +471,12 @@ class OverviewViewModel : BaseViewModel() {
     }
 }
 
+enum class OverviewAnimationEvent {
+    EXPAND_IMMEDIATE, EXPAND_START, EXPAND_END, COLLAPSE_START, COLLAPSE_END
+}
+
 enum class OverviewNavigationEvent {
-    SHOW_MOVE_MONEY, SHOW_LOCK_UNLOCK_CARD, SHOW_CHANGE_PIN, SHOW_REPLACE_CARD, SHOW_REPORT_LOST_STOLEN, SHOW_CANCEL_CARD
+    MOVE_MONEY, LOCK_UNLOCK_CARD, CHANGE_PIN, REPLACE_CARD, REPORT_LOST_STOLEN, CANCEL_CARD, SPENDING, SET_ASIDE, TRANSACTION_SELECTED, ALERTS, TRANSACTION_SEARCH
 }
 
 enum class OverviewBalanceState {

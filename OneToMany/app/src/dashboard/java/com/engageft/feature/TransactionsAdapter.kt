@@ -168,9 +168,9 @@ class TransactionsAdapter(private val context: Context, private val listener: On
 
         init {
             this.itemView.setOnClickListener {
-                transactionInfo?.let {
+                transactionInfo?.let { transactionInfo ->
                     if (transactionSelectionEnabled) {
-                        listener?.onTransactionInfoSelected(it)
+                        listener?.onTransactionInfoSelected(transactionInfo)
                     }
                 }
             }

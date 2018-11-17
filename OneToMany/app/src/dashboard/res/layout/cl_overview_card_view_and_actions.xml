@@ -11,9 +11,9 @@
         android:layout_width="wrap_content"
         android:layout_height="@dimen/overview_card_view_height"
         android:layout_marginTop="@dimen/overview_card_view_top_margin_collapsed"
-        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
         app:condensed="true"
         app:cardBackground="@drawable/card_background"
         app:cardnumberTextAppearance="@style/PrimaryCardTextAppearance"
@@ -27,10 +27,11 @@
         app:providerLogoDrawable="@drawable/cardview_provider_logo_mc"
         app:cardLockedIcon="@drawable/ic_card_locked"
         app:productLogoDrawable="@drawable/showcase_logo"
-        app:cvvMask="CVC %s"
-        app:cardNumberMask="•••• %s"
-        app:cardValidMask="Good Thru %s"
-        android:elevation="8dp"/>
+        app:cvvMask="@string/OVERVIEW_CARDVIEW_CVV_MASK"
+        app:cardNumberMask="@string/OVERVIEW_CARDVIEW_CARDNUMBER_MASK"
+        app:cardValidMask="@string/OVERVIEW_CARDVIEW_CARD_VALID_MASK"
+        android:background="@color/white"
+        android:elevation="24dp"/>
 
     <LinearLayout
         android:id="@+id/layout_card_actions"
