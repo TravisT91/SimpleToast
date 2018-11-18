@@ -1,12 +1,9 @@
 package android.print;
 
-import android.annotation.TargetApi;
 import android.os.CancellationSignal;
 import android.os.ParcelFileDescriptor;
 import android.util.Log;
-
 import java.io.File;
-
 import io.reactivex.Observable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.observers.DisposableObserver;
@@ -18,6 +15,7 @@ import io.reactivex.schedulers.Schedulers;
  * From here: http://www.annalytics.co.uk/android/pdf/2017/04/06/Save-PDF-From-An-Android-WebView/
  * </p>
  * Created by Kurt Mueller on 7/26/17.
+ * Imported, converted to Kotlin by Atia Hashimi on 11/16/2018.
  * Copyright (c) 2017 Engage FT. All rights reserved.
  */
 public class PdfPrint {
@@ -26,7 +24,6 @@ public class PdfPrint {
     private final PrintAttributes printAttributes;
 
     public PdfPrint(PrintAttributes printAttributes) {
-        Log.e(TAG, "this should get called!");
         this.printAttributes = printAttributes;
     }
 

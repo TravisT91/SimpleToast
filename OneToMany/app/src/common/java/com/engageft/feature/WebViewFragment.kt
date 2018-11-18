@@ -9,12 +9,11 @@ import android.net.MailTo
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
+import android.util.Log
 import android.util.TypedValue
 import android.view.*
-import android.webkit.WebResourceError
-import android.webkit.WebResourceRequest
-import android.webkit.WebView
-import android.webkit.WebViewClient
+import android.webkit.*
+import androidx.annotation.RequiresApi
 import androidx.core.content.ContextCompat
 import androidx.core.content.FileProvider
 import androidx.navigation.fragment.findNavController
@@ -58,6 +57,18 @@ class WebViewFragment : LotusFullScreenFragment() {
 
     private var listener: OnWebViewFragmentListener? = null
 
+    private val dialogInfoListener = object: InformationDialogFragment.InformationDialogFragmentListener {
+        override fun onDialogFragmentNegativeButtonClicked() {}
+
+        override fun onDialogFragmentPositiveButtonClicked() {
+            findNavController().popBackStack()
+        }
+
+        override fun onDialogCancelled() {
+            findNavController().popBackStack()
+        }
+    }
+
     override fun createViewModel(): BaseViewModel? {
         return null
     }
@@ -100,11 +111,18 @@ class WebViewFragment : LotusFullScreenFragment() {
                 }
             }
 
-            override fun onReceivedError(view: WebView, request: WebResourceRequest, error: WebResourceError) {
+            @RequiresApi(Build.VERSION_CODES.M)
+            override fun onReceivedError(view: WebView?, request: WebResourceRequest?, error: WebResourceError?) {
+                Log.e("WebviewFragment", "onReceivedError")
                 dismissProgressOverlay()
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                    loadFailure(error.description.toString())
-                }
+                loadFailure(error?.description.toString())
+            }
+
+            @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
+            override fun onReceivedError(view: WebView, errorCode: Int,
+                                         description: String, failingUrl: String) {
+                dismissProgressOverlay()
+                loadFailure(description)
             }
 
             override fun shouldOverrideUrlLoading(view: WebView, request: WebResourceRequest): Boolean {
@@ -118,21 +136,9 @@ class WebViewFragment : LotusFullScreenFragment() {
 
         if (!initialUrl.isNullOrEmpty()) {
             if (!isNetworkAvailable()) {
-                val listener = object: InformationDialogFragment.InformationDialogFragmentListener {
-                    override fun onDialogFragmentNegativeButtonClicked() {}
-
-                    override fun onDialogFragmentPositiveButtonClicked() {
-                        findNavController().popBackStack()
-                    }
-
-                    override fun onDialogCancelled() {
-                        findNavController().popBackStack()
-                    }
-
-                }
                 showDialog(infoDialogGenericErrorTitleMessageNewInstance(context!!,
                         message = getString(R.string.alert_error_message_no_internet_connection),
-                        listener = listener))
+                        listener = dialogInfoListener))
             } else {
                 showProgressOverlay()
 
@@ -146,7 +152,7 @@ class WebViewFragment : LotusFullScreenFragment() {
                                     result?.let { url ->
                                         loadWebView(url)
                                     } ?: run {
-                                        showDialog(infoDialogGenericErrorTitleMessageNewInstance(context!!))
+                                        showDialog(infoDialogGenericErrorTitleMessageNewInstance(context!!, listener = dialogInfoListener))
                                     }
                                 }
                             }
@@ -249,7 +255,7 @@ class WebViewFragment : LotusFullScreenFragment() {
         }
     }
 
-    //TODO(aHashimi): Is there a way to intercept/override navigatioUp without ?
+    //TODO(aHashimi): Is there a way to intercept/override navigatioUp for custom handling? https://engageft.atlassian.net/browse/SHOW-441
 //    fun goBack(): Boolean {
 //        if (webView != null && webView!!.canGoBack()) {
 //            webView!!.goBack()
@@ -287,7 +293,7 @@ class WebViewFragment : LotusFullScreenFragment() {
 
             override fun onError(e: Throwable) {
                 handleGenericThrowable(e)
-                showDialog(infoDialogGenericErrorTitleMessageNewInstance(context!!))
+                showDialog(infoDialogGenericErrorTitleMessageNewInstance(context!!, listener = dialogInfoListener))
             }
 
             override fun onComplete() {}
