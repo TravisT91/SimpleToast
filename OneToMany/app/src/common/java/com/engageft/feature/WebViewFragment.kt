@@ -19,6 +19,7 @@ import androidx.core.content.FileProvider
 import androidx.navigation.fragment.findNavController
 import com.engageft.apptoolbox.BaseViewModel
 import com.engageft.apptoolbox.LotusFullScreenFragment
+import com.engageft.apptoolbox.WebPrinter
 import com.engageft.apptoolbox.util.MenuTint
 import com.engageft.apptoolbox.view.InformationDialogFragment
 import com.engageft.apptoolbox.view.ScrollToBottomWebView
