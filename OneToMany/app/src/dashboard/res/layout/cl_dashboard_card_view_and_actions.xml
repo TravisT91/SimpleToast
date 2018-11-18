@@ -31,7 +31,6 @@
         app:cvvMask="@string/OVERVIEW_CARDVIEW_CVV_MASK"
         app:cardNumberMask="@string/OVERVIEW_CARDVIEW_CARDNUMBER_MASK"
         app:cardValidMask="@string/OVERVIEW_CARDVIEW_CARD_VALID_MASK"
-        android:background="@color/white"
         android:elevation="8dp"/>
 
     <LinearLayout
