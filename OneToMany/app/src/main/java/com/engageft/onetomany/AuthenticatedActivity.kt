@@ -1,12 +1,7 @@
 package com.engageft.onetomany
 
-
-import android.app.Activity
-import android.content.Intent
-import android.util.Log
 import com.engageft.apptoolbox.LotusActivity
 import com.engageft.apptoolbox.LotusActivityConfig
-import com.engageft.feature.WebViewFragment
 
 class AuthenticatedActivity : LotusActivity() {
     private val lotusActivityConfig = object : LotusActivityConfig() {
@@ -17,13 +12,4 @@ class AuthenticatedActivity : LotusActivity() {
     override fun getLotusActivityConfig(): LotusActivityConfig {
         return lotusActivityConfig
     }
-
-//    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-//        Log.e("AuthenticatedActivity", "requestCode $requestCode")
-//        if (resultCode == Activity.RESULT_OK) {
-//
-//        } else {
-//            super.onActivityResult(requestCode, resultCode, data)
-//        }
-//    }
 }
