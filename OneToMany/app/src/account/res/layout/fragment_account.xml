@@ -221,7 +221,6 @@
             <TextView
                 android:id="@+id/logout"
                 tools:style="@style/Body"
-                android:visibility="gone"
                 parisStyle="@{palette.body}"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -236,10 +235,6 @@
 
             <include layout="@layout/divider" />
 
-            <Space
-                android:layout_width="match_parent"
-                android:layout_height="64dp" />
-
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -249,7 +244,6 @@
                 android:paddingEnd="16dp"
                 android:paddingBottom="16dp"
                 android:paddingTop="8dp"
-                android:visibility="gone"
                 parisStyle="@{palette.Footnote}"
                 tools:text="Software Version: 1.0"/>
         </LinearLayout>
