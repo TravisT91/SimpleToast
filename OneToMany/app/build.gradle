@@ -76,7 +76,7 @@ dependencies {
     implementation "com.heapanalytics.android:heap-android-client:$rootProject.heapVersion"
     // For styling views programmatically
     implementation 'com.airbnb.android:paris:1.1.0'
-    implementation 'io.github.luizgrp.sectionedrecyclerviewadapter:sectionedrecyclerviewadapter:1.1.3'
+    implementation 'io.github.luizgrp.sectionedrecyclerviewadapter:sectionedrecyclerviewadapter:1.2.0'
     // If you're using Paris annotations.
     annotationProcessor 'com.airbnb.android:paris-processor:1.1.0'
 
