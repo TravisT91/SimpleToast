@@ -5,9 +5,8 @@
         <variable name="viewModel" type="com.engageft.feature.StatementsViewModel"/>
         <variable
             name="palette"
-            type="com.engageft.feature.Palette"/>
+            type="com.engageft.fis.pscu.feature.Palette"/>
     </data>
-
 
     <LinearLayout
         android:id="@+id/statementsLayout"

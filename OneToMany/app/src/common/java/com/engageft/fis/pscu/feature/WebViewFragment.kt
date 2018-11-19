@@ -9,10 +9,12 @@ import android.net.MailTo
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
-import android.util.Log
 import android.util.TypedValue
 import android.view.*
-import android.webkit.*
+import android.webkit.WebResourceError
+import android.webkit.WebResourceRequest
+import android.webkit.WebView
+import android.webkit.WebViewClient
 import androidx.annotation.RequiresApi
 import androidx.core.content.ContextCompat
 import androidx.core.content.FileProvider
@@ -91,7 +93,7 @@ class WebViewFragment : LotusFullScreenFragment() {
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         super.onCreateView(inflater, container, savedInstanceState)
 
-        val view = inflater.inflate(R.layout.fragment_webView, container, false)
+        val view = inflater.inflate(R.layout.fragment_webview, container, false)
         webView = view.findViewById(R.id.webView)
 
         webView.settings.javaScriptEnabled = true
@@ -104,7 +106,7 @@ class WebViewFragment : LotusFullScreenFragment() {
             override fun onPageFinished(view: WebView, url: String) {
                 removeHeadersAndFooter()
                 removeLeftRightPadding()
-                dismissProgressOverlay()
+                progressOverlayDelegate.dismissProgressOverlay()
                 loadSuccess()
                 if (forPrint && showPdfImmediately) {
                     exportPdfIntent()
@@ -113,15 +115,14 @@ class WebViewFragment : LotusFullScreenFragment() {
 
             @RequiresApi(Build.VERSION_CODES.M)
             override fun onReceivedError(view: WebView?, request: WebResourceRequest?, error: WebResourceError?) {
-                Log.e("WebviewFragment", "onReceivedError")
-                dismissProgressOverlay()
+                progressOverlayDelegate.dismissProgressOverlay()
                 loadFailure(error?.description.toString())
             }
 
             @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
             override fun onReceivedError(view: WebView, errorCode: Int,
                                          description: String, failingUrl: String) {
-                dismissProgressOverlay()
+                progressOverlayDelegate.dismissProgressOverlay()
                 loadFailure(description)
             }
 
@@ -140,7 +141,7 @@ class WebViewFragment : LotusFullScreenFragment() {
                         message = getString(R.string.alert_error_message_no_internet_connection),
                         listener = dialogInfoListener))
             } else {
-                showProgressOverlay()
+                progressOverlayDelegate.showProgressOverlay()
 
                 if (forPrint) {
                     Thread(Runnable {
