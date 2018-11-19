@@ -24,7 +24,7 @@ import com.engageft.fis.pscu.R
 import com.engageft.fis.pscu.config.EngageAppConfig
 import io.github.luizgrp.sectionedrecyclerviewadapter.SectionedRecyclerViewAdapter
 import org.joda.time.DateTime
-
+import com.engageft.fis.pscu.databinding.FragmentStatementsBinding
 
 class StatementsFragment: LotusFullScreenFragment() {
 
