@@ -102,6 +102,12 @@ class WebViewFragment : LotusFullScreenFragment() {
             webView.visibility = View.GONE
         }
 
+        return view
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
         webView.webViewClient = object : WebViewClient() {
             override fun onPageFinished(view: WebView, url: String) {
                 removeHeadersAndFooter()
@@ -164,8 +170,6 @@ class WebViewFragment : LotusFullScreenFragment() {
                 }
             }
         }
-
-        return view
     }
 
     private fun isNetworkAvailable(): Boolean {
