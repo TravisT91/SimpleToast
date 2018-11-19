@@ -8,14 +8,20 @@ apply plugin: 'kotlin-kapt'
 
 apply plugin: 'com.heapanalytics.android'
 
+apply plugin: 'io.fabric'
+
 android {
     compileSdkVersion rootProject.compileSdkVersion
     defaultConfig {
-        applicationId "com.engageft.onetomany"
+        applicationId "com.engageft.fis.pscu"
         minSdkVersion rootProject.minSdkVersion
         targetSdkVersion rootProject.targetSdkVersion
         versionCode 1
-        versionName "1.0"
+        versionName "0.0"
+        // Below is the version string that tracks real releases for this app. When creating a build for
+        // QA or release, increment and use the version string below. the master branch should always
+        // use 0.0
+//        versionName "0.1" + "." + versionCode
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         multiDexEnabled true
 
@@ -73,6 +79,10 @@ dependencies {
     implementation 'io.github.luizgrp.sectionedrecyclerviewadapter:sectionedrecyclerviewadapter:1.1.3'
     // If you're using Paris annotations.
     annotationProcessor 'com.airbnb.android:paris-processor:1.1.0'
+
+    implementation('com.crashlytics.sdk.android:crashlytics:2.9.6@aar') {
+        transitive = true
+    }
     // for printing webview contents
     implementation 'org.jsoup:jsoup:1.10.3'
 }

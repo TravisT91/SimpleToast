@@ -7,12 +7,12 @@
 
     <fragment
         android:id="@+id/dashboard_fragment"
-        android:name="com.engageft.feature.DashboardFragment"
+        android:name="com.engageft.fis.pscu.feature.DashboardFragment"
         android:label="@string/fragment_title_dashboard"
         tools:layout="@layout/fragment_dashboard"/>
     <fragment
         android:id="@+id/budgets_fragment"
-        android:name="com.engageft.feature.BudgetsFragment"
+        android:name="com.engageft.fis.pscu.feature.BudgetsFragment"
         android:label="@string/fragment_title_budgets"
         tools:layout="@layout/fragment_budgets">
         <argument
@@ -21,7 +21,7 @@
     </fragment>
     <fragment
         android:id="@+id/goals_fragment"
-        android:name="com.engageft.feature.GoalsFragment"
+        android:name="com.engageft.fis.pscu.feature.GoalsFragment"
         android:label="@string/fragment_title_goals"
         tools:layout="@layout/fragment_goals">
         <action
@@ -33,7 +33,7 @@
     </fragment>
     <fragment
         android:id="@+id/account_fragment"
-        android:name="com.engageft.feature.AccountSettingsFragment"
+        android:name="com.engageft.fis.pscu.feature.AccountSettingsFragment"
         android:label="@string/fragment_title_account"
         tools:layout="@layout/fragment_account">
         <argument
@@ -45,7 +45,7 @@
     </fragment>
     <fragment
         android:id="@+id/goalAdd1Fragment"
-        android:name="com.engageft.feature.GoalAdd1Fragment"
+        android:name="com.engageft.fis.pscu.feature.GoalAdd1Fragment"
         android:label="@string/fragment_title_goals_add_step_1"
         tools:layout="@layout/fragment_goal_add_1" >
         <argument
@@ -54,7 +54,7 @@
     </fragment>
     <fragment
         android:id="@+id/cardManagementFragment"
-        android:name="com.engageft.feature.CardManagementFragment"
+        android:name="com.engageft.fis.pscu.feature.CardManagementFragment"
         android:label="@string/fragment_title_cardmanagement">
         <argument
             android:name="@string/navigation_override_up"
@@ -62,7 +62,7 @@
     </fragment>
     <fragment
         android:id="@+id/helpFragment"
-        android:name="com.engageft.feature.HelpFragment"
+        android:name="com.engageft.fis.pscu.feature.HelpFragment"
         android:label="@string/fragment_title_help">
         <argument
             android:name="@string/navigation_override_up"
@@ -70,7 +70,7 @@
     </fragment>
     <fragment
         android:id="@+id/moveMoneyFragment"
-        android:name="com.engageft.feature.MoveMoneyFragment"
+        android:name="com.engageft.fis.pscu.feature.MoveMoneyFragment"
         android:label="@string/TITLE_MOVE_MONEY">
         <argument
             android:name="@string/navigation_override_up"
