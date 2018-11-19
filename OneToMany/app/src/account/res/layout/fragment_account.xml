@@ -221,6 +221,7 @@
             <TextView
                 android:id="@+id/logout"
                 tools:style="@style/Body"
+                android:visibility="gone"
                 parisStyle="@{palette.body}"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -238,6 +239,19 @@
             <Space
                 android:layout_width="match_parent"
                 android:layout_height="64dp" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/softwareVersionTextView"
+                style="@style/Footnote"
+                android:paddingStart="16dp"
+                android:paddingEnd="16dp"
+                android:paddingBottom="16dp"
+                android:paddingTop="8dp"
+                android:visibility="gone"
+                parisStyle="@{palette.Footnote}"
+                tools:text="Software Version: 1.0"/>
         </LinearLayout>
 
     </ScrollView>
