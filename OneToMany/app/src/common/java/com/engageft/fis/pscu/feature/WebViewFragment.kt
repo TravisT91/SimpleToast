@@ -1,4 +1,4 @@
-package com.engageft.feature
+package com.engageft.fis.pscu.feature
 
 import android.app.Activity.RESULT_OK
 import android.content.ActivityNotFoundException
@@ -24,8 +24,6 @@ import com.engageft.apptoolbox.util.MenuTint
 import com.engageft.apptoolbox.view.InformationDialogFragment
 import com.engageft.apptoolbox.view.ScrollToBottomWebView
 import com.engageft.fis.pscu.R
-import com.engageft.fis.pscu.feature.infoDialogGenericErrorTitleMessageNewInstance
-import com.engageft.fis.pscu.feature.infoDialogYesNoNewInstance
 import io.reactivex.observers.DisposableObserver
 import org.jsoup.Jsoup
 import java.io.File

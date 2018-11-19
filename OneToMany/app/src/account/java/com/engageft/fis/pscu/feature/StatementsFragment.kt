@@ -1,4 +1,4 @@
-package com.engageft.feature
+package com.engageft.fis.pscu.feature
 
 import android.os.Bundle
 import android.view.Gravity
@@ -18,12 +18,10 @@ import com.engageft.apptoolbox.adapter.HorizontalRuleSection
 import com.engageft.apptoolbox.adapter.SelectableLabelsSection
 import com.engageft.apptoolbox.util.applyTypefaceAndColorToSubString
 import com.engageft.engagekit.EngageService
+import com.engageft.feature.StatementsViewModel
 import com.engageft.feature.util.DisplayDateTimeUtils
 import com.engageft.fis.pscu.R
 import com.engageft.fis.pscu.config.EngageAppConfig
-import com.engageft.fis.pscu.feature.DialogInfo
-import com.engageft.fis.pscu.feature.infoDialogGenericErrorTitleMessageConditionalNewInstance
-import com.engageft.fis.pscu.feature.infoDialogGenericErrorTitleMessageNewInstance
 import io.github.luizgrp.sectionedrecyclerviewadapter.SectionedRecyclerViewAdapter
 import org.joda.time.DateTime
 
