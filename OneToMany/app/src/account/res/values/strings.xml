@@ -15,8 +15,24 @@
     <string name="SETTINGS_COPYRIGHT">Copyright</string>
     <string name="SETTINGS_DISCLOSURES">Disclosures</string>
 
+    <!-- Copyright -->
     <!--TODO(aHashimi): replace with the actual copyright text-->
     <string name="account_copyright_title">Copyright</string>
     <string name="account_copyright_text">Engage Financial Technology, Inc. All Rights Reserved. The Millennial Showcase Mastercard Prepaid Card is issued by Sunrise Banks N.A., St. Paul, MN, Member FDIC, pursuant to a license from Mastercard International Incorporated. This card may be used everywhere Mastercard debit cards are accepted. Use of this card constitutes acceptance of the terms and conditions stated in the Cardholder Agreement. Powered by Engage Financial Technology.</string>
+
+    <!-- Change Security Questions: -->
+    <string name="SECURITY_QUESTIONS_HEADER_CHANGE">Reset your security questions by selecting new questions from the following lists.</string>
+    <string name="SECURITY_QUESTIONS_HEADER_CREATE">Select and answer any two of the security questions from the following lists.</string>
+    <string name="SECURITY_QUESTIONS_HEADER_FETCHING"></string>
+    <string name="SECURITY_QUESTIONS_LIST_LABEL">Select Question</string>
+    <string name="SECURITY_QUESTIONS_ANSWER_LABEL">Answer</string>
+    <string name="SECURITY_QUESTIONS_BUTTON_SAVE">Save</string>
+    <string name="SECURITY_QUESTIONS_LIST_TITLE">Select Question</string>
+    <string name="SECURITY_QUESTIONS_LIST_SUBTITLE"></string>
+
+    <string name="SECURITY_QUESTIONS_SUCCESS_TITLE">Success</string>
+    <string name="SECURITY_QUESTIONS_SUCCESS_MESSAGE_CHANGE">You have successfully changed your security questions.</string>
+    <string name="SECURITY_QUESTIONS_SUCCESS_MESSAGE_CREATE">You have successfully set your security questions.</string>
+    <string name="SECURITY_QUESTIONS_SUCCESS_MESSAGE_OK">Ok</string>
 
 </resources>

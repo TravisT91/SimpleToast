@@ -42,6 +42,9 @@
         <action
             android:id="@+id/action_account_fragment_to_copyrightFragment"
             app:destination="@id/copyrightFragment" />
+        <action
+            android:id="@+id/action_account_fragment_to_changeSecurityQuestionsFragment"
+            app:destination="@id/changeSecurityQuestionsFragment" />
     </fragment>
     <fragment
         android:id="@+id/goalAdd1Fragment"
@@ -79,5 +82,9 @@
     <fragment
         android:id="@+id/copyrightFragment"
         android:name="com.engageft.fis.pscu.feature.CopyrightFragment"
-        android:label="@string/account_copyright_title" />
+        android:label="@string/account_copyright_title"/>
+    <fragment
+        android:id="@+id/changeSecurityQuestionsFragment"
+        android:name="com.engageft.fis.pscu.feature.ChangeSecurityQuestionsFragment"
+        android:label="@string/fragment_title_change_security_questions"/>
 </navigation>

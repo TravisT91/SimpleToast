@@ -10,12 +10,14 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
-import androidx.navigation.fragment.findNavController
+import androidx.navigation.findNavController
 import com.engageft.apptoolbox.BaseViewModel
 import com.engageft.apptoolbox.LotusFullScreenFragment
+import com.engageft.fis.pscu.BuildConfig
 import com.engageft.fis.pscu.NotAuthenticatedActivity
 import com.engageft.fis.pscu.R
 import com.engageft.fis.pscu.databinding.FragmentAccountBinding
+import kotlinx.android.synthetic.main.fragment_account.*
 
 /**
  * AccountSettingsFragment
@@ -48,7 +50,7 @@ class AccountSettingsFragment : LotusFullScreenFragment() {
             }
 
             securityQuestions.setOnClickListener {
-                //TODO(ttkachuk) implement onCLick
+                binding.root.findNavController().navigate(R.id.action_account_fragment_to_changeSecurityQuestionsFragment)
             }
             notifications.setOnClickListener {
                 //TODO(ttkachuk) implement onCLick
@@ -60,11 +62,13 @@ class AccountSettingsFragment : LotusFullScreenFragment() {
                 //TODO(ttkachuk) implement onCLick
             }
             copyright.setOnClickListener {
-                findNavController().navigate(R.id.action_account_fragment_to_copyrightFragment)
+                binding.root.findNavController().navigate(R.id.action_account_fragment_to_copyrightFragment)
             }
             disclosures.setOnClickListener {
                 //TODO(ttkachuk) implement onCLick
             }
+
+            softwareVersionTextView.text = String.format(getString(R.string.software_version_format), BuildConfig.VERSION_NAME)
         }
         accountSettingsViewModel.navigationObservable.observe(this, Observer { navigationEvent ->
             when (navigationEvent) {
