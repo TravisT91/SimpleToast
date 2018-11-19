@@ -13,9 +13,11 @@ import androidx.lifecycle.ViewModelProviders
 import androidx.navigation.findNavController
 import com.engageft.apptoolbox.BaseViewModel
 import com.engageft.apptoolbox.LotusFullScreenFragment
+import com.engageft.fis.pscu.BuildConfig
 import com.engageft.fis.pscu.NotAuthenticatedActivity
 import com.engageft.fis.pscu.R
 import com.engageft.fis.pscu.databinding.FragmentAccountBinding
+import kotlinx.android.synthetic.main.fragment_account.*
 
 /**
  * AccountSettingsFragment
@@ -65,6 +67,8 @@ class AccountSettingsFragment : LotusFullScreenFragment() {
             disclosures.setOnClickListener {
                 //TODO(ttkachuk) implement onCLick
             }
+
+            softwareVersionTextView.text = String.format(getString(R.string.software_version_format), BuildConfig.VERSION_NAME)
         }
         accountSettingsViewModel.navigationObservable.observe(this, Observer { navigationEvent ->
             when (navigationEvent) {
