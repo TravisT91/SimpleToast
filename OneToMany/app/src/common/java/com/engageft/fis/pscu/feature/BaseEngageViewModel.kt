@@ -4,7 +4,7 @@ import androidx.lifecycle.MutableLiveData
 import com.crashlytics.android.Crashlytics
 import com.engageft.apptoolbox.BaseViewModel
 import com.engageft.apptoolbox.BuildConfig
-import java.net.ConnectException
+import com.engageft.engagekit.rest.exception.NoConnectivityException
 import java.net.SocketTimeoutException
 import java.net.UnknownHostException
 
@@ -25,7 +25,7 @@ open class BaseEngageViewModel: BaseViewModel() {
             is UnknownHostException -> {
                 dialogInfoObservable.value = DialogInfo(dialogType = DialogInfo.DialogType.NO_INTERNET_CONNECTION)
             }
-            is ConnectException -> {
+            is NoConnectivityException -> {
                 dialogInfoObservable.value = DialogInfo(dialogType = DialogInfo.DialogType.NO_INTERNET_CONNECTION)
             }
             is SocketTimeoutException -> {
