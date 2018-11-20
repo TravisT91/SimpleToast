@@ -259,6 +259,7 @@ class DashboardExpandableView : ConstraintLayout {
     }
 
     fun showActions(show: Boolean) {
+        // TODO(kurt): still seems possible to quickly tap the button twice, leaving it in a strange state with the disclosure caret twisted. Why?
         expandCollapseButton.isEnabled = false
 
         // setup vals for animations
