@@ -1,14 +1,10 @@
-package com.engageft.feature
+package com.engageft.fis.pscu.feature
 
 import android.os.Bundle
 import android.view.View
 import androidx.lifecycle.Observer
 import com.engageft.apptoolbox.LotusFullScreenFragment
 import com.engageft.fis.pscu.R
-import com.engageft.fis.pscu.feature.BaseEngageViewModel
-import com.engageft.fis.pscu.feature.DialogInfo
-import com.engageft.fis.pscu.feature.infoDialogGenericErrorTitleMessageConditionalNewInstance
-import com.engageft.fis.pscu.feature.infoDialogGenericErrorTitleMessageNewInstance
 
 /**
  * BaseEngageFullscreenFragment
