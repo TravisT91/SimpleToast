@@ -9,12 +9,12 @@ package com.engageft.fis.pscu.feature.utils
  * Copyright (c) 2018 Engage FT. All rights reserved.
  */
 object StringUtils {
-    fun concatenateFromList(items: ArrayList<String>, delimeter: String): String {
+    fun concatenateFromList(items: ArrayList<String>, delimiter: String): String {
         var message = ""
         if (items.isNotEmpty()) {
-            var message = items.removeAt(0)
+            message = items.removeAt(0)
             for (m: String in items) {
-                message += delimeter + m
+                message += delimiter + m
             }
         }
         return message
