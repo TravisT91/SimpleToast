@@ -6,12 +6,14 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
+import androidx.navigation.findNavController
 import com.engageft.apptoolbox.BaseViewModel
 import com.engageft.apptoolbox.LotusFullScreenFragment
 import com.engageft.apptoolbox.ViewUtils.newLotusInstance
 import com.engageft.apptoolbox.view.InformationDialogFragment
-import com.engageft.onetomany.R
-import com.engageft.onetomany.databinding.FragmentChangeSecurityQuestionsBinding
+import com.engageft.fis.pscu.R
+import com.engageft.fis.pscu.databinding.FragmentChangeSecurityQuestionsBinding
+
 
 /**
  * ChangeSecurityQuestionsFragment

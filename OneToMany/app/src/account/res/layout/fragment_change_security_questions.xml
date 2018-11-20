@@ -7,7 +7,7 @@
         <variable name="viewModel" type="com.engageft.fis.pscu.feature.ChangeSecurityQuestionsViewModel"/>
         <variable
             name="palette"
-            type="com.engageft.feature.Palette"/>
+            type="com.engageft.fis.pscu.feature.Palette"/>
     </data>
 
     <ScrollView
@@ -36,7 +36,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
-                android:background="@color/cellBackground"
+                android:background="@color/changeSecurityQuestionsInputBackground"
                 android:paddingLeft="16dp"
                 android:paddingRight="16dp">
 

@@ -235,9 +235,29 @@
 
             <include layout="@layout/divider" />
 
-            <Space
+            <TextView
                 android:layout_width="match_parent"
-                android:layout_height="64dp" />
+                android:layout_height="wrap_content"
+                android:id="@+id/appNameTextView"
+                style="@style/Caption1Loud"
+                android:paddingStart="16dp"
+                android:paddingEnd="16dp"
+                android:paddingTop="24dp"
+                android:gravity="center"
+                android:text="@string/app_name"
+                parisStyle="@{palette.Caption1Loud}"/>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/softwareVersionTextView"
+                style="@style/Caption1"
+                android:paddingStart="16dp"
+                android:paddingEnd="16dp"
+                android:paddingBottom="16dp"
+                android:gravity="center"
+                parisStyle="@{palette.Caption1}"
+                tools:text="Software Version: 1.0"/>
         </LinearLayout>
 
     </ScrollView>
