@@ -49,18 +49,6 @@ class LoginFragment : LotusFullScreenFragment() {
         constraintSet = ConstraintSet()
         constraintSet.clone(binding.root as ConstraintLayout)
 
-        /**
-         * TEST SHOULD BE REMOVED
-         */
-
-        getTextSizeAndTypefaceFromParisStyle(context!!, Palette.BodyLoud).apply {
-            binding.usernameInput.setInputAndLabelTypeface(this.second!!)
-        }
-
-        /**
-         * END TEST
-         */
-
         val vm = (viewModel as LoginViewModel)
         binding.viewModel = vm
         vm.navigationObservable.observe(this, Observer { splashNavigationEvent : LoginViewModel.LoginNavigationEvent ->
@@ -219,15 +207,17 @@ class LoginFragment : LotusFullScreenFragment() {
             }
         })
 
-        binding.passwordInput.setImeOptions(EditorInfo.IME_ACTION_DONE)
-        binding.passwordInput.onImeAction(EditorInfo.IME_ACTION_DONE) { vm.loginClicked() }
+        binding.apply {
+            passwordInput.setImeOptions(EditorInfo.IME_ACTION_DONE)
+            passwordInput.onImeAction(EditorInfo.IME_ACTION_DONE) { vm.loginClicked() }
 
-        binding.btnIssuerStatement.setOnClickListener { vm.issuerStatementClicked() }
-        binding.btnDisclosures.setOnClickListener { vm.disclosuresClicked() }
-        binding.loginButton.setOnClickListener { vm.loginClicked() }
-        binding.demoAccountButton.setOnClickListener { vm.createDemoAccount() }
+            btnIssuerStatement.setOnClickListener { vm.issuerStatementClicked() }
+            btnDisclosures.setOnClickListener { vm.disclosuresClicked() }
+            loginButton.setOnClickListener { vm.loginClicked() }
+            demoAccountButton.setOnClickListener { vm.createDemoAccount() }
 
-        binding.root.systemUiVisibility = View.SYSTEM_UI_FLAG_LAYOUT_STABLE
+            root.systemUiVisibility = View.SYSTEM_UI_FLAG_LAYOUT_STABLE
+        }
 
         return binding.root
     }

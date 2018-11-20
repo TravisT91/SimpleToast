@@ -23,10 +23,10 @@ fun getTextStateList(@ColorInt pressedColor : Int, @ColorInt disabledColor : Int
     return ColorStateList(s,c)
 }
 
-fun getInputLabelStateList(@ColorInt focusedColor: Int, @ColorInt notFocused : Int, @ColorInt pressedColor: Int, @ColorInt disabledColor : Int, @ColorInt enabledColor: Int) : ColorStateList {
+fun getInputStateList(@ColorInt focusedColor: Int, @ColorInt notFocused : Int, @ColorInt pressedColor: Int, @ColorInt disabledColor : Int, @ColorInt enabledColor: Int) : ColorStateList {
     val s = arrayOf(
             intArrayOf(android.R.attr.state_focused),
-            intArrayOf(-android.R.attr.state_enabled),
+            intArrayOf(-android.R.attr.state_focused),
             intArrayOf(android.R.attr.state_pressed),
             intArrayOf(-android.R.attr.state_enabled),
             intArrayOf(android.R.attr.state_enabled))
