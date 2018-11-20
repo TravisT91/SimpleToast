@@ -11,12 +11,13 @@ import com.engageft.apptoolbox.ViewUtils.newLotusInstance
 import com.engageft.apptoolbox.view.InformationDialogFragment
 import com.engageft.fis.pscu.R
 import com.engageft.fis.pscu.databinding.FragmentProfileBinding
+import com.engageft.fis.pscu.feature.utils.StringUtils
 
 
 /**
- * ChangeSecurityQuestionsFragment
+ * ProfileFragment
  * <p>
- * Fragment for changing/setting a user's security questions.
+ * Fragment for changing a user's profile settings. This includes email, phone number, and address.
  * </p>
  * Created by joeyhutchins on 11/12/18.
  * Copyright (c) 2018 Engage FT. All rights reserved.
@@ -62,10 +63,7 @@ class ProfileFragment : BaseEngageFullscreenFragment() {
                         messages.add(it.message!!)
                     }
                 }
-                var message = messages.removeAt(0)
-                for (m : String in messages) {
-                    message += "\n\n" + m
-                }
+                var message = StringUtils.concatenateFromList(messages, "\n\n")
                 showDialog(InformationDialogFragment.newLotusInstance(title = if (wasError) getString(R.string.PROFILE_ERROR_TITLE) else getString(R.string.PROFILE_SUCCESS_TITLE),
                         message = message,
                         positiveButton = getString(R.string.PROFILE_SUCCESS_MESSAGE_OK)))
@@ -77,7 +75,7 @@ class ProfileFragment : BaseEngageFullscreenFragment() {
                     binding.emailAddressInput.setErrorTexts(null)
                 }
                 ProfileViewModel.EmailInputValidationError.EMPTY -> {
-                    binding.emailAddressInput.setErrorTexts(arrayListOf(getString(R.string.PROFILE_INPUT_ERROR_EMTPY)))
+                    binding.emailAddressInput.setErrorTexts(arrayListOf(getString(R.string.PROFILE_INPUT_ERROR_EMPTY)))
                 }
                 ProfileViewModel.EmailInputValidationError.AT_REQUIRED -> {
                     binding.emailAddressInput.setErrorTexts(arrayListOf(getString(R.string.PROFILE_INPUT_ERROR_EMAIL_AT_REQUIRED)))
@@ -90,7 +88,7 @@ class ProfileFragment : BaseEngageFullscreenFragment() {
                     binding.phoneNumberInput.setErrorTexts(null)
                 }
                 ProfileViewModel.PhoneInputValidationError.EMPTY -> {
-                    binding.phoneNumberInput.setErrorTexts(arrayListOf(getString(R.string.PROFILE_INPUT_ERROR_EMTPY)))
+                    binding.phoneNumberInput.setErrorTexts(arrayListOf(getString(R.string.PROFILE_INPUT_ERROR_EMPTY)))
                 }
                 ProfileViewModel.PhoneInputValidationError.NOT_TEN -> {
                     binding.phoneNumberInput.setErrorTexts(arrayListOf(getString(R.string.PROFILE_INPUT_ERROR_PHONE_NOT_TEN)))
@@ -103,7 +101,7 @@ class ProfileFragment : BaseEngageFullscreenFragment() {
                     binding.streetAddressInput.setErrorTexts(null)
                 }
                 ProfileViewModel.InputValidationError.EMPTY -> {
-                    binding.streetAddressInput.setErrorTexts(arrayListOf(getString(R.string.PROFILE_INPUT_ERROR_EMTPY)))
+                    binding.streetAddressInput.setErrorTexts(arrayListOf(getString(R.string.PROFILE_INPUT_ERROR_EMPTY)))
                 }
             }
         })
@@ -113,7 +111,7 @@ class ProfileFragment : BaseEngageFullscreenFragment() {
                     binding.cityInput.setErrorTexts(null)
                 }
                 ProfileViewModel.InputValidationError.EMPTY -> {
-                    binding.cityInput.setErrorTexts(arrayListOf(getString(R.string.PROFILE_INPUT_ERROR_EMTPY)))
+                    binding.cityInput.setErrorTexts(arrayListOf(getString(R.string.PROFILE_INPUT_ERROR_EMPTY)))
                 }
             }
         })
@@ -123,7 +121,7 @@ class ProfileFragment : BaseEngageFullscreenFragment() {
                     binding.stateInput.setErrorTexts(null)
                 }
                 ProfileViewModel.InputValidationError.EMPTY -> {
-                    binding.stateInput.setErrorTexts(arrayListOf(getString(R.string.PROFILE_INPUT_ERROR_EMTPY)))
+                    binding.stateInput.setErrorTexts(arrayListOf(getString(R.string.PROFILE_INPUT_ERROR_EMPTY)))
                 }
             }
         })
@@ -133,7 +131,7 @@ class ProfileFragment : BaseEngageFullscreenFragment() {
                     binding.zipcodeInput.setErrorTexts(null)
                 }
                 ProfileViewModel.ZipInputValidationError.EMPTY -> {
-                    binding.zipcodeInput.setErrorTexts(arrayListOf(getString(R.string.PROFILE_INPUT_ERROR_EMTPY)))
+                    binding.zipcodeInput.setErrorTexts(arrayListOf(getString(R.string.PROFILE_INPUT_ERROR_EMPTY)))
                 }
                 ProfileViewModel.ZipInputValidationError.NOT_FIVE -> {
                     binding.zipcodeInput.setErrorTexts(arrayListOf(getString(R.string.PROFILE_INPUT_ERROR_ZIP_NOT_FIVE)))

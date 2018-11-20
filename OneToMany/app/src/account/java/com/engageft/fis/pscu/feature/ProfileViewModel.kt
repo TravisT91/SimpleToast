@@ -17,9 +17,9 @@ import io.reactivex.functions.Function3
 import io.reactivex.schedulers.Schedulers
 
 /**
- * ChangeSecurityQuestionsViewModel
+ * ProfileViewModel
  * <p>
- * ViewModel for change security questions.
+ * ViewModel for change profile settings.
  *
  * FYI: Address details will only update if the zip code is changed as well. Zip code cannot be
  * changed in isolation or an error will occur (Backend implementation). There is also a limit on

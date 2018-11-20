@@ -46,7 +46,7 @@
     <string name="PROFILE_ZIP">Zip Code</string>
     <string name="PROFILE_STATE_LIST_TITLE">Select State</string>
     <string name="PROFILE_STATE_LIST_SUBTITLE"></string>
-    <string name="PROFILE_INPUT_ERROR_EMTPY">This field cannot be empty.</string>
+    <string name="PROFILE_INPUT_ERROR_EMPTY">This field cannot be empty.</string>
     <string name="PROFILE_INPUT_ERROR_EMAIL_AT_REQUIRED">Please enter a valid email address.</string>
     <string name="PROFILE_INPUT_ERROR_PHONE_NOT_TEN">Please enter a 10-digit phone number.</string>
     <string name="PROFILE_INPUT_ERROR_ZIP_NOT_FIVE">Please enter a 5-digit zip code.</string>

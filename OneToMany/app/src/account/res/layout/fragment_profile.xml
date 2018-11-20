@@ -147,7 +147,6 @@
                     app:labelText="@string/PROFILE_STATE"
                     app:bottomSheetDialogOptions="@array/state_list_options"
                     app:bottomSheetDialogTitle="@string/PROFILE_STATE_LIST_TITLE"
-                    app:bottomSheetDialogSubtitle="@string/PROFILE_LEGAL_NAME"
                     app:bottomSheetDialogStyle="@style/ListOptionBottomSheetDialogFragmentStyle"/>
             </LinearLayout>
 
