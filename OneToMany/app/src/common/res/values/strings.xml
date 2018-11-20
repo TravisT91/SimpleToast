@@ -8,6 +8,8 @@
 
     <string name="dialog_information_cancel_button">Cancel</string>
     <string name="dialog_information_ok_button">OK</string>
+
+    <string name="software_version_format">Version %s</string>
     <string name="dialog_information_yes_button">Yes</string>
     <string name="dialog_information_no_button">No</string>
 

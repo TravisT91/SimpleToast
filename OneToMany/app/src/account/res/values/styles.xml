@@ -1,5 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <style name="CopyrightTextStyle" parent="Body">
+        <item name="android:padding">16dp</item>
+        <item name="android:lineSpacingExtra">6sp</item>
+    </style>
     <style name="StatementsDescriptionStyle" parent="Title1Quiet">
         <item name="android:textColor">@color/textPrimary</item>
         <item name="android:gravity">center_horizontal</item>
