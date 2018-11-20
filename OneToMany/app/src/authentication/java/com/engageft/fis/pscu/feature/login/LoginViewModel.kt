@@ -56,6 +56,8 @@ class LoginViewModel : BaseEngageViewModel() {
         DISMISS_DIALOG
     }
 
+    private val compositeDisposable = CompositeDisposable()
+
     val navigationObservable = MutableLiveData<LoginNavigationEvent>()
 
     val username : ObservableField<String> = ObservableField("")

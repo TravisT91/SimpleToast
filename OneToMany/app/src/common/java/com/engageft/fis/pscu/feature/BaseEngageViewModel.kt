@@ -6,13 +6,7 @@ import com.engageft.apptoolbox.BaseViewModel
 import com.engageft.apptoolbox.BuildConfig
 import com.engageft.engagekit.rest.exception.NoConnectivityException
 import com.ob.ws.dom.BasicResponse
-import com.engageft.engagekit.EngageService
-import com.engageft.engagekit.rest.exception.NoConnectivityException
 import com.ob.ws.dom.LoginResponse
-import io.reactivex.android.schedulers.AndroidSchedulers
-import io.reactivex.disposables.CompositeDisposable
-import io.reactivex.schedulers.Schedulers
-import java.net.ConnectException
 import java.net.SocketTimeoutException
 import java.net.UnknownHostException
 
@@ -25,8 +19,6 @@ import java.net.UnknownHostException
  * Copyright (c) 2018 Engage FT. All rights reserved.
  */
 open class BaseEngageViewModel: BaseViewModel() {
-
-    protected val compositeDisposable = CompositeDisposable()
 
     var loginResponse: LoginResponse? = null
 

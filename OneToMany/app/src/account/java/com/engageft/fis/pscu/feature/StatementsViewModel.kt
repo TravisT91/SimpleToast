@@ -7,10 +7,12 @@ import com.engageft.fis.pscu.feature.BaseEngageViewModel
 import com.engageft.fis.pscu.feature.DialogInfo
 import com.ob.ws.dom.LoginResponse
 import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
 import org.joda.time.DateTime
 
 class StatementsViewModel: BaseEngageViewModel() {
+    private val compositeDisposable = CompositeDisposable()
 
     val statementsObservable = MutableLiveData<List<DateTime>>()
     var dayOfMonthStatementAvailable = 0
