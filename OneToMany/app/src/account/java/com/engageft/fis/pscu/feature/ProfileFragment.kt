@@ -10,9 +10,8 @@ import com.engageft.apptoolbox.BaseViewModel
 import com.engageft.apptoolbox.ViewUtils.newLotusInstance
 import com.engageft.apptoolbox.view.InformationDialogFragment
 import com.engageft.feature.BaseEngageFullscreenFragment
-import com.engageft.onetomany.R
-import com.engageft.onetomany.databinding.FragmentProfileBinding
-
+import com.engageft.fis.pscu.R
+import com.engageft.fis.pscu.databinding.FragmentProfileBinding
 
 
 /**
