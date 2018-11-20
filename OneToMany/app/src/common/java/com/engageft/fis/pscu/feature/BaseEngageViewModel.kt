@@ -5,6 +5,7 @@ import com.crashlytics.android.Crashlytics
 import com.engageft.apptoolbox.BaseViewModel
 import com.engageft.apptoolbox.BuildConfig
 import com.engageft.engagekit.rest.exception.NoConnectivityException
+import com.ob.ws.dom.BasicResponse
 import java.net.SocketTimeoutException
 import java.net.UnknownHostException
 
@@ -19,6 +20,15 @@ import java.net.UnknownHostException
 open class BaseEngageViewModel: BaseViewModel() {
 
     val dialogInfoObservable: MutableLiveData<DialogInfo> = MutableLiveData()
+
+    fun handleUnexpectedErrorResponse(response: BasicResponse) {
+        if (BuildConfig.DEBUG) {
+            dialogInfoObservable.value = DialogInfo(message = response.message)
+        } else {
+            dialogInfoObservable.value = DialogInfo(dialogType = DialogInfo.DialogType.GENERIC_ERROR)
+            Crashlytics.log(response.message)
+        }
+    }
 
     fun handleThrowable(e: Throwable)  {
         when (e) {
