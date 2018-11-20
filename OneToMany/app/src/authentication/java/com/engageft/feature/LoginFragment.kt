@@ -19,10 +19,8 @@ import com.engageft.apptoolbox.LotusFullScreenFragment
 import com.engageft.apptoolbox.ViewUtils.newLotusInstance
 import com.engageft.apptoolbox.view.InformationDialogFragment
 import com.engageft.engagekit.utils.DeviceUtils
-import com.engageft.feature.PaletteBindings.getTextSizeAndTypefaceFromParisStyle
 import com.engageft.onetomany.R
 import com.engageft.onetomany.databinding.FragmentLoginBinding
-
 
 /**
  * LoginFragment
