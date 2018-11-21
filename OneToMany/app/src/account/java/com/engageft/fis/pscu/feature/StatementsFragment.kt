@@ -12,7 +12,6 @@ import androidx.lifecycle.ViewModelProviders
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.engageft.apptoolbox.BaseViewModel
-import com.engageft.apptoolbox.LotusFullScreenFragment
 import com.engageft.apptoolbox.adapter.HeaderLabelTitleWithSubtitleSection
 import com.engageft.apptoolbox.adapter.HorizontalRuleSection
 import com.engageft.apptoolbox.adapter.SelectableLabelsSection
@@ -22,11 +21,11 @@ import com.engageft.feature.StatementsViewModel
 import com.engageft.feature.util.DisplayDateTimeUtils
 import com.engageft.fis.pscu.R
 import com.engageft.fis.pscu.config.EngageAppConfig
+import com.engageft.fis.pscu.databinding.FragmentStatementsBinding
 import io.github.luizgrp.sectionedrecyclerviewadapter.SectionedRecyclerViewAdapter
 import org.joda.time.DateTime
-import com.engageft.fis.pscu.databinding.FragmentStatementsBinding
 
-class StatementsFragment: LotusFullScreenFragment() {
+class StatementsFragment: BaseEngageFullscreenFragment() {
 
     private val sectionAdapter: SectionedRecyclerViewAdapter = SectionedRecyclerViewAdapter()
     private lateinit var statementsViewModel: StatementsViewModel
@@ -47,26 +46,6 @@ class StatementsFragment: LotusFullScreenFragment() {
 
         statementsViewModel.statementsObservable.observe(this, Observer { statementsList ->
             updateRecyclerView(statementsList)
-        })
-
-        //TODO(aHashimi): make this reusable.
-        statementsViewModel.dialogInfoObservable.observe(this, Observer { dialogInfo ->
-            when (dialogInfo.dialogType) {
-                DialogInfo.DialogType.GENERIC_ERROR -> {
-                    showDialog(infoDialogGenericErrorTitleMessageConditionalNewInstance(context!!, dialogInfo))
-                }
-                DialogInfo.DialogType.SERVER_ERROR -> {
-                    showDialog(infoDialogGenericErrorTitleMessageConditionalNewInstance(context!!, dialogInfo))
-                }
-                DialogInfo.DialogType.NO_INTERNET_CONNECTION -> {
-                    showDialog(infoDialogGenericErrorTitleMessageNewInstance(
-                            context!!, message = getString(R.string.alert_error_message_no_internet_connection)))
-                }
-                DialogInfo.DialogType.CONNECTION_TIMEOUT -> {
-                    showDialog(infoDialogGenericErrorTitleMessageNewInstance(context!!, getString(R.string.alert_error_message_connection_timeout)))
-                }
-                else -> {}
-            }
         })
 
         return binding.root

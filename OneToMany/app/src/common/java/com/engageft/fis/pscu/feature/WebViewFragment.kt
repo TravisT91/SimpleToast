@@ -20,7 +20,6 @@ import androidx.core.content.ContextCompat
 import androidx.core.content.FileProvider
 import androidx.navigation.fragment.findNavController
 import com.engageft.apptoolbox.BaseViewModel
-import com.engageft.apptoolbox.LotusFullScreenFragment
 import com.engageft.apptoolbox.WebPrinter
 import com.engageft.apptoolbox.util.MenuTint
 import com.engageft.apptoolbox.view.InformationDialogFragment
@@ -43,7 +42,7 @@ import java.util.*
  * Converted to Kotlin, imported partially by Atia Hashimi on 11/16/18.
  * Copyright (c) 2017 Engage FT. All rights reserved.
  */
-class WebViewFragment : LotusFullScreenFragment() {
+class WebViewFragment : BaseEngageFullscreenFragment() {
 
     // Using custom WebView, even though only need its functionality when showing agreements.
     private lateinit var webView: ScrollToBottomWebView
