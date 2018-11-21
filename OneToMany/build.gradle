@@ -19,6 +19,11 @@ buildscript {
 
         heapVersion = "0.7.1"
 
+        rxJava = '2.1.0'
+        rxAndroid = '2.2.2'
+
+        sectionedRecylerView = '1.2.0'
+
         // The following version redefinitions for engagekit:
         android_support_lib_version = "27.1.1"
         archLifecycleVersion = "2.0.0" // We'll have to make this match the app later, potentially.

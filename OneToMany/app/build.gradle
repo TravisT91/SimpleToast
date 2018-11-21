@@ -77,13 +77,14 @@ dependencies {
     implementation "com.heapanalytics.android:heap-android-client:$rootProject.heapVersion"
     // For styling views programmatically
     implementation 'com.airbnb.android:paris:1.1.0'
-    implementation 'io.github.luizgrp.sectionedrecyclerviewadapter:sectionedrecyclerviewadapter:1.2.0'
+    implementation "io.github.luizgrp.sectionedrecyclerviewadapter:sectionedrecyclerviewadapter:$rootProject.sectionedRecylerView"
     // If you're using Paris annotations.
     annotationProcessor 'com.airbnb.android:paris-processor:1.1.0'
 
     implementation('com.crashlytics.sdk.android:crashlytics:2.9.6@aar') {
         transitive = true
     }
+
     // for printing webview contents
     implementation 'org.jsoup:jsoup:1.10.3'
 }
