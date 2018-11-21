@@ -9,7 +9,7 @@ import com.airbnb.paris.extensions.style
 import com.airbnb.paris.styles.Style
 
 /**
- * com.engageft.fis.pscu.feature.PaletteBindings
+ * com.engageft.fis.pscu.feature.AndroidViewBindings
  * </p>
  * Used to hold the binding adapters that are needed to style android views with Paris
  * </p>
