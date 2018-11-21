@@ -279,7 +279,7 @@ class WebViewFragment : BaseEngageFullscreenFragment() {
                             context!!.applicationContext.packageName + ".file_provider",
                             file)
                 } catch (e: Exception) {
-                    e.printStackTrace()
+                    handleGenericThrowable(e)
                 }
 
                 if (fileUri != null) {
