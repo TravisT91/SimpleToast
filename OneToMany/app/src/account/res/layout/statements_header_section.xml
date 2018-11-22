@@ -12,6 +12,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:padding="16dp"
+        android:lineSpacingExtra="8sp"
         tools:text="@string/statements_description" />
 
     <TextView

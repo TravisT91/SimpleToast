@@ -58,8 +58,8 @@ class StatementsFragment: BaseEngageFullscreenFragment() {
             val title = getString(R.string.statements_description)
                     .applyTypefaceAndColorToSubString(ResourcesCompat.getFont(context!!, R.font.font_bold)!!,
                             ContextCompat.getColor(context!!, R.color.statementSubstringDescription), getString(R.string.statements_description_substring))
-            val subTitle = String.format(getString(R.string.statements_subDescription_format),
-                    DisplayDateTimeUtils.getOrdinal(context!!, statementsViewModel.dayOfMonthStatementAvailable))
+            val availableDate = statementsViewModel.dayOfMonthStatementAvailable.toString() + DisplayDateTimeUtils.getOrdinal(context!!, statementsViewModel.dayOfMonthStatementAvailable)
+            val subTitle = String.format(getString(R.string.statements_subDescription_format), availableDate)
 
             sectionAdapter.addSection(HeaderLabelTitleWithSubtitleSection(title, subTitle, R.layout.statements_header_section))
 
@@ -86,9 +86,9 @@ class StatementsFragment: BaseEngageFullscreenFragment() {
                                 selectedMonth.year.toString())
 
                         //TODO(aHashimi): can't change the toolbar title dynamically.
-                        val pdfTitle = String.format(getString(R.string.STATEMENT_PDF_HEADER), DisplayDateTimeUtils.getMonthAbbrYear(selectedMonth.year, selectedMonth.monthOfYear))
+                        val pdfTitle = DisplayDateTimeUtils.getMonthFullYear(selectedMonth.year, selectedMonth.monthOfYear)
                         findNavController().navigate(R.id.action_statementsFragment_to_webViewFragment,
-                                WebViewFragment.getBundle(pdfTitle, statementUrl, true, false))
+                                WebViewFragment.getBundle(pdfTitle, statementUrl, true, true))
                     }
                 }
             })

@@ -36,7 +36,6 @@
     <string name="SECURITY_QUESTIONS_SUCCESS_MESSAGE_OK">Ok</string>
 
     <string name="STATEMENT_FILTER_URL">%1$s/login/sso?token=%2$s&amp;redirect_to=/account/statements?filter=%3$s-%4$s&amp;embedded=ios</string>
-    <string name="STATEMENT_PDF_HEADER">Statement for %s</string>
     <string name="statements_screen_title">Statements</string>
     <string name="statements_webView_screen_title">Statement</string>
     <string name="statements_description_empty">There are no statements available.</string>

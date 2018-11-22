@@ -98,7 +98,7 @@ class WebViewFragment : BaseEngageFullscreenFragment() {
         webView.settings.javaScriptEnabled = true
 
         if (showPdfImmediately) {
-            webView.visibility = View.GONE
+            webView.visibility = View.INVISIBLE
         }
 
         return view
@@ -270,7 +270,12 @@ class WebViewFragment : BaseEngageFullscreenFragment() {
 //    }
 
     fun exportPdfIntent() {
-        WebPrinter(context!!).createPdfPrint(webView, title!!.replace(" ", "_"), object : DisposableObserver<File>() {
+        // if we are showing PDF immediately, don't append .PDF or underscores to the file and rename
+        // underscores because the filename is used as the title of the screen when the pdf file is opened in activity
+        if (!showPdfImmediately) {
+            title = title!!.replace(" ", "_")
+        }
+        WebPrinter(context!!).createPdfPrint(webView, title!!, !showPdfImmediately, object : DisposableObserver<File>() {
             override fun onNext(file: File) {
                 var fileUri: Uri? = null
                 try {

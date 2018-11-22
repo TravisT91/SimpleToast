@@ -317,16 +317,16 @@ object DisplayDateTimeUtils {
         val lastDigitString = dayString.substring(dayString.length - 1)
         val lastDigitInt = Integer.valueOf(lastDigitString)
         val ordinal: String
-        if (day == 11 || day == 12 || day == 13) {
-            ordinal = context.getString(R.string.ORDINAL_TH)
+        ordinal = if (day == 11 || day == 12 || day == 13) {
+            context.getString(R.string.ORDINAL_TH)
         } else if (lastDigitInt == 1) {
-            ordinal = context.getString(R.string.ORDINAL_ST)
+            context.getString(R.string.ORDINAL_ST)
         } else if (lastDigitInt == 2) {
-            ordinal = context.getString(R.string.ORDINAL_ND)
+            context.getString(R.string.ORDINAL_ND)
         } else if (lastDigitInt == 3) {
-            ordinal = context.getString(R.string.ORDINAL_RD)
+            context.getString(R.string.ORDINAL_RD)
         } else {
-            ordinal = context.getString(R.string.ORDINAL_TH)
+            context.getString(R.string.ORDINAL_TH)
         }
 
         return ordinal
