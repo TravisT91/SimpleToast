@@ -30,24 +30,25 @@
                 android:paddingTop="16dp"
                 android:paddingBottom="16dp"
                 android:gravity="center"
-                android:textColor="@color/changeSecurityQuestionsHeaderTextColor" />
+                android:textColor="@color/changeSecurityQuestionsHeaderTextColor"
+                android:lineSpacingExtra="10sp" />
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
                 android:background="@color/changeSecurityQuestionsInputBackground"
-                android:paddingLeft="16dp"
-                android:paddingRight="16dp">
+                android:paddingStart="16dp"
+                android:paddingEnd="16dp">
 
                 <com.engageft.apptoolbox.view.BottomSheetListInputWithLabel
                     android:id="@+id/questionsList1"
                     style="@style/BottomSheetListInputWithLabelStyle"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="20dp"
+                    android:layout_marginTop="16dp"
                     app:inputText="@={viewModel.question1}"
-                    app:labelText="@string/SECURITY_QUESTIONS_LIST_LABEL"
+                    app:labelText="@string/SECURITY_QUESTIONS_LIST_LABEL_1"
                     app:bottomSheetDialogTitle="@string/SECURITY_QUESTIONS_LIST_TITLE"
                     app:bottomSheetDialogSubtitle="@string/SECURITY_QUESTIONS_LIST_SUBTITLE"
                     app:bottomSheetDialogStyle="@style/ListOptionBottomSheetDialogFragmentStyle"/>
@@ -57,7 +58,7 @@
                     style="@style/TextInputWithLabelStyle"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="20dp"
+                    android:layout_marginTop="16dp"
                     app:inputText="@={viewModel.answer1}"
                     app:labelText="@string/SECURITY_QUESTIONS_ANSWER_LABEL"/>
 
@@ -65,24 +66,24 @@
 
             <Space
                 android:layout_width="match_parent"
-                android:layout_height="8dp" />
+                android:layout_height="30dp" />
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
                 android:background="@color/changeSecurityQuestionsInputBackground"
-                android:paddingLeft="16dp"
-                android:paddingRight="16dp">
+                android:paddingStart="16dp"
+                android:paddingEnd="16dp">
 
                 <com.engageft.apptoolbox.view.BottomSheetListInputWithLabel
                     android:id="@+id/questionsList2"
                     style="@style/BottomSheetListInputWithLabelStyle"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="20dp"
+                    android:layout_marginTop="16dp"
                     app:inputText="@={viewModel.question2}"
-                    app:labelText="@string/SECURITY_QUESTIONS_LIST_LABEL"
+                    app:labelText="@string/SECURITY_QUESTIONS_LIST_LABEL_2"
                     app:bottomSheetDialogTitle="@string/SECURITY_QUESTIONS_LIST_TITLE"
                     app:bottomSheetDialogSubtitle="@string/SECURITY_QUESTIONS_LIST_SUBTITLE"
                     app:bottomSheetDialogStyle="@style/ListOptionBottomSheetDialogFragmentStyle"/>
@@ -92,7 +93,7 @@
                     style="@style/TextInputWithLabelStyle"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="20dp"
+                    android:layout_marginTop="16dp"
                     app:inputText="@={viewModel.answer2}"
                     app:labelText="@string/SECURITY_QUESTIONS_ANSWER_LABEL"/>
 
@@ -108,6 +109,7 @@
                 android:gravity="center"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginBottom="8dp"
                 android:enabled="@{viewModel.saveEnabled}"
                 android:onClick="@{() -> viewModel.onSaveClicked()}"
                 android:text="@string/SECURITY_QUESTIONS_BUTTON_SAVE"/>
