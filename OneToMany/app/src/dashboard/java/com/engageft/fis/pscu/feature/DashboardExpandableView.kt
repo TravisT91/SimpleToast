@@ -1,4 +1,4 @@
-package com.engageft.feature
+package com.engageft.fis.pscu.feature
 
 import android.animation.ValueAnimator
 import android.content.Context
@@ -18,8 +18,6 @@ import androidx.constraintlayout.widget.ConstraintLayout
 import com.engageft.apptoolbox.BaseActivity
 import com.engageft.apptoolbox.view.ListBottomSheetDialogFragment
 import com.engageft.apptoolbox.view.ProductCardView
-import com.engageft.engagekit.EngageService
-import com.engageft.engagekit.tools.MixpanelEvent
 import com.engageft.fis.pscu.R
 import com.engageft.fis.pscu.R.style.DashboardMoreOptionsBottomSheetDialogFragmentStyle
 
@@ -149,7 +147,6 @@ class DashboardExpandableView : ConstraintLayout {
         findViewById<ViewGroup>(R.id.overviewShowHideCardDetailsLayout).apply {
             if (DashboardConfig.CARD_MANAGEMENT_SHOW_CARD_DETAILS_ENABLED) {
                 setOnClickListener {
-                    EngageService.getInstance().mixpanel.track(MixpanelEvent.getTapsDashboardMenuEvent(findViewById<TextView>(R.id.overviewShowHideCardDetailsLabel).text))
                     listener?.onShowHideCardDetails()
                 }
             } else {
@@ -160,7 +157,6 @@ class DashboardExpandableView : ConstraintLayout {
         findViewById<ViewGroup>(R.id.overviewMoveMoneyLayout).apply {
             if (DashboardConfig.CARD_MANAGEMENT_MOVE_MONEY_ENABLED) {
                 setOnClickListener {
-                    EngageService.getInstance().mixpanel.track(MixpanelEvent.getTapsDashboardMenuEvent(findViewById<TextView>(R.id.overviewMoveMoneyLabel).text))
                     listener?.onMoveMoney()
                 }
             } else {
@@ -171,7 +167,6 @@ class DashboardExpandableView : ConstraintLayout {
         findViewById<ViewGroup>(R.id.overviewLockUnlockCardLayout).apply {
             if (DashboardConfig.CARD_MANAGEMENT_LOCK_MY_CARD_ENABLED) {
                 setOnClickListener {
-                    EngageService.getInstance().mixpanel.track(MixpanelEvent.getTapsDashboardMenuEvent(findViewById<TextView>(R.id.overviewLockUnlockCardLabel).text))
                     listener?.onLockUnlockCard()
                 }
             } else {
@@ -181,7 +176,6 @@ class DashboardExpandableView : ConstraintLayout {
 
         findViewById<ViewGroup>(R.id.overviewMoreOptionsLayout).apply {
             setOnClickListener {
-                EngageService.getInstance().mixpanel.track(MixpanelEvent.getTapsDashboardMenuEvent(findViewById<TextView>(R.id.overviewMoreOptionsLabel).text))
                 showMoreOptionsBottomNav()
             }
         }

@@ -1,6 +1,5 @@
 package com.engageft.fis.pscu
 
-import android.animation.ObjectAnimator
 import android.os.Bundle
 import android.widget.Toast
 import androidx.lifecycle.Observer
@@ -8,9 +7,9 @@ import androidx.lifecycle.ViewModelProviders
 import com.engageft.apptoolbox.LotusActivityConfig
 import com.engageft.engagekit.EngageService
 import com.engageft.engagekit.utils.LoginResponseUtils
-import com.engageft.feature.DashboardAnimationEvent
-import com.engageft.feature.DashboardNavigationEvent
-import com.engageft.feature.DashboardViewModel
+import com.engageft.fis.pscu.feature.DashboardAnimationEvent
+import com.engageft.fis.pscu.feature.DashboardNavigationEvent
+import com.engageft.fis.pscu.feature.DashboardViewModel
 import com.engageft.fis.pscu.feature.authentication.BaseAuthenticatedActivity
 import com.ob.ws.dom.utility.TransactionInfo
 
@@ -22,7 +21,6 @@ class AuthenticatedActivity : BaseAuthenticatedActivity() {
     }
 
     private lateinit var viewModel: DashboardViewModel
-    private var navigationEnabled = true
 
     override fun getLotusActivityConfig(): LotusActivityConfig {
         return lotusActivityConfig
@@ -40,14 +38,6 @@ class AuthenticatedActivity : BaseAuthenticatedActivity() {
         viewModel = ViewModelProviders.of(this).get(DashboardViewModel::class.java)
         setupDashboardNavigationObserving()
         setupDashboardAnimationObserving()
-    }
-
-    override fun onSupportNavigateUp(): Boolean {
-        return if (navigationEnabled) {
-            super.onSupportNavigateUp()
-        } else {
-            false
-        }
     }
 
     private fun setupDashboardNavigationObserving() {
@@ -77,38 +67,19 @@ class AuthenticatedActivity : BaseAuthenticatedActivity() {
                 }
                 DashboardAnimationEvent.EXPAND_START -> {
                     //navView.visibility = View.GONE // for bottom nav
-                    showToolbar(show = false, animate = true)
+                    showToolbar(show = false, animate = true, animationDurationMS = resources.getInteger(R.integer.dashboard_disclose_hide_duration_ms).toLong())
                 }
                 DashboardAnimationEvent.EXPAND_END -> {
                     // intentionally left blank
                 }
                 DashboardAnimationEvent.COLLAPSE_START -> {
                     //navView.visibility = View.VISIBLE // for bottom nav
-                    showToolbar(show = true, animate = true)
+                    showToolbar(show = true, animate = true, animationDurationMS = resources.getInteger(R.integer.dashboard_disclose_hide_duration_ms).toLong())
                 }
                 DashboardAnimationEvent.COLLAPSE_END -> {
                     // intentionally left blank
                 }
             }
         })
-    }
-
-    private fun showToolbar(show: Boolean, animate: Boolean) {
-        // animate alpha of toolbar -- fade out as DashboardExpandableView expands
-        val alphaEnd = if (show) {
-            1F
-        } else {
-            0F
-        }
-
-        if (animate) {
-            val alphaAnimator = ObjectAnimator.ofFloat(getToolbar(), "alpha", alphaEnd)
-            alphaAnimator.duration = resources.getInteger(R.integer.dashboard_disclose_hide_duration_ms).toLong()
-            alphaAnimator.start()
-        } else {
-            getToolbar()!!.alpha = alphaEnd
-        }
-
-        navigationEnabled = show
     }
 }

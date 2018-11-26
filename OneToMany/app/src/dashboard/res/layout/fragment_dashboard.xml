@@ -124,7 +124,7 @@
                         android:visibility="invisible"
                         android:alpha="0" />
 
-                    <com.engageft.feature.DashboardExpandableView
+                    <com.engageft.fis.pscu.feature.DashboardExpandableView
                         android:id="@+id/dashboardExpandableView"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"/>

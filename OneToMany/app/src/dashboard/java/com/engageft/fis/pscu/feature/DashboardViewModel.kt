@@ -1,4 +1,4 @@
-package com.engageft.feature
+package com.engageft.fis.pscu.feature
 
 import android.text.TextUtils
 import androidx.lifecycle.MutableLiveData
@@ -12,7 +12,6 @@ import com.engageft.engagekit.utils.AlertUtils
 import com.engageft.engagekit.utils.BackendDateTimeUtils
 import com.engageft.engagekit.utils.DebitCardInfoUtils
 import com.engageft.engagekit.utils.LoginResponseUtils
-import com.engageft.fis.pscu.feature.DialogInfo
 import com.ob.domain.lookup.TransactionStatus
 import com.ob.ws.dom.LoginResponse
 import com.ob.ws.dom.SecureCardInfoResponse

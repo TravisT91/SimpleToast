@@ -21,10 +21,6 @@ import com.engageft.apptoolbox.BaseViewModel
 import com.engageft.apptoolbox.LotusFullScreenFragment
 import com.engageft.apptoolbox.view.ProductCardModel
 import com.engageft.apptoolbox.view.ProductCardModelCardStatus
-import com.engageft.feature.DashboardBalanceState
-import com.engageft.feature.DashboardExpandableView
-import com.engageft.feature.DashboardViewModel
-import com.engageft.feature.TransactionsAdapter
 import com.engageft.fis.pscu.R
 import com.engageft.fis.pscu.databinding.FragmentDashboardBinding
 import com.google.android.material.tabs.TabLayout
