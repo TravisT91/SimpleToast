@@ -64,6 +64,9 @@
         <argument
             android:name="@string/navigation_override_up"
             android:defaultValue="true" />
+        <action
+            android:id="@+id/action_helpFragment_to_cardPinFragment"
+            app:destination="@id/cardPinFragment" />
     </fragment>
     <fragment
         android:id="@+id/moveMoneyFragment"
@@ -73,5 +76,9 @@
             android:name="@string/navigation_override_up"
             android:defaultValue="true" />
     </fragment>
+    <fragment
+        android:id="@+id/cardPinFragment"
+        android:name="com.engageft.fis.pscu.feature.CardPinFragment"
+        android:label="CardPinFragment" />
 
 </navigation>
