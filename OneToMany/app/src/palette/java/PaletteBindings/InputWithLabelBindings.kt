@@ -3,8 +3,12 @@ package com.engageft.feature.PaletteBindings
 import androidx.core.content.ContextCompat
 import androidx.databinding.BindingAdapter
 import com.engageft.apptoolbox.view.BaseInputWithLabel
-import com.engageft.feature.Palette
-import com.engageft.onetomany.R
+import com.engageft.fis.pscu.R
+import com.engageft.fis.pscu.feature.Palette
+import com.engageft.fis.pscu.feature.palettebindings.getInputStateList
+import com.engageft.fis.pscu.feature.palettebindings.getTextSizeAndTypefaceFromParisStyle
+import com.engageft.fis.pscu.feature.palettebindings.getTextStateList
+
 
 /**
  * InputWithLabelBinding
