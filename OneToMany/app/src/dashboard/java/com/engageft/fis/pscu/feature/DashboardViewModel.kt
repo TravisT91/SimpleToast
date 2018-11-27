@@ -2,7 +2,6 @@ package com.engageft.fis.pscu.feature
 
 import android.text.TextUtils
 import androidx.lifecycle.MutableLiveData
-import com.engageft.apptoolbox.BaseViewModel
 import com.engageft.apptoolbox.view.ProductCardModel
 import com.engageft.apptoolbox.view.ProductCardModelCardStatus
 import com.engageft.engagekit.EngageService
@@ -32,7 +31,7 @@ import java.math.BigDecimal
  *  Created by Kurt Mueller on 4/18/18.
  *  Copyright (c) 2018 Engage FT. All rights reserved.
  */
-class DashboardViewModel : BaseViewModel() {
+class DashboardViewModel : BaseEngageViewModel() {
     // ProductCardView
     var cardInfoModelObservable: MutableLiveData<ProductCardModel> = MutableLiveData()
     var cardStateObservable: MutableLiveData<CardState> = MutableLiveData()
@@ -56,9 +55,7 @@ class DashboardViewModel : BaseViewModel() {
 
     private val compositeDisposable = CompositeDisposable()
 
-    val dialogInfoObservable: MutableLiveData<DashboardDialogInfo> = MutableLiveData()
-    // Use Pair with event type and optional object, to pass relevant object like TransactionInfo when selected from list
-    val navigationObservable = MutableLiveData<Pair<DashboardNavigationEvent, Any>>()
+    val navigationObservable = MutableLiveData<DashboardNavigationEvent>()
 
     val animationObservable: MutableLiveData<DashboardAnimationEvent> = MutableLiveData()
 
@@ -111,7 +108,7 @@ class DashboardViewModel : BaseViewModel() {
                             } else {
                                 cardStateObservable.postValue(CardState.ERROR)
                             }
-                        }) {_ ->
+                        }) {
                             cardStateObservable.postValue(CardState.ERROR)
                         }
 
@@ -135,15 +132,11 @@ class DashboardViewModel : BaseViewModel() {
                             updateCardView(response)
                         } else {
                             cardStateObservable.value = CardState.DETAILS_HIDDEN
-
-                            // TODO(jhutchins): Proper error handling.
-                            dialogInfoObservable.value = DashboardDialogInfo()
+                            handleUnexpectedErrorResponse(response)
                         }
                     }) { e ->
                         cardStateObservable.value = CardState.DETAILS_HIDDEN
-
-                        // TODO(jhutchins): Proper error handling.
-                        dialogInfoObservable.value = DashboardDialogInfo()
+                        handleThrowable(e)
                     }
             )
         }
@@ -200,22 +193,19 @@ class DashboardViewModel : BaseViewModel() {
 
                                 updateNotifications(response)
                             } else {
-                                // TODO(jhutchins): Proper error handling.
-                                dialogInfoObservable.value = DashboardDialogInfo()
                                 spendingBalanceObservable.value = BigDecimal.ZERO
                                 spendingBalanceStateObservable.value = DashboardBalanceState.ERROR
                                 savingsBalanceObservable.value = BigDecimal.ZERO
                                 savingsBalanceStateObservable.value = DashboardBalanceState.ERROR
-
+                                handleUnexpectedErrorResponse(response)
                             }
                         })
                         { e ->
-                            // TODO(jhutchins): Proper error handling.
-                            dialogInfoObservable.value = DashboardDialogInfo()
                             spendingBalanceObservable.value = BigDecimal.ZERO
                             spendingBalanceStateObservable.value = DashboardBalanceState.ERROR
                             savingsBalanceObservable.value = BigDecimal.ZERO
                             savingsBalanceStateObservable.value = DashboardBalanceState.ERROR
+                            handleThrowable(e)
                         }
         )
     }
@@ -231,30 +221,20 @@ class DashboardViewModel : BaseViewModel() {
                             .subscribe({ response ->
                                 if (response.isSuccess && response is LoginResponse) {
                                     debitCardInfo = LoginResponseUtils.getCurrentCard(response)
-                                    if (debitCardInfo != null) {
-                                        // get 6 months of transactions (or less, if card request date less than 6 months ago)
-                                        val numberMonthsToLoad = getCountOfMonthsToLoadAndReload()
-                                        if (numberMonthsToLoad > 0) {
-                                            loadMostRecentMonthlyTransactions(numberMonthsToLoad, useCached)
-                                        } else {
-                                            // this could happen if using a malformed test account with isoRequestDate in the future
-                                            progressOverlayShownObservable.value = false
-                                        }
+                                    // get 6 months of transactions (or less, if card request date less than 6 months ago)
+                                    val numberMonthsToLoad = getCountOfMonthsToLoadAndReload()
+                                    if (numberMonthsToLoad > 0) {
+                                        loadMostRecentMonthlyTransactions(numberMonthsToLoad, useCached)
                                     } else {
-                                        // TODO No debit card in login response
-
-                                        // TODO(jhutchins): Proper error handling.
-                                        dialogInfoObservable.value = DashboardDialogInfo()
+                                        // this could happen if using a malformed test account with isoRequestDate in the future
+                                        progressOverlayShownObservable.value = false
                                     }
                                 } else {
-
-                                    // TODO(jhutchins): Proper error handling.
-                                    dialogInfoObservable.value = DashboardDialogInfo()
+                                    handleUnexpectedErrorResponse(response)
                                 }
                             })
                             { e ->
-                                // TODO(jhutchins): Proper error handling.
-                                dialogInfoObservable.value = DashboardDialogInfo()
+                                handleThrowable(e)
                             }
             )
         }
@@ -318,8 +298,7 @@ class DashboardViewModel : BaseViewModel() {
                                     retrievingTransactionsFinishedObservable.value = true
                                 }
                             }) { e ->
-                                // TODO(jhutchins): Proper error handling.
-                                dialogInfoObservable.value = DashboardDialogInfo()
+                                handleThrowable(e)
                             }
             )
             populateFilter.filterYear = if (populateFilter.filterMonth > 1) populateFilter.filterYear else populateFilter.filterYear - 1
@@ -335,9 +314,7 @@ class DashboardViewModel : BaseViewModel() {
         if (event.isSuccessful) {
             val newTransactions = EngageService.getInstance().storageManager.transactionsStore.getTransactionsWithFilter(debitCardInfo.debitCardId, TransactionsFilter(event.year, event.month).addStatus(TransactionStatus.PENDING))
             // add new transactions to existing list, or create a new list if no existing list
-            var transactionsList = allTransactionsObservable.value?.let {
-                it.toMutableList()
-            } ?: run {
+            val transactionsList = allTransactionsObservable.value?.toMutableList() ?: run {
                 mutableListOf<TransactionInfo>()
             }
             transactionsList.addAll(newTransactions)
@@ -375,11 +352,11 @@ class DashboardViewModel : BaseViewModel() {
     // May not be needed depending on how alerts and search are implemented. May not need DashboardFragment's
     // parent activity to observe this viewModel's navigationObservable, but leaving here just in case.
     fun showAlerts() {
-        navigationObservable.value = Pair(DashboardNavigationEvent.ALERTS, Any())
+        navigationObservable.value = DashboardNavigationEvent.ALERTS
     }
 
     fun showTransactionSearch() {
-        navigationObservable.value = Pair(DashboardNavigationEvent.TRANSACTION_SEARCH, Any())
+        navigationObservable.value = DashboardNavigationEvent.TRANSACTION_SEARCH
     }
 
     // DashboardExpandableView animation-related functions
@@ -446,10 +423,4 @@ enum class DashboardNavigationEvent {
 
 enum class DashboardBalanceState {
     LOADING, AVAILABLE, HIDDEN, ERROR
-}
-
-class DashboardDialogInfo(title: String? = null,
-                          message: String? = null,
-                          tag: String? = null,
-                          dialogType: DialogType = DialogType.GENERIC_ERROR) : DialogInfo(title, message, tag, dialogType) {
 }

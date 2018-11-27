@@ -40,7 +40,7 @@ class AuthenticatedActivity : BaseAuthenticatedActivity() {
     }
 
     private fun setupDashboardNavigationObserving() {
-        viewModel.navigationObservable.observe(this, Observer { (navigationEvent, item) ->
+        viewModel.navigationObservable.observe(this, Observer { navigationEvent ->
             when (navigationEvent) {
                 // TODO(kurt) these may not be needed for alerts and transactions search, once transactions are overhauled in a future task.
                 DashboardNavigationEvent.ALERTS -> Toast.makeText(this, "Alerts selected", Toast.LENGTH_SHORT).show()

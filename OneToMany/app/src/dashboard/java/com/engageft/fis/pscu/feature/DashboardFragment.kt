@@ -19,6 +19,8 @@ import androidx.navigation.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.engageft.apptoolbox.BaseViewModel
 import com.engageft.apptoolbox.LotusFullScreenFragment
+import com.engageft.apptoolbox.ViewUtils.newLotusInstance
+import com.engageft.apptoolbox.view.InformationDialogFragment
 import com.engageft.apptoolbox.view.ProductCardModel
 import com.engageft.apptoolbox.view.ProductCardModelCardStatus
 import com.engageft.fis.pscu.R
@@ -44,10 +46,6 @@ class DashboardFragment : LotusFullScreenFragment(), DashboardExpandableView.Das
 
     private val cardModelObserver = Observer<ProductCardModel> { updateForCardModel(it!!) }
     private val cardStateObserver = Observer<DashboardViewModel.CardState> { updateForCardState(it!!) }
-    private val cardErrorObserver = Observer<Any> { error ->
-        // TODO(jhutchins): SHOW-382: Implement error handling
-//        if (error != null && error is String) showErrorDialog(error)
-    }
 
     private val spendingBalanceObserver = Observer<BigDecimal> { updateSpendingBalance(it) }
     private val spendingBalanceStateObserver = Observer<DashboardBalanceState> { updateSpendingBalanceState(it!!) }
@@ -219,8 +217,12 @@ class DashboardFragment : LotusFullScreenFragment(), DashboardExpandableView.Das
                         if (dashboardViewModel.isShowingCardDetails()) R.string.OVERVIEW_HIDE_CARD_DETAILS else R.string.OVERVIEW_SHOW_CARD_DETAILS
                 )
 
-                // TODO(jhutchins): SHOW-382: Implement error handling
-//                showErrorDialog(getString(R.string.OVERVIEW_CARD_ERROR_DIALOG_MESSAGE))
+                showDialog(
+                        InformationDialogFragment.newLotusInstance(
+                                message = getString(R.string.OVERVIEW_CARD_ERROR_DIALOG_MESSAGE),
+                                buttonPositiveText = getString(R.string.dialog_information_ok_button)
+                        )
+                )
 
             }
         }
@@ -277,7 +279,7 @@ class DashboardFragment : LotusFullScreenFragment(), DashboardExpandableView.Das
         }
     }
 
-    fun retrievingTransactionsFinished(transactionsComplete: Boolean?) {
+    private fun retrievingTransactionsFinished(transactionsComplete: Boolean?) {
         transactionsComplete?.let {
             if (it) {
                 transactionsAdapter.notifyRetrievingTransactionsFinished()
@@ -285,7 +287,7 @@ class DashboardFragment : LotusFullScreenFragment(), DashboardExpandableView.Das
         }
     }
 
-    fun updateTransactions(transactionsList: List<TransactionInfo>?) {
+    private fun updateTransactions(transactionsList: List<TransactionInfo>?) {
         transactionsList?.let {
             transactionsAdapter.updateTransactionsList(it)
         }
@@ -309,7 +311,7 @@ class DashboardFragment : LotusFullScreenFragment(), DashboardExpandableView.Das
         return binding.dashboardExpandableView.animationDurationMs
     }
 
-    fun refreshTransactions() {
+    private fun refreshTransactions() {
         transactionsAdapter.notifyRetrievingTransactionsStarted()
         dashboardViewModel.refreshTransactions()
     }
@@ -361,8 +363,6 @@ class DashboardFragment : LotusFullScreenFragment(), DashboardExpandableView.Das
         dashboardViewModel.expirationDateFormatString = getString(R.string.MONTH_YEAR_FORMAT)
         dashboardViewModel.cardInfoModelObservable.observe(this, cardModelObserver)
         dashboardViewModel.cardStateObservable.observe(this, cardStateObserver)
-        // TODO(jhutchins): Error handling
-//        dashboardViewModel.errorObservable.observe(this, cardErrorObserver)
         dashboardViewModel.initCardView()
 
         dashboardViewModel.spendingBalanceObservable.observe(this, spendingBalanceObserver)
