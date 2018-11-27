@@ -1,11 +1,18 @@
 package com.engageft.fis.pscu.feature
 
 import android.graphics.Typeface
+import android.util.Log
 import androidx.annotation.ColorInt
 import com.airbnb.paris.extensions.fontFamily
 import com.airbnb.paris.extensions.lineSpacingExtra
 import com.airbnb.paris.extensions.textSizeDp
 import com.airbnb.paris.extensions.textViewStyle
+import com.engageft.engagekit.EngageService
+import com.ob.ws.dom.BasicResponse
+import com.ob.ws.dom.tag.TokenRequest
+import io.reactivex.Observable
+import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.schedulers.Schedulers
 
 object Palette {
     private const val NOT_SET = 0
@@ -329,7 +336,15 @@ object Palette {
             }
         }
 
-//    fun updateWithAccountPropertiesResponse(accountPropertiesResponse: AccountPropertiesResponse?) {
+    fun updateWithAccountPropertiesResponse(token : String): Observable<BasicResponse> {
+        return EngageService.getInstance().engageApiInterface.postGetAccountProperties(
+                HashMap<String,String>().apply{ put("token",token)})
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .doOnNext { response ->
+                    Log.d("POST_GET_ACCOUNT_PROPS", response.toJsonString())
+                    //TODO(ttkachuk) getResponseObjectAndApply to Palette
+
 //        accountPropertiesResponse?.apply {
 //            if (primaryColor != 0) this@Palette.primaryColor = primaryColor
 //            if (secondaryColor != 0) this@Palette.secondaryColor = secondaryColor
@@ -341,8 +356,6 @@ object Palette {
 //            if (!typefaceName.isNullOrEmpty()) this@Palette.typefaceName = typefaceName
 //
 //            updateStyles()
-//        }
-//        //TODO uncomment when we can retrieve the response from backend
-//    }
-
+                }
+        }
 }
