@@ -24,7 +24,15 @@ import com.engageft.fis.pscu.config.EngageAppConfig
 import com.engageft.fis.pscu.databinding.FragmentStatementsBinding
 import io.github.luizgrp.sectionedrecyclerviewadapter.SectionedRecyclerViewAdapter
 import org.joda.time.DateTime
-
+/**
+ * StatementsFragment
+ *
+ * Fragment that lists the available monthly statements
+ *
+ * Created by Kurt Mueller on 2/13/17.
+ * Imported, and modified by Atia Hashimi 11/22/218
+ * Copyright (c) 2018 Engage FT. All rights reserved.
+ */
 class StatementsFragment: BaseEngageFullscreenFragment() {
 
     private val sectionAdapter: SectionedRecyclerViewAdapter = SectionedRecyclerViewAdapter()

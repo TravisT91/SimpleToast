@@ -1,16 +1,21 @@
-package com.engageft.feature
+package com.engageft.fis.pscu.feature
 
 import androidx.lifecycle.MutableLiveData
 import com.engageft.engagekit.EngageService
 import com.engageft.engagekit.utils.BackendDateTimeUtils
-import com.engageft.fis.pscu.feature.BaseEngageViewModel
-import com.engageft.fis.pscu.feature.DialogInfo
 import com.ob.ws.dom.LoginResponse
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
 import org.joda.time.DateTime
-
+/**
+ * StatementsViewModel
+ *
+ * ViewModel for handling of statements lists
+ *
+ * Created by Atia Hashimi 11/22/218
+ * Copyright (c) 2018 Engage FT. All rights reserved.
+ */
 class StatementsViewModel: BaseEngageViewModel() {
     private val compositeDisposable = CompositeDisposable()
 
