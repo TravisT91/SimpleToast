@@ -31,9 +31,9 @@ import java.text.NumberFormat
 import java.util.*
 
 /**
- * TODO: CLASS NAME
+ * StringUtils
  *
- * TODO: CLASS DESCRIPTION
+ * Gen1 string utilities.
  *
  * Created by Kurt Mueller on 1/30/17.
  * Copyright (c) 2017 Engage FT. All rights reserved.
@@ -355,24 +355,26 @@ object StringUtils {
 
     // from DebitCardInfoUtils
     fun getDebitCardInfoFriendlyStatus(debitCardInfo: DebitCardInfo): String {
-        // active if status = ACTIVE, REPLACEMENT ORDERED, or REPLACED
-        var resId = R.string.CARD_STATUS_DISPLAY_ACTIVE
-
-        if (DebitCardInfoUtils.hasVirtualCard(debitCardInfo) && EngageService.getInstance().engageConfig.virtualCardEnabled)
-            resId = R.string.CARD_STATUS_DISPLAY_VIRTUAL
-        else if (DebitCardInfoUtils.isLocked(debitCardInfo))
-            resId = R.string.CARD_STATUS_DISPLAY_LOCKED
-        else if (DebitCardInfoUtils.isPendingActivation(debitCardInfo))
-            resId = R.string.CARD_STATUS_DISPLAY_PENDING
-        else if (DebitCardInfoUtils.isLostStolen(debitCardInfo))
-            resId = R.string.CARD_STATUS_DISPLAY_REPLACED
-        else if (DebitCardInfoUtils.isCancelled(debitCardInfo))
-            resId = R.string.CARD_STATUS_DISPLAY_CANCELLED
-        else if (DebitCardInfoUtils.isSuspended(debitCardInfo))
-            resId = R.string.CARD_STATUS_DISPLAY_SUSPENDED
-        else if (DebitCardInfoUtils.isFraudStatus(debitCardInfo))
-            resId = R.string.CARD_STATUS_DISPLAY_CLOSED
-        else if (DebitCardInfoUtils.isOrdered(debitCardInfo)) resId = R.string.CARD_STATUS_DISPLAY_ORDERED
+        val resId = when {
+            DebitCardInfoUtils.hasVirtualCard(debitCardInfo) && EngageService.getInstance().engageConfig.virtualCardEnabled ->
+                R.string.CARD_STATUS_DISPLAY_VIRTUAL
+            DebitCardInfoUtils.isLocked(debitCardInfo) ->
+                R.string.CARD_STATUS_DISPLAY_LOCKED
+            DebitCardInfoUtils.isPendingActivation(debitCardInfo) ->
+                R.string.CARD_STATUS_DISPLAY_PENDING
+            DebitCardInfoUtils.isLostStolen(debitCardInfo) ->
+                R.string.CARD_STATUS_DISPLAY_REPLACED
+            DebitCardInfoUtils.isCancelled(debitCardInfo) ->
+                R.string.CARD_STATUS_DISPLAY_CANCELLED
+            DebitCardInfoUtils.isSuspended(debitCardInfo) ->
+                R.string.CARD_STATUS_DISPLAY_SUSPENDED
+            DebitCardInfoUtils.isFraudStatus(debitCardInfo) ->
+                R.string.CARD_STATUS_DISPLAY_CLOSED
+            DebitCardInfoUtils.isOrdered(debitCardInfo) ->
+                R.string.CARD_STATUS_DISPLAY_ORDERED
+            else ->
+                R.string.CARD_STATUS_DISPLAY_ACTIVE // active if status = ACTIVE, REPLACEMENT ORDERED, or REPLACED
+        }
 
         return OneToManyApplication.sInstance.getString(resId)
     }
@@ -542,6 +544,7 @@ object StringUtils {
     }
 
     // if paused, "paused", or like "$5.14/Daily"
+    // TODO(travis): This would be nice as a GoalInfo extension
     fun getGoalInfoContributionString(context: Context, goalInfo: GoalInfo?): String? {
         var result: String? = null
 
@@ -555,6 +558,7 @@ object StringUtils {
     }
 
     // if paused, "paused", or like "$5.14/day"
+    // TODO(travis): This would be nice as a PayPlanInfo extension
     fun getPayPlanInfoContributionString(context: Context, payPlan: PayPlanInfo?): String? {
         val result: String
 
@@ -573,6 +577,7 @@ object StringUtils {
     }
 
     // like "by Feb 29, 2020"
+    // TODO(travis): This would be nice as a GoalInfo extension
     fun getGoalInfoCompletionDateString(context: Context, goalInfo: GoalInfo): String? {
         var result: String? = null
 
@@ -590,6 +595,7 @@ object StringUtils {
     }
 
     // "$6 of $29"
+    // TODO(travis): This would be nice as a GoalInfo extension
     fun getGoalInfoProgressString(context: Context, goalInfo: GoalInfo?): String? {
         var result: String? = null
 

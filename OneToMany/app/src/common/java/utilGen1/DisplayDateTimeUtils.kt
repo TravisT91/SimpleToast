@@ -38,6 +38,7 @@ object DisplayDateTimeUtils {
     private val mediumDateFormatter = DateTimeFormat.mediumDate() // "Feb 10, 2017";
 
     // strings.xml format patterns:
+    // TODO(travis): Are these strings localized? If not, we should probably make them constants.
     val shortDateFormatter: DateTimeFormatter = DateTimeFormat.forPattern(OneToManyApplication.sInstance.getString(R.string.format_datetime_short)) // 02/10/2017;
     val hourMinuteSecondMillisFormatter: DateTimeFormatter = DateTimeFormat.forPattern(OneToManyApplication.sInstance.getString(R.string.format_datetime_hour_minute_second_milli))
     private val monthYearFormatter = DateTimeFormat.forPattern(OneToManyApplication.sInstance.getString(R.string.format_datetime_month_year)) // "Nov 2016";
@@ -90,6 +91,7 @@ object DisplayDateTimeUtils {
             val now = DateTime.now()
             val thisYear = now.year
             for (i in 0..19) {
+                // TODO(travis): we could have done % 100 here instead
                 map[(thisYear + i).toString()] = (thisYear + i - 2000).toString()
             }
 
@@ -165,6 +167,7 @@ object DisplayDateTimeUtils {
         return longDateFormatter.print(dateTime)
     }
 
+    // TODO(travis): This could be more generic since it doesn’t have any reference to Alerts here. It could just be getAgeFromDateTime
     fun getAlertAgeFromDateTime(context: Context, dateTime: DateTime): String {
         var result = ""
         val now = DateTime.now()
@@ -222,29 +225,22 @@ object DisplayDateTimeUtils {
         // Days of week in the following array come from Calendar object. That object maps days of week
         // exactly the same as Engage backend.
         val daysOfWeek = DateFormatSymbols.getInstance(Locale.getDefault()).weekdays
-        return if (daysOfWeek[1] == dayOfWeek) {
-            // This is Sunday
-            1
-        } else if (daysOfWeek[2] == dayOfWeek) {
-            // This is Monday
-            2
-        } else if (daysOfWeek[3] == dayOfWeek) {
-            // This is Tuesday
-            3
-        } else if (daysOfWeek[4] == dayOfWeek) {
-            // This is Wednesday
-            4
-        } else if (daysOfWeek[5] == dayOfWeek) {
-            // This is Thursday
-            5
-        } else if (daysOfWeek[6] == dayOfWeek) {
-            // This is Friday
-            6
-        } else if (daysOfWeek[7] == dayOfWeek) {
-            // This is Saturday
-            7
-        } else {
-            -1
+        return when (dayOfWeek) {
+            daysOfWeek[1] -> // This is Sunday
+                1
+            daysOfWeek[2] -> // This is Monday
+                2
+            daysOfWeek[3] -> // This is Tuesday
+                3
+            daysOfWeek[4] -> // This is Wednesday
+                4
+            daysOfWeek[5] -> // This is Thursday
+                5
+            daysOfWeek[6] -> // This is Friday
+                6
+            daysOfWeek[7] -> // This is Saturday
+                7
+            else -> -1
         }
     }
 
