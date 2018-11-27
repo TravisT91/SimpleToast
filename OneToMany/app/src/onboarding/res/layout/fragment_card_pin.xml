@@ -46,6 +46,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
+            android:layout_margin="16dp"
             android:gravity="center">
 
             <androidx.appcompat.widget.AppCompatImageView
@@ -56,7 +57,7 @@
                 android:layout_marginTop="16dp"
                 android:layout_marginBottom="16dp"
                 android:layout_marginEnd="32dp"
-                android:background="@drawable/card_pin_empty_dot_shape" />
+                android:background="@drawable/card_pin_unselected_dot_shape" />
 
             <androidx.appcompat.widget.AppCompatImageView
                 android:id="@+id/iconImageView2"
@@ -65,7 +66,7 @@
                 android:layout_marginTop="16dp"
                 android:layout_marginBottom="16dp"
                 android:layout_marginEnd="32dp"
-                android:background="@drawable/card_pin_empty_dot_shape" />
+                android:background="@drawable/card_pin_unselected_dot_shape" />
 
             <androidx.appcompat.widget.AppCompatImageView
                 android:id="@+id/iconImageView3"
@@ -74,7 +75,7 @@
                 android:layout_marginTop="16dp"
                 android:layout_marginBottom="16dp"
                 android:layout_marginEnd="32dp"
-                android:background="@drawable/card_pin_empty_dot_shape" />
+                android:background="@drawable/card_pin_unselected_dot_shape" />
 
             <androidx.appcompat.widget.AppCompatImageView
                 android:id="@+id/iconImageView4"
@@ -83,18 +84,18 @@
                 android:layout_marginTop="16dp"
                 android:layout_marginBottom="16dp"
                 android:layout_marginEnd="16dp"
-                android:background="@drawable/card_pin_empty_dot_shape" />
+                android:background="@drawable/card_pin_unselected_dot_shape" />
         </androidx.appcompat.widget.LinearLayoutCompat>
 
         <com.engageft.apptoolbox.view.ZipCodeInputWithLabel
-            android:id="@+id/pinInputWithLabel"
+            android:id="@+id/pinInputField"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
             android:layout_marginTop="8dp"
             android:layout_marginEnd="8dp"
             android:layout_marginBottom="8dp"
-            android:alpha="1"
+            android:alpha="0"
             app:inputMask="[0000]" />
 
     </LinearLayout>
