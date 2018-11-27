@@ -7,7 +7,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.WindowManager
-import android.widget.TextView
 import androidx.core.content.ContextCompat
 import androidx.core.view.ViewCompat
 import androidx.core.widget.NestedScrollView
@@ -15,8 +14,6 @@ import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
-import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.engageft.apptoolbox.BaseViewModel
 import com.engageft.apptoolbox.LotusFullScreenFragment
 import com.engageft.apptoolbox.view.ProductCardModel
@@ -25,7 +22,6 @@ import com.engageft.fis.pscu.R
 import com.engageft.fis.pscu.databinding.FragmentDashboardBinding
 import com.google.android.material.tabs.TabLayout
 import com.ob.ws.dom.utility.TransactionInfo
-import eightbitlab.com.blurview.BlurView
 import eightbitlab.com.blurview.RenderScriptBlur
 import utilGen1.StringUtils
 import java.math.BigDecimal
@@ -68,25 +64,8 @@ class DashboardFragment : LotusFullScreenFragment(), DashboardExpandableView.Das
 
     private var scrollDisabled = false
 
-    // views, which can't be accessed using Kotlin Android plugin because the imports created for that are flavor-specific
-    private lateinit var rootLayout: ViewGroup
-    lateinit var dashboardExpandableView: DashboardExpandableView
-    private lateinit var transactionsRecyclerView: RecyclerView
-    private lateinit var overviewNestedScrollView: NestedScrollView
-    private lateinit var toolbarShadowView: View
-    private lateinit var spendingBalanceAmount: TextView
-    private lateinit var spendingBalanceLabel: TextView
-    private lateinit var savingsBalanceAmount: TextView
-    private lateinit var savingsBalanceLabel: TextView
-    private var transactionsTabLayout: TabLayout? = null
-    private lateinit var swipeRefreshLayout: SwipeRefreshLayout
-    private lateinit var blurView: BlurView
-    // for displaying a message view, like CARE-399 waiting for card activation message
-    lateinit var messageContainer: ViewGroup
-
     override fun createViewModel(): BaseViewModel? {
         dashboardViewModel = ViewModelProviders.of(activity!!).get(DashboardViewModel::class.java)
-        initViewModel()
         return null
     }
 
@@ -98,68 +77,55 @@ class DashboardFragment : LotusFullScreenFragment(), DashboardExpandableView.Das
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        rootLayout = view.findViewById(R.id.rootLayout)
-        dashboardExpandableView = view.findViewById(R.id.dashboardExpandableView)
-        transactionsRecyclerView = view.findViewById(R.id.transactionsRecyclerView)
-        overviewNestedScrollView = view.findViewById(R.id.dashboardNestedScrollView)
-        toolbarShadowView = view.findViewById(R.id.toolbarShadowView)
-        spendingBalanceAmount = view.findViewById(R.id.spendingBalanceAmount)
-        spendingBalanceLabel = view.findViewById(R.id.spendingBalanceLabel)
-        savingsBalanceAmount = view.findViewById(R.id.savingsBalanceAmount)
-        savingsBalanceLabel = view.findViewById(R.id.savingsBalanceLabel)
-        transactionsTabLayout = view.findViewById(R.id.transactionsTabLayout)
-        swipeRefreshLayout = view.findViewById(R.id.swipeRefreshLayout)
-        blurView = view.findViewById(R.id.blurView)
-
         toolbarShadowAnimationScrollRange = context!!.resources.getDimensionPixelSize(R.dimen.dashboard_toolbar_shadow_animation_scroll_range)
         toolbarShadowAnimationScrollRangeFloat = toolbarShadowAnimationScrollRange.toFloat()
 
-        dashboardExpandableView.listener = this
+        binding.dashboardExpandableView.listener = this
 
         transactionsAdapter = TransactionsAdapter(context!!, this)
-        transactionsRecyclerView.apply {
+        binding.transactionsRecyclerView.apply {
             layoutManager = LinearLayoutManager(context)
             adapter = transactionsAdapter
         }
         // this enables smooth scrolling of the nestedscrollview
-        ViewCompat.setNestedScrollingEnabled(transactionsRecyclerView, false)
+        ViewCompat.setNestedScrollingEnabled(binding.transactionsRecyclerView, false)
 
         // allows disabling scrollview
-        overviewNestedScrollView.setOnTouchListener { _, _ ->
+        binding.dashboardNestedScrollView.setOnTouchListener { _, _ ->
             scrollDisabled
         }
 
-        overviewNestedScrollView.setOnScrollChangeListener { _: NestedScrollView?, _: Int, scrollY: Int, _X: Int, _: Int ->
+        binding.dashboardNestedScrollView.setOnScrollChangeListener { _: NestedScrollView?, _: Int, scrollY: Int, _: Int, _: Int ->
             when {
-                scrollY == 0 -> toolbarShadowView.visibility = View.INVISIBLE
+                scrollY == 0 -> binding.toolbarShadowView.visibility = View.INVISIBLE
                 scrollY <= toolbarShadowAnimationScrollRange -> {
-                    toolbarShadowView.alpha = scrollY / toolbarShadowAnimationScrollRangeFloat
-                    toolbarShadowView.visibility = View.VISIBLE
+                    binding.toolbarShadowView.alpha = scrollY / toolbarShadowAnimationScrollRangeFloat
+                    binding.toolbarShadowView.visibility = View.VISIBLE
                 }
                 else -> {
-                    toolbarShadowView.alpha = 1F
-                    toolbarShadowView.visibility = View.VISIBLE
+                    binding.toolbarShadowView.alpha = 1F
+                    binding.toolbarShadowView.visibility = View.VISIBLE
                 }
             }
         }
 
         val spendingClickListener = View.OnClickListener {
-            if (!dashboardExpandableView.showingActions) {
+            if (!binding.dashboardExpandableView.showingActions) {
                 dashboardViewModel.showSpending()
             }
         }
-        spendingBalanceAmount.setOnClickListener(spendingClickListener)
-        spendingBalanceLabel.setOnClickListener(spendingClickListener)
+        binding.spendingBalanceAmount.setOnClickListener(spendingClickListener)
+        binding.spendingBalanceLabel.setOnClickListener(spendingClickListener)
 
         val savingsClickListener = View.OnClickListener {
-            if (!dashboardExpandableView.showingActions) {
+            if (!binding.dashboardExpandableView.showingActions) {
                 dashboardViewModel.showSetAside()
             }
         }
-        savingsBalanceAmount.setOnClickListener(savingsClickListener)
-        savingsBalanceLabel.setOnClickListener(savingsClickListener)
+        binding.savingsBalanceAmount.setOnClickListener(savingsClickListener)
+        binding.savingsBalanceLabel.setOnClickListener(savingsClickListener)
 
-        transactionsTabLayout!!.addOnTabSelectedListener(object:TabLayout.OnTabSelectedListener {
+        binding.transactionsTabLayout.addOnTabSelectedListener(object:TabLayout.OnTabSelectedListener {
             override fun onTabReselected(tab: TabLayout.Tab?) {
                 // intentionally left blank
             }
@@ -169,7 +135,7 @@ class DashboardFragment : LotusFullScreenFragment(), DashboardExpandableView.Das
             }
 
             override fun onTabSelected(tab: TabLayout.Tab?) {
-                when (transactionsTabLayout!!.selectedTabPosition) {
+                when (binding.transactionsTabLayout.selectedTabPosition) {
                     DashboardViewModel.TRANSACTIONS_TAB_POSITION_ALL -> {
                         transactionsAdapter.showDepositsOnly = false
                     }
@@ -178,36 +144,36 @@ class DashboardFragment : LotusFullScreenFragment(), DashboardExpandableView.Das
                     }
                 }
                 // update view model with position, so that it can be set correctly when fragment is restored
-                dashboardViewModel.transactionsTabPosition = transactionsTabLayout!!.selectedTabPosition
+                dashboardViewModel.transactionsTabPosition = binding.transactionsTabLayout.selectedTabPosition
             }
         })
 
-        swipeRefreshLayout.setOnRefreshListener {
+        binding.swipeRefreshLayout.setOnRefreshListener {
             dashboardViewModel.refreshBalancesAndNotifications()
             refreshTransactions()
             // viewModel will trigger showing regular activity indicator. Don't show swipe refresh indicator too.
-            swipeRefreshLayout.isRefreshing = false
+            binding.swipeRefreshLayout.isRefreshing = false
         }
 
         // lot of work to get a float from dimens!
         val outValue = TypedValue()
         resources.getValue(R.dimen.blur_radius, outValue, true)
         val blurRadius = outValue.float
-        blurView.setupWith(rootLayout)
+        binding.blurView.setupWith(binding.rootLayout)
                 .setBlurAlgorithm(RenderScriptBlur(context))
                 .setBlurRadius(blurRadius)
 
-        messageContainer = view.findViewById(R.id.message_container)
+        initViewModel()
     }
 
     private fun updateForCardModel(productCardModel: ProductCardModel) {
         productCardModel.cardStatusText = cardStatusStringFromCardStatus(productCardModel.cardStatus)
-        dashboardExpandableView.cardView.updateWithProductCardModel(productCardModel)
+        binding.dashboardExpandableView.cardView.updateWithProductCardModel(productCardModel)
 
-        dashboardExpandableView.overviewLockUnlockCardIcon.setImageDrawable(
+        binding.dashboardExpandableView.overviewLockUnlockCardIcon.setImageDrawable(
                 ContextCompat.getDrawable(context!!, if (productCardModel.cardLocked) R.drawable.ic_dashboard_card_unlock else R.drawable.ic_dashboard_card_lock)
         )
-        dashboardExpandableView.overviewLockUnlockCardLabel.text = getString(
+        binding.dashboardExpandableView.overviewLockUnlockCardLabel.text = getString(
                 if (productCardModel.cardLocked) R.string.OVERVIEW_UNLOCK_MY_CARD else R.string.OVERVIEW_LOCK_MY_CARD
         )
     }
@@ -232,21 +198,21 @@ class DashboardFragment : LotusFullScreenFragment(), DashboardExpandableView.Das
         when (cardState) {
             DashboardViewModel.CardState.LOADING -> {
                 progressOverlayDelegate.showProgressOverlay()
-                dashboardExpandableView.overviewShowHideCardDetailsLabel.text = getString(R.string.OVERVIEW_LOADING_CARD_DETAILS)
+                binding.dashboardExpandableView.overviewShowHideCardDetailsLabel.text = getString(R.string.OVERVIEW_LOADING_CARD_DETAILS)
             }
             DashboardViewModel.CardState.DETAILS_HIDDEN -> {
                 progressOverlayDelegate.dismissProgressOverlay()
-                dashboardExpandableView.overviewShowHideCardDetailsIcon.setImageDrawable(ContextCompat.getDrawable(context!!, R.drawable.ic_dashboard_card_details_show))
-                dashboardExpandableView.overviewShowHideCardDetailsLabel.text = getString(R.string.OVERVIEW_SHOW_CARD_DETAILS)
+                binding.dashboardExpandableView.overviewShowHideCardDetailsIcon.setImageDrawable(ContextCompat.getDrawable(context!!, R.drawable.ic_dashboard_card_details_show))
+                binding.dashboardExpandableView.overviewShowHideCardDetailsLabel.text = getString(R.string.OVERVIEW_SHOW_CARD_DETAILS)
             }
             DashboardViewModel.CardState.DETAILS_SHOWN -> {
                 progressOverlayDelegate.dismissProgressOverlay()
-                dashboardExpandableView.overviewShowHideCardDetailsIcon.setImageDrawable(ContextCompat.getDrawable(context!!, R.drawable.ic_dashboard_card_details_hide))
-                dashboardExpandableView.overviewShowHideCardDetailsLabel.text = getString(R.string.OVERVIEW_HIDE_CARD_DETAILS)
+                binding.dashboardExpandableView.overviewShowHideCardDetailsIcon.setImageDrawable(ContextCompat.getDrawable(context!!, R.drawable.ic_dashboard_card_details_hide))
+                binding.dashboardExpandableView.overviewShowHideCardDetailsLabel.text = getString(R.string.OVERVIEW_HIDE_CARD_DETAILS)
             }
             DashboardViewModel.CardState.ERROR -> {
                 progressOverlayDelegate.dismissProgressOverlay()
-                dashboardExpandableView.overviewShowHideCardDetailsLabel.text = getString(
+                binding.dashboardExpandableView.overviewShowHideCardDetailsLabel.text = getString(
                         if (dashboardViewModel.isShowingCardDetails()) R.string.OVERVIEW_HIDE_CARD_DETAILS else R.string.OVERVIEW_SHOW_CARD_DETAILS
                 )
 
@@ -262,48 +228,49 @@ class DashboardFragment : LotusFullScreenFragment(), DashboardExpandableView.Das
 
     fun updateSpendingBalance(spendingBalance: BigDecimal?) {
         spendingBalance?.let {
-            spendingBalanceAmount.text = StringUtils.formatCurrencyStringFractionDigitsReducedHeight(spendingBalance.toFloat(), 0.5f, true)
+            binding.spendingBalanceAmount.text = StringUtils.formatCurrencyStringFractionDigitsReducedHeight(spendingBalance.toFloat(), 0.5f, true)
         } ?: run {
             // TODO(kurt) what do show when no value?
-            spendingBalanceAmount.text = "..."
+            binding.spendingBalanceAmount.text = "..."
         }
     }
 
     fun updateSpendingBalanceState(spendingBalanceState: DashboardBalanceState) {
         when (spendingBalanceState) {
-            DashboardBalanceState.LOADING -> spendingBalanceAmount.text = getString(R.string.OVERVIEW_BALANCE_LOADING)
-            DashboardBalanceState.ERROR -> spendingBalanceAmount.text = getString(R.string.OVERVIEW_BALANCE_ERROR)
+            DashboardBalanceState.LOADING -> binding.spendingBalanceAmount.text = getString(R.string.OVERVIEW_BALANCE_LOADING)
+            DashboardBalanceState.ERROR -> binding.spendingBalanceAmount.text = getString(R.string.OVERVIEW_BALANCE_ERROR)
             // don't change for other states
+            else -> {}
         }
     }
 
     fun updateSavingsBalance(savingsBalance: BigDecimal?) {
         savingsBalance?.let {
-            savingsBalanceAmount.text = StringUtils.formatCurrencyStringFractionDigitsReducedHeight(savingsBalance.toFloat(), 0.5f, true)
-            savingsBalanceAmount.visibility = View.VISIBLE
-            savingsBalanceLabel.visibility = View.VISIBLE
+            binding.savingsBalanceAmount.text = StringUtils.formatCurrencyStringFractionDigitsReducedHeight(savingsBalance.toFloat(), 0.5f, true)
+            binding.savingsBalanceAmount.visibility = View.VISIBLE
+            binding.savingsBalanceLabel.visibility = View.VISIBLE
         } ?: run {
-            savingsBalanceAmount.visibility = View.GONE
-            savingsBalanceLabel.visibility = View.GONE
+            binding.savingsBalanceAmount.visibility = View.GONE
+            binding.savingsBalanceLabel.visibility = View.GONE
         }
     }
 
     fun updateSavingsBalanceState(savingsBalanceState: DashboardBalanceState) {
         when (savingsBalanceState) {
             DashboardBalanceState.LOADING -> {
-                savingsBalanceAmount.text = getString(R.string.OVERVIEW_BALANCE_LOADING)
-                savingsBalanceAmount.visibility = View.VISIBLE
-                savingsBalanceLabel.visibility = View.VISIBLE
+                binding.savingsBalanceAmount.text = getString(R.string.OVERVIEW_BALANCE_LOADING)
+                binding.savingsBalanceAmount.visibility = View.VISIBLE
+                binding.savingsBalanceLabel.visibility = View.VISIBLE
             }
             DashboardBalanceState.HIDDEN -> {
-                savingsBalanceAmount.visibility = View.GONE
-                savingsBalanceLabel.visibility = View.GONE
+                binding.savingsBalanceAmount.visibility = View.GONE
+                binding.savingsBalanceLabel.visibility = View.GONE
             }
             DashboardBalanceState.AVAILABLE -> {
-                savingsBalanceAmount.visibility = View.VISIBLE
-                savingsBalanceLabel.visibility = View.VISIBLE
+                binding.savingsBalanceAmount.visibility = View.VISIBLE
+                binding.savingsBalanceLabel.visibility = View.VISIBLE
             }
-            DashboardBalanceState.ERROR -> savingsBalanceAmount.text = getString(R.string.OVERVIEW_BALANCE_ERROR)
+            DashboardBalanceState.ERROR -> binding.savingsBalanceAmount.text = getString(R.string.OVERVIEW_BALANCE_ERROR)
         }
     }
 
@@ -324,19 +291,19 @@ class DashboardFragment : LotusFullScreenFragment(), DashboardExpandableView.Das
     }
 
     fun showMessageContainerWithView(messageView: View) {
-        messageContainer.addView(messageView)
-        messageContainer.visibility = View.VISIBLE
-        dashboardExpandableView.showExpandCollapseButton(false)
+        binding.messageContainer.addView(messageView)
+        binding.messageContainer.visibility = View.VISIBLE
+        binding.dashboardExpandableView.showExpandCollapseButton(false)
     }
 
     fun hideMessageContainer() {
-        messageContainer.visibility = View.INVISIBLE
-        messageContainer.removeAllViews()
-        dashboardExpandableView.showExpandCollapseButton(true)
+        binding.messageContainer.visibility = View.INVISIBLE
+        binding.messageContainer.removeAllViews()
+        binding.dashboardExpandableView.showExpandCollapseButton(true)
     }
 
     fun getAnimationDurationMs(): Long {
-        return dashboardExpandableView.animationDurationMs
+        return binding.dashboardExpandableView.animationDurationMs
     }
 
     fun refreshTransactions() {
@@ -357,8 +324,8 @@ class DashboardFragment : LotusFullScreenFragment(), DashboardExpandableView.Das
     private fun showObscuringOverlayImmediate() {
         scrollDisabled = true
         transactionsAdapter.transactionSelectionEnabled = false
-        blurView.visibility = View.VISIBLE
-        blurView.alpha = 1F
+        binding.blurView.visibility = View.VISIBLE
+        binding.blurView.alpha = 1F
     }
 
     private fun showObscuringOverlay(show: Boolean) {
@@ -370,8 +337,8 @@ class DashboardFragment : LotusFullScreenFragment(), DashboardExpandableView.Das
 
             // if the main scrollView is not at the top, scroll to top now. Otherwise expanded DashboardExpandableView
             // may be partially offscreen.
-            if (overviewNestedScrollView.scrollY != 0) {
-                overviewNestedScrollView.scrollTo(0, 0)
+            if (binding.dashboardNestedScrollView.scrollY != 0) {
+                binding.dashboardNestedScrollView.scrollTo(0, 0)
             }
             // Don't let user scroll or click transactions when DashboardExpandableView is expanded
             scrollDisabled = true
@@ -380,9 +347,9 @@ class DashboardFragment : LotusFullScreenFragment(), DashboardExpandableView.Das
             alphaEnd = 0F
         }
 
-        val alphaAnimator = ObjectAnimator.ofFloat(blurView,"alpha", alphaEnd)
-        alphaAnimator.duration = dashboardExpandableView.animationDurationMs
-        blurView.visibility = View.VISIBLE
+        val alphaAnimator = ObjectAnimator.ofFloat(binding.blurView,"alpha", alphaEnd)
+        alphaAnimator.duration = binding.dashboardExpandableView.animationDurationMs
+        binding.blurView.visibility = View.VISIBLE
         alphaAnimator.start()
     }
 
@@ -407,7 +374,7 @@ class DashboardFragment : LotusFullScreenFragment(), DashboardExpandableView.Das
         dashboardViewModel.notificationsCountObservable.observe(this, notificationsObserver)
 
         // make sure correct tab is showing, after return from TransactionDetailFragment, in particular
-        transactionsTabLayout?.getTabAt(dashboardViewModel.transactionsTabPosition)?.select()
+        binding.transactionsTabLayout.getTabAt(dashboardViewModel.transactionsTabPosition)?.select()
 
         dashboardViewModel.initBalancesAndNotifications()
         dashboardViewModel.initTransactions()
@@ -417,8 +384,8 @@ class DashboardFragment : LotusFullScreenFragment(), DashboardExpandableView.Das
         showObscuringOverlayImmediate()
         dashboardViewModel.expandImmediate()
 
-        blurView.setOnClickListener {
-            dashboardExpandableView.showActions(false)
+        binding.blurView.setOnClickListener {
+            binding.dashboardExpandableView.showActions(false)
         }
     }
 
@@ -426,8 +393,8 @@ class DashboardFragment : LotusFullScreenFragment(), DashboardExpandableView.Das
         showObscuringOverlay(true)
         dashboardViewModel.expandStart()
 
-        blurView.setOnClickListener {
-            dashboardExpandableView.showActions(false)
+        binding.blurView.setOnClickListener {
+            binding.dashboardExpandableView.showActions(false)
         }
     }
 
@@ -440,11 +407,11 @@ class DashboardFragment : LotusFullScreenFragment(), DashboardExpandableView.Das
         showObscuringOverlay(false)
         dashboardViewModel.collapseStart()
 
-        blurView.setOnClickListener(null)
+        binding.blurView.setOnClickListener(null)
     }
 
     override fun onCollapseEnd() {
-        blurView.visibility = View.INVISIBLE
+        binding.blurView.visibility = View.INVISIBLE
         scrollDisabled = false
         transactionsAdapter.transactionSelectionEnabled = true
         dashboardViewModel.collapseEnd()
