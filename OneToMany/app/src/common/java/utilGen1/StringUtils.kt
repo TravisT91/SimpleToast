@@ -15,6 +15,7 @@ import android.text.style.RelativeSizeSpan
 import androidx.core.content.ContextCompat
 import androidx.core.content.res.ResourcesCompat
 import com.engageft.apptoolbox.util.CurrencyUtils
+import com.engageft.apptoolbox.util.CustomTypefaceSpan
 import com.engageft.engagekit.EngageService
 import com.engageft.engagekit.utils.BackendDateTimeUtils
 import com.engageft.engagekit.utils.DebitCardInfoUtils
@@ -441,7 +442,7 @@ object StringUtils {
         if (typefaceResId != 0) {
             val typeface = ResourcesCompat.getFont(context, typefaceResId)
             if (typeface != null) {
-                val customTypefaceSpan = CustomTypefaceSpan("", typeface)
+                val customTypefaceSpan = CustomTypefaceSpan(typeface)
                 spannableString.setSpan(customTypefaceSpan, 0, spannableString.length, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
             }
         }
@@ -482,7 +483,7 @@ object StringUtils {
         val spannableString = SpannableString(target)
         if (typeface != null && target.contains(substring)) {
             val indexOfSubstring = target.indexOf(substring)
-            val customTypefaceSpan = CustomTypefaceSpan("", typeface)
+            val customTypefaceSpan = CustomTypefaceSpan(typeface)
             spannableString.setSpan(customTypefaceSpan, indexOfSubstring, indexOfSubstring + substring.length, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
         }
 
@@ -500,7 +501,7 @@ object StringUtils {
             val typeface = ResourcesCompat.getFont(context, first)
             if (typeface != null && target.contains(second)) {
                 val indexOfSubstring = target.indexOf(second)
-                val customTypefaceSpan = CustomTypefaceSpan("", typeface)
+                val customTypefaceSpan = CustomTypefaceSpan(typeface)
                 spannableString.setSpan(customTypefaceSpan, indexOfSubstring, indexOfSubstring + second.length, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
             }
         }
