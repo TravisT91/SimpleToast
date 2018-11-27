@@ -28,7 +28,6 @@ import com.engageft.fis.pscu.feature.Palette
 import com.engageft.fis.pscu.feature.infoDialogGenericErrorTitleMessageConditionalNewInstance
 import com.engageft.fis.pscu.feature.infoDialogGenericErrorTitleMessageNewInstance
 import com.engageft.fis.pscu.feature.infoDialogSimpleMessageNoTitle
-import kotlinx.android.synthetic.main.fragment_login.*
 
 /**
  * LoginFragment
@@ -88,16 +87,16 @@ class LoginFragment : LotusFullScreenFragment() {
         })
         vm.usernameError.observe(this, Observer { error: LoginViewModel.UsernameValidationError ->
             when (error) {
-                LoginViewModel.UsernameValidationError.NONE -> usernameInput.setErrorTexts(null)
-                LoginViewModel.UsernameValidationError.INVALID_CREDENTIALS -> usernameInput.setErrorTexts(listOf(getString(R.string.error_message_invalid_credentials)))
+                LoginViewModel.UsernameValidationError.NONE -> binding.usernameInput.setErrorTexts(null)
+                LoginViewModel.UsernameValidationError.INVALID_CREDENTIALS -> binding.usernameInput.setErrorTexts(listOf(getString(R.string.error_message_invalid_credentials)))
             }
             // Make sure error is animated
             setLayoutTransitions()
         })
         vm.passwordError.observe(this, Observer { error: LoginViewModel.PasswordValidationError ->
             when (error) {
-                LoginViewModel.PasswordValidationError.NONE -> passwordInput.setErrorTexts(null)
-                LoginViewModel.PasswordValidationError.INVALID_CREDENTIALS -> passwordInput.setErrorTexts(listOf(getString(R.string.error_message_invalid_credentials)))
+                LoginViewModel.PasswordValidationError.NONE -> binding.passwordInput.setErrorTexts(null)
+                LoginViewModel.PasswordValidationError.INVALID_CREDENTIALS -> binding.passwordInput.setErrorTexts(listOf(getString(R.string.error_message_invalid_credentials)))
             }
             // Make sure error is animated
             setLayoutTransitions()
@@ -212,15 +211,17 @@ class LoginFragment : LotusFullScreenFragment() {
             }
         })
 
-        binding.passwordInput.setImeOptions(EditorInfo.IME_ACTION_DONE)
-        binding.passwordInput.onImeAction(EditorInfo.IME_ACTION_DONE) { vm.loginClicked() }
+        binding.apply {
+            passwordInput.setImeOptions(EditorInfo.IME_ACTION_DONE)
+            passwordInput.onImeAction(EditorInfo.IME_ACTION_DONE) { vm.loginClicked() }
 
-        binding.btnIssuerStatement.setOnClickListener { vm.issuerStatementClicked() }
-        binding.btnDisclosures.setOnClickListener { vm.disclosuresClicked() }
-        binding.loginButton.setOnClickListener { vm.loginClicked() }
-        binding.demoAccountButton.setOnClickListener { vm.createDemoAccount() }
+            btnIssuerStatement.setOnClickListener { vm.issuerStatementClicked() }
+            btnDisclosures.setOnClickListener { vm.disclosuresClicked() }
+            loginButton.setOnClickListener { vm.loginClicked() }
+            demoAccountButton.setOnClickListener { vm.createDemoAccount() }
 
-        binding.root.systemUiVisibility = View.SYSTEM_UI_FLAG_LAYOUT_STABLE
+            root.systemUiVisibility = View.SYSTEM_UI_FLAG_LAYOUT_STABLE
+        }
 
         return binding.root
     }
