@@ -9,6 +9,7 @@ open class DialogInfo(var title: String? = null,
         SERVER_ERROR,
         NO_INTERNET_CONNECTION,
         CONNECTION_TIMEOUT,
+        NOT_LOGGED_IN,
         OTHER
     }
 }

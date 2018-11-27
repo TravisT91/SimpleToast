@@ -4,7 +4,9 @@ import androidx.lifecycle.MutableLiveData
 import com.crashlytics.android.Crashlytics
 import com.engageft.apptoolbox.BaseViewModel
 import com.engageft.apptoolbox.BuildConfig
+import com.engageft.engagekit.EngageService
 import com.engageft.engagekit.rest.exception.NoConnectivityException
+import com.engageft.engagekit.rest.exception.NotLoggedInException
 import com.ob.ws.dom.BasicResponse
 import java.net.SocketTimeoutException
 import java.net.UnknownHostException
@@ -40,6 +42,9 @@ open class BaseEngageViewModel: BaseViewModel() {
             }
             is SocketTimeoutException -> {
                 dialogInfoObservable.value = DialogInfo(dialogType = DialogInfo.DialogType.CONNECTION_TIMEOUT)
+            }
+            is NotLoggedInException -> {
+                dialogInfoObservable.value = DialogInfo(dialogType = DialogInfo.DialogType.NOT_LOGGED_IN)
             }
             // Add more specific exceptions here, if needed
             else -> {
