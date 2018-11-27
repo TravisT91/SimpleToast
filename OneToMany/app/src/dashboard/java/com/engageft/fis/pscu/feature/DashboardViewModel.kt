@@ -371,49 +371,15 @@ class DashboardViewModel : BaseViewModel() {
         return count
     }
 
-    // These are called by DashboardFragment in response to user presses in DashboardExpandableView
-    fun showMoveMoney() {
-        navigationObservable.value = Pair(DashboardNavigationEvent.MOVE_MONEY, Any())
-    }
-
-    fun showLockUnlockCard() {
-        navigationObservable.value = Pair(DashboardNavigationEvent.LOCK_UNLOCK_CARD, Any())
-    }
-
-    fun showChangePin() {
-        navigationObservable.value = Pair(DashboardNavigationEvent.CHANGE_PIN, Any())
-    }
-
-    fun showReplaceCard() {
-        navigationObservable.value = Pair(DashboardNavigationEvent.REPLACE_CARD, Any())
-    }
-
-    fun showReportLostStolen() {
-        navigationObservable.value = Pair(DashboardNavigationEvent.REPORT_LOST_STOLEN, Any())
-    }
-
-    fun showCancelCard() {
-        navigationObservable.value = Pair(DashboardNavigationEvent.CANCEL_CARD, Any())
-    }
-
-    fun showSpending() {
-        navigationObservable.value = Pair(DashboardNavigationEvent.SPENDING, Any())
-    }
-
-    fun showSetAside() {
-        navigationObservable.value = Pair(DashboardNavigationEvent.SET_ASIDE, Any())
-    }
-
+    // These are called by DashboardFragment in response to user presses in DashboardExpandableView.
+    // May not be needed depending on how alerts and search are implemented. May not need DashboardFragment's
+    // parent activity to observe this viewModel's navigationObservable, but leaving here just in case.
     fun showAlerts() {
         navigationObservable.value = Pair(DashboardNavigationEvent.ALERTS, Any())
     }
 
     fun showTransactionSearch() {
         navigationObservable.value = Pair(DashboardNavigationEvent.TRANSACTION_SEARCH, Any())
-    }
-
-    fun showTransactionDetails(transaction: TransactionInfo) {
-        navigationObservable.value = Pair(DashboardNavigationEvent.TRANSACTION_SELECTED, transaction)
     }
 
     // DashboardExpandableView animation-related functions
@@ -475,7 +441,7 @@ enum class DashboardAnimationEvent {
 }
 
 enum class DashboardNavigationEvent {
-    MOVE_MONEY, LOCK_UNLOCK_CARD, CHANGE_PIN, REPLACE_CARD, REPORT_LOST_STOLEN, CANCEL_CARD, SPENDING, SET_ASIDE, TRANSACTION_SELECTED, ALERTS, TRANSACTION_SEARCH
+    ALERTS, TRANSACTION_SEARCH
 }
 
 enum class DashboardBalanceState {

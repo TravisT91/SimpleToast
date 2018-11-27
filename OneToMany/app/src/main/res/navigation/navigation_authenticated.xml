@@ -12,7 +12,12 @@
         tools:layout="@layout/fragment_dashboard">
         <action
             android:id="@+id/action_dashboard_fragment_to_moveMoneyFragment"
-            app:destination="@id/moveMoneyFragment"/>
+            app:destination="@id/moveMoneyFragmentChild"
+            app:enterAnim="@anim/nav_enter_anim"
+            app:exitAnim="@anim/nav_exit_anim"
+            app:popEnterAnim="@anim/nav_pop_enter_anim"
+            app:popExitAnim="@anim/nav_pop_exit_anim">
+        </action>
     </fragment>
     <fragment
         android:id="@+id/budgets_fragment"
@@ -82,6 +87,20 @@
         <argument
             android:name="@string/navigation_override_up"
             android:defaultValue="true" />
+    </fragment>
+    <!-- This is necessary for navigating from the dashboard, so that the back/up arrow is shown
+     rather than the hamburger. We don't have a way in LotusActivity to access an overridden value
+     for navigation_override_up, even if it's added to the navigation Bundle in DashboardFragment.
+     The overridden value is accessible in the destination fragment arguments, but not in the
+     onNavigated() function of the NavDelegate in LotusActivity.
+     So, we must have a separate fragment defined here with the defaultValue set to false. -->
+    <fragment
+        android:id="@+id/moveMoneyFragmentChild"
+        android:name="com.engageft.fis.pscu.feature.MoveMoneyFragment"
+        android:label="@string/TITLE_MOVE_MONEY">
+        <argument
+            android:name="@string/navigation_override_up"
+            android:defaultValue="false" />
     </fragment>
     <fragment
         android:id="@+id/copyrightFragment"

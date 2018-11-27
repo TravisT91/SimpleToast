@@ -11,7 +11,6 @@ import com.engageft.fis.pscu.feature.DashboardAnimationEvent
 import com.engageft.fis.pscu.feature.DashboardNavigationEvent
 import com.engageft.fis.pscu.feature.DashboardViewModel
 import com.engageft.fis.pscu.feature.authentication.BaseAuthenticatedActivity
-import com.ob.ws.dom.utility.TransactionInfo
 
 
 class AuthenticatedActivity : BaseAuthenticatedActivity() {
@@ -43,15 +42,7 @@ class AuthenticatedActivity : BaseAuthenticatedActivity() {
     private fun setupDashboardNavigationObserving() {
         viewModel.navigationObservable.observe(this, Observer { (navigationEvent, item) ->
             when (navigationEvent) {
-                DashboardNavigationEvent.MOVE_MONEY -> Toast.makeText(this, "Move money selected", Toast.LENGTH_SHORT).show()
-                DashboardNavigationEvent.LOCK_UNLOCK_CARD -> Toast.makeText(this, "Lock/unlock card selected", Toast.LENGTH_SHORT).show()
-                DashboardNavigationEvent.CHANGE_PIN -> Toast.makeText(this, "Change PIN selected", Toast.LENGTH_SHORT).show()
-                DashboardNavigationEvent.REPLACE_CARD -> Toast.makeText(this, "Replace card selected", Toast.LENGTH_SHORT).show()
-                DashboardNavigationEvent.REPORT_LOST_STOLEN -> Toast.makeText(this, "Report card lost/stolen selected", Toast.LENGTH_SHORT).show()
-                DashboardNavigationEvent.CANCEL_CARD -> Toast.makeText(this, "Cancel card selected", Toast.LENGTH_SHORT).show()
-                DashboardNavigationEvent.SPENDING -> Toast.makeText(this, "Spending balance selected", Toast.LENGTH_SHORT).show()
-                DashboardNavigationEvent.SET_ASIDE -> Toast.makeText(this, "Set aside balance selected", Toast.LENGTH_SHORT).show()
-                DashboardNavigationEvent.TRANSACTION_SELECTED -> Toast.makeText(this, "Transaction selected: " + (item as? TransactionInfo)!!.store, Toast.LENGTH_SHORT).show()
+                // TODO(kurt) these may not be needed for alerts and transactions search, once transactions are overhauled in a future task.
                 DashboardNavigationEvent.ALERTS -> Toast.makeText(this, "Alerts selected", Toast.LENGTH_SHORT).show()
                 DashboardNavigationEvent.TRANSACTION_SEARCH -> Toast.makeText(this, "Transactions search selected", Toast.LENGTH_SHORT).show()
             }

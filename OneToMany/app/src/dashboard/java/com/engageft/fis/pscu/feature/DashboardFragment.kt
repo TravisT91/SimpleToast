@@ -7,7 +7,9 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.WindowManager
+import android.widget.Toast
 import androidx.core.content.ContextCompat
+import androidx.core.os.bundleOf
 import androidx.core.view.ViewCompat
 import androidx.core.widget.NestedScrollView
 import androidx.databinding.DataBindingUtil
@@ -112,7 +114,7 @@ class DashboardFragment : LotusFullScreenFragment(), DashboardExpandableView.Das
 
         val spendingClickListener = View.OnClickListener {
             if (!binding.dashboardExpandableView.showingActions) {
-                dashboardViewModel.showSpending()
+                Toast.makeText(activity, "Spending balance selected", Toast.LENGTH_SHORT).show()
             }
         }
         binding.spendingBalanceAmount.setOnClickListener(spendingClickListener)
@@ -120,7 +122,7 @@ class DashboardFragment : LotusFullScreenFragment(), DashboardExpandableView.Das
 
         val savingsClickListener = View.OnClickListener {
             if (!binding.dashboardExpandableView.showingActions) {
-                dashboardViewModel.showSetAside()
+                Toast.makeText(activity, "Set aside balance selected", Toast.LENGTH_SHORT).show()
             }
         }
         binding.savingsBalanceAmount.setOnClickListener(savingsClickListener)
@@ -430,32 +432,36 @@ class DashboardFragment : LotusFullScreenFragment(), DashboardExpandableView.Das
     }
 
     override fun onMoveMoney() {
-        binding.root.findNavController().navigate(R.id.action_dashboard_fragment_to_moveMoneyFragment)
-        //dashboardViewModel.showMoveMoney()
+        // This bundle is currently not used, because we don't have a way to access the bundle arguments in LotusActivity onNavigated override,
+        // but that's how it should work. See note in navigation_authenticated.xml for more details.
+        // Leaving it here so we know how pass a param that overrides a defaultValue in the navigation destination.
+        val bundle = bundleOf(getString(R.string.navigation_override_up) to false)
+        binding.root.findNavController().navigate(R.id.action_dashboard_fragment_to_moveMoneyFragment, bundle)
     }
 
     override fun onLockUnlockCard() {
-        dashboardViewModel.showLockUnlockCard()
+        Toast.makeText(activity, "Lock/unlock card selected", Toast.LENGTH_SHORT).show()
     }
 
     override fun onChangePin() {
-        dashboardViewModel.showChangePin()
+        Toast.makeText(activity, "Change PIN selected", Toast.LENGTH_SHORT).show()
     }
 
     override fun onReplaceCard() {
-        dashboardViewModel.showReplaceCard()
+        Toast.makeText(activity, "Replace card selected", Toast.LENGTH_SHORT).show()
     }
 
     override fun onReportCardLostStolen() {
-        dashboardViewModel.showReportLostStolen()
+        Toast.makeText(activity, "Report card lost/stolen selected", Toast.LENGTH_SHORT).show()
     }
 
     override fun onCancelCard() {
-        dashboardViewModel.showCancelCard()
+        Toast.makeText(activity, "Cancel card selected", Toast.LENGTH_SHORT).show()
     }
 
     // TransactionsAdapter.OnTransactionsAdapterListener
     override fun onTransactionInfoSelected(transactionInfo: TransactionInfo) {
-        dashboardViewModel.showTransactionDetails(transactionInfo)
+        // TODO(kurt): Pass transactionInfo to TransactionDetailFragment through navigation bundle (see onMoveMoney(), above)
+        Toast.makeText(activity, "Transaction selected: " + transactionInfo.store, Toast.LENGTH_SHORT).show()
     }
 }
