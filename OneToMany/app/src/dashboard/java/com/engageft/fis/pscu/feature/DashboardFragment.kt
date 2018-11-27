@@ -13,6 +13,7 @@ import androidx.core.widget.NestedScrollView
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
+import androidx.navigation.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.engageft.apptoolbox.BaseViewModel
 import com.engageft.apptoolbox.LotusFullScreenFragment
@@ -429,7 +430,8 @@ class DashboardFragment : LotusFullScreenFragment(), DashboardExpandableView.Das
     }
 
     override fun onMoveMoney() {
-        dashboardViewModel.showMoveMoney()
+        binding.root.findNavController().navigate(R.id.action_dashboard_fragment_to_moveMoneyFragment)
+        //dashboardViewModel.showMoveMoney()
     }
 
     override fun onLockUnlockCard() {

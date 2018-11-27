@@ -6,7 +6,6 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:background="@color/dashboard_cardview_background">
 
-    <!-- TODO(kurt): Setting background is necessary to show elevation, but breaks rounded corners. -->
     <com.engageft.apptoolbox.view.ProductCardView
         android:id="@+id/cv_dashboard"
         android:layout_width="wrap_content"

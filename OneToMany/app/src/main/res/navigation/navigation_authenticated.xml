@@ -9,7 +9,11 @@
         android:id="@+id/dashboard_fragment"
         android:name="com.engageft.fis.pscu.feature.DashboardFragment"
         android:label="@string/fragment_title_dashboard"
-        tools:layout="@layout/fragment_dashboard"/>
+        tools:layout="@layout/fragment_dashboard">
+        <action
+            android:id="@+id/action_dashboard_fragment_to_moveMoneyFragment"
+            app:destination="@id/moveMoneyFragment"/>
+    </fragment>
     <fragment
         android:id="@+id/budgets_fragment"
         android:name="com.engageft.fis.pscu.feature.BudgetsFragment"
