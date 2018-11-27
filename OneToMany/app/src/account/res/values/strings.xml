@@ -14,6 +14,7 @@
     <string name="SETTINGS_LOG_OUT">Log out</string>
     <string name="SETTINGS_COPYRIGHT">Copyright</string>
     <string name="SETTINGS_DISCLOSURES">Disclosures</string>
+    <string name="SETTINGS_ACTION_HELP">HELP</string>
 
     <!-- Copyright -->
     <!--TODO(aHashimi): replace with the actual copyright text-->
@@ -57,4 +58,5 @@
     <string name="PROFILE_SUCCESS_MESSAGE_CHANGE_PHONE">You have successfully changed your phone number.</string>
     <string name="PROFILE_SUCCESS_MESSAGE_CHANGE_ADDRESS">You have successfully changed your address.</string>
     <string name="PROFILE_SUCCESS_MESSAGE_OK">Ok</string>
+    <string name="PROFILE_ACTION_SAVE">SAVE</string>
 </resources>

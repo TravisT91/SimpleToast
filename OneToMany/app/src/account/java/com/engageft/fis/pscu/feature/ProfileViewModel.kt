@@ -247,8 +247,10 @@ class ProfileViewModel : BaseEngageViewModel() {
                                 var emailSaveResult: ProfileSaveResult? = null
                                 var phoneSaveResult: ProfileSaveResult? = null
                                 var addressSaveResult: ProfileSaveResult? = null
+                                var wasError = false
                                 finalResponse.updateResponse.emailResponse?.let {
                                     emailSaveResult = if (!it.isSuccess) {
+                                        wasError = true
                                         ProfileSaveResult(false, it.message)
                                     } else {
                                         ProfileSaveResult(true, null)
@@ -256,6 +258,7 @@ class ProfileViewModel : BaseEngageViewModel() {
                                 }
                                 finalResponse.updateResponse.phoneResponse?.let {
                                     phoneSaveResult = if (!it.isSuccess) {
+                                        wasError = true
                                         ProfileSaveResult(false, it.message)
                                     } else {
                                         ProfileSaveResult(true, null)
@@ -263,6 +266,7 @@ class ProfileViewModel : BaseEngageViewModel() {
                                 }
                                 finalResponse.updateResponse.addressResponse?.let {
                                     addressSaveResult = if (!it.isSuccess) {
+                                        wasError = true
                                         ProfileSaveResult(false, it.message)
                                     } else {
                                         ProfileSaveResult(true, null)
@@ -274,6 +278,10 @@ class ProfileViewModel : BaseEngageViewModel() {
                                 // Since we refreshed login, let's update our local reference to loginResponse and then update the UI.
                                 this.loginResponse = finalResponse.refreshResponse as LoginResponse
                                 updateFieldsWithBackendData()
+                                if (!wasError) {
+                                    valuesChanged = false
+                                    validateSaveButtonState()
+                                }
 
                                 // Everything is done, regardless of error. Now let's see how things went:
                                 progressOverlayShownObservable.value = false

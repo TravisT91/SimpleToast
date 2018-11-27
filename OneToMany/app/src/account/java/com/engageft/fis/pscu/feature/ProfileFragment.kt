@@ -2,6 +2,9 @@ package com.engageft.fis.pscu.feature
 
 import android.os.Bundle
 import android.view.LayoutInflater
+import android.view.Menu
+import android.view.MenuInflater
+import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import androidx.lifecycle.Observer
@@ -142,10 +145,12 @@ class ProfileFragment : BaseEngageFullscreenFragment() {
             when (saveButtonState) {
                 ProfileViewModel.SaveButtonState.GONE -> {
                     binding.saveButton.visibility = View.GONE
+                    activity?.invalidateOptionsMenu()
                 }
                 ProfileViewModel.SaveButtonState.VISIBLE_ENABLED -> {
                     binding.saveButton.visibility = View.VISIBLE
                     binding.saveButton.isEnabled = true
+                    activity?.invalidateOptionsMenu()
                 }
             }
         })
@@ -181,5 +186,30 @@ class ProfileFragment : BaseEngageFullscreenFragment() {
         })
 
         return binding.root
+    }
+
+    override fun onResume() {
+        super.onResume()
+        setHasOptionsMenu(true)
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu?, inflater: MenuInflater?) {
+        inflater?.inflate(R.menu.profile_action_menu, menu)
+        super.onCreateOptionsMenu(menu, inflater)
+    }
+
+    override fun onPrepareOptionsMenu(menu: Menu?) {
+        val saveMenuItem = menu!!.findItem(R.id.save)
+        saveMenuItem.isVisible = profileViewModel.saveButtonStateObservable.value == ProfileViewModel.SaveButtonState.VISIBLE_ENABLED
+        super.onPrepareOptionsMenu(menu)
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem?): Boolean {
+        when(item?.itemId){
+            R.id.save -> run {
+                profileViewModel.onSaveClicked()
+            }
+        }
+        return super.onOptionsItemSelected(item)
     }
 }
