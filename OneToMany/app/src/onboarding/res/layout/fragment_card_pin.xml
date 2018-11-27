@@ -9,10 +9,12 @@
             type="com.engageft.fis.pscu.feature.Palette"/>
     </data>
 
-    <androidx.constraintlayout.widget.ConstraintLayout
+    <LinearLayout
         xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:gravity="center_horizontal">
 
         <!-- TODO(aHashimi): this is a placeholder, need to replace it later -->
         <androidx.appcompat.widget.AppCompatImageView
@@ -28,69 +30,61 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
-        <!--TODO: use palette -->
         <TextView
             android:id="@+id/chooseDescriptionTextView"
-            android:layout_width="0dp"
+            parisStyle="@{palette.Body}"
+            style="@style/CardPinDescriptionStyle"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="16dp"
-            android:layout_marginTop="16dp"
-            android:layout_marginEnd="16dp"
-            android:gravity="center"
             android:text="@string/card_pin_choose_description"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/cardView" />
 
-        <androidx.appcompat.widget.AppCompatImageView
-            android:id="@+id/iconImageView1"
-            android:layout_width="wrap_content"
-            android:layout_height="0dp"
-            android:layout_marginStart="16dp"
-            android:layout_marginTop="16dp"
-            android:layout_marginEnd="32dp"
-            android:background="@drawable/shape"
-            app:layout_constraintEnd_toStartOf="@+id/iconImageView2"
-            app:layout_constraintHorizontal_bias="0.5"
-            app:layout_constraintHorizontal_chainStyle="packed"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/chooseDescriptionTextView" />
+        <androidx.appcompat.widget.LinearLayoutCompat
+            android:id="@+id/pinLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center">
 
-        <androidx.appcompat.widget.AppCompatImageView
-            android:id="@+id/iconImageView2"
-            android:layout_width="wrap_content"
-            android:layout_height="0dp"
-            android:layout_marginTop="16dp"
-            android:layout_marginEnd="32dp"
-            android:background="@drawable/shape"
-            app:layout_constraintEnd_toStartOf="@+id/iconImageView3"
-            app:layout_constraintHorizontal_bias="0.5"
-            app:layout_constraintStart_toEndOf="@+id/iconImageView1"
-            app:layout_constraintTop_toBottomOf="@id/chooseDescriptionTextView" />
+            <androidx.appcompat.widget.AppCompatImageView
+                android:id="@+id/iconImageView1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="16dp"
+                android:layout_marginBottom="16dp"
+                android:layout_marginEnd="32dp"
+                android:background="@drawable/card_pin_empty_dot_shape" />
 
-        <androidx.appcompat.widget.AppCompatImageView
-            android:id="@+id/iconImageView3"
-            android:layout_width="wrap_content"
-            android:layout_height="0dp"
-            android:layout_marginTop="16dp"
-            android:layout_marginEnd="32dp"
-            android:background="@drawable/shape"
-            app:layout_constraintEnd_toStartOf="@+id/iconImageView4"
-            app:layout_constraintHorizontal_bias="0.5"
-            app:layout_constraintStart_toEndOf="@+id/iconImageView2"
-            app:layout_constraintTop_toBottomOf="@id/chooseDescriptionTextView" />
+            <androidx.appcompat.widget.AppCompatImageView
+                android:id="@+id/iconImageView2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:layout_marginBottom="16dp"
+                android:layout_marginEnd="32dp"
+                android:background="@drawable/card_pin_empty_dot_shape" />
 
-        <androidx.appcompat.widget.AppCompatImageView
-            android:id="@+id/iconImageView4"
-            android:layout_width="wrap_content"
-            android:layout_height="0dp"
-            android:layout_marginTop="16dp"
-            android:layout_marginEnd="16dp"
-            android:background="@drawable/shape"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.5"
-            app:layout_constraintStart_toEndOf="@+id/iconImageView3"
-            app:layout_constraintTop_toBottomOf="@id/chooseDescriptionTextView" />
+            <androidx.appcompat.widget.AppCompatImageView
+                android:id="@+id/iconImageView3"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:layout_marginBottom="16dp"
+                android:layout_marginEnd="32dp"
+                android:background="@drawable/card_pin_empty_dot_shape" />
+
+            <androidx.appcompat.widget.AppCompatImageView
+                android:id="@+id/iconImageView4"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:layout_marginBottom="16dp"
+                android:layout_marginEnd="16dp"
+                android:background="@drawable/card_pin_empty_dot_shape" />
+        </androidx.appcompat.widget.LinearLayoutCompat>
 
         <com.engageft.apptoolbox.view.ZipCodeInputWithLabel
             android:id="@+id/pinInputWithLabel"
@@ -101,26 +95,8 @@
             android:layout_marginEnd="8dp"
             android:layout_marginBottom="8dp"
             android:alpha="1"
-            app:inputMask="[0000]"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/iconImageView2" />
+            app:inputMask="[0000]" />
 
-        <com.engageft.apptoolbox.view.ZipCodeInputWithLabel
-            android:id="@+id/confirmPinInputWithLabel"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:layout_marginTop="8dp"
-            android:layout_marginEnd="8dp"
-            android:layout_marginBottom="8dp"
-            android:alpha="1"
-            android:visibility="gone"
-            app:inputMask="[0000]"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/pinInputWithLabel" />
-    </androidx.constraintlayout.widget.ConstraintLayout>
+    </LinearLayout>
+
 </layout>

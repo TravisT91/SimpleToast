@@ -71,8 +71,8 @@
             android:name="@string/navigation_override_up"
             android:defaultValue="true" />
         <action
-            android:id="@+id/action_helpFragment_to_cardPinFragment"
-            app:destination="@id/cardPinFragment" />
+            android:id="@+id/action_helpFragment_to_cardPinStep1Fragment"
+            app:destination="@id/cardPinStep1Fragment" />
     </fragment>
     <fragment
         android:id="@+id/moveMoneyFragment"
@@ -91,8 +91,16 @@
         android:name="com.engageft.fis.pscu.feature.ChangeSecurityQuestionsFragment"
         android:label="@string/fragment_title_change_security_questions"/>
     <fragment
-        android:id="@+id/cardPinFragment"
-        android:name="com.engageft.fis.pscu.feature.CardPinFragment"
-        android:label="CardPinFragment" />
+        android:id="@+id/cardPinStep1Fragment"
+        android:name="com.engageft.fis.pscu.feature.CardPinStep1Fragment"
+        android:label="CardPinStep1Fragment" >
+        <action
+            android:id="@+id/action_cardPinStep1Fragment_to_cardPinStep2Fragment"
+            app:destination="@id/cardPinStep2Fragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/cardPinStep2Fragment"
+        android:name="com.engageft.fis.pscu.feature.CardPinStep2Fragment"
+        android:label="@string/card_pin_screen_title" />
 
 </navigation>

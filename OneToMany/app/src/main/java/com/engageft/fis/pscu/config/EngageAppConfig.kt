@@ -37,6 +37,7 @@ abstract class BaseAppConfig {
     open val supportPhone: String = "18662392008"
     open val supportEmail: String = "service@myengageft.com"
     open val supportTechnicalPhone: String = "18662392008"
+    open val cardPinLength: Int = 4
 
     var isUsingProdEnvironment: Boolean
         set(value) {

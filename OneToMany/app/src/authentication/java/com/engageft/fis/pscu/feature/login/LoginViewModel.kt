@@ -28,7 +28,6 @@ import io.reactivex.schedulers.Schedulers
  * Copyright (c) 2018 Engage FT. All rights reserved.
  */
 class LoginViewModel : BaseEngageViewModel() {
-    private var loginResponse: LoginResponse? = null
 
     enum class LoginNavigationEvent {
         AUTHENTICATED_ACTIVITY,
@@ -57,8 +56,6 @@ class LoginViewModel : BaseEngageViewModel() {
         CREATING_DEMO_ACCOUNT,
         DISMISS_DIALOG
     }
-
-    private val compositeDisposable = CompositeDisposable()
 
     val navigationObservable = MutableLiveData<LoginNavigationEvent>()
 

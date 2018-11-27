@@ -30,7 +30,6 @@ class ChangeSecurityQuestionsViewModel : BaseEngageViewModel() {
         FETCHING, CHANGE, CREATE // CREATE is for first time, CHANGE is if questions were already set.
     }
 
-    private val compositeDisposable = CompositeDisposable()
     val navigationObservable = MutableLiveData<ChangeSecurityQuestionsNavigation>()
     val modeObservable = MutableLiveData<ChangeSecurityQuestionsMode>()
     val questions1List = MutableLiveData<List<String>>()

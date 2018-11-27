@@ -1,14 +1,23 @@
 package com.engageft.fis.pscu.feature
 
+import android.os.Handler
 import android.util.Log
 import androidx.databinding.Observable
 import androidx.databinding.ObservableField
 import androidx.lifecycle.MutableLiveData
+import com.engageft.apptoolbox.util.isDigitsOnly
 import com.engageft.fis.pscu.feature.BaseEngageViewModel
+import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.schedulers.Schedulers
+import com.engageft.engagekit.EngageService
+import com.engageft.fis.pscu.config.EngageAppConfig
+import io.reactivex.disposables.CompositeDisposable
+
 
 class CardPinViewModel: BaseEngageViewModel() {
 
     enum class CardPinFlow {
+        INVALID_PIN,
         CONFIRM_PIN,
         MISMATCH_PIN,
         SUBMIT_PIN
@@ -16,26 +25,32 @@ class CardPinViewModel: BaseEngageViewModel() {
 
     val flowObservable = MutableLiveData<CardPinFlow>()
 
-    private var cardPin: Int = 0
-    fun validatePin(pin: Int) {
-        cardPin = pin
-        // todo: proper validation? recheck for
-        if (pin.toString().length == 4) {
-            flowObservable.value = CardPinFlow.CONFIRM_PIN
+    fun submit(pin: Int, confirmPin: Int) {
+        if (pin.toString().length == EngageAppConfig.cardPinLength && pin.toString().isDigitsOnly() && pin == confirmPin) {
+            val currentCard = EngageService.getInstance().storageManager.currentCard
+
+            progressOverlayShownObservable.value = true
+            compositeDisposable.add(
+                    EngageService.getInstance().setCardPinObservable(currentCard, pin)
+                            .subscribeOn(Schedulers.io())
+                            .observeOn(AndroidSchedulers.mainThread())
+                            .subscribe({ response ->
+                                progressOverlayShownObservable.value = false
+                                if (response.isSuccess) {
+                                    dialogInfoObservable.value = DialogInfo(dialogType = DialogInfo.DialogType.GENERIC_SUCCESS)
+                                } else {
+                                    dialogInfoObservable.value = DialogInfo(dialogType = DialogInfo.DialogType.SERVER_ERROR, message = response.message)
+                                }
+                            }, { e ->
+                                progressOverlayShownObservable.value = false
+                                handleThrowable(e)
+                            })
+            )
         } else {
-            dialogInfoObservable.value = CardPinDialogInfo(dialogType = DialogInfo.DialogType.OTHER)
+            Handler().post {
+                flowObservable.value = CardPinFlow.MISMATCH_PIN
+            }
         }
-    }
-
-    fun confirmPin(confirmPin: Int) {
-        // todo: proper validation? recheck for
-        if (cardPin.toString().length == 4 && cardPin == confirmPin) {
-            submit()
-        }
-    }
-
-    private fun submit() {
-
     }
 }
 class CardPinDialogInfo(title: String? = null,
