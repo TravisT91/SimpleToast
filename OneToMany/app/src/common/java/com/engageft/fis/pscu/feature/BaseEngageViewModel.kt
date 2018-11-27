@@ -47,6 +47,11 @@ open class BaseEngageViewModel: BaseViewModel() {
 
     }
 
+    override fun onCleared() {
+        super.onCleared()
+        compositeDisposable.dispose()
+    }
+
     fun handleUnexpectedErrorResponse(response: BasicResponse) {
         if (BuildConfig.DEBUG) {
             dialogInfoObservable.value = DialogInfo(message = response.message)
@@ -77,6 +82,5 @@ open class BaseEngageViewModel: BaseViewModel() {
                 }
             }
         }
-
     }
 }

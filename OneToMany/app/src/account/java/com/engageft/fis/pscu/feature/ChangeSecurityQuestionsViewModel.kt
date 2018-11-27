@@ -8,7 +8,6 @@ import com.engageft.engagekit.rest.request.AuthenticatedRequest
 import com.engageft.engagekit.rest.request.SetSecurityQuestionsRequest
 import com.ob.ws.dom.SecurityQuestionsResponse
 import io.reactivex.android.schedulers.AndroidSchedulers
-import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
 
 /**
