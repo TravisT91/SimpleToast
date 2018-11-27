@@ -37,15 +37,15 @@
     <string name="SECURITY_QUESTIONS_SUCCESS_MESSAGE_OK">Ok</string>
 
 
-    <string name="PROFILE_LEGAL_NAME">Legal Name</string>
-    <string name="PROFILE_EMAIL">Email Address</string>
-    <string name="PROFILE_PHONE">Phone Number</string>
-    <string name="PROFILE_STREET">Street Address</string>
+    <string name="PROFILE_LEGAL_NAME">Legal name</string>
+    <string name="PROFILE_EMAIL">Email address</string>
+    <string name="PROFILE_PHONE">Phone number</string>
+    <string name="PROFILE_STREET">Street address</string>
     <string name="PROFILE_APT_SUITE">Apt/Suite# (optional)</string>
     <string name="PROFILE_CITY">City</string>
     <string name="PROFILE_STATE">State</string>
-    <string name="PROFILE_ZIP">Zip Code</string>
-    <string name="PROFILE_STATE_LIST_TITLE">Select State</string>
+    <string name="PROFILE_ZIP">Zip code</string>
+    <string name="PROFILE_STATE_LIST_TITLE">Select state</string>
     <string name="PROFILE_STATE_LIST_SUBTITLE"></string>
     <string name="PROFILE_INPUT_ERROR_EMPTY">This field cannot be empty.</string>
     <string name="PROFILE_INPUT_ERROR_EMAIL_AT_REQUIRED">Please enter a valid email address.</string>

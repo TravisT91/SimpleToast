@@ -43,7 +43,6 @@ class ProfileViewModel : BaseEngageViewModel() {
 
     enum class SaveButtonState {
         GONE,
-        VISIBLE_DISABLED,
         VISIBLE_ENABLED
     }
 
@@ -242,8 +241,6 @@ class ProfileViewModel : BaseEngageViewModel() {
                             .subscribeOn(Schedulers.single())
                             .observeOn(AndroidSchedulers.mainThread())
                             .subscribe({ finalResponse ->
-                                // Everything is done, regardless of error. Now let's see how things went:
-                                progressOverlayShownObservable.value = false
 
                                 // If the events did not happen, we want to pass the ProfileSaveResults
                                 // back as null so the UI knows.
@@ -277,6 +274,9 @@ class ProfileViewModel : BaseEngageViewModel() {
                                 // Since we refreshed login, let's update our local reference to loginResponse and then update the UI.
                                 this.loginResponse = finalResponse.refreshResponse as LoginResponse
                                 updateFieldsWithBackendData()
+
+                                // Everything is done, regardless of error. Now let's see how things went:
+                                progressOverlayShownObservable.value = false
                             }, { e ->
                                 progressOverlayShownObservable.value = false
                                 handleThrowable(e)
@@ -363,11 +363,7 @@ class ProfileViewModel : BaseEngageViewModel() {
         saveButtonStateObservable.value = if (!valuesChanged) {
             SaveButtonState.GONE
         } else {
-            if (checkAllFieldsValid()) {
-                SaveButtonState.VISIBLE_ENABLED
-            } else {
-                SaveButtonState.VISIBLE_DISABLED
-            }
+            SaveButtonState.VISIBLE_ENABLED
         }
     }
 

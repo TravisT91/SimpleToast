@@ -143,10 +143,6 @@ class ProfileFragment : BaseEngageFullscreenFragment() {
                 ProfileViewModel.SaveButtonState.GONE -> {
                     binding.saveButton.visibility = View.GONE
                 }
-                ProfileViewModel.SaveButtonState.VISIBLE_DISABLED -> {
-                    binding.saveButton.visibility = View.VISIBLE
-                    binding.saveButton.isEnabled = false
-                }
                 ProfileViewModel.SaveButtonState.VISIBLE_ENABLED -> {
                     binding.saveButton.visibility = View.VISIBLE
                     binding.saveButton.isEnabled = true
