@@ -1,21 +1,20 @@
 package com.engageft.fis.pscu.feature.login
 
 import android.util.Log
-import android.view.KeyEvent
 import androidx.databinding.Observable
 import androidx.databinding.ObservableField
 import androidx.lifecycle.MutableLiveData
 import com.engageft.engagekit.EngageService
 import com.engageft.engagekit.rest.request.CreateDemoAccountRequest
 import com.engageft.engagekit.utils.LoginResponseUtils
+import com.engageft.fis.pscu.HeapUtils
+import com.engageft.fis.pscu.config.EngageAppConfig
 import com.engageft.fis.pscu.feature.BaseEngageViewModel
 import com.engageft.fis.pscu.feature.DialogInfo
+import com.engageft.fis.pscu.feature.Palette
 import com.engageft.fis.pscu.feature.WelcomeSharedPreferencesRepo
 import com.engageft.fis.pscu.feature.authentication.AuthenticationConfig
 import com.engageft.fis.pscu.feature.authentication.AuthenticationSharedPreferencesRepo
-import com.engageft.fis.pscu.HeapUtils
-import com.engageft.fis.pscu.config.EngageAppConfig
-import com.engageft.fis.pscu.feature.Palette
 import com.ob.ws.dom.DeviceFailResponse
 import com.ob.ws.dom.LoginResponse
 import io.reactivex.android.schedulers.AndroidSchedulers
@@ -232,11 +231,18 @@ class LoginViewModel : BaseEngageViewModel() {
                                 { response ->
                                     progressOverlayShownObservable.value = false
                                     if (response.isSuccess && response is LoginResponse) {
-                                        compositeDisposable.add(Palette.updateWithAccountPropertiesResponse(response.token)
+                                        Palette.getBrandingWithToken(response.token)
                                                 .subscribe(
-                                                        { paletteResponse -> Log.d("paletteResponse", paletteResponse.toJsonString())},
-                                                        { e -> Log.d("paletteResponseError", e.message) }))
-                                        handleSuccessfulLoginResponse(response)
+                                                        { paletteResponse ->
+                                                            if (paletteResponse.isSuccess) {
+                                                                handleSuccessfulLoginResponse(response)
+                                                            } else {
+                                                                handleUnexpectedErrorResponse(paletteResponse)
+                                                            }
+                                                        },
+                                                        { e ->
+                                                            Log.e("paletteResponseError", e.message)
+                                                        })
                                     } else if (response is DeviceFailResponse) {
                                         navigationObservable.value = LoginNavigationEvent.TWO_FACTOR_AUTHENTICATION
                                     } else {
