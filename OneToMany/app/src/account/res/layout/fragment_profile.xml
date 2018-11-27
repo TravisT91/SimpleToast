@@ -36,6 +36,7 @@
                     android:layout_marginTop="20dp"
                     app:inputText="@={viewModel.legalName}"
                     app:labelText="@string/PROFILE_LEGAL_NAME"
+                    app:maxLines="1"
                     android:enabled="false"/>
             </LinearLayout>
 
@@ -89,6 +90,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="20dp"
+                    app:maxLines="1"
                     app:inputText="@={viewModel.streetAddress}"
                     app:labelText="@string/PROFILE_STREET"/>
             </LinearLayout>
@@ -107,6 +109,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="20dp"
+                    app:maxLines="1"
                     app:inputText="@={viewModel.aptSuite}"
                     app:labelText="@string/PROFILE_APT_SUITE"/>
             </LinearLayout>
@@ -125,6 +128,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="20dp"
+                    app:maxLines="1"
                     app:inputText="@={viewModel.city}"
                     app:labelText="@string/PROFILE_CITY"/>
             </LinearLayout>

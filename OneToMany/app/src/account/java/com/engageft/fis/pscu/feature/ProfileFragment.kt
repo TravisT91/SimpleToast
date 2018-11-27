@@ -7,6 +7,7 @@ import android.view.MenuInflater
 import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
+import android.view.inputmethod.EditorInfo
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import com.engageft.apptoolbox.BaseViewModel
@@ -159,31 +160,39 @@ class ProfileFragment : BaseEngageFullscreenFragment() {
                 profileViewModel.validateEmail(false)
             }
         })
+        binding.emailAddressInput.setImeOptions(EditorInfo.IME_ACTION_NEXT)
         binding.phoneNumberInput.addEditTextFocusChangeListener(View.OnFocusChangeListener { v, hasFocus ->
             if (!hasFocus) {
                 profileViewModel.validatePhone(false)
             }
         })
+        binding.phoneNumberInput.setImeOptions(EditorInfo.IME_ACTION_NEXT)
         binding.streetAddressInput.addEditTextFocusChangeListener(View.OnFocusChangeListener { v, hasFocus ->
             if (!hasFocus) {
                 profileViewModel.validateStreet(false)
             }
         })
+        binding.streetAddressInput.setImeOptions(EditorInfo.IME_ACTION_NEXT)
+        binding.aptSuiteInput.setImeOptions(EditorInfo.IME_ACTION_NEXT)
         binding.cityInput.addEditTextFocusChangeListener(View.OnFocusChangeListener { v, hasFocus ->
             if (!hasFocus) {
                 profileViewModel.validateCity(false)
             }
         })
+        binding.cityInput.setImeOptions(EditorInfo.IME_ACTION_NEXT)
         binding.stateInput.addEditTextFocusChangeListener(View.OnFocusChangeListener { v, hasFocus ->
             if (!hasFocus) {
                 profileViewModel.validateState(false)
             }
         })
+        binding.stateInput.setImeOptions(EditorInfo.IME_ACTION_NEXT)
         binding.zipcodeInput.addEditTextFocusChangeListener(View.OnFocusChangeListener { v, hasFocus ->
             if (!hasFocus) {
                 profileViewModel.validateZipCode(false)
             }
         })
+        binding.zipcodeInput.setImeOptions(EditorInfo.IME_ACTION_GO)
+        binding.zipcodeInput.onImeAction(EditorInfo.IME_ACTION_DONE) { profileViewModel.onSaveClicked() }
 
         return binding.root
     }
