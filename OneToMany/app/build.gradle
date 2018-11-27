@@ -55,7 +55,7 @@ android {
                             'src/help/java', 'src/cardmanagement/java', 'src/palette/java', 'src/welcome/java']
             res.srcDirs = ['src/main/res', 'src/authentication/res', 'src/common/res', 'src/splash/res',
                            'src/dashboard/res', 'src/budgets/res', 'src/account/res', 'src/goals/res',
-                           'src/help/res', 'src/cardmanagement/res', 'src/palette/res', 'src/welcome/res']
+                           'src/help/res', 'src/cardmanagement/res', 'src/welcome/res']
         }
     }
 }
