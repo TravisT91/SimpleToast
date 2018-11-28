@@ -5,8 +5,10 @@ import androidx.databinding.Observable
 import androidx.databinding.ObservableField
 import androidx.lifecycle.MutableLiveData
 import com.engageft.engagekit.EngageService
+import com.engageft.engagekit.rest.request.AuthenticatedRequest
 import com.engageft.engagekit.utils.LoginResponseUtils
 import com.ob.domain.lookup.States
+import com.ob.ws.dom.BasicPermissionResponse
 import com.ob.ws.dom.BasicResponse
 import com.ob.ws.dom.LoginResponse
 import com.ob.ws.dom.utility.AddressInfo
@@ -69,6 +71,11 @@ class ProfileViewModel : BaseEngageViewModel() {
         AT_REQUIRED
     }
 
+    enum class AddressEditableState {
+        EDITABLE,
+        NOT_EDITABLE
+    }
+
     inner class UpdateResponse(val emailResponse: BasicResponse?, val phoneResponse: BasicResponse?, val addressResponse: BasicResponse?)
     inner class FinalResponse(val updateResponse: UpdateResponse, val refreshResponse: BasicResponse)
 
@@ -81,6 +88,7 @@ class ProfileViewModel : BaseEngageViewModel() {
     val cityValidationObservable = MutableLiveData<InputValidationError>()
     val stateValidationObservable = MutableLiveData<InputValidationError>()
     val zipValidationObservable = MutableLiveData<ZipInputValidationError>()
+    val addressEditableObservable = MutableLiveData<AddressEditableState>()
 
     val legalName : ObservableField<String> = ObservableField("")
     val emailAddress : ObservableField<String> = ObservableField("")
@@ -148,6 +156,7 @@ class ProfileViewModel : BaseEngageViewModel() {
         cityValidationObservable.value = InputValidationError.NONE
         stateValidationObservable.value = InputValidationError.NONE
         zipValidationObservable.value = ZipInputValidationError.NONE
+        addressEditableObservable.value = AddressEditableState.NOT_EDITABLE
         loadProfileState()
     }
 
@@ -311,6 +320,25 @@ class ProfileViewModel : BaseEngageViewModel() {
                             progressOverlayShownObservable.value = false
                             handleThrowable(e)
                         }
+        )
+        compositeDisposable.add(EngageService.getInstance().engageApiInterface.postCheckChangeAddress(AuthenticatedRequest(EngageService.getInstance().authManager.authToken).fieldMap)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe({ response ->
+                    if (response.isSuccess && response is BasicPermissionResponse) {
+                        if (response.isPermission) {
+                            addressEditableObservable.value = AddressEditableState.EDITABLE
+                        } else {
+                            addressEditableObservable.value = AddressEditableState.NOT_EDITABLE
+                        }
+                    } else {
+                        handleUnexpectedErrorResponse(response)
+                        addressEditableObservable.value = AddressEditableState.NOT_EDITABLE
+                    }
+                }, { e ->
+                    handleThrowable(e)
+                    addressEditableObservable.value = AddressEditableState.NOT_EDITABLE
+                })
         )
     }
 

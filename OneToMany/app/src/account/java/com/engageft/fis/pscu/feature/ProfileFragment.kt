@@ -155,6 +155,24 @@ class ProfileFragment : BaseEngageFullscreenFragment() {
                 }
             }
         })
+        profileViewModel.addressEditableObservable.observe(this, Observer {addressEditableState ->
+            when (addressEditableState) {
+                ProfileViewModel.AddressEditableState.NOT_EDITABLE -> {
+                    binding.streetAddressInput.setEnable(false)
+                    binding.aptSuiteInput.setEnable(false)
+                    binding.cityInput.setEnable(false)
+                    binding.stateInput.setEnable(false)
+                    binding.zipcodeInput.setEnable(false)
+                }
+                ProfileViewModel.AddressEditableState.EDITABLE -> {
+                    binding.streetAddressInput.setEnable(true)
+                    binding.aptSuiteInput.setEnable(true)
+                    binding.cityInput.setEnable(true)
+                    binding.stateInput.setEnable(true)
+                    binding.zipcodeInput.setEnable(true)
+                }
+            }
+        })
         binding.emailAddressInput.addEditTextFocusChangeListener(View.OnFocusChangeListener { v, hasFocus ->
             if (!hasFocus) {
                 profileViewModel.validateEmail(false)
