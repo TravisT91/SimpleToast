@@ -1,6 +1,7 @@
 package com.engageft.fis.pscu.feature
 
 import android.os.Handler
+import android.util.Log
 import androidx.databinding.Observable
 import androidx.databinding.ObservableField
 import androidx.lifecycle.MutableLiveData
@@ -168,14 +169,18 @@ class ProfileViewModel : BaseEngageViewModel() {
         validateState(false)
         validateStreet(false)
         validateZipCode(false)
+
         if (checkAllFieldsValid()) {
             // All fields are valid, so let's find out what changed. There are potentially 3 API calls
             // that can occur during this save event. We only fire them off if the data has changed.
             val accountInfo = LoginResponseUtils.getCurrentAccountInfo(loginResponse)
             val addressInfo = LoginResponseUtils.getAddressInfoForCurrentDebitCard(loginResponse)
 
+            var apiCallNecessary = false
+
             // Build the email observable. This observable might be a dummy.
             val emailObservable = if (emailAddress.get()!! != accountInfo.email) {
+                apiCallNecessary = true
                 EngageService.getInstance().updateEmailAddressObservable(emailAddress.get()!!)
             } else {
                 // No data changed, so we're not going to make an API call. Instead, just return
@@ -184,9 +189,10 @@ class ProfileViewModel : BaseEngageViewModel() {
             }
 
             // Build the phone observable. This observable might be a dummy.
-            val phoneObservable = if (phoneNumber.get() != accountInfo.phone)
+            val phoneObservable = if (phoneNumber.get() != accountInfo.phone) {
+                apiCallNecessary = true
                 EngageService.getInstance().updatePhoneNumberObservable(phoneNumber.get()!!)
-            else {
+            } else {
                 // No data changed, so we're not going to make an API call. Instead, just return
                 // and Observable that flags us of this later.
                 io.reactivex.Observable.just(eventNotCalled)
@@ -196,6 +202,7 @@ class ProfileViewModel : BaseEngageViewModel() {
             val addressObservable = if (streetAddress.get()!! != addressInfo.address1 || aptSuite.get()!! != addressInfo.address2 ||
                     city.get()!! != addressInfo.city || States.getStateByAbbreviation(state.get()!!) != addressInfo.state ||
                     zip.get()!! != addressInfo.zip) {
+                apiCallNecessary = true
                 val newAddressInfo = AddressInfo()
 
                 // existing fields, not editable on this form
@@ -217,88 +224,102 @@ class ProfileViewModel : BaseEngageViewModel() {
             }
 
 
-            progressOverlayShownObservable.value = true
-            // Zip all 3 of these observables together, and schedule them in parallel. The Function3 will
-            // be called ONLY once all three calls succeed.
-            val parallelTasksObservable = io.reactivex.Observable.zip(emailObservable.subscribeOn(Schedulers.io()), phoneObservable.subscribeOn(Schedulers.io()), addressObservable.subscribeOn(Schedulers.io()),
-                    Function3<BasicResponse?, BasicResponse?, BasicResponse?, UpdateResponse> { emailResponse, phoneResponse, addressResponse ->
-                        // If we passed "eventNotCalled" objects into the Observable, we want to check
-                        // that here. If we did, just make the BasicResponse null for this result.
-                        // This will flag us later to know that this update was really never called.
-                        UpdateResponse(if (emailResponse == eventNotCalled) null else emailResponse,
-                                if (phoneResponse == eventNotCalled) null else phoneResponse,
-                                if (addressResponse == eventNotCalled) null else addressResponse)
-                    })
+            if (!apiCallNecessary) {
+                valuesChanged = false
+                validateSaveButtonState()
+            } else {
+                progressOverlayShownObservable.value = true
+                // Zip all 3 of these observables together, and schedule them in parallel. The Function3 will
+                // be called ONLY once all three calls succeed.
+                val parallelTasksObservable = io.reactivex.Observable.zip(emailObservable.subscribeOn(Schedulers.io()), phoneObservable.subscribeOn(Schedulers.io()), addressObservable.subscribeOn(Schedulers.io()),
+                        Function3<BasicResponse?, BasicResponse?, BasicResponse?, UpdateResponse> { emailResponse, phoneResponse, addressResponse ->
+                            // If we passed "eventNotCalled" objects into the Observable, we want to check
+                            // that here. If we did, just make the BasicResponse null for this result.
+                            // This will flag us later to know that this update was really never called.
+                            if (emailResponse == eventNotCalled) {
+                                Log.e("Joey", "email not called")
+                            }
+                            if (phoneResponse == eventNotCalled) {
+                                Log.e("Joey", "phone not called")
+                            }
+                            if (addressResponse == eventNotCalled) {
+                                Log.e("Joey", "address not called")
+                            }
+                            UpdateResponse(if (emailResponse == eventNotCalled) null else emailResponse,
+                                    if (phoneResponse == eventNotCalled) null else phoneResponse,
+                                    if (addressResponse == eventNotCalled) null else addressResponse)
+                        })
 
-            val refreshLoginObservable = EngageService.getInstance().refreshLoginObservable()
+                val refreshLoginObservable = EngageService.getInstance().refreshLoginObservable()
 
-            // After zipping the 3 parallel observables together, now we want to zip them together with a
-            // refresh API call and put them on Schedulers.single() so that they are run Synchronously,
-            // and only give us a callback when both tasks are done.
-            val combinedObservable = io.reactivex.Observable.zip(parallelTasksObservable.subscribeOn(Schedulers.single()), refreshLoginObservable.subscribeOn(Schedulers.single()),
-                    BiFunction<UpdateResponse, BasicResponse, FinalResponse> { updateResponse, refreshResponse ->
-                        // Both tasks are done, let's put the ParallelResponse and the RefreshResponse together
-                        // in a data object and pass it to our final callback.
-                        FinalResponse(updateResponse, refreshResponse)
-                    })
+                // After zipping the 3 parallel observables together, now we want to zip them together with a
+                // refresh API call and put them on Schedulers.single() so that they are run Synchronously,
+                // and only give us a callback when both tasks are done.
+                val combinedObservable = io.reactivex.Observable.zip(parallelTasksObservable.subscribeOn(Schedulers.single()), refreshLoginObservable.subscribeOn(Schedulers.single()),
+                        BiFunction<UpdateResponse, BasicResponse, FinalResponse> { updateResponse, refreshResponse ->
+                            // Both tasks are done, let's put the ParallelResponse and the RefreshResponse together
+                            // in a data object and pass it to our final callback.
+                            FinalResponse(updateResponse, refreshResponse)
+                        })
 
 
-            // Now we only need to observe the final combinedOvservable, and we will only get a callback when everything is done.
-            // The final result will be wrapped up in a FinalResponse data class.
-            compositeDisposable.add(
-                    combinedObservable
-                            .subscribeOn(Schedulers.single())
-                            .observeOn(AndroidSchedulers.mainThread())
-                            .subscribe({ finalResponse ->
+                // Now we only need to observe the final combinedOvservable, and we will only get a callback when everything is done.
+                // The final result will be wrapped up in a FinalResponse data class.
+                compositeDisposable.add(
+                        combinedObservable
+                                .subscribeOn(Schedulers.single())
+                                .observeOn(AndroidSchedulers.mainThread())
+                                .subscribe({ finalResponse ->
 
-                                // If the events did not happen, we want to pass the ProfileSaveResults
-                                // back as null so the UI knows.
-                                var emailSaveResult: ProfileSaveResult? = null
-                                var phoneSaveResult: ProfileSaveResult? = null
-                                var addressSaveResult: ProfileSaveResult? = null
-                                var wasError = false
-                                finalResponse.updateResponse.emailResponse?.let {
-                                    emailSaveResult = if (!it.isSuccess) {
-                                        wasError = true
-                                        ProfileSaveResult(false, it.message)
-                                    } else {
-                                        ProfileSaveResult(true, null)
+                                    // If the events did not happen, we want to pass the ProfileSaveResults
+                                    // back as null so the UI knows.
+                                    var emailSaveResult: ProfileSaveResult? = null
+                                    var phoneSaveResult: ProfileSaveResult? = null
+                                    var addressSaveResult: ProfileSaveResult? = null
+                                    var wasError = false
+                                    finalResponse.updateResponse.emailResponse?.let {
+                                        emailSaveResult = if (!it.isSuccess) {
+                                            wasError = true
+                                            ProfileSaveResult(false, it.message)
+                                        } else {
+                                            ProfileSaveResult(true, null)
+                                        }
                                     }
-                                }
-                                finalResponse.updateResponse.phoneResponse?.let {
-                                    phoneSaveResult = if (!it.isSuccess) {
-                                        wasError = true
-                                        ProfileSaveResult(false, it.message)
-                                    } else {
-                                        ProfileSaveResult(true, null)
+                                    finalResponse.updateResponse.phoneResponse?.let {
+                                        phoneSaveResult = if (!it.isSuccess) {
+                                            wasError = true
+                                            ProfileSaveResult(false, it.message)
+                                        } else {
+                                            ProfileSaveResult(true, null)
+                                        }
                                     }
-                                }
-                                finalResponse.updateResponse.addressResponse?.let {
-                                    addressSaveResult = if (!it.isSuccess) {
-                                        wasError = true
-                                        ProfileSaveResult(false, it.message)
-                                    } else {
-                                        ProfileSaveResult(true, null)
+                                    finalResponse.updateResponse.addressResponse?.let {
+                                        addressSaveResult = if (!it.isSuccess) {
+                                            wasError = true
+                                            ProfileSaveResult(false, it.message)
+                                        } else {
+                                            ProfileSaveResult(true, null)
+                                        }
                                     }
-                                }
-                                // Pass the results to the UI.
-                                saveEventObservable.value = ProfileSaveEvent(emailSaveResult, phoneSaveResult, addressSaveResult)
+                                    // Pass the results to the UI.
+                                    saveEventObservable.value = ProfileSaveEvent(emailSaveResult, phoneSaveResult, addressSaveResult)
 
-                                // Since we refreshed login, let's update our local reference to loginResponse and then update the UI.
-                                this.loginResponse = finalResponse.refreshResponse as LoginResponse
-                                updateFieldsWithBackendData()
-                                if (!wasError) {
-                                    valuesChanged = false
-                                    validateSaveButtonState()
-                                }
+                                    // Since we refreshed login, let's update our local reference to loginResponse and then update the UI.
+                                    this.loginResponse = finalResponse.refreshResponse as LoginResponse
+                                    updateFieldsWithBackendData()
+                                    if (!wasError) {
+                                        valuesChanged = false
+                                        validateSaveButtonState()
+                                    }
 
-                                // Everything is done, regardless of error. Now let's see how things went:
-                                progressOverlayShownObservable.value = false
-                            }, { e ->
-                                progressOverlayShownObservable.value = false
-                                handleThrowable(e)
-                            })
-            )
+                                    // Everything is done, regardless of error. Now let's see how things went:
+                                    progressOverlayShownObservable.value = false
+                                }, { e ->
+                                    progressOverlayShownObservable.value = false
+                                    handleThrowable(e)
+                                })
+                )
+            }
         }
     }
 
