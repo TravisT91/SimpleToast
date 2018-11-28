@@ -128,7 +128,7 @@
                 android:id="@+id/loginButton"
                 style="@style/ButtonPillPrimaryFilledDefault"
                 android:layout_width="wrap_content"
-                android:layout_height="@dimen/pill_button_min_height_default"
+                android:layout_height="wrap_content"
                 app:layout_constraintTop_toBottomOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -138,10 +138,11 @@
                 android:id="@+id/demoAccountButton"
                 style="@style/ButtonPillPrimaryFilledDefault"
                 android:layout_width="wrap_content"
-                android:layout_height="@dimen/pill_button_min_height_default"
+                android:layout_height="wrap_content"
                 android:text="@string/login_demo_account_button"
                 android:visibility="gone"
                 app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintBottom_toTopOf="@id/loginFooter"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/contentBox" />
 
