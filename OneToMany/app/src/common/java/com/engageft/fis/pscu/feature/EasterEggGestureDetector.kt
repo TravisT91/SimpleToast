@@ -32,8 +32,13 @@ class EasterEggGestureDetector(context: Context, viewToGestureDetect: View, priv
         if (BuildConfig.DEBUG) {
             viewToGestureDetect.setOnTouchListener(object : View.OnTouchListener{
                 override fun onTouch(v: View?, event: MotionEvent?): Boolean {
-                    gestureDetector.onTouchEvent(event)
-                    return true
+                    // Clone the touch event, do the gesture detector can consume it AND the views underneath
+                    // can consume it. If it's not cloned, only one view hierarchy reliably consumes the event
+                    // and breaks it's usage for the other. 
+                    event!!
+                    val motionEvent = MotionEvent.obtain(event.downTime, event.eventTime, event.action, event.x, event.y, event.metaState)
+                    gestureDetector.onTouchEvent(motionEvent)
+                    return false
                 }
             })
         }
