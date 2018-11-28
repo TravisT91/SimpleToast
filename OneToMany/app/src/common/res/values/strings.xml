@@ -22,7 +22,6 @@
     <string name="GOALS_PROGRESS_FORMAT">%1$s of %2$s</string>
     <string name="LAST_UPDATED_FORMAT">Last updated %s</string> <!-- insert date -->
 
-
     <!--TODO(jhutchins): Refactor DisplayDateTimeUtils: SHOW-386-->
     <!-- DateFormat strings for localization: -->
     <string name="format_datetime_month_year">MMM yyyy</string> <!-- "Nov 2016" -->
@@ -86,23 +85,4 @@
     <string name="NO_PDF_APP_FOUND_TITLE">No PDF Viewer Found</string>
     <string name="NO_PDF_APP_FOUND_MESSAGE">Would you like to find an application to view PDF documents in the Play Store?</string>
     <string name="WEBVIEW_NO_EMAIL_CLIENT_FOUND">No email client app found!</string>
-
-    <!-- times -->
-    <string name="DATE_JUST_NOW">just now</string>
-
-    <string name="TIME_INTERVAL_FORMAT_DAYS">%d d</string>
-
-    <plurals name="TIME_INTERVAL_FORMAT_MINUTES">
-        <item quantity="one">1 min</item>
-        <item quantity="other">%d mins</item>
-    </plurals>
-    <plurals name="TIME_INTERVAL_FORMAT_HOURS">
-        <item quantity="one">1 hr</item>
-        <item quantity="other">%d hrs</item>
-    </plurals>
-
-    <string name="ORDINAL_ST">st</string>
-    <string name="ORDINAL_ND">nd</string>
-    <string name="ORDINAL_RD">rd</string>
-    <string name="ORDINAL_TH">th</string>
 </resources>

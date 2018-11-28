@@ -8,13 +8,12 @@ import com.engageft.fis.pscu.R
 fun infoDialogGenericErrorTitleMessageNewInstance(context: Context,
                                                   title: String = context.getString(R.string.alert_error_title_generic),
                                                   message: String = context.getString(R.string.alert_error_message_generic),
-                                                  positiveButtonText: String = context.getString(R.string.dialog_information_ok_button),
+                                                  buttonPositiveText: String = context.getString(R.string.dialog_information_ok_button),
                                                   listener: InformationDialogFragment.InformationDialogFragmentListener? = null) : InformationDialogFragment {
-                                                  buttonPositiveText: String = context.getString(R.string.dialog_information_ok_button)) : InformationDialogFragment {
     return InformationDialogFragment.newLotusInstance(
             title = title,
             message = message,
-            positiveButton = positiveButtonText,
+            buttonPositiveText = buttonPositiveText,
             listener = listener)
 }
 
@@ -33,13 +32,13 @@ fun infoDialogGenericErrorTitleMessageConditionalNewInstance(context: Context, d
 }
 
 fun infoDialogYesNoNewInstance(context: Context, title: String?, message: String?,
-                               positiveButtonText: String = context.getString(R.string.dialog_information_yes_button),
-                               negativeButtonText: String = context.getString(R.string.dialog_information_no_button),
+                               buttonPositiveText: String = context.getString(R.string.dialog_information_yes_button),
+                               buttonNegativeText: String = context.getString(R.string.dialog_information_no_button),
                                listener: InformationDialogFragment.InformationDialogFragmentListener? = null): InformationDialogFragment {
     return InformationDialogFragment.newLotusInstance(
             title = title,
             message = message,
-            positiveButton = positiveButtonText,
-            negativeButton = negativeButtonText,
+            buttonPositiveText = buttonPositiveText,
+            buttonNegativeText = buttonNegativeText,
             listener = listener)
 }
