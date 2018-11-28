@@ -17,12 +17,13 @@ import com.engageft.apptoolbox.adapter.HorizontalRuleSection
 import com.engageft.apptoolbox.adapter.SelectableLabelsSection
 import com.engageft.apptoolbox.util.applyTypefaceAndColorToSubString
 import com.engageft.engagekit.EngageService
-import com.engageft.feature.util.DisplayDateTimeUtils
 import com.engageft.fis.pscu.R
 import com.engageft.fis.pscu.config.EngageAppConfig
 import com.engageft.fis.pscu.databinding.FragmentStatementsBinding
 import io.github.luizgrp.sectionedrecyclerviewadapter.SectionedRecyclerViewAdapter
 import org.joda.time.DateTime
+import utilGen1.DisplayDateTimeUtils
+
 /**
  * StatementsFragment
  *
