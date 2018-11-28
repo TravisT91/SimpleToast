@@ -93,6 +93,7 @@ class StatementsFragment: BaseEngageFullscreenFragment() {
                                 selectedMonth.year.toString())
 
                         //TODO(aHashimi): can't change the toolbar title dynamically.
+                        //TODO(aHashimi): don't use the WebView to show the PDF: https://engageft.atlassian.net/browse/SHOW-449
                         val pdfTitle = DisplayDateTimeUtils.getMonthFullYear(selectedMonth.year, selectedMonth.monthOfYear)
                         findNavController().navigate(R.id.action_statementsFragment_to_webViewFragment,
                                 WebViewFragment.getBundle(pdfTitle, statementUrl, true, true))
