@@ -79,7 +79,7 @@ dependencies {
     implementation 'com.eightbitlab:blurview:1.5.0'
     // For styling views programmatically
     implementation 'com.airbnb.android:paris:1.1.0'
-    implementation "io.github.luizgrp.sectionedrecyclerviewadapter:sectionedrecyclerviewadapter:$rootProject.sectionedRecylerView"
+    implementation "io.github.luizgrp.sectionedrecyclerviewadapter:sectionedrecyclerviewadapter:$rootProject.sectionedRecylerViewVersion"
     // If you're using Paris annotations.
     kapt 'com.airbnb.android:paris-processor:1.1.0'
 
