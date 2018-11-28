@@ -10,168 +10,188 @@
             type="com.engageft.fis.pscu.feature.Palette"/>
     </data>
 
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/loginParent"
+    <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:fillViewport="true"
+        android:layout_height="match_parent"
+        android:isScrollContainer="true">
 
-        <Switch
-            android:id="@+id/testSwitch"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_margin="16dp"
-            android:text="@string/login_test_switch"
-            android:textColor="@color/black"
-            android:textAppearance="@style/Body"
-            android:checked="@={viewModel.testMode}"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            android:visibility="invisible" />
 
-        <androidx.appcompat.widget.AppCompatTextView
-            tools:style="@style/Title1Quiet"
-            parisStyle="@{palette.title1Quiet}"
-            android:id="@+id/loginTextView"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintVertical_bias="0.05"
-            android:text="@string/login_title"/>
-
-        <LinearLayout
-            android:id="@+id/loginInputForm"
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/loginParent"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            app:layout_constraintTop_toBottomOf="@id/loginTextView"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            android:layout_marginTop="14dp"
-            android:orientation="vertical"
-            android:background="@color/white"
-            android:paddingLeft="16dp"
-            android:paddingRight="16dp">
+            android:layout_height="wrap_content">
 
-            <com.engageft.apptoolbox.view.EmailInputWithLabel
-                android:id="@+id/usernameInput"
-                inputWithLabel.setThemeWithPalette="@{true}"
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/contentBox"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="20dp"
-                app:labelText="@string/login_email_label"
-                app:inputText="@={viewModel.username}"/>
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintVertical_chainStyle="spread_inside"
+                app:layout_constraintBottom_toTopOf="@id/loginFooter">
 
-            <com.engageft.apptoolbox.view.PasswordInputWithLabel
-                android:id="@+id/passwordInput"
-                inputWithLabel.setThemeWithPalette="@{true}"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="20dp"
-                app:labelText="@string/login_password_label"
-                app:inputText="@={viewModel.password}"/>
-        </LinearLayout>
+                <Switch
+                    android:id="@+id/testSwitch"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="16dp"
+                    android:text="@string/login_test_switch"
+                    android:textColor="@color/black"
+                    android:textAppearance="@style/Body"
+                    android:checked="@={viewModel.testMode}"
+                    app:layout_constraintVertical_chainStyle="packed"
+                    app:layout_constraintTop_toTopOf="@id/loginTextView"
+                    app:layout_constraintBottom_toBottomOf="@id/loginTextView"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    android:visibility="invisible" />
 
-        <Button
-            style="@style/Caption1Medium"
-            android:textColor="@color/pill_button_secondary_text"
-            android:background="@null"
-            android:textAllCaps="false"
-            android:id="@+id/forgotPasswordText"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/loginInputForm"
-            android:minHeight="@dimen/pill_button_min_height_default"
-            android:layout_marginStart="16dp"
-            android:layout_marginTop="19dp"
-            android:text="@string/login_forgot_password"/>
+                <androidx.appcompat.widget.AppCompatTextView
+                    tools:style="@style/Title1Quiet"
+                    parisStyle="@{palette.title1Quiet}"
+                    android:id="@+id/loginTextView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintBottom_toTopOf="@id/loginInputForm"
+                    android:text="@string/login_title"/>
 
-        <androidx.appcompat.widget.AppCompatCheckBox
-            style="@style/Caption1Medium"
-            android:textColor="@color/pill_button_secondary_text"
-            android:id="@+id/rememberMeCheckbox"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            app:layout_constraintTop_toTopOf="@id/forgotPasswordText"
-            app:layout_constraintBottom_toBottomOf="@id/forgotPasswordText"
-            app:layout_constraintEnd_toEndOf="parent"
-            android:button="@drawable/checkbox_selector"
-            android:paddingStart="9dp"
-            android:paddingEnd="0dp"
-            android:layout_marginEnd="16dp"
-            android:checked="@={viewModel.rememberMe}"
-            android:text="@string/login_remember_me"/>
+                <LinearLayout
+                    android:id="@+id/loginInputForm"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintTop_toBottomOf="@id/loginTextView"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintBottom_toTopOf="@id/forgotPasswordText"
+                    android:layout_marginTop="14dp"
+                    android:orientation="vertical"
+                    android:background="@color/white"
+                    android:paddingLeft="16dp"
+                    android:paddingRight="16dp">
 
-        <!--This gets animated in the fragment.-->
-        <com.engageft.apptoolbox.view.PillButton
-            android:id="@+id/loginButton"
-            style="@style/ButtonPillPrimaryFilledDefault"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            app:layout_constraintTop_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            android:text="@string/login_submit_button"/>
+                    <com.engageft.apptoolbox.view.EmailInputWithLabel
+                        android:id="@+id/usernameInput"
+                        inputWithLabel.setThemeWithPalette="@{true}"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="20dp"
+                        app:labelText="@string/login_email_label"
+                        app:inputText="@={viewModel.username}"/>
 
-        <com.engageft.apptoolbox.view.PillButton
-            android:id="@+id/demoAccountButton"
-            style="@style/ButtonPillPrimaryFilledDefault"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:layout_marginBottom="8dp"
-            android:text="@string/login_demo_account_button"
-            android:visibility="visible"
-            app:layout_constraintBottom_toTopOf="@+id/loginFooter"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/forgotPasswordText" />
+                    <com.engageft.apptoolbox.view.PasswordInputWithLabel
+                        android:id="@+id/passwordInput"
+                        inputWithLabel.setThemeWithPalette="@{true}"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="20dp"
+                        app:labelText="@string/login_password_label"
+                        app:inputText="@={viewModel.password}"/>
+                </LinearLayout>
 
-        <LinearLayout
-            android:id="@+id/loginFooter"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:layout_gravity="center_horizontal"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            android:layout_marginBottom="13dp">
-            <Button
-                android:id="@+id/btn_issuer_statement"
+                <Button
+                    style="@style/Caption1Medium"
+                    android:textColor="@color/pill_button_secondary_text"
+                    android:background="@null"
+                    android:textAllCaps="false"
+                    android:id="@+id/forgotPasswordText"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/loginInputForm"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    android:layout_marginStart="16dp"
+                    android:text="@string/login_forgot_password"/>
+
+                <androidx.appcompat.widget.AppCompatCheckBox
+                    style="@style/Caption1Medium"
+                    android:textColor="@color/pill_button_secondary_text"
+                    android:id="@+id/rememberMeCheckbox"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintTop_toTopOf="@id/forgotPasswordText"
+                    app:layout_constraintBottom_toBottomOf="@id/forgotPasswordText"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    android:button="@drawable/checkbox_selector"
+                    android:paddingStart="9dp"
+                    android:paddingEnd="0dp"
+                    android:layout_marginEnd="16dp"
+                    android:checked="@={viewModel.rememberMe}"
+                    android:text="@string/login_remember_me"/>
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <!--This gets animated in the fragment.-->
+            <com.engageft.apptoolbox.view.PillButton
+                android:id="@+id/loginButton"
+                style="@style/ButtonPillPrimaryFilledDefault"
+                android:layout_width="wrap_content"
+                android:layout_height="@dimen/pill_button_min_height_default"
+                app:layout_constraintTop_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                android:text="@string/login_submit_button"/>
+
+            <com.engageft.apptoolbox.view.PillButton
+                android:id="@+id/demoAccountButton"
+                style="@style/ButtonPillPrimaryFilledDefault"
+                android:layout_width="wrap_content"
+                android:layout_height="@dimen/pill_button_min_height_default"
+                android:text="@string/login_demo_account_button"
+                android:visibility="gone"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/contentBox" />
+
+            <LinearLayout
+                android:id="@+id/loginFooter"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                style="@style/Caption1Medium"
-                android:textColor="@color/pill_button_secondary_text"
-                android:background="@null"
-                android:textAllCaps="false"
-                android:minHeight="@dimen/pill_button_min_height_default"
-                android:layout_marginEnd="8dp"
-                android:text="@string/login_issuer_statement"
-                />
-            <androidx.appcompat.widget.AppCompatTextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                style="@style/Caption1Medium"
-                android:textColor="@color/black"
-                android:text="@string/login_footer_separator"/>
+                android:orientation="horizontal"
+                android:layout_gravity="center_horizontal"
+                app:layout_constraintTop_toBottomOf="@id/contentBox"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                android:layout_marginBottom="8dp"
+                android:layout_marginTop="8dp">
+                <Button
+                    android:id="@+id/btn_issuer_statement"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    style="@style/Caption1Medium"
+                    android:textColor="@color/pill_button_secondary_text"
+                    android:background="@null"
+                    android:textAllCaps="false"
+                    android:minHeight="@dimen/pill_button_min_height_default"
+                    android:layout_marginEnd="8dp"
+                    android:text="@string/login_issuer_statement"
+                    />
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    style="@style/Caption1Medium"
+                    android:textColor="@color/black"
+                    android:text="@string/login_footer_separator"/>
 
-            <Button
-                android:id="@+id/btn_disclosures"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                style="@style/Caption1Medium"
-                android:textColor="@color/pill_button_secondary_text"
-                android:background="@null"
-                android:textAllCaps="false"
-                android:minHeight="@dimen/pill_button_min_height_default"
-                android:layout_marginStart="8dp"
-                android:text="@string/login_disclosures"
-                />
+                <Button
+                    android:id="@+id/btn_disclosures"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    style="@style/Caption1Medium"
+                    android:textColor="@color/pill_button_secondary_text"
+                    android:background="@null"
+                    android:textAllCaps="false"
+                    android:minHeight="@dimen/pill_button_min_height_default"
+                    android:layout_marginStart="8dp"
+                    android:text="@string/login_disclosures"
+                    />
 
-        </LinearLayout>
+            </LinearLayout>
 
-    </androidx.constraintlayout.widget.ConstraintLayout>
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </androidx.core.widget.NestedScrollView>
+
 </layout>

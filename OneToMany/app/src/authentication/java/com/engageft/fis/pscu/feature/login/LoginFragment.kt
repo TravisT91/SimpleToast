@@ -39,6 +39,7 @@ import com.engageft.fis.pscu.feature.infoDialogSimpleMessageNoTitle
  */
 class LoginFragment : LotusFullScreenFragment() {
     private lateinit var constraintSet: ConstraintSet
+    private lateinit var contentConstraintSet: ConstraintSet
     private lateinit var binding: FragmentLoginBinding
     private lateinit var gestureDetector: EasterEggGestureDetector
 
@@ -52,7 +53,10 @@ class LoginFragment : LotusFullScreenFragment() {
         binding.palette = Palette
 
         constraintSet = ConstraintSet()
-        constraintSet.clone(binding.root as ConstraintLayout)
+        constraintSet.clone(binding.loginParent as ConstraintLayout)
+
+        contentConstraintSet = ConstraintSet()
+        contentConstraintSet.clone(binding.contentBox as ConstraintLayout)
 
         val vm = (viewModel as LoginViewModel)
         binding.viewModel = vm
@@ -105,21 +109,25 @@ class LoginFragment : LotusFullScreenFragment() {
             when (loginButtonState) {
                 LoginViewModel.ButtonState.SHOW -> {
                     // Animate the login button onto the screen.
-                    val constraintLayout = binding.root as ConstraintLayout
+                    val constraintLayout = binding.loginParent as ConstraintLayout
                     constraintSet = ConstraintSet()
                     constraintSet.clone(constraintLayout)
-                    constraintSet.connect(R.id.loginButton, ConstraintSet.TOP, R.id.forgotPasswordText, ConstraintSet.BOTTOM, 0)
+                    constraintSet.connect(R.id.loginButton, ConstraintSet.TOP, R.id.contentBox, ConstraintSet.BOTTOM, 0)
                     constraintSet.connect(R.id.loginButton, ConstraintSet.BOTTOM, R.id.loginFooter, ConstraintSet.TOP, 0)
+                    constraintSet.connect(R.id.loginFooter, ConstraintSet.TOP, R.id.loginButton, ConstraintSet.BOTTOM, 0)
+                    constraintSet.connect(R.id.contentBox, ConstraintSet.BOTTOM, R.id.loginButton, ConstraintSet.TOP, 0)
 
                     setLayoutTransitions()
                 }
                 LoginViewModel.ButtonState.HIDE -> {
                     // Animate the login button off the screen.
-                    val constraintLayout = binding.root as ConstraintLayout
+                    val constraintLayout = binding.loginParent as ConstraintLayout
                     constraintSet = ConstraintSet()
                     constraintSet.clone(constraintLayout)
                     constraintSet.connect(R.id.loginButton, ConstraintSet.TOP, constraintLayout.id, ConstraintSet.BOTTOM, 0)
                     constraintSet.clear(R.id.loginButton, ConstraintSet.BOTTOM)
+                    constraintSet.connect(R.id.loginFooter, ConstraintSet.TOP, R.id.contentBox, ConstraintSet.BOTTOM, 0)
+                    constraintSet.connect(R.id.contentBox, ConstraintSet.BOTTOM, R.id.loginFooter, ConstraintSet.TOP, 0)
 
                     setLayoutTransitions()
                 }
@@ -127,26 +135,34 @@ class LoginFragment : LotusFullScreenFragment() {
         })
         vm.demoAccountButtonState.observe(this, Observer { buttonState: LoginViewModel.ButtonState ->
             when (buttonState) {
-                LoginViewModel.ButtonState.SHOW -> constraintSet.setVisibility(R.id.demoAccountButton, View.VISIBLE)
-                LoginViewModel.ButtonState.HIDE -> constraintSet.setVisibility(R.id.demoAccountButton, View.GONE)
+                LoginViewModel.ButtonState.SHOW -> {
+                    constraintSet.setVisibility(R.id.demoAccountButton, View.VISIBLE)
+                    constraintSet.connect(R.id.loginFooter, ConstraintSet.TOP, R.id.demoAccountButton, ConstraintSet.BOTTOM, 0)
+                    constraintSet.connect(R.id.contentBox, ConstraintSet.BOTTOM, R.id.demoAccountButton, ConstraintSet.TOP, 0)
+                }
+                LoginViewModel.ButtonState.HIDE -> {
+                    constraintSet.setVisibility(R.id.demoAccountButton, View.GONE)
+                    constraintSet.connect(R.id.loginFooter, ConstraintSet.TOP, R.id.contentBox, ConstraintSet.BOTTOM, 0)
+                    constraintSet.connect(R.id.contentBox, ConstraintSet.BOTTOM, R.id.loginFooter, ConstraintSet.TOP, 0)
+                }
             }
             setLayoutTransitions()
         })
         // If testMode was saved as enabled, make the switch visible initially.
         if (vm.testMode.get()!! || DeviceUtils.isEmulator()) {
-            constraintSet.setVisibility(R.id.testSwitch, View.VISIBLE)
+            contentConstraintSet.setVisibility(R.id.testSwitch, View.VISIBLE)
             setLayoutTransitions()
         }
         // The gestureDetector does not enable or disable anything, it merely controls visibility of the
         // switch so it CAN be changed. 
         gestureDetector = EasterEggGestureDetector(context!!, binding.root, object : EasterEggGestureListener {
             override fun onEasterEggActivated() {
-                constraintSet.setVisibility(R.id.testSwitch, View.VISIBLE)
+                contentConstraintSet.setVisibility(R.id.testSwitch, View.VISIBLE)
                 setLayoutTransitions()
             }
 
             override fun onEasterEggDeactivated() {
-                constraintSet.setVisibility(R.id.testSwitch, View.INVISIBLE)
+                contentConstraintSet.setVisibility(R.id.testSwitch, View.INVISIBLE)
                 setLayoutTransitions()
             }
         })
@@ -227,10 +243,13 @@ class LoginFragment : LotusFullScreenFragment() {
     }
 
     private fun setLayoutTransitions() {
-        val constraintLayout = binding.root as ConstraintLayout
+        val constraintLayout = binding.loginParent as ConstraintLayout
+        val contentConstraintLayout = binding.contentBox as ConstraintLayout
         val transition = AutoTransition()
         transition.duration = 250
         TransitionManager.beginDelayedTransition(constraintLayout, transition)
+        TransitionManager.beginDelayedTransition(contentConstraintLayout, transition)
         constraintSet.applyTo(constraintLayout)
+        contentConstraintSet.applyTo(contentConstraintLayout)
     }
 }
