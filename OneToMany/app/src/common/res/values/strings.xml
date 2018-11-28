@@ -1,5 +1,74 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+
+    <!--TODO(jhutchins): Refactor StringUtils: SHOW-385-->
+    <string name="BUDGET_SUMMARY_LABEL">Budget</string>
+    <string name="TOTAL_SPENT_LABEL">Total Spent</string>
+    <string name="CARD_STATUS_DISPLAY_LOCKED">Locked</string>
+    <string name="CARD_STATUS_DISPLAY_PENDING">Inactive</string>
+    <string name="CARD_STATUS_DISPLAY_REPLACED">Replaced</string>
+    <string name="CARD_STATUS_DISPLAY_ACTIVE">Active</string>
+    <string name="CARD_STATUS_DISPLAY_CANCELLED">Canceled</string>
+    <string name="CARD_STATUS_DISPLAY_ACTIVATE">Activate</string>
+    <string name="CARD_STATUS_DISPLAY_VIRTUAL">Temporary</string>
+    <string name="CARD_STATUS_DISPLAY_SUSPENDED">Suspended</string>
+    <string name="CARD_STATUS_DISPLAY_CLOSED">Closed</string>
+    <string name="CARD_STATUS_DISPLAY_ORDERED">Ordered</string>
+    <string name="GOALS_PAUSED">paused</string>
+    <string name="GOALS_COMPLETE">Completed</string>
+    <string name="GOALS_RECURRENCE_FORMAT">%1$s/%2$s</string>
+    <string name="GOALS_BY_DATE_FORMAT">by %s</string>
+    <string name="GOALS_ON_DATE_FORMAT">on %s</string>
+    <string name="GOALS_PROGRESS_FORMAT">%1$s of %2$s</string>
+    <string name="LAST_UPDATED_FORMAT">Last updated %s</string> <!-- insert date -->
+
+
+    <!--TODO(jhutchins): Refactor DisplayDateTimeUtils: SHOW-386-->
+    <!-- DateFormat strings for localization: -->
+    <string name="format_datetime_month_year">MMM yyyy</string> <!-- "Nov 2016" -->
+    <string name="format_datetime_fullmonth_year">MMMM yyyy</string> <!-- "November 2016" -->
+    <string name="format_datetime_month_day">MMM dd</string> <!-- "Nov 15" -->
+    <string name="format_datetime_year_shortmonth_day">yyyy-MM-dd</string> <!-- "2017-03-07" -->
+    <string name="format_datetime_longmonth_day">MMMM d</string> <!-- "November 27" -->
+    <string name="format_datetime_shortmonth_day">MM/dd</string> <!-- "01/15" -->
+    <string name="format_datetime_shortmonth_year">MM/yy</string> <!-- "01/16" -->
+    <string name="format_datetime_hour_minute_second_milli">hh:mm:ss.SSS</string>
+    <string name="format_datetime_short">MM/dd/yyyy</string>
+
+    <string name="DATE_JUST_NOW">just now</string>
+
+    <plurals name="TIME_INTERVAL_FORMAT_MINUTES">
+        <item quantity="one">1 min</item>
+        <item quantity="other">%d mins</item>
+    </plurals>
+    <plurals name="TIME_INTERVAL_FORMAT_HOURS">
+        <item quantity="one">1 hr</item>
+        <item quantity="other">%d hrs</item>
+    </plurals>
+
+    <string name="TIME_INTERVAL_FORMAT_DAYS">%d d</string>
+
+    <string name="ORDINAL_TH">th</string>
+    <string name="ORDINAL_RD">rd</string>
+    <string name="ORDINAL_ST">st</string>
+    <string name="ORDINAL_ND">nd</string>
+    <!-- End DateFormat strings for localization -->
+
+
+    <!--TODO(jhutchins): Refactor PayPlanUtils: SHOW-388-->
+    <string name="PAY_PLAN_ANNUAL">Yearly</string>
+    <string name="PAY_PLAN_QUARTER">Quarterly</string>
+    <string name="PAY_PLAN_MONTH">Monthly</string>
+    <string name="PAY_PLAN_WEEK">Weekly</string>
+    <string name="PAY_PLAN_DAILY">Daily</string>
+    <string name="PAY_PLAN_PAYCHECK">Paycheck</string>
+    <string name="PAY_PER_YEAR">year</string>
+    <string name="PAY_PER_QUARTER">quarter</string>
+    <string name="PAY_PER_MONTH">month</string>
+    <string name="PAY_PER_WEEK">week</string>
+    <string name="PAY_PER_DAY">day</string>
+    <string name="PAY_PER_PAYCHECK">paycheck</string>
+
     <!-- Error messages -->
     <string name="alert_error_message_no_internet_connection">No Internet Connection</string>
     <string name="alert_error_message_connection_timeout">Connection timeout. Please try again.</string>

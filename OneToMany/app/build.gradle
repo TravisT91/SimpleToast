@@ -52,10 +52,11 @@ android {
         main {
             java.srcDirs = ['src/main/java', 'src/authentication/java', 'src/common/java', 'src/splash/java',
                             'src/dashboard/java', 'src/budgets/java', 'src/account/java', 'src/goals/java',
-                            'src/help/java', 'src/cardmanagement/java', 'src/palette/java', 'src/welcome/java']
+                            'src/help/java', 'src/cardmanagement/java', 'src/palette/java', 'src/welcome/java',
+                            'src/transactions/java']
             res.srcDirs = ['src/main/res', 'src/authentication/res', 'src/common/res', 'src/splash/res',
                            'src/dashboard/res', 'src/budgets/res', 'src/account/res', 'src/goals/res',
-                           'src/help/res', 'src/cardmanagement/res', 'src/welcome/res']
+                           'src/help/res', 'src/cardmanagement/res', 'src/welcome/res', 'src/transactions/res']
         }
     }
 }
@@ -75,10 +76,11 @@ dependencies {
     implementation "androidx.lifecycle:lifecycle-extensions:$rootProject.archLifecycleVersion"
     kapt "androidx.lifecycle:lifecycle-compiler:$rootProject.archLifecycleVersion"
     implementation "com.heapanalytics.android:heap-android-client:$rootProject.heapVersion"
+    implementation 'com.eightbitlab:blurview:1.5.0'
     // For styling views programmatically
     implementation 'com.airbnb.android:paris:1.1.0'
     // If you're using Paris annotations.
-    annotationProcessor 'com.airbnb.android:paris-processor:1.1.0'
+    kapt 'com.airbnb.android:paris-processor:1.1.0'
 
     implementation('com.crashlytics.sdk.android:crashlytics:2.9.6@aar') {
         transitive = true
