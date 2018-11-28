@@ -225,6 +225,7 @@ class DashboardExpandableView : ConstraintLayout {
 
     // use when restoring state of view to show it expanded immediately
     private fun showActionsImmediate() {
+        showingActions = true
         // card and actions view height
         val layoutParams = cardAndActionsView.layoutParams
         layoutParams.height = cardAndActionsViewExpandedHeight

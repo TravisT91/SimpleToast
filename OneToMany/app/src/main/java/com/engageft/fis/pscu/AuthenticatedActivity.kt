@@ -8,6 +8,7 @@ import com.engageft.apptoolbox.LotusActivityConfig
 import com.engageft.engagekit.EngageService
 import com.engageft.engagekit.utils.LoginResponseUtils
 import com.engageft.fis.pscu.feature.DashboardAnimationEvent
+import com.engageft.fis.pscu.feature.DashboardFragment
 import com.engageft.fis.pscu.feature.DashboardNavigationEvent
 import com.engageft.fis.pscu.feature.DashboardViewModel
 import com.engageft.fis.pscu.feature.authentication.BaseAuthenticatedActivity
@@ -37,6 +38,23 @@ class AuthenticatedActivity : BaseAuthenticatedActivity() {
         viewModel = ViewModelProviders.of(this).get(DashboardViewModel::class.java)
         setupDashboardNavigationObserving()
         setupDashboardAnimationObserving()
+    }
+
+    override fun onBackPressed() {
+        // If the currently displayed fragment is DashboardFragment, give it a chance to handle back pressed.
+        // It will do so if its DashboardExpandableView with card management options is expanded, by collapsing it.
+        // If it's not expanded, or if the currently displayed fragment is not DashboardFragment, let
+        // the parent Activity class handle onBackPressed().
+        val navHost = supportFragmentManager.findFragmentById(R.id.navHost)
+        navHost?.let { navFragment ->
+            navFragment.childFragmentManager.primaryNavigationFragment?.let { currentFragment ->
+                if (currentFragment !is DashboardFragment || !currentFragment.handleBackPressed()) {
+                    super.onBackPressed()
+                }
+            }
+        } ?: run {
+            super.onBackPressed()
+        }
     }
 
     private fun setupDashboardNavigationObserving() {

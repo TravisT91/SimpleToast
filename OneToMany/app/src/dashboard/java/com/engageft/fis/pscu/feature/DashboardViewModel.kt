@@ -256,7 +256,6 @@ class DashboardViewModel : BaseEngageViewModel() {
                 notificationsCountObservable.value = 0
             }
         }
-
     }
 
     fun refreshBalancesAndNotifications() {

@@ -311,6 +311,16 @@ class DashboardFragment : LotusFullScreenFragment(), DashboardExpandableView.Das
         return binding.dashboardExpandableView.animationDurationMs
     }
 
+    // If the dashboardExpandableView is expanded when the device back button is pressed, collapse it.
+    fun handleBackPressed(): Boolean {
+        return if (binding.dashboardExpandableView.showingActions) {
+            binding.dashboardExpandableView.showActions(show = false)
+            true
+        } else {
+            false
+        }
+    }
+
     private fun refreshTransactions() {
         transactionsAdapter.notifyRetrievingTransactionsStarted()
         dashboardViewModel.refreshTransactions()
