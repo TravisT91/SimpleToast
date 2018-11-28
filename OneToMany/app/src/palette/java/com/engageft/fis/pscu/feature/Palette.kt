@@ -1,11 +1,22 @@
 package com.engageft.fis.pscu.feature
 
+import android.graphics.Color
 import android.graphics.Typeface
 import androidx.annotation.ColorInt
+import androidx.core.content.res.ResourcesCompat
 import com.airbnb.paris.extensions.fontFamily
 import com.airbnb.paris.extensions.lineSpacingExtra
 import com.airbnb.paris.extensions.textSizeDp
 import com.airbnb.paris.extensions.textViewStyle
+import com.engageft.apptoolbox.R
+import com.engageft.engagekit.EngageService
+import com.engageft.fis.pscu.OneToManyApplication
+import com.ob.domain.lookup.branding.BrandingColorType
+import com.ob.ws.dom.BasicResponse
+import com.ob.ws.dom.BrandingInfoResponse
+import io.reactivex.Observable
+import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.schedulers.Schedulers
 
 object Palette {
     private const val NOT_SET = 0
@@ -329,20 +340,64 @@ object Palette {
             }
         }
 
-//    fun updateWithAccountPropertiesResponse(accountPropertiesResponse: AccountPropertiesResponse?) {
-//        accountPropertiesResponse?.apply {
-//            if (primaryColor != 0) this@Palette.primaryColor = primaryColor
-//            if (secondaryColor != 0) this@Palette.secondaryColor = secondaryColor
-//            if (successColor != 0) this@Palette.successColor = successColor
-//            if (warningColor != 0) this@Palette.warningColor = warningColor
-//            if (errorColor != 0) this@Palette.errorColor = errorColor
-//            if (infoColor != 0) this@Palette.infoColor = infoColor
-//            if (!cardImageUrl.isNullOrEmpty()) this@Palette.cardImageUrl = cardImageUrl
-//            if (!typefaceName.isNullOrEmpty()) this@Palette.typefaceName = typefaceName
-//
-//            updateStyles()
-//        }
-//        //TODO uncomment when we can retrieve the response from backend
-//    }
+    fun getBrandingWithToken(token : String): Observable<BasicResponse> {
+        return EngageService.getInstance().engageApiInterface.postGetAccountBrandingInfo(
+                HashMap<String,String>().apply{ put("token",token)})
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .doOnNext {
+                    if (it.isSuccess && it is BrandingInfoResponse){
+                        applyBrandingInfo(it)
+                    }
+                }}
 
+    fun getBrandingWithRefCode(refCode : String): Observable<BasicResponse> {
+        return EngageService.getInstance().engageApiInterface.postGetBrandingInfoFromRefCode(
+                HashMap<String,String>().apply{ put("refCode",refCode)})
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .doOnNext {
+                    if (it.isSuccess && it is BrandingInfoResponse){
+                        applyBrandingInfo(it)
+                    }
+                }}
+
+    fun applyBrandingInfo(brandingInfoResponse: BrandingInfoResponse){
+        brandingInfoResponse.brandingInfo.apply {
+            applyColors(colors)
+            setFonts(font)
+        }
+    }
+
+    fun applyColors(colors: MutableMap<BrandingColorType, String>) {
+        colors.apply {
+            this.forEach {
+                val color = Color.parseColor(it.value)
+                when(it.key){
+                    BrandingColorType.SUCCESS -> successColor = color
+                    BrandingColorType.WARNING -> warningColor = color
+                    BrandingColorType.ERROR -> errorColor = color
+                    BrandingColorType.INFO -> infoColor = color
+                    BrandingColorType.PRIMARY -> primaryColor = color
+                    BrandingColorType.SECONDARY -> secondaryColor = color
+                }
+            }
+        }
+    }
+
+    fun setFonts(fontName: String){
+        Palette.apply {
+            val context = OneToManyApplication.sInstance.applicationContext
+            when (fontName) {
+                Palette.FontType.ARIAL.fontName -> run {
+                    font_regular = ResourcesCompat.getFont(context, R.font.font_regular)
+                    font_bold = ResourcesCompat.getFont(context, R.font.font_bold)
+                    font_italic = ResourcesCompat.getFont(context, R.font.font_italic)
+                    font_light = ResourcesCompat.getFont(context, R.font.font_light)
+                    font_medium = ResourcesCompat.getFont(context, R.font.font_medium)
+                }
+                else -> run { }
+            }
+        }
+    }
 }
