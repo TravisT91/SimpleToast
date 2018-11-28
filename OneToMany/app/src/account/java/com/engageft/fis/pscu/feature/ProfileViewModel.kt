@@ -236,15 +236,6 @@ class ProfileViewModel : BaseEngageViewModel() {
                             // If we passed "eventNotCalled" objects into the Observable, we want to check
                             // that here. If we did, just make the BasicResponse null for this result.
                             // This will flag us later to know that this update was really never called.
-                            if (emailResponse == eventNotCalled) {
-                                Log.e("Joey", "email not called")
-                            }
-                            if (phoneResponse == eventNotCalled) {
-                                Log.e("Joey", "phone not called")
-                            }
-                            if (addressResponse == eventNotCalled) {
-                                Log.e("Joey", "address not called")
-                            }
                             UpdateResponse(if (emailResponse == eventNotCalled) null else emailResponse,
                                     if (phoneResponse == eventNotCalled) null else phoneResponse,
                                     if (addressResponse == eventNotCalled) null else addressResponse)
