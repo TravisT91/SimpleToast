@@ -9,20 +9,11 @@
     <TextView
         android:id="@+id/titleTextView"
         style="@style/StatementsDescriptionStyle"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:padding="16dp"
-        android:lineSpacingExtra="8sp"
         tools:text="@string/statements_description" />
 
     <TextView
         android:id="@+id/subTitleTextView"
         style="@style/StatementsSubDescriptionStyle"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:paddingBottom="16dp"
-        android:paddingLeft="16dp"
-        android:paddingRight="16dp"
         tools:text="@string/statements_subDescription_format" />
 
 </LinearLayout>

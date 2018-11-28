@@ -178,10 +178,10 @@ class LoginViewModel : BaseEngageViewModel() {
     }
 
     fun onConfirmEmail() {
-
-        loginResponse?.let {
+        val authToken = EngageService.getInstance().authManager.authToken
+        authToken?.let { token ->
             progressOverlayShownObservable.value = true
-            compositeDisposable.add(EngageService.getInstance().verificationEmailObservable(it.token)
+            compositeDisposable.add(EngageService.getInstance().verificationEmailObservable(token)
                     .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe({ response ->
@@ -258,8 +258,6 @@ class LoginViewModel : BaseEngageViewModel() {
     }
 
     private fun handleSuccessfulLoginResponse(loginResponse: LoginResponse) {
-        this.loginResponse = loginResponse
-
         // set the Get started flag to true after the successful login, so the Welcome screen doesn't get displayed again
         WelcomeSharedPreferencesRepo.applyHasSeenGetStarted(true)
 

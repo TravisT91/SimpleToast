@@ -6,7 +6,6 @@ import com.engageft.apptoolbox.BaseViewModel
 import com.engageft.apptoolbox.BuildConfig
 import com.engageft.engagekit.rest.exception.NoConnectivityException
 import com.ob.ws.dom.BasicResponse
-import com.ob.ws.dom.LoginResponse
 import java.net.SocketTimeoutException
 import java.net.UnknownHostException
 
@@ -19,8 +18,6 @@ import java.net.UnknownHostException
  * Copyright (c) 2018 Engage FT. All rights reserved.
  */
 open class BaseEngageViewModel: BaseViewModel() {
-
-    var loginResponse: LoginResponse? = null
 
     val dialogInfoObservable: MutableLiveData<DialogInfo> = MutableLiveData()
 

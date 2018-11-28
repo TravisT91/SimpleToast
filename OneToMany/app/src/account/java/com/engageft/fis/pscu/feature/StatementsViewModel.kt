@@ -23,34 +23,26 @@ class StatementsViewModel: BaseEngageViewModel() {
     var dayOfMonthStatementAvailable = 0
 
     init {
-        loginResponse?.let {
-            initMonthlyStatements()
-        } ?: run {
-            refreshAndFetchStatements()
-        }
+        refreshAndFetchStatements()
     }
 
-    private fun initMonthlyStatements() {
-        loginResponse?.let { loginResponse ->
-            val familyInfo = loginResponse.familyInfo
-            val dateOptions = mutableListOf<DateTime>()
+    private fun initMonthlyStatements(loginResponse: LoginResponse) {
+        val familyInfo = loginResponse.familyInfo
+        val dateOptions = mutableListOf<DateTime>()
 
-            val startDate = BackendDateTimeUtils.parseDateTimeFromIso8601String(familyInfo.isoStatementBeginDate)
-            val lastDate = BackendDateTimeUtils.parseDateTimeFromIso8601String(familyInfo.isoStatementEndDate)
+        val startDate = BackendDateTimeUtils.parseDateTimeFromIso8601String(familyInfo.isoStatementBeginDate)
+        val lastDate = BackendDateTimeUtils.parseDateTimeFromIso8601String(familyInfo.isoStatementEndDate)
 
-            dayOfMonthStatementAvailable = familyInfo.dayOfMonthStatementAvailable
+        dayOfMonthStatementAvailable = familyInfo.dayOfMonthStatementAvailable
 
-            // add from latest available months so that it's displayed from recent to oldest
-            dateOptions.add(lastDate)
-            var tempDate = lastDate
-            while (startDate.isBefore(tempDate)) {
-                tempDate = tempDate.minusMonths(1)
-                dateOptions.add(tempDate)
-            }
-            statementsObservable.value = dateOptions
-        } ?: run {
-            refreshAndFetchStatements()
+        // add from latest available months so that it's displayed from recent to oldest
+        dateOptions.add(lastDate)
+        var tempDate = lastDate
+        while (startDate.isBefore(tempDate)) {
+            tempDate = tempDate.minusMonths(1)
+            dateOptions.add(tempDate)
         }
+        statementsObservable.value = dateOptions
     }
 
     private fun refreshAndFetchStatements(): Boolean {
@@ -59,8 +51,7 @@ class StatementsViewModel: BaseEngageViewModel() {
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe({ response ->
                     if (response is LoginResponse) {
-                        loginResponse = response
-                        initMonthlyStatements()
+                        initMonthlyStatements(response)
                     } else {
                         dialogInfoObservable.value = DialogInfo()
                     }
