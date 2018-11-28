@@ -45,8 +45,8 @@ class StatementsViewModel: BaseEngageViewModel() {
         statementsObservable.value = dateOptions
     }
 
-    private fun refreshAndFetchStatements(): Boolean {
-        return compositeDisposable.add(EngageService.getInstance().loginResponseAsObservable
+    private fun refreshAndFetchStatements() {
+        compositeDisposable.add(EngageService.getInstance().loginResponseAsObservable
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe({ response ->
