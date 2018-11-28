@@ -10,6 +10,7 @@ fun infoDialogGenericErrorTitleMessageNewInstance(context: Context,
                                                   message: String = context.getString(R.string.alert_error_message_generic),
                                                   positiveButtonText: String = context.getString(R.string.dialog_information_ok_button),
                                                   listener: InformationDialogFragment.InformationDialogFragmentListener? = null) : InformationDialogFragment {
+                                                  buttonPositiveText: String = context.getString(R.string.dialog_information_ok_button)) : InformationDialogFragment {
     return InformationDialogFragment.newLotusInstance(
             title = title,
             message = message,
@@ -18,9 +19,9 @@ fun infoDialogGenericErrorTitleMessageNewInstance(context: Context,
 }
 
 fun infoDialogSimpleMessageNoTitle(context: Context, message: String,
-                                   positiveButtonText: String = context.getString(R.string.dialog_information_ok_button)) : InformationDialogFragment {
+                                   buttonPositiveText: String = context.getString(R.string.dialog_information_ok_button)) : InformationDialogFragment {
 
-    return InformationDialogFragment.newLotusInstance(message = message, positiveButton = positiveButtonText)
+    return InformationDialogFragment.newLotusInstance(message = message, buttonPositiveText = buttonPositiveText)
 }
 
 fun infoDialogGenericErrorTitleMessageConditionalNewInstance(context: Context, dialogInfo: DialogInfo) : InformationDialogFragment {

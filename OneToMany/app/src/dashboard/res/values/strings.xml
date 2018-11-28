@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="OVERVIEW_CARDVIEW_CVV_MASK">CVC %s</string>
+    <string name="OVERVIEW_CARDVIEW_CARDNUMBER_MASK">•••• %s</string>
+    <string name="OVERVIEW_CARDVIEW_CARD_VALID_MASK">Good Thru %s</string>
+
+    <string name="OVERVIEW_LOADING_CARD_DETAILS">Updating...</string>
+    <string name="OVERVIEW_SHOW_CARD_DETAILS">Show card details</string>
+    <string name="OVERVIEW_HIDE_CARD_DETAILS">Hide card details</string>
+    <string name="OVERVIEW_CARD_ERROR_DIALOG_MESSAGE">There was an error updating card info. Please try again.</string>
+    <string name="OVERVIEW_MOVE_MONEY">Move money</string>
+    <string name="OVERVIEW_LOCK_MY_CARD">Lock card</string>
+    <string name="OVERVIEW_UNLOCK_MY_CARD">Unlock card</string>
+    <string name="OVERVIEW_MORE_OPTIONS">More options</string>
+
+    <string name="OVERVIEW_MORE_CARD_OPTIONS">More options</string>
+    <string name="OVERVIEW_CHANGE_CARD_PIN">Change card PIN</string>
+    <string name="OVERVIEW_REPLACE_CARD">Replace card</string>
+    <string name="OVERVIEW_REPORT_LOST_STOLEN">Report lost/stolen</string>
+    <string name="OVERVIEW_CANCEL_CARD">Cancel card</string>
+
+    <string-array name="OVERVIEW_MORE_OPTIONS_ITEMS">
+        <item>@string/OVERVIEW_CHANGE_CARD_PIN</item>
+        <item>@string/OVERVIEW_REPLACE_CARD</item>
+        <item>@string/OVERVIEW_REPORT_LOST_STOLEN</item>
+        <item>@string/OVERVIEW_CANCEL_CARD</item>
+    </string-array>
+
+    <string name="MONTH_YEAR_FORMAT">%1$d/%2$d</string>
+
+    <string name="OVERVIEW_SPENDING_BALANCE">Available</string>
+    <string name="OVERVIEW_GOALS_BALANCE">Set-aside</string>
+    <string name="OVERVIEW_BALANCE_LOADING">--</string>
+    <string name="OVERVIEW_BALANCE_ERROR">\?</string>
+    <string name="OVERVIEW_ALL_ACTIVITY">ALL ACTIVITY</string>
+    <string name="OVERVIEW_DEPOSITS">DEPOSITS</string>
+
+    <string name="OPTIONS_MENU_NOTIFICATIONS">Notifications</string>
+
+    <!-- Transactions -->
+    <string name="OVERVIEW_NO_TRANSACTIONS_PLACEHOLDER">Once you start spending, you\'ll see all transactions show up right here.</string>
+</resources>

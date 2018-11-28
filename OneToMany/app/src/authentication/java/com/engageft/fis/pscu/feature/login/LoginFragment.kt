@@ -186,8 +186,8 @@ class LoginFragment : LotusFullScreenFragment() {
                             showDialog(InformationDialogFragment.newLotusInstance(
                                     title = getString(R.string.login_confirm_email_alert_title),
                                     message = getString(R.string.login_confirm_email_alert_message),
-                                    positiveButton = getString(R.string.login_confirm_email_send_button),
-                                    negativeButton = getString(R.string.dialog_information_cancel_button),
+                                    buttonPositiveText = getString(R.string.login_confirm_email_send_button),
+                                    buttonNegativeText = getString(R.string.dialog_information_cancel_button),
                                     layoutType = InformationDialogFragment.LayoutType.BUTTONS_STACKED,
                                     listener = listener))
                         }
