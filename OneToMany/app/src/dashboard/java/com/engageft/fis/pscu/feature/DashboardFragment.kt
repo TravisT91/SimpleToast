@@ -9,7 +9,6 @@ import android.view.ViewGroup
 import android.view.WindowManager
 import android.widget.Toast
 import androidx.core.content.ContextCompat
-import androidx.core.os.bundleOf
 import androidx.core.view.ViewCompat
 import androidx.core.widget.NestedScrollView
 import androidx.databinding.DataBindingUtil
@@ -18,6 +17,7 @@ import androidx.lifecycle.ViewModelProviders
 import androidx.navigation.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.engageft.apptoolbox.BaseViewModel
+import com.engageft.apptoolbox.LotusActivity
 import com.engageft.apptoolbox.LotusFullScreenFragment
 import com.engageft.apptoolbox.ViewUtils.newLotusInstance
 import com.engageft.apptoolbox.view.InformationDialogFragment
@@ -58,6 +58,8 @@ class DashboardFragment : LotusFullScreenFragment(), DashboardExpandableView.Das
 
     private val notificationsObserver = Observer<Int> { activity?.invalidateOptionsMenu() }
 
+    private val animationObserver = Observer<DashboardAnimationEvent> { updateAnimation(it!!) }
+
     private var toolbarShadowAnimationScrollRange: Int = 0
     private var toolbarShadowAnimationScrollRangeFloat: Float = 0F
 
@@ -66,7 +68,7 @@ class DashboardFragment : LotusFullScreenFragment(), DashboardExpandableView.Das
     private var scrollDisabled = false
 
     override fun createViewModel(): BaseViewModel? {
-        dashboardViewModel = ViewModelProviders.of(activity!!).get(DashboardViewModel::class.java)
+        dashboardViewModel = ViewModelProviders.of(this).get(DashboardViewModel::class.java)
         return null
     }
 
@@ -279,6 +281,29 @@ class DashboardFragment : LotusFullScreenFragment(), DashboardExpandableView.Das
         }
     }
 
+    private fun updateAnimation(animationEvent: DashboardAnimationEvent) {
+        when (animationEvent) {
+            DashboardAnimationEvent.EXPAND_IMMEDIATE -> {
+                //navView.visibility = View.GONE // for bottom nav
+                (activity as LotusActivity).showToolbar(show = false, animate = false)
+            }
+            DashboardAnimationEvent.EXPAND_START -> {
+                //navView.visibility = View.GONE // for bottom nav
+                (activity as LotusActivity).showToolbar(show = false, animate = true, animationDurationMS = resources.getInteger(R.integer.dashboard_disclose_hide_duration_ms).toLong())
+            }
+            DashboardAnimationEvent.EXPAND_END -> {
+                // intentionally left blank
+            }
+            DashboardAnimationEvent.COLLAPSE_START -> {
+                //navView.visibility = View.VISIBLE // for bottom nav
+                (activity as LotusActivity).showToolbar(show = true, animate = true, animationDurationMS = resources.getInteger(R.integer.dashboard_disclose_hide_duration_ms).toLong())
+            }
+            DashboardAnimationEvent.COLLAPSE_END -> {
+                // intentionally left blank
+            }
+        }
+    }
+
     private fun retrievingTransactionsFinished(transactionsComplete: Boolean?) {
         transactionsComplete?.let {
             if (it) {
@@ -305,10 +330,6 @@ class DashboardFragment : LotusFullScreenFragment(), DashboardExpandableView.Das
         binding.messageContainer.visibility = View.INVISIBLE
         binding.messageContainer.removeAllViews()
         binding.dashboardExpandableView.showExpandCollapseButton(true)
-    }
-
-    fun getAnimationDurationMs(): Long {
-        return binding.dashboardExpandableView.animationDurationMs
     }
 
     // If the dashboardExpandableView is expanded when the device back button is pressed, collapse it.
@@ -386,6 +407,8 @@ class DashboardFragment : LotusFullScreenFragment(), DashboardExpandableView.Das
 
         dashboardViewModel.notificationsCountObservable.observe(this, notificationsObserver)
 
+        dashboardViewModel.animationObservable.observe(this, animationObserver)
+
         // make sure correct tab is showing, after return from TransactionDetailFragment, in particular
         binding.transactionsTabLayout.getTabAt(dashboardViewModel.transactionsTabPosition)?.select()
 
@@ -442,11 +465,7 @@ class DashboardFragment : LotusFullScreenFragment(), DashboardExpandableView.Das
     }
 
     override fun onMoveMoney() {
-        // This bundle is currently not used, because we don't have a way to access the bundle arguments in LotusActivity onNavigated override,
-        // but that's how it should work. See note in navigation_authenticated.xml for more details.
-        // Leaving it here so we know how pass a param that overrides a defaultValue in the navigation destination.
-        val bundle = bundleOf(getString(R.string.navigation_override_up) to false)
-        binding.root.findNavController().navigate(R.id.action_dashboard_fragment_to_moveMoneyFragment, bundle)
+        binding.root.findNavController().navigate(R.id.action_dashboard_fragment_to_moveMoneyFragment)
     }
 
     override fun onLockUnlockCard() {
