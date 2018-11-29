@@ -3,6 +3,8 @@ package com.engageft.fis.pscu.feature
 import android.os.Bundle
 import android.view.View
 import androidx.lifecycle.Observer
+import com.crashlytics.android.Crashlytics
+import com.engageft.apptoolbox.BuildConfig
 import com.engageft.apptoolbox.LotusFullScreenFragment
 import com.engageft.fis.pscu.R
 
@@ -41,6 +43,14 @@ abstract class BaseEngageFullscreenFragment : LotusFullScreenFragment() {
                     }
                 })
             }
+        }
+    }
+
+    fun handleGenericThrowable(e: Throwable) {
+        if (BuildConfig.DEBUG) {
+            e.printStackTrace()
+        } else {
+             Crashlytics.logException(e)
         }
     }
 }

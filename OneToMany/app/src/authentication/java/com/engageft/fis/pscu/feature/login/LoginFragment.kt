@@ -79,7 +79,8 @@ class LoginFragment : LotusFullScreenFragment() {
                 }
                 LoginViewModel.LoginNavigationEvent.ACCEPT_TERMS -> {
                     //TODO(aHashimi): https://engageft.atlassian.net/browse/SHOW-354
-                    Toast.makeText(context!!, "TODO: Navigate to Accept Terms", Toast.LENGTH_SHORT).show()
+                    //TODO(aHashimi): this's here to bypass Accept terms until it's resolved
+                    activity!!.finish()
                     R.id.action_loginFragment_to_authenticatedActivity
                 }
             }

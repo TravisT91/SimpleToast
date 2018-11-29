@@ -59,4 +59,14 @@
     <string name="PROFILE_SUCCESS_MESSAGE_CHANGE_ADDRESS">You have successfully changed your address.</string>
     <string name="PROFILE_SUCCESS_MESSAGE_OK">Ok</string>
     <string name="PROFILE_ACTION_SAVE">SAVE</string>
+
+    <string name="STATEMENT_FILTER_URL">%1$s/login/sso?token=%2$s&amp;redirect_to=/account/statements?filter=%3$s-%4$s&amp;embedded=ios</string>
+    <string name="statements_screen_title">Statements</string>
+    <string name="statements_webView_screen_title">Statement</string>
+    <string name="statements_description_empty">There are no statements available.</string>
+    <string name="statements_description_empty_substring">no statements</string>
+    <string name="statements_subDescription_empty">Please check back again soon.</string>
+    <string name="statements_description">Select a statement to view, save, or send.</string>
+    <string name="statements_description_substring">view, save, or send.</string>
+    <string name="statements_subDescription_format">Statements for last month are not available until the %s of next month.</string>
 </resources>

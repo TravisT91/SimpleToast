@@ -54,7 +54,7 @@ class AccountSettingsFragment : LotusFullScreenFragment() {
                 //TODO(ttkachuk) implement onCLick
             }
             statements.setOnClickListener {
-                //TODO(ttkachuk) implement onCLick
+                binding.root.findNavController().navigate(R.id.action_account_fragment_to_statementsFragment)
             }
             secondaryAccount.setOnClickListener {
                 //TODO(ttkachuk) implement onCLick
