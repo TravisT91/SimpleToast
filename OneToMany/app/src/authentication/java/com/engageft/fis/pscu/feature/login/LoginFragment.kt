@@ -74,11 +74,12 @@ class LoginFragment : LotusFullScreenFragment() {
                 }
                 LoginViewModel.LoginNavigationEvent.TWO_FACTOR_AUTHENTICATION -> {
                     //TODO(aHashimi): https://engageft.atlassian.net/browse/SHOW-273
+                    Toast.makeText(context!!, "TODO: Navigate to Two Factor Auth", Toast.LENGTH_SHORT).show()
                     0
                 }
                 LoginViewModel.LoginNavigationEvent.ACCEPT_TERMS -> {
                     //TODO(aHashimi): https://engageft.atlassian.net/browse/SHOW-354
-                    //TODO(aHashimi): remove after above ticket is resolved. this is here just to bypass accept terms flag
+                    //TODO(aHashimi): this's here to bypass Accept terms until it's resolved
                     activity!!.finish()
                     R.id.action_loginFragment_to_authenticatedActivity
                 }

@@ -57,7 +57,6 @@ class ChangeSecurityQuestionsViewModel : BaseEngageViewModel() {
                 validateSaveButtonState()
             }
         })
-        loadSecurityQuestionState()
         question1.addOnPropertyChangedCallback(object : Observable.OnPropertyChangedCallback(){
             override fun onPropertyChanged(observable: Observable?, field: Int) {
                 invalidateDisplayLists()
@@ -68,6 +67,7 @@ class ChangeSecurityQuestionsViewModel : BaseEngageViewModel() {
                 invalidateDisplayLists()
             }
         })
+        loadSecurityQuestionState()
     }
 
     /**

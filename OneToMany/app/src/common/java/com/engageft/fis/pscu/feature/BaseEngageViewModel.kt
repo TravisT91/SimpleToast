@@ -4,13 +4,9 @@ import androidx.lifecycle.MutableLiveData
 import com.crashlytics.android.Crashlytics
 import com.engageft.apptoolbox.BaseViewModel
 import com.engageft.apptoolbox.BuildConfig
-import com.engageft.engagekit.EngageService
 import com.engageft.engagekit.rest.exception.NoConnectivityException
 import com.ob.ws.dom.BasicResponse
-import com.ob.ws.dom.LoginResponse
-import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
-import io.reactivex.schedulers.Schedulers
 import java.net.SocketTimeoutException
 import java.net.UnknownHostException
 
@@ -23,34 +19,9 @@ import java.net.UnknownHostException
  * Copyright (c) 2018 Engage FT. All rights reserved.
  */
 open class BaseEngageViewModel: BaseViewModel() {
-
-    val dialogInfoObservable: MutableLiveData<DialogInfo> = MutableLiveData()
-    var loginResponse: LoginResponse? = null
     val compositeDisposable = CompositeDisposable()
 
-    init {
-        loginResponse.let {
-            compositeDisposable.add(EngageService.getInstance().loginResponseAsObservable
-                    .subscribeOn(Schedulers.io())
-                    .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe({ response ->
-                        if (response is LoginResponse) {
-                            loginResponse = response
-                        } else {
-                            dialogInfoObservable.value = DialogInfo()
-                        }
-                    }, { e ->
-                        handleThrowable(e)
-                    })
-            )
-        }
-
-    }
-
-    override fun onCleared() {
-        super.onCleared()
-        compositeDisposable.dispose()
-    }
+    val dialogInfoObservable: MutableLiveData<DialogInfo> = MutableLiveData()
 
     fun handleUnexpectedErrorResponse(response: BasicResponse) {
         if (BuildConfig.DEBUG) {
@@ -82,5 +53,11 @@ open class BaseEngageViewModel: BaseViewModel() {
                 }
             }
         }
+
+    }
+
+    override fun onCleared() {
+        super.onCleared()
+        compositeDisposable.dispose()
     }
 }

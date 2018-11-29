@@ -8,11 +8,13 @@ import com.engageft.fis.pscu.R
 fun infoDialogGenericErrorTitleMessageNewInstance(context: Context,
                                                   title: String = context.getString(R.string.alert_error_title_generic),
                                                   message: String = context.getString(R.string.alert_error_message_generic),
-                                                  buttonPositiveText: String = context.getString(R.string.dialog_information_ok_button)) : InformationDialogFragment {
+                                                  buttonPositiveText: String = context.getString(R.string.dialog_information_ok_button),
+                                                  listener: InformationDialogFragment.InformationDialogFragmentListener? = null) : InformationDialogFragment {
     return InformationDialogFragment.newLotusInstance(
             title = title,
             message = message,
-            buttonPositiveText = buttonPositiveText)
+            buttonPositiveText = buttonPositiveText,
+            listener = listener)
 }
 
 fun infoDialogSimpleMessageNoTitle(context: Context, message: String,
@@ -27,6 +29,18 @@ fun infoDialogGenericErrorTitleMessageConditionalNewInstance(context: Context, d
     }
 
     return infoDialogGenericErrorTitleMessageNewInstance(context)
+}
+
+fun infoDialogYesNoNewInstance(context: Context, title: String?, message: String?,
+                               buttonPositiveText: String = context.getString(R.string.dialog_information_yes_button),
+                               buttonNegativeText: String = context.getString(R.string.dialog_information_no_button),
+                               listener: InformationDialogFragment.InformationDialogFragmentListener? = null): InformationDialogFragment {
+    return InformationDialogFragment.newLotusInstance(
+            title = title,
+            message = message,
+            buttonPositiveText = buttonPositiveText,
+            buttonNegativeText = buttonNegativeText,
+            listener = listener)
 }
 
 fun infoDialogGenericSuccessTitleMessageNewInstance(context: Context,

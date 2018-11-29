@@ -17,7 +17,6 @@ import com.ob.ws.dom.SecureCardInfoResponse
 import com.ob.ws.dom.utility.DebitCardInfo
 import com.ob.ws.dom.utility.TransactionInfo
 import io.reactivex.android.schedulers.AndroidSchedulers
-import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
 import org.joda.time.DateTime
 import org.joda.time.Months
