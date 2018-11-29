@@ -229,11 +229,11 @@ class LoginViewModel : BaseEngageViewModel() {
                         .observeOn(AndroidSchedulers.mainThread())
                         .subscribe(
                                 { response ->
-                                    progressOverlayShownObservable.value = false
                                     if (response.isSuccess && response is LoginResponse) {
                                         Palette.getBrandingWithToken(response.token)
                                                 .subscribe(
                                                         { paletteResponse ->
+                                                            progressOverlayShownObservable.value = false
                                                             if (paletteResponse.isSuccess) {
                                                                 handleSuccessfulLoginResponse(response)
                                                             } else {
@@ -244,8 +244,10 @@ class LoginViewModel : BaseEngageViewModel() {
                                                             Log.e("paletteResponseError", e.message)
                                                         })
                                     } else if (response is DeviceFailResponse) {
+                                        progressOverlayShownObservable.value = false
                                         navigationObservable.value = LoginNavigationEvent.TWO_FACTOR_AUTHENTICATION
                                     } else {
+                                        progressOverlayShownObservable.value = false
                                         // we’re not yet truly parsing error types, and instead assume any error means invalid credentials.
                                         // so set backend error response message as "invalid credentials" for now until true error handling has been implemented.
                                         // https://engageft.atlassian.net/browse/SHOW-364
