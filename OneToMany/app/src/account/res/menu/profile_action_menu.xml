@@ -3,8 +3,9 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <item
-        android:title="Help"
-        android:id="@+id/help"
+        android:title="@string/PROFILE_ACTION_SAVE"
+        android:id="@+id/save"
+        android:visible="false"
         app:showAsAction="ifRoom" />
 
 </menu>
