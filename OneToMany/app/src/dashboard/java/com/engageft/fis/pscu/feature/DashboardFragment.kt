@@ -477,7 +477,7 @@ class DashboardFragment : LotusFullScreenFragment(), DashboardExpandableView.Das
     }
 
     override fun onReplaceCard() {
-        Toast.makeText(activity, "Replace card selected", Toast.LENGTH_SHORT).show()
+        binding.root.findNavController().navigate(R.id.action_dashboard_fragment_to_replaceCardFragment)
     }
 
     override fun onReportCardLostStolen() {

@@ -3,6 +3,7 @@ package com.engageft.fis.pscu.feature.palettebindings
 import com.airbnb.paris.styles.Style
 import com.engageft.apptoolbox.view.InformationDialogFragment
 import com.engageft.apptoolbox.view.ListBottomSheetDialogFragment
+import com.engageft.fis.pscu.feature.Palette
 
 /**
  * DialogPaletteExtensions
@@ -25,6 +26,15 @@ fun InformationDialogFragment.setPositiveButtonTextSizeAndFont(style: Style){
     this.setPositiveButtonTextSizeAndFont(getTextSizeAndTypefaceFromParisStyle(context!!,style))
 }
 
+fun InformationDialogFragment.applyPaletteStyles(){
+    this.apply {
+        setTitleTextSizeAndFont(Palette.Title3Loud)
+        setMessageTextSizeAndFont(Palette.Body)
+        setPositiveButtonTextSizeAndFont(Palette.FootnoteLoud)
+    }
+}
+
+
 fun InformationDialogFragment.setNegativeButtonTextSizeAndFont(style: Style){
     this.setNegativeButtonTextSizeAndFont(getTextSizeAndTypefaceFromParisStyle(context!!,style))
 }
@@ -41,3 +51,4 @@ fun ListBottomSheetDialogFragment.setTitleTextSizeAndFont(style: Style){
 fun ListBottomSheetDialogFragment.setSubtitleTextSizeAndFont(style: Style){
     this.setSubtitleTextSizeAndFont(getTextSizeAndTypefaceFromParisStyle(context!!, style))
 }
+

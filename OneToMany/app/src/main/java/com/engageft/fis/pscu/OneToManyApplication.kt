@@ -6,11 +6,9 @@ import com.crashlytics.android.Crashlytics
 import com.engageft.apptoolbox.LotusApplication
 import com.engageft.apptoolbox.R
 import com.engageft.engagekit.EngageService
-import com.engageft.fis.pscu.feature.Palette
 import com.engageft.fis.pscu.config.EngageAppConfig
+import com.engageft.fis.pscu.feature.Palette
 import io.fabric.sdk.android.Fabric
-
-
 
 /**
  * TODO(joeyhutchins): ClassName
@@ -33,6 +31,12 @@ class OneToManyApplication : LotusApplication() {
         HeapUtils.initHeap(this)
         EngageService.initService(BuildConfig.VERSION_CODE.toString(), this, EngageAppConfig.engageKitConfig)
 
+        setPaletteDefaults()
+
+        Fabric.with(this, Crashlytics())
+    }
+
+    fun setPaletteDefaults(){
         Palette.apply {
             primaryColor = ContextCompat.getColor(this@OneToManyApplication, R.color.primary)
             secondaryColor = ContextCompat.getColor(this@OneToManyApplication, R.color.secondary)
@@ -47,21 +51,6 @@ class OneToManyApplication : LotusApplication() {
             font_light = ResourcesCompat.getFont(this@OneToManyApplication, R.font.font_light)
             font_medium = ResourcesCompat.getFont(this@OneToManyApplication, R.font.font_medium)
         }
-
-        Fabric.with(this, Crashlytics())
     }
 
-    fun setFonts(fontName: String){
-        Palette.apply {
-            when (fontName) {
-                Palette.FontType.ARIAL.fontName -> run {
-                    font_regular = ResourcesCompat.getFont(this@OneToManyApplication, R.font.font_regular)
-                    font_bold = ResourcesCompat.getFont(this@OneToManyApplication, R.font.font_bold)
-                    font_italic = ResourcesCompat.getFont(this@OneToManyApplication, R.font.font_italic)
-                    font_light = ResourcesCompat.getFont(this@OneToManyApplication, R.font.font_light)
-                    font_medium = ResourcesCompat.getFont(this@OneToManyApplication, R.font.font_medium)
-                }
-            }
-        }
-    }
 }

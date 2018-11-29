@@ -7,4 +7,15 @@
     <string name="MOVE_MONEY_CREDIT_OR_DEBIT_CARD_LOAD">Credit or debit card load</string>
     <string name="MOVE_MONEY_DIRECT_DEPOSIT">Direct Deposit</string>
 
+    <!-- Replace Card -->
+    <string name="REPLACE_CARD_REPLACEMENT_QUESTION">Do you need a\nreplacement card?</string>
+    <string name="REPLACE_CARD_REPLACEMENT_SUBSTRING">replacement</string>
+    <string name="REPLACE_CARD_ADDRESS_HEADER">By requesting a REPLACEMENT card, a \n new card containing the same number \n will be sent to</string>
+    <string name="REPLACE_CARD_EXPECTED_ARRIVAL">New cards typically arrive within 5–7 days</string>
+    <string name="REPLACE_CARD_DO_NOT_KNOW">If you do not know where your card is, please report your card as LOST/STOLEN.</string>
+    <string name="REPLACE_CARD_DO_NOT_KNOW_SUBSTRING">do not</string>
+    <string name="REPLACE_CARD_ORDER_REPLACEMENT">Order replacement</string>
+    <string name="REPLACE_CARD_REPLACEMENT_ORDERED_TITLE">Replacement ordered</string>
+    <string name="REPLACE_CARD_REPLACEMENT_ORDERED_MESSAGE">Your replacement card has been ordered. It will arrive with 5–7 days.</string>
+
 </resources>
