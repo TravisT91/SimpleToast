@@ -10,6 +10,7 @@ import androidx.navigation.findNavController
 import com.engageft.apptoolbox.BaseViewModel
 import com.engageft.apptoolbox.LotusFullScreenFragment
 import com.engageft.apptoolbox.view.InformationDialogFragment
+import com.engageft.fis.pscu.R
 import com.engageft.fis.pscu.databinding.FragmentChangePasswordBinding
 
 /**
@@ -32,51 +33,89 @@ class ChangePasswordFragment: LotusFullScreenFragment() {
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val binding = FragmentChangePasswordBinding.inflate(inflater, container, false)
 
-        binding.viewModel = changePasswordViewModel
+        binding.apply {
+            viewModel = changePasswordViewModel
 
-        binding.updatePasswordButton.setOnClickListener {
-            changePasswordViewModel.updatePassword()
-        }
-
-        changePasswordViewModel.buttonState.observe(this, Observer { buttonState ->
-            when (buttonState) {
-                BaseEngageViewModel.ButtonState.HIDE -> {
-                    binding.updatePasswordButton.visibility = View.GONE
-                }
-                BaseEngageViewModel.ButtonState.SHOW -> {
-                    binding.updatePasswordButton.visibility = View.VISIBLE
-                }
+            updatePasswordButton.setOnClickListener {
+                changePasswordViewModel.updatePassword()
             }
-        })
 
-        changePasswordViewModel.dialogInfoObservable.observe(this, Observer { dialogInfo ->
-            when (dialogInfo.dialogType) {
-                DialogInfo.DialogType.GENERIC_SUCCESS -> {
-                    val listener = object: InformationDialogFragment.InformationDialogFragmentListener {
-                        override fun onDialogFragmentNegativeButtonClicked() {
-                        }
-
-                        override fun onDialogFragmentPositiveButtonClicked() {
-                            binding.root.findNavController().popBackStack()
-                        }
-
-                        override fun onDialogCancelled() {
-                            binding.root.findNavController().popBackStack()
-                        }
+            newPasswordWithLabel1.addEditTextFocusChangeListener(View.OnFocusChangeListener { v, hasFocus ->
+                if (!hasFocus) {
+                    changePasswordViewModel.passwordValidationErrorObservable.value?.let {
+                        changePasswordViewModel.isPasswordValid()
                     }
+                }
+            })
+            newPasswordWithLabel1.addEditTextFocusChangeListener(View.OnFocusChangeListener { v, hasFocus ->
+                if (!hasFocus) {
+                    changePasswordViewModel.passwordValidationErrorObservable.value?.let {
+                        changePasswordViewModel.isPasswordValid()
+                    }
+                }
+            })
+        }
+        changePasswordViewModel.apply {
 
-                    showDialog(infoDialogGenericSuccessTitleMessageNewInstance(context!!, listener = listener))
+            updateButtonStateObservable.observe(this@ChangePasswordFragment, Observer { buttonState ->
+                when (buttonState) {
+                    ChangePasswordViewModel.UpdateButtonState.GONE -> {
+                        binding.updatePasswordButton.visibility = View.GONE
+                    }
+                    ChangePasswordViewModel.UpdateButtonState.VISIBLE_ENABLED -> {
+                        binding.updatePasswordButton.visibility = View.VISIBLE
+                    }
+                }
+            })
 
+            passwordValidationErrorObservable.observe(this@ChangePasswordFragment, Observer {
+                when (it) {
+                    pro
+                    ChangePasswordViewModel.PasswordValidationError.INVALID -> {
+                        binding.newPasswordWithLabel1.setErrorTexts(listOf(getString(R.string.change_password_error_message_invalid)))
+                        binding.newPasswordWithLabel2.setErrorTexts(listOf(getString(R.string.change_password_error_message_invalid)))
+                    }
+                    ChangePasswordViewModel.PasswordValidationError.VALID -> {
+                        binding.newPasswordWithLabel1.setErrorTexts(null)
+                        binding.newPasswordWithLabel2.setErrorTexts(null)
+                    }
+                    ChangePasswordViewModel.PasswordValidationError.MISMATCH -> {
+                        binding.newPasswordWithLabel1.setErrorTexts(listOf(getString(R.string.change_password_error_message_mismatch)))
+                        binding.newPasswordWithLabel2.setErrorTexts(listOf(getString(R.string.change_password_error_message_mismatch)))
+                    }
+                    else -> {}
                 }
-                DialogInfo.DialogType.GENERIC_ERROR -> {
-                    showDialog(infoDialogGenericErrorTitleMessageConditionalNewInstance(context!!, dialogInfo))
+            })
+
+            dialogInfoObservable.observe(this@ChangePasswordFragment, Observer { dialogInfo ->
+                when (dialogInfo.dialogType) {
+                    DialogInfo.DialogType.GENERIC_SUCCESS -> {
+                        val listener = object: InformationDialogFragment.InformationDialogFragmentListener {
+                            override fun onDialogFragmentNegativeButtonClicked() {
+                            }
+
+                            override fun onDialogFragmentPositiveButtonClicked() {
+                                binding.root.findNavController().popBackStack()
+                            }
+
+                            override fun onDialogCancelled() {
+                                binding.root.findNavController().popBackStack()
+                            }
+                        }
+
+                        showDialog(infoDialogGenericSuccessTitleMessageNewInstance(context!!, listener = listener))
+
+                    }
+                    DialogInfo.DialogType.GENERIC_ERROR -> {
+                        showDialog(infoDialogGenericErrorTitleMessageConditionalNewInstance(context!!, dialogInfo))
+                    }
+                    DialogInfo.DialogType.SERVER_ERROR -> {
+                        showDialog(infoDialogGenericErrorTitleMessageConditionalNewInstance(context!!, dialogInfo))
+                    }
+                    else -> {}
                 }
-                DialogInfo.DialogType.SERVER_ERROR -> {
-                    showDialog(infoDialogGenericErrorTitleMessageConditionalNewInstance(context!!, dialogInfo))
-                }
-                else -> {}
-            }
-        })
+            })
+        }
 
         return binding.root
     }
