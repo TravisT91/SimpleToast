@@ -1,18 +1,20 @@
 package com.engageft.fis.pscu.feature.login
 
+import android.util.Log
 import androidx.databinding.Observable
 import androidx.databinding.ObservableField
 import androidx.lifecycle.MutableLiveData
 import com.engageft.engagekit.EngageService
 import com.engageft.engagekit.rest.request.CreateDemoAccountRequest
 import com.engageft.engagekit.utils.LoginResponseUtils
+import com.engageft.fis.pscu.HeapUtils
+import com.engageft.fis.pscu.config.EngageAppConfig
 import com.engageft.fis.pscu.feature.BaseEngageViewModel
 import com.engageft.fis.pscu.feature.DialogInfo
+import com.engageft.fis.pscu.feature.Palette
 import com.engageft.fis.pscu.feature.WelcomeSharedPreferencesRepo
 import com.engageft.fis.pscu.feature.authentication.AuthenticationConfig
 import com.engageft.fis.pscu.feature.authentication.AuthenticationSharedPreferencesRepo
-import com.engageft.fis.pscu.HeapUtils
-import com.engageft.fis.pscu.config.EngageAppConfig
 import com.ob.ws.dom.DeviceFailResponse
 import com.ob.ws.dom.LoginResponse
 import io.reactivex.android.schedulers.AndroidSchedulers
@@ -227,12 +229,25 @@ class LoginViewModel : BaseEngageViewModel() {
                         .observeOn(AndroidSchedulers.mainThread())
                         .subscribe(
                                 { response ->
-                                    progressOverlayShownObservable.value = false
                                     if (response.isSuccess && response is LoginResponse) {
-                                        handleSuccessfulLoginResponse(response)
+                                        Palette.getBrandingWithToken(response.token)
+                                                .subscribe(
+                                                        { paletteResponse ->
+                                                            progressOverlayShownObservable.value = false
+                                                            if (paletteResponse.isSuccess) {
+                                                                handleSuccessfulLoginResponse(response)
+                                                            } else {
+                                                                handleUnexpectedErrorResponse(paletteResponse)
+                                                            }
+                                                        },
+                                                        { e ->
+                                                            Log.e("paletteResponseError", e.message)
+                                                        })
                                     } else if (response is DeviceFailResponse) {
+                                        progressOverlayShownObservable.value = false
                                         navigationObservable.value = LoginNavigationEvent.TWO_FACTOR_AUTHENTICATION
                                     } else {
+                                        progressOverlayShownObservable.value = false
                                         // we’re not yet truly parsing error types, and instead assume any error means invalid credentials.
                                         // so set backend error response message as "invalid credentials" for now until true error handling has been implemented.
                                         // https://engageft.atlassian.net/browse/SHOW-364

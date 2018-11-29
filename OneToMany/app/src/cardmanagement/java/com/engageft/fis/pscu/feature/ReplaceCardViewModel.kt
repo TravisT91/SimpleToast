@@ -31,9 +31,7 @@ class ReplaceCardViewModel : BaseEngageViewModel() {
                         .observeOn(AndroidSchedulers.mainThread())
                         .subscribe(
                                 {
-                                    replacementRequestStatus.value =
-                                            if(it.isSuccess) ReplacementRequestStatus.SUCCESS
-                                            else ReplacementRequestStatus.FAILED
+                                    replacementRequestStatus.value = if(it.isSuccess) ReplacementRequestStatus.SUCCESS else ReplacementRequestStatus.FAILED
                                 },
                                 {
                                     replacementRequestStatus.value = ReplacementRequestStatus.FAILED

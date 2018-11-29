@@ -34,7 +34,10 @@
             android:theme="@style/LotusTheme">
         </activity>
 
-        <activity android:name=".AuthenticatedActivity">
+        <activity
+            android:windowSoftInputMode="adjustResize"
+            android:name=".AuthenticatedActivity"
+            android:screenOrientation="portrait">
 
         </activity>
 

@@ -1,8 +1,11 @@
 package com.engageft.fis.pscu.feature.palettebindings
 
+import android.content.Context
+import androidx.core.content.ContextCompat
 import com.airbnb.paris.styles.Style
 import com.engageft.apptoolbox.view.InformationDialogFragment
 import com.engageft.apptoolbox.view.ListBottomSheetDialogFragment
+import com.engageft.fis.pscu.R
 import com.engageft.fis.pscu.feature.Palette
 
 /**
@@ -14,31 +17,18 @@ import com.engageft.fis.pscu.feature.Palette
  * Copyright (c) 2018 Engage FT. All rights reserved.
  */
 
-fun InformationDialogFragment.setTitleTextSizeAndFont(style: Style){
-    this.setTitleTextSizeAndFont(getTextSizeAndTypefaceFromParisStyle(context!!,style))
-}
-
-fun InformationDialogFragment.setMessageTextSizeAndFont(style: Style){
-    this.setMessageTextSizeAndFont(getTextSizeAndTypefaceFromParisStyle(context!!,style))
-}
-
-fun InformationDialogFragment.setPositiveButtonTextSizeAndFont(style: Style){
-    this.setPositiveButtonTextSizeAndFont(getTextSizeAndTypefaceFromParisStyle(context!!,style))
-}
-
-fun InformationDialogFragment.applyPaletteStyles(){
+fun InformationDialogFragment.applyPaletteStyles(context: Context){
     this.apply {
-        setTitleTextSizeAndFont(Palette.Title3Loud)
-        setMessageTextSizeAndFont(Palette.Body)
-        setPositiveButtonTextSizeAndFont(Palette.FootnoteLoud)
+        titleTextSizeAndFont = getTextSizeAndTypefaceFromParisStyle(context,Palette.Title3Loud)
+        messageTextSizeAndFont = getTextSizeAndTypefaceFromParisStyle(context,Palette.Body)
+        positiveButtonTextSizeAndFont = getTextSizeAndTypefaceFromParisStyle(context,Palette.FootnoteLoud)
+        negativeButtonTextSizeAndFont = getTextSizeAndTypefaceFromParisStyle(context,Palette.FootnoteLoud)
+        titleTextColor = ContextCompat.getColor(context, R.color.structure6)
+        messageTextColor = ContextCompat.getColor(context, R.color.structure5)
+        positiveButtonTextColor = Palette.primaryColor
+        negativeButtonTextColor = Palette.errorColor
     }
 }
-
-
-fun InformationDialogFragment.setNegativeButtonTextSizeAndFont(style: Style){
-    this.setNegativeButtonTextSizeAndFont(getTextSizeAndTypefaceFromParisStyle(context!!,style))
-}
-
 
 fun ListBottomSheetDialogFragment.setOptionTextSizeAndFont(style: Style){
     this.setOptionTextSizeAndFont(getTextSizeAndTypefaceFromParisStyle(context!!,style))

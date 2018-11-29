@@ -74,11 +74,13 @@ class LoginFragment : LotusFullScreenFragment() {
                 }
                 LoginViewModel.LoginNavigationEvent.TWO_FACTOR_AUTHENTICATION -> {
                     //TODO(aHashimi): https://engageft.atlassian.net/browse/SHOW-273
+                    Toast.makeText(context!!, "TODO: Navigate to Two Factor Auth", Toast.LENGTH_SHORT).show()
                     0
                 }
                 LoginViewModel.LoginNavigationEvent.ACCEPT_TERMS -> {
                     //TODO(aHashimi): https://engageft.atlassian.net/browse/SHOW-354
-                    0
+                    Toast.makeText(context!!, "TODO: Navigate to Accept Terms", Toast.LENGTH_SHORT).show()
+                    R.id.action_loginFragment_to_authenticatedActivity
                 }
             }
             if (navDestinationId != 0) {

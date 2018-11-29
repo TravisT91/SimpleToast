@@ -6,8 +6,8 @@ import com.crashlytics.android.Crashlytics
 import com.engageft.apptoolbox.LotusApplication
 import com.engageft.apptoolbox.R
 import com.engageft.engagekit.EngageService
-import com.engageft.fis.pscu.config.EngageAppConfig
 import com.engageft.fis.pscu.feature.Palette
+import com.engageft.fis.pscu.config.EngageAppConfig
 import io.fabric.sdk.android.Fabric
 
 /**

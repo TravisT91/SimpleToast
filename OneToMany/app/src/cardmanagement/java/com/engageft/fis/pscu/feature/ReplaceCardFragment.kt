@@ -1,17 +1,13 @@
 package com.engageft.fis.pscu.feature
 
 import android.os.Bundle
-import android.text.SpannableString
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
-import com.engageft.apptoolbox.BaseFragment
+import androidx.navigation.findNavController
 import com.engageft.apptoolbox.BaseViewModel
-import com.engageft.apptoolbox.LotusFullScreenFragment
-import com.engageft.apptoolbox.util.applyColor
 import com.engageft.apptoolbox.view.InformationDialogFragment
 import com.engageft.fis.pscu.R
 import com.engageft.fis.pscu.databinding.FragmentReplaceCardBinding
@@ -27,7 +23,7 @@ import utilGen1.StringUtils
  * Copyright (c) 2018 Engage FT. All rights reserved.
  */
 
-class ReplaceCardFragment : LotusFullScreenFragment() {
+class ReplaceCardFragment : BaseEngageFullscreenFragment() {
 
     override fun createViewModel(): BaseViewModel? {
         return  ViewModelProviders.of(this).get(ReplaceCardViewModel::class.java)
@@ -43,11 +39,7 @@ class ReplaceCardFragment : LotusFullScreenFragment() {
                         ReplaceCardViewModel.ReplacementRequestStatus.PROCESSING -> progressOverlayDelegate.showProgressOverlay()
                         ReplaceCardViewModel.ReplacementRequestStatus.SUCCESS -> {
                             progressOverlayDelegate.dismissProgressOverlay()
-                            showDialog(InformationDialogFragment.newInstance(
-                                    title = getString(R.string.REPLACE_CARD_REPLACEMENT_ORDERED_TITLE),
-                                    message = getString(R.string.REPLACE_CARD_REPLACEMENT_ORDERED_MESSAGE),
-                                    buttonPositiveText = SpannableString(getString(android.R.string.ok)))
-                                    .apply { applyPaletteStyles()})
+                            showSuccessDialog()
                         }
                         ReplaceCardViewModel.ReplacementRequestStatus.FAILED -> {
                             progressOverlayDelegate.dismissProgressOverlay()
@@ -71,5 +63,29 @@ class ReplaceCardFragment : LotusFullScreenFragment() {
 
         }
         return binding.root
+    }
+
+    fun showSuccessDialog(){
+        val dialog = InformationDialogFragment.newInstance(
+                title = getString(R.string.REPLACE_CARD_REPLACEMENT_ORDERED_TITLE),
+                message = getString(R.string.REPLACE_CARD_REPLACEMENT_ORDERED_MESSAGE),
+                buttonPositiveText = getString(android.R.string.ok),
+                listener = object: InformationDialogFragment.InformationDialogFragmentListener{
+                    override fun onDialogFragmentNegativeButtonClicked() {
+
+                    }
+
+                    override fun onDialogFragmentPositiveButtonClicked() {
+                        view?.findNavController()?.popBackStack()
+                    }
+
+                    override fun onDialogCancelled() {
+
+                    }
+
+                }
+        )
+        dialog.applyPaletteStyles(context!!)
+        showDialog(dialog)
     }
 }
