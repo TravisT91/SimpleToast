@@ -18,7 +18,6 @@ import com.engageft.fis.pscu.BuildConfig
 import com.engageft.fis.pscu.NotAuthenticatedActivity
 import com.engageft.fis.pscu.R
 import com.engageft.fis.pscu.databinding.FragmentAccountBinding
-import kotlinx.android.synthetic.main.fragment_account.*
 
 /**
  * AccountSettingsFragment
@@ -44,12 +43,11 @@ class AccountSettingsFragment : LotusFullScreenFragment() {
         binding.palette = Palette
         binding.apply {
             profile.setOnClickListener {
-                //TODO(ttkachuk) implement onCLick
+                binding.root.findNavController().navigate(R.id.action_account_fragment_to_profileFragment)
             }
             password.setOnClickListener {
                 findNavController().navigate(R.id.action_account_fragment_to_changePasswordFragment)
             }
-
             securityQuestions.setOnClickListener {
                 binding.root.findNavController().navigate(R.id.action_account_fragment_to_changeSecurityQuestionsFragment)
             }
@@ -57,7 +55,7 @@ class AccountSettingsFragment : LotusFullScreenFragment() {
                 //TODO(ttkachuk) implement onCLick
             }
             statements.setOnClickListener {
-                //TODO(ttkachuk) implement onCLick
+                binding.root.findNavController().navigate(R.id.action_account_fragment_to_statementsFragment)
             }
             secondaryAccount.setOnClickListener {
                 //TODO(ttkachuk) implement onCLick
@@ -89,7 +87,7 @@ class AccountSettingsFragment : LotusFullScreenFragment() {
     }
 
     override fun onCreateOptionsMenu(menu: Menu?, inflater: MenuInflater?) {
-        inflater?.inflate(R.menu.settings_menu, menu)
+        inflater?.inflate(R.menu.settings_action_menu, menu)
         super.onCreateOptionsMenu(menu, inflater)
     }
 

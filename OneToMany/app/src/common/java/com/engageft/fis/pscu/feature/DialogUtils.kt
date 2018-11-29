@@ -42,15 +42,3 @@ fun infoDialogYesNoNewInstance(context: Context, title: String?, message: String
             buttonNegativeText = buttonNegativeText,
             listener = listener)
 }
-
-fun infoDialogGenericSuccessTitleMessageNewInstance(context: Context,
-                                                    title: String = context.getString(R.string.alert_success_title_generic),
-                                                    message: String = context.getString(R.string.alert_success_message_generic),
-                                                    buttonPositiveText: String = context.getString(R.string.dialog_information_ok_button),
-                                                    listener: InformationDialogFragment.InformationDialogFragmentListener? = null) : InformationDialogFragment {
-    return InformationDialogFragment.newLotusInstance(
-            title = title,
-            message = message,
-            buttonPositiveText = buttonPositiveText,
-            listener = listener)
-}

@@ -55,6 +55,12 @@
             android:id="@+id/action_account_fragment_to_changeSecurityQuestionsFragment"
             app:destination="@id/changeSecurityQuestionsFragment" />
         <action
+            android:id="@+id/action_account_fragment_to_profileFragment"
+            app:destination="@id/profileFragment" />
+        <action
+            android:id="@+id/action_account_fragment_to_statementsFragment"
+            app:destination="@id/statementsFragment" />
+        <action
             android:id="@+id/action_account_fragment_to_changePasswordFragment"
             app:destination="@id/changePasswordFragment" />
     </fragment>
@@ -108,7 +114,25 @@
     <fragment
         android:id="@+id/changeSecurityQuestionsFragment"
         android:name="com.engageft.fis.pscu.feature.ChangeSecurityQuestionsFragment"
+        android:label="@string/fragment_title_change_security_questions" />
+    <fragment
+        android:id="@+id/profileFragment"
+        android:name="com.engageft.fis.pscu.feature.ProfileFragment"
+        android:label="@string/fragment_title_profile" />
+
         android:label="@string/fragment_title_change_security_questions"/>
+    <fragment
+        android:id="@+id/statementsFragment"
+        android:name="com.engageft.fis.pscu.feature.StatementsFragment"
+        android:label="@string/statements_screen_title" >
+        <action
+            android:id="@+id/action_statementsFragment_to_webViewFragment"
+            app:destination="@id/webViewFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/webViewFragment"
+        android:name="com.engageft.fis.pscu.feature.WebViewFragment"
+        android:label="@string/statements_webView_screen_title" />
     <fragment
         android:id="@+id/changePasswordFragment"
         android:name="com.engageft.fis.pscu.feature.ChangePasswordFragment"

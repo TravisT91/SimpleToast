@@ -13,6 +13,16 @@
         android:supportsRtl="true"
         android:theme="@style/LotusTheme">
 
+        <provider
+            android:name="androidx.core.content.FileProvider"
+            android:authorities="${applicationId}.file_provider"
+            android:exported="false"
+            android:grantUriPermissions="true">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/file_paths_pdf"/>
+        </provider>
+
         <activity android:name="com.engageft.fis.pscu.feature.SplashActivity"
             android:theme="@style/SplashTheme"
             android:screenOrientation="portrait">
@@ -34,8 +44,17 @@
             android:theme="@style/LotusTheme">
         </activity>
 
-        <activity android:name=".AuthenticatedActivity">
+        <activity
+            android:windowSoftInputMode="adjustResize"
+            android:name=".AuthenticatedActivity"
+            android:screenOrientation="portrait">
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
 
+                <data android:scheme="onetomany" />
+            </intent-filter>
         </activity>
 
         <activity android:name="com.engageft.fis.pscu.feature.WelcomeActivity"
