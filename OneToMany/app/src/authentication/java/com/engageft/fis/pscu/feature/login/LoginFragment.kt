@@ -74,6 +74,7 @@ class LoginFragment : LotusFullScreenFragment() {
                 }
                 LoginViewModel.LoginNavigationEvent.TWO_FACTOR_AUTHENTICATION -> {
                     //TODO(aHashimi): https://engageft.atlassian.net/browse/SHOW-273
+                    Toast.makeText(context!!, "TODO: Navigate to Two Factor Auth", Toast.LENGTH_SHORT).show()
                     0
                 }
                 LoginViewModel.LoginNavigationEvent.ACCEPT_TERMS -> {
