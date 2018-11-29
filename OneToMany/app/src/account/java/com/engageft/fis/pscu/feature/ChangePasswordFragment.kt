@@ -12,6 +12,7 @@ import com.engageft.apptoolbox.LotusFullScreenFragment
 import com.engageft.apptoolbox.view.InformationDialogFragment
 import com.engageft.fis.pscu.R
 import com.engageft.fis.pscu.databinding.FragmentChangePasswordBinding
+import com.redmadrobot.inputmask.MaskedTextChangedListener
 
 /**
  * ChangePasswordFragment
@@ -42,14 +43,26 @@ class ChangePasswordFragment: LotusFullScreenFragment() {
 
             newPasswordWithLabel1.addEditTextFocusChangeListener(View.OnFocusChangeListener { v, hasFocus ->
                 if (!hasFocus) {
-                    changePasswordViewModel.passwordValidationErrorObservable.value?.let {
-                        changePasswordViewModel.isPasswordValid()
-                    }
+                    changePasswordViewModel.isPasswordValid()
                 }
             })
             newPasswordWithLabel1.addEditTextFocusChangeListener(View.OnFocusChangeListener { v, hasFocus ->
                 if (!hasFocus) {
-                    changePasswordViewModel.passwordValidationErrorObservable.value?.let {
+                    changePasswordViewModel.isPasswordValid()
+                }
+            })
+
+            binding.newPasswordWithLabel1.addTextChangeListener(object: MaskedTextChangedListener.ValueListener {
+                override fun onTextChanged(maskFilled: Boolean, extractedValue: String) {
+                    if (binding.newPasswordWithLabel1.isErrorEnabled) {
+                        changePasswordViewModel.isPasswordValid()
+                    }
+                }
+            })
+
+            binding.newPasswordWithLabel2.addTextChangeListener(object: MaskedTextChangedListener.ValueListener {
+                override fun onTextChanged(maskFilled: Boolean, extractedValue: String) {
+                    if (binding.newPasswordWithLabel2.isErrorEnabled) {
                         changePasswordViewModel.isPasswordValid()
                     }
                 }
@@ -70,7 +83,6 @@ class ChangePasswordFragment: LotusFullScreenFragment() {
 
             passwordValidationErrorObservable.observe(this@ChangePasswordFragment, Observer {
                 when (it) {
-                    pro
                     ChangePasswordViewModel.PasswordValidationError.INVALID -> {
                         binding.newPasswordWithLabel1.setErrorTexts(listOf(getString(R.string.change_password_error_message_invalid)))
                         binding.newPasswordWithLabel2.setErrorTexts(listOf(getString(R.string.change_password_error_message_invalid)))
