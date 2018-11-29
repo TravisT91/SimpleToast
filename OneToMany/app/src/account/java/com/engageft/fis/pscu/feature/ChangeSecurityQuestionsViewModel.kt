@@ -8,7 +8,6 @@ import com.engageft.engagekit.rest.request.AuthenticatedRequest
 import com.engageft.engagekit.rest.request.SetSecurityQuestionsRequest
 import com.ob.ws.dom.SecurityQuestionsResponse
 import io.reactivex.android.schedulers.AndroidSchedulers
-import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
 
 /**
@@ -30,7 +29,6 @@ class ChangeSecurityQuestionsViewModel : BaseEngageViewModel() {
         FETCHING, CHANGE, CREATE // CREATE is for first time, CHANGE is if questions were already set.
     }
 
-    private val compositeDisposable = CompositeDisposable()
     val navigationObservable = MutableLiveData<ChangeSecurityQuestionsNavigation>()
     val modeObservable = MutableLiveData<ChangeSecurityQuestionsMode>()
     val questions1List = MutableLiveData<List<String>>()
@@ -59,7 +57,6 @@ class ChangeSecurityQuestionsViewModel : BaseEngageViewModel() {
                 validateSaveButtonState()
             }
         })
-        loadSecurityQuestionState()
         question1.addOnPropertyChangedCallback(object : Observable.OnPropertyChangedCallback(){
             override fun onPropertyChanged(observable: Observable?, field: Int) {
                 invalidateDisplayLists()
@@ -70,6 +67,7 @@ class ChangeSecurityQuestionsViewModel : BaseEngageViewModel() {
                 invalidateDisplayLists()
             }
         })
+        loadSecurityQuestionState()
     }
 
     /**

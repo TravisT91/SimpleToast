@@ -6,6 +6,7 @@ import com.engageft.apptoolbox.BaseViewModel
 import com.engageft.apptoolbox.BuildConfig
 import com.engageft.engagekit.rest.exception.NoConnectivityException
 import com.ob.ws.dom.BasicResponse
+import io.reactivex.disposables.CompositeDisposable
 import java.net.SocketTimeoutException
 import java.net.UnknownHostException
 
@@ -18,6 +19,7 @@ import java.net.UnknownHostException
  * Copyright (c) 2018 Engage FT. All rights reserved.
  */
 open class BaseEngageViewModel: BaseViewModel() {
+    val compositeDisposable = CompositeDisposable()
 
     val dialogInfoObservable: MutableLiveData<DialogInfo> = MutableLiveData()
 
@@ -52,5 +54,10 @@ open class BaseEngageViewModel: BaseViewModel() {
             }
         }
 
+    }
+
+    override fun onCleared() {
+        super.onCleared()
+        compositeDisposable.dispose()
     }
 }

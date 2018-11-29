@@ -9,7 +9,16 @@
         android:id="@+id/dashboard_fragment"
         android:name="com.engageft.fis.pscu.feature.DashboardFragment"
         android:label="@string/fragment_title_dashboard"
-        tools:layout="@layout/fragment_dashboard"/>
+        tools:layout="@layout/fragment_dashboard">
+        <action
+            android:id="@+id/action_dashboard_fragment_to_moveMoneyFragment"
+            app:destination="@id/moveMoneyFragmentChild"
+            app:enterAnim="@anim/nav_enter_anim"
+            app:exitAnim="@anim/nav_exit_anim"
+            app:popEnterAnim="@anim/nav_pop_enter_anim"
+            app:popExitAnim="@anim/nav_pop_exit_anim">
+        </action>
+    </fragment>
     <fragment
         android:id="@+id/budgets_fragment"
         android:name="com.engageft.fis.pscu.feature.BudgetsFragment"
@@ -45,6 +54,12 @@
         <action
             android:id="@+id/action_account_fragment_to_changeSecurityQuestionsFragment"
             app:destination="@id/changeSecurityQuestionsFragment" />
+        <action
+            android:id="@+id/action_account_fragment_to_profileFragment"
+            app:destination="@id/profileFragment" />
+        <action
+            android:id="@+id/action_account_fragment_to_statementsFragment"
+            app:destination="@id/statementsFragment" />
     </fragment>
     <fragment
         android:id="@+id/goalAdd1Fragment"
@@ -79,6 +94,16 @@
             android:name="@string/navigation_override_up"
             android:defaultValue="true" />
     </fragment>
+    <!-- This is necessary for navigating from the dashboard, so that the back/up arrow is shown
+     rather than the hamburger. -->
+    <fragment
+        android:id="@+id/moveMoneyFragmentChild"
+        android:name="com.engageft.fis.pscu.feature.MoveMoneyFragment"
+        android:label="@string/TITLE_MOVE_MONEY">
+        <argument
+            android:name="@string/navigation_override_up"
+            android:defaultValue="false" />
+    </fragment>
     <fragment
         android:id="@+id/copyrightFragment"
         android:name="com.engageft.fis.pscu.feature.CopyrightFragment"
@@ -86,5 +111,23 @@
     <fragment
         android:id="@+id/changeSecurityQuestionsFragment"
         android:name="com.engageft.fis.pscu.feature.ChangeSecurityQuestionsFragment"
+        android:label="@string/fragment_title_change_security_questions" />
+    <fragment
+        android:id="@+id/profileFragment"
+        android:name="com.engageft.fis.pscu.feature.ProfileFragment"
+        android:label="@string/fragment_title_profile" />
+
         android:label="@string/fragment_title_change_security_questions"/>
+    <fragment
+        android:id="@+id/statementsFragment"
+        android:name="com.engageft.fis.pscu.feature.StatementsFragment"
+        android:label="@string/statements_screen_title" >
+        <action
+            android:id="@+id/action_statementsFragment_to_webViewFragment"
+            app:destination="@id/webViewFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/webViewFragment"
+        android:name="com.engageft.fis.pscu.feature.WebViewFragment"
+        android:label="@string/statements_webView_screen_title" />
 </navigation>

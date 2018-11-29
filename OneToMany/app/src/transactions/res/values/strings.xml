@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!--TODO(jhutchins): Refactor TransactionUtils: SHOW-384-->
+    <string name="TRANSACTION_TYPE_LOAD">Deposit</string>
+    <string name="TRANSACTION_TYPE_REVERSE_LOAD">Reverse Load</string>
+    <string name="TRANSACTION_TYPE_FEE">Card Fee</string>
+    <string name="TRANSACTION_TYPE_TRANSFER">Transfer</string>
+    <string name="TRANSACTION_TYPE_ATM">ATM Withdrawal</string>
+    <string name="TRANSACTION_TYPE_RETURN">Purchase Return</string>
+
+    <string name="TRANSACTION_LIST_OFFBUDGET_LABEL">Off-Budget</string>
+
+    <string name="TRANSACTION_STATUS_PENDING_TEXT">Pending</string>
+    <string name="TRANSACTION_STATUS_DECLINED_TEXT">Declined</string>
+
+    <string name="TRANSACTIONS_NONE">No transactions</string>
+    <string name="TRANSACTIONS_PAY">Pay</string>
+</resources>

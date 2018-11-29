@@ -1,22 +1,23 @@
 package com.engageft.fis.pscu.feature.login
 
+import android.util.Log
 import androidx.databinding.Observable
 import androidx.databinding.ObservableField
 import androidx.lifecycle.MutableLiveData
 import com.engageft.engagekit.EngageService
 import com.engageft.engagekit.rest.request.CreateDemoAccountRequest
 import com.engageft.engagekit.utils.LoginResponseUtils
+import com.engageft.fis.pscu.HeapUtils
+import com.engageft.fis.pscu.config.EngageAppConfig
 import com.engageft.fis.pscu.feature.BaseEngageViewModel
 import com.engageft.fis.pscu.feature.DialogInfo
+import com.engageft.fis.pscu.feature.Palette
 import com.engageft.fis.pscu.feature.WelcomeSharedPreferencesRepo
 import com.engageft.fis.pscu.feature.authentication.AuthenticationConfig
 import com.engageft.fis.pscu.feature.authentication.AuthenticationSharedPreferencesRepo
-import com.engageft.fis.pscu.HeapUtils
-import com.engageft.fis.pscu.config.EngageAppConfig
 import com.ob.ws.dom.DeviceFailResponse
 import com.ob.ws.dom.LoginResponse
 import io.reactivex.android.schedulers.AndroidSchedulers
-import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
 
 /**
@@ -28,8 +29,6 @@ import io.reactivex.schedulers.Schedulers
  * Copyright (c) 2018 Engage FT. All rights reserved.
  */
 class LoginViewModel : BaseEngageViewModel() {
-    private var loginResponse: LoginResponse? = null
-
     enum class LoginNavigationEvent {
         AUTHENTICATED_ACTIVITY,
         ISSUER_STATEMENT,
@@ -58,7 +57,7 @@ class LoginViewModel : BaseEngageViewModel() {
         DISMISS_DIALOG
     }
 
-    private val compositeDisposable = CompositeDisposable()
+    private lateinit var token: String
 
     val navigationObservable = MutableLiveData<LoginNavigationEvent>()
 
@@ -180,32 +179,27 @@ class LoginViewModel : BaseEngageViewModel() {
     }
 
     fun onConfirmEmail() {
+        progressOverlayShownObservable.value = true
+        compositeDisposable.add(EngageService.getInstance().verificationEmailObservable(token)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe({ response ->
+                    progressOverlayShownObservable.value = false
 
-        loginResponse?.let {
-            progressOverlayShownObservable.value = true
-            compositeDisposable.add(EngageService.getInstance().verificationEmailObservable(it.token)
-                    .subscribeOn(Schedulers.io())
-                    .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe({ response ->
-                        progressOverlayShownObservable.value = false
-
-                        if (response.isSuccess) {
-                            dialogInfoObservable.value = LoginDialogInfo(dialogType = DialogInfo.DialogType.OTHER,
-                                    loginDialogType = LoginDialogInfo.LoginDialogType.EMAIL_VERIFICATION_SUCCESS)
-                        } else {
-                            dialogInfoObservable.value = LoginDialogInfo(
-                                    message = response.message,
-                                    dialogType = DialogInfo.DialogType.SERVER_ERROR)
-                        }
-                    }, { e ->
-                        progressOverlayShownObservable.value = false
-                        logout()
-                        handleThrowable(e)
-                    })
-            )
-        } ?: run {
-            dialogInfoObservable.value = LoginDialogInfo()
-        }
+                    if (response.isSuccess) {
+                        dialogInfoObservable.value = LoginDialogInfo(dialogType = DialogInfo.DialogType.OTHER,
+                                loginDialogType = LoginDialogInfo.LoginDialogType.EMAIL_VERIFICATION_SUCCESS)
+                    } else {
+                        dialogInfoObservable.value = LoginDialogInfo(
+                                message = response.message,
+                                dialogType = DialogInfo.DialogType.SERVER_ERROR)
+                    }
+                }, { e ->
+                    progressOverlayShownObservable.value = false
+                    logout()
+                    handleThrowable(e)
+                })
+        )
     }
 
     fun logout() {
@@ -227,12 +221,25 @@ class LoginViewModel : BaseEngageViewModel() {
                         .observeOn(AndroidSchedulers.mainThread())
                         .subscribe(
                                 { response ->
-                                    progressOverlayShownObservable.value = false
                                     if (response.isSuccess && response is LoginResponse) {
-                                        handleSuccessfulLoginResponse(response)
+                                        Palette.getBrandingWithToken(response.token)
+                                                .subscribe(
+                                                        { paletteResponse ->
+                                                            progressOverlayShownObservable.value = false
+                                                            if (paletteResponse.isSuccess) {
+                                                                handleSuccessfulLoginResponse(response)
+                                                            } else {
+                                                                handleUnexpectedErrorResponse(paletteResponse)
+                                                            }
+                                                        },
+                                                        { e ->
+                                                            Log.e("paletteResponseError", e.message)
+                                                        })
                                     } else if (response is DeviceFailResponse) {
+                                        progressOverlayShownObservable.value = false
                                         navigationObservable.value = LoginNavigationEvent.TWO_FACTOR_AUTHENTICATION
                                     } else {
+                                        progressOverlayShownObservable.value = false
                                         // we’re not yet truly parsing error types, and instead assume any error means invalid credentials.
                                         // so set backend error response message as "invalid credentials" for now until true error handling has been implemented.
                                         // https://engageft.atlassian.net/browse/SHOW-364
@@ -260,8 +267,7 @@ class LoginViewModel : BaseEngageViewModel() {
     }
 
     private fun handleSuccessfulLoginResponse(loginResponse: LoginResponse) {
-        this.loginResponse = loginResponse
-
+        token = loginResponse.token
         // set the Get started flag to true after the successful login, so the Welcome screen doesn't get displayed again
         WelcomeSharedPreferencesRepo.applyHasSeenGetStarted(true)
 

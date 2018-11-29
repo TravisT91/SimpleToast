@@ -6,4 +6,7 @@
 
     <color name="changeSecurityQuestionsHeaderTextColor">@color/structure5</color>
     <color name="changeSecurityQuestionsInputBackground">@color/cellBackground</color>
+
+    <color name="profileInputBackground">@color/cellBackground</color>
+    <color name="statementSubstringDescription">@color/primary</color>
 </resources>

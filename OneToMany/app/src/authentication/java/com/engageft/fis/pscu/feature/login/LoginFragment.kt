@@ -78,11 +78,14 @@ class LoginFragment : LotusFullScreenFragment() {
                 }
                 LoginViewModel.LoginNavigationEvent.TWO_FACTOR_AUTHENTICATION -> {
                     //TODO(aHashimi): https://engageft.atlassian.net/browse/SHOW-273
+                    Toast.makeText(context!!, "TODO: Navigate to Two Factor Auth", Toast.LENGTH_SHORT).show()
                     0
                 }
                 LoginViewModel.LoginNavigationEvent.ACCEPT_TERMS -> {
                     //TODO(aHashimi): https://engageft.atlassian.net/browse/SHOW-354
-                    0
+                    //TODO(aHashimi): this's here to bypass Accept terms until it's resolved
+                    activity!!.finish()
+                    R.id.action_loginFragment_to_authenticatedActivity
                 }
             }
             if (navDestinationId != 0) {
@@ -202,8 +205,8 @@ class LoginFragment : LotusFullScreenFragment() {
                             showDialog(InformationDialogFragment.newLotusInstance(
                                     title = getString(R.string.login_confirm_email_alert_title),
                                     message = getString(R.string.login_confirm_email_alert_message),
-                                    positiveButton = getString(R.string.login_confirm_email_send_button),
-                                    negativeButton = getString(R.string.dialog_information_cancel_button),
+                                    buttonPositiveText = getString(R.string.login_confirm_email_send_button),
+                                    buttonNegativeText = getString(R.string.dialog_information_cancel_button),
                                     layoutType = InformationDialogFragment.LayoutType.BUTTONS_STACKED,
                                     listener = listener))
                         }
