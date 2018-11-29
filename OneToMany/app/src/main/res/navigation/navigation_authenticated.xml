@@ -111,7 +111,7 @@
         android:label="@string/fragment_title_change_security_questions"/>
     <fragment
         android:id="@+id/changePasswordFragment"
-        android:name="com.engageft.feature.ChangePasswordFragment"
+        android:name="com.engageft.fis.pscu.feature.ChangePasswordFragment"
         android:label="@string/change_password_title" />
 
 

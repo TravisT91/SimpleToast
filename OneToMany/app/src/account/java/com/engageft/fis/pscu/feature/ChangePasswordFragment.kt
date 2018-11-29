@@ -1,4 +1,4 @@
-package com.engageft.feature
+package com.engageft.fis.pscu.feature
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -10,7 +10,8 @@ import androidx.navigation.findNavController
 import com.engageft.apptoolbox.BaseViewModel
 import com.engageft.apptoolbox.LotusFullScreenFragment
 import com.engageft.apptoolbox.view.InformationDialogFragment
-import com.engageft.onetomany.databinding.FragmentChangePasswordBinding
+import com.engageft.fis.pscu.databinding.FragmentChangePasswordBinding
+
 /**
  * ChangePasswordFragment
  * <p>

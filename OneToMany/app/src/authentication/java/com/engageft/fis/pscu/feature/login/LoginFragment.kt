@@ -28,6 +28,7 @@ import com.engageft.fis.pscu.feature.Palette
 import com.engageft.fis.pscu.feature.infoDialogGenericErrorTitleMessageConditionalNewInstance
 import com.engageft.fis.pscu.feature.infoDialogGenericErrorTitleMessageNewInstance
 import com.engageft.fis.pscu.feature.infoDialogSimpleMessageNoTitle
+import com.engageft.fis.pscu.feature.BaseEngageViewModel
 
 /**
  * LoginFragment

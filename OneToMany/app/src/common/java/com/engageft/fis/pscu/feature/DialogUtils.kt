@@ -37,6 +37,6 @@ fun infoDialogGenericSuccessTitleMessageNewInstance(context: Context,
     return InformationDialogFragment.newLotusInstance(
             title = title,
             message = message,
-            positiveButton = positiveButtonText,
+            buttonPositiveText = positiveButtonText,
             listener = listener)
 }
