@@ -20,7 +20,11 @@
         </action>
         <action
             android:id="@+id/action_dashboard_fragment_to_cardPinFragment"
-            app:destination="@id/cardPinFragment" />
+            app:destination="@id/cardPinFragment"
+            app:enterAnim="@anim/nav_enter_anim"
+            app:exitAnim="@anim/nav_exit_anim"
+            app:popEnterAnim="@anim/nav_pop_enter_anim"
+            app:popExitAnim="@anim/nav_pop_exit_anim"/>
     </fragment>
     <fragment
         android:id="@+id/budgets_fragment"
