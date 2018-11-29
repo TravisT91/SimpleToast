@@ -37,16 +37,6 @@ class LoginViewModel : BaseEngageViewModel() {
         ACCEPT_TERMS
     }
 
-    enum class UsernameValidationError {
-        NONE,
-        INVALID_CREDENTIALS, // Generic username/password not valid error type.
-    }
-
-    enum class PasswordValidationError {
-        NONE,
-        INVALID_CREDENTIALS // Generic username/password not valid error type.
-    }
-
     enum class ButtonState {
         SHOW,
         HIDE
@@ -62,10 +52,8 @@ class LoginViewModel : BaseEngageViewModel() {
     val navigationObservable = MutableLiveData<LoginNavigationEvent>()
 
     val username : ObservableField<String> = ObservableField("")
-    var usernameError : MutableLiveData<UsernameValidationError> = MutableLiveData()
 
     var password : ObservableField<String> = ObservableField("")
-    var passwordError : MutableLiveData<PasswordValidationError> = MutableLiveData()
 
     val rememberMe: ObservableField<Boolean> = ObservableField(false)
 
@@ -210,9 +198,6 @@ class LoginViewModel : BaseEngageViewModel() {
         // Make sure there's no stale data. Might want to keep some around, but for now, just wipe it all out.
         EngageService.getInstance().authManager.logout()
 
-        // let's clear previous credentials error messages if applicable
-        clearErrorTexts()
-
         progressOverlayShownObservable.value = true
 
         compositeDisposable.add(
@@ -240,30 +225,13 @@ class LoginViewModel : BaseEngageViewModel() {
                                         navigationObservable.value = LoginNavigationEvent.TWO_FACTOR_AUTHENTICATION
                                     } else {
                                         progressOverlayShownObservable.value = false
-                                        // we’re not yet truly parsing error types, and instead assume any error means invalid credentials.
-                                        // so set backend error response message as "invalid credentials" for now until true error handling has been implemented.
-                                        // https://engageft.atlassian.net/browse/SHOW-364
-                                        usernameError.value = UsernameValidationError.INVALID_CREDENTIALS
-                                        passwordError.value = PasswordValidationError.INVALID_CREDENTIALS
+                                        dialogInfoObservable.value = DialogInfo(dialogType = DialogInfo.DialogType.SERVER_ERROR, message = response.message)
                                     }
                                 }, { e ->
                             progressOverlayShownObservable.value = false
                             handleThrowable(e)
                         })
         )
-    }
-
-    private fun clearErrorTexts() {
-        usernameError.value?.let {
-            if (it == UsernameValidationError.INVALID_CREDENTIALS) {
-                usernameError.value = UsernameValidationError.NONE
-            }
-        }
-        passwordError.value?.let {
-            if (it == PasswordValidationError.INVALID_CREDENTIALS) {
-                passwordError.value = PasswordValidationError.NONE
-            }
-        }
     }
 
     private fun handleSuccessfulLoginResponse(loginResponse: LoginResponse) {

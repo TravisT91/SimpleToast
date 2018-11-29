@@ -92,22 +92,6 @@ class LoginFragment : LotusFullScreenFragment() {
                 binding.root.findNavController().navigate(navDestinationId)
             }
         })
-        vm.usernameError.observe(this, Observer { error: LoginViewModel.UsernameValidationError ->
-            when (error) {
-                LoginViewModel.UsernameValidationError.NONE -> binding.usernameInput.setErrorTexts(null)
-                LoginViewModel.UsernameValidationError.INVALID_CREDENTIALS -> binding.usernameInput.setErrorTexts(listOf(getString(R.string.error_message_invalid_credentials)))
-            }
-            // Make sure error is animated
-            setContentLayoutTransitions()
-        })
-        vm.passwordError.observe(this, Observer { error: LoginViewModel.PasswordValidationError ->
-            when (error) {
-                LoginViewModel.PasswordValidationError.NONE -> binding.passwordInput.setErrorTexts(null)
-                LoginViewModel.PasswordValidationError.INVALID_CREDENTIALS -> binding.passwordInput.setErrorTexts(listOf(getString(R.string.error_message_invalid_credentials)))
-            }
-            // Make sure error is animated
-            setContentLayoutTransitions()
-        })
         vm.loginButtonState.observe(this, Observer { loginButtonState: LoginViewModel.ButtonState ->
             when (loginButtonState) {
                 LoginViewModel.ButtonState.SHOW -> {
