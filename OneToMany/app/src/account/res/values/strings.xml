@@ -59,6 +59,7 @@
     <string name="PROFILE_SUCCESS_MESSAGE_CHANGE_ADDRESS">You have successfully changed your address.</string>
     <string name="PROFILE_SUCCESS_MESSAGE_OK">Ok</string>
     <string name="PROFILE_ACTION_SAVE">SAVE</string>
+
     <string name="STATEMENT_FILTER_URL">%1$s/login/sso?token=%2$s&amp;redirect_to=/account/statements?filter=%3$s-%4$s&amp;embedded=ios</string>
     <string name="statements_screen_title">Statements</string>
     <string name="statements_webView_screen_title">Statement</string>
