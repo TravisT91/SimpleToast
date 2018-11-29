@@ -55,6 +55,9 @@
             android:id="@+id/action_account_fragment_to_changeSecurityQuestionsFragment"
             app:destination="@id/changeSecurityQuestionsFragment" />
         <action
+            android:id="@+id/action_account_fragment_to_profileFragment"
+            app:destination="@id/profileFragment" />
+        <action
             android:id="@+id/action_account_fragment_to_statementsFragment"
             app:destination="@id/statementsFragment" />
     </fragment>
@@ -108,6 +111,12 @@
     <fragment
         android:id="@+id/changeSecurityQuestionsFragment"
         android:name="com.engageft.fis.pscu.feature.ChangeSecurityQuestionsFragment"
+        android:label="@string/fragment_title_change_security_questions" />
+    <fragment
+        android:id="@+id/profileFragment"
+        android:name="com.engageft.fis.pscu.feature.ProfileFragment"
+        android:label="@string/fragment_title_profile" />
+
         android:label="@string/fragment_title_change_security_questions"/>
     <fragment
         android:id="@+id/statementsFragment"

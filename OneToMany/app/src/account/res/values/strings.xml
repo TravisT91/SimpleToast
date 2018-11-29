@@ -14,6 +14,7 @@
     <string name="SETTINGS_LOG_OUT">Log out</string>
     <string name="SETTINGS_COPYRIGHT">Copyright</string>
     <string name="SETTINGS_DISCLOSURES">Disclosures</string>
+    <string name="SETTINGS_ACTION_HELP">HELP</string>
 
     <!-- Copyright -->
     <!--TODO(aHashimi): replace with the actual copyright text-->
@@ -36,6 +37,28 @@
     <string name="SECURITY_QUESTIONS_SUCCESS_MESSAGE_CREATE">You have successfully set your security questions.</string>
     <string name="SECURITY_QUESTIONS_SUCCESS_MESSAGE_OK">Ok</string>
 
+
+    <string name="PROFILE_LEGAL_NAME">Legal name</string>
+    <string name="PROFILE_EMAIL">Email address</string>
+    <string name="PROFILE_PHONE">Phone number</string>
+    <string name="PROFILE_STREET">Street address</string>
+    <string name="PROFILE_APT_SUITE">Apt/Suite# (optional)</string>
+    <string name="PROFILE_CITY">City</string>
+    <string name="PROFILE_STATE">State</string>
+    <string name="PROFILE_ZIP">Zip code</string>
+    <string name="PROFILE_STATE_LIST_TITLE">Select state</string>
+    <string name="PROFILE_STATE_LIST_SUBTITLE"></string>
+    <string name="PROFILE_INPUT_ERROR_EMPTY">This field cannot be empty.</string>
+    <string name="PROFILE_INPUT_ERROR_EMAIL_AT_REQUIRED">Please enter a valid email address.</string>
+    <string name="PROFILE_INPUT_ERROR_PHONE_NOT_TEN">Please enter a 10-digit phone number.</string>
+    <string name="PROFILE_INPUT_ERROR_ZIP_NOT_FIVE">Please enter a 5-digit zip code.</string>
+    <string name="PROFILE_SUCCESS_TITLE">Success</string>
+    <string name="PROFILE_ERROR_TITLE">Error</string>
+    <string name="PROFILE_SUCCESS_MESSAGE_CHANGE_EMAIL">You have successfully changed your email.</string>
+    <string name="PROFILE_SUCCESS_MESSAGE_CHANGE_PHONE">You have successfully changed your phone number.</string>
+    <string name="PROFILE_SUCCESS_MESSAGE_CHANGE_ADDRESS">You have successfully changed your address.</string>
+    <string name="PROFILE_SUCCESS_MESSAGE_OK">Ok</string>
+    <string name="PROFILE_ACTION_SAVE">SAVE</string>
     <string name="STATEMENT_FILTER_URL">%1$s/login/sso?token=%2$s&amp;redirect_to=/account/statements?filter=%3$s-%4$s&amp;embedded=ios</string>
     <string name="statements_screen_title">Statements</string>
     <string name="statements_webView_screen_title">Statement</string>
