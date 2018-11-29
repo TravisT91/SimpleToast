@@ -4,10 +4,10 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
-        <variable name="viewModel" type="com.engageft.feature.LoginViewModel"/>
+        <variable name="viewModel" type="com.engageft.fis.pscu.feature.login.LoginViewModel"/>
         <variable
             name="palette"
-            type="com.engageft.feature.Palette"/>
+            type="com.engageft.fis.pscu.feature.Palette"/>
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -56,7 +56,7 @@
 
             <com.engageft.apptoolbox.view.EmailInputWithLabel
                 android:id="@+id/usernameInput"
-                style="@style/TextInputWithLabelStyle"
+                inputWithLabel.setThemeWithPalette="@{true}"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="20dp"
@@ -65,7 +65,7 @@
 
             <com.engageft.apptoolbox.view.PasswordInputWithLabel
                 android:id="@+id/passwordInput"
-                style="@style/TextInputWithLabelStyle"
+                inputWithLabel.setThemeWithPalette="@{true}"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="20dp"
@@ -99,6 +99,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             android:button="@drawable/checkbox_selector"
             android:paddingStart="9dp"
+            android:paddingEnd="0dp"
             android:layout_marginEnd="16dp"
             android:checked="@={viewModel.rememberMe}"
             android:text="@string/login_remember_me"/>

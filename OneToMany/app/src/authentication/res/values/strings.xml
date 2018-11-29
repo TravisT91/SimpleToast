@@ -23,4 +23,12 @@
     <string name="login_confirm_email_send_button">Send Confirmation Email</string>
     <string name="login_confirm_email_success">Please check your email to validate this account.</string>
 
+
+    <!-- auth password expired dialog -->
+    <string name="auth_expired_password_logout">Logout</string>
+    <string name="auth_expired_password_title">Sign in to My Card Manager?</string>
+    <string name="auth_expired_password_message">Please enter your password to continue</string>
+    <string name="auth_expired_password_label">Password</string>
+    <string name="auth_expired_password_sign_in">Sign in</string>
+    <string name="auth_expired_password_forgot_password">Forgot password</string>
 </resources>

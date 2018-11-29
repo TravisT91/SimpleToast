@@ -14,10 +14,9 @@ buildscript {
         constraintLayoutVersion = '1.1.3'
         appCompatVersion = "1.0.0"
         supportDesignVersion = "1.0.0"
-        navigationVersion = '1.0.0-alpha06'
-        ktxVersion = '0.3'
+        navigationVersion = '1.0.0-alpha07'
 
-        heapVersion = "0.7.1"
+        heapVersion = "0.7.5"
 
         // The following version redefinitions for engagekit:
         android_support_lib_version = "27.1.1"
@@ -33,12 +32,15 @@ buildscript {
         maven {
             url 'https://heap-maven-public.s3.amazonaws.com/android-testing'
         }
+        maven { url 'https://maven.fabric.io/public' }
     }
     dependencies {
-        classpath "com.android.tools.build:gradle:3.2.0"
+        classpath 'com.android.tools.build:gradle:3.2.1'
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlinVersion"
 
         classpath "com.heapanalytics.android:heap-android-gradle:$heapVersion"
+
+        classpath 'io.fabric.tools:gradle:1.+'
 
         // NOTE: Do not place your application dependencies here; they belong
         // in the individual module build.gradle files
@@ -54,6 +56,7 @@ allprojects {
         maven {
             url 'https://heap-maven-public.s3.amazonaws.com/android-testing'
         }
+        maven { url 'https://maven.fabric.io/public' }
     }
 }
 

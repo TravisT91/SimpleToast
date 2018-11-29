@@ -8,14 +8,20 @@ apply plugin: 'kotlin-kapt'
 
 apply plugin: 'com.heapanalytics.android'
 
+apply plugin: 'io.fabric'
+
 android {
     compileSdkVersion rootProject.compileSdkVersion
     defaultConfig {
-        applicationId "com.engageft.showcase"
+        applicationId "com.engageft.fis.pscu"
         minSdkVersion rootProject.minSdkVersion
         targetSdkVersion rootProject.targetSdkVersion
         versionCode 1
-        versionName "1.0"
+        versionName "0.0"
+        // Below is the version string that tracks real releases for this app. When creating a build for
+        // QA or release, increment and use the version string below. the master branch should always
+        // use 0.0
+//        versionName "0.1" + "." + versionCode
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         multiDexEnabled true
 
@@ -29,6 +35,7 @@ android {
 
         debug {
             ext.heap = ["enabled": true]
+            versionNameSuffix = "-debug"
         }
     }
 
@@ -45,10 +52,11 @@ android {
         main {
             java.srcDirs = ['src/main/java', 'src/authentication/java', 'src/common/java', 'src/splash/java',
                             'src/dashboard/java', 'src/budgets/java', 'src/account/java', 'src/goals/java',
-                            'src/help/java', 'src/cardmanagement/java', 'src/palette/java', 'src/welcome/java']
+                            'src/help/java', 'src/cardmanagement/java', 'src/palette/java', 'src/welcome/java',
+                            'src/transactions/java']
             res.srcDirs = ['src/main/res', 'src/authentication/res', 'src/common/res', 'src/splash/res',
                            'src/dashboard/res', 'src/budgets/res', 'src/account/res', 'src/goals/res',
-                           'src/help/res', 'src/cardmanagement/res', 'src/palette/res', 'src/welcome/res']
+                           'src/help/res', 'src/cardmanagement/res', 'src/welcome/res', 'src/transactions/res']
         }
     }
 }
@@ -68,8 +76,13 @@ dependencies {
     implementation "androidx.lifecycle:lifecycle-extensions:$rootProject.archLifecycleVersion"
     kapt "androidx.lifecycle:lifecycle-compiler:$rootProject.archLifecycleVersion"
     implementation "com.heapanalytics.android:heap-android-client:$rootProject.heapVersion"
+    implementation 'com.eightbitlab:blurview:1.5.0'
     // For styling views programmatically
     implementation 'com.airbnb.android:paris:1.1.0'
     // If you're using Paris annotations.
-    annotationProcessor 'com.airbnb.android:paris-processor:1.1.0'
+    kapt 'com.airbnb.android:paris-processor:1.1.0'
+
+    implementation('com.crashlytics.sdk.android:crashlytics:2.9.6@aar') {
+        transitive = true
+    }
 }

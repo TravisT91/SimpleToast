@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item>
+        <shape android:shape="oval">
+            <size
+                android:width="@dimen/dashboard_disclosure_button_width_height"
+                android:height="@dimen/dashboard_disclosure_button_width_height"/>
+            <solid android:color="@color/white" />
+        </shape>
+    </item>
+
+    <item>
+        <bitmap android:src="@drawable/ic_dashboard_disclosure_chevron" android:gravity="center"/>
+    </item>
+
+</layer-list>
