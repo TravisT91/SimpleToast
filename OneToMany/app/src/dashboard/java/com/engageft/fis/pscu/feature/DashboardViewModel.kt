@@ -53,8 +53,6 @@ class DashboardViewModel : BaseEngageViewModel() {
 
     var transactionsTabPosition = TRANSACTIONS_TAB_POSITION_ALL
 
-    private val compositeDisposable = CompositeDisposable()
-
     val navigationObservable = MutableLiveData<DashboardNavigationEvent>()
 
     val animationObservable: MutableLiveData<DashboardAnimationEvent> = MutableLiveData()

@@ -18,6 +18,9 @@
             app:popEnterAnim="@anim/nav_pop_enter_anim"
             app:popExitAnim="@anim/nav_pop_exit_anim">
         </action>
+        <action
+            android:id="@+id/action_dashboard_fragment_to_cardPinFragment"
+            app:destination="@id/cardPinFragment" />
     </fragment>
     <fragment
         android:id="@+id/budgets_fragment"
@@ -79,9 +82,6 @@
         <argument
             android:name="@string/navigation_override_up"
             android:defaultValue="true" />
-        <action
-            android:id="@+id/action_helpFragment_to_cardPinFragment"
-            app:destination="@id/cardPinFragment" />
     </fragment>
     <fragment
         android:id="@+id/moveMoneyFragment"
@@ -113,5 +113,4 @@
         android:id="@+id/cardPinFragment"
         android:name="com.engageft.fis.pscu.feature.CardPinFragment"
         android:label="@string/card_pin_screen_title" />
-
 </navigation>

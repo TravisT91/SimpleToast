@@ -75,6 +75,9 @@
     <string name="alert_error_message_generic">There was an error. Please try again.</string>
     <string name="alert_error_title_generic">Error</string>
 
+    <string name="alert_success_title_generic">Success</string>
+    <string name="alert_success_message_generic">Your changes have been saved.</string>
+
     <string name="dialog_information_cancel_button">Cancel</string>
     <string name="dialog_information_ok_button">OK</string>
 

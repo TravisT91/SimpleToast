@@ -13,6 +13,7 @@ import androidx.lifecycle.ViewModelProviders
 import androidx.navigation.findNavController
 import com.engageft.apptoolbox.BaseViewModel
 import com.engageft.apptoolbox.LotusFullScreenFragment
+import com.engageft.apptoolbox.view.InformationDialogFragment
 import com.engageft.fis.pscu.R
 import com.engageft.fis.pscu.config.EngageAppConfig
 import com.engageft.fis.pscu.databinding.FragmentCardPinBinding
@@ -102,8 +103,20 @@ class CardPinFragment : LotusFullScreenFragment() {
             dialogInfoObservable.observe(this@CardPinFragment, Observer {
                 when (it.dialogType) {
                     DialogInfo.DialogType.GENERIC_SUCCESS -> {
-                        //TODO(aHashimi): add show generic success before poping fragment off, currently code in PR
-                        binding.root.findNavController().popBackStack()
+                        val listener = object: InformationDialogFragment.InformationDialogFragmentListener {
+                            override fun onDialogFragmentNegativeButtonClicked() {
+                            }
+
+                            override fun onDialogFragmentPositiveButtonClicked() {
+                                binding.root.findNavController().popBackStack()
+                            }
+
+                            override fun onDialogCancelled() {
+                                binding.root.findNavController().popBackStack()
+                            }
+                        }
+
+                        showDialog(infoDialogGenericSuccessTitleMessageNewInstance(context!!, listener = listener))
                     }
                     else -> {}
                 }
@@ -115,7 +128,11 @@ class CardPinFragment : LotusFullScreenFragment() {
 
     override fun onResume() {
         super.onResume()
-        binding.pinInputField.requestFocusOnEditInput()
+        // must do Handler().post() because when this fragment is displayed from DashboardFragment,
+        // the keyboard doesn't get displayed
+        Handler().post {
+            binding.pinInputField.requestFocusOnEditInput()
+        }
     }
 
     private fun updateView(text: String, @ColorInt textColor: Int, drawable: Drawable) {

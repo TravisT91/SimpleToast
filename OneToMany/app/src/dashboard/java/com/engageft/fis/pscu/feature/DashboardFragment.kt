@@ -15,6 +15,7 @@ import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.navigation.findNavController
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.engageft.apptoolbox.BaseViewModel
 import com.engageft.apptoolbox.LotusActivity
@@ -473,7 +474,7 @@ class DashboardFragment : LotusFullScreenFragment(), DashboardExpandableView.Das
     }
 
     override fun onChangePin() {
-        Toast.makeText(activity, "Change PIN selected", Toast.LENGTH_SHORT).show()
+        binding.root.findNavController().navigate(R.id.action_dashboard_fragment_to_cardPinFragment)
     }
 
     override fun onReplaceCard() {
