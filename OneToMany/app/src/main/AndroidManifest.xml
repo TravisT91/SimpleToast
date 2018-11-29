@@ -48,7 +48,6 @@
             android:windowSoftInputMode="adjustResize"
             android:name=".AuthenticatedActivity"
             android:screenOrientation="portrait">
-        <activity android:name=".AuthenticatedActivity">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
                 <category android:name="android.intent.category.DEFAULT" />

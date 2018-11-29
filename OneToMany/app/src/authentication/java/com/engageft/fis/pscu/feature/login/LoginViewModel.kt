@@ -18,7 +18,6 @@ import com.engageft.fis.pscu.feature.authentication.AuthenticationSharedPreferen
 import com.ob.ws.dom.DeviceFailResponse
 import com.ob.ws.dom.LoginResponse
 import io.reactivex.android.schedulers.AndroidSchedulers
-import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
 
 /**
@@ -59,7 +58,6 @@ class LoginViewModel : BaseEngageViewModel() {
     }
 
     private lateinit var token: String
-    private val compositeDisposable = CompositeDisposable()
 
     val navigationObservable = MutableLiveData<LoginNavigationEvent>()
 

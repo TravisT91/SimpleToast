@@ -1,7 +1,6 @@
 package com.engageft.fis.pscu.feature
 
 import android.os.Handler
-import android.util.Log
 import androidx.databinding.Observable
 import androidx.databinding.ObservableField
 import androidx.lifecycle.MutableLiveData
@@ -14,7 +13,6 @@ import com.ob.ws.dom.BasicResponse
 import com.ob.ws.dom.LoginResponse
 import com.ob.ws.dom.utility.AddressInfo
 import io.reactivex.android.schedulers.AndroidSchedulers
-import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.functions.BiFunction
 import io.reactivex.functions.Function3
 import io.reactivex.schedulers.Schedulers
@@ -80,7 +78,6 @@ class ProfileViewModel : BaseEngageViewModel() {
     inner class UpdateResponse(val emailResponse: BasicResponse?, val phoneResponse: BasicResponse?, val addressResponse: BasicResponse?)
     inner class FinalResponse(val updateResponse: UpdateResponse, val refreshResponse: BasicResponse)
 
-    private val compositeDisposable = CompositeDisposable()
     val saveEventObservable = MutableLiveData<ProfileSaveEvent>()
     val saveButtonStateObservable = MutableLiveData<SaveButtonState>()
     val emailValidationObservable = MutableLiveData<EmailInputValidationError>()

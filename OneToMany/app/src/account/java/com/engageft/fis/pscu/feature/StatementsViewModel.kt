@@ -17,7 +17,6 @@ import org.joda.time.DateTime
  * Copyright (c) 2018 Engage FT. All rights reserved.
  */
 class StatementsViewModel: BaseEngageViewModel() {
-    private val compositeDisposable = CompositeDisposable()
 
     val statementsObservable = MutableLiveData<List<DateTime>>()
     var dayOfMonthStatementAvailable = 0
