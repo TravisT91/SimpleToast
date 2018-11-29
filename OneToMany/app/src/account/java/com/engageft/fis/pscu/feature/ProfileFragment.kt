@@ -70,7 +70,7 @@ class ProfileFragment : BaseEngageFullscreenFragment() {
                 var message = StringUtils.concatenateFromList(messages, "\n\n")
                 showDialog(InformationDialogFragment.newLotusInstance(title = if (wasError) getString(R.string.PROFILE_ERROR_TITLE) else getString(R.string.PROFILE_SUCCESS_TITLE),
                         message = message,
-                        positiveButton = getString(R.string.PROFILE_SUCCESS_MESSAGE_OK)))
+                        buttonPositiveText = getString(R.string.PROFILE_SUCCESS_MESSAGE_OK)))
             }
         })
         profileViewModel.emailValidationObservable.observe(this, Observer { error ->
