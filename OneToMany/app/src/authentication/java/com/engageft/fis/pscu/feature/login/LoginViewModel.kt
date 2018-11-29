@@ -58,6 +58,7 @@ class LoginViewModel : BaseEngageViewModel() {
         DISMISS_DIALOG
     }
 
+    private lateinit var token: String
     private val compositeDisposable = CompositeDisposable()
 
     val navigationObservable = MutableLiveData<LoginNavigationEvent>()
@@ -180,32 +181,27 @@ class LoginViewModel : BaseEngageViewModel() {
     }
 
     fun onConfirmEmail() {
-        val authToken = EngageService.getInstance().authManager.authToken
-        authToken?.let { token ->
-            progressOverlayShownObservable.value = true
-            compositeDisposable.add(EngageService.getInstance().verificationEmailObservable(token)
-                    .subscribeOn(Schedulers.io())
-                    .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe({ response ->
-                        progressOverlayShownObservable.value = false
+        progressOverlayShownObservable.value = true
+        compositeDisposable.add(EngageService.getInstance().verificationEmailObservable(token)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe({ response ->
+                    progressOverlayShownObservable.value = false
 
-                        if (response.isSuccess) {
-                            dialogInfoObservable.value = LoginDialogInfo(dialogType = DialogInfo.DialogType.OTHER,
-                                    loginDialogType = LoginDialogInfo.LoginDialogType.EMAIL_VERIFICATION_SUCCESS)
-                        } else {
-                            dialogInfoObservable.value = LoginDialogInfo(
-                                    message = response.message,
-                                    dialogType = DialogInfo.DialogType.SERVER_ERROR)
-                        }
-                    }, { e ->
-                        progressOverlayShownObservable.value = false
-                        logout()
-                        handleThrowable(e)
-                    })
-            )
-        } ?: run {
-            dialogInfoObservable.value = LoginDialogInfo()
-        }
+                    if (response.isSuccess) {
+                        dialogInfoObservable.value = LoginDialogInfo(dialogType = DialogInfo.DialogType.OTHER,
+                                loginDialogType = LoginDialogInfo.LoginDialogType.EMAIL_VERIFICATION_SUCCESS)
+                    } else {
+                        dialogInfoObservable.value = LoginDialogInfo(
+                                message = response.message,
+                                dialogType = DialogInfo.DialogType.SERVER_ERROR)
+                    }
+                }, { e ->
+                    progressOverlayShownObservable.value = false
+                    logout()
+                    handleThrowable(e)
+                })
+        )
     }
 
     fun logout() {
@@ -271,6 +267,7 @@ class LoginViewModel : BaseEngageViewModel() {
     }
 
     private fun handleSuccessfulLoginResponse(loginResponse: LoginResponse) {
+        token = loginResponse.token
         // set the Get started flag to true after the successful login, so the Welcome screen doesn't get displayed again
         WelcomeSharedPreferencesRepo.applyHasSeenGetStarted(true)
 

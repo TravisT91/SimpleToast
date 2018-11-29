@@ -78,7 +78,9 @@ class LoginFragment : LotusFullScreenFragment() {
                 }
                 LoginViewModel.LoginNavigationEvent.ACCEPT_TERMS -> {
                     //TODO(aHashimi): https://engageft.atlassian.net/browse/SHOW-354
-                    0
+                    //TODO(aHashimi): this's here to bypass Accept terms until it's resolved
+                    activity!!.finish()
+                    R.id.action_loginFragment_to_authenticatedActivity
                 }
             }
             if (navDestinationId != 0) {
