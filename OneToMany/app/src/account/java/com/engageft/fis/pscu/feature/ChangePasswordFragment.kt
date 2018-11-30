@@ -1,9 +1,7 @@
 package com.engageft.fis.pscu.feature
 
 import android.os.Bundle
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
+import android.view.*
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.navigation.findNavController
@@ -36,10 +34,6 @@ class ChangePasswordFragment: LotusFullScreenFragment() {
         binding.apply {
             viewModel = changePasswordViewModel
 
-            updatePasswordButton.setOnClickListener {
-                changePasswordViewModel.updatePassword()
-            }
-
             newPasswordWithLabel1.addEditTextFocusChangeListener(View.OnFocusChangeListener { v, hasFocus ->
                 if (!hasFocus) {
                     changePasswordViewModel.validateNewPassword()
@@ -58,9 +52,11 @@ class ChangePasswordFragment: LotusFullScreenFragment() {
                 when (buttonState) {
                     ChangePasswordViewModel.UpdateButtonState.GONE -> {
                         binding.updatePasswordButton.visibility = View.GONE
+                        activity?.invalidateOptionsMenu()
                     }
                     ChangePasswordViewModel.UpdateButtonState.VISIBLE_ENABLED -> {
                         binding.updatePasswordButton.visibility = View.VISIBLE
+                        activity?.invalidateOptionsMenu()
                     }
                     else -> {}
                 }
@@ -121,5 +117,30 @@ class ChangePasswordFragment: LotusFullScreenFragment() {
         }
 
         return binding.root
+    }
+
+    override fun onResume() {
+        super.onResume()
+        setHasOptionsMenu(true)
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu?, inflater: MenuInflater?) {
+        inflater?.inflate(R.menu.change_password_action_menu, menu)
+        super.onCreateOptionsMenu(menu, inflater)
+    }
+
+    override fun onPrepareOptionsMenu(menu: Menu?) {
+        val updateMenuItem = menu!!.findItem(R.id.update)
+        updateMenuItem.isVisible = changePasswordViewModel.updateButtonStateObservable.value == ChangePasswordViewModel.UpdateButtonState.VISIBLE_ENABLED
+        super.onPrepareOptionsMenu(menu)
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem?): Boolean {
+        when(item?.itemId){
+            R.id.update -> run {
+                changePasswordViewModel.onUpdateClicked()
+            }
+        }
+        return super.onOptionsItemSelected(item)
     }
 }

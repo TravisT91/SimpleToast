@@ -37,8 +37,11 @@ class ChangePasswordViewModel: BaseEngageViewModel() {
     var updateButtonStateObservable = MutableLiveData<UpdateButtonState>()
 
     init {
+        updateButtonStateObservable.value = UpdateButtonState.GONE
+
         newPasswordErrorStateObservable.value = ErrorState.ERROR_NONE
         confirmPasswordErrorObservable.value = ErrorState.ERROR_NONE
+
         currentPassword.addOnPropertyChangedCallback(object : Observable.OnPropertyChangedCallback(){
             override fun onPropertyChanged(observable: Observable?, field: Int) {
                 validateUpdateButtonState()
@@ -82,7 +85,7 @@ class ChangePasswordViewModel: BaseEngageViewModel() {
         }
     }
 
-    fun updatePassword() {
+    fun onUpdateClicked() {
         if (isFormValid()) {
             if (EngageService.getInstance().authManager.isLoggedIn && !EngageService.getInstance().authManager.checkSecuritySession()) {
                 progressOverlayShownObservable.value = true

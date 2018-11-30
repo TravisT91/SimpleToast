@@ -119,8 +119,6 @@
         android:id="@+id/profileFragment"
         android:name="com.engageft.fis.pscu.feature.ProfileFragment"
         android:label="@string/fragment_title_profile" />
-
-        android:label="@string/fragment_title_change_security_questions"/>
     <fragment
         android:id="@+id/statementsFragment"
         android:name="com.engageft.fis.pscu.feature.StatementsFragment"
