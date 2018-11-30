@@ -143,8 +143,8 @@ class CardPinFragment : LotusFullScreenFragment() {
             pinInputField.inputText = ""
         }
 
-        for (listOfView in listOfImageViews) {
-            listOfView.background = drawable
+        for (imageView in listOfImageViews) {
+            imageView.background = drawable
         }
     }
 
