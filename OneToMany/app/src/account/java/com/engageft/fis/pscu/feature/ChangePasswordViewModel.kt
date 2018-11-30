@@ -22,24 +22,24 @@ class ChangePasswordViewModel: BaseEngageViewModel() {
         VISIBLE_ENABLED
     }
 
-    enum class PasswordValidationError {
-        MISMATCH,
-        INVALID,
-        VALID
+    enum class ErrorState {
+        ERROR_NONE,
+        ERROR_SET
     }
 
     var currentPassword: ObservableField<String> = ObservableField("")
     var newPassword: ObservableField<String> = ObservableField("")
     var confirmPassword: ObservableField<String> = ObservableField("")
 
-//    var currentPasswordError = MutableLiveData<Boolean>()
-    var newPasswordError = MutableLiveData<PasswordValidationError>()
-    var confirmPasswordError = MutableLiveData<PasswordValidationError>()
+    var newPasswordErrorStateObservable = MutableLiveData<ErrorState>()
+    var confirmPasswordErrorObservable = MutableLiveData<ErrorState>()
 
     var updateButtonStateObservable = MutableLiveData<UpdateButtonState>()
-    var passwordValidationErrorObservable = MutableLiveData<PasswordValidationError>()
 
     init {
+        newPasswordErrorStateObservable.value = ErrorState.ERROR_NONE
+        confirmPasswordErrorObservable.value = ErrorState.ERROR_NONE
+
         currentPassword.addOnPropertyChangedCallback(object : Observable.OnPropertyChangedCallback(){
             override fun onPropertyChanged(observable: Observable?, field: Int) {
                 validateUpdateButtonState()
@@ -47,35 +47,40 @@ class ChangePasswordViewModel: BaseEngageViewModel() {
         })
         newPassword.addOnPropertyChangedCallback(object : Observable.OnPropertyChangedCallback(){
             override fun onPropertyChanged(observable: Observable?, field: Int) {
+                if (newPasswordErrorStateObservable.value == ErrorState.ERROR_SET) {
+                    validateNewPassword()
+                }
                 validateUpdateButtonState()
             }
         })
         confirmPassword.addOnPropertyChangedCallback(object : Observable.OnPropertyChangedCallback(){
             override fun onPropertyChanged(observable: Observable?, field: Int) {
+                if (confirmPasswordErrorObservable.value == ErrorState.ERROR_SET) {
+                    validatePasswordMatch()
+                }
                 validateUpdateButtonState()
             }
         })
     }
-
-    // todo rename
-    fun isPasswordValid(): Boolean {
-        if (newPassword.get() == confirmPassword.get()) {
-            if (!isValidPassword(newPassword.get()!!)) {
-                passwordValidationErrorObservable.value = PasswordValidationError.INVALID
-                return false
-            }
-            // reset validation error when passwords are valid
-            passwordValidationErrorObservable.value = PasswordValidationError.VALID
-
-            return true
+    fun validateNewPassword() {
+        if (!newPassword.get()!!.isBlank() && !isValidPassword(newPassword.get()!!)) {
+            newPasswordErrorStateObservable.value = ErrorState.ERROR_SET
         } else {
-            passwordValidationErrorObservable.value = PasswordValidationError.MISMATCH
+            newPasswordErrorStateObservable.value = ErrorState.ERROR_NONE
+
         }
-        return false
+    }
+
+    fun validatePasswordMatch() {
+        if (confirmPassword.get()!! == newPassword.get()!!) {
+            confirmPasswordErrorObservable.value = ErrorState.ERROR_NONE
+        } else {
+            confirmPasswordErrorObservable.value = ErrorState.ERROR_SET
+        }
     }
 
     fun updatePassword() {
-        if (isPasswordValid()) {
+        if (isFormValid()) {
             if (EngageService.getInstance().authManager.isLoggedIn && !EngageService.getInstance().authManager.checkSecuritySession()) {
                 progressOverlayShownObservable.value = true
 
@@ -99,6 +104,15 @@ class ChangePasswordViewModel: BaseEngageViewModel() {
                 EngageService.getInstance().authManager.logout()
             }
         }
+    }
+
+    private fun isFormValid(): Boolean {
+        if (newPasswordErrorStateObservable.value == ErrorState.ERROR_NONE
+                && confirmPasswordErrorObservable.value == ErrorState.ERROR_NONE
+                && !currentPassword.get()!!.isBlank()) { // last check is redundant technically
+            return true
+        }
+        return false
     }
 
     private fun validateUpdateButtonState() {
