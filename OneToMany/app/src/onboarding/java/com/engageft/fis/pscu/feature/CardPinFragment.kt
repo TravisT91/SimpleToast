@@ -121,6 +121,13 @@ class CardPinFragment : LotusFullScreenFragment() {
                     else -> {}
                 }
             })
+
+            productCardViewModelDelegate.cardInfoModelObservable.observe(this@CardPinFragment, Observer { productCardModel ->
+                productCardModel.cardStatusText = getString(productCardModel.cardStatus.cardStatusStringRes())
+                binding.cardView.updateWithProductCardModel(productCardModel)
+            })
+
+            productCardViewModelDelegate.updateCardView()
         }
 
         return binding.root

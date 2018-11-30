@@ -25,9 +25,9 @@ open class BaseEngageViewModel: BaseViewModel() {
 
     fun handleUnexpectedErrorResponse(response: BasicResponse) {
         if (BuildConfig.DEBUG) {
-            dialogInfoObservable.value = DialogInfo(message = response.message)
+            dialogInfoObservable.postValue(DialogInfo(message = response.message))
         } else {
-            dialogInfoObservable.value = DialogInfo(dialogType = DialogInfo.DialogType.GENERIC_ERROR)
+            dialogInfoObservable.postValue(DialogInfo(dialogType = DialogInfo.DialogType.GENERIC_ERROR))
             Crashlytics.log(response.message)
         }
     }
@@ -35,18 +35,18 @@ open class BaseEngageViewModel: BaseViewModel() {
     fun handleThrowable(e: Throwable)  {
         when (e) {
             is UnknownHostException -> {
-                dialogInfoObservable.value = DialogInfo(dialogType = DialogInfo.DialogType.NO_INTERNET_CONNECTION)
+                dialogInfoObservable.postValue(DialogInfo(dialogType = DialogInfo.DialogType.NO_INTERNET_CONNECTION))
             }
             is NoConnectivityException -> {
-                dialogInfoObservable.value = DialogInfo(dialogType = DialogInfo.DialogType.NO_INTERNET_CONNECTION)
+                dialogInfoObservable.postValue(DialogInfo(dialogType = DialogInfo.DialogType.NO_INTERNET_CONNECTION))
             }
             is SocketTimeoutException -> {
-                dialogInfoObservable.value = DialogInfo(dialogType = DialogInfo.DialogType.CONNECTION_TIMEOUT)
+                dialogInfoObservable.postValue(DialogInfo(dialogType = DialogInfo.DialogType.CONNECTION_TIMEOUT))
             }
             // Add more specific exceptions here, if needed
             else -> {
                 if (BuildConfig.DEBUG) {
-                    dialogInfoObservable.value = DialogInfo(message = e.message)
+                    dialogInfoObservable.postValue(DialogInfo(message = e.message))
                     e.printStackTrace()
                 } else {
                     Crashlytics.logException(e)

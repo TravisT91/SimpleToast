@@ -2,10 +2,10 @@ package com.engageft.fis.pscu.feature
 
 import androidx.lifecycle.MutableLiveData
 import com.engageft.apptoolbox.util.isDigitsOnly
-import io.reactivex.android.schedulers.AndroidSchedulers
-import io.reactivex.schedulers.Schedulers
 import com.engageft.engagekit.EngageService
 import com.engageft.fis.pscu.config.EngageAppConfig
+import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.schedulers.Schedulers
 
 
 class CardPinViewModel: BaseEngageViewModel() {
@@ -22,6 +22,8 @@ class CardPinViewModel: BaseEngageViewModel() {
     init {
         cardPinStateObservable.value = CardPinState.ENTER_PIN
     }
+
+    val productCardViewModelDelegate = ProductCardViewDelegate(this)
 
     fun submit(pin: String) {
         if (pinEntered.length == EngageAppConfig.cardPinLength && pin.isDigitsOnly() && pin == pinEntered) {
