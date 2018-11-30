@@ -72,8 +72,9 @@
 
     <string name="change_password_title">App Password</string>
     <string name="change_password_requirement">Passwords must be at least 6 characters long, should contain at least one letter and one number and should not have been used by you in the past.</string>
-    <string name="change_password_error_message_invalid">Password is invalid.</string>
-    <string name="change_password_error_message_mismatch">Passwords do not match.</string>
+    <string name="change_password_error_message_invalid_1">Min 6 character(s)</string>
+    <string name="change_password_error_message_invalid_2">Min 1 number(s)</string>
+    <string name="change_password_error_message_mismatch">Passwords do not match</string>
     <string name="change_password_enter_current_password">Enter current password</string>
     <string name="change_password_enter_new_password">Enter new password</string>
     <string name="change_password_confirm_new_password">Confirm new password</string>

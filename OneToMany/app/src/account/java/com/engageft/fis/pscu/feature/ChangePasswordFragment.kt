@@ -65,7 +65,9 @@ class ChangePasswordFragment: LotusFullScreenFragment() {
             newPasswordErrorStateObservable.observe(this@ChangePasswordFragment, Observer {
                 when (it) {
                     ChangePasswordViewModel.ErrorState.ERROR_SET -> {
-                        binding.newPasswordWithLabel1.setErrorTexts(listOf(getString(R.string.change_password_error_message_invalid)))
+                        binding.newPasswordWithLabel1.setErrorTexts(listOf(
+                                getString(R.string.change_password_error_message_invalid_1),
+                                getString(R.string.change_password_error_message_invalid_2)))
                     }
                     ChangePasswordViewModel.ErrorState.ERROR_NONE -> {
                         binding.newPasswordWithLabel1.setErrorTexts(null)
