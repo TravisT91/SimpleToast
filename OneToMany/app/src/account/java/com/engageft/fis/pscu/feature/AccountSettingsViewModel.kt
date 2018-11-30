@@ -14,8 +14,7 @@ import com.engageft.engagekit.EngageService
 class AccountSettingsViewModel : BaseEngageViewModel() {
     enum class AccountSettingsNavigation {
         NONE,
-        LOGOUT,
-        CHANGE_PASSWORD
+        LOGOUT
     }
 
     val navigationObservable = MutableLiveData<AccountSettingsNavigation>()
