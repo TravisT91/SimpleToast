@@ -1,7 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<resources>
-    <string name="card_pin_screen_title">Card PIN</string>
-    <string name="card_pin_choose_description">Choose your PIN</string>
-    <string name="card_pin_choose_confirmation">Confirm your PIN</string>
-    <string name="card_pin_mismatch_error_message">PINs do not match, please try again </string>
-</resources>
