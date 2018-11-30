@@ -7,7 +7,6 @@ import io.reactivex.schedulers.Schedulers
 import com.engageft.engagekit.EngageService
 import com.engageft.fis.pscu.config.EngageAppConfig
 
-
 class CardPinViewModel: BaseEngageViewModel() {
 
     enum class CardPinState {

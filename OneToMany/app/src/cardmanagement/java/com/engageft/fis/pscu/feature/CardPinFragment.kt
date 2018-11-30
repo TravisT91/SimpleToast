@@ -12,14 +12,13 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.navigation.findNavController
 import com.engageft.apptoolbox.BaseViewModel
-import com.engageft.apptoolbox.LotusFullScreenFragment
 import com.engageft.apptoolbox.view.InformationDialogFragment
 import com.engageft.fis.pscu.R
 import com.engageft.fis.pscu.config.EngageAppConfig
 import com.engageft.fis.pscu.databinding.FragmentCardPinBinding
 import com.redmadrobot.inputmask.MaskedTextChangedListener
 
-class CardPinFragment : LotusFullScreenFragment() {
+class CardPinFragment : BaseEngageFullscreenFragment() {
 
     private lateinit var binding: FragmentCardPinBinding
     private lateinit var cardPinViewModel: CardPinViewModel
