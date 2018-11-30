@@ -6,6 +6,10 @@ import com.engageft.apptoolbox.BaseViewModel
 import com.engageft.apptoolbox.BuildConfig
 import com.engageft.engagekit.rest.exception.NoConnectivityException
 import com.ob.ws.dom.BasicResponse
+import io.reactivex.Observable
+import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.disposables.Disposable
+import io.reactivex.schedulers.Schedulers
 import java.net.SocketTimeoutException
 import java.net.UnknownHostException
 
@@ -53,4 +57,31 @@ open class BaseEngageViewModel: BaseViewModel() {
         }
 
     }
+}
+
+inline fun <reified ExpectedClass> Observable<BasicResponse>.subscribeWithProgressAndDefaultErrorHandling(
+        vm: BaseEngageViewModel,
+        crossinline onNext: (ExpectedClass) -> Unit,
+        noinline onError: ((e: Throwable) -> Unit)? = null,
+        noinline onComplete: (() -> Unit?)? = null) : Disposable {
+    return this
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe(
+                    {
+                        if(it.isSuccess && it is ExpectedClass){
+                            onNext(it)
+                        } else{
+                            vm.handleUnexpectedErrorResponse(it)
+                        }
+                    },
+                    {
+                        vm.progressOverlayShownObservable.value = false
+                        vm.handleThrowable(it)
+                        onError?.invoke(it)
+                    },
+                    {
+                        vm.progressOverlayShownObservable.value = false
+                        onComplete?.invoke()
+                    })
 }

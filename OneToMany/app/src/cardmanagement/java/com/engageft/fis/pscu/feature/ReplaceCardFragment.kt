@@ -33,20 +33,10 @@ class ReplaceCardFragment : BaseEngageFullscreenFragment() {
         val binding = FragmentReplaceCardBinding.inflate(inflater,container,false).apply {
 
             palette = Palette
+
             replaceCardViewModel =  (createViewModel() as? ReplaceCardViewModel)?.apply {
-                replacementRequestStatus.observe(this@ReplaceCardFragment, Observer {
-                    when(it){
-                        ReplaceCardViewModel.ReplacementRequestStatus.PROCESSING -> progressOverlayDelegate.showProgressOverlay()
-                        ReplaceCardViewModel.ReplacementRequestStatus.SUCCESS -> {
-                            progressOverlayDelegate.dismissProgressOverlay()
-                            showSuccessDialog()
-                        }
-                        ReplaceCardViewModel.ReplacementRequestStatus.FAILED -> {
-                            progressOverlayDelegate.dismissProgressOverlay()
-                        }
-                        null -> {}
-                    }
-                })
+                val successObserver = Observer<Boolean> { if (it) showSuccessDialog() }
+                replacementRequestIsSuccess.observe(this@ReplaceCardFragment, successObserver)
             }
 
             title.text = StringUtils.applyTypefaceAndColorToSubString(

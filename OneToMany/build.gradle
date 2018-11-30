@@ -15,6 +15,8 @@ buildscript {
         appCompatVersion = "1.0.0"
         supportDesignVersion = "1.0.0"
         navigationVersion = '1.0.0-alpha07'
+        rxAndroidVersion = "2.1.0"
+        rxJavaVersion = "2.2.0"
 
         heapVersion = "0.7.5"
 
