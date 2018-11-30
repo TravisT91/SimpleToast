@@ -14,9 +14,6 @@
     <string name="login_preview_wait_message">Please wait while we create a preview account for you.\u0020\u0020This may take a minute.</string>
     <string name="login_test_switch">Test</string>
 
-    <!--Login error messages-->
-    <string name="error_message_invalid_credentials">Invalid Credentials</string>
-
     <!-- email confirmation -->
     <string name="login_confirm_email_alert_title">Email Verification</string>
     <string name="login_confirm_email_alert_message">You must confirm your email address before you can continue.</string>
