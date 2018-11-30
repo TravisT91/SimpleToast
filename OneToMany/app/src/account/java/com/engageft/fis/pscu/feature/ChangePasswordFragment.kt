@@ -14,7 +14,7 @@ import com.engageft.fis.pscu.databinding.FragmentChangePasswordBinding
 /**
  * ChangePasswordFragment
  * <p>
- * ViewModel for changing password Screen.
+ * Screen to change password.
  * </p>
  * Created by Atia Hashimi on 11/13/18.
  * Copyright (c) 2018 Engage FT. All rights reserved.
@@ -58,7 +58,6 @@ class ChangePasswordFragment: LotusFullScreenFragment() {
                         binding.updatePasswordButton.visibility = View.VISIBLE
                         activity?.invalidateOptionsMenu()
                     }
-                    else -> {}
                 }
             })
 
@@ -72,7 +71,6 @@ class ChangePasswordFragment: LotusFullScreenFragment() {
                     ChangePasswordViewModel.ErrorState.ERROR_NONE -> {
                         binding.newPasswordWithLabel1.setErrorTexts(null)
                     }
-                    else -> {}
                 }
             })
 
