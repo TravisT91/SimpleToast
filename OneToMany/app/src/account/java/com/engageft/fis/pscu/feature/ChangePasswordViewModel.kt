@@ -3,8 +3,8 @@ package com.engageft.fis.pscu.feature
 import androidx.databinding.Observable
 import androidx.databinding.ObservableField
 import androidx.lifecycle.MutableLiveData
-import com.engageft.apptoolbox.util.isValidPassword
 import com.engageft.engagekit.EngageService
+import com.engageft.fis.pscu.feature.utils.isValidPassword
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 
@@ -39,7 +39,6 @@ class ChangePasswordViewModel: BaseEngageViewModel() {
     init {
         newPasswordErrorStateObservable.value = ErrorState.ERROR_NONE
         confirmPasswordErrorObservable.value = ErrorState.ERROR_NONE
-
         currentPassword.addOnPropertyChangedCallback(object : Observable.OnPropertyChangedCallback(){
             override fun onPropertyChanged(observable: Observable?, field: Int) {
                 validateUpdateButtonState()
@@ -49,6 +48,10 @@ class ChangePasswordViewModel: BaseEngageViewModel() {
             override fun onPropertyChanged(observable: Observable?, field: Int) {
                 if (newPasswordErrorStateObservable.value == ErrorState.ERROR_SET) {
                     validateNewPassword()
+                }
+                // must update validation of Confirm Password field
+                if (confirmPassword.get()!!.isNotEmpty()) {
+                    validatePasswordMatch()
                 }
                 validateUpdateButtonState()
             }
@@ -62,12 +65,12 @@ class ChangePasswordViewModel: BaseEngageViewModel() {
             }
         })
     }
+
     fun validateNewPassword() {
-        if (!newPassword.get()!!.isBlank() && !isValidPassword(newPassword.get()!!)) {
+        if (newPassword.get()!!.isNotEmpty() && !newPassword.get()!!.isValidPassword()) {
             newPasswordErrorStateObservable.value = ErrorState.ERROR_SET
         } else {
             newPasswordErrorStateObservable.value = ErrorState.ERROR_NONE
-
         }
     }
 
@@ -109,7 +112,7 @@ class ChangePasswordViewModel: BaseEngageViewModel() {
     private fun isFormValid(): Boolean {
         if (newPasswordErrorStateObservable.value == ErrorState.ERROR_NONE
                 && confirmPasswordErrorObservable.value == ErrorState.ERROR_NONE
-                && !currentPassword.get()!!.isBlank()) { // last check is redundant technically
+                && currentPassword.get()!!.isNotEmpty()) { // last check is redundant technically
             return true
         }
         return false
