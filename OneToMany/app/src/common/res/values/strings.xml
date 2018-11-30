@@ -54,6 +54,11 @@
     <string name="ORDINAL_ND">nd</string>
     <!-- End DateFormat strings for localization -->
 
+    <!-- Common Dialog Strings -->
+    <string name="YES">YES</string>
+    <string name="NO">NO</string>
+    <string name="OK">OK</string>
+
 
     <!--TODO(jhutchins): Refactor PayPlanUtils: SHOW-388-->
     <string name="PAY_PLAN_ANNUAL">Yearly</string>

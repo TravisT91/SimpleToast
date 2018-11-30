@@ -9,14 +9,14 @@ import com.ob.ws.dom.LoginResponse
 import io.reactivex.disposables.CompositeDisposable
 import utilGen1.StringUtils
 
-class ReplaceCardViewModel : BaseEngageViewModel() {
+class ReportLostStolenCardViewModel : BaseEngageViewModel() {
     val compositeDisposable = CompositeDisposable()
 
     var address: String = ""
 
-    val replacementRequestIsSuccess = MutableLiveData<Boolean>()
+    val lostStolenReportedSuccess = MutableLiveData<Boolean>()
 
-    fun onOrderReplacementClicked(){
+    fun onReportLostStolenClicked(){
         progressOverlayShownObservable.value = true
         val token = EngageService.getInstance().storageManager.loginResponse.token
         val cardId = EngageService.getInstance().storageManager.currentCard.debitCardId
@@ -24,10 +24,9 @@ class ReplaceCardViewModel : BaseEngageViewModel() {
             put("token", token)
             put("cardId", cardId.toString())
         }
-        compositeDisposable.add(
-                engageApi().postReplaceCard(params)
-                        .subscribeWithProgressAndDefaultErrorHandling<BasicResponse>(
-                        this, { replacementRequestIsSuccess.value = true }))
+        compositeDisposable.add(engageApi().postLostStolenCard(params)
+                .subscribeWithProgressAndDefaultErrorHandling<BasicResponse>(
+                        this, { lostStolenReportedSuccess.value = true }))
     }
 
     init{
@@ -46,7 +45,7 @@ class ReplaceCardViewModel : BaseEngageViewModel() {
     }
 
     override fun onCleared() {
-        compositeDisposable.dispose()
+        compositeDisposable.clear()
         super.onCleared()
     }
 }

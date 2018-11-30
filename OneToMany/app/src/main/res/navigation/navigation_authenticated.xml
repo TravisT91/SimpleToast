@@ -26,12 +26,25 @@
             app:popEnterAnim="@anim/nav_pop_enter_anim"
             app:popExitAnim="@anim/nav_pop_exit_anim">
         </action>
+        <action
+            android:id="@+id/action_dashboard_fragment_to_reportLostStolenCardFragment"
+            app:destination="@id/reportLostStolenCardFragment"
+            app:enterAnim="@anim/nav_enter_anim"
+            app:exitAnim="@anim/nav_exit_anim"
+            app:popEnterAnim="@anim/nav_pop_enter_anim"
+            app:popExitAnim="@anim/nav_pop_exit_anim">
+        </action>
     </fragment>
 
     <fragment
         android:id="@+id/replaceCardFragment"
         android:name="com.engageft.fis.pscu.feature.ReplaceCardFragment"
         android:label="@string/fragment_title_replace_card"/>
+
+    <fragment
+        android:id="@+id/reportLostStolenCardFragment"
+        android:name="com.engageft.fis.pscu.feature.ReportLostStolenCardFragment"
+        android:label="@string/fragment_title_report_lost_stolen_card"/>
 
     <fragment
         android:id="@+id/budgets_fragment"

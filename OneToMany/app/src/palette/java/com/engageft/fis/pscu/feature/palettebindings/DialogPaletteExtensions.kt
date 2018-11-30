@@ -17,16 +17,16 @@ import com.engageft.fis.pscu.feature.Palette
  * Copyright (c) 2018 Engage FT. All rights reserved.
  */
 
-fun InformationDialogFragment.applyPaletteStyles(context: Context){
+fun InformationDialogFragment.applyPaletteStyles(context: Context) {
     this.apply {
-        titleTextSizeAndFont = getTextSizeAndTypefaceFromParisStyle(context,Palette.Title3Loud)
-        messageTextSizeAndFont = getTextSizeAndTypefaceFromParisStyle(context,Palette.Body)
-        positiveButtonTextSizeAndFont = getTextSizeAndTypefaceFromParisStyle(context,Palette.FootnoteLoud)
-        negativeButtonTextSizeAndFont = getTextSizeAndTypefaceFromParisStyle(context,Palette.FootnoteLoud)
+        titleTextSizeAndFont = getTextSizeAndTypefaceFromParisStyle(context, Palette.Title3Loud)
+        messageTextSizeAndFont = getTextSizeAndTypefaceFromParisStyle(context, Palette.Body)
+        positiveButtonTextSizeAndFont = getTextSizeAndTypefaceFromParisStyle(context, Palette.FootnoteMedium)
+        negativeButtonTextSizeAndFont = getTextSizeAndTypefaceFromParisStyle(context, Palette.FootnoteMedium)
         titleTextColor = ContextCompat.getColor(context, R.color.structure6)
         messageTextColor = ContextCompat.getColor(context, R.color.structure5)
         positiveButtonTextColor = Palette.primaryColor
-        negativeButtonTextColor = Palette.errorColor
+        negativeButtonTextColor = Palette.primaryColor
     }
 }
 

@@ -55,7 +55,7 @@ class ReplaceCardFragment : BaseEngageFullscreenFragment() {
         return binding.root
     }
 
-    fun showSuccessDialog(){
+    private fun showSuccessDialog(){
         val dialog = InformationDialogFragment.newInstance(
                 title = getString(R.string.REPLACE_CARD_REPLACEMENT_ORDERED_TITLE),
                 message = getString(R.string.REPLACE_CARD_REPLACEMENT_ORDERED_MESSAGE),

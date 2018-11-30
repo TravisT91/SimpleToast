@@ -21,5 +21,6 @@
     <string name="fragment_title_change_security_questions">Security questions</string>
     <string name="fragment_title_profile">Profile</string>
     <string name="fragment_title_replace_card">Replace card</string>
+    <string name="fragment_title_report_lost_stolen_card">Report lost/stolen</string>
 
 </resources>

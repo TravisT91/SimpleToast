@@ -24,17 +24,26 @@ abstract class BaseEngageFullscreenFragment : LotusFullScreenFragment() {
                 it.dialogInfoObservable.observe(this, Observer {
                     when (it.dialogType) {
                         DialogInfo.DialogType.GENERIC_ERROR -> {
-                            showDialog(infoDialogGenericErrorTitleMessageConditionalNewInstance(context!!, it).apply { applyPaletteStyles(context!!) })
+                            showDialog(infoDialogGenericErrorTitleMessageConditionalNewInstance(
+                                    context!!, it)
+                                    .apply { applyPaletteStyles(this@BaseEngageFullscreenFragment.context!!) })
                         }
                         DialogInfo.DialogType.SERVER_ERROR -> {
-                            showDialog(infoDialogGenericErrorTitleMessageConditionalNewInstance(context!!, it).apply { applyPaletteStyles(context!!) })
+                            showDialog(infoDialogGenericErrorTitleMessageConditionalNewInstance(
+                                    context!!, it)
+                                    .apply { applyPaletteStyles(this@BaseEngageFullscreenFragment.context!!) })
                         }
                         DialogInfo.DialogType.NO_INTERNET_CONNECTION -> {
                             showDialog(infoDialogGenericErrorTitleMessageNewInstance(
-                                    context!!, message = getString(R.string.alert_error_message_no_internet_connection)).apply { applyPaletteStyles(context!!) })
+                                    context!!,
+                                    message = getString(R.string.alert_error_message_no_internet_connection))
+                                    .apply { applyPaletteStyles(this@BaseEngageFullscreenFragment.context!!) })
                         }
                         DialogInfo.DialogType.CONNECTION_TIMEOUT -> {
-                            showDialog(infoDialogGenericErrorTitleMessageNewInstance(context!!, getString(R.string.alert_error_message_connection_timeout)).apply { applyPaletteStyles(context!!) })
+                            showDialog(infoDialogGenericErrorTitleMessageNewInstance(
+                                    context!!,
+                                    getString(R.string.alert_error_message_connection_timeout))
+                                    .apply { applyPaletteStyles(this@BaseEngageFullscreenFragment.context!!) })
                         }
                         DialogInfo.DialogType.OTHER -> {
                             // Do nothing

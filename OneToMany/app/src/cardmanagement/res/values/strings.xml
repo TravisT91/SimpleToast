@@ -18,4 +18,14 @@
     <string name="REPLACE_CARD_REPLACEMENT_ORDERED_TITLE">Replacement ordered</string>
     <string name="REPLACE_CARD_REPLACEMENT_ORDERED_MESSAGE">Your replacement card has been ordered. It will arrive with 5–7 days.</string>
 
+    <!-- Lost/Stolen Card -->
+    <string name="LOST_STOLEN_CARD_REPLACEMENT_HEADER">We will automatically send you a new card.</string>
+    <string name="LOST_STOLEN_CARD_REPLACEMENT_HEADER_SUBSTRING">new card.</string>
+    <string name="LOST_STOLEN_CARD_ADDRESS_HEADER">Your old card will be canceled and a new card, with a new number will be sent to</string>
+    <string name="LOST_STOLEN_CARD_REPORT_LOST_STOLEN">Report lost/stolen</string>
+    <string name="LOST_STOLEN_CARD_REPLACEMENT_CONFIRMATION_MESSAGE">This will cancel your current card and can\'t be undone.\nDo you want to continue?</string>
+    <string name="LOST_STOLEN_CARD_NEW_CARD_ORDERED">New card ordered</string>
+    <string name="LOST_STOLEN_CARD_NEW_CARD_ORDERED_MESSAGE">Your new card has been ordered. It will arrive within 5–7 days.</string>
+
+
 </resources>
