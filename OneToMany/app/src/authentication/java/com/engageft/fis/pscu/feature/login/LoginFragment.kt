@@ -15,18 +15,16 @@ import androidx.navigation.findNavController
 import androidx.transition.AutoTransition
 import androidx.transition.TransitionManager
 import com.engageft.apptoolbox.BaseViewModel
-import com.engageft.apptoolbox.LotusFullScreenFragment
 import com.engageft.apptoolbox.ViewUtils.newLotusInstance
 import com.engageft.apptoolbox.view.InformationDialogFragment
 import com.engageft.engagekit.utils.DeviceUtils
 import com.engageft.fis.pscu.R
 import com.engageft.fis.pscu.databinding.FragmentLoginBinding
+import com.engageft.fis.pscu.feature.BaseEngageFullscreenFragment
 import com.engageft.fis.pscu.feature.DialogInfo
 import com.engageft.fis.pscu.feature.EasterEggGestureDetector
 import com.engageft.fis.pscu.feature.EasterEggGestureListener
 import com.engageft.fis.pscu.feature.Palette
-import com.engageft.fis.pscu.feature.infoDialogGenericErrorTitleMessageConditionalNewInstance
-import com.engageft.fis.pscu.feature.infoDialogGenericErrorTitleMessageNewInstance
 import com.engageft.fis.pscu.feature.infoDialogSimpleMessageNoTitle
 
 /**
@@ -37,7 +35,7 @@ import com.engageft.fis.pscu.feature.infoDialogSimpleMessageNoTitle
  * Created by joeyhutchins on 8/24/18.
  * Copyright (c) 2018 Engage FT. All rights reserved.
  */
-class LoginFragment : LotusFullScreenFragment() {
+class LoginFragment : BaseEngageFullscreenFragment() {
     private lateinit var constraintSet: ConstraintSet
     private lateinit var contentConstraintSet: ConstraintSet
     private lateinit var binding: FragmentLoginBinding
@@ -156,19 +154,6 @@ class LoginFragment : LotusFullScreenFragment() {
 
         vm.dialogInfoObservable.observe(this, Observer { dialogInfo ->
             when (dialogInfo.dialogType) {
-                DialogInfo.DialogType.GENERIC_ERROR -> {
-                    showDialog(infoDialogGenericErrorTitleMessageConditionalNewInstance(context!!, dialogInfo))
-                }
-                DialogInfo.DialogType.SERVER_ERROR -> {
-                    showDialog(infoDialogGenericErrorTitleMessageConditionalNewInstance(context!!, dialogInfo))
-                }
-                DialogInfo.DialogType.NO_INTERNET_CONNECTION -> {
-                    showDialog(infoDialogGenericErrorTitleMessageNewInstance(
-                            context!!, message = getString(R.string.alert_error_message_no_internet_connection)))
-                }
-                DialogInfo.DialogType.CONNECTION_TIMEOUT -> {
-                    showDialog(infoDialogGenericErrorTitleMessageNewInstance(context!!, getString(R.string.alert_error_message_connection_timeout)))
-                }
                 DialogInfo.DialogType.OTHER -> {
                     when ((dialogInfo as LoginDialogInfo).loginDialogType) {
 
