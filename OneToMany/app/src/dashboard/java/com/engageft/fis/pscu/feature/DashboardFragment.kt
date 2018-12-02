@@ -25,6 +25,7 @@ import com.engageft.apptoolbox.view.ProductCardModel
 import com.engageft.apptoolbox.view.ProductCardModelCardStatus
 import com.engageft.fis.pscu.R
 import com.engageft.fis.pscu.databinding.FragmentDashboardBinding
+import com.engageft.fis.pscu.feature.authentication.AuthenticationDialogFragment
 import com.google.android.material.tabs.TabLayout
 import com.ob.ws.dom.utility.TransactionInfo
 import eightbitlab.com.blurview.RenderScriptBlur
@@ -460,6 +461,7 @@ class DashboardFragment : LotusFullScreenFragment(), DashboardExpandableView.Das
             //val dialogFragment = PasswordAuthenticationDialogFragment.newInstance(AUTHENTICATION_REVEAL_CARD_DIALOG_TAG, getString(R.string.BUTTON_CANCEL))
             //dialogFragment.show(childFragmentManager, AUTHENTICATION_REVEAL_CARD_DIALOG_TAG)
             // TODO(kurt): hide this behind password auth, once we have PasswordAuthDialogFragment (SHOW-376)
+            val authDialogFragment = AuthenticationDialogFragment.newInstance()
             dashboardViewModel.showCardDetails()
         }
     }
