@@ -70,4 +70,16 @@
     <string name="statements_description">Select a statement to view, save, or send.</string>
     <string name="statements_description_substring">view, save, or send.</string>
     <string name="statements_subDescription_format">Statements for last month are not available until the %s of next month.</string>
+
+    <string name="change_password_title">App Password</string>
+    <string name="change_password_requirement">Passwords must be at least 6 characters long, should contain at least one letter and one number and should not have been used by you in the past.</string>
+    <string name="change_password_error_message_invalid_1">Min 6 character(s)</string>
+    <string name="change_password_error_message_invalid_2">Min 1 number(s)</string>
+    <string name="change_password_error_message_mismatch">Passwords do not match</string>
+    <string name="change_password_enter_current_password">Enter current password</string>
+    <string name="change_password_enter_new_password">Enter new password</string>
+    <string name="change_password_confirm_new_password">Confirm new password</string>
+    <string name="change_password_update_button">Update</string>
+
+
 </resources>
