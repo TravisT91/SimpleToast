@@ -28,7 +28,7 @@
     <string name="SECURITY_QUESTIONS_LIST_LABEL_1">Question 1</string>
     <string name="SECURITY_QUESTIONS_LIST_LABEL_2">Question 2</string>
     <string name="SECURITY_QUESTIONS_ANSWER_LABEL">Answer</string>
-    <string name="SECURITY_QUESTIONS_BUTTON_SAVE">Save</string>
+    <string name="SECURITY_QUESTIONS_BUTTON_SAVE">@string/save</string>
     <string name="SECURITY_QUESTIONS_LIST_TITLE">Select a question from the list below.</string>
     <string name="SECURITY_QUESTIONS_LIST_SUBTITLE">You can change this at any time.</string>
 
@@ -36,7 +36,7 @@
     <string name="SECURITY_QUESTIONS_SUCCESS_MESSAGE_CHANGE">You have successfully changed your security questions.</string>
     <string name="SECURITY_QUESTIONS_SUCCESS_MESSAGE_CREATE">You have successfully set your security questions.</string>
     <string name="SECURITY_QUESTIONS_SUCCESS_MESSAGE_OK">Ok</string>
-    <string name="SECURITY_QUESTIONS_ACTION_SAVE">Save</string>
+    <string name="SECURITY_QUESTIONS_ACTION_SAVE">@string/save</string>
 
 
     <string name="PROFILE_LEGAL_NAME">Legal name</string>
@@ -59,7 +59,7 @@
     <string name="PROFILE_SUCCESS_MESSAGE_CHANGE_PHONE">You have successfully changed your phone number.</string>
     <string name="PROFILE_SUCCESS_MESSAGE_CHANGE_ADDRESS">You have successfully changed your address.</string>
     <string name="PROFILE_SUCCESS_MESSAGE_OK">Ok</string>
-    <string name="PROFILE_ACTION_SAVE">Save</string>
+    <string name="PROFILE_ACTION_SAVE">@string/save</string>
 
     <string name="STATEMENT_FILTER_URL">%1$s/login/sso?token=%2$s&amp;redirect_to=/account/statements?filter=%3$s-%4$s&amp;embedded=ios</string>
     <string name="statements_screen_title">Statements</string>
@@ -81,5 +81,13 @@
     <string name="change_password_confirm_new_password">Confirm new password</string>
     <string name="change_password_update_button">Update</string>
 
+    <!-- account notifications -->
+    <string name="account_notifications_save_button">@string/save</string>
+    <string name="account_notifications_screen_title">Notifications</string>
+    <string name="account_notifications_screen_description">For a better experience, we recommend leaving push notifications ON.</string>
+    <string name="account_notifications_screen_footer">U+002AStandard text message rates, fees, and charges apply.</string>
+    <string name="account_notifications_push">U+002AStandard text message rates, fees, and charges apply.</string>
+    <string name="account_notifications_sms">SMS/Text AlertsU+002A</string>
+    <string name="account_notifications_email">Email Notifications</string>
 
 </resources>

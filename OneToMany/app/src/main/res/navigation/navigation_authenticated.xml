@@ -44,7 +44,7 @@
         android:id="@+id/account_fragment"
         android:name="com.engageft.fis.pscu.feature.AccountSettingsFragment"
         android:label="@string/fragment_title_account"
-        tools:layout="@layout/fragment_account">
+        tools:layout="@layout/fragment_account_notifications">
         <argument
             android:name="@string/navigation_override_up"
             android:defaultValue="true" />
@@ -63,6 +63,9 @@
         <action
             android:id="@+id/action_account_fragment_to_changePasswordFragment"
             app:destination="@id/changePasswordFragment" />
+        <action
+            android:id="@+id/action_account_fragment_to_accountNotificationsFragment"
+            app:destination="@id/accountNotificationsFragment" />
     </fragment>
     <fragment
         android:id="@+id/goalAdd1Fragment"
@@ -135,6 +138,10 @@
         android:id="@+id/changePasswordFragment"
         android:name="com.engageft.fis.pscu.feature.ChangePasswordFragment"
         android:label="@string/change_password_title" />
+    <fragment
+        android:id="@+id/accountNotificationsFragment"
+        android:name="com.engageft.fis.pscu.feature.AccountNotificationsFragment"
+        android:label="@string/account_notifications_screen_title" />
 
 
 </navigation>
