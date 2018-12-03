@@ -3,7 +3,10 @@ package com.engageft.fis.pscu.feature
 import android.graphics.drawable.Drawable
 import android.os.Bundle
 import android.os.Handler
-import android.view.*
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
+import android.view.WindowManager
 import android.widget.ImageView
 import androidx.annotation.ColorInt
 import androidx.core.content.ContextCompat
@@ -16,6 +19,7 @@ import com.engageft.apptoolbox.view.InformationDialogFragment
 import com.engageft.fis.pscu.R
 import com.engageft.fis.pscu.config.EngageAppConfig
 import com.engageft.fis.pscu.databinding.FragmentCardPinBinding
+import com.engageft.fis.pscu.feature.utils.cardStatusStringRes
 import com.redmadrobot.inputmask.MaskedTextChangedListener
 
 class CardPinFragment : BaseEngageFullscreenFragment() {

@@ -24,6 +24,7 @@ import com.engageft.apptoolbox.view.InformationDialogFragment
 import com.engageft.apptoolbox.view.ProductCardModel
 import com.engageft.fis.pscu.R
 import com.engageft.fis.pscu.databinding.FragmentDashboardBinding
+import com.engageft.fis.pscu.feature.utils.cardStatusStringRes
 import com.google.android.material.tabs.TabLayout
 import com.ob.ws.dom.utility.TransactionInfo
 import eightbitlab.com.blurview.RenderScriptBlur
