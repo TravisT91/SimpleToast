@@ -40,7 +40,10 @@ import java.math.BigDecimal
  * Created by joeyhutchins on 8/24/18.
  * Copyright (c) 2018 Engage FT. All rights reserved.
  */
-class DashboardFragment : LotusFullScreenFragment(), DashboardExpandableView.DashboardExpandableViewListener, TransactionsAdapter.OnTransactionsAdapterListener {
+class DashboardFragment : LotusFullScreenFragment(),
+        DashboardExpandableView.DashboardExpandableViewListener,
+        TransactionsAdapter.OnTransactionsAdapterListener,
+        AuthenticationDialogFragment.AuthenticationDialogFragmentListener {
     private lateinit var binding: FragmentDashboardBinding
 
     private lateinit var dashboardViewModel: DashboardViewModel
@@ -461,8 +464,11 @@ class DashboardFragment : LotusFullScreenFragment(), DashboardExpandableView.Das
             //val dialogFragment = PasswordAuthenticationDialogFragment.newInstance(AUTHENTICATION_REVEAL_CARD_DIALOG_TAG, getString(R.string.BUTTON_CANCEL))
             //dialogFragment.show(childFragmentManager, AUTHENTICATION_REVEAL_CARD_DIALOG_TAG)
             // TODO(kurt): hide this behind password auth, once we have PasswordAuthDialogFragment (SHOW-376)
-            val authDialogFragment = AuthenticationDialogFragment.newInstance()
-            dashboardViewModel.showCardDetails()
+//            val authDialogFragment = AuthenticationDialogFragment.newInstance("Please authenticate to change your PIN", () ->
+//                dashboardViewModel.showCardDetails()
+//            )
+
+            //authDialogFragment.show(childFragmentManager, "Auth Dialog")
         }
     }
 
@@ -494,5 +500,15 @@ class DashboardFragment : LotusFullScreenFragment(), DashboardExpandableView.Das
     override fun onTransactionInfoSelected(transactionInfo: TransactionInfo) {
         // TODO(kurt): Pass transactionInfo to TransactionDetailFragment through navigation bundle (see onMoveMoney(), above)
         Toast.makeText(activity, "Transaction selected: " + transactionInfo.store, Toast.LENGTH_SHORT).show()
+    }
+
+    // AuthenticationDialogFragment.AuthenticationDialogFragmentListener
+    override fun onAuthenticationSuccess() {
+
+    }
+
+    // AuthenticationDialogFragment.AuthenticationDialogFragmentListener
+    override fun onAuthenticationCancelled() {
+        // intentionally left blank
     }
 }
