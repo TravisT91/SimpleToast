@@ -15,7 +15,6 @@ import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.navigation.findNavController
-import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.engageft.apptoolbox.BaseViewModel
 import com.engageft.apptoolbox.LotusActivity
@@ -23,9 +22,9 @@ import com.engageft.apptoolbox.LotusFullScreenFragment
 import com.engageft.apptoolbox.ViewUtils.newLotusInstance
 import com.engageft.apptoolbox.view.InformationDialogFragment
 import com.engageft.apptoolbox.view.ProductCardModel
-import com.engageft.apptoolbox.view.ProductCardModelCardStatus
 import com.engageft.fis.pscu.R
 import com.engageft.fis.pscu.databinding.FragmentDashboardBinding
+import com.engageft.fis.pscu.feature.utils.cardStatusStringRes
 import com.google.android.material.tabs.TabLayout
 import com.ob.ws.dom.utility.TransactionInfo
 import eightbitlab.com.blurview.RenderScriptBlur
@@ -46,7 +45,7 @@ class DashboardFragment : LotusFullScreenFragment(), DashboardExpandableView.Das
     private lateinit var dashboardViewModel: DashboardViewModel
 
     private val cardModelObserver = Observer<ProductCardModel> { updateForCardModel(it!!) }
-    private val cardStateObserver = Observer<DashboardViewModel.CardState> { updateForCardState(it!!) }
+    private val cardStateObserver = Observer<ProductCardViewCardState> { updateForCardState(it!!) }
 
     private val spendingBalanceObserver = Observer<BigDecimal> { updateSpendingBalance(it) }
     private val spendingBalanceStateObserver = Observer<DashboardBalanceState> { updateSpendingBalanceState(it!!) }
@@ -171,7 +170,7 @@ class DashboardFragment : LotusFullScreenFragment(), DashboardExpandableView.Das
     }
 
     private fun updateForCardModel(productCardModel: ProductCardModel) {
-        productCardModel.cardStatusText = cardStatusStringFromCardStatus(productCardModel.cardStatus)
+        productCardModel.cardStatusText = getString(productCardModel.cardStatus.cardStatusStringRes())
         binding.dashboardExpandableView.cardView.updateWithProductCardModel(productCardModel)
 
         binding.dashboardExpandableView.overviewLockUnlockCardIcon.setImageDrawable(
@@ -182,42 +181,26 @@ class DashboardFragment : LotusFullScreenFragment(), DashboardExpandableView.Das
         )
     }
 
-    private fun cardStatusStringFromCardStatus(productCardModelCardStatus: ProductCardModelCardStatus): String {
-        return getString(
-                when (productCardModelCardStatus) {
-                    ProductCardModelCardStatus.CARD_STATUS_ACTIVE -> R.string.CARD_STATUS_DISPLAY_ACTIVE
-                    ProductCardModelCardStatus.CARD_STATUS_VIRTUAL -> R.string.CARD_STATUS_DISPLAY_VIRTUAL
-                    ProductCardModelCardStatus.CARD_STATUS_PENDING -> R.string.CARD_STATUS_DISPLAY_PENDING
-                    ProductCardModelCardStatus.CARD_STATUS_LOCKED -> R.string.CARD_STATUS_DISPLAY_LOCKED
-                    ProductCardModelCardStatus.CARD_STATUS_REPLACED -> R.string.CARD_STATUS_DISPLAY_REPLACED
-                    ProductCardModelCardStatus.CARD_STATUS_CANCELED -> R.string.CARD_STATUS_DISPLAY_CANCELLED
-                    ProductCardModelCardStatus.CARD_STATUS_SUSPENDED -> R.string.CARD_STATUS_DISPLAY_SUSPENDED
-                    ProductCardModelCardStatus.CARD_STATUS_CLOSED -> R.string.CARD_STATUS_DISPLAY_CLOSED
-                    ProductCardModelCardStatus.CARD_STATUS_ORDERED -> R.string.CARD_STATUS_DISPLAY_ORDERED
-                }
-        )
-    }
-
-    private fun updateForCardState(cardState: DashboardViewModel.CardState) {
+    private fun updateForCardState(cardState: ProductCardViewCardState) {
         when (cardState) {
-            DashboardViewModel.CardState.LOADING -> {
+            ProductCardViewCardState.LOADING -> {
                 progressOverlayDelegate.showProgressOverlay()
                 binding.dashboardExpandableView.overviewShowHideCardDetailsLabel.text = getString(R.string.OVERVIEW_LOADING_CARD_DETAILS)
             }
-            DashboardViewModel.CardState.DETAILS_HIDDEN -> {
+            ProductCardViewCardState.DETAILS_HIDDEN -> {
                 progressOverlayDelegate.dismissProgressOverlay()
                 binding.dashboardExpandableView.overviewShowHideCardDetailsIcon.setImageDrawable(ContextCompat.getDrawable(context!!, R.drawable.ic_dashboard_card_details_show))
                 binding.dashboardExpandableView.overviewShowHideCardDetailsLabel.text = getString(R.string.OVERVIEW_SHOW_CARD_DETAILS)
             }
-            DashboardViewModel.CardState.DETAILS_SHOWN -> {
+            ProductCardViewCardState.DETAILS_SHOWN -> {
                 progressOverlayDelegate.dismissProgressOverlay()
                 binding.dashboardExpandableView.overviewShowHideCardDetailsIcon.setImageDrawable(ContextCompat.getDrawable(context!!, R.drawable.ic_dashboard_card_details_hide))
                 binding.dashboardExpandableView.overviewShowHideCardDetailsLabel.text = getString(R.string.OVERVIEW_HIDE_CARD_DETAILS)
             }
-            DashboardViewModel.CardState.ERROR -> {
+            ProductCardViewCardState.ERROR -> {
                 progressOverlayDelegate.dismissProgressOverlay()
                 binding.dashboardExpandableView.overviewShowHideCardDetailsLabel.text = getString(
-                        if (dashboardViewModel.isShowingCardDetails()) R.string.OVERVIEW_HIDE_CARD_DETAILS else R.string.OVERVIEW_SHOW_CARD_DETAILS
+                        if (dashboardViewModel.productCardViewModelDelegate.isShowingCardDetails()) R.string.OVERVIEW_HIDE_CARD_DETAILS else R.string.OVERVIEW_SHOW_CARD_DETAILS
                 )
 
                 showDialog(
@@ -231,7 +214,7 @@ class DashboardFragment : LotusFullScreenFragment(), DashboardExpandableView.Das
         }
 
         // don't show screen image in task switcher if showing card details
-        preventScreenCapture(dashboardViewModel.isShowingCardDetails())
+        preventScreenCapture(dashboardViewModel.productCardViewModelDelegate.isShowingCardDetails())
     }
 
     fun updateSpendingBalance(spendingBalance: BigDecimal?) {
@@ -393,8 +376,8 @@ class DashboardFragment : LotusFullScreenFragment(), DashboardExpandableView.Das
     private fun initViewModel() {
         dashboardViewModel = ViewModelProviders.of(activity!!).get(DashboardViewModel::class.java)
         dashboardViewModel.expirationDateFormatString = getString(R.string.MONTH_YEAR_FORMAT)
-        dashboardViewModel.cardInfoModelObservable.observe(this, cardModelObserver)
-        dashboardViewModel.cardStateObservable.observe(this, cardStateObserver)
+        dashboardViewModel.productCardViewModelDelegate.cardInfoModelObservable.observe(this, cardModelObserver)
+        dashboardViewModel.productCardViewModelDelegate.cardStateObservable.observe(this, cardStateObserver)
         dashboardViewModel.initCardView()
 
         dashboardViewModel.spendingBalanceObservable.observe(this, spendingBalanceObserver)
@@ -440,7 +423,7 @@ class DashboardFragment : LotusFullScreenFragment(), DashboardExpandableView.Das
     }
 
     override fun onCollapseStart() {
-        dashboardViewModel.hideCardDetails()
+        dashboardViewModel.productCardViewModelDelegate.hideCardDetails()
         showObscuringOverlay(false)
         dashboardViewModel.collapseStart()
 
@@ -455,13 +438,13 @@ class DashboardFragment : LotusFullScreenFragment(), DashboardExpandableView.Das
     }
 
     override fun onShowHideCardDetails() {
-        if (dashboardViewModel.isShowingCardDetails()) {
-            dashboardViewModel.hideCardDetails()
+        if (dashboardViewModel.productCardViewModelDelegate.isShowingCardDetails()) {
+            dashboardViewModel.productCardViewModelDelegate.hideCardDetails()
         } else {
             //val dialogFragment = PasswordAuthenticationDialogFragment.newInstance(AUTHENTICATION_REVEAL_CARD_DIALOG_TAG, getString(R.string.BUTTON_CANCEL))
             //dialogFragment.show(childFragmentManager, AUTHENTICATION_REVEAL_CARD_DIALOG_TAG)
             // TODO(kurt): hide this behind password auth, once we have PasswordAuthDialogFragment (SHOW-376)
-            dashboardViewModel.showCardDetails()
+            dashboardViewModel.productCardViewModelDelegate.showCardDetails()
         }
     }
 

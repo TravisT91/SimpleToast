@@ -5,6 +5,7 @@ import com.engageft.apptoolbox.util.isDigitsOnly
 import com.engageft.engagekit.EngageService
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
+
 /**
  * CardPinViewModel
  * <p>
@@ -79,6 +80,9 @@ class CardPinViewModel: BaseEngageViewModel() {
     init {
         cardPinStateObservable.value = CardPinState.INITIAL_ENTER_PIN
     }
+
+    val productCardViewModelDelegate = ProductCardViewDelegate(this)
+
 
     private fun submit() {
         if (isValidPin(pinNumber)) {
