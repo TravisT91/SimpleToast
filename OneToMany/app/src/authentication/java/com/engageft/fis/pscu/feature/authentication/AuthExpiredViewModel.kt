@@ -100,6 +100,7 @@ class AuthExpiredViewModel : BaseViewModel() {
      * that class. This means this entire set of functionality should be refactored to a delegate pattern
      * so we will do that eventually as a TODO
      */
+
     fun handleThrowable(e: Throwable)  {
         when (e) {
             is UnknownHostException -> {
@@ -113,10 +114,17 @@ class AuthExpiredViewModel : BaseViewModel() {
             }
             // Add more specific exceptions here, if needed
             else -> {
+                // This is a catch-all for anything else. Anything caught here is a BUG and should
+                // be reported as such. In Debug builds, we can just blow up in the user's face but
+                // on production, we need to fail gracefully and report the error so we can fix it
+                // later.
                 if (BuildConfig.DEBUG) {
                     dialogInfoObservable.value = DialogInfo(message = e.message)
                     e.printStackTrace()
+                    // Just in case the user at the time doesn't report a bug to us.
+                    Crashlytics.logException(e)
                 } else {
+                    dialogInfoObservable.value = DialogInfo(dialogType = DialogInfo.DialogType.GENERIC_ERROR)
                     Crashlytics.logException(e)
                 }
             }
