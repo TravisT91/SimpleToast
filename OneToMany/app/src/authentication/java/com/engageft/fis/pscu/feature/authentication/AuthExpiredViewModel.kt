@@ -3,11 +3,17 @@ package com.engageft.fis.pscu.feature.authentication
 import androidx.databinding.Observable
 import androidx.databinding.ObservableField
 import androidx.lifecycle.MutableLiveData
+import com.crashlytics.android.Crashlytics
 import com.engageft.apptoolbox.BaseViewModel
+import com.engageft.apptoolbox.BuildConfig
 import com.engageft.engagekit.EngageService
+import com.engageft.engagekit.rest.exception.NoConnectivityException
+import com.engageft.fis.pscu.feature.DialogInfo
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
+import java.net.SocketTimeoutException
+import java.net.UnknownHostException
 
 /**
  * AuthExpiredViewModel
@@ -21,20 +27,27 @@ class AuthExpiredViewModel : BaseViewModel() {
     enum class AuthExpiredNavigationEvent {
         LOGOUT,
         LOGIN_SUCCESS,
-        LOGIN_ERROR,
         FORGOT_PASSWORD,
         NONE
     }
+
+    enum class LoginButtonState {
+        GONE,
+        VISIBLE_ENABLED
+    }
+
+    val dialogInfoObservable: MutableLiveData<DialogInfo> = MutableLiveData()
+
     private val compositeDisposable = CompositeDisposable()
 
     val navigationObservable = MutableLiveData<AuthExpiredNavigationEvent>()
+    val loginButtonStateObservable = MutableLiveData<LoginButtonState>()
 
     var password : ObservableField<String> = ObservableField("")
 
-    val signInEnabled: ObservableField<Boolean> = ObservableField(false)
-
     init {
         navigationObservable.value = AuthExpiredNavigationEvent.NONE
+        loginButtonStateObservable.value = LoginButtonState.GONE
         password.addOnPropertyChangedCallback(object : Observable.OnPropertyChangedCallback(){
             override fun onPropertyChanged(observable: Observable?, field: Int) {
                 validatePassword()
@@ -61,13 +74,11 @@ class AuthExpiredViewModel : BaseViewModel() {
                                     if (response.isSuccess) {
                                         navigationObservable.value = AuthExpiredNavigationEvent.LOGIN_SUCCESS
                                     } else {
-                                        // TODO(jhutchins): Handle error.
-                                        navigationObservable.value = AuthExpiredNavigationEvent.LOGIN_ERROR
+                                        dialogInfoObservable.value = DialogInfo(dialogType = DialogInfo.DialogType.SERVER_ERROR, message = response.message)
                                     }
                                 }, { e ->
                             progressOverlayShownObservable.value = false
-                            // TODO(jhutchins): Handle error.
-                            navigationObservable.value = AuthExpiredNavigationEvent.LOGIN_ERROR
+                            handleThrowable(e)
                         }))
     }
 
@@ -78,9 +89,37 @@ class AuthExpiredViewModel : BaseViewModel() {
     private fun validatePassword() {
         val passwordText = password.get()
         if (!passwordText.isNullOrEmpty()) {
-            signInEnabled.set(true)
+            loginButtonStateObservable.value = LoginButtonState.VISIBLE_ENABLED
         } else {
-            signInEnabled.set(false)
+            loginButtonStateObservable.value = LoginButtonState.GONE
+        }
+    }
+
+    /**
+     * This is duplicated from BaseEngageViewModel because this class CANNOT inherit from
+     * that class. This means this entire set of functionality should be refactored to a delegate pattern
+     * so we will do that eventually as a TODO
+     */
+    fun handleThrowable(e: Throwable)  {
+        when (e) {
+            is UnknownHostException -> {
+                dialogInfoObservable.value = DialogInfo(dialogType = DialogInfo.DialogType.NO_INTERNET_CONNECTION)
+            }
+            is NoConnectivityException -> {
+                dialogInfoObservable.value = DialogInfo(dialogType = DialogInfo.DialogType.NO_INTERNET_CONNECTION)
+            }
+            is SocketTimeoutException -> {
+                dialogInfoObservable.value = DialogInfo(dialogType = DialogInfo.DialogType.CONNECTION_TIMEOUT)
+            }
+            // Add more specific exceptions here, if needed
+            else -> {
+                if (BuildConfig.DEBUG) {
+                    dialogInfoObservable.value = DialogInfo(message = e.message)
+                    e.printStackTrace()
+                } else {
+                    Crashlytics.logException(e)
+                }
+            }
         }
     }
 }
