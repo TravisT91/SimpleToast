@@ -19,34 +19,46 @@ object Palette {
     //COLORS
     @ColorInt
     var primaryColor: Int = NOT_SET
+        private set
     @ColorInt
     var secondaryColor: Int = NOT_SET
+        private set
     @ColorInt
     var successColor: Int = NOT_SET
+        private set
     @ColorInt
     var warningColor: Int = NOT_SET
+        private set
     @ColorInt
     var errorColor: Int = NOT_SET
+        private set
     @ColorInt
     var infoColor: Int = NOT_SET
+        private set
 
     enum class FontType(val fontName: String){
         ARIAL("Arial")
     }
 
     //FONTS
-    var typefaceName: String? = null
     var font_bold: Typeface? = null
+        private set
     var font_italic: Typeface? = null
+        private set
     var font_light: Typeface? = null
+        private set
     var font_medium: Typeface? = null
+        private set
     var font_regular: Typeface? = null
+        private set
 
-    //IMAGES
+    @Suppress("unused")
+//IMAGES
     var cardImageUrl: String? = null
 
     //TEXT STYLES
     var Title4Quiet = textViewStyle { }
+        private set
         get() {
             return textViewStyle {
                 textSizeDp(18)
@@ -55,6 +67,7 @@ object Palette {
         }
 
     var Title2Quiet = textViewStyle { }
+        private set
         get() {
             return textViewStyle {
                 textSizeDp(28)
@@ -63,6 +76,7 @@ object Palette {
         }
 
     var LargeTitle = textViewStyle { }
+        private set
         get() {
             return textViewStyle {
                 textSizeDp(38)
@@ -71,6 +85,7 @@ object Palette {
         }
 
     var BodyQuiet = textViewStyle { }
+        private set
         get() {
             return textViewStyle {
                 textSizeDp(16)
@@ -80,6 +95,7 @@ object Palette {
         }
 
     var LargeTitleLoud = textViewStyle { }
+        private set
         get() {
             return textViewStyle {
                 textSizeDp(38)
@@ -88,6 +104,7 @@ object Palette {
         }
 
     var Title3Quiet = textViewStyle { }
+        private set
         get() {
             return textViewStyle {
                 textSizeDp(20)
@@ -96,6 +113,7 @@ object Palette {
         }
 
     var Caption1Quiet = textViewStyle { }
+        private set
         get() {
             return textViewStyle {
                 textSizeDp(12)
@@ -104,6 +122,7 @@ object Palette {
         }
 
     var  Title1Quiet = textViewStyle { }
+        private set
         get() {
             return textViewStyle {
                 textSizeDp(32)
@@ -112,6 +131,7 @@ object Palette {
         }
 
     var Caption2Quiet = textViewStyle { }
+        private set
         get() {
             return textViewStyle {
                 textSizeDp(10)
@@ -120,6 +140,7 @@ object Palette {
         }
 
     var Title1 = textViewStyle { }
+        private set
         get() {
             return textViewStyle {
                 textSizeDp(32)
@@ -128,6 +149,7 @@ object Palette {
         }
 
     var Title2 = textViewStyle { }
+        private set
         get() {
             return textViewStyle {
                 textSizeDp(28)
@@ -136,6 +158,7 @@ object Palette {
         }
 
     var Title3 = textViewStyle { }
+        private set
         get() {
             return textViewStyle {
                 textSizeDp(20)
@@ -144,6 +167,7 @@ object Palette {
         }
 
     var Title4 = textViewStyle { }
+        private set
         get() {
             return textViewStyle {
                 textSizeDp(18)
@@ -152,6 +176,7 @@ object Palette {
         }
 
     var FootnoteQuiet = textViewStyle { }
+        private set
         get() {
             return textViewStyle {
                 textSizeDp(14)
@@ -160,6 +185,7 @@ object Palette {
         }
 
     var Body = textViewStyle { }
+        private set
         get() {
             return textViewStyle {
                 textSizeDp(16)
@@ -168,6 +194,7 @@ object Palette {
         }
 
     var Footnote = textViewStyle { }
+        private set
         get() {
             return textViewStyle {
                 textSizeDp(14)
@@ -176,6 +203,7 @@ object Palette {
         }
 
     var Caption1 = textViewStyle { }
+        private set
         get() {
             return textViewStyle {
                 textSizeDp(12)
@@ -184,6 +212,7 @@ object Palette {
         }
 
     var Caption2 = textViewStyle { }
+        private set
         get() {
             return textViewStyle {
                 textSizeDp(10)
@@ -192,6 +221,7 @@ object Palette {
         }
 
     var Title1Loud = textViewStyle { }
+        private set
         get() {
             return textViewStyle {
                 textSizeDp(32)
@@ -200,6 +230,7 @@ object Palette {
         }
 
     var Title2Loud = textViewStyle { }
+        private set
         get() {
             return textViewStyle {
                 textSizeDp(28)
@@ -208,6 +239,7 @@ object Palette {
         }
 
     var Title4Loud = textViewStyle { }
+        private set
         get() {
             return textViewStyle {
                 textSizeDp(18)
@@ -216,6 +248,7 @@ object Palette {
         }
 
     var BodyLoud = textViewStyle { }
+        private set
         get() {
             return textViewStyle {
                 font_bold?.let { fontFamily(it) }
@@ -224,6 +257,7 @@ object Palette {
         }
 
     var LargeTitleQuiet = textViewStyle { }
+        private set
         get() {
             return textViewStyle {
                 textSizeDp(38)
@@ -232,6 +266,7 @@ object Palette {
         }
 
     var Caption1Loud = textViewStyle { }
+        private set
         get() {
             return textViewStyle {
                 textSizeDp(12)
@@ -240,6 +275,7 @@ object Palette {
         }
 
     var Title3Loud = textViewStyle { }
+        private set
         get() {
             return textViewStyle {
                 textSizeDp(20)
@@ -248,6 +284,7 @@ object Palette {
         }
 
     var Caption2Loud = textViewStyle { }
+        private set
         get() {
             return textViewStyle {
                 textSizeDp(10)
@@ -256,6 +293,7 @@ object Palette {
         }
 
     var FootnoteLoud = textViewStyle { }
+        private set
         get() {
             return textViewStyle {
                 textSizeDp(14)
@@ -264,6 +302,7 @@ object Palette {
         }
 
     var FootnoteMedium = textViewStyle { }
+        private set
         get() {
             return textViewStyle {
                 textSizeDp(14)
@@ -272,6 +311,7 @@ object Palette {
         }
 
     var Title1Medium = textViewStyle { }
+        private set
         get() {
             return textViewStyle {
                 textSizeDp(32)
@@ -280,6 +320,7 @@ object Palette {
         }
 
     var LargeTitleMedium = textViewStyle { }
+        private set
         get() {
             return textViewStyle {
                 textSizeDp(38)
@@ -288,6 +329,7 @@ object Palette {
         }
 
     var BodyMedium = textViewStyle { }
+        private set
         get() {
             return textViewStyle {
                 textSizeDp(16)
@@ -296,6 +338,7 @@ object Palette {
         }
 
     var Title3Medium = textViewStyle { }
+        private set
         get() {
             return textViewStyle {
                 textSizeDp(20)
@@ -304,6 +347,7 @@ object Palette {
         }
 
     var Caption1Medium = textViewStyle { }
+        private set
         get() {
             return textViewStyle {
                 textSizeDp(12)
@@ -312,6 +356,7 @@ object Palette {
         }
 
     var Caption2Medium = textViewStyle { }
+        private set
         get() {
             return textViewStyle {
                 textSizeDp(10)
@@ -320,6 +365,7 @@ object Palette {
         }
 
     var Title2Medium = textViewStyle { }
+        private set
         get() {
             return textViewStyle {
                 textSizeDp(28)
@@ -328,6 +374,7 @@ object Palette {
         }
 
     var Title4Medium = textViewStyle { }
+        private set
         get() {
             return textViewStyle {
                 textSizeDp(18)
@@ -353,7 +400,7 @@ object Palette {
         }
     }
 
-    fun setFonts(fontName: String){
+    fun setFontsFromString(fontName: String){
         Palette.apply {
             val context = OneToManyApplication.sInstance.applicationContext
             when (fontName) {
@@ -367,5 +414,33 @@ object Palette {
                 else -> run { }
             }
         }
+    }
+
+    fun setPaletteColors(
+            primaryColor : Int,
+            secondaryColor : Int,
+            successColor : Int,
+            warningColor : Int,
+            errorColor : Int,
+            infoColor : Int){
+        this.primaryColor = primaryColor
+        this.secondaryColor = secondaryColor
+        this.successColor = successColor
+        this.warningColor = warningColor
+        this.errorColor = errorColor
+        this.infoColor = infoColor
+    }
+
+    fun setFonts(
+            font_regular: Typeface?,
+            font_bold: Typeface?,
+            font_italic: Typeface?,
+            font_light: Typeface?,
+            font_medium: Typeface?) {
+        this.font_regular = font_regular
+        this.font_bold = font_bold
+        this.font_italic = font_italic
+        this.font_light = font_light
+        this.font_medium = font_medium
     }
 }

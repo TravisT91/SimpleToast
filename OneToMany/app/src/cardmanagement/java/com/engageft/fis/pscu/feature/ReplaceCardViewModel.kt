@@ -20,22 +20,20 @@ class ReplaceCardViewModel : BaseEngageViewModel() {
         progressOverlayShownObservable.value = true
         val token = EngageService.getInstance().storageManager.loginResponse.token
         val cardId = EngageService.getInstance().storageManager.currentCard.debitCardId
-        compositeDisposable.add(
-                engageApi().postReplaceCard(CardRequest(token,cardId).fieldMap)
-                        .subscribeWithProgressAndDefaultErrorHandling<BasicResponse>(
+        engageApi().postReplaceCard(CardRequest(token,cardId).fieldMap)
+                .subscribeWithProgressAndDefaultErrorHandling<BasicResponse>(
                         this, {
-                            replacementRequestIsSuccess.value = true
-                            EngageService.getInstance().storageManager.removeLoginResponse()
-                        }))
+                    replacementRequestIsSuccess.value = true
+                    EngageService.getInstance().storageManager.removeLoginResponse()
+                })
     }
 
     init{
         val loginResponse = EngageService.getInstance().storageManager.loginResponse
         loginResponse?.let{ setAddressFromLoginResponse(it) } ?: run {
-            progressOverlayShownObservable.value = true
-            compositeDisposable.add(EngageService.getInstance().loginResponseAsObservable
+            EngageService.getInstance().loginResponseAsObservable
                     .subscribeWithProgressAndDefaultErrorHandling<LoginResponse>(
-                            this, { setAddressFromLoginResponse(it) }))
+                            this, { setAddressFromLoginResponse(it) })
         }
     }
 

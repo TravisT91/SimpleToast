@@ -69,8 +69,10 @@ inline fun <reified ExpectedClass> Observable<BasicResponse>.subscribeWithProgre
         vm: BaseEngageViewModel,
         crossinline onNext: (ExpectedClass) -> Unit,
         noinline onError: ((e: Throwable) -> Unit)? = null,
-        noinline onComplete: (() -> Unit?)? = null) : Disposable {
-    return this
+        noinline onComplete: (() -> Unit?)? = null){
+    vm.progressOverlayShownObservable.value = true
+    vm.compositeDisposable.add(
+            this
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe(
@@ -89,5 +91,5 @@ inline fun <reified ExpectedClass> Observable<BasicResponse>.subscribeWithProgre
                     {
                         vm.progressOverlayShownObservable.value = false
                         onComplete?.invoke()
-                    })
+                    }))
 }

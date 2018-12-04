@@ -412,14 +412,14 @@ class DashboardViewModel : BaseEngageViewModel() {
     }
 
     fun updateCardLockStatus(lock: Boolean){
-        compositeDisposable.add(engageApi().postLockCard(
+        engageApi().postLockCard(
                 CardLockUnlockRequest(
                         EngageService.getInstance().storageManager.loginResponse.token,
                         EngageService.getInstance().storageManager.currentCard.debitCardId,
                         lock).fieldMap)
                 .subscribeWithProgressAndDefaultErrorHandling<BasicResponse>(this, {
                     EngageService.getInstance().clearLoginAndDashboardResponses()
-                    updateCardView() }))
+                    updateCardView() })
     }
 }
 

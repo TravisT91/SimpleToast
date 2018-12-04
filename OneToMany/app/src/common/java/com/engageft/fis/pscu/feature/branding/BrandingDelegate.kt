@@ -47,7 +47,7 @@ object BrandingDelegate{
     private fun applyBrandingInfo(brandingInfoResponse: BrandingInfoResponse){
         brandingInfoResponse.brandingInfo.apply {
             Palette.applyColors(colors)
-            Palette.setFonts(font)
+            Palette.setFontsFromString(font)
             this@BrandingDelegate.financialInfo = financialInfo
         }
     }

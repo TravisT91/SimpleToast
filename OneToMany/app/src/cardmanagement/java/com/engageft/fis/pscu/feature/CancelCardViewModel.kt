@@ -12,14 +12,13 @@ class CancelCardViewModel : BaseEngageViewModel() {
     val cardCanceledSuccess = MutableLiveData<Boolean>()
 
     fun onCancelClicked(){
-        progressOverlayShownObservable.value = true
         val token = EngageService.getInstance().storageManager.loginResponse.token
         val cardId = EngageService.getInstance().storageManager.currentCard.debitCardId
-        compositeDisposable.add(engageApi().postCancelCard(CardRequest(token,cardId).fieldMap)
+        engageApi().postCancelCard(CardRequest(token,cardId).fieldMap)
                 .subscribeWithProgressAndDefaultErrorHandling<BasicResponse>(
                         this, {
                     cardCanceledSuccess.value = true
                     EngageService.getInstance().storageManager.removeLoginResponse()
-                }))
+                })
     }
 }

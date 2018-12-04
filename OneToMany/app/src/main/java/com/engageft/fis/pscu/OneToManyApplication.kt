@@ -37,20 +37,22 @@ class OneToManyApplication : LotusApplication() {
     }
 
     fun setPaletteDefaults(){
-        Palette.apply {
-            primaryColor = ContextCompat.getColor(this@OneToManyApplication, R.color.primary)
-            secondaryColor = ContextCompat.getColor(this@OneToManyApplication, R.color.secondary)
-            successColor = ContextCompat.getColor(this@OneToManyApplication, R.color.success)
-            warningColor = ContextCompat.getColor(this@OneToManyApplication, R.color.warning)
-            errorColor = ContextCompat.getColor(this@OneToManyApplication, R.color.error)
+        Palette.setPaletteColors(
+            primaryColor = ContextCompat.getColor(this@OneToManyApplication, R.color.primary),
+            secondaryColor = ContextCompat.getColor(this@OneToManyApplication, R.color.secondary),
+            successColor = ContextCompat.getColor(this@OneToManyApplication, R.color.success),
+            warningColor = ContextCompat.getColor(this@OneToManyApplication, R.color.warning),
+            errorColor = ContextCompat.getColor(this@OneToManyApplication, R.color.error),
             infoColor = ContextCompat.getColor(this@OneToManyApplication, R.color.info)
+        )
 
-            font_regular = ResourcesCompat.getFont(this@OneToManyApplication, R.font.font_regular)
-            font_bold = ResourcesCompat.getFont(this@OneToManyApplication, R.font.font_bold)
-            font_italic = ResourcesCompat.getFont(this@OneToManyApplication, R.font.font_italic)
-            font_light = ResourcesCompat.getFont(this@OneToManyApplication, R.font.font_light)
+        Palette.setFonts(
+            font_regular = ResourcesCompat.getFont(this@OneToManyApplication, R.font.font_regular),
+            font_bold = ResourcesCompat.getFont(this@OneToManyApplication, R.font.font_bold),
+            font_italic = ResourcesCompat.getFont(this@OneToManyApplication, R.font.font_italic),
+            font_light = ResourcesCompat.getFont(this@OneToManyApplication, R.font.font_light),
             font_medium = ResourcesCompat.getFont(this@OneToManyApplication, R.font.font_medium)
-        }
+        )
     }
 
 }
