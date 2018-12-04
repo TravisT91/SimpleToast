@@ -16,25 +16,42 @@
             app:enterAnim="@anim/nav_enter_anim"
             app:exitAnim="@anim/nav_exit_anim"
             app:popEnterAnim="@anim/nav_pop_enter_anim"
-            app:popExitAnim="@anim/nav_pop_exit_anim">
-        </action>
+            app:popExitAnim="@anim/nav_pop_exit_anim"/>
         <action
             android:id="@+id/action_dashboard_fragment_to_replaceCardFragment"
             app:destination="@id/replaceCardFragment"
             app:enterAnim="@anim/nav_enter_anim"
             app:exitAnim="@anim/nav_exit_anim"
             app:popEnterAnim="@anim/nav_pop_enter_anim"
-            app:popExitAnim="@anim/nav_pop_exit_anim">
-        </action>
+            app:popExitAnim="@anim/nav_pop_exit_anim"/>
         <action
             android:id="@+id/action_dashboard_fragment_to_reportLostStolenCardFragment"
             app:destination="@id/reportLostStolenCardFragment"
             app:enterAnim="@anim/nav_enter_anim"
             app:exitAnim="@anim/nav_exit_anim"
             app:popEnterAnim="@anim/nav_pop_enter_anim"
-            app:popExitAnim="@anim/nav_pop_exit_anim">
-        </action>
+            app:popExitAnim="@anim/nav_pop_exit_anim"/>
+
+        <action
+            android:id="@+id/action_dashboard_fragment_to_cancelCardFragment"
+            app:destination="@id/cancelCardFragment"
+            app:enterAnim="@anim/nav_enter_anim"
+            app:exitAnim="@anim/nav_exit_anim"
+            app:popEnterAnim="@anim/nav_pop_enter_anim"
+            app:popExitAnim="@anim/nav_pop_exit_anim"/>
+        <action
+            android:id="@+id/action_dashboard_fragment_to_featureNotAvailable"
+            app:destination="@id/featureNotAvailableFragment"
+            app:enterAnim="@anim/nav_enter_anim"
+            app:exitAnim="@anim/nav_exit_anim"
+            app:popEnterAnim="@anim/nav_pop_enter_anim"
+            app:popExitAnim="@anim/nav_pop_exit_anim"/>
     </fragment>
+
+    <fragment
+        android:id="@+id/featureNotAvailableFragment"
+        android:name="com.engageft.fis.pscu.feature.CardFeatureNotAvailableFragment"
+        android:label="Feature not available"/>
 
     <fragment
         android:id="@+id/replaceCardFragment"
@@ -45,6 +62,11 @@
         android:id="@+id/reportLostStolenCardFragment"
         android:name="com.engageft.fis.pscu.feature.ReportLostStolenCardFragment"
         android:label="@string/fragment_title_report_lost_stolen_card"/>
+
+    <fragment
+        android:id="@+id/cancelCardFragment"
+        android:name="com.engageft.fis.pscu.feature.CancelCardFragment"
+        android:label="@string/fragment_title_cancel_card"/>
 
     <fragment
         android:id="@+id/budgets_fragment"

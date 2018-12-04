@@ -340,34 +340,7 @@ object Palette {
             }
         }
 
-    fun getBrandingWithToken(token : String): Observable<BasicResponse> {
-        return EngageService.getInstance().engageApiInterface.postGetAccountBrandingInfo(
-                HashMap<String,String>().apply{ put("token",token)})
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .doOnNext {
-                    if (it.isSuccess && it is BrandingInfoResponse){
-                        applyBrandingInfo(it)
-                    }
-                }}
 
-    fun getBrandingWithRefCode(refCode : String): Observable<BasicResponse> {
-        return EngageService.getInstance().engageApiInterface.postGetBrandingInfoFromRefCode(
-                HashMap<String,String>().apply{ put("refCode",refCode)})
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .doOnNext {
-                    if (it.isSuccess && it is BrandingInfoResponse){
-                        applyBrandingInfo(it)
-                    }
-                }}
-
-    fun applyBrandingInfo(brandingInfoResponse: BrandingInfoResponse){
-        brandingInfoResponse.brandingInfo.apply {
-            applyColors(colors)
-            setFonts(font)
-        }
-    }
 
     fun applyColors(colors: MutableMap<BrandingColorType, String>) {
         colors.apply {

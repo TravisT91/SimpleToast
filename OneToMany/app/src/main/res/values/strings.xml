@@ -22,5 +22,6 @@
     <string name="fragment_title_profile">Profile</string>
     <string name="fragment_title_replace_card">Replace card</string>
     <string name="fragment_title_report_lost_stolen_card">Report lost/stolen</string>
+    <string name="fragment_title_cancel_card">Cancel card</string>
 
 </resources>
