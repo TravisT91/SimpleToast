@@ -17,17 +17,21 @@ import androidx.navigation.findNavController
 import com.engageft.apptoolbox.BaseViewModel
 import com.engageft.apptoolbox.view.InformationDialogFragment
 import com.engageft.fis.pscu.R
-import com.engageft.fis.pscu.config.EngageAppConfig
 import com.engageft.fis.pscu.databinding.FragmentCardPinBinding
-import com.engageft.fis.pscu.feature.utils.cardStatusStringRes
-import com.redmadrobot.inputmask.MaskedTextChangedListener
 
+/**
+ * CardPinFragment
+ * <p>
+ * Fragment for handling changing card PIN number
+ * </p>
+ * Created by Atia Hashimi on 12/3/18.
+ * Copyright (c) 2018 Engage FT. All rights reserved.
+ */
 class CardPinFragment : BaseEngageFullscreenFragment() {
 
     private lateinit var binding: FragmentCardPinBinding
     private lateinit var cardPinViewModel: CardPinViewModel
     private val listOfImageViews = ArrayList<ImageView>()
-    private var tempLength = 0
 
     override fun createViewModel(): BaseViewModel? {
         cardPinViewModel = ViewModelProviders.of(this).get(CardPinViewModel::class.java)
@@ -41,30 +45,6 @@ class CardPinFragment : BaseEngageFullscreenFragment() {
         binding.apply {
             viewModel = cardPinViewModel
 
-            pinInputField.addTextChangeListener(object: MaskedTextChangedListener.ValueListener {
-                override fun onTextChanged(maskFilled: Boolean, extractedValue: String) {
-                    updateView(extractedValue)
-
-                    if (extractedValue.length == EngageAppConfig.cardPinLength) {
-                        // must call this after updateView() is done. This allows drawable.background to complete before
-                        // running this code so that all drawables are drawn
-                        Handler().post {
-                            when (cardPinViewModel.cardPinStateObservable.value) {
-                                CardPinViewModel.CardPinState.ENTER_PIN -> {
-                                    cardPinViewModel.validatePin(extractedValue)
-                                }
-                                CardPinViewModel.CardPinState.CONFIRM_PIN -> {
-                                    cardPinViewModel.submit(pinInputField.inputText.toString())
-                                }
-                                else -> {
-                                    cardPinViewModel.validatePin(extractedValue)
-                                }
-                            }
-                        }
-                    }
-                }
-            })
-
             listOfImageViews.add(iconImageView1)
             listOfImageViews.add(iconImageView2)
             listOfImageViews.add(iconImageView3)
@@ -72,8 +52,13 @@ class CardPinFragment : BaseEngageFullscreenFragment() {
 
             pinLayout.setOnClickListener {
                 // requestFocus to show keyboard in case keyboard was dismissed
-                pinInputField.clearFocus()
-                pinInputField.requestFocusOnEditInput()
+                if (pinInputField.visibility == View.VISIBLE) {
+                    pinInputField.clearFocus()
+                    pinInputField.requestFocusOnEditInput()
+                } else {
+                    confirmPinInputField.clearFocus()
+                    confirmPinInputField.requestFocusOnEditInput()
+                }
             }
         }
 
@@ -81,16 +66,33 @@ class CardPinFragment : BaseEngageFullscreenFragment() {
             cardPinStateObservable.observe(this@CardPinFragment, Observer {
                 when (it) {
                     CardPinViewModel.CardPinState.MISMATCH_PIN -> {
-                        val drawable = ContextCompat.getDrawable(context!!, R.drawable.card_pin_error_dot_shape)!!
-                        drawable.setTint(Palette.errorColor)
-                        updateView(getString(R.string.card_pin_mismatch_error_message),
-                                Palette.errorColor,
-                                drawable)
+                        // do Hanlder().post so that the last PIN digit drawable gets drawn then this code is run, otherwise, it happens so fast.
+                        Handler().post {
+                            binding.pinInputField.visibility = View.VISIBLE
+                            binding.confirmPinInputField.visibility = View.GONE
+                            binding.pinInputField.requestFocusOnEditInput()
+                            // reset fields
+                            binding.confirmPinInputField.inputText = ""
+                            binding.pinInputField.inputText = ""
+
+                            val drawable = ContextCompat.getDrawable(context!!, R.drawable.card_pin_error_dot_shape)!!
+                            drawable.setTint(Palette.errorColor)
+                            updateView(getString(R.string.card_pin_mismatch_error_message),
+                                    Palette.errorColor,
+                                    drawable)
+                        }
                     }
                     CardPinViewModel.CardPinState.CONFIRM_PIN -> {
-                        updateView(getString(R.string.card_pin_choose_confirmation),
-                                ContextCompat.getColor(context!!, R.color.textPrimary),
-                                ContextCompat.getDrawable(context!!, R.drawable.card_pin_unselected_dot_shape)!!)
+                        // do Hanlder().post so that the last PIN digit drawable gets drawn then this code is run, otherwise, it happens really fast.
+                        Handler().post {
+                            binding.pinInputField.visibility = View.GONE
+                            binding.confirmPinInputField.visibility = View.VISIBLE
+                            binding.confirmPinInputField.requestFocusOnEditInput()
+
+                            updateView(getString(R.string.card_pin_choose_confirmation),
+                                    ContextCompat.getColor(context!!, R.color.textPrimary),
+                                    ContextCompat.getDrawable(context!!, R.drawable.card_pin_unselected_dot_shape)!!)
+                        }
                     }
                     CardPinViewModel.CardPinState.INVALID_PIN -> {
                         val drawable = ContextCompat.getDrawable(context!!, R.drawable.card_pin_error_dot_shape)!!
@@ -99,7 +101,22 @@ class CardPinFragment : BaseEngageFullscreenFragment() {
                                 Palette.errorColor,
                                 drawable)
                     }
-                    else -> {}
+                    CardPinViewModel.CardPinState.INITIAL_ENTER_PIN -> {
+                        updateView(getString(R.string.card_pin_choose_description),
+                                ContextCompat.getColor(context!!, R.color.textPrimary),
+                                ContextCompat.getDrawable(context!!, R.drawable.card_pin_unselected_dot_shape)!!)
+                    }
+                }
+            })
+
+            cardPinDigitsState.observe(this@CardPinFragment, Observer {
+                when (it.first) {
+                    CardPinViewModel.PinDigits.DIGIT_DELETED -> {
+                        pinDigitDeleted(it.second)
+                    }
+                    CardPinViewModel.PinDigits.DIGIT_ADDED -> {
+                        pinDigitAdded(it.second)
+                    }
                 }
             })
 
@@ -149,24 +166,10 @@ class CardPinFragment : BaseEngageFullscreenFragment() {
         binding.apply {
             chooseDescriptionTextView.text = text
             chooseDescriptionTextView.setTextColor(textColor)
-            // reset field
-            pinInputField.inputText = ""
         }
 
         for (imageView in listOfImageViews) {
             imageView.background = drawable
-        }
-    }
-
-    private fun updateView(extractedValue: String) {
-        if (extractedValue.length in 0..EngageAppConfig.cardPinLength) {
-
-            if (extractedValue.length > tempLength) {
-                pinDigitAdded(extractedValue.length - 1)
-            } else if (extractedValue.length < tempLength) {
-                pinDigitDeleted(tempLength - 1)
-            }
-            tempLength = extractedValue.length
         }
     }
 

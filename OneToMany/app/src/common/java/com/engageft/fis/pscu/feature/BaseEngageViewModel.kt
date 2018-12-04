@@ -53,7 +53,6 @@ open class BaseEngageViewModel: BaseViewModel() {
                 }
             }
         }
-
     }
 
     override fun onCleared() {

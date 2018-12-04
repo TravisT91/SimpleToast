@@ -2,6 +2,9 @@ package com.engageft.fis.pscu.feature
 
 import android.os.Bundle
 import android.view.LayoutInflater
+import android.view.Menu
+import android.view.MenuInflater
+import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import androidx.lifecycle.Observer
@@ -105,7 +108,44 @@ class ChangeSecurityQuestionsFragment : LotusFullScreenFragment() {
                 binding.questionsList1.dialogOptions = ArrayList<CharSequence>()
             }
         })
+        changeSecurityQuestionsViewModel.saveButtonStateObservable.observe(this, Observer { buttonState ->
+            when(buttonState) {
+                ChangeSecurityQuestionsViewModel.SaveButtonState.VISIBLE_ENABLED -> {
+                    binding.saveButton.visibility = View.VISIBLE
+                    activity?.invalidateOptionsMenu()
+                }
+                ChangeSecurityQuestionsViewModel.SaveButtonState.GONE -> {
+                    binding.saveButton.visibility = View.GONE
+                    activity?.invalidateOptionsMenu()
+                }
+            }
+        })
 
         return binding.root
+    }
+
+    override fun onResume() {
+        super.onResume()
+        setHasOptionsMenu(true)
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu?, inflater: MenuInflater?) {
+        inflater?.inflate(R.menu.change_seq_questions_action_menu, menu)
+        super.onCreateOptionsMenu(menu, inflater)
+    }
+
+    override fun onPrepareOptionsMenu(menu: Menu?) {
+        val saveMenuItem = menu!!.findItem(R.id.save)
+        saveMenuItem.isVisible = changeSecurityQuestionsViewModel.saveButtonStateObservable.value == ChangeSecurityQuestionsViewModel.SaveButtonState.VISIBLE_ENABLED
+        super.onPrepareOptionsMenu(menu)
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem?): Boolean {
+        when(item?.itemId){
+            R.id.save -> run {
+                changeSecurityQuestionsViewModel.onSaveClicked()
+            }
+        }
+        return super.onOptionsItemSelected(item)
     }
 }
