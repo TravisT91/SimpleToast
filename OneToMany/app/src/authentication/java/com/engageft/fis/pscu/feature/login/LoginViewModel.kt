@@ -211,7 +211,7 @@ class LoginViewModel : BaseEngageViewModel() {
                         .subscribe(
                                 { response ->
                                     if (response.isSuccess && response is LoginResponse) {
-                                        BrandingManager.getBrandingWithToken(token)
+                                        BrandingManager.getBrandingWithToken(response.token)
                                                 .subscribeWithProgressAndDefaultErrorHandling<BrandingInfoResponse>(
                                                         this, { handleSuccessfulLoginResponse(response)})
                                     } else if (response is DeviceFailResponse) {

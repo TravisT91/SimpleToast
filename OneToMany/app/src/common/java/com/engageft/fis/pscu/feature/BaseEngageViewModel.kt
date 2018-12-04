@@ -8,9 +8,8 @@ import com.engageft.engagekit.rest.exception.NoConnectivityException
 import com.ob.ws.dom.BasicResponse
 import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
-import io.reactivex.disposables.Disposable
-import io.reactivex.schedulers.Schedulers
 import io.reactivex.disposables.CompositeDisposable
+import io.reactivex.schedulers.Schedulers
 import java.net.SocketTimeoutException
 import java.net.UnknownHostException
 
@@ -72,14 +71,11 @@ inline fun <reified ExpectedClass> Observable<BasicResponse>.subscribeWithProgre
         noinline onComplete: (() -> Unit?)? = null){
     vm.progressOverlayShownObservable.value = true
     vm.compositeDisposable.add(
-            this
-            .subscribeOn(Schedulers.io())
-            .observeOn(AndroidSchedulers.mainThread())
-            .subscribe(
+            this.subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(
                     {
-                        if(it.isSuccess && it is ExpectedClass){
+                        if (it.isSuccess && it is ExpectedClass) {
                             onNext(it)
-                        } else{
+                        } else {
                             vm.handleUnexpectedErrorResponse(it)
                         }
                     },
