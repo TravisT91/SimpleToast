@@ -16,6 +16,7 @@ import com.engageft.apptoolbox.ViewUtils.newLotusInstance
 import com.engageft.apptoolbox.view.InformationDialogFragment
 import com.engageft.fis.pscu.R
 import com.engageft.fis.pscu.databinding.FragmentChangeSecurityQuestionsBinding
+import com.engageft.fis.pscu.feature.branding.Palette
 
 
 /**

@@ -1,4 +1,4 @@
-package com.engageft.fis.pscu.feature
+package com.engageft.fis.pscu.feature.branding
 
 import android.graphics.Color
 import android.graphics.Typeface
@@ -404,7 +404,7 @@ object Palette {
         Palette.apply {
             val context = OneToManyApplication.sInstance.applicationContext
             when (fontName) {
-                Palette.FontType.ARIAL.fontName -> run {
+                FontType.ARIAL.fontName -> run {
                     font_regular = ResourcesCompat.getFont(context, R.font.font_regular)
                     font_bold = ResourcesCompat.getFont(context, R.font.font_bold)
                     font_italic = ResourcesCompat.getFont(context, R.font.font_italic)
@@ -423,12 +423,12 @@ object Palette {
             warningColor : Int,
             errorColor : Int,
             infoColor : Int){
-        this.primaryColor = primaryColor
-        this.secondaryColor = secondaryColor
-        this.successColor = successColor
-        this.warningColor = warningColor
-        this.errorColor = errorColor
-        this.infoColor = infoColor
+        Palette.primaryColor = primaryColor
+        Palette.secondaryColor = secondaryColor
+        Palette.successColor = successColor
+        Palette.warningColor = warningColor
+        Palette.errorColor = errorColor
+        Palette.infoColor = infoColor
     }
 
     fun setFonts(
@@ -437,10 +437,10 @@ object Palette {
             font_italic: Typeface?,
             font_light: Typeface?,
             font_medium: Typeface?) {
-        this.font_regular = font_regular
-        this.font_bold = font_bold
-        this.font_italic = font_italic
-        this.font_light = font_light
-        this.font_medium = font_medium
+        Palette.font_regular = font_regular
+        Palette.font_bold = font_bold
+        Palette.font_italic = font_italic
+        Palette.font_light = font_light
+        Palette.font_medium = font_medium
     }
 }

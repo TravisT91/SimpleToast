@@ -10,12 +10,11 @@ import com.engageft.engagekit.utils.LoginResponseUtils
 import com.engageft.fis.pscu.HeapUtils
 import com.engageft.fis.pscu.config.EngageAppConfig
 import com.engageft.fis.pscu.feature.BaseEngageViewModel
-import com.engageft.fis.pscu.feature.branding.BrandingDelegate
 import com.engageft.fis.pscu.feature.DialogInfo
-import com.engageft.fis.pscu.feature.Palette
 import com.engageft.fis.pscu.feature.WelcomeSharedPreferencesRepo
 import com.engageft.fis.pscu.feature.authentication.AuthenticationConfig
 import com.engageft.fis.pscu.feature.authentication.AuthenticationSharedPreferencesRepo
+import com.engageft.fis.pscu.feature.branding.BrandingManager
 import com.ob.ws.dom.DeviceFailResponse
 import com.ob.ws.dom.LoginResponse
 import io.reactivex.android.schedulers.AndroidSchedulers
@@ -208,7 +207,7 @@ class LoginViewModel : BaseEngageViewModel() {
                         .subscribe(
                                 { response ->
                                     if (response.isSuccess && response is LoginResponse) {
-                                        BrandingDelegate.getBrandingWithToken(response.token)
+                                        BrandingManager.getBrandingWithToken(response.token)
                                                 .subscribe(
                                                         { paletteResponse ->
                                                             progressOverlayShownObservable.value = false

@@ -11,6 +11,7 @@ import com.engageft.apptoolbox.BaseViewModel
 import com.engageft.apptoolbox.view.InformationDialogFragment
 import com.engageft.fis.pscu.R
 import com.engageft.fis.pscu.databinding.FragmentReportLostStolenCardBinding
+import com.engageft.fis.pscu.feature.branding.Palette
 import com.engageft.fis.pscu.feature.palettebindings.applyPaletteStyles
 import utilGen1.StringUtils
 

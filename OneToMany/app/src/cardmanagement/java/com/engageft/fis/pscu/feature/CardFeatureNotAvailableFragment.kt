@@ -10,10 +10,10 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import com.engageft.apptoolbox.BaseViewModel
-import com.engageft.fis.pscu.AuthenticatedActivity
 import com.engageft.fis.pscu.R
 import com.engageft.fis.pscu.databinding.FragmentCardFeatureNotAvailableBinding
-import com.engageft.fis.pscu.feature.branding.BrandingDelegate
+import com.engageft.fis.pscu.feature.branding.BrandingInfo
+import com.engageft.fis.pscu.feature.branding.Palette
 import utilGen1.StringUtils
 
 /**
@@ -93,7 +93,7 @@ class CardFeatureNotAvailableFragment: BaseEngageFullscreenFragment() {
 
             callSupportButton.setOnClickListener {
                 activity?.startActivity(Intent(Intent.ACTION_DIAL).apply {
-                    data = Uri.parse("tel:" + BrandingDelegate.financialInfo?.supportNumber) })
+                    data = Uri.parse("tel:" + BrandingInfo.financialInfo?.supportNumber) })
 
             }
         }

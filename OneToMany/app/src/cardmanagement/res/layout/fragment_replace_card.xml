@@ -5,7 +5,7 @@
     <data>
         <variable
             name="Palette"
-            type="com.engageft.fis.pscu.feature.Palette"/>
+            type="com.engageft.fis.pscu.feature.branding.Palette"/>
         <variable
             name="ReplaceCardViewModel"
             type="com.engageft.fis.pscu.feature.ReplaceCardViewModel"/>

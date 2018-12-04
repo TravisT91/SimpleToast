@@ -6,7 +6,7 @@ import com.airbnb.paris.styles.Style
 import com.engageft.apptoolbox.view.InformationDialogFragment
 import com.engageft.apptoolbox.view.ListBottomSheetDialogFragment
 import com.engageft.fis.pscu.R
-import com.engageft.fis.pscu.feature.Palette
+import com.engageft.fis.pscu.feature.branding.Palette
 
 /**
  * DialogPaletteExtensions
