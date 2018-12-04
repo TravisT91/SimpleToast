@@ -48,14 +48,13 @@ object BrandingManager {
 
     private fun applyBrandingInfo(brandingInfoResponse: BrandingInfoResponse) {
         brandingInfoResponse.brandingInfo.apply {
-            Palette.applyColors(colors)
-            Palette.setFontsFromString(font)
-            BrandingInfo.financialInfo = financialInfo
+            Palette.applyBrandingInfo(brandingInfo = this)
+            BrandingInfoRepo.setBrandingInfo(brandingInfo = this)
         }
     }
 
     fun clearBranding() {
         OneToManyApplication.sInstance.setPaletteDefaults()
-        BrandingInfo.resetBrandingInfo()
+        BrandingInfoRepo.resetBrandingInfo()
     }
 }

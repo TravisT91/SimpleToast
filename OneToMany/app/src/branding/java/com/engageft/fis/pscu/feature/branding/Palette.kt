@@ -11,6 +11,7 @@ import com.airbnb.paris.extensions.textViewStyle
 import com.engageft.apptoolbox.R
 import com.engageft.fis.pscu.OneToManyApplication
 import com.ob.domain.lookup.branding.BrandingColorType
+import com.ob.domain.lookup.branding.BrandingInfo
 
 
 object Palette {
@@ -382,9 +383,12 @@ object Palette {
             }
         }
 
+    fun applyBrandingInfo(brandingInfo: BrandingInfo){
+        applyColors(brandingInfo.colors)
+        setFontsFromString(brandingInfo.font)
+    }
 
-
-    fun applyColors(colors: MutableMap<BrandingColorType, String>) {
+    private fun applyColors(colors: MutableMap<BrandingColorType, String>) {
         colors.apply {
             this.forEach {
                 val color = Color.parseColor(it.value)
@@ -400,7 +404,7 @@ object Palette {
         }
     }
 
-    fun setFontsFromString(fontName: String){
+    private fun setFontsFromString(fontName: String){
         Palette.apply {
             val context = OneToManyApplication.sInstance.applicationContext
             when (fontName) {
