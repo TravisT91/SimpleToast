@@ -146,7 +146,6 @@ class LoginViewModel : BaseEngageViewModel() {
                             .subscribeOn(Schedulers.io())
                             .observeOn(AndroidSchedulers.mainThread())
                             .subscribe({ response ->
-                                Log.e("Joey", "got demo response")
                                 if (response.isSuccess) {
                                     username.set(response.message)
                                     EngageService.getInstance().storageManager.isDemoMode = true
@@ -160,7 +159,6 @@ class LoginViewModel : BaseEngageViewModel() {
                                             dialogType = DialogInfo.DialogType.SERVER_ERROR)
                                 }
                             }, { e ->
-                                Log.e("Joey", "got login response throwable")
                                 loadingOverlayDialogObservable.value = LoadingOverlayDialog.DISMISS_DIALOG
                                 handleThrowable(e)
                             })
@@ -208,7 +206,6 @@ class LoginViewModel : BaseEngageViewModel() {
                         .observeOn(AndroidSchedulers.mainThread())
                         .subscribe(
                                 { response ->
-                                    Log.e("Joey", "got login response")
                                     if (response.isSuccess && response is LoginResponse) {
                                         Palette.getBrandingWithToken(response.token)
                                                 .subscribe(
@@ -231,7 +228,6 @@ class LoginViewModel : BaseEngageViewModel() {
                                         dialogInfoObservable.value = DialogInfo(dialogType = DialogInfo.DialogType.SERVER_ERROR, message = response.message)
                                     }
                                 }, { e ->
-                            Log.e("Joey", "got login response throwable")
                             progressOverlayShownObservable.value = false
                             handleThrowable(e)
                         })
