@@ -102,7 +102,7 @@ class CardFeatureNotAvailableFragment: BaseEngageFullscreenFragment() {
 
     override fun onResume() {
         super.onResume()
-        val featureId = arguments?.getInt(KEY_UNAVAILABLE_FEATURE_ID,-1) ?: -1
+        val featureId = arguments?.getInt(KEY_UNAVAILABLE_FEATURE_ID,-1) ?: UnavailableFeatureType.UNKNOWN.id
         (viewModel as? CardFeatureNotAvailableViewModel)?.apply {
             feature.observe(this@CardFeatureNotAvailableFragment, Observer {
                 message = getMessageByFeature(it)
