@@ -55,10 +55,10 @@ class CardPinFragment : BaseEngageFullscreenFragment() {
                 // requestFocus to show keyboard in case keyboard was dismissed
                 if (pinInputField.visibility == View.VISIBLE) {
                     pinInputField.clearFocus()
-                    pinInputField.requestFocusOnEditInput()
+                    pinInputField.requestFocus()
                 } else {
                     confirmPinInputField.clearFocus()
-                    confirmPinInputField.requestFocusOnEditInput()
+                    confirmPinInputField.requestFocus()
                 }
             }
         }
@@ -71,7 +71,7 @@ class CardPinFragment : BaseEngageFullscreenFragment() {
                         Handler().post {
                             binding.pinInputField.visibility = View.VISIBLE
                             binding.confirmPinInputField.visibility = View.GONE
-                            binding.pinInputField.requestFocusOnEditInput()
+                            binding.pinInputField.requestFocus()
                             // reset fields
                             binding.confirmPinInputField.inputText = ""
                             binding.pinInputField.inputText = ""
@@ -88,7 +88,7 @@ class CardPinFragment : BaseEngageFullscreenFragment() {
                         Handler().post {
                             binding.pinInputField.visibility = View.GONE
                             binding.confirmPinInputField.visibility = View.VISIBLE
-                            binding.confirmPinInputField.requestFocusOnEditInput()
+                            binding.confirmPinInputField.requestFocus()
 
                             updateView(getString(R.string.card_pin_choose_confirmation),
                                     ContextCompat.getColor(context!!, R.color.textPrimary),
@@ -159,7 +159,7 @@ class CardPinFragment : BaseEngageFullscreenFragment() {
         // must do Handler().post() because when this fragment is displayed from DashboardFragment,
         // the keyboard doesn't get displayed
         Handler().post {
-            binding.pinInputField.requestFocusOnEditInput()
+            binding.pinInputField.requestFocus()
         }
     }
 
