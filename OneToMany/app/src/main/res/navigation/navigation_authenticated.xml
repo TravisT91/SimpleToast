@@ -142,8 +142,6 @@
         android:id="@+id/changePasswordFragment"
         android:name="com.engageft.fis.pscu.feature.ChangePasswordFragment"
         android:label="@string/change_password_title" />
-
-
     <fragment
         android:id="@+id/cardPinFragment"
         android:name="com.engageft.fis.pscu.feature.CardPinFragment"
