@@ -3,9 +3,9 @@ package com.engageft.fis.pscu.feature.branding
 import com.ob.domain.lookup.branding.BrandingFinancialInfo
 
 /**
- * BrandingDelegate
+ * BrandingInfo
  * </p>
- * Handles the parsing and storing of the BrandingInfoResponse
+ * This object will act as a holder for all non-UI related branding information.
  * </p>
  * Created by Travis Tkachuk 12/3/18
  * Copyright (c) 2018 Engage FT. All rights reserved.
