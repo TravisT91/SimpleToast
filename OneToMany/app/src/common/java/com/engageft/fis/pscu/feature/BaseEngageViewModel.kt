@@ -24,11 +24,25 @@ open class BaseEngageViewModel: BaseViewModel() {
     val dialogInfoObservable: MutableLiveData<DialogInfo> = MutableLiveData()
 
     fun handleUnexpectedErrorResponse(response: BasicResponse) {
+        // This is a catch-all utility function to handle all unexpected responses to an API call
+        // and report it essentially as a BUG. In debug builds, let's blow up in the user's face,
+        // but in production, show a generic error, fail gracefully, and report it over crashlytics.
         if (BuildConfig.DEBUG) {
             dialogInfoObservable.value = DialogInfo(message = response.message)
+            // Report this problem to Crashlytics in case a bug report is not made.
+            try {
+                throw IllegalStateException("handleUnexpectedErrorReponse: " + response.message)
+            } catch (e: IllegalStateException) {
+                Crashlytics.logException(e)
+            }
         } else {
             dialogInfoObservable.value = DialogInfo(dialogType = DialogInfo.DialogType.GENERIC_ERROR)
             Crashlytics.log(response.message)
+            try {
+                throw IllegalStateException("handleUnexpectedErrorReponse: " + response.message)
+            } catch (e: IllegalStateException) {
+                Crashlytics.logException(e)
+            }
         }
     }
 
@@ -45,10 +59,17 @@ open class BaseEngageViewModel: BaseViewModel() {
             }
             // Add more specific exceptions here, if needed
             else -> {
+                // This is a catch-all for anything else. Anything caught here is a BUG and should
+                // be reported as such. In Debug builds, we can just blow up in the user's face but
+                // on production, we need to fail gracefully and report the error so we can fix it
+                // later.
                 if (BuildConfig.DEBUG) {
                     dialogInfoObservable.value = DialogInfo(message = e.message)
                     e.printStackTrace()
+                    // Just in case the user at the time doesn't report a bug to us.
+                    Crashlytics.logException(e)
                 } else {
+                    dialogInfoObservable.value = DialogInfo(dialogType = DialogInfo.DialogType.GENERIC_ERROR)
                     Crashlytics.logException(e)
                 }
             }
