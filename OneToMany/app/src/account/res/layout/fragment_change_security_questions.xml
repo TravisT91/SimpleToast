@@ -104,13 +104,14 @@
                 android:layout_height="16dp" />
 
             <com.engageft.apptoolbox.view.PillButton
+                android:id="@+id/saveButton"
                 style="@style/ButtonPillPrimaryFilledDefault"
                 android:layout_gravity="center"
                 android:gravity="center"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="8dp"
-                android:enabled="@{viewModel.saveEnabled}"
+                android:visibility="gone"
                 android:onClick="@{() -> viewModel.onSaveClicked()}"
                 android:text="@string/SECURITY_QUESTIONS_BUTTON_SAVE"/>
 

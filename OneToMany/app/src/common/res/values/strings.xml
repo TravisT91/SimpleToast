@@ -22,7 +22,6 @@
     <string name="GOALS_PROGRESS_FORMAT">%1$s of %2$s</string>
     <string name="LAST_UPDATED_FORMAT">Last updated %s</string> <!-- insert date -->
 
-
     <!--TODO(jhutchins): Refactor DisplayDateTimeUtils: SHOW-386-->
     <!-- DateFormat strings for localization: -->
     <string name="format_datetime_month_year">MMM yyyy</string> <!-- "Nov 2016" -->
@@ -80,8 +79,18 @@
     <string name="alert_error_message_generic">There was an error. Please try again.</string>
     <string name="alert_error_title_generic">Error</string>
 
+    <string name="alert_success_title_generic">Success</string>
+    <string name="alert_success_message_generic">Your changes have been saved.</string>
+
     <string name="dialog_information_cancel_button">Cancel</string>
     <string name="dialog_information_ok_button">OK</string>
 
     <string name="software_version_format">Version %s</string>
+    <string name="dialog_information_yes_button">Yes</string>
+    <string name="dialog_information_no_button">No</string>
+
+    <string name="MENU_SHARE">Share</string>
+    <string name="NO_PDF_APP_FOUND_TITLE">No PDF Viewer Found</string>
+    <string name="NO_PDF_APP_FOUND_MESSAGE">Would you like to find an application to view PDF documents in the Play Store?</string>
+    <string name="WEBVIEW_NO_EMAIL_CLIENT_FOUND">No email client app found!</string>
 </resources>

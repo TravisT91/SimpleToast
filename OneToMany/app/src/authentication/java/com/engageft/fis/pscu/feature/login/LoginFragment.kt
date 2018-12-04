@@ -15,18 +15,16 @@ import androidx.navigation.findNavController
 import androidx.transition.AutoTransition
 import androidx.transition.TransitionManager
 import com.engageft.apptoolbox.BaseViewModel
-import com.engageft.apptoolbox.LotusFullScreenFragment
 import com.engageft.apptoolbox.ViewUtils.newLotusInstance
 import com.engageft.apptoolbox.view.InformationDialogFragment
 import com.engageft.engagekit.utils.DeviceUtils
 import com.engageft.fis.pscu.R
 import com.engageft.fis.pscu.databinding.FragmentLoginBinding
+import com.engageft.fis.pscu.feature.BaseEngageFullscreenFragment
 import com.engageft.fis.pscu.feature.DialogInfo
 import com.engageft.fis.pscu.feature.EasterEggGestureDetector
 import com.engageft.fis.pscu.feature.EasterEggGestureListener
 import com.engageft.fis.pscu.feature.Palette
-import com.engageft.fis.pscu.feature.infoDialogGenericErrorTitleMessageConditionalNewInstance
-import com.engageft.fis.pscu.feature.infoDialogGenericErrorTitleMessageNewInstance
 import com.engageft.fis.pscu.feature.infoDialogSimpleMessageNoTitle
 
 /**
@@ -37,8 +35,9 @@ import com.engageft.fis.pscu.feature.infoDialogSimpleMessageNoTitle
  * Created by joeyhutchins on 8/24/18.
  * Copyright (c) 2018 Engage FT. All rights reserved.
  */
-class LoginFragment : LotusFullScreenFragment() {
+class LoginFragment : BaseEngageFullscreenFragment() {
     private lateinit var constraintSet: ConstraintSet
+    private lateinit var contentConstraintSet: ConstraintSet
     private lateinit var binding: FragmentLoginBinding
     private lateinit var gestureDetector: EasterEggGestureDetector
 
@@ -52,7 +51,10 @@ class LoginFragment : LotusFullScreenFragment() {
         binding.palette = Palette
 
         constraintSet = ConstraintSet()
-        constraintSet.clone(binding.root as ConstraintLayout)
+        constraintSet.clone(binding.loginParent)
+
+        contentConstraintSet = ConstraintSet()
+        contentConstraintSet.clone(binding.contentBox)
 
         val vm = (viewModel as LoginViewModel)
         binding.viewModel = vm
@@ -79,7 +81,8 @@ class LoginFragment : LotusFullScreenFragment() {
                 }
                 LoginViewModel.LoginNavigationEvent.ACCEPT_TERMS -> {
                     //TODO(aHashimi): https://engageft.atlassian.net/browse/SHOW-354
-                    Toast.makeText(context!!, "TODO: Navigate to Accept Terms", Toast.LENGTH_SHORT).show()
+                    //TODO(aHashimi): this's here to bypass Accept terms until it's resolved
+                    activity!!.finish()
                     R.id.action_loginFragment_to_authenticatedActivity
                 }
             }
@@ -87,87 +90,70 @@ class LoginFragment : LotusFullScreenFragment() {
                 binding.root.findNavController().navigate(navDestinationId)
             }
         })
-        vm.usernameError.observe(this, Observer { error: LoginViewModel.UsernameValidationError ->
-            when (error) {
-                LoginViewModel.UsernameValidationError.NONE -> binding.usernameInput.setErrorTexts(null)
-                LoginViewModel.UsernameValidationError.INVALID_CREDENTIALS -> binding.usernameInput.setErrorTexts(listOf(getString(R.string.error_message_invalid_credentials)))
-            }
-            // Make sure error is animated
-            setLayoutTransitions()
-        })
-        vm.passwordError.observe(this, Observer { error: LoginViewModel.PasswordValidationError ->
-            when (error) {
-                LoginViewModel.PasswordValidationError.NONE -> binding.passwordInput.setErrorTexts(null)
-                LoginViewModel.PasswordValidationError.INVALID_CREDENTIALS -> binding.passwordInput.setErrorTexts(listOf(getString(R.string.error_message_invalid_credentials)))
-            }
-            // Make sure error is animated
-            setLayoutTransitions()
-        })
         vm.loginButtonState.observe(this, Observer { loginButtonState: LoginViewModel.ButtonState ->
             when (loginButtonState) {
                 LoginViewModel.ButtonState.SHOW -> {
                     // Animate the login button onto the screen.
-                    val constraintLayout = binding.root as ConstraintLayout
+                    val constraintLayout = binding.loginParent
                     constraintSet = ConstraintSet()
                     constraintSet.clone(constraintLayout)
-                    constraintSet.connect(R.id.loginButton, ConstraintSet.TOP, R.id.forgotPasswordText, ConstraintSet.BOTTOM, 0)
+                    constraintSet.connect(R.id.loginButton, ConstraintSet.TOP, R.id.contentBox, ConstraintSet.BOTTOM, 0)
                     constraintSet.connect(R.id.loginButton, ConstraintSet.BOTTOM, R.id.loginFooter, ConstraintSet.TOP, 0)
+                    constraintSet.connect(R.id.loginFooter, ConstraintSet.TOP, R.id.loginButton, ConstraintSet.BOTTOM, 0)
+                    constraintSet.connect(R.id.contentBox, ConstraintSet.BOTTOM, R.id.loginButton, ConstraintSet.TOP, 0)
 
-                    setLayoutTransitions()
+                    setFullLayoutTransitions()
                 }
                 LoginViewModel.ButtonState.HIDE -> {
                     // Animate the login button off the screen.
-                    val constraintLayout = binding.root as ConstraintLayout
+                    val constraintLayout = binding.loginParent as ConstraintLayout
                     constraintSet = ConstraintSet()
                     constraintSet.clone(constraintLayout)
                     constraintSet.connect(R.id.loginButton, ConstraintSet.TOP, constraintLayout.id, ConstraintSet.BOTTOM, 0)
                     constraintSet.clear(R.id.loginButton, ConstraintSet.BOTTOM)
+                    constraintSet.connect(R.id.loginFooter, ConstraintSet.TOP, R.id.contentBox, ConstraintSet.BOTTOM, 0)
+                    constraintSet.connect(R.id.contentBox, ConstraintSet.BOTTOM, R.id.loginFooter, ConstraintSet.TOP, 0)
 
-                    setLayoutTransitions()
+                    setFullLayoutTransitions()
                 }
             }
         })
         vm.demoAccountButtonState.observe(this, Observer { buttonState: LoginViewModel.ButtonState ->
             when (buttonState) {
-                LoginViewModel.ButtonState.SHOW -> constraintSet.setVisibility(R.id.demoAccountButton, View.VISIBLE)
-                LoginViewModel.ButtonState.HIDE -> constraintSet.setVisibility(R.id.demoAccountButton, View.GONE)
+                LoginViewModel.ButtonState.SHOW -> {
+                    constraintSet.setVisibility(R.id.demoAccountButton, View.VISIBLE)
+                    constraintSet.connect(R.id.loginFooter, ConstraintSet.TOP, R.id.demoAccountButton, ConstraintSet.BOTTOM, 0)
+                    constraintSet.connect(R.id.contentBox, ConstraintSet.BOTTOM, R.id.demoAccountButton, ConstraintSet.TOP, 0)
+                }
+                LoginViewModel.ButtonState.HIDE -> {
+                    constraintSet.setVisibility(R.id.demoAccountButton, View.GONE)
+                    constraintSet.connect(R.id.loginFooter, ConstraintSet.TOP, R.id.contentBox, ConstraintSet.BOTTOM, 0)
+                    constraintSet.connect(R.id.contentBox, ConstraintSet.BOTTOM, R.id.loginFooter, ConstraintSet.TOP, 0)
+                }
             }
-            setLayoutTransitions()
+            setFullLayoutTransitions()
         })
         // If testMode was saved as enabled, make the switch visible initially.
         if (vm.testMode.get()!! || DeviceUtils.isEmulator()) {
-            constraintSet.setVisibility(R.id.testSwitch, View.VISIBLE)
-            setLayoutTransitions()
+            contentConstraintSet.setVisibility(R.id.testSwitch, View.VISIBLE)
+            setFullLayoutTransitions()
         }
         // The gestureDetector does not enable or disable anything, it merely controls visibility of the
         // switch so it CAN be changed. 
         gestureDetector = EasterEggGestureDetector(context!!, binding.root, object : EasterEggGestureListener {
             override fun onEasterEggActivated() {
-                constraintSet.setVisibility(R.id.testSwitch, View.VISIBLE)
-                setLayoutTransitions()
+                contentConstraintSet.setVisibility(R.id.testSwitch, View.VISIBLE)
+                setFullLayoutTransitions()
             }
 
             override fun onEasterEggDeactivated() {
-                constraintSet.setVisibility(R.id.testSwitch, View.INVISIBLE)
-                setLayoutTransitions()
+                contentConstraintSet.setVisibility(R.id.testSwitch, View.INVISIBLE)
+                setFullLayoutTransitions()
             }
         })
 
         vm.dialogInfoObservable.observe(this, Observer { dialogInfo ->
             when (dialogInfo.dialogType) {
-                DialogInfo.DialogType.GENERIC_ERROR -> {
-                    showDialog(infoDialogGenericErrorTitleMessageConditionalNewInstance(context!!, dialogInfo))
-                }
-                DialogInfo.DialogType.SERVER_ERROR -> {
-                    showDialog(infoDialogGenericErrorTitleMessageConditionalNewInstance(context!!, dialogInfo))
-                }
-                DialogInfo.DialogType.NO_INTERNET_CONNECTION -> {
-                    showDialog(infoDialogGenericErrorTitleMessageNewInstance(
-                            context!!, message = getString(R.string.alert_error_message_no_internet_connection)))
-                }
-                DialogInfo.DialogType.CONNECTION_TIMEOUT -> {
-                    showDialog(infoDialogGenericErrorTitleMessageNewInstance(context!!, getString(R.string.alert_error_message_connection_timeout)))
-                }
                 DialogInfo.DialogType.OTHER -> {
                     when ((dialogInfo as LoginDialogInfo).loginDialogType) {
 
@@ -228,11 +214,20 @@ class LoginFragment : LotusFullScreenFragment() {
         return binding.root
     }
 
-    private fun setLayoutTransitions() {
-        val constraintLayout = binding.root as ConstraintLayout
+    private fun setFullLayoutTransitions() {
+        val constraintLayout = binding.loginParent
         val transition = AutoTransition()
         transition.duration = 250
         TransitionManager.beginDelayedTransition(constraintLayout, transition)
         constraintSet.applyTo(constraintLayout)
+        setContentLayoutTransitions()
+    }
+
+    private fun setContentLayoutTransitions() {
+        val contentConstraintLayout = binding.contentBox
+        val transition = AutoTransition()
+        transition.duration = 250
+        TransitionManager.beginDelayedTransition(contentConstraintLayout, transition)
+        contentConstraintSet.applyTo(contentConstraintLayout)
     }
 }

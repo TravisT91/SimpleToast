@@ -10,6 +10,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
+import androidx.navigation.fragment.findNavController
 import androidx.navigation.findNavController
 import com.engageft.apptoolbox.BaseViewModel
 import com.engageft.apptoolbox.LotusFullScreenFragment
@@ -45,7 +46,7 @@ class AccountSettingsFragment : LotusFullScreenFragment() {
                 binding.root.findNavController().navigate(R.id.action_account_fragment_to_profileFragment)
             }
             password.setOnClickListener {
-                //TODO(ttkachuk) implement onCLick
+                findNavController().navigate(R.id.action_account_fragment_to_changePasswordFragment)
             }
             securityQuestions.setOnClickListener {
                 binding.root.findNavController().navigate(R.id.action_account_fragment_to_changeSecurityQuestionsFragment)
@@ -54,7 +55,7 @@ class AccountSettingsFragment : LotusFullScreenFragment() {
                 //TODO(ttkachuk) implement onCLick
             }
             statements.setOnClickListener {
-                //TODO(ttkachuk) implement onCLick
+                binding.root.findNavController().navigate(R.id.action_account_fragment_to_statementsFragment)
             }
             secondaryAccount.setOnClickListener {
                 //TODO(ttkachuk) implement onCLick

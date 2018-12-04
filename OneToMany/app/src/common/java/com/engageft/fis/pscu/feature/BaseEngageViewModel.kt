@@ -10,6 +10,7 @@ import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
+import io.reactivex.disposables.CompositeDisposable
 import java.net.SocketTimeoutException
 import java.net.UnknownHostException
 
@@ -22,6 +23,7 @@ import java.net.UnknownHostException
  * Copyright (c) 2018 Engage FT. All rights reserved.
  */
 open class BaseEngageViewModel: BaseViewModel() {
+    val compositeDisposable = CompositeDisposable()
 
     val dialogInfoObservable: MutableLiveData<DialogInfo> = MutableLiveData()
 
@@ -55,7 +57,11 @@ open class BaseEngageViewModel: BaseViewModel() {
                 }
             }
         }
+    }
 
+    override fun onCleared() {
+        super.onCleared()
+        compositeDisposable.dispose()
     }
 }
 

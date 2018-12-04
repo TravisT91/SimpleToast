@@ -12,13 +12,13 @@ import com.engageft.fis.pscu.config.EngageAppConfig
 import com.engageft.fis.pscu.feature.BaseEngageViewModel
 import com.engageft.fis.pscu.feature.branding.BrandingDelegate
 import com.engageft.fis.pscu.feature.DialogInfo
+import com.engageft.fis.pscu.feature.Palette
 import com.engageft.fis.pscu.feature.WelcomeSharedPreferencesRepo
 import com.engageft.fis.pscu.feature.authentication.AuthenticationConfig
 import com.engageft.fis.pscu.feature.authentication.AuthenticationSharedPreferencesRepo
 import com.ob.ws.dom.DeviceFailResponse
 import com.ob.ws.dom.LoginResponse
 import io.reactivex.android.schedulers.AndroidSchedulers
-import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
 
 /**
@@ -30,24 +30,12 @@ import io.reactivex.schedulers.Schedulers
  * Copyright (c) 2018 Engage FT. All rights reserved.
  */
 class LoginViewModel : BaseEngageViewModel() {
-    private var loginResponse: LoginResponse? = null
-
     enum class LoginNavigationEvent {
         AUTHENTICATED_ACTIVITY,
         ISSUER_STATEMENT,
         DISCLOSURES,
         TWO_FACTOR_AUTHENTICATION,
         ACCEPT_TERMS
-    }
-
-    enum class UsernameValidationError {
-        NONE,
-        INVALID_CREDENTIALS, // Generic username/password not valid error type.
-    }
-
-    enum class PasswordValidationError {
-        NONE,
-        INVALID_CREDENTIALS // Generic username/password not valid error type.
     }
 
     enum class ButtonState {
@@ -60,15 +48,13 @@ class LoginViewModel : BaseEngageViewModel() {
         DISMISS_DIALOG
     }
 
-    private val compositeDisposable = CompositeDisposable()
+    private lateinit var token: String
 
     val navigationObservable = MutableLiveData<LoginNavigationEvent>()
 
     val username : ObservableField<String> = ObservableField("")
-    var usernameError : MutableLiveData<UsernameValidationError> = MutableLiveData()
 
     var password : ObservableField<String> = ObservableField("")
-    var passwordError : MutableLiveData<PasswordValidationError> = MutableLiveData()
 
     val rememberMe: ObservableField<Boolean> = ObservableField(false)
 
@@ -182,32 +168,27 @@ class LoginViewModel : BaseEngageViewModel() {
     }
 
     fun onConfirmEmail() {
+        progressOverlayShownObservable.value = true
+        compositeDisposable.add(EngageService.getInstance().verificationEmailObservable(token)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe({ response ->
+                    progressOverlayShownObservable.value = false
 
-        loginResponse?.let {
-            progressOverlayShownObservable.value = true
-            compositeDisposable.add(EngageService.getInstance().verificationEmailObservable(it.token)
-                    .subscribeOn(Schedulers.io())
-                    .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe({ response ->
-                        progressOverlayShownObservable.value = false
-
-                        if (response.isSuccess) {
-                            dialogInfoObservable.value = LoginDialogInfo(dialogType = DialogInfo.DialogType.OTHER,
-                                    loginDialogType = LoginDialogInfo.LoginDialogType.EMAIL_VERIFICATION_SUCCESS)
-                        } else {
-                            dialogInfoObservable.value = LoginDialogInfo(
-                                    message = response.message,
-                                    dialogType = DialogInfo.DialogType.SERVER_ERROR)
-                        }
-                    }, { e ->
-                        progressOverlayShownObservable.value = false
-                        logout()
-                        handleThrowable(e)
-                    })
-            )
-        } ?: run {
-            dialogInfoObservable.value = LoginDialogInfo()
-        }
+                    if (response.isSuccess) {
+                        dialogInfoObservable.value = LoginDialogInfo(dialogType = DialogInfo.DialogType.OTHER,
+                                loginDialogType = LoginDialogInfo.LoginDialogType.EMAIL_VERIFICATION_SUCCESS)
+                    } else {
+                        dialogInfoObservable.value = LoginDialogInfo(
+                                message = response.message,
+                                dialogType = DialogInfo.DialogType.SERVER_ERROR)
+                    }
+                }, { e ->
+                    progressOverlayShownObservable.value = false
+                    logout()
+                    handleThrowable(e)
+                })
+        )
     }
 
     fun logout() {
@@ -217,9 +198,6 @@ class LoginViewModel : BaseEngageViewModel() {
     private fun login(username: String, password: String) {
         // Make sure there's no stale data. Might want to keep some around, but for now, just wipe it all out.
         EngageService.getInstance().authManager.logout()
-
-        // let's clear previous credentials error messages if applicable
-        clearErrorTexts()
 
         progressOverlayShownObservable.value = true
 
@@ -248,11 +226,7 @@ class LoginViewModel : BaseEngageViewModel() {
                                         navigationObservable.value = LoginNavigationEvent.TWO_FACTOR_AUTHENTICATION
                                     } else {
                                         progressOverlayShownObservable.value = false
-                                        // we’re not yet truly parsing error types, and instead assume any error means invalid credentials.
-                                        // so set backend error response message as "invalid credentials" for now until true error handling has been implemented.
-                                        // https://engageft.atlassian.net/browse/SHOW-364
-                                        usernameError.value = UsernameValidationError.INVALID_CREDENTIALS
-                                        passwordError.value = PasswordValidationError.INVALID_CREDENTIALS
+                                        dialogInfoObservable.value = DialogInfo(dialogType = DialogInfo.DialogType.SERVER_ERROR, message = response.message)
                                     }
                                 }, { e ->
                             progressOverlayShownObservable.value = false
@@ -261,22 +235,8 @@ class LoginViewModel : BaseEngageViewModel() {
         )
     }
 
-    private fun clearErrorTexts() {
-        usernameError.value?.let {
-            if (it == UsernameValidationError.INVALID_CREDENTIALS) {
-                usernameError.value = UsernameValidationError.NONE
-            }
-        }
-        passwordError.value?.let {
-            if (it == PasswordValidationError.INVALID_CREDENTIALS) {
-                passwordError.value = PasswordValidationError.NONE
-            }
-        }
-    }
-
     private fun handleSuccessfulLoginResponse(loginResponse: LoginResponse) {
-        this.loginResponse = loginResponse
-
+        token = loginResponse.token
         // set the Get started flag to true after the successful login, so the Welcome screen doesn't get displayed again
         WelcomeSharedPreferencesRepo.applyHasSeenGetStarted(true)
 

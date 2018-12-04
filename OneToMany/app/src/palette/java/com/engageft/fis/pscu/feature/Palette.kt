@@ -9,14 +9,9 @@ import com.airbnb.paris.extensions.lineSpacingExtra
 import com.airbnb.paris.extensions.textSizeDp
 import com.airbnb.paris.extensions.textViewStyle
 import com.engageft.apptoolbox.R
-import com.engageft.engagekit.EngageService
 import com.engageft.fis.pscu.OneToManyApplication
 import com.ob.domain.lookup.branding.BrandingColorType
-import com.ob.ws.dom.BasicResponse
-import com.ob.ws.dom.BrandingInfoResponse
-import io.reactivex.Observable
-import io.reactivex.android.schedulers.AndroidSchedulers
-import io.reactivex.schedulers.Schedulers
+
 
 object Palette {
     private const val NOT_SET = 0
