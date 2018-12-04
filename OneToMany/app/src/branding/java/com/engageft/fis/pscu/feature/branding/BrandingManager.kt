@@ -1,6 +1,8 @@
 package com.engageft.fis.pscu.feature.branding
 
 import com.engageft.engagekit.EngageService
+import com.engageft.engagekit.rest.request.AuthenticatedRequest
+import com.engageft.engagekit.rest.request.RefCodeRequest
 import com.engageft.fis.pscu.OneToManyApplication
 import com.ob.ws.dom.BasicResponse
 import com.ob.ws.dom.BrandingInfoResponse
@@ -22,7 +24,7 @@ object BrandingManager {
 
     fun getBrandingWithToken(token: String): Observable<BasicResponse> {
         return EngageService.getInstance().engageApiInterface.postGetAccountBrandingInfo(
-                HashMap<String, String>().apply { put("token", token) })
+                AuthenticatedRequest(token).fieldMap)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .doOnNext {
@@ -34,7 +36,7 @@ object BrandingManager {
 
     fun getBrandingWithRefCode(refCode: String): Observable<BasicResponse> {
         return EngageService.getInstance().engageApiInterface.postGetBrandingInfoFromRefCode(
-                HashMap<String, String>().apply { put("refCode", refCode) })
+                RefCodeRequest(refCode).fieldMap)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .doOnNext {
