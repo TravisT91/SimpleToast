@@ -11,8 +11,6 @@ import io.reactivex.disposables.CompositeDisposable
 import utilGen1.StringUtils
 
 class ReportLostStolenCardViewModel : BaseEngageViewModel() {
-    val compositeDisposable = CompositeDisposable()
-
     var address: String = ""
 
     val lostStolenReportedSuccess = MutableLiveData<Boolean>()
@@ -43,10 +41,5 @@ class ReportLostStolenCardViewModel : BaseEngageViewModel() {
     private fun setAddressFromLoginResponse(loginResponse: LoginResponse){
         val addressInfo = LoginResponseUtils.getAddressInfoForCurrentDebitCard(loginResponse)
         address = StringUtils.formatAddressString(addressInfo)
-    }
-
-    override fun onCleared() {
-        compositeDisposable.clear()
-        super.onCleared()
     }
 }

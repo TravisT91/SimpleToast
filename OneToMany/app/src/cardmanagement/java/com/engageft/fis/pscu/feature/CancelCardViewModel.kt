@@ -8,7 +8,6 @@ import com.ob.ws.dom.BasicResponse
 import io.reactivex.disposables.CompositeDisposable
 
 class CancelCardViewModel : BaseEngageViewModel() {
-    val compositeDisposable = CompositeDisposable()
 
     val cardCanceledSuccess = MutableLiveData<Boolean>()
 
@@ -22,10 +21,5 @@ class CancelCardViewModel : BaseEngageViewModel() {
                     cardCanceledSuccess.value = true
                     EngageService.getInstance().storageManager.removeLoginResponse()
                 }))
-    }
-
-    override fun onCleared() {
-        compositeDisposable.clear()
-        super.onCleared()
     }
 }

@@ -11,7 +11,6 @@ import io.reactivex.disposables.CompositeDisposable
 import utilGen1.StringUtils
 
 class ReplaceCardViewModel : BaseEngageViewModel() {
-    val compositeDisposable = CompositeDisposable()
 
     var address: String = ""
 
@@ -43,10 +42,5 @@ class ReplaceCardViewModel : BaseEngageViewModel() {
     private fun setAddressFromLoginResponse(loginResponse: LoginResponse){
         val addressInfo = LoginResponseUtils.getAddressInfoForCurrentDebitCard(loginResponse)
         address = StringUtils.formatAddressString(addressInfo)
-    }
-
-    override fun onCleared() {
-        compositeDisposable.dispose()
-        super.onCleared()
     }
 }
