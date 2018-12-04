@@ -8,7 +8,6 @@ open class DialogInfo(var title: String? = null,
         GENERIC_SUCCESS,
         GENERIC_ERROR,
         SERVER_ERROR,
-        GENERIC_SUCCESS,
         NO_INTERNET_CONNECTION,
         CONNECTION_TIMEOUT,
         OTHER
