@@ -18,6 +18,7 @@ import androidx.appcompat.app.AlertDialog
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
+import com.engageft.apptoolbox.util.setTextSizeAndFont
 import com.engageft.apptoolbox.util.showKeyboard
 import com.engageft.apptoolbox.view.SafeDialogFragment
 import com.engageft.fis.pscu.R
@@ -45,13 +46,33 @@ class AuthenticationDialogFragment : SafeDialogFragment() {
     private lateinit var buttonNeutral: Button
     private lateinit var buttonNegative: Button
 
+    var titleTextSizeAndFont: Pair<Float?, Typeface?>? = null
+    var messageTextSizeAndFont: Pair<Float?, Typeface?>? = null
+    var errorTextSizeAndFont: Pair<Float?, Typeface?>? = null
+    var positiveButtonTextSizeAndFont: Pair<Float?, Typeface?>? = null
+    var neutralButtonTextSizeAndFont: Pair<Float?, Typeface?>? = null
+    var negativeButtonTextSizeAndFont: Pair<Float?, Typeface?>? = null
+
+    @ColorInt
+    var titleTextColor: Int = NOT_SET
+    @ColorInt
+    var messageTextColor: Int = NOT_SET
+    @ColorInt
+    var errorTextColor: Int = NOT_SET
+    @ColorInt
+    var positiveButtonTextColor: Int = NOT_SET
+    @ColorInt
+    var neutralButtonTextColor: Int = NOT_SET
+    @ColorInt
+    var negativeButtonTextColor: Int = NOT_SET
+
     private var authenticationSuccessFunction: (() -> Unit)? = null
 
     private lateinit var viewModel: AuthenticationDialogViewModel
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         arguments?.apply {
-            message = getString(AuthenticationDialogFragment.ARG_MESSAGE)
+            message = getCharSequence(AuthenticationDialogFragment.ARG_MESSAGE)
             styleResId = getInt(AuthenticationDialogFragment.ARG_STYLE_RES)
             dialogWidthStyleResId = getInt(AuthenticationDialogFragment.ARG_DIALOG_WIDTH_STYLE_RES)
         }
@@ -171,58 +192,100 @@ class AuthenticationDialogFragment : SafeDialogFragment() {
         if (styleResId != NOT_SET) {
             applyStyle(styleResId)
         }
+
+        titleTextSizeAndFont?.let{titleTextView.setTextSizeAndFont(it)}
+        messageTextSizeAndFont?.let{messageTextView.setTextSizeAndFont(it)}
+        errorTextSizeAndFont?.let{errorTextView.setTextSizeAndFont(it)}
+        positiveButtonTextSizeAndFont?.let{buttonPositive.setTextSizeAndFont(it)}
+        neutralButtonTextSizeAndFont?.let{buttonNeutral.setTextSizeAndFont(it)}
+        negativeButtonTextSizeAndFont?.let{buttonNegative.setTextSizeAndFont(it)}
+
+        if (titleTextColor != NOT_SET) titleTextView.setTextColor(titleTextColor)
+        if (messageTextColor != NOT_SET) messageTextView.setTextColor(messageTextColor)
+        if (errorTextColor != NOT_SET) errorTextView.setTextColor(errorTextColor)
+        if (positiveButtonTextColor != NOT_SET) buttonPositive.setTextColor(positiveButtonTextColor)
+        if (neutralButtonTextColor != NOT_SET) buttonNeutral.setTextColor(neutralButtonTextColor)
+        if (negativeButtonTextColor != NOT_SET) buttonNegative.setTextColor(negativeButtonTextColor)
     }
 
     private fun applyStyle(@StyleRes styleResId: Int) {
         val a = context!!.obtainStyledAttributes(styleResId, R.styleable.DialogAuthentication)
 
-        val titleTextAppearance = a?.getResourceId(R.styleable.DialogAuthentication_titleTextAppearance, AuthenticationDialogFragment.NOT_SET) ?: AuthenticationDialogFragment.NOT_SET
-        val messageTextAppearance = a?.getResourceId(R.styleable.DialogAuthentication_messageTextAppearance, AuthenticationDialogFragment.NOT_SET) ?: AuthenticationDialogFragment.NOT_SET
-        val errorMessageTextAppearance = a?.getResourceId(R.styleable.DialogAuthentication_errorMessageTextAppearance, AuthenticationDialogFragment.NOT_SET) ?: AuthenticationDialogFragment.NOT_SET
-        val messageLineSpacing = a?.getDimension(R.styleable.DialogAuthentication_messageLineSpacing, AuthenticationDialogFragment.NOT_SET_FLOAT) ?: AuthenticationDialogFragment.NOT_SET_FLOAT
-        val buttonPositiveAppearance = a?.getResourceId(R.styleable.DialogAuthentication_buttonPositiveTextAppearance, AuthenticationDialogFragment.NOT_SET) ?: AuthenticationDialogFragment.NOT_SET
-        val buttonNeutralAppearance = a?.getResourceId(R.styleable.DialogAuthentication_buttonNeutralTextAppearance, AuthenticationDialogFragment.NOT_SET) ?: AuthenticationDialogFragment.NOT_SET
-        val buttonNegativeAppearance = a?.getResourceId(R.styleable.DialogAuthentication_buttonNegativeTextAppearance, AuthenticationDialogFragment.NOT_SET) ?: AuthenticationDialogFragment.NOT_SET
-        val buttonBackground = a?.getResourceId(R.styleable.DialogAuthentication_buttonBackground, AuthenticationDialogFragment.NOT_SET) ?: AuthenticationDialogFragment.NOT_SET
+        val titleTextAppearance = a?.getResourceId(R.styleable.DialogAuthentication_titleTextAppearance, NOT_SET) ?: NOT_SET
+        val messageTextAppearance = a?.getResourceId(R.styleable.DialogAuthentication_messageTextAppearance, NOT_SET) ?: NOT_SET
+        val errorMessageTextAppearance = a?.getResourceId(R.styleable.DialogAuthentication_errorMessageTextAppearance, NOT_SET) ?: NOT_SET
+        val messageLineSpacing = a?.getDimension(R.styleable.DialogAuthentication_messageLineSpacing, NOT_SET_FLOAT) ?: NOT_SET_FLOAT
+        val buttonPositiveAppearance = a?.getResourceId(R.styleable.DialogAuthentication_buttonPositiveTextAppearance, NOT_SET) ?: NOT_SET
+        val buttonNeutralAppearance = a?.getResourceId(R.styleable.DialogAuthentication_buttonNeutralTextAppearance, NOT_SET) ?: NOT_SET
+        val buttonNegativeAppearance = a?.getResourceId(R.styleable.DialogAuthentication_buttonNegativeTextAppearance, NOT_SET) ?: NOT_SET
+        val buttonBackground = a?.getResourceId(R.styleable.DialogAuthentication_buttonBackground, NOT_SET) ?: NOT_SET
 
         a.recycle()
 
-        if (titleTextAppearance != AuthenticationDialogFragment.NOT_SET) {
-            setTextAppearance(titleTextView, titleTextAppearance)
+        if (titleTextAppearance != NOT_SET) {
+            setTitleTextAppearance(titleTextAppearance)
         }
 
-        if (messageTextAppearance != AuthenticationDialogFragment.NOT_SET) {
-            setTextAppearance(messageTextView, messageTextAppearance)
+        if (messageTextAppearance != NOT_SET) {
+            setMessageTextAppearance(messageTextAppearance)
         }
 
-        if (errorMessageTextAppearance != AuthenticationDialogFragment.NOT_SET) {
-            setTextAppearance(errorTextView, errorMessageTextAppearance)
+        if (errorMessageTextAppearance != NOT_SET) {
+            setErrorTextAppearance(errorMessageTextAppearance)
         }
 
-        if (messageLineSpacing != AuthenticationDialogFragment.NOT_SET_FLOAT) {
+        if (messageLineSpacing != NOT_SET_FLOAT) {
             titleTextView.setLineSpacing(messageLineSpacing, AuthenticationDialogFragment.LINE_SPACE_MULTIPLIER)
             messageTextView.setLineSpacing(messageLineSpacing, AuthenticationDialogFragment.LINE_SPACE_MULTIPLIER)
             errorTextView.setLineSpacing(messageLineSpacing, AuthenticationDialogFragment.LINE_SPACE_MULTIPLIER)
         }
 
-        if (buttonPositiveAppearance != AuthenticationDialogFragment.NOT_SET) {
-            setTextAppearance(buttonPositive, buttonPositiveAppearance)
+        if (buttonPositiveAppearance != NOT_SET) {
+            setPositiveButtonTextAppearance(buttonPositiveAppearance)
         }
 
-        if (buttonNeutralAppearance != AuthenticationDialogFragment.NOT_SET) {
+        if (buttonNeutralAppearance != NOT_SET) {
             setTextAppearance(buttonNeutral, buttonNeutralAppearance)
         }
 
-        if (buttonNegativeAppearance != AuthenticationDialogFragment.NOT_SET) {
-            setTextAppearance(buttonNegative, buttonNegativeAppearance)
+        if (buttonNeutralAppearance != NOT_SET) {
+            setNeutralButtonTextAppearance(buttonNeutralAppearance)
         }
 
-        if (buttonBackground != AuthenticationDialogFragment.NOT_SET) {
+        if (buttonNegativeAppearance != NOT_SET) {
+            setNegativeButtonTextAppearance(buttonNegativeAppearance)
+        }
+
+        if (buttonBackground != NOT_SET) {
             val buttonBackgroundDrawable = ContextCompat.getDrawable(context!!, buttonBackground)
             buttonPositive.background = buttonBackgroundDrawable
             buttonNeutral.background = buttonBackgroundDrawable
             buttonNegative.background = buttonBackgroundDrawable
         }
+    }
+
+    fun setPositiveButtonTextAppearance(@StyleRes buttonPositiveAppearance: Int) {
+        setTextAppearance(buttonPositive, buttonPositiveAppearance)
+    }
+
+    fun setNeutralButtonTextAppearance(@StyleRes buttonNeutralAppearance: Int) {
+        setTextAppearance(buttonNeutral, buttonNeutralAppearance)
+    }
+
+    fun setNegativeButtonTextAppearance(@StyleRes buttonNegativeAppearance: Int) {
+        setTextAppearance(buttonNegative, buttonNegativeAppearance)
+    }
+
+    fun setMessageTextAppearance(@StyleRes messageTextAppearance: Int) {
+        setTextAppearance(messageTextView, messageTextAppearance)
+    }
+
+    fun setTitleTextAppearance(@StyleRes titleTextAppearance: Int) {
+        setTextAppearance(titleTextView, titleTextAppearance)
+    }
+
+    fun setErrorTextAppearance(@StyleRes errorTextAppearance: Int) {
+        setTextAppearance(errorTextView, errorTextAppearance)
     }
 
     private fun setTextAppearance(view: TextView, @StyleRes style: Int) {
@@ -245,11 +308,11 @@ class AuthenticationDialogFragment : SafeDialogFragment() {
         private const val ARG_STYLE_RES = "ARG_STYLE_RES"
         private const val ARG_DIALOG_WIDTH_STYLE_RES = "ARG_DIALOG_WIDTH_STYLE_RES"
 
-        fun newInstance(message: String, authenticationSuccessFunction: () -> Unit): AuthenticationDialogFragment {
+        fun newInstance(message: CharSequence, authenticationSuccessFunction: () -> Unit): AuthenticationDialogFragment {
             val dialogFragment = AuthenticationDialogFragment()
 
             val args = Bundle()
-            args.putString(ARG_MESSAGE, message)
+            args.putCharSequence(ARG_MESSAGE, message)
             args.putInt(ARG_STYLE_RES, R.style.DialogAuthenticationStyle)
             args.putInt(ARG_DIALOG_WIDTH_STYLE_RES, R.style.DialogAuthenticationWidthStyle)
             dialogFragment.arguments = args
