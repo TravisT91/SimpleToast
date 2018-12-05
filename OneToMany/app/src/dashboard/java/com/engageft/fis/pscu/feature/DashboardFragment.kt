@@ -476,7 +476,7 @@ class DashboardFragment : BaseEngageFullscreenFragment(), DashboardExpandableVie
             binding.root.findNavController().navigate(R.id.action_dashboard_fragment_to_replaceCardFragment)
         } else {
             val bundle = Bundle().apply {
-                putInt(CardFeatureNotAvailableFragment.KEY_UNAVAILABLE_FEATURE_ID, CardFeatureNotAvailableFragment.UnavailableFeatureType.REPLACE.id)
+                putSerializable(CardFeatureNotAvailableFragment.KEY_UNAVAILABLE_FEATURE, CardFeatureNotAvailableFragment.UnavailableFeatureType.REPLACE)
             }
             binding.root.findNavController().navigate(R.id.action_dashboard_fragment_to_featureNotAvailable, bundle)
         }
@@ -489,7 +489,7 @@ class DashboardFragment : BaseEngageFullscreenFragment(), DashboardExpandableVie
         }
         else {
             val bundle = Bundle().apply {
-                putInt(CardFeatureNotAvailableFragment.KEY_UNAVAILABLE_FEATURE_ID, CardFeatureNotAvailableFragment.UnavailableFeatureType.LOST_STOLEN.id)
+                putSerializable(CardFeatureNotAvailableFragment.KEY_UNAVAILABLE_FEATURE, CardFeatureNotAvailableFragment.UnavailableFeatureType.LOST_STOLEN)
             }
             binding.root.findNavController().navigate(R.id.action_dashboard_fragment_to_featureNotAvailable, bundle)
         }
@@ -501,7 +501,7 @@ class DashboardFragment : BaseEngageFullscreenFragment(), DashboardExpandableVie
         }
         else {
             val bundle = Bundle().apply {
-                putInt(CardFeatureNotAvailableFragment.KEY_UNAVAILABLE_FEATURE_ID, CardFeatureNotAvailableFragment.UnavailableFeatureType.CANCEL.id)
+                putSerializable(CardFeatureNotAvailableFragment.KEY_UNAVAILABLE_FEATURE, CardFeatureNotAvailableFragment.UnavailableFeatureType.CANCEL)
             }
             binding.root.findNavController().navigate(R.id.action_dashboard_fragment_to_featureNotAvailable, bundle)
         }
