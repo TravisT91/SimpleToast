@@ -27,9 +27,9 @@
         app:providerLogoDrawable="@drawable/cardview_provider_logo_mc"
         app:cardLockedIcon="@drawable/ic_card_locked"
         app:productLogoDrawable="@drawable/showcase_logo"
-        app:cvvMask="@string/OVERVIEW_CARDVIEW_CVV_MASK"
-        app:cardNumberMask="@string/OVERVIEW_CARDVIEW_CARDNUMBER_MASK"
-        app:cardValidMask="@string/OVERVIEW_CARDVIEW_CARD_VALID_MASK"
+        app:cvvMask="@string/PRODUCTCARDVIEW_CVV_MASK"
+        app:cardNumberMask="@string/PRODUCTCARDVIEW_CARDNUMBER_MASK"
+        app:cardValidMask="@string/PRODUCTCARDVIEW_CARD_VALID_MASK"
         android:elevation="8dp"/>
 
     <LinearLayout
