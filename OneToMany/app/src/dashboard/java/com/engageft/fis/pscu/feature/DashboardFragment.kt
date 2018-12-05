@@ -188,17 +188,21 @@ class DashboardFragment : LotusFullScreenFragment(),
     private fun updateForCardState(cardState: ProductCardViewCardState) {
         when (cardState) {
             ProductCardViewCardState.LOADING -> {
+                progressOverlayDelegate.showProgressOverlay()
                 binding.dashboardExpandableView.overviewShowHideCardDetailsLabel.text = getString(R.string.OVERVIEW_LOADING_CARD_DETAILS)
             }
             ProductCardViewCardState.DETAILS_HIDDEN -> {
+                progressOverlayDelegate.dismissProgressOverlay()
                 binding.dashboardExpandableView.overviewShowHideCardDetailsIcon.setImageDrawable(ContextCompat.getDrawable(context!!, R.drawable.ic_dashboard_card_details_show))
                 binding.dashboardExpandableView.overviewShowHideCardDetailsLabel.text = getString(R.string.OVERVIEW_SHOW_CARD_DETAILS)
             }
             ProductCardViewCardState.DETAILS_SHOWN -> {
+                progressOverlayDelegate.dismissProgressOverlay()
                 binding.dashboardExpandableView.overviewShowHideCardDetailsIcon.setImageDrawable(ContextCompat.getDrawable(context!!, R.drawable.ic_dashboard_card_details_hide))
                 binding.dashboardExpandableView.overviewShowHideCardDetailsLabel.text = getString(R.string.OVERVIEW_HIDE_CARD_DETAILS)
             }
             ProductCardViewCardState.ERROR -> {
+                progressOverlayDelegate.dismissProgressOverlay()
                 binding.dashboardExpandableView.overviewShowHideCardDetailsLabel.text = getString(
                         if (dashboardViewModel.productCardViewModelDelegate.isShowingCardDetails()) R.string.OVERVIEW_HIDE_CARD_DETAILS else R.string.OVERVIEW_SHOW_CARD_DETAILS
                 )
