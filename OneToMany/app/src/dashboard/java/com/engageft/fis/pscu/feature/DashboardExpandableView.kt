@@ -20,6 +20,7 @@ import com.engageft.apptoolbox.view.ListBottomSheetDialogFragment
 import com.engageft.apptoolbox.view.ProductCardView
 import com.engageft.fis.pscu.R
 import com.engageft.fis.pscu.R.style.DashboardMoreOptionsBottomSheetDialogFragmentStyle
+import com.engageft.fis.pscu.feature.palettebindings.applyBranding
 
 /**
  *  DashboardExpandableView
@@ -135,6 +136,7 @@ class DashboardExpandableView : ConstraintLayout {
 
         cardAndActionsView = findViewById(R.id.cl_card_view_and_actions)
         cardView = findViewById(R.id.cv_dashboard)
+        cardView.applyBranding()
         actionsView = findViewById(R.id.layout_card_actions)
         expandCollapseButton = findViewById(R.id.btn_disclose_hide_card_actions)
         transparentBarBelowCardView = findViewById(R.id.view_transparent_bar_below_card_view)

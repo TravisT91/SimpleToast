@@ -12,6 +12,7 @@ import com.engageft.apptoolbox.R
 import com.engageft.fis.pscu.OneToManyApplication
 import com.ob.domain.lookup.branding.BrandingColorType
 import com.ob.domain.lookup.branding.BrandingInfo
+import java.lang.IllegalStateException
 
 
 object Palette {
@@ -52,10 +53,6 @@ object Palette {
         private set
     var font_regular: Typeface? = null
         private set
-
-    @Suppress("unused")
-//IMAGES
-    var cardImageUrl: String? = null
 
     //TEXT STYLES
     var Title4Quiet = textViewStyle { }
@@ -420,31 +417,83 @@ object Palette {
         }
     }
 
-    fun setPaletteColors(
+    fun reset(){
+        primaryColor = initial_primaryColor
+        secondaryColor = initial_secondaryColor
+        successColor = initial_successColor
+        warningColor = initial_warningColor
+        errorColor = initial_errorColor
+        infoColor = initial_infoColor
+
+        font_regular = initial_font_regular
+        font_bold = initial_font_bold
+        font_italic = initial_font_italic
+        font_light = initial_font_light
+        font_medium = initial_font_medium
+    }
+
+    private var colorsInitialized = false
+    private var initial_primaryColor: Int = NOT_SET
+    private var initial_secondaryColor: Int = NOT_SET
+    private var initial_successColor: Int = NOT_SET
+    private var initial_warningColor: Int = NOT_SET
+    private var initial_errorColor: Int = NOT_SET
+    private var initial_infoColor: Int = NOT_SET
+
+    fun initPaletteColors(
             primaryColor : Int,
             secondaryColor : Int,
             successColor : Int,
             warningColor : Int,
             errorColor : Int,
             infoColor : Int){
-        Palette.primaryColor = primaryColor
-        Palette.secondaryColor = secondaryColor
-        Palette.successColor = successColor
-        Palette.warningColor = warningColor
-        Palette.errorColor = errorColor
-        Palette.infoColor = infoColor
+        if (colorsInitialized){
+            throw IllegalStateException("Palette colors can not be reinitialized")
+        } else {
+            initial_primaryColor = primaryColor
+            initial_secondaryColor = secondaryColor
+            initial_successColor = successColor
+            initial_warningColor = warningColor
+            initial_errorColor = errorColor
+            initial_infoColor = infoColor
+
+            this.primaryColor = primaryColor
+            this.secondaryColor = secondaryColor
+            this.successColor = successColor
+            this.warningColor = warningColor
+            this.errorColor = errorColor
+            this.infoColor = infoColor
+            colorsInitialized = true
+        }
     }
 
-    fun setFonts(
+    private var fontsInitialized = false
+    private var initial_font_regular: Typeface? = null
+    private var initial_font_bold: Typeface? = null
+    private var initial_font_italic: Typeface? = null
+    private var initial_font_light: Typeface? = null
+    private var initial_font_medium: Typeface? = null
+
+    fun initFonts(
             font_regular: Typeface?,
             font_bold: Typeface?,
             font_italic: Typeface?,
             font_light: Typeface?,
             font_medium: Typeface?) {
-        Palette.font_regular = font_regular
-        Palette.font_bold = font_bold
-        Palette.font_italic = font_italic
-        Palette.font_light = font_light
-        Palette.font_medium = font_medium
+        if (fontsInitialized){
+            throw IllegalStateException("Palette fonts can not be reinitialized")
+        } else {
+            initial_font_regular = font_regular
+            initial_font_bold = font_bold
+            initial_font_italic = font_italic
+            initial_font_light = font_light
+            initial_font_medium = font_medium
+
+            this.font_regular = font_regular
+            this.font_bold = font_bold
+            this.font_italic = font_italic
+            this.font_light = font_light
+            this.font_medium = font_medium
+        }
     }
 }

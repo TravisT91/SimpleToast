@@ -23,7 +23,7 @@ object BrandingInfoRepo {
     var financialInfo: BrandingFinancialInfo? = null
         private set
 
-    fun resetBrandingInfo(){
+    fun reset(){
         financialInfo = null
         cardImageUrl = null
         terms = null
