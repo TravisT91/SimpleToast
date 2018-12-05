@@ -35,5 +35,6 @@
     <string name="auth_dialog_button_continue">Continue</string>
     <string name="auth_dialog_button_forgot_passcode">Forgot passcode?</string>
     <string name="auth_dialog_button_forgot_password">Forgot password?</string>
+    <string name="auth_dialog_button_cancel">Cancel</string>
 
 </resources>

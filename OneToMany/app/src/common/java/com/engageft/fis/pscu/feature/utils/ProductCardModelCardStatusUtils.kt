@@ -4,6 +4,14 @@ import androidx.annotation.StringRes
 import com.engageft.apptoolbox.view.ProductCardModelCardStatus
 import com.engageft.fis.pscu.R
 
+/**
+ * ProductCardModelCardStatusUtils
+ * </p>
+ * Provides extension functions for ProductCardModelCardStatus apptoolbox model.
+ * </p>
+ * Created by Kurt Mueller on 12/3/18.
+ * Copyright (c) 2018 Engage FT. All rights reserved.
+ */
 @StringRes
 fun ProductCardModelCardStatus.cardStatusStringRes(): Int {
     return when (this) {

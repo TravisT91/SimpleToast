@@ -14,8 +14,8 @@ import androidx.appcompat.app.AlertDialog
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
-import com.engageft.apptoolbox.R
 import com.engageft.apptoolbox.view.SafeDialogFragment
+import com.engageft.fis.pscu.R
 import java.lang.ref.WeakReference
 
 /**
@@ -54,7 +54,7 @@ class AuthenticationDialogFragment : SafeDialogFragment() {
         }
 
         val builder = AlertDialog.Builder(context!!, dialogWidthStyleResId)
-        val view = LayoutInflater.from(context!!).inflate(R.layout.authentication_dialog_fragment, null)
+        val view = LayoutInflater.from(context!!).inflate(R.layout.dialog_fragment_authentication, null)
 
         view.apply {
             titleTextView = this.findViewById(R.id.titleTextView)
@@ -103,9 +103,10 @@ class AuthenticationDialogFragment : SafeDialogFragment() {
                     
                 }
                 AuthenticationDialogViewModel.AuthMethod.PASSWORD -> {
-                    val formatString = getString(R.string.auth_dialog_title_password_passcode_format)
-                    titleTextView.text = String.format(formatString, getString(R.string.auth_dialog_title_password), viewModel.usernameObservable.value!!)
+                    titleTextView.text = String.format(getString(R.string.auth_dialog_title_password_passcode_format), getString(R.string.auth_dialog_title_password), viewModel.usernameObservable.value!!)
                     passwordEditText.visibility = View.VISIBLE
+
+                    buttonNeutral.text = getString(R.string.auth_dialog_button_forgot_password)
                 }
             }
         })
@@ -147,7 +148,7 @@ class AuthenticationDialogFragment : SafeDialogFragment() {
     }
 
     private fun applyStyle(@StyleRes styleResId: Int) {
-        val a = context!!.obtainStyledAttributes(styleResId, R.styleable.DialogInformation)
+        val a = context!!.obtainStyledAttributes(styleResId, R.styleable.DialogAuthentication)
 
         val titleTextAppearance = a?.getResourceId(R.styleable.DialogAuthentication_titleTextAppearance, AuthenticationDialogFragment.NOT_SET) ?: AuthenticationDialogFragment.NOT_SET
         val messageTextAppearance = a?.getResourceId(R.styleable.DialogAuthentication_messageTextAppearance, AuthenticationDialogFragment.NOT_SET) ?: AuthenticationDialogFragment.NOT_SET
