@@ -81,13 +81,13 @@ class AuthenticationDialogFragment : SafeDialogFragment() {
         val view = LayoutInflater.from(context!!).inflate(R.layout.dialog_fragment_authentication, null)
 
         view.apply {
-            titleTextView = this.findViewById(R.id.titleTextView)
-            messageTextView = this.findViewById(R.id.messageTextView)
-            passwordPasscodeEditText = this.findViewById(R.id.passwordPasscodeEditText)
-            errorTextView = this.findViewById(R.id.errorTextView)
-            buttonPositive = this.findViewById(R.id.buttonPositive)
-            buttonNeutral = this.findViewById(R.id.buttonNeutral)
-            buttonNegative = this.findViewById(R.id.buttonNegative)
+            titleTextView = findViewById(R.id.titleTextView)
+            messageTextView = findViewById(R.id.messageTextView)
+            passwordPasscodeEditText = findViewById(R.id.passwordPasscodeEditText)
+            errorTextView = findViewById(R.id.errorTextView)
+            buttonPositive = findViewById(R.id.buttonPositive)
+            buttonNeutral = findViewById(R.id.buttonNeutral)
+            buttonNegative = findViewById(R.id.buttonNegative)
 
             builder.setView(this)
         }
@@ -116,72 +116,74 @@ class AuthenticationDialogFragment : SafeDialogFragment() {
 
         viewModel = ViewModelProviders.of(this).get(AuthenticationDialogViewModel::class.java)
 
-        viewModel.authMethodObservable.observe(this, Observer { authMethod ->
-            when (authMethod) {
-                AuthenticationDialogViewModel.AuthMethod.BIOMETRIC -> {
-                    // TODO(kurt): configure view for fingerprint auth
-                }
-                AuthenticationDialogViewModel.AuthMethod.PASSCODE -> {
-                    titleTextView.text = String.format(
-                            getString(R.string.auth_dialog_title_password_passcode_format),
-                            getString(R.string.auth_dialog_title_passcode),
-                            viewModel.username
-                    )
-                    passwordPasscodeEditText.text = null
-                    passwordPasscodeEditText.hint = getString(R.string.auth_dialog_input_hint_passcode)
-                    passwordPasscodeEditText.inputType = InputType.TYPE_CLASS_NUMBER or InputType.TYPE_TEXT_VARIATION_PASSWORD
-                    passwordPasscodeEditText.requestFocus()
-                    buttonNeutral.text = getString(R.string.auth_dialog_button_forgot_passcode)
+        viewModel.apply {
+            authMethodObservable.observe(this@AuthenticationDialogFragment, Observer { authMethod ->
+                when (authMethod) {
+                    AuthenticationDialogViewModel.AuthMethod.BIOMETRIC -> {
+                        // TODO(kurt): configure view for fingerprint auth
+                    }
+                    AuthenticationDialogViewModel.AuthMethod.PASSCODE -> {
+                        titleTextView.text = String.format(
+                                getString(R.string.auth_dialog_title_password_passcode_format),
+                                getString(R.string.auth_dialog_title_passcode),
+                                username
+                        )
+                        passwordPasscodeEditText.text = null
+                        passwordPasscodeEditText.hint = getString(R.string.auth_dialog_input_hint_passcode)
+                        passwordPasscodeEditText.inputType = InputType.TYPE_CLASS_NUMBER or InputType.TYPE_TEXT_VARIATION_PASSWORD
+                        passwordPasscodeEditText.requestFocus()
+                        buttonNeutral.text = getString(R.string.auth_dialog_button_forgot_passcode)
 
-                    Handler().post { passwordPasscodeEditText.showKeyboard() }
-                }
-                AuthenticationDialogViewModel.AuthMethod.PASSWORD -> {
-                    titleTextView.text = String.format(
-                            getString(R.string.auth_dialog_title_password_passcode_format),
-                            getString(R.string.auth_dialog_title_password),
-                            viewModel.username
-                    )
-                    passwordPasscodeEditText.text = null
-                    passwordPasscodeEditText.hint = getString(R.string.auth_dialog_input_hint_password)
-                    passwordPasscodeEditText.inputType = InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_VARIATION_PASSWORD
-                    passwordPasscodeEditText.requestFocus()
-                    buttonNeutral.text = getString(R.string.auth_dialog_button_forgot_password)
+                        Handler().post { passwordPasscodeEditText.showKeyboard() }
+                    }
+                    AuthenticationDialogViewModel.AuthMethod.PASSWORD -> {
+                        titleTextView.text = String.format(
+                                getString(R.string.auth_dialog_title_password_passcode_format),
+                                getString(R.string.auth_dialog_title_password),
+                                username
+                        )
+                        passwordPasscodeEditText.text = null
+                        passwordPasscodeEditText.hint = getString(R.string.auth_dialog_input_hint_password)
+                        passwordPasscodeEditText.inputType = InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_VARIATION_PASSWORD
+                        passwordPasscodeEditText.requestFocus()
+                        buttonNeutral.text = getString(R.string.auth_dialog_button_forgot_password)
 
-                    Handler().post { passwordPasscodeEditText.showKeyboard() }
+                        Handler().post { passwordPasscodeEditText.showKeyboard() }
+                    }
                 }
-            }
-        })
-        
-        viewModel.authEventObservable.observe(this, Observer { authEvent ->
-            when (authEvent) {
-                AuthenticationDialogViewModel.AuthEvent.SUCCESS -> {
-                    authenticationSuccessFunction?.invoke()
-                    dismiss()
-                }
-                AuthenticationDialogViewModel.AuthEvent.RESET_PASSWORD -> {
-                    // TODO(kurt) show password reset dialog
-                    Toast.makeText(context, "TODO: prompt to reset password", Toast.LENGTH_SHORT).show()
-                    dismiss()
-                }
-            }
-        })
-        
-        viewModel.errorMessageObservable.observe(this, Observer { errorMessage ->
-            if (errorMessage.isNullOrBlank()) {
-                errorTextView.visibility = View.INVISIBLE
-                errorTextView.text = "" // just to be safe
-            } else {
-                errorTextView.text = errorMessage
-                errorTextView.visibility = View.VISIBLE
-            }
-        })
+            })
 
-        viewModel.dialogInfoObservable.observe(this, Observer { dialogInfo ->
-            dialogInfo?.apply {
-                errorTextView.text = message
-                errorTextView.visibility = View.VISIBLE
-            }
-        })
+            authEventObservable.observe(this@AuthenticationDialogFragment, Observer { authEvent ->
+                when (authEvent) {
+                    AuthenticationDialogViewModel.AuthEvent.SUCCESS -> {
+                        authenticationSuccessFunction?.invoke()
+                        dismiss()
+                    }
+                    AuthenticationDialogViewModel.AuthEvent.RESET_PASSWORD -> {
+                        // TODO(kurt) show password reset dialog
+                        Toast.makeText(context, "TODO: prompt to reset password", Toast.LENGTH_SHORT).show()
+                        dismiss()
+                    }
+                }
+            })
+
+            errorMessageObservable.observe(this@AuthenticationDialogFragment, Observer { errorMessage ->
+                if (errorMessage.isNullOrBlank()) {
+                    errorTextView.visibility = View.INVISIBLE
+                    errorTextView.text = "" // just to be safe
+                } else {
+                    errorTextView.text = errorMessage
+                    errorTextView.visibility = View.VISIBLE
+                }
+            })
+
+            dialogInfoObservable.observe(this@AuthenticationDialogFragment, Observer { dialogInfo ->
+                dialogInfo?.apply {
+                    errorTextView.text = message
+                    errorTextView.visibility = View.VISIBLE
+                }
+            })
+        }
 
         return builder.create()
     }
