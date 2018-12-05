@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="pinDotEmpty">@color/structure4</color>
+    <color name="pinDotSelected">@color/primary</color>
+    <color name="pinDotError">@color/error</color>
+</resources>
