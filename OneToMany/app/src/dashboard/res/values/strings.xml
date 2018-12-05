@@ -1,9 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="OVERVIEW_CARDVIEW_CVV_MASK">CVC %s</string>
-    <string name="OVERVIEW_CARDVIEW_CARDNUMBER_MASK">•••• %s</string>
-    <string name="OVERVIEW_CARDVIEW_CARD_VALID_MASK">Good Thru %s</string>
-
     <string name="OVERVIEW_LOADING_CARD_DETAILS">Updating...</string>
     <string name="OVERVIEW_SHOW_CARD_DETAILS">Show card details</string>
     <string name="OVERVIEW_HIDE_CARD_DETAILS">Hide card details</string>
