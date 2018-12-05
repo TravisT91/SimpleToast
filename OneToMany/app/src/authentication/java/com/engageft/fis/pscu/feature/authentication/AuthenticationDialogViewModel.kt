@@ -26,8 +26,6 @@ class AuthenticationDialogViewModel : BaseEngageViewModel() {
     }
     val authMethodObservable = MutableLiveData<AuthMethod>()
 
-    val continueButtonEnabledObservable = MutableLiveData<Boolean>()
-
     enum class AuthEvent {
         SUCCESS,
         FAILURE
@@ -45,8 +43,6 @@ class AuthenticationDialogViewModel : BaseEngageViewModel() {
                     EngageService.getInstance().authManager.isPasscodeEnrolled -> AuthMethod.PASSCODE
                     else -> AuthMethod.PASSWORD
                 }
-
-        continueButtonEnabledObservable.value = false
     }
 
     fun authenticateBiometric() {

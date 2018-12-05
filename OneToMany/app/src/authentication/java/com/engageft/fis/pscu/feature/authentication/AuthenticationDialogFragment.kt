@@ -114,16 +114,13 @@ class AuthenticationDialogFragment : SafeDialogFragment() {
         viewModel.authEventObservable.observe(this, Observer<AuthenticationDialogViewModel.AuthEvent> { authEvent ->
             when (authEvent) {
                 AuthenticationDialogViewModel.AuthEvent.SUCCESS -> {
-                    authenticationSuccessHandler?.invoke() ?: run { dismiss() }
+                    authenticationSuccessHandler?.invoke()
+                    dismiss()
                 }
                 AuthenticationDialogViewModel.AuthEvent.FAILURE -> {
                     
                 }
             }
-        })
-        
-        viewModel.continueButtonEnabledObservable.observe(this, Observer<Boolean> { enabled ->
-            buttonPositive.isEnabled = enabled
         })
         
         viewModel.errorMessageObservable.observe(this, Observer<String> { errorMessage ->
