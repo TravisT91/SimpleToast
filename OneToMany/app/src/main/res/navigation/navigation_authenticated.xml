@@ -45,6 +45,13 @@
             app:exitAnim="@anim/nav_exit_anim"
             app:popEnterAnim="@anim/nav_pop_enter_anim"
             app:popExitAnim="@anim/nav_pop_exit_anim"/>
+        <action
+            android:id="@+id/action_dashboard_fragment_to_cardPinFragment"
+            app:destination="@id/cardPinFragment"
+            app:enterAnim="@anim/nav_enter_anim"
+            app:exitAnim="@anim/nav_exit_anim"
+            app:popEnterAnim="@anim/nav_pop_enter_anim"
+            app:popExitAnim="@anim/nav_pop_exit_anim"/>
     </fragment>
 
     <fragment
@@ -172,10 +179,12 @@
         android:id="@+id/changeSecurityQuestionsFragment"
         android:name="com.engageft.fis.pscu.feature.ChangeSecurityQuestionsFragment"
         android:label="@string/fragment_title_change_security_questions" />
+
     <fragment
         android:id="@+id/profileFragment"
         android:name="com.engageft.fis.pscu.feature.ProfileFragment"
         android:label="@string/fragment_title_profile" />
+
     <fragment
         android:id="@+id/statementsFragment"
         android:name="com.engageft.fis.pscu.feature.StatementsFragment"
@@ -184,14 +193,19 @@
             android:id="@+id/action_statementsFragment_to_webViewFragment"
             app:destination="@id/webViewFragment" />
     </fragment>
+
     <fragment
         android:id="@+id/webViewFragment"
         android:name="com.engageft.fis.pscu.feature.WebViewFragment"
         android:label="@string/statements_webView_screen_title" />
+
     <fragment
         android:id="@+id/changePasswordFragment"
         android:name="com.engageft.fis.pscu.feature.ChangePasswordFragment"
         android:label="@string/change_password_title" />
 
-
+    <fragment
+        android:id="@+id/cardPinFragment"
+        android:name="com.engageft.fis.pscu.feature.CardPinFragment"
+        android:label="@string/card_pin_screen_title" />
 </navigation>

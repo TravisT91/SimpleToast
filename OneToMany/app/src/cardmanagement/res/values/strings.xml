@@ -7,6 +7,12 @@
     <string name="MOVE_MONEY_CREDIT_OR_DEBIT_CARD_LOAD">Credit or debit card load</string>
     <string name="MOVE_MONEY_DIRECT_DEPOSIT">Direct Deposit</string>
 
+    <!-- Card PIN -->
+    <string name="card_pin_screen_title">Card PIN</string>
+    <string name="card_pin_choose_description">Choose your PIN</string>
+    <string name="card_pin_choose_confirmation">Confirm your PIN</string>
+    <string name="card_pin_mismatch_error_message">PINs do not match, please try again</string>
+
     <!-- Replace Card -->
     <string name="REPLACE_CARD_REPLACEMENT_QUESTION">Do you need a\nreplacement card?</string>
     <string name="REPLACE_CARD_REPLACEMENT_SUBSTRING">replacement</string>
