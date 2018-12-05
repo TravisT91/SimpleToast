@@ -97,8 +97,8 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"
             android:background="@null"
-            tools:background="null"
-            tools:text="@string/auth_dialog_button_cancel" />
+            android:text="@string/auth_dialog_button_cancel"
+            tools:background="null" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
