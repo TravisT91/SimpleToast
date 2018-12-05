@@ -464,11 +464,10 @@ class DashboardFragment : LotusFullScreenFragment(),
             //val dialogFragment = PasswordAuthenticationDialogFragment.newInstance(AUTHENTICATION_REVEAL_CARD_DIALOG_TAG, getString(R.string.BUTTON_CANCEL))
             //dialogFragment.show(childFragmentManager, AUTHENTICATION_REVEAL_CARD_DIALOG_TAG)
             // TODO(kurt): hide this behind password auth, once we have PasswordAuthDialogFragment (SHOW-376)
-//            val authDialogFragment = AuthenticationDialogFragment.newInstance("Please authenticate to change your PIN", () ->
-//                dashboardViewModel.showCardDetails()
-//            )
+            val authDialogFragment = AuthenticationDialogFragment.newInstance("Please authenticate to change your PIN"
+            ) { dashboardViewModel.showCardDetails() }
 
-            //authDialogFragment.show(childFragmentManager, "Auth Dialog")
+            authDialogFragment.show(childFragmentManager, "Auth Dialog")
         }
     }
 
