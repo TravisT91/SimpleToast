@@ -4,6 +4,7 @@ import android.graphics.PorterDuff
 import android.widget.Switch
 import android.widget.TextView
 import androidx.annotation.ColorInt
+import androidx.appcompat.widget.SwitchCompat
 import androidx.databinding.BindingAdapter
 import com.airbnb.paris.extensions.style
 import com.airbnb.paris.styles.Style
@@ -25,7 +26,7 @@ fun TextView.setParisStyle(style: Style?){
 }
 
 @BindingAdapter("switchButtonTint",requireAll = true)
-fun Switch.setButtonTint(@ColorInt color: Int){
+fun SwitchCompat.setButtonTint(@ColorInt color: Int){
     this.thumbDrawable.setColorFilter(color, PorterDuff.Mode.MULTIPLY)
     this.trackDrawable.setColorFilter(color, PorterDuff.Mode.MULTIPLY)
 }

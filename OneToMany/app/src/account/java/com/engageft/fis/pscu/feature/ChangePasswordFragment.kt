@@ -4,10 +4,7 @@ import android.os.Bundle
 import android.view.*
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
-import androidx.navigation.findNavController
 import com.engageft.apptoolbox.BaseViewModel
-import com.engageft.apptoolbox.LotusFullScreenFragment
-import com.engageft.apptoolbox.view.InformationDialogFragment
 import com.engageft.fis.pscu.R
 import com.engageft.fis.pscu.databinding.FragmentChangePasswordBinding
 
@@ -19,7 +16,7 @@ import com.engageft.fis.pscu.databinding.FragmentChangePasswordBinding
  * Created by Atia Hashimi on 11/13/18.
  * Copyright (c) 2018 Engage FT. All rights reserved.
  */
-class ChangePasswordFragment: LotusFullScreenFragment() {
+class ChangePasswordFragment: BaseEngageFullscreenFragment() {
 
     private lateinit var changePasswordViewModel: ChangePasswordViewModel
 
@@ -89,27 +86,7 @@ class ChangePasswordFragment: LotusFullScreenFragment() {
             dialogInfoObservable.observe(this@ChangePasswordFragment, Observer { dialogInfo ->
                 when (dialogInfo.dialogType) {
                     DialogInfo.DialogType.GENERIC_SUCCESS -> {
-                        val listener = object: InformationDialogFragment.InformationDialogFragmentListener {
-                            override fun onDialogFragmentNegativeButtonClicked() {
-                            }
-
-                            override fun onDialogFragmentPositiveButtonClicked() {
-                                binding.root.findNavController().popBackStack()
-                            }
-
-                            override fun onDialogCancelled() {
-                                binding.root.findNavController().popBackStack()
-                            }
-                        }
-
-                        showDialog(infoDialogGenericSuccessTitleMessageNewInstance(context!!, listener = listener))
-
-                    }
-                    DialogInfo.DialogType.GENERIC_ERROR -> {
-                        showDialog(infoDialogGenericErrorTitleMessageConditionalNewInstance(context!!, dialogInfo))
-                    }
-                    DialogInfo.DialogType.SERVER_ERROR -> {
-                        showDialog(infoDialogGenericErrorTitleMessageConditionalNewInstance(context!!, dialogInfo))
+                        showGenericSuccessDialogMessageAndPopBackstack(binding.root)
                     }
                     else -> {}
                 }

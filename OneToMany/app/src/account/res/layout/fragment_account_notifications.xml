@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout>
+<layout xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <data>
         <variable name="viewModel" type="com.engageft.fis.pscu.feature.AccountNotificationsViewModel"/>
@@ -9,8 +10,6 @@
     </data>
 
     <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
-        xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@color/viewBackground"
@@ -22,18 +21,8 @@
             android:orientation="vertical">
 
             <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="8dp"
-                android:layout_marginTop="8dp"
-                android:layout_marginEnd="8dp"
-                android:text="@string/account_notifications_screen_description"
-                android:textSize="16sp"
-                android:padding="16dp"
-                android:gravity="center"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+                style="@style/NotificationsDescriptionStyle"
+                android:text="@string/account_notifications_screen_description" />
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="wrap_content"
@@ -41,44 +30,55 @@
                 android:background="@color/cellBackground">
 
                 <TextView
+                    style="@style/NotificationsPushStyle"
                     android:id="@+id/pushTextView"
-                    android:layout_width="0dp"
-                    android:layout_height="16dp"
-                    android:layout_marginStart="8dp"
+                    android:layout_marginStart="16dp"
                     android:layout_marginTop="16dp"
                     android:layout_marginEnd="8dp"
                     android:text="@string/account_notifications_push"
-                    app:layout_constraintBottom_toTopOf="@+id/pushDivider"
                     app:layout_constraintEnd_toStartOf="@+id/pushSwitch"
-                    app:layout_constraintHorizontal_bias="0.5"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
                     tools:text="Push Notifications" />
 
-                <Switch
+                <TextView
+                    style="@style/NotificationsPushSubLabelStyle"
+                    android:id="@+id/pushDisabledTextView"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginEnd="8dp"
+                    android:text="@string/account_notifications_push_disabled"
+                    app:layout_constraintBottom_toTopOf="@+id/pushDivider"
+                    app:layout_constraintEnd_toStartOf="@+id/pushSwitch"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/pushTextView"
+                    tools:text="Push Disabled" />
+
+                <androidx.appcompat.widget.SwitchCompat
                     android:id="@+id/pushSwitch"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginEnd="8dp"
+                    android:layout_marginEnd="24dp"
+                    android:onCheckedChanged="@{(switch, isChecked) -> viewModel.onPushCheckChanged(isChecked)}"
                     app:layout_constraintBottom_toTopOf="@+id/pushDivider"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
 
                 <include
                     android:id="@+id/pushDivider"
-                    android:layout_width="wrap_content"
-                    android:layout_height="8dp"
+                    layout="@layout/view_horizontal_divider_indent_start"
+                    android:layout_width="0dp"
+                    android:layout_height="1dp"
+                    android:layout_marginStart="16dp"
                     android:layout_marginTop="16dp"
-                    android:background="@color/error"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintHorizontal_bias="0.0"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/pushTextView" />
+                    app:layout_constraintTop_toBottomOf="@+id/pushDisabledTextView" />
 
                 <TextView
+                    style="@style/NotificationsSmsStyle"
                     android:id="@+id/smsTextView"
                     android:layout_width="0dp"
-                    android:layout_height="17dp"
+                    android:layout_height="wrap_content"
                     android:layout_marginStart="16dp"
                     android:layout_marginTop="16dp"
                     android:layout_marginEnd="8dp"
@@ -88,71 +88,81 @@
                     app:layout_constraintTop_toBottomOf="@+id/pushDivider" />
 
                 <TextView
+                    style="@style/NotificationsSmsSubLabelStyle"
                     android:id="@+id/smsNumberTextView"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="16dp"
-                    android:layout_marginTop="8dp"
                     android:layout_marginEnd="8dp"
+                    android:text="@={viewModel.phoneNumber}"
                     app:layout_constraintEnd_toStartOf="@+id/smsSwitch"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/smsTextView"
                     tools:text="(555)760-1234" />
 
-                <View
+                <include
                     android:id="@+id/smsDivider"
+                    layout="@layout/view_horizontal_divider_indent_start"
                     android:layout_width="wrap_content"
-                    android:layout_height="8dp"
+                    android:layout_height="1dp"
                     android:layout_marginTop="16dp"
-                    android:background="@color/error"
+                    android:layout_marginStart="16dp"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/smsNumberTextView" />
 
-                <Switch
+                <androidx.appcompat.widget.SwitchCompat
                     android:id="@+id/smsSwitch"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="24dp"
-                    android:layout_marginEnd="8dp"
+                    android:layout_marginTop="16dp"
+                    android:layout_marginEnd="24dp"
                     app:layout_constraintEnd_toEndOf="parent"
+                    android:onCheckedChanged="@{(switch, isChecked) -> viewModel.onSmsCheckChanged(isChecked)}"
                     app:layout_constraintTop_toBottomOf="@+id/pushDivider" />
 
 
                 <TextView
+                    style="@style/NotificationsEmailStyle"
                     android:id="@+id/emailTextView"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="16dp"
                     android:layout_marginTop="16dp"
                     android:layout_marginEnd="8dp"
-                    android:text="TextView"
+                    android:text="@string/account_notifications_email"
                     app:layout_constraintBottom_toTopOf="@+id/emailDivider"
                     app:layout_constraintEnd_toStartOf="@+id/emailSwitch"
                     app:layout_constraintHorizontal_bias="0.5"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/smsDivider" />
 
-                <Switch
+                <androidx.appcompat.widget.SwitchCompat
                     android:id="@+id/emailSwitch"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginEnd="16dp"
+                    android:layout_marginEnd="24dp"
+                    android:onCheckedChanged="@{(switch, isChecked) -> viewModel.onEmailCheckChanged(isChecked)}"
                     app:layout_constraintBottom_toTopOf="@+id/emailDivider"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/smsDivider" />
 
-                <View
+                <include
                     android:id="@+id/emailDivider"
+                    layout="@layout/view_horizontal_divider_indent_start"
                     android:layout_width="wrap_content"
-                    android:layout_height="8dp"
+                    android:layout_height="1dp"
                     android:layout_marginTop="16dp"
-                    android:background="@color/error"
+                    android:layout_marginStart="16dp"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/emailTextView" />
 
             </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <TextView
+                style="@style/NotificationsFooterStyle"
+                android:text="@string/account_notifications_screen_footer" />
 
             <com.engageft.apptoolbox.view.PillButton
                 android:id="@+id/saveButton"
@@ -160,7 +170,11 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:layout_margin="16dp"
+                android:layout_marginEnd="16dp"
+                android:layout_marginStart="16dp"
+                android:layout_marginBottom="16dp"
+                android:layout_marginTop="32dp"
+                android:onClick="@{() -> viewModel.onSaveClicked()}"
                 android:text="@string/account_notifications_save_button" />
 
         </LinearLayout>
