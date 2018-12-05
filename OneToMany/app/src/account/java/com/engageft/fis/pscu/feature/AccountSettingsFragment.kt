@@ -10,8 +10,8 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
-import androidx.navigation.fragment.findNavController
 import androidx.navigation.findNavController
+import androidx.navigation.fragment.findNavController
 import com.engageft.apptoolbox.BaseViewModel
 import com.engageft.apptoolbox.LotusFullScreenFragment
 import com.engageft.fis.pscu.BuildConfig
@@ -31,6 +31,8 @@ import com.engageft.fis.pscu.databinding.FragmentAccountBinding
 
 class AccountSettingsFragment : LotusFullScreenFragment() {
     private lateinit var accountSettingsViewModel: AccountSettingsViewModel
+    override val name: String
+        get() = "AccountSettings"
 
     override fun createViewModel(): BaseViewModel? {
         accountSettingsViewModel = ViewModelProviders.of(this).get(AccountSettingsViewModel::class.java)
