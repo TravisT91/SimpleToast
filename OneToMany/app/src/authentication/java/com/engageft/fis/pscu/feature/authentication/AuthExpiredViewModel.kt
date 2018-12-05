@@ -104,13 +104,13 @@ class AuthExpiredViewModel : BaseViewModel() {
     fun handleThrowable(e: Throwable)  {
         when (e) {
             is UnknownHostException -> {
-                dialogInfoObservable.value = DialogInfo(dialogType = DialogInfo.DialogType.NO_INTERNET_CONNECTION)
+                dialogInfoObservable.postValue(DialogInfo(dialogType = DialogInfo.DialogType.NO_INTERNET_CONNECTION))
             }
             is NoConnectivityException -> {
-                dialogInfoObservable.value = DialogInfo(dialogType = DialogInfo.DialogType.NO_INTERNET_CONNECTION)
+                dialogInfoObservable.postValue(DialogInfo(dialogType = DialogInfo.DialogType.NO_INTERNET_CONNECTION))
             }
             is SocketTimeoutException -> {
-                dialogInfoObservable.value = DialogInfo(dialogType = DialogInfo.DialogType.CONNECTION_TIMEOUT)
+                dialogInfoObservable.postValue(DialogInfo(dialogType = DialogInfo.DialogType.CONNECTION_TIMEOUT))
             }
             // Add more specific exceptions here, if needed
             else -> {
@@ -119,14 +119,12 @@ class AuthExpiredViewModel : BaseViewModel() {
                 // on production, we need to fail gracefully and report the error so we can fix it
                 // later.
                 if (BuildConfig.DEBUG) {
-                    dialogInfoObservable.value = DialogInfo(message = e.message)
+                    dialogInfoObservable.postValue(DialogInfo(message = e.message))
                     e.printStackTrace()
-                    // Just in case the user at the time doesn't report a bug to us.
-                    Crashlytics.logException(e)
                 } else {
-                    dialogInfoObservable.value = DialogInfo(dialogType = DialogInfo.DialogType.GENERIC_ERROR)
-                    Crashlytics.logException(e)
+                    dialogInfoObservable.postValue(DialogInfo(dialogType = DialogInfo.DialogType.GENERIC_ERROR))
                 }
+                Crashlytics.logException(e)
             }
         }
     }

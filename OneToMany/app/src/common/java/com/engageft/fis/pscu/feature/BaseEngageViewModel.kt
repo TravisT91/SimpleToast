@@ -28,34 +28,24 @@ open class BaseEngageViewModel: BaseViewModel() {
         // and report it essentially as a BUG. In debug builds, let's blow up in the user's face,
         // but in production, show a generic error, fail gracefully, and report it over crashlytics.
         if (BuildConfig.DEBUG) {
-            dialogInfoObservable.value = DialogInfo(message = response.message)
-            // Report this problem to Crashlytics in case a bug report is not made.
-            try {
-                throw IllegalStateException("handleUnexpectedErrorReponse: " + response.message)
-            } catch (e: IllegalStateException) {
-                Crashlytics.logException(e)
-            }
+            dialogInfoObservable.postValue(DialogInfo(message = response.message))
         } else {
-            dialogInfoObservable.value = DialogInfo(dialogType = DialogInfo.DialogType.GENERIC_ERROR)
-            Crashlytics.log(response.message)
-            try {
-                throw IllegalStateException("handleUnexpectedErrorReponse: " + response.message)
-            } catch (e: IllegalStateException) {
-                Crashlytics.logException(e)
-            }
+            dialogInfoObservable.postValue(DialogInfo(dialogType = DialogInfo.DialogType.GENERIC_ERROR))
         }
+        // Report this problem to Crashlytics in case a bug report is not made.
+        Crashlytics.logException(IllegalStateException("handleUnexpectedErrorReponse: " + response.message))
     }
 
     fun handleThrowable(e: Throwable)  {
         when (e) {
             is UnknownHostException -> {
-                dialogInfoObservable.value = DialogInfo(dialogType = DialogInfo.DialogType.NO_INTERNET_CONNECTION)
+                dialogInfoObservable.postValue(DialogInfo(dialogType = DialogInfo.DialogType.NO_INTERNET_CONNECTION))
             }
             is NoConnectivityException -> {
-                dialogInfoObservable.value = DialogInfo(dialogType = DialogInfo.DialogType.NO_INTERNET_CONNECTION)
+                dialogInfoObservable.postValue(DialogInfo(dialogType = DialogInfo.DialogType.NO_INTERNET_CONNECTION))
             }
             is SocketTimeoutException -> {
-                dialogInfoObservable.value = DialogInfo(dialogType = DialogInfo.DialogType.CONNECTION_TIMEOUT)
+                dialogInfoObservable.postValue(DialogInfo(dialogType = DialogInfo.DialogType.CONNECTION_TIMEOUT))
             }
             // Add more specific exceptions here, if needed
             else -> {
@@ -64,14 +54,13 @@ open class BaseEngageViewModel: BaseViewModel() {
                 // on production, we need to fail gracefully and report the error so we can fix it
                 // later.
                 if (BuildConfig.DEBUG) {
-                    dialogInfoObservable.value = DialogInfo(message = e.message)
+                    dialogInfoObservable.postValue(DialogInfo(message = e.message))
                     e.printStackTrace()
                     // Just in case the user at the time doesn't report a bug to us.
-                    Crashlytics.logException(e)
                 } else {
                     dialogInfoObservable.value = DialogInfo(dialogType = DialogInfo.DialogType.GENERIC_ERROR)
-                    Crashlytics.logException(e)
                 }
+                Crashlytics.logException(e)
             }
         }
     }
