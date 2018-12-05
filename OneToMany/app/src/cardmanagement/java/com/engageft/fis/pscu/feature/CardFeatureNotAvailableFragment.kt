@@ -32,36 +32,34 @@ class CardFeatureNotAvailableFragment: BaseEngageFullscreenFragment() {
     }
 
     companion object {
-        const val KEY_UNAVAILABLE_FEATURE_ID = "KEY_UNAVAILABLE_ID"
+        const val KEY_UNAVAILABLE_FEATURE = "KEY_UNAVAILABLE"
     }
 
-    enum class UnavailableFeatureType(val id: Int){
-        UNKNOWN(-1),
-        LOST_STOLEN(0),
-        CANCEL(1),
-        REPLACE(2);
+    enum class UnavailableFeatureType{
+        UNKNOWN,
+        LOST_STOLEN,
+        CANCEL,
+        REPLACE,
+        GENERIC;
 
         companion object {
-            fun getFeatureById(id: Int): UnavailableFeatureType {
-                return when(id){
-                    0 -> LOST_STOLEN
-                    1 -> CANCEL
-                    2 -> REPLACE
-                    else -> UNKNOWN
-                }
-            }
+            val unknownFeatureException =
+                    IllegalArgumentException("CardFeatureNotAvailableFragment must have the " +
+                            "argument KEY_UNAVAILABLE_FEATURE set and must be an UnavailableFeatureType enum")
         }
     }
 
     private fun getMessageByFeature(feature: UnavailableFeatureType) : String {
         return when(feature){
+            CardFeatureNotAvailableFragment.UnavailableFeatureType.UNKNOWN ->
+                throw UnavailableFeatureType.unknownFeatureException //should never reach here
             CardFeatureNotAvailableFragment.UnavailableFeatureType.LOST_STOLEN ->
                 getString(R.string.FEATURE_NOT_AVAILABLE_LOST_STOLEN)
             CardFeatureNotAvailableFragment.UnavailableFeatureType.CANCEL ->
                 getString(R.string.FEATURE_NOT_AVAILABLE_CANCEL)
             CardFeatureNotAvailableFragment.UnavailableFeatureType.REPLACE ->
                 getString(R.string.FEATURE_NOT_AVAILABLE_REPLACE)
-            CardFeatureNotAvailableFragment.UnavailableFeatureType.UNKNOWN ->
+            CardFeatureNotAvailableFragment.UnavailableFeatureType.GENERIC ->
                 getString(R.string.FEATURE_NOT_AVAILABLE_UNKNOWN)
         }
     }
@@ -69,6 +67,8 @@ class CardFeatureNotAvailableFragment: BaseEngageFullscreenFragment() {
     private fun getTitleByFeature(feature: UnavailableFeatureType) : String{
         return when(feature) {
             CardFeatureNotAvailableFragment.UnavailableFeatureType.UNKNOWN ->
+                throw UnavailableFeatureType.unknownFeatureException //should never reach here
+            CardFeatureNotAvailableFragment.UnavailableFeatureType.GENERIC ->
                 getString(R.string.FEATURE_NOT_AVAILABLE_UNKNOWN_FEATURE_TITLE)
             CardFeatureNotAvailableFragment.UnavailableFeatureType.LOST_STOLEN ->
                 getString(R.string.fragment_title_report_lost_stolen_card)
@@ -102,13 +102,16 @@ class CardFeatureNotAvailableFragment: BaseEngageFullscreenFragment() {
 
     override fun onResume() {
         super.onResume()
-        val featureId = arguments?.getInt(KEY_UNAVAILABLE_FEATURE_ID,-1) ?: UnavailableFeatureType.UNKNOWN.id
+        val feature = (arguments?.getSerializable(KEY_UNAVAILABLE_FEATURE) as? UnavailableFeatureType) ?: UnavailableFeatureType.UNKNOWN
+        if (feature == UnavailableFeatureType.UNKNOWN){
+            throw UnavailableFeatureType.unknownFeatureException
+        }
         (viewModel as? CardFeatureNotAvailableViewModel)?.apply {
-            feature.observe(this@CardFeatureNotAvailableFragment, Observer {
+            this.feature.observe(this@CardFeatureNotAvailableFragment, Observer {
                 message = getMessageByFeature(it)
                 (activity as? AppCompatActivity)?.supportActionBar?.title = getTitleByFeature(it)
             })
-            feature.value = UnavailableFeatureType.getFeatureById(featureId)
+            this.feature.value = feature
         }
     }
 

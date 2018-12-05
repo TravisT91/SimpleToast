@@ -12,32 +12,31 @@
         android:layout_height="@dimen/dashboard_card_and_actions_height_collapsed"
         android:background="@color/dashboard_cardview_background">
 
-        <com.engageft.apptoolbox.view.ProductCardView
-            android:id="@+id/cv_dashboard"
-            android:layout_width="wrap_content"
-            android:layout_height="@dimen/dashboard_card_view_height"
-            android:layout_marginTop="@dimen/dashboard_card_view_top_margin_collapsed"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:condensed="true"
-            app:cardBackground="@drawable/card_background"
-            app:cardnumberTextAppearance="@style/PrimaryCardTextAppearance"
-            app:cardHolderNameTextAppearance="@style/PrimaryCardTextAppearance"
-            app:cvvTextAppearance="@style/SecondaryCardTextAppearance"
-            app:expirationTextAppearance="@style/SecondaryCardTextAppearance"
-            app:cardMessageTextAppearance="@style/SecondaryCardTextAppearance"
-            app:statusRibbonTextAppearance="@style/CardRibbonTextAppearance"
-            app:statusRibbonColorOk="@color/primary"
-            app:statusRibbonColorNotOk="@color/error"
-            app:providerLogoDrawable="@drawable/cardview_provider_logo_mc"
-            app:cardLockedIcon="@drawable/ic_card_locked"
-            app:productLogoDrawable="@drawable/showcase_logo"
-            app:cvvMask="@string/OVERVIEW_CARDVIEW_CVV_MASK"
-            app:cardNumberMask="@string/OVERVIEW_CARDVIEW_CARDNUMBER_MASK"
-            app:cardValidMask="@string/OVERVIEW_CARDVIEW_CARD_VALID_MASK"
-            ProductCardView.shouldApplyBranding="@{true}"
-            android:elevation="8dp" />
+    <com.engageft.apptoolbox.view.ProductCardView
+        android:id="@+id/cv_dashboard"
+        android:layout_width="wrap_content"
+        android:layout_height="@dimen/dashboard_card_view_height"
+        android:layout_marginTop="@dimen/dashboard_card_view_top_margin_collapsed"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:condensed="true"
+        app:cardBackground="@drawable/card_background"
+        app:cardnumberTextAppearance="@style/PrimaryCardTextAppearance"
+        app:cardHolderNameTextAppearance="@style/PrimaryCardTextAppearance"
+        app:cvvTextAppearance="@style/SecondaryCardTextAppearance"
+        app:expirationTextAppearance="@style/SecondaryCardTextAppearance"
+        app:cardMessageTextAppearance="@style/SecondaryCardTextAppearance"
+        app:statusRibbonTextAppearance="@style/CardRibbonTextAppearance"
+        app:statusRibbonColorOk="@color/primary"
+        app:statusRibbonColorNotOk="@color/error"
+        app:providerLogoDrawable="@drawable/cardview_provider_logo_mc"
+        app:cardLockedIcon="@drawable/ic_card_locked"
+        app:productLogoDrawable="@drawable/showcase_logo"
+        app:cvvMask="@string/PRODUCTCARDVIEW_CVV_MASK"
+        app:cardNumberMask="@string/PRODUCTCARDVIEW_CARDNUMBER_MASK"
+        app:cardValidMask="@string/PRODUCTCARDVIEW_CARD_VALID_MASK"
+        android:elevation="8dp"/>
 
         <LinearLayout
             android:id="@+id/layout_card_actions"
@@ -53,104 +52,103 @@
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintEnd_toEndOf="parent">
 
-            <LinearLayout
-                android:id="@+id/overviewShowHideCardDetailsLayout"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal">
+        <LinearLayout
+            android:id="@+id/overviewShowHideCardDetailsLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
 
-                <androidx.appcompat.widget.AppCompatImageView
-                    android:id="@+id/overviewShowHideCardDetailsIcon"
-                    android:layout_width="@dimen/dashboard_action_item_icon_width"
-                    android:layout_height="@dimen/dashboard_action_item_icon_height"
-                    android:scaleType="center"
-                    android:layout_marginEnd="8dp"
-                    app:srcCompat="@drawable/ic_dashboard_card_details_show" />
+            <androidx.appcompat.widget.AppCompatImageView
+                android:id="@+id/overviewShowHideCardDetailsIcon"
+                android:layout_width="@dimen/dashboard_action_item_icon_width"
+                android:layout_height="@dimen/dashboard_action_item_icon_height"
+                android:scaleType="center"
+                android:layout_marginEnd="8dp"
+                app:srcCompat="@drawable/ic_dashboard_card_details_show"/>
 
-                <TextView
-                    android:id="@+id/overviewShowHideCardDetailsLabel"
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    style="@style/DashboardCardItemTextView"
-                    android:text="@string/OVERVIEW_SHOW_CARD_DETAILS"
-                    android:gravity="center_vertical" />
-
-            </LinearLayout>
-
-            <LinearLayout
-                android:id="@+id/overviewMoveMoneyLayout"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:layout_marginTop="16dp">
-
-                <androidx.appcompat.widget.AppCompatImageView
-                    android:layout_width="@dimen/dashboard_action_item_icon_width"
-                    android:layout_height="@dimen/dashboard_action_item_icon_height"
-                    android:scaleType="center"
-                    android:layout_marginEnd="8dp"
-                    app:srcCompat="@drawable/ic_dashboard_move_money" />
-
-                <TextView
-                    android:id="@+id/overviewMoveMoneyLabel"
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    style="@style/DashboardCardItemTextView"
-                    android:text="@string/OVERVIEW_MOVE_MONEY"
-                    android:gravity="center_vertical" />
-
-            </LinearLayout>
-
-            <LinearLayout
-                android:id="@+id/overviewLockUnlockCardLayout"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:layout_marginTop="16dp">
-
-                <androidx.appcompat.widget.AppCompatImageView
-                    android:id="@+id/overviewLockUnlockCardIcon"
-                    android:layout_width="@dimen/dashboard_action_item_icon_width"
-                    android:layout_height="@dimen/dashboard_action_item_icon_height"
-                    android:scaleType="center"
-                    android:layout_marginEnd="8dp"
-                    app:srcCompat="@drawable/ic_dashboard_card_lock" />
-
-                <TextView
-                    android:id="@+id/overviewLockUnlockCardLabel"
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    style="@style/DashboardCardItemTextView"
-                    tools:text="@string/OVERVIEW_LOCK_MY_CARD"
-                    android:gravity="center_vertical" />
-
-            </LinearLayout>
-
-            <LinearLayout
-                android:id="@+id/overviewMoreOptionsLayout"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:layout_marginTop="16dp">
-
-                <androidx.appcompat.widget.AppCompatImageView
-                    android:layout_width="@dimen/dashboard_action_item_icon_width"
-                    android:layout_height="@dimen/dashboard_action_item_icon_height"
-                    android:scaleType="center"
-                    android:layout_marginEnd="8dp"
-                    app:srcCompat="@drawable/ic_dashboard_more_options" />
-
-                <TextView
-                    android:id="@+id/overviewMoreOptionsLabel"
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    style="@style/DashboardCardItemTextView"
-                    android:text="@string/OVERVIEW_MORE_OPTIONS"
-                    android:gravity="center_vertical" />
-
-            </LinearLayout>
+            <TextView
+                android:id="@+id/overviewShowHideCardDetailsLabel"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                style="@style/DashboardCardItemTextView"
+                android:text="@string/OVERVIEW_SHOW_CARD_DETAILS"
+                android:gravity="center_vertical"/>
 
         </LinearLayout>
 
-    </androidx.constraintlayout.widget.ConstraintLayout>
-</layout>
+        <LinearLayout
+            android:id="@+id/overviewMoveMoneyLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginTop="16dp">
+
+            <androidx.appcompat.widget.AppCompatImageView
+                android:layout_width="@dimen/dashboard_action_item_icon_width"
+                android:layout_height="@dimen/dashboard_action_item_icon_height"
+                android:scaleType="center"
+                android:layout_marginEnd="8dp"
+                app:srcCompat="@drawable/ic_dashboard_move_money"/>
+
+            <TextView
+                android:id="@+id/overviewMoveMoneyLabel"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                style="@style/DashboardCardItemTextView"
+                android:text="@string/OVERVIEW_MOVE_MONEY"
+                android:gravity="center_vertical"/>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/overviewLockUnlockCardLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginTop="16dp">
+
+            <androidx.appcompat.widget.AppCompatImageView
+                android:id="@+id/overviewLockUnlockCardIcon"
+                android:layout_width="@dimen/dashboard_action_item_icon_width"
+                android:layout_height="@dimen/dashboard_action_item_icon_height"
+                android:scaleType="center"
+                android:layout_marginEnd="8dp"
+                app:srcCompat="@drawable/ic_dashboard_card_lock"/>
+
+            <TextView
+                android:id="@+id/overviewLockUnlockCardLabel"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                style="@style/DashboardCardItemTextView"
+                tools:text="@string/OVERVIEW_LOCK_MY_CARD"
+                android:gravity="center_vertical"/>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/overviewMoreOptionsLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginTop="16dp">
+
+            <androidx.appcompat.widget.AppCompatImageView
+                android:layout_width="@dimen/dashboard_action_item_icon_width"
+                android:layout_height="@dimen/dashboard_action_item_icon_height"
+                android:scaleType="center"
+                android:layout_marginEnd="8dp"
+                app:srcCompat="@drawable/ic_dashboard_more_options"/>
+
+            <TextView
+                android:id="@+id/overviewMoreOptionsLabel"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                style="@style/DashboardCardItemTextView"
+                android:text="@string/OVERVIEW_MORE_OPTIONS"
+                android:gravity="center_vertical"/>
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>
