@@ -18,6 +18,13 @@
             app:popEnterAnim="@anim/nav_pop_enter_anim"
             app:popExitAnim="@anim/nav_pop_exit_anim">
         </action>
+        <action
+            android:id="@+id/action_dashboard_fragment_to_cardPinFragment"
+            app:destination="@id/cardPinFragment"
+            app:enterAnim="@anim/nav_enter_anim"
+            app:exitAnim="@anim/nav_exit_anim"
+            app:popEnterAnim="@anim/nav_pop_enter_anim"
+            app:popExitAnim="@anim/nav_pop_exit_anim"/>
     </fragment>
     <fragment
         android:id="@+id/budgets_fragment"
@@ -44,7 +51,7 @@
         android:id="@+id/account_fragment"
         android:name="com.engageft.fis.pscu.feature.AccountSettingsFragment"
         android:label="@string/fragment_title_account"
-        tools:layout="@layout/fragment_account_notifications">
+        tools:layout="@layout/fragment_account">
         <argument
             android:name="@string/navigation_override_up"
             android:defaultValue="true" />
@@ -138,6 +145,10 @@
         android:id="@+id/changePasswordFragment"
         android:name="com.engageft.fis.pscu.feature.ChangePasswordFragment"
         android:label="@string/change_password_title" />
+    <fragment
+        android:id="@+id/cardPinFragment"
+        android:name="com.engageft.fis.pscu.feature.CardPinFragment"
+        android:label="@string/card_pin_screen_title" />
     <fragment
         android:id="@+id/accountNotificationsFragment"
         android:name="com.engageft.fis.pscu.feature.AccountNotificationsFragment"

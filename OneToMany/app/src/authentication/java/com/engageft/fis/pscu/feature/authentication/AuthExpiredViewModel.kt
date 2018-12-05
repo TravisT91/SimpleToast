@@ -100,25 +100,31 @@ class AuthExpiredViewModel : BaseViewModel() {
      * that class. This means this entire set of functionality should be refactored to a delegate pattern
      * so we will do that eventually as a TODO
      */
+
     fun handleThrowable(e: Throwable)  {
         when (e) {
             is UnknownHostException -> {
-                dialogInfoObservable.value = DialogInfo(dialogType = DialogInfo.DialogType.NO_INTERNET_CONNECTION)
+                dialogInfoObservable.postValue(DialogInfo(dialogType = DialogInfo.DialogType.NO_INTERNET_CONNECTION))
             }
             is NoConnectivityException -> {
-                dialogInfoObservable.value = DialogInfo(dialogType = DialogInfo.DialogType.NO_INTERNET_CONNECTION)
+                dialogInfoObservable.postValue(DialogInfo(dialogType = DialogInfo.DialogType.NO_INTERNET_CONNECTION))
             }
             is SocketTimeoutException -> {
-                dialogInfoObservable.value = DialogInfo(dialogType = DialogInfo.DialogType.CONNECTION_TIMEOUT)
+                dialogInfoObservable.postValue(DialogInfo(dialogType = DialogInfo.DialogType.CONNECTION_TIMEOUT))
             }
             // Add more specific exceptions here, if needed
             else -> {
+                // This is a catch-all for anything else. Anything caught here is a BUG and should
+                // be reported as such. In Debug builds, we can just blow up in the user's face but
+                // on production, we need to fail gracefully and report the error so we can fix it
+                // later.
                 if (BuildConfig.DEBUG) {
-                    dialogInfoObservable.value = DialogInfo(message = e.message)
+                    dialogInfoObservable.postValue(DialogInfo(message = e.message))
                     e.printStackTrace()
                 } else {
-                    Crashlytics.logException(e)
+                    dialogInfoObservable.postValue(DialogInfo(dialogType = DialogInfo.DialogType.GENERIC_ERROR))
                 }
+                Crashlytics.logException(e)
             }
         }
     }

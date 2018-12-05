@@ -22,6 +22,11 @@
     <string name="GOALS_PROGRESS_FORMAT">%1$s of %2$s</string>
     <string name="LAST_UPDATED_FORMAT">Last updated %s</string> <!-- insert date -->
 
+    <!-- ProductCardView -->
+    <string name="PRODUCTCARDVIEW_CVV_MASK">CVC %s</string>
+    <string name="PRODUCTCARDVIEW_CARDNUMBER_MASK">•••• %s</string>
+    <string name="PRODUCTCARDVIEW_CARD_VALID_MASK">Good Thru %s</string>
+
     <!--TODO(jhutchins): Refactor DisplayDateTimeUtils: SHOW-386-->
     <!-- DateFormat strings for localization: -->
     <string name="format_datetime_month_year">MMM yyyy</string> <!-- "Nov 2016" -->
