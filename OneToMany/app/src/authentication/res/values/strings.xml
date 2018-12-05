@@ -32,9 +32,10 @@
     <string name="auth_dialog_title_password_passcode_format">Enter %1$s for %2$s</string> <!-- Enter password for username -->
     <string name="auth_dialog_title_password">password</string>
     <string name="auth_dialog_title_passcode">passcode</string>
+    <string name="auth_dialog_input_hint_password">Password</string>
+    <string name="auth_dialog_input_hint_passcode">4-digit code</string>
     <string name="auth_dialog_button_continue">Continue</string>
     <string name="auth_dialog_button_forgot_passcode">Forgot passcode?</string>
     <string name="auth_dialog_button_forgot_password">Forgot password?</string>
     <string name="auth_dialog_button_cancel">Cancel</string>
-
 </resources>

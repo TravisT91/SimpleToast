@@ -8,8 +8,7 @@
         android:layout_height="wrap_content"
         xmlns:app="http://schemas.android.com/apk/res-auto">
 
-        <!--TODO(aHashimi): Make the margins parameterizable, can change it to padding if that works: https://engageft.atlassian.net/browse/SHOW-402-->
-        <androidx.appcompat.widget.AppCompatTextView
+        <TextView
             android:id="@+id/titleTextView"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
@@ -21,7 +20,7 @@
             app:layout_constraintTop_toTopOf="parent"
             tools:text="Dialog title" />
 
-        <androidx.appcompat.widget.AppCompatTextView
+        <TextView
             android:id="@+id/messageTextView"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
@@ -33,35 +32,34 @@
             app:layout_constraintTop_toBottomOf="@+id/titleTextView"
             tools:text="Please enter your password/passcode." />
 
-        <androidx.appcompat.widget.AppCompatEditText
-            android:id="@+id/passwordEditText"
+        <EditText
+            android:id="@+id/passwordPasscodeEditText"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/dialogInfoTitleMessageMargins"
             android:layout_marginTop="@dimen/dialogInfoMessageTopMargin"
             android:layout_marginEnd="@dimen/dialogInfoTitleMessageMargins"
+            android:fontFamily="@font/font_regular"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/messageTextView"
-            android:inputType="textPassword"/>
+            app:layout_constraintTop_toBottomOf="@+id/messageTextView" />
 
-        <!-- TODO(kurt): add biometric and passcode entry views here -->
+        <!-- TODO(kurt): add biometric view here? -->
 
-        <androidx.appcompat.widget.AppCompatTextView
+        <TextView
             android:id="@+id/errorTextView"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/dialogInfoTitleMessageMargins"
-            android:layout_marginTop="@dimen/dialogInfoMessageTopMargin"
             android:layout_marginEnd="@dimen/dialogInfoTitleMessageMargins"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/passwordEditText"
+            app:layout_constraintTop_toBottomOf="@+id/passwordPasscodeEditText"
             tools:text="This is a test error message"
             tools:visibility="visible"
-            android:visibility="gone"/>
+            android:visibility="invisible"/>
 
-        <androidx.appcompat.widget.AppCompatButton
+        <Button
             android:id="@+id/buttonPositive"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -74,7 +72,7 @@
             android:text="@string/auth_dialog_button_continue"
             tools:background="null" />
 
-        <androidx.appcompat.widget.AppCompatButton
+        <Button
             android:id="@+id/buttonNeutral"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -86,7 +84,7 @@
             tools:background="null"
             tools:text="@string/auth_dialog_button_forgot_password" />
 
-        <androidx.appcompat.widget.AppCompatButton
+        <Button
             android:id="@+id/buttonNegative"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

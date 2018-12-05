@@ -3,7 +3,6 @@ package com.engageft.fis.pscu.feature.authentication
 import androidx.lifecycle.MutableLiveData
 import com.engageft.engagekit.EngageService
 import com.engageft.fis.pscu.feature.BaseEngageViewModel
-import com.engageft.fis.pscu.feature.DialogInfo
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 
@@ -17,7 +16,7 @@ import io.reactivex.schedulers.Schedulers
  */
 class AuthenticationDialogViewModel : BaseEngageViewModel() {
 
-    val usernameObservable = MutableLiveData<String>()
+    val username = EngageService.getInstance().storageManager.username
 
     enum class AuthMethod {
         BIOMETRIC,
@@ -28,15 +27,13 @@ class AuthenticationDialogViewModel : BaseEngageViewModel() {
 
     enum class AuthEvent {
         SUCCESS,
-        FAILURE
+        RESET_PASSWORD
     }
     val authEventObservable = MutableLiveData<AuthEvent>()
 
     val errorMessageObservable = MutableLiveData<String>()
 
     init {
-        usernameObservable.value = EngageService.getInstance().storageManager.username
-
         authMethodObservable.value =
                 when {
                     EngageService.getInstance().authManager.isFingerprintAuthEnrolled -> AuthMethod.BIOMETRIC
@@ -45,15 +42,45 @@ class AuthenticationDialogViewModel : BaseEngageViewModel() {
                 }
     }
 
+    fun tryNextAuthMethod() {
+        when (authMethodObservable.value) {
+            AuthMethod.BIOMETRIC -> authMethodObservable.value = AuthMethod.PASSCODE
+            AuthMethod.PASSCODE -> authMethodObservable.value = AuthMethod.PASSWORD
+            AuthMethod.PASSWORD -> authEventObservable.value = AuthEvent.RESET_PASSWORD
+        }
+
+        errorMessageObservable.value = null
+    }
+
     fun authenticateBiometric() {
         // placeholder
     }
 
     fun authenticatePasscode(passcode: String) {
-        // placeholder
+        errorMessageObservable.value = null
+        progressOverlayShownObservable.value = true
+
+        compositeDisposable.add(
+                EngageService.getInstance().validateLoginPasscodeObservable(passcode)
+                        .subscribeOn(Schedulers.io())
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .subscribe(
+                                { response ->
+                                    progressOverlayShownObservable.value = false
+                                    if (response.isSuccess) {
+                                        authEventObservable.value = AuthEvent.SUCCESS
+                                    } else {
+                                        errorMessageObservable.value = response.message
+                                    }
+                                }, { e ->
+                            progressOverlayShownObservable.value = false
+                            handleThrowable(e)
+                        })
+        )
     }
 
     fun authenticatePassword(password: String) {
+        errorMessageObservable.value = null
         progressOverlayShownObservable.value = true
 
         compositeDisposable.add(
@@ -66,11 +93,9 @@ class AuthenticationDialogViewModel : BaseEngageViewModel() {
                                     if (response.isSuccess) {
                                         authEventObservable.value = AuthEvent.SUCCESS
                                     } else {
-                                        authEventObservable.value = AuthEvent.FAILURE
                                         errorMessageObservable.value = response.message
                                     }
                                 }, { e ->
-                            // TODO(kurt): maybe use authEventObservable and errorMessageObservable rather than handleThrowable, since this is a dialog already?
                             progressOverlayShownObservable.value = false
                             handleThrowable(e)
                         })
