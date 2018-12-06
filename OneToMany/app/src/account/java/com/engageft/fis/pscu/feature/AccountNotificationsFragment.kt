@@ -36,6 +36,7 @@ class AccountNotificationsFragment: BaseEngageFullscreenFragment() {
         binding = FragmentAccountNotificationsBinding.inflate(inflater, container, false)
         binding.apply {
             binding.viewModel = accountNotificationsViewModel
+            binding.palette = Palette
 
             binding.saveButton.setThemeFilled(true)
 
@@ -146,7 +147,6 @@ class AccountNotificationsFragment: BaseEngageFullscreenFragment() {
             binding.pushDisabledTextView.visibility = View.VISIBLE
             binding.pushAlertLayout.visibility = View.VISIBLE
             binding.pushRowLayout.setBackgroundColor(Palette.warningColor)
-            binding.pushAlertLayout.setBackgroundColor(Palette.warningColor)
         } else {
             binding.pushDisabledTextView.visibility = View.GONE
             binding.pushAlertLayout.visibility = View.GONE

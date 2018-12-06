@@ -182,7 +182,7 @@
                 android:orientation="vertical"
                 android:id="@+id/pushAlertLayout"
                 android:visibility="gone"
-                android:background="@color/warning">
+                android:background="@{palette.warningColor}">
 
                 <TextView
                     style="@style/Caption1Quiet"
