@@ -1,7 +1,5 @@
 package com.engageft.fis.pscu.feature.palettebindings
 
-import android.graphics.PorterDuff
-import android.widget.Switch
 import android.widget.TextView
 import androidx.annotation.ColorInt
 import androidx.appcompat.widget.SwitchCompat
@@ -25,9 +23,11 @@ fun TextView.setParisStyle(style: Style?){
     }
 }
 
-@BindingAdapter("switchButtonTint",requireAll = true)
-fun SwitchCompat.setButtonTint(@ColorInt color: Int){
-    this.thumbDrawable.setColorFilter(color, PorterDuff.Mode.MULTIPLY)
-    this.trackDrawable.setColorFilter(color, PorterDuff.Mode.MULTIPLY)
+@BindingAdapter("thumbCheckedColor", "trackCheckedColor", "thumbUncheckedColor", "trackUncheckedColor", requireAll = true)
+fun SwitchCompat.setSwitchTintList(@ColorInt thumbCheckedColor: Int, @ColorInt trackCheckedColor: Int,
+                                   @ColorInt thumbUncheckedColor: Int, @ColorInt trackUncheckedColor: Int) {
+    this.thumbTintList = getSwitchColorStateList(thumbCheckedColor, thumbUncheckedColor)
+    this.trackTintList = getSwitchColorStateList(trackCheckedColor, trackUncheckedColor)
 }
+
 

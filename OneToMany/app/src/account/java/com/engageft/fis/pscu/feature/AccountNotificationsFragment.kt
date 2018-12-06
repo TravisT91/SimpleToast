@@ -1,8 +1,10 @@
 package com.engageft.fis.pscu.feature
 
+import android.graphics.Color
 import android.os.Bundle
 import android.view.*
 import androidx.core.app.NotificationManagerCompat
+import androidx.core.content.ContextCompat
 import androidx.core.content.res.ResourcesCompat
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
@@ -10,10 +12,10 @@ import com.engageft.apptoolbox.BaseViewModel
 import com.engageft.apptoolbox.util.applyTypefaceToSubstring
 import com.engageft.fis.pscu.R
 import com.engageft.fis.pscu.databinding.FragmentAccountNotificationsBinding
+import com.engageft.fis.pscu.feature.palettebindings.setSwitchTintList
 import com.engageft.fis.pscu.feature.palettebindings.setThemeFilled
 
 class AccountNotificationsFragment: BaseEngageFullscreenFragment() {
-    val TAG = "ANFragment"
     private lateinit var accountNotificationsViewModel: AccountNotificationsViewModel
 
     override fun createViewModel(): BaseViewModel? {
@@ -30,9 +32,14 @@ class AccountNotificationsFragment: BaseEngageFullscreenFragment() {
             binding.descriptionTextView.text = description.applyTypefaceToSubstring(
                     ResourcesCompat.getFont(context!!, R.font.font_bold)!!,
                     getString(R.string.account_notifications_screen_description_subString))
-//            binding.pushSwitch.setButtonTint(Palette.successColor)
-//            binding.smsSwitch.setButtonTint(Palette.successColor)
-//            binding.emailSwitch.setButtonTint(Palette.successColor)
+            binding.pushSwitch.setSwitchTintList(Palette.primaryColor, lighter(Palette.primaryColor, .8f),
+                    ContextCompat.getColor(context!!, R.color.structure2), ContextCompat.getColor(context!!, android.R.color.darker_gray))
+
+            binding.smsSwitch.setSwitchTintList(Palette.primaryColor, lighter(Palette.primaryColor, .8f),
+                    ContextCompat.getColor(context!!, R.color.structure2), ContextCompat.getColor(context!!, android.R.color.darker_gray))
+
+            binding.emailSwitch.setSwitchTintList(Palette.primaryColor, lighter(Palette.primaryColor, .8f),
+                    ContextCompat.getColor(context!!, R.color.structure2), ContextCompat.getColor(context!!, android.R.color.darker_gray))
 
             // set click listener on Disabled push textView
         }
@@ -109,5 +116,24 @@ class AccountNotificationsFragment: BaseEngageFullscreenFragment() {
             }
         }
         return super.onOptionsItemSelected(item)
+    }
+
+    /**
+     * Lightens a color by a given factor.
+     * https://stackoverflow.com/questions/4928772/using-color-and-color-darker-in-android
+     *
+     * @param color
+     * The color to lighten
+     * @param factor
+     * The factor to lighten the color. 0 will make the color unchanged. 1 will make the
+     * color white.
+     * @return lighter version of the specified color.
+     *
+     */
+    private fun lighter(color: Int, factor: Float): Int {
+        val red = ((Color.red(color) * (1 - factor) / 255 + factor) * 255).toInt()
+        val green = ((Color.green(color) * (1 - factor) / 255 + factor) * 255).toInt()
+        val blue = ((Color.blue(color) * (1 - factor) / 255 + factor) * 255).toInt()
+        return Color.argb(Color.alpha(color), red, green, blue)
     }
 }
