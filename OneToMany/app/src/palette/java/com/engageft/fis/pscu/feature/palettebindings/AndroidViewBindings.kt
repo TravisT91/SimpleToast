@@ -29,5 +29,3 @@ fun SwitchCompat.setSwitchTintList(@ColorInt thumbCheckedColor: Int, @ColorInt t
     this.thumbTintList = getSwitchColorStateList(thumbCheckedColor, thumbUncheckedColor)
     this.trackTintList = getSwitchColorStateList(trackCheckedColor, trackUncheckedColor)
 }
-
-

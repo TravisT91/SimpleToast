@@ -1,7 +1,6 @@
 package com.engageft.fis.pscu.feature
 
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import androidx.lifecycle.Observer
 import androidx.navigation.findNavController
@@ -27,10 +26,8 @@ abstract class BaseEngageFullscreenFragment : LotusFullScreenFragment() {
         viewModel?.let {
             if (it is BaseEngageViewModel) {
                 it.dialogInfoObservable.observe(this, Observer { dialogInfo ->
-                    Log.e("BEFsFragment", "Base HERE")
                     when (dialogInfo.dialogType) {
                         DialogInfo.DialogType.GENERIC_ERROR -> {
-                            Log.e("BEFsFragment", "GENERIC_ERROR HERE")
                             showDialog(infoDialogGenericErrorTitleMessageConditionalNewInstance(context!!, dialogInfo))
                         }
                         DialogInfo.DialogType.SERVER_ERROR -> {
