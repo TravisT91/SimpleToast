@@ -24,6 +24,7 @@ import com.engageft.apptoolbox.view.InformationDialogFragment
 import com.engageft.apptoolbox.view.ProductCardModel
 import com.engageft.fis.pscu.R
 import com.engageft.fis.pscu.databinding.FragmentDashboardBinding
+import com.engageft.fis.pscu.feature.authentication.AuthenticationDialogFragment
 import com.engageft.fis.pscu.feature.utils.cardStatusStringRes
 import com.google.android.material.tabs.TabLayout
 import com.ob.ws.dom.utility.TransactionInfo
@@ -36,10 +37,13 @@ import java.math.BigDecimal
  * <p>
  * UI Fragment for the Dashboard.
  * </p>
- * Created by joeyhutchins on 8/24/18.
+ * Created by Kurt Mueller on 4/17/18.
+ * Ported to gen2 by joeyhutchins on 8/24/18.
  * Copyright (c) 2018 Engage FT. All rights reserved.
  */
-class DashboardFragment : LotusFullScreenFragment(), DashboardExpandableView.DashboardExpandableViewListener, TransactionsAdapter.OnTransactionsAdapterListener {
+class DashboardFragment : LotusFullScreenFragment(),
+        DashboardExpandableView.DashboardExpandableViewListener,
+        TransactionsAdapter.OnTransactionsAdapterListener {
     private lateinit var binding: FragmentDashboardBinding
 
     private lateinit var dashboardViewModel: DashboardViewModel
@@ -437,10 +441,11 @@ class DashboardFragment : LotusFullScreenFragment(), DashboardExpandableView.Das
         if (dashboardViewModel.productCardViewModelDelegate.isShowingCardDetails()) {
             dashboardViewModel.productCardViewModelDelegate.hideCardDetails()
         } else {
-            //val dialogFragment = PasswordAuthenticationDialogFragment.newInstance(AUTHENTICATION_REVEAL_CARD_DIALOG_TAG, getString(R.string.BUTTON_CANCEL))
-            //dialogFragment.show(childFragmentManager, AUTHENTICATION_REVEAL_CARD_DIALOG_TAG)
-            // TODO(kurt): hide this behind password auth, once we have PasswordAuthDialogFragment (SHOW-376)
-            dashboardViewModel.productCardViewModelDelegate.showCardDetails()
+            val authDialogFragment = AuthenticationDialogFragment.newInstance(
+                    getString(R.string.OVERVIEW_SHOW_CARD_DETAILS_AUTHENTICATION_MESSAGE)
+            ) { dashboardViewModel.productCardViewModelDelegate.showCardDetails() }
+
+            authDialogFragment.show(childFragmentManager, AuthenticationDialogFragment.TAG)
         }
     }
 
@@ -453,7 +458,11 @@ class DashboardFragment : LotusFullScreenFragment(), DashboardExpandableView.Das
     }
 
     override fun onChangePin() {
-        binding.root.findNavController().navigate(R.id.action_dashboard_fragment_to_cardPinFragment)
+        val authDialogFragment = AuthenticationDialogFragment.newInstance(
+                getString(R.string.OVERVIEW_CHANGE_CARD_PIN_AUTHENTICATION_MESSAGE)
+        ) { binding.root.findNavController().navigate(R.id.action_dashboard_fragment_to_cardPinFragment) }
+
+        authDialogFragment.show(childFragmentManager, AuthenticationDialogFragment.TAG)
     }
 
     override fun onReplaceCard() {
