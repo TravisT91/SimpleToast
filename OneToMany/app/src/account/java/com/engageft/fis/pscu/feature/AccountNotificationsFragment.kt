@@ -32,11 +32,14 @@ class AccountNotificationsFragment: BaseEngageFullscreenFragment() {
         binding = FragmentAccountNotificationsBinding.inflate(inflater, container, false)
         binding.apply {
             binding.viewModel = accountNotificationsViewModel
+
             binding.saveButton.setThemeFilled(true)
+
             val description = getString(R.string.account_notifications_screen_description)
             binding.descriptionTextView.text = description.applyTypefaceToSubstring(
                     ResourcesCompat.getFont(context!!, R.font.font_bold)!!,
                     getString(R.string.account_notifications_screen_description_subString))
+
             binding.pushSwitch.setSwitchTintList(Palette.primaryColor, lighter(Palette.primaryColor, .8f),
                     ContextCompat.getColor(context!!, R.color.structure2), ContextCompat.getColor(context!!, android.R.color.darker_gray))
 
@@ -139,6 +142,7 @@ class AccountNotificationsFragment: BaseEngageFullscreenFragment() {
             binding.pushDisabledTextView.visibility = View.VISIBLE
             binding.pushAlertLayout.visibility = View.VISIBLE
             binding.pushRowLayout.setBackgroundColor(Palette.warningColor)
+            binding.pushAlertLayout.setBackgroundColor(Palette.warningColor)
         } else {
             binding.pushDisabledTextView.visibility = View.GONE
             binding.pushAlertLayout.visibility = View.GONE
