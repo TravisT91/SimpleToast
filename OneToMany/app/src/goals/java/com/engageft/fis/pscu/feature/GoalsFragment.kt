@@ -8,7 +8,7 @@ import android.view.ViewGroup
 import android.widget.Button
 import androidx.navigation.findNavController
 import com.engageft.apptoolbox.BaseViewModel
-import com.engageft.apptoolbox.LotusFullScreenFragment
+import com.engageft.apptoolbox.LotusPageFragment
 import com.engageft.fis.pscu.R
 
 /**
@@ -19,7 +19,7 @@ import com.engageft.fis.pscu.R
  * Created by joeyhutchins on 8/24/18.
  * Copyright (c) 2018 Engage FT. All rights reserved.
  */
-class GoalsFragment : LotusFullScreenFragment() {
+class GoalsFragment : LotusPageFragment() {
 
     override fun createViewModel(): BaseViewModel? {
         return null

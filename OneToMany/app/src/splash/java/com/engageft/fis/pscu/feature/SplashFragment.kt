@@ -9,7 +9,7 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.navigation.findNavController
 import com.engageft.apptoolbox.BaseViewModel
-import com.engageft.apptoolbox.LotusFullScreenFragment
+import com.engageft.apptoolbox.LotusPageFragment
 import com.engageft.fis.pscu.R
 import com.engageft.fis.pscu.databinding.FragmentSplashBinding
 
@@ -23,7 +23,7 @@ import com.engageft.fis.pscu.databinding.FragmentSplashBinding
  * Created by joeyhutchins on 8/22/18.
  * Copyright (c) 2018 Engage FT. All rights reserved.
  */
-class SplashFragment : LotusFullScreenFragment() {
+class SplashFragment : LotusPageFragment() {
     lateinit var binding: FragmentSplashBinding
 
     override fun createViewModel(): BaseViewModel? {

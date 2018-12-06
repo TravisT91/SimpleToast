@@ -6,7 +6,7 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.navigation.findNavController
 import com.engageft.apptoolbox.BaseViewModel
-import com.engageft.apptoolbox.LotusFullScreenFragment
+import com.engageft.apptoolbox.LotusPageFragment
 import com.engageft.apptoolbox.view.InformationDialogFragment
 import com.engageft.fis.pscu.R
 import com.engageft.fis.pscu.databinding.FragmentChangePasswordBinding
@@ -19,7 +19,7 @@ import com.engageft.fis.pscu.databinding.FragmentChangePasswordBinding
  * Created by Atia Hashimi on 11/13/18.
  * Copyright (c) 2018 Engage FT. All rights reserved.
  */
-class ChangePasswordFragment: LotusFullScreenFragment() {
+class ChangePasswordFragment: LotusPageFragment() {
 
     private lateinit var changePasswordViewModel: ChangePasswordViewModel
 

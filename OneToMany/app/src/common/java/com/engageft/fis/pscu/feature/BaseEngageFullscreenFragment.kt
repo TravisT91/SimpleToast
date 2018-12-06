@@ -5,7 +5,7 @@ import android.view.View
 import androidx.lifecycle.Observer
 import com.crashlytics.android.Crashlytics
 import com.engageft.apptoolbox.BuildConfig
-import com.engageft.apptoolbox.LotusFullScreenFragment
+import com.engageft.apptoolbox.LotusPageFragment
 import com.engageft.fis.pscu.R
 
 /**
@@ -17,7 +17,7 @@ import com.engageft.fis.pscu.R
  * Created by joeyhutchins on 11/15/18.
  * Copyright (c) 2018 Engage FT. All rights reserved.
  */
-abstract class BaseEngageFullscreenFragment : LotusFullScreenFragment() {
+abstract class BaseEngageFullscreenFragment : LotusPageFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         viewModel?.let {
