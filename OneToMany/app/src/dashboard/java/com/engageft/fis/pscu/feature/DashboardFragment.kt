@@ -24,6 +24,8 @@ import com.engageft.apptoolbox.view.ProductCardModel
 import com.engageft.engagekit.EngageService
 import com.engageft.fis.pscu.R
 import com.engageft.fis.pscu.databinding.FragmentDashboardBinding
+import com.engageft.fis.pscu.feature.branding.BrandingInfoRepo
+import com.engageft.fis.pscu.feature.palettebindings.applyBranding
 import com.engageft.fis.pscu.feature.utils.cardStatusStringRes
 import com.google.android.material.tabs.TabLayout
 import com.ob.domain.lookup.DebitCardStatus
@@ -75,6 +77,10 @@ class DashboardFragment : BaseEngageFullscreenFragment(), DashboardExpandableVie
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         binding = DataBindingUtil.inflate(layoutInflater, R.layout.fragment_dashboard, container, false)
+        //TODO(ttkachuk) right now card types are no specified by the backend, but we will select the BrandingCard that matches debitCardInfo.cardType when the backend is updated
+        BrandingInfoRepo.cards?.get(0)?.let {
+            binding.dashboardExpandableView.cardView.applyBranding(it,dashboardViewModel.compositeDisposable)
+        }
         return binding.root
     }
 

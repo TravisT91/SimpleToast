@@ -18,7 +18,9 @@ import com.engageft.apptoolbox.BaseViewModel
 import com.engageft.apptoolbox.view.InformationDialogFragment
 import com.engageft.fis.pscu.R
 import com.engageft.fis.pscu.databinding.FragmentCardPinBinding
+import com.engageft.fis.pscu.feature.branding.BrandingInfoRepo
 import com.engageft.fis.pscu.feature.branding.Palette
+import com.engageft.fis.pscu.feature.palettebindings.applyBranding
 import com.engageft.fis.pscu.feature.utils.cardStatusStringRes
 
 /**
@@ -47,10 +49,16 @@ class CardPinFragment : BaseEngageFullscreenFragment() {
         binding.apply {
             viewModel = cardPinViewModel
 
-            listOfImageViews.add(iconImageView1)
-            listOfImageViews.add(iconImageView2)
-            listOfImageViews.add(iconImageView3)
-            listOfImageViews.add(iconImageView4)
+            BrandingInfoRepo.cards?.get(0)?.let {
+                binding.cardView.applyBranding(it,cardPinViewModel.compositeDisposable)
+            }
+
+            listOfImageViews.apply {
+                add(iconImageView1)
+                add(iconImageView2)
+                add(iconImageView3)
+                add(iconImageView4)
+            }
 
             pinLayout.setOnClickListener {
                 // requestFocus to show keyboard in case keyboard was dismissed

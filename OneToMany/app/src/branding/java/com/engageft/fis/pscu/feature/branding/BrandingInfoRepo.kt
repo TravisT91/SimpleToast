@@ -1,5 +1,7 @@
 package com.engageft.fis.pscu.feature.branding
 
+import com.ob.domain.lookup.branding.BrandingCard
+import com.ob.domain.lookup.branding.BrandingColorType
 import com.ob.domain.lookup.branding.BrandingFinancialInfo
 import com.ob.domain.lookup.branding.BrandingInfo
 import com.ob.domain.lookup.branding.BrandingTerm
@@ -14,25 +16,22 @@ import com.ob.domain.lookup.branding.BrandingTerm
  */
 
 object BrandingInfoRepo {
-    var cardImageUrl: String? = null
-        private set
-    var brandLogoUrl: String? = null
-        private set
-    var terms: Array<BrandingTerm>? = null
+    var terms: List<BrandingTerm>? = null
         private set
     var financialInfo: BrandingFinancialInfo? = null
+        private set
+    var cards: List<BrandingCard>? = null
         private set
 
     fun reset(){
         financialInfo = null
-        cardImageUrl = null
+        cards = null
         terms = null
         financialInfo = null
     }
 
     fun setBrandingInfo(brandingInfo: BrandingInfo){
-        cardImageUrl = brandingInfo.cardImage
-        brandLogoUrl = brandingInfo.brandLogo
+        cards = brandingInfo.cards
         terms = brandingInfo.terms
         financialInfo = brandingInfo.financialInfo
     }

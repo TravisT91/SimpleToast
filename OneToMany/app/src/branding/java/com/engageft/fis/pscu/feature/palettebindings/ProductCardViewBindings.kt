@@ -1,30 +1,33 @@
 package com.engageft.fis.pscu.feature.palettebindings
 
-import androidx.databinding.BindingAdapter
+import android.graphics.Color
 import com.engageft.apptoolbox.view.ProductCardView
-import com.engageft.fis.pscu.feature.branding.BrandingInfoRepo
+import com.engageft.fis.pscu.feature.branding.Palette
+import com.ob.domain.lookup.branding.BrandingCard
 import com.squareup.picasso.Picasso
+import io.reactivex.Single
+import io.reactivex.disposables.CompositeDisposable
+import io.reactivex.schedulers.Schedulers
 
 /**
- * TODO: Class Name
+ * ProductCardViewBindings
  * </p>
- * TODO: Class Description
+ * Contains the bindings and extensions used to style the ProductCardView
  * </p>
  * Created by Travis Tkachuk 12/4/18
  * Copyright (c) 2018 Engage FT. All rights reserved.
  */
 
-@BindingAdapter("ProductCardView.shouldApplyBranding")
-fun ProductCardView.shouldApplyBranding(shouldStyle: Boolean){
-    if (shouldStyle){
-        this.applyBranding()
-    }
-}
-
-fun ProductCardView.applyBranding(){
+fun ProductCardView.applyBranding(brandingCard: BrandingCard, cd: CompositeDisposable) {
     val picasso = Picasso.Builder(context).loggingEnabled(true).build()
-    picasso
-            .load(BrandingInfoRepo.cardImageUrl)
-            .into(this.binding.cardBackground)
-    picasso.load("https://upload.wikimedia.org/wikipedia/commons/5/53/Google_%22G%22_Logo.svg").into(this.binding.productLogoImageView)
+    this.setCardTextColor(Color.parseColor(brandingCard.textColor))
+    this.setRibbonOkColor(Palette.primaryColor)
+    this.setRibbonNotOkColor(Palette.errorColor)
+    //Using this rx solution we are able to apply the bitmap without having to worry about creating
+    //a target and garbage collection, however if we want to set a placeholder image we must do so
+    //in xml on the ProductCardView
+    val disposable =  Single.fromCallable { picasso.load(brandingCard.image).get() }
+            .subscribeOn(Schedulers.io())
+            .subscribe { bitmap -> this.setCardBackground(bitmap) }
+    cd.add(disposable)
 }
