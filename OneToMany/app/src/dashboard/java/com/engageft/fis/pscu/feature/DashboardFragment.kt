@@ -43,6 +43,8 @@ class DashboardFragment : LotusFullScreenFragment(), DashboardExpandableView.Das
     private lateinit var binding: FragmentDashboardBinding
 
     private lateinit var dashboardViewModel: DashboardViewModel
+    override val name: String
+        get() = "Dashboard"
 
     private val cardModelObserver = Observer<ProductCardModel> { updateForCardModel(it!!) }
     private val cardStateObserver = Observer<ProductCardViewCardState> { updateForCardState(it!!) }

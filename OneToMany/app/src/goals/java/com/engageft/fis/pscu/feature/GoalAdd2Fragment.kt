@@ -1,12 +1,9 @@
 package com.engageft.fis.pscu.feature
 
 import android.os.Bundle
-import android.os.Handler
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
-import androidx.navigation.findNavController
 import com.engageft.apptoolbox.BaseViewModel
 import com.engageft.apptoolbox.LotusFullScreenFragment
 import com.engageft.fis.pscu.R
@@ -19,23 +16,16 @@ import com.engageft.fis.pscu.R
  * Created by joeyhutchins on 8/24/18.
  * Copyright (c) 2018 Engage FT. All rights reserved.
  */
-class GoalsFragment : LotusFullScreenFragment() {
+class GoalAdd2Fragment : LotusFullScreenFragment() {
 
     override fun createViewModel(): BaseViewModel? {
         return null
     }
 
     override val name: String
-        get() = "GoalsFragment"
+        get() = "Goals2"
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        val view = inflater.inflate(R.layout.fragment_goals, container, false)
-        val button = view.findViewById<Button>(R.id.button)
-        button.setOnClickListener{
-            hideToolbar()
-            Handler().postDelayed({
-                view.findNavController().navigate(R.id.action_goals_fragment_to_goalAdd1Fragment)
-            }, 2000L)
-        }
+        val view = inflater.inflate(R.layout.fragment_goal_add_1, container, false)
         return view
     }
 }

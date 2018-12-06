@@ -79,6 +79,9 @@
         <argument
             android:name="@string/navigation_view_gone"
             android:defaultValue="true" />
+        <action
+            android:id="@+id/action_goalAdd1Fragment_to_goalAdd2Fragment"
+            app:destination="@id/goalAdd2Fragment" />
     </fragment>
     <fragment
         android:id="@+id/cardManagementFragment"
@@ -146,4 +149,8 @@
         android:id="@+id/cardPinFragment"
         android:name="com.engageft.fis.pscu.feature.CardPinFragment"
         android:label="@string/card_pin_screen_title" />
+    <fragment
+        android:id="@+id/goalAdd2Fragment"
+        android:name="com.engageft.fis.pscu.feature.GoalAdd2Fragment"
+        android:label="GoalAdd2Fragment" />
 </navigation>

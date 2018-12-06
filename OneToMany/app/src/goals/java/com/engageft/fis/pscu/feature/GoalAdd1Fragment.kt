@@ -4,6 +4,8 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
+import androidx.navigation.findNavController
 import com.engageft.apptoolbox.BaseViewModel
 import com.engageft.apptoolbox.LotusFullScreenFragment
 import com.engageft.fis.pscu.R
@@ -21,8 +23,15 @@ class GoalAdd1Fragment : LotusFullScreenFragment() {
     override fun createViewModel(): BaseViewModel? {
         return null
     }
+
+    override val name: String
+        get() = "Goals1"
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val view = inflater.inflate(R.layout.fragment_goal_add_1, container, false)
+        val button = view.findViewById<Button>(R.id.button)
+        button.setOnClickListener{
+            view.findNavController().navigate(R.id.action_goalAdd1Fragment_to_goalAdd2Fragment)
+        }
         return view
     }
 }
