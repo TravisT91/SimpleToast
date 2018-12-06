@@ -20,6 +20,10 @@ import kotlinx.android.synthetic.main.fragment_account_notifications.*
 
 
 class AccountNotificationsFragment: BaseEngageFullscreenFragment() {
+
+    companion object {
+        private const val COLOR_LIGHTEN_VALUE = .6f
+    }
     private lateinit var accountNotificationsViewModel: AccountNotificationsViewModel
     private lateinit var binding: FragmentAccountNotificationsBinding
 
@@ -40,13 +44,13 @@ class AccountNotificationsFragment: BaseEngageFullscreenFragment() {
                     ResourcesCompat.getFont(context!!, R.font.font_bold)!!,
                     getString(R.string.account_notifications_screen_description_subString))
 
-            binding.pushSwitch.setSwitchTintList(Palette.primaryColor, lighter(Palette.primaryColor, .8f),
+            binding.pushSwitch.setSwitchTintList(Palette.successColor, lighter(Palette.successColor, COLOR_LIGHTEN_VALUE),
                     ContextCompat.getColor(context!!, R.color.structure2), ContextCompat.getColor(context!!, android.R.color.darker_gray))
 
-            binding.smsSwitch.setSwitchTintList(Palette.primaryColor, lighter(Palette.primaryColor, .8f),
+            binding.smsSwitch.setSwitchTintList(Palette.successColor, lighter(Palette.successColor, COLOR_LIGHTEN_VALUE),
                     ContextCompat.getColor(context!!, R.color.structure2), ContextCompat.getColor(context!!, android.R.color.darker_gray))
 
-            binding.emailSwitch.setSwitchTintList(Palette.primaryColor, lighter(Palette.primaryColor, .8f),
+            binding.emailSwitch.setSwitchTintList(Palette.successColor, lighter(Palette.successColor, COLOR_LIGHTEN_VALUE),
                     ContextCompat.getColor(context!!, R.color.structure2), ContextCompat.getColor(context!!, android.R.color.darker_gray))
 
             // set click listener on Disabled Push View which takes user to the system notification settings
