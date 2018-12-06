@@ -157,6 +157,19 @@
         <argument
             android:name="@string/navigation_override_up"
             android:defaultValue="true" />
+        <action
+            android:id="@+id/action_move_money_fragment_to_directDepositFragment"
+            app:destination="@id/directDepositFragment"
+            app:enterAnim="@anim/nav_enter_anim"
+            app:exitAnim="@anim/nav_exit_anim"
+            app:popEnterAnim="@anim/nav_pop_enter_anim"
+            app:popExitAnim="@anim/nav_pop_exit_anim"/>
+    </fragment>
+
+    <fragment
+        android:id="@+id/directDepositFragment"
+        android:name="com.engageft.fis.pscu.feature.DirectDepositFragment"
+        android:label="@string/TITLE_MOVE_MONEY">
     </fragment>
 
     <!-- This is necessary for navigating from the dashboard, so that the back/up arrow is shown
