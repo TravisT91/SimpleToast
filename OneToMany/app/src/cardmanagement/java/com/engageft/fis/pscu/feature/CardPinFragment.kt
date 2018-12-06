@@ -3,11 +3,13 @@ package com.engageft.fis.pscu.feature
 import android.graphics.drawable.Drawable
 import android.os.Bundle
 import android.os.Handler
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.WindowManager
 import android.widget.ImageView
+import android.widget.Toast
 import androidx.annotation.ColorInt
 import androidx.core.content.ContextCompat
 import androidx.core.graphics.drawable.DrawableCompat
@@ -50,7 +52,11 @@ class CardPinFragment : BaseEngageFullscreenFragment() {
             viewModel = cardPinViewModel
 
             BrandingInfoRepo.cards?.get(0)?.let {
-                binding.cardView.applyBranding(it,cardPinViewModel.compositeDisposable)
+                binding.cardView.applyBranding(it,cardPinViewModel.compositeDisposable) { e ->
+                    Toast.makeText(context, "Failed to retrieve card image", Toast.LENGTH_SHORT).show()
+                    Log.e("BRANDING_INFO_FAIL", e.message)
+                    //TODO(ttkachuk) right now it is not clear on how we should handle failure to retrieve the card image
+                }
             }
 
             listOfImageViews.apply {

@@ -1,7 +1,9 @@
 package com.engageft.fis.pscu.feature
 
 import android.animation.ObjectAnimator
+import android.annotation.SuppressLint
 import android.os.Bundle
+import android.util.Log
 import android.util.TypedValue
 import android.view.LayoutInflater
 import android.view.View
@@ -79,7 +81,11 @@ class DashboardFragment : BaseEngageFullscreenFragment(), DashboardExpandableVie
         binding = DataBindingUtil.inflate(layoutInflater, R.layout.fragment_dashboard, container, false)
         //TODO(ttkachuk) right now card types are no specified by the backend, but we will select the BrandingCard that matches debitCardInfo.cardType when the backend is updated
         BrandingInfoRepo.cards?.get(0)?.let {
-            binding.dashboardExpandableView.cardView.applyBranding(it,dashboardViewModel.compositeDisposable)
+            binding.dashboardExpandableView.cardView.applyBranding(it,dashboardViewModel.compositeDisposable){ e ->
+                Toast.makeText(context, "Failed to retrieve card image", Toast.LENGTH_SHORT).show()
+                Log.e("BRANDING_INFO_FAIL", e.message)
+                //TODO(ttkachuk) right now it is not clear on how we should handle failure to retrieve the card image
+            }
         }
         return binding.root
     }

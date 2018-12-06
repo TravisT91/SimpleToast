@@ -18,16 +18,22 @@ import io.reactivex.schedulers.Schedulers
  * Copyright (c) 2018 Engage FT. All rights reserved.
  */
 
-fun ProductCardView.applyBranding(brandingCard: BrandingCard, cd: CompositeDisposable) {
+fun ProductCardView.applyBranding(brandingCard: BrandingCard, cd: CompositeDisposable, onFailedToApplyBranding: ((e:Throwable) -> Unit)?) {
     val picasso = Picasso.Builder(context).loggingEnabled(true).build()
-    this.setCardTextColor(Color.parseColor(brandingCard.textColor))
-    this.setRibbonOkColor(Palette.primaryColor)
-    this.setRibbonNotOkColor(Palette.errorColor)
     //Using this rx solution we are able to apply the bitmap without having to worry about creating
     //a target and garbage collection, however if we want to set a placeholder image we must do so
     //in xml on the ProductCardView
     val disposable =  Single.fromCallable { picasso.load(brandingCard.image).get() }
             .subscribeOn(Schedulers.io())
-            .subscribe { bitmap -> this.setCardBackground(bitmap) }
+            .subscribe (
+                    { bitmap ->
+                        this.setCardBackground(bitmap)
+                        this.setCardTextColor(Color.parseColor(brandingCard.textColor))
+                        this.setRibbonOkColor(Palette.primaryColor)
+                        this.setRibbonNotOkColor(Palette.errorColor)
+                    },
+                    { e ->
+                        onFailedToApplyBranding?.invoke(e)
+                    })
     cd.add(disposable)
 }
