@@ -30,39 +30,53 @@
                 android:layout_height="wrap_content"
                 android:background="@color/cellBackground">
 
-                <TextView
-                    style="@style/NotificationsPushStyle"
-                    android:id="@+id/pushTextView"
-                    android:layout_marginStart="16dp"
-                    android:layout_marginTop="16dp"
-                    android:layout_marginEnd="8dp"
-                    android:text="@string/account_notifications_push"
-                    app:layout_constraintEnd_toStartOf="@+id/pushSwitch"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"
-                    tools:text="Push Notifications" />
-
-                <TextView
-                    style="@style/NotificationsPushSubLabelStyle"
-                    android:id="@+id/pushDisabledTextView"
-                    android:layout_marginStart="16dp"
-                    android:layout_marginEnd="8dp"
-                    android:text="@string/account_notifications_push_disabled"
-                    app:layout_constraintBottom_toTopOf="@+id/pushDivider"
-                    app:layout_constraintEnd_toStartOf="@+id/pushSwitch"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/pushTextView"
-                    tools:text="Push Disabled" />
-
-                <androidx.appcompat.widget.SwitchCompat
-                    android:id="@+id/pushSwitch"
-                    android:layout_width="wrap_content"
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:id="@+id/pushRowLayout"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_marginEnd="24dp"
-                    android:onCheckedChanged="@{(switch, isChecked) -> viewModel.onPushCheckChanged(isChecked)}"
-                    app:layout_constraintBottom_toTopOf="@+id/pushDivider"
+                    android:padding="16dp"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent">
+
+                    <TextView
+                        android:id="@+id/pushTextView"
+                        style="@style/NotificationsPushStyle"
+                        android:layout_marginEnd="8dp"
+                        android:text="@string/account_notifications_push"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintBottom_toTopOf="@+id/pushDisabledTextView"
+                        app:layout_constraintEnd_toStartOf="@+id/pushSwitch"
+                        app:layout_constraintHorizontal_bias="0.5"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:layout_constraintVertical_chainStyle="spread_inside"
+                        tools:text="Push Notifications" />
+
+                    <TextView
+                        android:id="@+id/pushDisabledTextView"
+                        style="@style/NotificationsPushSubLabelStyle"
+                        android:layout_marginEnd="8dp"
+                        android:text="@string/account_notifications_push_disabled"
+                        android:visibility="visible"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toStartOf="@+id/pushSwitch"
+                        app:layout_constraintHorizontal_bias="0.5"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/pushTextView"
+                        tools:text="Push Disabled" />
+
+                    <androidx.appcompat.widget.SwitchCompat
+                        android:id="@+id/pushSwitch"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginEnd="8dp"
+                        android:onCheckedChanged="@{(switch, isChecked) -> viewModel.onPushCheckChanged(isChecked)}"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
 
                 <include
                     android:id="@+id/pushDivider"
@@ -70,10 +84,9 @@
                     android:layout_width="0dp"
                     android:layout_height="1dp"
                     android:layout_marginStart="16dp"
-                    android:layout_marginTop="16dp"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/pushDisabledTextView" />
+                    app:layout_constraintTop_toBottomOf="@+id/pushRowLayout" />
 
                 <TextView
                     style="@style/NotificationsSmsStyle"
@@ -118,8 +131,10 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="16dp"
                     android:layout_marginEnd="24dp"
-                    app:layout_constraintEnd_toEndOf="parent"
+                    android:layout_marginBottom="16dp"
                     android:onCheckedChanged="@{(switch, isChecked) -> viewModel.onSmsCheckChanged(isChecked)}"
+                    app:layout_constraintBottom_toTopOf="@+id/smsDivider"
+                    app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/pushDivider" />
 
 

@@ -61,6 +61,7 @@ class AccountNotificationsViewModel: BaseEngageViewModel() {
     fun onPushCheckChanged(isChecked: Boolean) {
         pushObservable.value = isChecked
 
+        // The ON state of Push notification and SMS are mutually exclusive
         if (isChecked) smsObservable.value = false
 
         updateSaveButtonState()
@@ -69,6 +70,7 @@ class AccountNotificationsViewModel: BaseEngageViewModel() {
     fun onSmsCheckChanged(isChecked: Boolean) {
         smsObservable.value = isChecked
 
+        // The ON state of Push notification and SMS are mutually exclusive
         if (isChecked) pushObservable.value = false
 
         updateSaveButtonState()
@@ -83,6 +85,7 @@ class AccountNotificationsViewModel: BaseEngageViewModel() {
     fun onSaveClicked() {
         accountInfo?.let { currentAccountInfo ->
             //TODO(aHashimi): Backend does not support clearing the notifications yet but this is what we want according to Jess.
+            // This needs to be updated based on what backend will require, empty-string or maybe a type.
             val messageType = currentAccountInfo.getNotificationMessageType(pushObservable.value!!,
                     smsObservable.value!!, emailObservable.value!!) ?: ""
 

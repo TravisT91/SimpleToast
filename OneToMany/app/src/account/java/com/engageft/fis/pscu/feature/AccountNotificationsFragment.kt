@@ -138,9 +138,11 @@ class AccountNotificationsFragment: BaseEngageFullscreenFragment() {
         if (isPushChecked && !NotificationManagerCompat.from(context!!).areNotificationsEnabled()) {
             binding.pushDisabledTextView.visibility = View.VISIBLE
             binding.pushAlertLayout.visibility = View.VISIBLE
+            binding.pushRowLayout.setBackgroundColor(Palette.warningColor)
         } else {
             binding.pushDisabledTextView.visibility = View.GONE
             binding.pushAlertLayout.visibility = View.GONE
+            binding.pushRowLayout.setBackgroundColor(ContextCompat.getColor(context!!, R.color.cellBackground))
         }
     }
 

@@ -36,7 +36,7 @@ fun getInputStateList(@ColorInt focusedColor: Int, @ColorInt notFocused : Int, @
 }
 
 fun getSwitchColorStateList(@ColorInt checkedColor:Int, @ColorInt unCheckedColor: Int): ColorStateList {
-    val s = arrayOf(intArrayOf(android.R.attr.state_checked), intArrayOf(-android.R.attr.state_checked), intArrayOf(android.R.attr.state_enabled))
+    val s = arrayOf(intArrayOf(android.R.attr.state_checked), intArrayOf(-android.R.attr.state_checked))
     val c = intArrayOf(checkedColor, unCheckedColor, unCheckedColor)
     return ColorStateList(s,c)
 }
