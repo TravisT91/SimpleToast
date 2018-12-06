@@ -161,6 +161,34 @@
 
             </androidx.constraintlayout.widget.ConstraintLayout>
 
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:id="@+id/pushAlertLayout"
+                android:visibility="gone"
+                android:background="@color/warning">
+
+                <TextView
+                    style="@style/Caption1Quiet"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingStart="16dp"
+                    android:paddingEnd="16dp"
+                    android:paddingTop="16dp"
+                    android:text="@string/ALERT_SETTINGS_PUSH_DISABLED_SECTION_HEADER"/>
+
+                <TextView
+                    style="@style/FootnoteQuiet"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingStart="16dp"
+                    android:paddingEnd="16dp"
+                    android:paddingBottom="16dp"
+                    android:paddingTop="8dp"
+                    android:text="@string/ALERT_SETTINGS_PUSH_DISABLED_SECTION_INSTRUCTION"/>
+            </LinearLayout>
+
             <TextView
                 style="@style/NotificationsFooterStyle"
                 android:text="@string/account_notifications_screen_footer" />

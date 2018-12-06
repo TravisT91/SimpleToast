@@ -1,30 +1,31 @@
 package com.engageft.fis.pscu.feature
 
-import com.engageft.engagekit.tools.MixpanelEvent
-import com.engageft.engagekit.EngageService
-import io.reactivex.android.schedulers.AndroidSchedulers
-import android.text.TextUtils
-import android.util.Log
-import androidx.databinding.Observable
+import android.telephony.PhoneNumberUtils
 import androidx.databinding.ObservableField
 import androidx.lifecycle.MutableLiveData
+import com.engageft.engagekit.EngageService
 import com.engageft.engagekit.utils.LoginResponseUtils
-import com.engageft.fis.pscu.feature.utils.*
-import io.reactivex.schedulers.Schedulers
+import com.engageft.fis.pscu.feature.utils.emailEnabled
+import com.engageft.fis.pscu.feature.utils.getNotificationMessageType
+import com.engageft.fis.pscu.feature.utils.pushEnabled
+import com.engageft.fis.pscu.feature.utils.smsEnabled
 import com.ob.ws.dom.LoginResponse
 import com.ob.ws.dom.utility.AccountInfo
+import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.schedulers.Schedulers
 
 
 class AccountNotificationsViewModel: BaseEngageViewModel() {
 
-    val TAG = "AccountNotificationsVM"
+    companion object {
+        private const val US_ISO_CODE = "US"
+    }
     enum class SaveButtonState {
         HIDE,
         SHOW
     }
 
     private var accountInfo: AccountInfo? = null
-//    var phoneNumber: String = "8589254498"
     var phoneNumber: ObservableField<String> = ObservableField("")
 
     var pushObservable = MutableLiveData<Boolean>()
@@ -55,11 +56,6 @@ class AccountNotificationsViewModel: BaseEngageViewModel() {
                     handleThrowable(e)
                 })
         )
-
-        phoneNumber.addOnPropertyChangedCallback(object: Observable.OnPropertyChangedCallback() {
-            override fun onPropertyChanged(sender: Observable?, propertyId: Int) {
-            }
-        })
     }
 
     fun onPushCheckChanged(isChecked: Boolean) {
@@ -86,6 +82,7 @@ class AccountNotificationsViewModel: BaseEngageViewModel() {
 
     fun onSaveClicked() {
         accountInfo?.let { currentAccountInfo ->
+            //TODO(aHashimi): Backend does not support clearing the notifications yet but this is what we want according to Jess.
             val messageType = currentAccountInfo.getNotificationMessageType(pushObservable.value!!,
                     smsObservable.value!!, emailObservable.value!!) ?: ""
 
@@ -121,7 +118,7 @@ class AccountNotificationsViewModel: BaseEngageViewModel() {
                 smsObservable.value = true
             }
 
-            phoneNumber.set(currentAccountInfo.phone)
+            phoneNumber.set(PhoneNumberUtils.formatNumber((currentAccountInfo.phone), US_ISO_CODE))
 
             emailObservable.value = currentAccountInfo.emailEnabled()
 

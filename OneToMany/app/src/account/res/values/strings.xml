@@ -91,5 +91,7 @@
     <string name="account_notifications_push_disabled">Disabled</string>
     <string name="account_notifications_sms">SMS/Text Alerts\u002A</string>
     <string name="account_notifications_email">Email Notifications</string>
+    <string name="ALERT_SETTINGS_PUSH_DISABLED_SECTION_HEADER">Push Disabled</string>
+    <string name="ALERT_SETTINGS_PUSH_DISABLED_SECTION_INSTRUCTION">You currently have notifications disabled. Select to view Android Notification settings and unblock My Card Manager notifications.</string>
 
 </resources>

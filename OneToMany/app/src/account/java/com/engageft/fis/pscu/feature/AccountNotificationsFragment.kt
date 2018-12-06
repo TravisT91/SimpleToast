@@ -14,9 +14,14 @@ import com.engageft.fis.pscu.R
 import com.engageft.fis.pscu.databinding.FragmentAccountNotificationsBinding
 import com.engageft.fis.pscu.feature.palettebindings.setSwitchTintList
 import com.engageft.fis.pscu.feature.palettebindings.setThemeFilled
+import android.content.Intent
+import android.os.Build
+import kotlinx.android.synthetic.main.fragment_account_notifications.*
+
 
 class AccountNotificationsFragment: BaseEngageFullscreenFragment() {
     private lateinit var accountNotificationsViewModel: AccountNotificationsViewModel
+    private lateinit var binding: FragmentAccountNotificationsBinding
 
     override fun createViewModel(): BaseViewModel? {
         accountNotificationsViewModel = ViewModelProviders.of(this).get(AccountNotificationsViewModel::class.java)
@@ -24,7 +29,7 @@ class AccountNotificationsFragment: BaseEngageFullscreenFragment() {
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        val binding = FragmentAccountNotificationsBinding.inflate(inflater, container, false)
+        binding = FragmentAccountNotificationsBinding.inflate(inflater, container, false)
         binding.apply {
             binding.viewModel = accountNotificationsViewModel
             binding.saveButton.setThemeFilled(true)
@@ -41,19 +46,27 @@ class AccountNotificationsFragment: BaseEngageFullscreenFragment() {
             binding.emailSwitch.setSwitchTintList(Palette.primaryColor, lighter(Palette.primaryColor, .8f),
                     ContextCompat.getColor(context!!, R.color.structure2), ContextCompat.getColor(context!!, android.R.color.darker_gray))
 
-            // set click listener on Disabled push textView
+            // set click listener on Disabled Push View which takes user to the system notification settings
+            binding.pushAlertLayout.setOnClickListener {
+                val intent = Intent()
+                intent.action = "android.settings.APP_NOTIFICATION_SETTINGS"
+                intent.putExtra("app_uid", activity!!.applicationInfo.uid)
+
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                    intent.putExtra("android.provider.extra.APP_PACKAGE", activity!!.packageName)
+                } else {
+                    intent.putExtra("app_package", activity!!.packageName)
+                }
+
+                startActivity(intent)
+            }
         }
 
         accountNotificationsViewModel.apply {
 
-            pushObservable.observe(this@AccountNotificationsFragment, Observer {
-                binding.pushSwitch.isChecked = it
-                // if push notification is enabled and app notifications are NOT enabled
-                if (it && !NotificationManagerCompat.from(context!!).areNotificationsEnabled()) {
-                    binding.pushDisabledTextView.visibility = View.VISIBLE
-                } else {
-                    binding.pushDisabledTextView.visibility = View.GONE
-                }
+            pushObservable.observe(this@AccountNotificationsFragment, Observer { isPushChecked ->
+                binding.pushSwitch.isChecked = isPushChecked
+                updatePushView(isPushChecked)
             })
 
             smsObservable.observe(this@AccountNotificationsFragment, Observer {
@@ -93,6 +106,8 @@ class AccountNotificationsFragment: BaseEngageFullscreenFragment() {
     override fun onResume() {
         super.onResume()
         setHasOptionsMenu(true)
+
+        updatePushView(pushSwitch.isChecked)
     }
 
     override fun onCreateOptionsMenu(menu: Menu?, inflater: MenuInflater?) {
@@ -116,6 +131,17 @@ class AccountNotificationsFragment: BaseEngageFullscreenFragment() {
             }
         }
         return super.onOptionsItemSelected(item)
+    }
+
+    private fun updatePushView(isPushChecked: Boolean) {
+        // if push notification is enabled and app notifications are Blocked show to the user that they won't receive push notifications
+        if (isPushChecked && !NotificationManagerCompat.from(context!!).areNotificationsEnabled()) {
+            binding.pushDisabledTextView.visibility = View.VISIBLE
+            binding.pushAlertLayout.visibility = View.VISIBLE
+        } else {
+            binding.pushDisabledTextView.visibility = View.GONE
+            binding.pushAlertLayout.visibility = View.GONE
+        }
     }
 
     /**
