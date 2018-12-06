@@ -85,6 +85,7 @@
     <string name="account_notifications_save_button">@string/save</string>
     <string name="account_notifications_screen_title">Notifications</string>
     <string name="account_notifications_screen_description">For a better experience, we recommend leaving push notifications ON.</string>
+    <string name="account_notifications_screen_description_subString">ON</string>
     <string name="account_notifications_screen_footer">\u002AStandard text message rates, fees, and charges apply.</string>
     <string name="account_notifications_push">Push Notifications</string>
     <string name="account_notifications_push_disabled">Disabled</string>

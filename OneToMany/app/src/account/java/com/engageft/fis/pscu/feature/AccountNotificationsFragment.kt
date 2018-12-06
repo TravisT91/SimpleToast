@@ -1,19 +1,15 @@
 package com.engageft.fis.pscu.feature
 
-import android.opengl.Visibility
 import android.os.Bundle
-import android.util.Log
 import android.view.*
-import android.widget.CompoundButton
 import androidx.core.app.NotificationManagerCompat
+import androidx.core.content.res.ResourcesCompat
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
-import androidx.navigation.findNavController
 import com.engageft.apptoolbox.BaseViewModel
-import com.engageft.apptoolbox.view.InformationDialogFragment
+import com.engageft.apptoolbox.util.applyTypefaceToSubstring
 import com.engageft.fis.pscu.R
 import com.engageft.fis.pscu.databinding.FragmentAccountNotificationsBinding
-import com.engageft.fis.pscu.feature.palettebindings.setButtonTint
 import com.engageft.fis.pscu.feature.palettebindings.setThemeFilled
 
 class AccountNotificationsFragment: BaseEngageFullscreenFragment() {
@@ -30,6 +26,10 @@ class AccountNotificationsFragment: BaseEngageFullscreenFragment() {
         binding.apply {
             binding.viewModel = accountNotificationsViewModel
             binding.saveButton.setThemeFilled(true)
+            val description = getString(R.string.account_notifications_screen_description)
+            binding.descriptionTextView.text = description.applyTypefaceToSubstring(
+                    ResourcesCompat.getFont(context!!, R.font.font_bold)!!,
+                    getString(R.string.account_notifications_screen_description_subString))
 //            binding.pushSwitch.setButtonTint(Palette.successColor)
 //            binding.smsSwitch.setButtonTint(Palette.successColor)
 //            binding.emailSwitch.setButtonTint(Palette.successColor)
