@@ -9,6 +9,7 @@ import android.widget.Button
 import androidx.navigation.findNavController
 import com.engageft.apptoolbox.BaseViewModel
 import com.engageft.apptoolbox.LotusPageFragment
+import com.engageft.apptoolbox.ToolbarVisibilityState
 import com.engageft.fis.pscu.R
 
 /**
@@ -31,7 +32,7 @@ class GoalsFragment : LotusPageFragment() {
         val view = inflater.inflate(R.layout.fragment_goals, container, false)
         val button = view.findViewById<Button>(R.id.button)
         button.setOnClickListener{
-            hideToolbar()
+            toolbarController.setToolbarVisibility(ToolbarVisibilityState.GONE)
             Handler().postDelayed({
                 view.findNavController().navigate(R.id.action_goals_fragment_to_goalAdd1Fragment)
             }, 2000L)

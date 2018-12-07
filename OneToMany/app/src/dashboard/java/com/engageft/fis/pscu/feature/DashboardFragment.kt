@@ -17,8 +17,8 @@ import androidx.lifecycle.ViewModelProviders
 import androidx.navigation.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.engageft.apptoolbox.BaseViewModel
-import com.engageft.apptoolbox.LotusActivity
 import com.engageft.apptoolbox.LotusPageFragment
+import com.engageft.apptoolbox.ToolbarVisibilityState
 import com.engageft.apptoolbox.ViewUtils.newLotusInstance
 import com.engageft.apptoolbox.view.InformationDialogFragment
 import com.engageft.apptoolbox.view.ProductCardModel
@@ -271,18 +271,21 @@ class DashboardFragment : LotusPageFragment(), DashboardExpandableView.Dashboard
         when (animationEvent) {
             DashboardAnimationEvent.EXPAND_IMMEDIATE -> {
                 //navView.visibility = View.GONE // for bottom nav
-                (activity as LotusActivity).showToolbar(show = false, animate = false)
+                toolbarController.setToolbarVisibility(ToolbarVisibilityState.INVISIBLE)
+                //(activity as LotusActivity).showToolbar(show = false, animate = false)
             }
             DashboardAnimationEvent.EXPAND_START -> {
                 //navView.visibility = View.GONE // for bottom nav
-                (activity as LotusActivity).showToolbar(show = false, animate = true, animationDurationMS = resources.getInteger(R.integer.dashboard_disclose_hide_duration_ms).toLong())
+                toolbarController.animateToolbarVisibility(ToolbarVisibilityState.INVISIBLE, animationDurationMs = resources.getInteger(R.integer.dashboard_disclose_hide_duration_ms).toLong())
+                //(activity as LotusActivity).showToolbar(show = false, animate = true, animationDurationMS = resources.getInteger(R.integer.dashboard_disclose_hide_duration_ms).toLong())
             }
             DashboardAnimationEvent.EXPAND_END -> {
                 // intentionally left blank
             }
             DashboardAnimationEvent.COLLAPSE_START -> {
                 //navView.visibility = View.VISIBLE // for bottom nav
-                (activity as LotusActivity).showToolbar(show = true, animate = true, animationDurationMS = resources.getInteger(R.integer.dashboard_disclose_hide_duration_ms).toLong())
+                toolbarController.animateToolbarVisibility(ToolbarVisibilityState.VISIBLE, animationDurationMs = resources.getInteger(R.integer.dashboard_disclose_hide_duration_ms).toLong())
+                //(activity as LotusActivity).showToolbar(show = true, animate = true, animationDurationMS = resources.getInteger(R.integer.dashboard_disclose_hide_duration_ms).toLong())
             }
             DashboardAnimationEvent.COLLAPSE_END -> {
                 // intentionally left blank
