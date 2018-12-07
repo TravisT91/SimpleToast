@@ -8,7 +8,6 @@ import android.view.ViewGroup
 import android.widget.Button
 import androidx.navigation.findNavController
 import com.engageft.apptoolbox.BaseViewModel
-import com.engageft.apptoolbox.LotusPageFragment
 import com.engageft.apptoolbox.ToolbarVisibilityState
 import com.engageft.fis.pscu.R
 
@@ -20,14 +19,12 @@ import com.engageft.fis.pscu.R
  * Created by joeyhutchins on 8/24/18.
  * Copyright (c) 2018 Engage FT. All rights reserved.
  */
-class GoalsFragment : LotusPageFragment() {
+class GoalsFragment : BaseEngageFullscreenFragment() {
 
     override fun createViewModel(): BaseViewModel? {
         return null
     }
 
-    override val name: String
-        get() = "GoalsFragment"
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val view = inflater.inflate(R.layout.fragment_goals, container, false)
         val button = view.findViewById<Button>(R.id.button)

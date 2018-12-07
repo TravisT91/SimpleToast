@@ -1,12 +1,16 @@
 package com.engageft.fis.pscu.feature
 
 import android.os.Bundle
-import android.view.*
+import android.view.LayoutInflater
+import android.view.Menu
+import android.view.MenuInflater
+import android.view.MenuItem
+import android.view.View
+import android.view.ViewGroup
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.navigation.findNavController
 import com.engageft.apptoolbox.BaseViewModel
-import com.engageft.apptoolbox.LotusPageFragment
 import com.engageft.apptoolbox.view.InformationDialogFragment
 import com.engageft.fis.pscu.R
 import com.engageft.fis.pscu.databinding.FragmentChangePasswordBinding
@@ -19,7 +23,7 @@ import com.engageft.fis.pscu.databinding.FragmentChangePasswordBinding
  * Created by Atia Hashimi on 11/13/18.
  * Copyright (c) 2018 Engage FT. All rights reserved.
  */
-class ChangePasswordFragment: LotusPageFragment() {
+class ChangePasswordFragment: BaseEngageFullscreenFragment() {
 
     private lateinit var changePasswordViewModel: ChangePasswordViewModel
 

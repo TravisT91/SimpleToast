@@ -17,7 +17,6 @@ import androidx.lifecycle.ViewModelProviders
 import androidx.navigation.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.engageft.apptoolbox.BaseViewModel
-import com.engageft.apptoolbox.LotusPageFragment
 import com.engageft.apptoolbox.ToolbarVisibilityState
 import com.engageft.apptoolbox.ViewUtils.newLotusInstance
 import com.engageft.apptoolbox.view.InformationDialogFragment
@@ -39,12 +38,10 @@ import java.math.BigDecimal
  * Created by joeyhutchins on 8/24/18.
  * Copyright (c) 2018 Engage FT. All rights reserved.
  */
-class DashboardFragment : LotusPageFragment(), DashboardExpandableView.DashboardExpandableViewListener, TransactionsAdapter.OnTransactionsAdapterListener {
+class DashboardFragment : BaseEngageFullscreenFragment(), DashboardExpandableView.DashboardExpandableViewListener, TransactionsAdapter.OnTransactionsAdapterListener {
     private lateinit var binding: FragmentDashboardBinding
 
     private lateinit var dashboardViewModel: DashboardViewModel
-    override val name: String
-        get() = "Dashboard"
 
     private val cardModelObserver = Observer<ProductCardModel> { updateForCardModel(it!!) }
     private val cardStateObserver = Observer<ProductCardViewCardState> { updateForCardState(it!!) }

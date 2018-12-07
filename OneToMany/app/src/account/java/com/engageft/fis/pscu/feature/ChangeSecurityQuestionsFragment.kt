@@ -11,7 +11,6 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.navigation.findNavController
 import com.engageft.apptoolbox.BaseViewModel
-import com.engageft.apptoolbox.LotusPageFragment
 import com.engageft.apptoolbox.ViewUtils.newLotusInstance
 import com.engageft.apptoolbox.view.InformationDialogFragment
 import com.engageft.fis.pscu.R
@@ -26,7 +25,7 @@ import com.engageft.fis.pscu.databinding.FragmentChangeSecurityQuestionsBinding
  * Created by joeyhutchins on 11/12/18.
  * Copyright (c) 2018 Engage FT. All rights reserved.
  */
-class ChangeSecurityQuestionsFragment : LotusPageFragment() {
+class ChangeSecurityQuestionsFragment : BaseEngageFullscreenFragment() {
     private lateinit var changeSecurityQuestionsViewModel: ChangeSecurityQuestionsViewModel
     override fun createViewModel(): BaseViewModel? {
         changeSecurityQuestionsViewModel = ViewModelProviders.of(this).get(ChangeSecurityQuestionsViewModel::class.java)
