@@ -62,7 +62,7 @@ class ChangeSecurityQuestionsFragment : BaseEngageFullscreenFragment() {
         val binding = FragmentChangeSecurityQuestionsBinding.inflate(inflater, container, false)
         binding.viewModel = changeSecurityQuestionsViewModel
         binding.palette = Palette
-        
+
         upButtonOverrideProvider.setUpButtonOverride(navigationOverrideClickListener)
         backButtonOverrideProvider.setBackButtonOverride(navigationOverrideClickListener)
 
