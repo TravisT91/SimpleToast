@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <declare-styleable name="DialogAuthentication">
+        <!-- button -->
+        <attr name="buttonNegativeTextAppearance"/>
+        <attr name="buttonNeutralTextAppearance"/>
+        <attr name="buttonPositiveTextAppearance"/>
+        <attr name="buttonBackground"/>
+
+        <attr name="titleTextAppearance"/>
+        <attr name="messageTextAppearance"/>
+        <attr name="messageLineSpacing"/>
+        <attr name="errorMessageTextAppearance" format="reference"/>
+        <attr name="textInputLabelStyle" format="reference"/>
+    </declare-styleable>
+</resources>

@@ -35,7 +35,7 @@ class ReportLostStolenCardFragment : BaseEngageFullscreenFragment() {
 
             palette = Palette
 
-            reportLostStolenCardViewModel =  (createViewModel() as? ReportLostStolenCardViewModel)?.apply {
+            reportLostStolenCardViewModel =  (viewModel as? ReportLostStolenCardViewModel)?.apply {
                 val successObserver = Observer<Boolean> {
                     if (it) showNewCardOrderedConfirmationDialog()
                 }

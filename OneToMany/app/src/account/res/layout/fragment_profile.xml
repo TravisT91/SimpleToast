@@ -3,7 +3,9 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <data>
-        <variable name="viewModel" type="com.engageft.fis.pscu.feature.ProfileViewModel"/>
+        <variable
+            name="viewModel"
+            type="com.engageft.fis.pscu.feature.ProfileViewModel"/>
     </data>
 
     <ScrollView
@@ -12,7 +14,7 @@
         android:background="@color/viewBackground">
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:orientation="vertical"
             android:background="@android:color/transparent">
 
