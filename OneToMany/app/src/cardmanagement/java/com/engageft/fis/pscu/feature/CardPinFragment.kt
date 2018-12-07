@@ -50,12 +50,14 @@ class CardPinFragment : BaseEngageFullscreenFragment() {
 
         binding.apply {
             viewModel = cardPinViewModel
-
+            //TODO(ttkachuk) right now card types are no specified by the backend, but we will select the BrandingCard that matches debitCardInfo.cardType when the backend is updated
+            //tracked in FOTM-498
             BrandingInfoRepo.cards?.get(0)?.let {
                 binding.cardView.applyBranding(it,cardPinViewModel.compositeDisposable) { e ->
                     Toast.makeText(context, "Failed to retrieve card image", Toast.LENGTH_SHORT).show()
                     Log.e("BRANDING_INFO_FAIL", e.message)
                     //TODO(ttkachuk) right now it is not clear on how we should handle failure to retrieve the card image
+                    //tracked in FOTM-497
                 }
             }
 

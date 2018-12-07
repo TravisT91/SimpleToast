@@ -3,17 +3,13 @@ package com.engageft.fis.pscu.feature
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
-import android.os.Environment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
-import com.crashlytics.android.Crashlytics
 import com.engageft.apptoolbox.BaseViewModel
-import com.engageft.apptoolbox.BuildConfig
-import com.engageft.apptoolbox.view.InformationDialogFragment
 import com.engageft.fis.pscu.R
 import com.engageft.fis.pscu.databinding.FragmentCardFeatureNotAvailableBinding
 import com.engageft.fis.pscu.feature.branding.BrandingInfoRepo
