@@ -34,9 +34,9 @@ class DirectDepositViewModel : BaseEngageViewModel() {
     }
 
     fun getDirectDepositInfo() {
-        val storageManager = EngageService.getInstance().storageManager
-        val token = storageManager.loginResponse.token
-        val cardId = storageManager.currentCard.debitCardId
+        val engageService = EngageService.getInstance()
+        val token = engageService.authManager.authToken
+        val cardId = engageService.storageManager.currentCard.debitCardId
         val requestFieldMap = CardRequest(token, cardId).fieldMap
         engageApi().postDebitDirectDepositInfo(requestFieldMap)
                 .subscribeWithDefaultProgressAndErrorHandling<DirectDepositInfoResponse>(
@@ -61,7 +61,7 @@ class DirectDepositViewModel : BaseEngageViewModel() {
         } else {
             EngageAppConfig.engageKitConfig.devEnvironment.websiteUrl
         }
-        val token = EngageService.getInstance().storageManager.loginResponse.token
+        val token = EngageService.getInstance().authManager.authToken
         return String.format(unformattedUrl, webSiteUrl, token)
     }
 }
