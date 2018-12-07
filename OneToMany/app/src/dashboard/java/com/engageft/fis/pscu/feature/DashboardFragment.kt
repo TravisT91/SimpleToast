@@ -1,7 +1,6 @@
 package com.engageft.fis.pscu.feature
 
 import android.animation.ObjectAnimator
-import android.annotation.SuppressLint
 import android.os.Bundle
 import android.util.Log
 import android.util.TypedValue
@@ -28,6 +27,7 @@ import com.engageft.fis.pscu.R
 import com.engageft.fis.pscu.databinding.FragmentDashboardBinding
 import com.engageft.fis.pscu.feature.branding.BrandingInfoRepo
 import com.engageft.fis.pscu.feature.palettebindings.applyBranding
+import com.engageft.fis.pscu.feature.authentication.AuthenticationDialogFragment
 import com.engageft.fis.pscu.feature.utils.cardStatusStringRes
 import com.google.android.material.tabs.TabLayout
 import com.ob.domain.lookup.DebitCardStatus
@@ -41,10 +41,13 @@ import java.math.BigDecimal
  * <p>
  * UI Fragment for the Dashboard.
  * </p>
- * Created by joeyhutchins on 8/24/18.
+ * Created by Kurt Mueller on 4/17/18.
+ * Ported to gen2 by joeyhutchins on 8/24/18.
  * Copyright (c) 2018 Engage FT. All rights reserved.
  */
-class DashboardFragment : BaseEngageFullscreenFragment(), DashboardExpandableView.DashboardExpandableViewListener, TransactionsAdapter.OnTransactionsAdapterListener {
+class DashboardFragment : BaseEngageFullscreenFragment(),
+        DashboardExpandableView.DashboardExpandableViewListener,
+        TransactionsAdapter.OnTransactionsAdapterListener {
     private lateinit var binding: FragmentDashboardBinding
 
     private lateinit var dashboardViewModel: DashboardViewModel
@@ -197,21 +200,17 @@ class DashboardFragment : BaseEngageFullscreenFragment(), DashboardExpandableVie
     private fun updateForCardState(cardState: ProductCardViewCardState) {
         when (cardState) {
             ProductCardViewCardState.LOADING -> {
-                progressOverlayDelegate.showProgressOverlay()
                 binding.dashboardExpandableView.overviewShowHideCardDetailsLabel.text = getString(R.string.OVERVIEW_LOADING_CARD_DETAILS)
             }
             ProductCardViewCardState.DETAILS_HIDDEN -> {
-                progressOverlayDelegate.dismissProgressOverlay()
                 binding.dashboardExpandableView.overviewShowHideCardDetailsIcon.setImageDrawable(ContextCompat.getDrawable(context!!, R.drawable.ic_dashboard_card_details_show))
                 binding.dashboardExpandableView.overviewShowHideCardDetailsLabel.text = getString(R.string.OVERVIEW_SHOW_CARD_DETAILS)
             }
             ProductCardViewCardState.DETAILS_SHOWN -> {
-                progressOverlayDelegate.dismissProgressOverlay()
                 binding.dashboardExpandableView.overviewShowHideCardDetailsIcon.setImageDrawable(ContextCompat.getDrawable(context!!, R.drawable.ic_dashboard_card_details_hide))
                 binding.dashboardExpandableView.overviewShowHideCardDetailsLabel.text = getString(R.string.OVERVIEW_HIDE_CARD_DETAILS)
             }
             ProductCardViewCardState.ERROR -> {
-                progressOverlayDelegate.dismissProgressOverlay()
                 binding.dashboardExpandableView.overviewShowHideCardDetailsLabel.text = getString(
                         if (dashboardViewModel.productCardViewModelDelegate.isShowingCardDetails()) R.string.OVERVIEW_HIDE_CARD_DETAILS else R.string.OVERVIEW_SHOW_CARD_DETAILS
                 )
@@ -454,10 +453,11 @@ class DashboardFragment : BaseEngageFullscreenFragment(), DashboardExpandableVie
         if (dashboardViewModel.productCardViewModelDelegate.isShowingCardDetails()) {
             dashboardViewModel.productCardViewModelDelegate.hideCardDetails()
         } else {
-            //val dialogFragment = PasswordAuthenticationDialogFragment.newInstance(AUTHENTICATION_REVEAL_CARD_DIALOG_TAG, getString(R.string.BUTTON_CANCEL))
-            //dialogFragment.show(childFragmentManager, AUTHENTICATION_REVEAL_CARD_DIALOG_TAG)
-            // TODO(kurt): hide this behind password auth, once we have PasswordAuthDialogFragment (SHOW-376)
-            dashboardViewModel.productCardViewModelDelegate.showCardDetails()
+            val authDialogFragment = AuthenticationDialogFragment.newInstance(
+                    getString(R.string.OVERVIEW_SHOW_CARD_DETAILS_AUTHENTICATION_MESSAGE)
+            ) { dashboardViewModel.productCardViewModelDelegate.showCardDetails() }
+
+            authDialogFragment.show(childFragmentManager, AuthenticationDialogFragment.TAG)
         }
     }
 
@@ -480,7 +480,11 @@ class DashboardFragment : BaseEngageFullscreenFragment(), DashboardExpandableVie
     }
 
     override fun onChangePin() {
-        binding.root.findNavController().navigate(R.id.action_dashboard_fragment_to_cardPinFragment)
+        val authDialogFragment = AuthenticationDialogFragment.newInstance(
+                getString(R.string.OVERVIEW_CHANGE_CARD_PIN_AUTHENTICATION_MESSAGE)
+        ) { binding.root.findNavController().navigate(R.id.action_dashboard_fragment_to_cardPinFragment) }
+
+        authDialogFragment.show(childFragmentManager, AuthenticationDialogFragment.TAG)
     }
 
     override fun onReplaceCard() {

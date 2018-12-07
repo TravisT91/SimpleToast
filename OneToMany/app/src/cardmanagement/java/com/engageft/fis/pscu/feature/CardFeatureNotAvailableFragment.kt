@@ -15,6 +15,7 @@ import com.engageft.fis.pscu.databinding.FragmentCardFeatureNotAvailableBinding
 import com.engageft.fis.pscu.feature.branding.BrandingInfoRepo
 import com.engageft.fis.pscu.feature.branding.Palette
 import utilGen1.StringUtils
+import java.lang.IllegalStateException
 
 /**
  * CardFeatureNotAvailableFragment
@@ -92,9 +93,15 @@ class CardFeatureNotAvailableFragment: BaseEngageFullscreenFragment() {
                     getString(R.string.FEATURE_NOT_AVAILABLE_HEADER_SUBSTRING))
 
             callSupportButton.setOnClickListener {
-                activity?.startActivity(Intent(Intent.ACTION_DIAL).apply {
-                    data = Uri.parse("tel:" + BrandingInfoRepo.financialInfo?.supportNumber) })
-
+                BrandingInfoRepo.financialInfo?.supportNumber?.let { number ->
+                    activity?.startActivity(Intent(Intent.ACTION_DIAL).apply {
+                        data = Uri.parse("tel:$number")
+                    })
+                } ?: run {
+                    val e  = IllegalStateException("Support number is null.")
+                    handleGenericThrowable(e)
+                    showDialog(infoDialogGenericErrorTitleMessageNewInstance(context!!))
+                }
             }
         }
         return binding.root
