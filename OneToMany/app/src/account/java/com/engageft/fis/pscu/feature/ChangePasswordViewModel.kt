@@ -112,6 +112,10 @@ class ChangePasswordViewModel: BaseEngageViewModel() {
         }
     }
 
+    fun hasUnsavedChanges(): Boolean {
+        return (currentPassword.get()!!.isNotEmpty() || newPassword.get()!!.isNotEmpty() || confirmPassword.get()!!.isNotEmpty())
+    }
+
     private fun isFormValid(): Boolean {
         if (newPasswordErrorStateObservable.value == ErrorState.ERROR_NONE
                 && confirmPasswordErrorObservable.value == ErrorState.ERROR_NONE

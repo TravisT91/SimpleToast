@@ -158,6 +158,10 @@ class ProfileViewModel : BaseEngageViewModel() {
         loadProfileState()
     }
 
+    fun hasUnsavedChanges(): Boolean {
+        return valuesChanged
+    }
+
     fun onSaveClicked() {
         // Before attempting to save the info, do one last validation attempt:
         validateCity(false)

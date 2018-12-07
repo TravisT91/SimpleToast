@@ -110,6 +110,10 @@ class ChangeSecurityQuestionsViewModel : BaseEngageViewModel() {
         )
     }
 
+    fun hasUnsavedChanges(): Boolean {
+        return question1.get()!!.isNotEmpty() || question2.get()!!.isNotEmpty() || answer1.get()!!.isNotEmpty() || answer2.get()!!.isNotEmpty()
+    }
+
     private fun validateSaveButtonState() {
         if (answer1.get()!!.isNotBlank() && answer2.get()!!.isNotBlank() && question1.get()!!.isNotBlank() && question2.get()!!.isNotBlank()) {
             saveButtonStateObservable.value = SaveButtonState.VISIBLE_ENABLED

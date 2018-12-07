@@ -10,7 +10,9 @@ import android.view.ViewGroup
 import android.view.inputmethod.EditorInfo
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
+import androidx.navigation.fragment.findNavController
 import com.engageft.apptoolbox.BaseViewModel
+import com.engageft.apptoolbox.NavigationOverrideClickListener
 import com.engageft.apptoolbox.ViewUtils.newLotusInstance
 import com.engageft.apptoolbox.view.InformationDialogFragment
 import com.engageft.fis.pscu.R
@@ -28,6 +30,30 @@ import com.engageft.fis.pscu.feature.utils.StringUtils
  */
 class ProfileFragment : BaseEngageFullscreenFragment() {
     private lateinit var profileViewModel: ProfileViewModel
+
+    private val navigationOverrideClickListener = object : NavigationOverrideClickListener {
+        override fun onClick(): Boolean {
+            return if (profileViewModel.hasUnsavedChanges()) {
+                showDialog(infoDialogGenericUnsavedChangesNewInstance(context = activity!!, listener = unsavedChangesDialogListener))
+                true
+            } else {
+                false
+            }
+        }
+    }
+
+    private val unsavedChangesDialogListener = object : InformationDialogFragment.InformationDialogFragmentListener {
+        override fun onDialogFragmentPositiveButtonClicked() {
+            findNavController().navigateUp()
+        }
+        override fun onDialogFragmentNegativeButtonClicked() {
+            // Do nothing.
+        }
+        override fun onDialogCancelled() {
+            // Do nothing.
+        }
+    }
+
     override fun createViewModel(): BaseViewModel? {
         profileViewModel = ViewModelProviders.of(this).get(ProfileViewModel::class.java)
         return profileViewModel
@@ -37,6 +63,9 @@ class ProfileFragment : BaseEngageFullscreenFragment() {
         val binding = FragmentProfileBinding.inflate(inflater, container, false)
         binding.viewModel = profileViewModel
         binding.palette = Palette
+
+        upButtonOverrideProvider.setUpButtonOverride(navigationOverrideClickListener)
+        backButtonOverrideProvider.setBackButtonOverride(navigationOverrideClickListener)
 
         binding.legalNameInput.setEnable(false)
         profileViewModel.saveEventObservable.observe(this, Observer { saveEvent ->
