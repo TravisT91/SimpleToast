@@ -11,12 +11,16 @@ import com.engageft.fis.pscu.HeapUtils
 import com.engageft.fis.pscu.config.EngageAppConfig
 import com.engageft.fis.pscu.feature.BaseEngageViewModel
 import com.engageft.fis.pscu.feature.DialogInfo
-import com.engageft.fis.pscu.feature.Palette
 import com.engageft.fis.pscu.feature.WelcomeSharedPreferencesRepo
 import com.engageft.fis.pscu.feature.authentication.AuthenticationConfig
 import com.engageft.fis.pscu.feature.authentication.AuthenticationSharedPreferencesRepo
+import com.engageft.fis.pscu.feature.branding.BrandingManager
+import com.engageft.fis.pscu.feature.subscribeWithProgressAndDefaultErrorHandling
+import com.ob.ws.dom.BrandingInfoResponse
 import com.ob.ws.dom.DeviceFailResponse
 import com.ob.ws.dom.LoginResponse
+import com.ob.ws.dom.TokenResponse
+import com.ob.ws.dom.tag.TokenRequest
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 
@@ -208,19 +212,9 @@ class LoginViewModel : BaseEngageViewModel() {
                         .subscribe(
                                 { response ->
                                     if (response.isSuccess && response is LoginResponse) {
-                                        Palette.getBrandingWithToken(response.token)
-                                                .subscribe(
-                                                        { paletteResponse ->
-                                                            progressOverlayShownObservable.value = false
-                                                            if (paletteResponse.isSuccess) {
-                                                                handleSuccessfulLoginResponse(response)
-                                                            } else {
-                                                                handleUnexpectedErrorResponse(paletteResponse)
-                                                            }
-                                                        },
-                                                        { e ->
-                                                            Log.e("paletteResponseError", e.message)
-                                                        })
+                                        BrandingManager.getBrandingWithToken(response.token)
+                                                .subscribeWithProgressAndDefaultErrorHandling<BrandingInfoResponse>(
+                                                        this, { handleSuccessfulLoginResponse(response)})
                                     } else if (response is DeviceFailResponse) {
                                         progressOverlayShownObservable.value = false
                                         navigationObservable.value = LoginNavigationEvent.TWO_FACTOR_AUTHENTICATION

@@ -24,7 +24,6 @@ import com.engageft.fis.pscu.feature.BaseEngageFullscreenFragment
 import com.engageft.fis.pscu.feature.DialogInfo
 import com.engageft.fis.pscu.feature.EasterEggGestureDetector
 import com.engageft.fis.pscu.feature.EasterEggGestureListener
-import com.engageft.fis.pscu.feature.Palette
 import com.engageft.fis.pscu.feature.infoDialogSimpleMessageNoTitle
 
 /**
@@ -48,7 +47,6 @@ class LoginFragment : BaseEngageFullscreenFragment() {
         //TODO(aHashimi): needs to fix the problem of the buttons overlapping other views when keyboard is shown
         // https://engageft.atlassian.net/browse/SHOW-363
         binding = DataBindingUtil.inflate(layoutInflater, R.layout.fragment_login, container, false)
-        binding.palette = Palette
 
         constraintSet = ConstraintSet()
         constraintSet.clone(binding.loginParent)
