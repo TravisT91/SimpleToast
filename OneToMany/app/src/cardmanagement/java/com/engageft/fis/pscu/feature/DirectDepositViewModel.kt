@@ -1,13 +1,66 @@
 package com.engageft.fis.pscu.feature
 
+import androidx.lifecycle.MutableLiveData
+import com.engageft.engagekit.EngageService
+import com.engageft.engagekit.rest.request.CardRequest
+import com.engageft.engagekit.utils.engageApi
+import com.engageft.fis.pscu.config.EngageAppConfig
+import com.engageft.fis.pscu.feature.branding.BrandingInfoRepo
+import com.ob.ws.dom.DirectDepositInfoResponse
+
 /**
- * TODO: Class Name
+ * DirectDepositViewModel
  * </p>
- * TODO: Class Description
+ * This is the corresponding ViewModel to the DirectDepositFragment.
  * </p>
  * Created by Travis Tkachuk 12/6/18
  * Copyright (c) 2018 Engage FT. All rights reserved.
  */
 class DirectDepositViewModel : BaseEngageViewModel() {
 
+    var routingNumber = MutableLiveData<String>()
+    var accountNumber = MutableLiveData<String>()
+    var accountType = MutableLiveData<String>()
+    var bankName = MutableLiveData<String>()
+    var shouldShowPrintButton = MutableLiveData<Boolean>()
+
+    init {
+        routingNumber.value = ""
+        accountNumber.value = ""
+        accountType.value =  ""
+        bankName.value =  ""
+        shouldShowPrintButton.value = false
+    }
+
+    fun getDirectDepositInfo() {
+        val storageManager = EngageService.getInstance().storageManager
+        val token = storageManager.loginResponse.token
+        val cardId = storageManager.currentCard.debitCardId
+        val requestFieldMap = CardRequest(token, cardId).fieldMap
+        engageApi().postDebitDirectDepositInfo(requestFieldMap)
+                .subscribeWithDefaultProgressAndErrorHandling<DirectDepositInfoResponse>(
+                        this,
+                        {
+                            routingNumber.value = it.routeNumber
+                            accountNumber.value = it.accountNumber
+                            accountType.value = "Checking"
+                            //TODO(ttkachuk) find out about what to put for account type. It is hard coded as checking in CARE.
+                            BrandingInfoRepo.financialInfo?.institutionName?.let{
+                                brandingBankName -> bankName.value = brandingBankName
+                            }
+                            shouldShowPrintButton.value = true
+                        }
+                //TODO(ttkachuk) right now this is only handling the happy path. We need to update our
+                )
+    }
+
+    fun formatDirectDepositUrl(unformattedUrl: String) :String {
+        val webSiteUrl = if (EngageAppConfig.isUsingProdEnvironment) {
+            EngageAppConfig.engageKitConfig.prodEnvironment.websiteUrl
+        } else {
+            EngageAppConfig.engageKitConfig.devEnvironment.websiteUrl
+        }
+        val token = EngageService.getInstance().storageManager.loginResponse.token
+        return String.format(unformattedUrl, webSiteUrl, token)
+    }
 }

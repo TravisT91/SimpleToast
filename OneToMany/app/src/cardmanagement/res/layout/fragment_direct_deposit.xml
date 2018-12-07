@@ -1,9 +1,90 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="match_parent"
-    android:layout_height="match_parent">
-    <androidx.appcompat.widget.AppCompatTextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"/>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
 
-</LinearLayout>
+    <data>
+        <variable
+            name="viewModel"
+            type="com.engageft.fis.pscu.feature.DirectDepositViewModel"/>
+        <import type="android.view.View"/>
+    </data>
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/DIRECT_DEPOSIT_HEADER_TEXT"
+            android:gravity="center"
+            android:paddingTop="32dp"
+            android:paddingBottom="32dp"
+            android:paddingStart="16dp"
+            android:paddingEnd="16dp"/>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:paddingStart="16dp"
+            android:paddingEnd="16dp"
+            android:background="@color/white">
+
+            <com.engageft.apptoolbox.view.TextInputWithLabel
+                android:layout_marginTop="16dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/routingNumber"
+                android:enabled="false"
+                InputWithLabel.setThemeWithPalette="@{true}"
+                app:labelText="@string/DIRECT_DEPOSIT_ROUTING_NUMBER"
+                app:inputText="@{viewModel.routingNumber}"/>
+
+            <com.engageft.apptoolbox.view.TextInputWithLabel
+                android:layout_marginTop="16dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/accountNumber"
+                android:enabled="false"
+                InputWithLabel.setThemeWithPalette="@{true}"
+                app:labelText="@string/DIRECT_DEPOSIT_ACCOUNT_NUMBER"
+                app:inputText="@{viewModel.accountNumber}"/>
+
+            <com.engageft.apptoolbox.view.TextInputWithLabel
+                android:layout_marginTop="16dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/accountType"
+                android:enabled="false"
+                InputWithLabel.setThemeWithPalette="@{true}"
+                app:labelText="@string/DIRECT_DEPOSIT_ACCOUNT_TYPE"
+                app:inputText="@{viewModel.accountType}"/>
+
+            <com.engageft.apptoolbox.view.TextInputWithLabel
+                android:layout_marginTop="16dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/bankName"
+                android:enabled="false"
+                InputWithLabel.setThemeWithPalette="@{true}"
+                app:labelText="@string/DIRECT_DEPOSIT_BANK_NAME"
+                app:inputText="@{viewModel.bankName}"/>
+        </LinearLayout>
+
+        <com.engageft.apptoolbox.view.PillButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/viewPrintableFormButton"
+            android:layout_marginTop="16dp"
+            style="@style/ButtonPillPrimaryFilledDefault"
+            android:layout_gravity="center"
+            android:text="@string/DIRECT_DEPOSIT_VIEW_PRINTABLE_FORM"
+            tools:visibility="visible"
+            android:visibility="@{viewModel.shouldShowPrintButton ? View.VISIBLE : View.GONE, default = gone}"
+            PillButton.setThemeFilled="@{true}"/>
+
+    </LinearLayout>
+</layout>

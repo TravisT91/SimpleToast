@@ -5,7 +5,6 @@ import com.engageft.engagekit.EngageService
 import com.engageft.engagekit.rest.request.CardRequest
 import com.engageft.engagekit.utils.engageApi
 import com.ob.ws.dom.BasicResponse
-import io.reactivex.disposables.CompositeDisposable
 
 class CancelCardViewModel : BaseEngageViewModel() {
 
@@ -15,7 +14,7 @@ class CancelCardViewModel : BaseEngageViewModel() {
         val token = EngageService.getInstance().storageManager.loginResponse.token
         val cardId = EngageService.getInstance().storageManager.currentCard.debitCardId
         engageApi().postCancelCard(CardRequest(token,cardId).fieldMap)
-                .subscribeWithProgressAndDefaultErrorHandling<BasicResponse>(
+                .subscribeWithDefaultProgressAndErrorHandling<BasicResponse>(
                         this, {
                     cardCanceledSuccess.value = true
                     EngageService.getInstance().storageManager.removeLoginResponse()
