@@ -271,12 +271,10 @@ class DashboardFragment : BaseEngageFullscreenFragment(),
             DashboardAnimationEvent.EXPAND_IMMEDIATE -> {
                 //navView.visibility = View.GONE // for bottom nav
                 toolbarController.setToolbarVisibility(ToolbarVisibilityState.INVISIBLE)
-                //(activity as LotusActivity).showToolbar(show = false, animate = false)
             }
             DashboardAnimationEvent.EXPAND_START -> {
                 //navView.visibility = View.GONE // for bottom nav
                 toolbarController.animateToolbarVisibility(ToolbarVisibilityState.INVISIBLE, animationDurationMs = resources.getInteger(R.integer.dashboard_disclose_hide_duration_ms).toLong())
-                //(activity as LotusActivity).showToolbar(show = false, animate = true, animationDurationMS = resources.getInteger(R.integer.dashboard_disclose_hide_duration_ms).toLong())
             }
             DashboardAnimationEvent.EXPAND_END -> {
                 // intentionally left blank
@@ -284,7 +282,6 @@ class DashboardFragment : BaseEngageFullscreenFragment(),
             DashboardAnimationEvent.COLLAPSE_START -> {
                 //navView.visibility = View.VISIBLE // for bottom nav
                 toolbarController.animateToolbarVisibility(ToolbarVisibilityState.VISIBLE, animationDurationMs = resources.getInteger(R.integer.dashboard_disclose_hide_duration_ms).toLong())
-                //(activity as LotusActivity).showToolbar(show = true, animate = true, animationDurationMS = resources.getInteger(R.integer.dashboard_disclose_hide_duration_ms).toLong())
             }
             DashboardAnimationEvent.COLLAPSE_END -> {
                 // intentionally left blank
