@@ -35,7 +35,7 @@ class CancelCardFragment : BaseEngageFullscreenFragment() {
 
             palette = Palette
 
-            cancelCardViewModel =  (createViewModel() as? CancelCardViewModel)?.apply {
+            cancelCardViewModel =  (viewModel as? CancelCardViewModel)?.apply {
                 val successObserver = Observer<Boolean> {
                     if (it) showCardCanceledConfirmationDialog()
                 }

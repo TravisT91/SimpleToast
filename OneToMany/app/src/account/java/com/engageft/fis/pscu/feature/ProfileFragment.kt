@@ -15,7 +15,6 @@ import com.engageft.apptoolbox.ViewUtils.newLotusInstance
 import com.engageft.apptoolbox.view.InformationDialogFragment
 import com.engageft.fis.pscu.R
 import com.engageft.fis.pscu.databinding.FragmentProfileBinding
-import com.engageft.fis.pscu.feature.branding.Palette
 import com.engageft.fis.pscu.feature.utils.StringUtils
 
 
@@ -37,7 +36,6 @@ class ProfileFragment : BaseEngageFullscreenFragment() {
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val binding = FragmentProfileBinding.inflate(inflater, container, false)
         binding.viewModel = profileViewModel
-        binding.palette = Palette
 
         binding.legalNameInput.setEnable(false)
         profileViewModel.saveEventObservable.observe(this, Observer { saveEvent ->

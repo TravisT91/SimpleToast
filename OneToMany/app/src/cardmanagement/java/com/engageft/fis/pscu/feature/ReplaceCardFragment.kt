@@ -35,7 +35,7 @@ class ReplaceCardFragment : BaseEngageFullscreenFragment() {
 
             palette = Palette
 
-            replaceCardViewModel =  (createViewModel() as? ReplaceCardViewModel)?.apply {
+            replaceCardViewModel =  (viewModel as? ReplaceCardViewModel)?.apply {
                 val successObserver = Observer<Boolean> { if (it) showSuccessDialog() }
                 replacementRequestIsSuccess.observe(this@ReplaceCardFragment, successObserver)
             }
