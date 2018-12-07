@@ -4,7 +4,7 @@ import androidx.core.content.ContextCompat
 import androidx.databinding.BindingAdapter
 import com.engageft.apptoolbox.R
 import com.engageft.apptoolbox.view.PillButton
-import com.engageft.fis.pscu.feature.Palette
+import com.engageft.fis.pscu.feature.branding.Palette
 
 /**
  * PillButtonBindings

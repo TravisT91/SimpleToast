@@ -18,15 +18,16 @@ import androidx.navigation.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.engageft.apptoolbox.BaseViewModel
 import com.engageft.apptoolbox.LotusActivity
-import com.engageft.apptoolbox.LotusFullScreenFragment
 import com.engageft.apptoolbox.ViewUtils.newLotusInstance
 import com.engageft.apptoolbox.view.InformationDialogFragment
 import com.engageft.apptoolbox.view.ProductCardModel
+import com.engageft.engagekit.EngageService
 import com.engageft.fis.pscu.R
 import com.engageft.fis.pscu.databinding.FragmentDashboardBinding
 import com.engageft.fis.pscu.feature.authentication.AuthenticationDialogFragment
 import com.engageft.fis.pscu.feature.utils.cardStatusStringRes
 import com.google.android.material.tabs.TabLayout
+import com.ob.domain.lookup.DebitCardStatus
 import com.ob.ws.dom.utility.TransactionInfo
 import eightbitlab.com.blurview.RenderScriptBlur
 import utilGen1.StringUtils
@@ -41,7 +42,7 @@ import java.math.BigDecimal
  * Ported to gen2 by joeyhutchins on 8/24/18.
  * Copyright (c) 2018 Engage FT. All rights reserved.
  */
-class DashboardFragment : LotusFullScreenFragment(),
+class DashboardFragment : BaseEngageFullscreenFragment(),
         DashboardExpandableView.DashboardExpandableViewListener,
         TransactionsAdapter.OnTransactionsAdapterListener {
     private lateinit var binding: FragmentDashboardBinding
@@ -73,7 +74,7 @@ class DashboardFragment : LotusFullScreenFragment(),
 
     override fun createViewModel(): BaseViewModel? {
         dashboardViewModel = ViewModelProviders.of(this).get(DashboardViewModel::class.java)
-        return null
+        return dashboardViewModel
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -454,7 +455,17 @@ class DashboardFragment : LotusFullScreenFragment(),
     }
 
     override fun onLockUnlockCard() {
-        Toast.makeText(activity, "Lock/unlock card selected", Toast.LENGTH_SHORT).show()
+        val lock: Boolean? = when(EngageService.getInstance().storageManager.currentCard.status){
+            DebitCardStatus.ACTIVE -> true
+            DebitCardStatus.LOCKED_USER -> false
+            else -> null
+        }
+        lock?.let{ dashboardViewModel.updateCardLockStatus(it)
+        } ?: run {
+            Toast.makeText(
+                    context,
+                    getString(R.string.FEATURE_NOT_AVAILABLE_HEADER),
+                    Toast.LENGTH_SHORT).show() }
     }
 
     override fun onChangePin() {
@@ -466,15 +477,39 @@ class DashboardFragment : LotusFullScreenFragment(),
     }
 
     override fun onReplaceCard() {
-        Toast.makeText(activity, "Replace card selected", Toast.LENGTH_SHORT).show()
+        if (EngageService.getInstance().storageManager.currentCard.status == DebitCardStatus.ACTIVE) {
+            binding.root.findNavController().navigate(R.id.action_dashboard_fragment_to_replaceCardFragment)
+        } else {
+            val bundle = Bundle().apply {
+                putSerializable(CardFeatureNotAvailableFragment.KEY_UNAVAILABLE_FEATURE, CardFeatureNotAvailableFragment.UnavailableFeatureType.REPLACE)
+            }
+            binding.root.findNavController().navigate(R.id.action_dashboard_fragment_to_featureNotAvailable, bundle)
+        }
     }
 
     override fun onReportCardLostStolen() {
-        Toast.makeText(activity, "Report card lost/stolen selected", Toast.LENGTH_SHORT).show()
+        if(EngageService.getInstance().storageManager.currentCard.status == DebitCardStatus.ACTIVE ||
+                EngageService.getInstance().storageManager.currentCard.status == DebitCardStatus.REPLACEMENT_ORDERED) {
+            binding.root.findNavController().navigate(R.id.action_dashboard_fragment_to_reportLostStolenCardFragment)
+        }
+        else {
+            val bundle = Bundle().apply {
+                putSerializable(CardFeatureNotAvailableFragment.KEY_UNAVAILABLE_FEATURE, CardFeatureNotAvailableFragment.UnavailableFeatureType.LOST_STOLEN)
+            }
+            binding.root.findNavController().navigate(R.id.action_dashboard_fragment_to_featureNotAvailable, bundle)
+        }
     }
 
     override fun onCancelCard() {
-        Toast.makeText(activity, "Cancel card selected", Toast.LENGTH_SHORT).show()
+        if(EngageService.getInstance().storageManager.currentCard.status == DebitCardStatus.ACTIVE) {
+            binding.root.findNavController().navigate(R.id.action_dashboard_fragment_to_cancelCardFragment)
+        }
+        else {
+            val bundle = Bundle().apply {
+                putSerializable(CardFeatureNotAvailableFragment.KEY_UNAVAILABLE_FEATURE, CardFeatureNotAvailableFragment.UnavailableFeatureType.CANCEL)
+            }
+            binding.root.findNavController().navigate(R.id.action_dashboard_fragment_to_featureNotAvailable, bundle)
+        }
     }
 
     // TransactionsAdapter.OnTransactionsAdapterListener
