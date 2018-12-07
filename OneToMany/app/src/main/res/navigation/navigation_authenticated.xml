@@ -103,6 +103,9 @@
         <argument
             android:name="@string/navigation_override_up"
             android:defaultValue="true" />
+        <action
+            android:id="@+id/action_moveMoneyFragment_to_accountsAndTransfersListFragment"
+            app:destination="@id/accountsAndTransfersListFragment" />
     </fragment>
     <!-- This is necessary for navigating from the dashboard, so that the back/up arrow is shown
      rather than the hamburger. -->
@@ -146,4 +149,8 @@
         android:id="@+id/cardPinFragment"
         android:name="com.engageft.fis.pscu.feature.CardPinFragment"
         android:label="@string/card_pin_screen_title" />
+    <fragment
+        android:id="@+id/accountsAndTransfersListFragment"
+        android:name="com.engageft.fis.pscu.feature.AccountsAndTransfersListFragment"
+        android:label="AccountsAndTransfersListFragment" />
 </navigation>
