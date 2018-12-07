@@ -84,9 +84,8 @@ class AccountNotificationsViewModel: BaseEngageViewModel() {
 
     fun onSaveClicked() {
         accountInfo?.let { currentAccountInfo ->
-            //TODO(aHashimi): Backend does not support clearing the notifications yet https://engageft.atlassian.net/browse/FOTM-478.
             val messageType = currentAccountInfo.getNotificationMessageType(pushObservable.value!!,
-                    smsObservable.value!!, emailObservable.value!!) ?: ""
+                    smsObservable.value!!, emailObservable.value!!)
 
             progressOverlayShownObservable.value = true
 
