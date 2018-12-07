@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Authentication Dialog Style -->
+    <style name="DialogAuthenticationStyle">
+        <item name="buttonNegativeTextAppearance">@style/DialogInformationButtonNegativeTextAppearance</item>
+        <item name="buttonNeutralTextAppearance">@style/DialogInformationButtonNeutralTextAppearance</item>
+        <item name="buttonPositiveTextAppearance">@style/DialogInformationButtonPositiveTextAppearance</item>
+        <item name="buttonBackground">@drawable/dialog_info_button_background</item>
+        <item name="titleTextAppearance">@style/DialogInformationTitleTextAppearance</item>
+        <item name="messageTextAppearance">@style/DialogInformationMessageTextAppearance</item>
+        <item name="messageLineSpacing">@dimen/dialogInfoMessageLineSpacing</item>
+        <item name="errorMessageTextAppearance">@style/InputWithLabelErrorTextAppearance</item>
+    </style>
+
+    <style name="DialogAuthenticationWidthStyle" parent="Theme.MaterialComponents.Light.Dialog.MinWidth">
+
+    </style>
+    <!-- End of Authentication Dialog Style -->
+</resources>
