@@ -63,4 +63,5 @@
     <string name="DIRECT_DEPOSIT_BANK_NAME">Bank name</string>
     <string name="DIRECT_DEPOSIT_VIEW_PRINTABLE_FORM">View printable form</string>
     <string name="DIRECT_DEPOSIT_PRINTABLE_URL_UNFORMATTED">%1$s/login/sso?token=%2$s&amp;redirect_to=/account/direct-deposit&amp;embedded=ios</string>
+    <string name="DIRECT_DEPOSIT_ACCOUNT_TYPE_VALUE">Checking</string>
 </resources>

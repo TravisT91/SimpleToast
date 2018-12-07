@@ -23,6 +23,7 @@ class DirectDepositViewModel : BaseEngageViewModel() {
     var accountType = MutableLiveData<String>()
     var bankName = MutableLiveData<String>()
     var shouldShowPrintButton = MutableLiveData<Boolean>()
+    var accountTypeString = ""
 
     init {
         routingNumber.value = ""
@@ -43,14 +44,12 @@ class DirectDepositViewModel : BaseEngageViewModel() {
                         {
                             routingNumber.value = it.routeNumber
                             accountNumber.value = it.accountNumber
-                            accountType.value = "Checking"
-                            //TODO(ttkachuk) find out about what to put for account type. It is hard coded as checking in CARE.
+                            accountType.value = accountTypeString
                             BrandingInfoRepo.financialInfo?.institutionName?.let{
                                 brandingBankName -> bankName.value = brandingBankName
                             }
                             shouldShowPrintButton.value = true
                         }
-                //TODO(ttkachuk) right now this is only handling the happy path. We need to update our
                 )
     }
 

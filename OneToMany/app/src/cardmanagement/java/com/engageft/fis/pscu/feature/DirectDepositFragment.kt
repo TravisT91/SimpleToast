@@ -9,6 +9,7 @@ import androidx.navigation.fragment.findNavController
 import com.engageft.apptoolbox.BaseViewModel
 import com.engageft.fis.pscu.R
 import com.engageft.fis.pscu.databinding.FragmentDirectDepositBinding
+import com.engageft.fis.pscu.feature.branding.Palette
 
 /**
  * DirectDepositFragment
@@ -32,7 +33,10 @@ class DirectDepositFragment: BaseEngageFullscreenFragment(){
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         binding = FragmentDirectDepositBinding.inflate(inflater,container,false).apply {
-            viewModel = directDepositViewModel
+            viewModel = directDepositViewModel.apply {
+                accountTypeString = getString(R.string.DIRECT_DEPOSIT_ACCOUNT_TYPE_VALUE)
+            }
+            palette = Palette
             setLifecycleOwner(this@DirectDepositFragment)
             viewPrintableFormButton.setOnClickListener {
                 val pdfTitle = getString(R.string.DIRECT_DEPOSIT_TITLE)
@@ -45,6 +49,10 @@ class DirectDepositFragment: BaseEngageFullscreenFragment(){
                                 initialUrl = formattedUrl,
                                 forPrint = true,
                                 showPdfImmediately = true))
+            }
+            swipeToRefreshLayout.setOnRefreshListener {
+                directDepositViewModel.getDirectDepositInfo()
+                swipeToRefreshLayout.isRefreshing = false
             }
         }
         directDepositViewModel.getDirectDepositInfo()
