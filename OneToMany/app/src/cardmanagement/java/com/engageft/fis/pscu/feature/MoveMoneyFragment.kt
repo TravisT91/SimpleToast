@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import android.widget.Toast
 import com.engageft.apptoolbox.BaseViewModel
 import com.engageft.fis.pscu.databinding.FragmentMoveMoneyBinding
+import com.engageft.fis.pscu.feature.branding.Palette
 
 /**
  * MoveMoneyFragment

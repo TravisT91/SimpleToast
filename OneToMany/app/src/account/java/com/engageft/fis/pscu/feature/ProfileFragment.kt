@@ -62,7 +62,6 @@ class ProfileFragment : BaseEngageFullscreenFragment() {
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val binding = FragmentProfileBinding.inflate(inflater, container, false)
         binding.viewModel = profileViewModel
-        binding.palette = Palette
 
         upButtonOverrideProvider.setUpButtonOverride(navigationOverrideClickListener)
         backButtonOverrideProvider.setBackButtonOverride(navigationOverrideClickListener)

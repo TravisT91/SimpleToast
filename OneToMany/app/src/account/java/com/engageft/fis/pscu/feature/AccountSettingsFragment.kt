@@ -17,6 +17,7 @@ import com.engageft.fis.pscu.BuildConfig
 import com.engageft.fis.pscu.NotAuthenticatedActivity
 import com.engageft.fis.pscu.R
 import com.engageft.fis.pscu.databinding.FragmentAccountBinding
+import com.engageft.fis.pscu.feature.branding.Palette
 
 /**
  * AccountSettingsFragment
