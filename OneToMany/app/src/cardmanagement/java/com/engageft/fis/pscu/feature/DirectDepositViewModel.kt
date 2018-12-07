@@ -40,17 +40,19 @@ class DirectDepositViewModel : BaseEngageViewModel() {
         val requestFieldMap = CardRequest(token, cardId).fieldMap
         engageApi().postDebitDirectDepositInfo(requestFieldMap)
                 .subscribeWithDefaultProgressAndErrorHandling<DirectDepositInfoResponse>(
-                        this,
-                        {
-                            routingNumber.value = it.routeNumber
-                            accountNumber.value = it.accountNumber
-                            accountType.value = accountTypeString
-                            BrandingInfoRepo.financialInfo?.institutionName?.let{
-                                brandingBankName -> bankName.value = brandingBankName
-                            }
-                            shouldShowPrintButton.value = true
-                        }
-                )
+                        this, { applyDirectDepositInfo(it) })
+    }
+
+    private fun applyDirectDepositInfo(directDepositInfoResponse: DirectDepositInfoResponse){
+        directDepositInfoResponse.let{
+            routingNumber.value = it.routeNumber
+            accountNumber.value = it.accountNumber
+            accountType.value = accountTypeString
+            BrandingInfoRepo.financialInfo?.institutionName?.let{
+                brandingBankName -> bankName.value = brandingBankName
+            }
+            shouldShowPrintButton.value = true
+        }
     }
 
     fun formatDirectDepositUrl(unformattedUrl: String) :String {
