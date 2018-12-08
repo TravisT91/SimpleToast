@@ -12,6 +12,7 @@ import android.text.Spanned
 import android.text.TextUtils
 import android.text.style.ForegroundColorSpan
 import android.text.style.RelativeSizeSpan
+import androidx.annotation.NonNull
 import androidx.core.content.ContextCompat
 import androidx.core.content.res.ResourcesCompat
 import com.engageft.apptoolbox.util.CurrencyUtils
@@ -294,17 +295,17 @@ object StringUtils {
         return spannableString
     }
 
-    fun formatDateMonthDayForTransactionRow(dateString: String): CharSequence? {
+    fun formatDateMonthDayForTransactionRow(@NonNull dateString: String): CharSequence? {
         val transactionDate = BackendDateTimeUtils.parseDateTimeFromIso8601String(dateString)
-        if (transactionDate != null) {
-            val spannableString = SpannableString(String.format("%s\n%s",
-                    DisplayDateTimeUtils.getDayTwoDigits(transactionDate),
-                    DisplayDateTimeUtils.getMonthAbbr(transactionDate).toUpperCase()))
-            spannableString.setSpan(RelativeSizeSpan(0.7f), 2, spannableString.length, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
-            return spannableString
-        }
+        return if (transactionDate != null) formatDateMonthDayForTransactionRow(transactionDate) else null
+    }
 
-        return null
+    fun formatDateMonthDayForTransactionRow(@NonNull transactionDate: DateTime): CharSequence {
+        val spannableString = SpannableString(String.format("%s\n%s",
+                DisplayDateTimeUtils.getDayTwoDigits(transactionDate),
+                DisplayDateTimeUtils.getMonthAbbr(transactionDate).toUpperCase()))
+        spannableString.setSpan(RelativeSizeSpan(0.7f), 2, spannableString.length, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
+        return spannableString
     }
 
     // My Accounts

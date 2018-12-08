@@ -1,12 +1,14 @@
 package com.engageft.fis.pscu.feature
 
-import android.text.TextUtils
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import androidx.paging.PagedList
 import com.engageft.engagekit.EngageService
 import com.engageft.engagekit.event.TransactionsListEvent
+import com.engageft.engagekit.repository.transaction.TransactionRepository
+import com.engageft.engagekit.repository.transaction.vo.Transaction
 import com.engageft.engagekit.tools.TransactionsFilter
 import com.engageft.engagekit.utils.AlertUtils
-import com.engageft.engagekit.utils.BackendDateTimeUtils
 import com.engageft.engagekit.utils.LoginResponseUtils
 import com.ob.domain.lookup.TransactionStatus
 import com.ob.ws.dom.LoginResponse
@@ -15,7 +17,6 @@ import com.ob.ws.dom.utility.TransactionInfo
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 import org.joda.time.DateTime
-import org.joda.time.Months
 import java.math.BigDecimal
 
 /**
@@ -41,6 +42,10 @@ class DashboardViewModel : BaseEngageViewModel() {
     // Transactions
     var allTransactionsObservable: MutableLiveData<List<TransactionInfo>> = MutableLiveData()
     var retrievingTransactionsFinishedObservable: MutableLiveData<Boolean> = MutableLiveData()
+
+    // Room transactions
+    val transactionsReadyObservable = MutableLiveData<Boolean>()
+    lateinit var transactionsListObservable: LiveData<PagedList<Transaction>>
 
     var notificationsCountObservable: MutableLiveData<Int> = MutableLiveData()
 
@@ -127,13 +132,12 @@ class DashboardViewModel : BaseEngageViewModel() {
                             .subscribe({ response ->
                                 if (response.isSuccess && response is LoginResponse) {
                                     debitCardInfo = LoginResponseUtils.getCurrentCard(response)
-                                    // get 6 months of transactions (or less, if card request date less than 6 months ago)
-                                    val numberMonthsToLoad = getCountOfMonthsToLoadAndReload()
-                                    if (numberMonthsToLoad > 0) {
-                                        loadMostRecentMonthlyTransactions(numberMonthsToLoad, useCached)
-                                    } else {
-                                        // this could happen if using a malformed test account with isoRequestDate in the future
-                                        progressOverlayShownObservable.value = false
+                                    debitCardInfo?.let {
+                                        transactionsListObservable = TransactionRepository.pagedTransactions(debitCardInfo.debitCardId)
+                                        transactionsReadyObservable.postValue(true)
+                                        TransactionRepository.refreshTransactions(debitCardInfo.debitCardId)
+                                    } ?: run {
+                                        // TODO: what if no debitCardInfo?
                                     }
                                 } else {
                                     handleUnexpectedErrorResponse(response)
@@ -178,39 +182,6 @@ class DashboardViewModel : BaseEngageViewModel() {
         }
     }
 
-    private fun loadMostRecentMonthlyTransactions(monthsToLoad: Int, useCached: Boolean) {
-        // showProgressOverlay for transactions has been replaced with placeholder views
-
-        val now = DateTime.now()
-
-        val populateFilter = TransactionsFilter()
-        populateFilter.filterYear = now.year
-        populateFilter.filterMonth = now.monthOfYear
-        var transactionsMonthsFetchedCounter = -1
-
-        for (i in 0..monthsToLoad) {
-            compositeDisposable.add(
-                    EngageService.getInstance().transactionsListObservable(
-                            populateFilter.filterYear, populateFilter.filterMonth, debitCardInfo.debitCardId, useCached)
-                            .subscribeOn(Schedulers.io())
-                            .observeOn(AndroidSchedulers.mainThread())
-                            .subscribe( {
-                                this.handleTransactionsListEvent(it)
-                                // we need this counter to notify TransactionsAdapter that fetching of transactions data is completed
-                                // This is for now until loading of data with one call is done.
-                                transactionsMonthsFetchedCounter++
-                                if (transactionsMonthsFetchedCounter == monthsToLoad) {
-                                    retrievingTransactionsFinishedObservable.value = true
-                                }
-                            }) { e ->
-                                handleThrowable(e)
-                            }
-            )
-            populateFilter.filterYear = if (populateFilter.filterMonth > 1) populateFilter.filterYear else populateFilter.filterYear - 1
-            populateFilter.filterMonth = if (populateFilter.filterMonth > 1) populateFilter.filterMonth - 1 else 12
-        }
-    }
-
     private fun handleTransactionsListEvent(event: TransactionsListEvent) {
         if (isRefreshing) {
             isRefreshing = false
@@ -228,29 +199,6 @@ class DashboardViewModel : BaseEngageViewModel() {
             // a lot of extra work to update recyclerview many times, once for each request completion.
             allTransactionsObservable.value = transactionsList
         }
-    }
-
-    private fun getCountOfMonthsToLoadAndReload(): Int {
-        var count = MAX_MONTHS_TO_LOAD
-        if (!TextUtils.isEmpty(debitCardInfo.isoRequestDate)) {
-            BackendDateTimeUtils.parseDateTimeFromIso8601String(debitCardInfo.isoRequestDate).let { requestDate ->
-                val now = DateTime.now()
-                count = if (datesAreSameMonthAndYear(requestDate, now)) {
-                    1
-                } else {
-                    // add 2 because monthsBetween is exclusive. If activation is January and now is February, monthsBetween is 0.
-                    Math.min(Months.monthsBetween(requestDate, DateTime.now()).months + 2, count)
-                }
-            }
-        } else {
-            count = 1
-        }
-
-        // If for some reason debitCardInfo.isoRequestDate is months/years in the future, like for malformed
-        // test accounts, set to a sensible value rather than a negative number of months.
-        if (count < 0) count = 0
-
-        return count
     }
 
     // These are called by DashboardFragment in response to user presses in DashboardExpandableView.

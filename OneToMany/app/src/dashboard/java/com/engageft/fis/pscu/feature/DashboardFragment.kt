@@ -15,6 +15,7 @@ import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.navigation.findNavController
+import androidx.paging.PagedList
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.engageft.apptoolbox.BaseViewModel
 import com.engageft.apptoolbox.LotusActivity
@@ -22,11 +23,11 @@ import com.engageft.apptoolbox.LotusFullScreenFragment
 import com.engageft.apptoolbox.ViewUtils.newLotusInstance
 import com.engageft.apptoolbox.view.InformationDialogFragment
 import com.engageft.apptoolbox.view.ProductCardModel
+import com.engageft.engagekit.repository.transaction.vo.Transaction
 import com.engageft.fis.pscu.R
 import com.engageft.fis.pscu.databinding.FragmentDashboardBinding
 import com.engageft.fis.pscu.feature.utils.cardStatusStringRes
 import com.google.android.material.tabs.TabLayout
-import com.ob.ws.dom.utility.TransactionInfo
 import eightbitlab.com.blurview.RenderScriptBlur
 import utilGen1.StringUtils
 import java.math.BigDecimal
@@ -53,8 +54,12 @@ class DashboardFragment : LotusFullScreenFragment(), DashboardExpandableView.Das
     private val savingsBalanceObserver = Observer<BigDecimal> { updateSavingsBalance(it) }
     private val savingsBalanceStateObserver = Observer<DashboardBalanceState> { updateSavingsBalanceState(it!!) }
 
-    private val allTransactionsObserver = Observer<List<TransactionInfo>> { updateTransactions(it)}
-    private val retrievingTransactionsFinishedObserver = Observer<Boolean> { retrievingTransactionsFinished(it)}
+//    private val allTransactionsObserver = Observer<List<TransactionInfo>> { updateTransactions(it)}
+//    private val retrievingTransactionsFinishedObserver = Observer<Boolean> { retrievingTransactionsFinished(it)}
+
+    private val transactionsObserver = Observer<PagedList<Transaction>> {
+        pagedList -> transactionsAdapter.submitList(pagedList)
+    }
 
     private val notificationsObserver = Observer<Int> { activity?.invalidateOptionsMenu() }
 
@@ -139,12 +144,12 @@ class DashboardFragment : LotusFullScreenFragment(), DashboardExpandableView.Das
 
             override fun onTabSelected(tab: TabLayout.Tab?) {
                 when (binding.transactionsTabLayout.selectedTabPosition) {
-                    DashboardViewModel.TRANSACTIONS_TAB_POSITION_ALL -> {
-                        transactionsAdapter.showDepositsOnly = false
-                    }
-                    DashboardViewModel.TRANSACTIONS_TAB_POSITION_DEPOSITS -> {
-                        transactionsAdapter.showDepositsOnly = true
-                    }
+//                    DashboardViewModel.TRANSACTIONS_TAB_POSITION_ALL -> {
+//                        transactionsAdapter.showDepositsOnly = false
+//                    }
+//                    DashboardViewModel.TRANSACTIONS_TAB_POSITION_DEPOSITS -> {
+//                        transactionsAdapter.showDepositsOnly = true
+//                    }
                 }
                 // update view model with position, so that it can be set correctly when fragment is restored
                 dashboardViewModel.transactionsTabPosition = binding.transactionsTabLayout.selectedTabPosition
@@ -153,7 +158,7 @@ class DashboardFragment : LotusFullScreenFragment(), DashboardExpandableView.Das
 
         binding.swipeRefreshLayout.setOnRefreshListener {
             dashboardViewModel.refreshBalancesAndNotifications()
-            refreshTransactions()
+            dashboardViewModel.refreshTransactions()
             // viewModel will trigger showing regular activity indicator. Don't show swipe refresh indicator too.
             binding.swipeRefreshLayout.isRefreshing = false
         }
@@ -288,22 +293,6 @@ class DashboardFragment : LotusFullScreenFragment(), DashboardExpandableView.Das
         }
     }
 
-    private fun retrievingTransactionsFinished(transactionsComplete: Boolean?) {
-        transactionsComplete?.let {
-            if (it) {
-                transactionsAdapter.notifyRetrievingTransactionsFinished()
-            }
-        }
-    }
-
-    private fun updateTransactions(transactionsList: List<TransactionInfo>?) {
-        transactionsList?.let {
-            transactionsAdapter.updateTransactionsList(it)
-        }
-        // swipeToRefresh showProgressOverlay in viewModel, remove here
-        progressOverlayDelegate.dismissProgressOverlay()
-    }
-
     fun showMessageContainerWithView(messageView: View) {
         binding.messageContainer.addView(messageView)
         binding.messageContainer.visibility = View.VISIBLE
@@ -324,11 +313,6 @@ class DashboardFragment : LotusFullScreenFragment(), DashboardExpandableView.Das
         } else {
             false
         }
-    }
-
-    private fun refreshTransactions() {
-        transactionsAdapter.notifyRetrievingTransactionsStarted()
-        dashboardViewModel.refreshTransactions()
     }
 
     private fun preventScreenCapture(prevent: Boolean) {
@@ -386,8 +370,17 @@ class DashboardFragment : LotusFullScreenFragment(), DashboardExpandableView.Das
         dashboardViewModel.savingsBalanceObservable.observe(this, savingsBalanceObserver)
         dashboardViewModel.savingsBalanceStateObservable.observe(this, savingsBalanceStateObserver)
 
-        dashboardViewModel.allTransactionsObservable.observe(this, allTransactionsObserver)
-        dashboardViewModel.retrievingTransactionsFinishedObservable.observe(this, retrievingTransactionsFinishedObserver)
+
+//        dashboardViewModel.allTransactionsObservable.observe(this, allTransactionsObserver)
+//        dashboardViewModel.retrievingTransactionsFinishedObservable.observe(this, retrievingTransactionsFinishedObserver)
+        dashboardViewModel.transactionsReadyObservable.observe( this, Observer {
+            if (it) {
+                dashboardViewModel.transactionsListObservable.observe(this, transactionsObserver)
+            }
+        })
+        dashboardViewModel.initTransactions()
+
+        binding.transactionsRecyclerView.adapter = transactionsAdapter
 
         dashboardViewModel.notificationsCountObservable.observe(this, notificationsObserver)
 
@@ -397,7 +390,6 @@ class DashboardFragment : LotusFullScreenFragment(), DashboardExpandableView.Das
         binding.transactionsTabLayout.getTabAt(dashboardViewModel.transactionsTabPosition)?.select()
 
         dashboardViewModel.initBalancesAndNotifications()
-        dashboardViewModel.initTransactions()
     }
 
     override fun onExpandImmediate() {
@@ -473,8 +465,8 @@ class DashboardFragment : LotusFullScreenFragment(), DashboardExpandableView.Das
     }
 
     // TransactionsAdapter.OnTransactionsAdapterListener
-    override fun onTransactionInfoSelected(transactionInfo: TransactionInfo) {
+    override fun onTransactionSelected(transaction: Transaction) {
         // TODO(kurt): Pass transactionInfo to TransactionDetailFragment through navigation bundle (see onMoveMoney(), above)
-        Toast.makeText(activity, "Transaction selected: " + transactionInfo.store, Toast.LENGTH_SHORT).show()
+        Toast.makeText(activity, "Transaction selected: " + transaction.store, Toast.LENGTH_SHORT).show()
     }
 }

@@ -2,158 +2,93 @@ package com.engageft.fis.pscu.feature
 
 import android.content.Context
 import android.graphics.PorterDuff
-import android.text.TextUtils
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.core.content.ContextCompat
+import androidx.paging.PagedListAdapter
+import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
-import com.engageft.engagekit.tools.StorageManager
+import com.engageft.engagekit.repository.transaction.vo.Transaction
 import com.engageft.fis.pscu.R
+import com.engageft.fis.pscu.feature.transactions.utils.TransactionUtils
 import com.ob.domain.lookup.TransactionStatus
 import com.ob.domain.lookup.TransactionType
-import com.ob.ws.dom.utility.TransactionInfo
 import utilGen1.StringUtils
-import utilGen1.TransactionInfoUtils
-import java.util.*
-import kotlin.math.min
 
 /**
  *  TransactionsAdapter
  *  </p>
- *  RecyclerView adapter for showing all transactions or just deposit transactions in the Dashboard
+ *  RecyclerView PagedListAdapter for showing all transactions or just deposit transactions in the Dashboard
  *  </p>
  *  Created by Kurt Mueller on 4/18/18.
  *  Copyright (c) 2018 Engage FT. All rights reserved.
  */
-class TransactionsAdapter(private val context: Context, private val listener: OnTransactionsAdapterListener?) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+class TransactionsAdapter(private val context: Context, private val listener: OnTransactionsAdapterListener?) : PagedListAdapter<Transaction, TransactionsAdapter.ViewHolder>(DIFF_CALLBACK) {
 
-    private var allTransactionsList = mutableListOf<TransactionInfo>()
-    private var depositTransactionsList = mutableListOf<TransactionInfo>()
-    // initially point main transactionsList to show all transactions
-    private var transactionsList = allTransactionsList
-    var showDepositsOnly = false
-        set(value) {
-            if (field != value) {
-                transactionsList = if (!value) {
-                    allTransactionsList
-                } else {
-                    depositTransactionsList
-                }
-
-                field = value
-
-                notifyDataSetChanged()
-            }
-        }
     var transactionSelectionEnabled: Boolean = true
-    private var isFetchingDataComplete = false
 
-    fun updateTransactionsList(transactionsList: List<TransactionInfo>) {
-        // sort by date, newest first
-        Collections.sort<TransactionInfo>(transactionsList) { o1, o2 ->
-            if (!TextUtils.isEmpty(o1.isoDate) && !TextUtils.isEmpty(o2.isoDate)) {
-                StorageManager.compareIso8601DateString(o1.isoDate, o2.isoDate, true)
-            } else {
-                0
-            }
-        }
-        allTransactionsList.clear()
-        allTransactionsList.addAll(transactionsList)
 
-        depositTransactionsList.clear()
-        run loop@{
-            allTransactionsList.forEach {
-                if (it.transactionType == TRANSACTION_TYPE_LOAD) {
-                    depositTransactionsList.add(it)
-                    // no need to iterate once 20 transactions have been added to the list of deposits
-                    if (depositTransactionsList.size >= TRANSACTIONS_LIST_MAX_SIZE) {
-                        return@loop // this is how you break out of a loop in Kotlin
+//    override fun getItemViewType(position: Int): Int {
+//        return if (transactionsList.isEmpty()) {
+//            if (isFetchingDataComplete) VIEW_TYPE_NO_TRANSACTIONS else VIEW_TYPE_PLACEHOLDER
+//        } else {
+//            VIEW_TYPE_TRANSACTIONS_DATA
+//        }
+//    }
+
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
+//        return when (viewType) {
+//            VIEW_TYPE_TRANSACTIONS_DATA -> ViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.row_transaction_info_view, parent, false))
+//            VIEW_TYPE_NO_TRANSACTIONS -> NoViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.row_text_view_bank_transfer_list_empty, parent, false))
+//            else -> PlaceholderViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.row_transaction_placeholder_view, parent, false))false
+//        }
+
+        return ViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.row_transaction_info_view, parent, false))
+    }
+
+    override fun onBindViewHolder(holder: ViewHolder, position: Int) {
+            getItem(position)?.let { transaction ->
+                holder.transaction = transaction
+
+                holder.transactionsView.visibility = View.VISIBLE
+                holder.noTransactionsView.visibility = View.GONE
+
+                val transactionType = TransactionUtils.getTransactionType(transaction)
+
+                holder.dayAndMonthTextView.text = StringUtils.formatDateMonthDayForTransactionRow(transaction.date)
+                holder.storeTextView.text = if (transaction.store.isNullOrBlank()) "" else StringUtils.removeRedundantWhitespace(transaction.store!!)
+                holder.categoryTextView.text = TransactionUtils.getTransactionTypeText(context, transaction, transactionType!!)
+
+                val transactionAmount = transaction.amount.toFloat()
+                val amountString = StringUtils.formatCurrencyStringWithFractionDigits(transactionAmount, true)
+                if (transactionAmount > 0F) {
+                    holder.amountTextView.text = "+$amountString"
+                    holder.amountTextView.setTextColor(ContextCompat.getColor(context, R.color.transactionAmountTextPositive))
+                } else {
+                    holder.amountTextView.text = amountString
+                    holder.amountTextView.setTextColor(ContextCompat.getColor(context, R.color.transactionAmountTextDefault))
+                }
+
+                val transactionStatus = TransactionUtils.getTransactionStatus(transaction)
+                holder.statusTextView.visibility = View.GONE
+                when (transactionStatus) {
+                    TransactionStatus.DECLINED -> {
+                        holder.statusTextView.visibility = View.VISIBLE
+                        holder.statusTextView.text = TransactionUtils.getTransactionStatusText(context, transactionStatus)
+                        holder.itemView.background.setColorFilter(ContextCompat.getColor(context, R.color.transactionRowBackgroundDeclined), PorterDuff.Mode.SRC_ATOP)
                     }
+                    TransactionStatus.PENDING -> holder.itemView.background.setColorFilter(ContextCompat.getColor(context, R.color.transactionRowBackgroundPending), PorterDuff.Mode.SRC_ATOP)
+                    else -> holder.itemView.background.setColorFilter(ContextCompat.getColor(context, R.color.transactionRowBackgroundDefault), PorterDuff.Mode.SRC_ATOP)
                 }
+
+                holder.bottomRule.visibility = if (position == itemCount - 1) View.INVISIBLE else View.VISIBLE
             }
-        }
-        notifyDataSetChanged()
     }
 
-    fun notifyRetrievingTransactionsStarted() {
-        isFetchingDataComplete = false
-        transactionsList.clear()
-        notifyDataSetChanged()
-    }
-
-    fun notifyRetrievingTransactionsFinished() {
-        isFetchingDataComplete = true
-        notifyDataSetChanged()
-    }
-
-    override fun getItemViewType(position: Int): Int {
-        return if (transactionsList.isEmpty()) {
-            if (isFetchingDataComplete) VIEW_TYPE_NO_TRANSACTIONS else VIEW_TYPE_PLACEHOLDER
-        } else {
-            VIEW_TYPE_TRANSACTIONS_DATA
-        }
-    }
-
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
-        return when (viewType) {
-            VIEW_TYPE_TRANSACTIONS_DATA -> TransactionsViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.row_transaction_info_view, parent, false))
-            VIEW_TYPE_NO_TRANSACTIONS -> NoTransactionsViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.row_text_view_bank_transfer_list_empty, parent, false))
-            else -> PlaceholderViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.row_transaction_placeholder_view, parent, false))
-        }
-    }
-
-    override fun getItemCount(): Int {
-        return if (transactionsList.isEmpty()) {
-            if (isFetchingDataComplete) NO_TRANSACTIONS_ITEM_COUNT else TRANSACTIONS_PLACEHOLDER_ITEM_COUNT
-        } else {
-            min(transactionsList.size, TRANSACTIONS_LIST_MAX_SIZE)
-        }
-    }
-
-    override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
-        if (holder is TransactionsViewHolder) {
-            val transactionInfo = transactionsList[position]
-            holder.transactionInfo = transactionInfo
-
-            holder.transactionsView.visibility = View.VISIBLE
-            holder.noTransactionsView.visibility = View.GONE
-
-            val transactionType = TransactionInfoUtils.getTransactionType(transactionInfo)
-
-            holder.dayAndMonthTextView.text = StringUtils.formatDateMonthDayForTransactionRow(transactionInfo.isoDate)
-            holder.storeTextView.text = StringUtils.removeRedundantWhitespace(transactionInfo.store)
-            holder.categoryTextView.text = TransactionInfoUtils.getTransactionTypeText(context, transactionInfo, transactionType!!)
-
-            val transactionAmount = StringUtils.getFloatFromString(transactionInfo.amount)
-            val amountString = StringUtils.formatCurrencyStringWithFractionDigits(transactionAmount, true)
-            if (transactionAmount > 0) {
-                holder.amountTextView.text = "+$amountString"
-                holder.amountTextView.setTextColor(ContextCompat.getColor(context, R.color.transactionAmountTextPositive))
-            } else {
-                holder.amountTextView.text = amountString
-                holder.amountTextView.setTextColor(ContextCompat.getColor(context, R.color.transactionAmountTextDefault))
-            }
-
-            val transactionStatus = TransactionInfoUtils.getTransactionStatus(transactionInfo)
-            holder.statusTextView.visibility = View.GONE
-            when (transactionStatus) {
-                TransactionStatus.DECLINED -> {
-                    holder.statusTextView.visibility = View.VISIBLE
-                    holder.statusTextView.text = TransactionInfoUtils.getTransactionStatusText(context, transactionStatus)
-                    holder.itemView.background.setColorFilter(ContextCompat.getColor(context, R.color.transactionRowBackgroundDeclined), PorterDuff.Mode.SRC_ATOP)
-                }
-                TransactionStatus.PENDING -> holder.itemView.background.setColorFilter(ContextCompat.getColor(context, R.color.transactionRowBackgroundPending), PorterDuff.Mode.SRC_ATOP)
-                else -> holder.itemView.background.setColorFilter(ContextCompat.getColor(context, R.color.transactionRowBackgroundDefault), PorterDuff.Mode.SRC_ATOP)
-            }
-
-            holder.bottomRule.visibility = if (position == itemCount - 1) View.INVISIBLE else View.VISIBLE
-        }
-    }
-
-    private inner class TransactionsViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        var transactionInfo: TransactionInfo? = null
+    inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+        var transaction: Transaction? = null
 
         val noTransactionsView: View = itemView.findViewById(R.id.rl_no_transactions)
         val transactionsView: View = itemView.findViewById(R.id.cl_transactions)
@@ -168,23 +103,23 @@ class TransactionsAdapter(private val context: Context, private val listener: On
 
         init {
             this.itemView.setOnClickListener {
-                transactionInfo?.let { transactionInfo ->
+                transaction?.let {
                     if (transactionSelectionEnabled) {
-                        listener?.onTransactionInfoSelected(transactionInfo)
+                        listener?.onTransactionSelected(it)
                     }
                 }
             }
         }
     }
 
-    private inner class PlaceholderViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView)
-
-    private inner class NoTransactionsViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        val noTransactionsTextView: TextView = itemView.findViewById(R.id.tv_label)
-    }
+//    private inner class PlaceholderViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView)
+//
+//    private inner class NoViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+//        val noTransactionsTextView: TextView = itemView.findViewById(R.id.tv_label)
+//    }
 
     interface OnTransactionsAdapterListener {
-        fun onTransactionInfoSelected(transactionInfo: TransactionInfo)
+        fun onTransactionSelected(transaction: Transaction)
     }
 
     private companion object {
@@ -197,5 +132,14 @@ class TransactionsAdapter(private val context: Context, private val listener: On
         const val TRANSACTIONS_PLACEHOLDER_ITEM_COUNT = 6
         const val NO_TRANSACTIONS_ITEM_COUNT = 1
         val TRANSACTION_TYPE_LOAD = TransactionType.LOAD.name
+
+        val DIFF_CALLBACK = object : DiffUtil.ItemCallback<Transaction>() {
+            override fun areItemsTheSame(oldItem: Transaction, newItem: Transaction): Boolean =
+                    oldItem.transactionId == newItem.transactionId
+
+
+            override fun areContentsTheSame(oldItem: Transaction, newItem: Transaction): Boolean =
+                    oldItem == newItem
+        }
     }
 }
