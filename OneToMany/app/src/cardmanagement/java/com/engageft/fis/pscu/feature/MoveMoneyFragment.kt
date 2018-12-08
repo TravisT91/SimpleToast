@@ -9,6 +9,7 @@ import androidx.fragment.app.Fragment
 import androidx.navigation.findNavController
 import com.engageft.fis.pscu.R
 import com.engageft.fis.pscu.databinding.FragmentMoveMoneyBinding
+import com.engageft.fis.pscu.feature.branding.Palette
 
 /**
  * MoveMoneyFragment

@@ -7,7 +7,7 @@
 
         <variable
             name="palette"
-            type="com.engageft.fis.pscu.feature.Palette"/>
+            type="com.engageft.fis.pscu.feature.branding.Palette"/>
 
     </data>
 

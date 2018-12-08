@@ -18,6 +18,7 @@ import com.engageft.apptoolbox.BaseViewModel
 import com.engageft.apptoolbox.view.InformationDialogFragment
 import com.engageft.fis.pscu.R
 import com.engageft.fis.pscu.databinding.FragmentCardPinBinding
+import com.engageft.fis.pscu.feature.branding.Palette
 import com.engageft.fis.pscu.feature.utils.cardStatusStringRes
 
 /**

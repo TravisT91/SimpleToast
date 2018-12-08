@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+        <variable
+            name="Palette"
+            type="com.engageft.fis.pscu.feature.branding.Palette"/>
+        <variable
+            name="CancelCardViewModel"
+            type="com.engageft.fis.pscu.feature.CancelCardViewModel"/>
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:layout_marginBottom="8dp"
+            android:orientation="vertical"
+            android:paddingStart="16dp"
+            android:paddingEnd="16dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <TextView
+                android:id="@+id/title"
+                parisStyle="@{Palette.title1Quiet}"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="16dp"
+                android:gravity="center"
+                android:text="@string/CANCEL_CARD_REPLACEMENT_HEADER"
+                android:textColor="@color/structure6"
+                tools:fontFamily="@font/font_light"
+                tools:textSize="32sp" />
+
+            <TextView
+                android:id="@+id/addressHeader"
+                parisStyle="@{Palette.body}"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="44dp"
+                android:gravity="center"
+                android:lineSpacingExtra="11sp"
+                android:text="@string/CANCEL_CARD_MESSAGE"
+                tools:fontFamily="@font/font_regular"
+                tools:textSize="16sp" />
+
+            <com.engageft.apptoolbox.view.PillButton
+                android:id="@+id/reportLostStolenButton"
+                style="@style/ButtonPillPrimaryFilledDefault"
+                setThemeFilled="@{true}"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:text="@string/CANCEL_CARD_CANCEL" />
+
+        </LinearLayout>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</layout>

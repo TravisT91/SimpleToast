@@ -12,4 +12,46 @@
     <string name="card_pin_choose_description">Choose your PIN</string>
     <string name="card_pin_choose_confirmation">Confirm your PIN</string>
     <string name="card_pin_mismatch_error_message">PINs do not match, please try again</string>
+
+    <!-- Replace Card -->
+    <string name="REPLACE_CARD_REPLACEMENT_QUESTION">Do you need a\nreplacement card?</string>
+    <string name="REPLACE_CARD_REPLACEMENT_SUBSTRING">replacement</string>
+    <string name="REPLACE_CARD_ADDRESS_HEADER">By requesting a REPLACEMENT card, a \n new card containing the same number \n will be sent to</string>
+    <string name="REPLACE_CARD_EXPECTED_ARRIVAL">New cards typically arrive within 5–7 days</string>
+    <string name="REPLACE_CARD_DO_NOT_KNOW">If you do not know where your card is, please report your card as LOST/STOLEN.</string>
+    <string name="REPLACE_CARD_DO_NOT_KNOW_SUBSTRING">do not</string>
+    <string name="REPLACE_CARD_ORDER_REPLACEMENT">Order replacement</string>
+    <string name="REPLACE_CARD_REPLACEMENT_ORDERED_TITLE">Replacement ordered</string>
+    <string name="REPLACE_CARD_REPLACEMENT_ORDERED_MESSAGE">Your replacement card has been ordered. It will arrive with 5–7 days.</string>
+
+    <!-- Lost/Stolen Card -->
+    <string name="LOST_STOLEN_CARD_REPLACEMENT_HEADER">We will automatically send you a new card.</string>
+    <string name="LOST_STOLEN_CARD_REPLACEMENT_HEADER_SUBSTRING">new card.</string>
+    <string name="LOST_STOLEN_CARD_ADDRESS_HEADER">Your old card will be canceled and a new card, with a new number will be sent to</string>
+    <string name="LOST_STOLEN_CARD_REPORT_LOST_STOLEN">Report lost/stolen</string>
+    <string name="LOST_STOLEN_CARD_REPLACEMENT_CONFIRMATION_MESSAGE">This will cancel your current card and can\'t be undone.\nDo you want to continue?</string>
+    <string name="LOST_STOLEN_CARD_NEW_CARD_ORDERED">New card ordered</string>
+    <string name="LOST_STOLEN_CARD_NEW_CARD_ORDERED_MESSAGE">Your new card has been ordered. It will arrive within 5–7 days.</string>
+
+    <!-- Cancel Card -->
+    <string name="CANCEL_CARD_REPLACEMENT_HEADER">Canceling your card cannot be undone.</string>
+    <string name="CANCEL_CARD_REPLACEMENT_HEADER_SUBSTRING">undone.</string>
+    <string name="CANCEL_CARD_MESSAGE">You may still review your transaction\nhistory and access your account.</string>
+    <string name="CANCEL_CARD_CANCEL">Cancel card</string>
+    <string name="CANCEL_CARD_CONFIRMATION_TITLE">Cancel card?</string>
+    <string name="CANCEL_CARD_CONFIRMATION_MESSAGE">This will cancel your current card and can\'t be undone.\nDo you want to continue?</string>
+    <string name="CANCEL_CARD_NEW_CARD_ORDERED_TITLE">Card canceled</string>
+    <string name="CANCEL_CARD_NEW_CARD_ORDERED_MESSAGE">You have successfully canceled your card.</string>
+
+    <!-- Card Feature Not Available -->
+    <string name="FEATURE_NOT_AVAILABLE_HEADER">This feature is not currently available.</string>
+    <string name="FEATURE_NOT_AVAILABLE_HEADER_SUBSTRING">available.</string>
+    <string name="FEATURE_NOT_AVAILABLE_MESSAGE">You may still review your transaction\nhistory and access your account.</string>
+    <string name="FEATURE_NOT_AVAILABLE_CALL_SUPPORT">Call Support</string>
+    <string name="FEATURE_NOT_AVAILABLE_UNKNOWN">This feature is currently unavailable. For more information, please contact customer support.</string>
+    <string name="FEATURE_NOT_AVAILABLE_REPLACE">We can’t cancel your card because it is currently inactive. For more information, please contact customer support.</string>
+    <string name="FEATURE_NOT_AVAILABLE_LOST_STOLEN">We can’t report your card lost/stolen because it is currently inactive. For more information, please contact customer support.</string>
+    <string name="FEATURE_NOT_AVAILABLE_CANCEL">We can’t cancel your card because it is currently inactive. For more information, please contact customer support.</string>
+    <string name="FEATURE_NOT_AVAILABLE_UNKNOWN_FEATURE_TITLE">Feature unavailable</string>
+
 </resources>
