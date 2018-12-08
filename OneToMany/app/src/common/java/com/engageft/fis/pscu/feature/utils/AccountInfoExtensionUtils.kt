@@ -1,9 +1,6 @@
 package com.engageft.fis.pscu.feature.utils
 
-import com.engageft.fis.pscu.feature.utils.AccountInfoExtensionUtils.Companion.MESSAGE_TYPE_NONE
 import com.ob.ws.dom.utility.AccountInfo
-
-
 
 class AccountInfoExtensionUtils {
 
@@ -29,17 +26,12 @@ fun AccountInfo.emailEnabled(): Boolean {
 }
 
 fun AccountInfo.getNotificationMessageType(push: Boolean, sms: Boolean, email: Boolean): String {
-    if (email && push) {
-        return AccountInfoExtensionUtils.MESSAGE_TYPE_EMAIL_PUSH
-    } else if (email && sms) {
-        return AccountInfoExtensionUtils.MESSAGE_TYPE_EMAIL_SMS
-    } else if (email) {
-        return AccountInfoExtensionUtils.MESSAGE_TYPE_EMAIL
-    } else if (push) {
-        return AccountInfoExtensionUtils.MESSAGE_TYPE_PUSH
-    } else if (sms) {
-        return AccountInfoExtensionUtils.MESSAGE_TYPE_SMS
+    return when {
+        email && push -> AccountInfoExtensionUtils.MESSAGE_TYPE_EMAIL_PUSH
+        email && sms -> AccountInfoExtensionUtils.MESSAGE_TYPE_EMAIL_SMS
+        push -> AccountInfoExtensionUtils.MESSAGE_TYPE_PUSH
+        sms -> AccountInfoExtensionUtils.MESSAGE_TYPE_SMS
+        email -> AccountInfoExtensionUtils.MESSAGE_TYPE_EMAIL
+        else -> AccountInfoExtensionUtils.MESSAGE_TYPE_NONE
     }
-
-    return MESSAGE_TYPE_NONE
 }
