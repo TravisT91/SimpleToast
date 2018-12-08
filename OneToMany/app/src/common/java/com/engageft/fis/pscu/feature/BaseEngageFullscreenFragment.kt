@@ -29,15 +29,11 @@ abstract class BaseEngageFullscreenFragment : LotusFullScreenFragment() {
                 it.dialogInfoObservable.observe(this, Observer { dialogInfo ->
                     when (dialogInfo.dialogType) {
                         DialogInfo.DialogType.GENERIC_ERROR -> {
-                            showDialog(infoDialogGenericErrorTitleMessageConditionalNewInstance(context!!, dialogInfo))
-                            showDialog(infoDialogGenericErrorTitleMessageConditionalNewInstance(
-                                    context!!, it)
+                            showDialog(infoDialogGenericErrorTitleMessageConditionalNewInstance(context!!, dialogInfo)
                                     .apply { applyPaletteStyles(this@BaseEngageFullscreenFragment.context!!) })
                         }
                         DialogInfo.DialogType.SERVER_ERROR -> {
-                            showDialog(infoDialogGenericErrorTitleMessageConditionalNewInstance(context!!, dialogInfo))
-                            showDialog(infoDialogGenericErrorTitleMessageConditionalNewInstance(
-                                    context!!, it)
+                            showDialog(infoDialogGenericErrorTitleMessageConditionalNewInstance(context!!, dialogInfo)
                                     .apply { applyPaletteStyles(this@BaseEngageFullscreenFragment.context!!) })
                         }
                         DialogInfo.DialogType.NO_INTERNET_CONNECTION -> {

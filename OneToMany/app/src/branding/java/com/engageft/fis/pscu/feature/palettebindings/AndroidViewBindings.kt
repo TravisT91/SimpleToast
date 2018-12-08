@@ -3,9 +3,13 @@ package com.engageft.fis.pscu.feature.palettebindings
 import android.widget.TextView
 import androidx.annotation.ColorInt
 import androidx.appcompat.widget.SwitchCompat
+import androidx.core.content.ContextCompat
 import androidx.databinding.BindingAdapter
 import com.airbnb.paris.extensions.style
 import com.airbnb.paris.styles.Style
+import com.engageft.fis.pscu.R
+import com.engageft.fis.pscu.feature.branding.Palette
+import com.engageft.fis.pscu.feature.utils.lighten
 
 /**
  * com.engageft.fis.pscu.feature.AndroidViewBindings
@@ -28,4 +32,17 @@ fun SwitchCompat.setSwitchTintList(@ColorInt thumbCheckedColor: Int, @ColorInt t
                                    @ColorInt thumbUncheckedColor: Int, @ColorInt trackUncheckedColor: Int) {
     this.thumbTintList = getSwitchColorStateList(thumbCheckedColor, thumbUncheckedColor)
     this.trackTintList = getSwitchColorStateList(trackCheckedColor, trackUncheckedColor)
+}
+
+@BindingAdapter("SwitchCompat.applyPaletteColors")
+fun SwitchCompat.shouldApplyPaletteColors(shouldApply: Boolean){
+    if (shouldApply) {
+        this.applyPaletteColors()
+    }
+}
+
+fun SwitchCompat.applyPaletteColors() {
+    this.setSwitchTintList(Palette.successColor, lighten(Palette.successColor, .6f),
+            ContextCompat.getColor(context!!, R.color.structure2),
+            ContextCompat.getColor(context!!, android.R.color.darker_gray))
 }

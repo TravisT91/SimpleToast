@@ -13,8 +13,14 @@ import com.ob.ws.dom.LoginResponse
 import com.ob.ws.dom.utility.AccountInfo
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
-
-
+/**
+ * AccountNotificationsViewModel
+ * </p>
+ * View Model that handles account notifications
+ * </p>
+ * Created by Atia Hashimi 12/07/18
+ * Copyright (c) 2018 Engage FT. All rights reserved.
+ */
 class AccountNotificationsViewModel: BaseEngageViewModel() {
 
     companion object {

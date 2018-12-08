@@ -6,7 +6,7 @@
         <variable name="viewModel" type="com.engageft.fis.pscu.feature.AccountNotificationsViewModel"/>
         <variable
             name="palette"
-            type="com.engageft.fis.pscu.feature.Palette"/>
+            type="com.engageft.fis.pscu.feature.branding.Palette"/>
     </data>
 
     <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
@@ -67,6 +67,7 @@
                         tools:text="Push Disabled" />
 
                     <androidx.appcompat.widget.SwitchCompat
+                        SwitchCompat.applyPaletteColors="@{true}"
                         android:id="@+id/pushSwitch"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -126,6 +127,7 @@
                     app:layout_constraintTop_toBottomOf="@+id/smsNumberTextView" />
 
                 <androidx.appcompat.widget.SwitchCompat
+                    SwitchCompat.applyPaletteColors="@{true}"
                     android:id="@+id/smsSwitch"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -136,7 +138,6 @@
                     app:layout_constraintBottom_toTopOf="@+id/smsDivider"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/pushDivider" />
-
 
                 <TextView
                     style="@style/NotificationsEmailStyle"
@@ -154,6 +155,7 @@
                     app:layout_constraintTop_toBottomOf="@+id/smsDivider" />
 
                 <androidx.appcompat.widget.SwitchCompat
+                    SwitchCompat.applyPaletteColors="@{true}"
                     android:id="@+id/emailSwitch"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -219,7 +221,8 @@
                 android:layout_marginBottom="16dp"
                 android:layout_marginTop="32dp"
                 android:onClick="@{() -> viewModel.onSaveClicked()}"
-                android:text="@string/account_notifications_save_button" />
+                android:text="@string/account_notifications_save_button"
+                setThemeFilled="@{true}"/>
 
         </LinearLayout>
 
