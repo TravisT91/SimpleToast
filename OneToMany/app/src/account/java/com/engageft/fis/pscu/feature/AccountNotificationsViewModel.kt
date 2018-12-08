@@ -53,7 +53,7 @@ class AccountNotificationsViewModel: BaseEngageViewModel() {
                 .subscribe({ response ->
                     progressOverlayShownObservable.value = false
                     if (response is LoginResponse) {
-                        setUpData(response)
+                        setNotificationType(response)
                     } else {
                         handleUnexpectedErrorResponse(response)
                     }
@@ -115,7 +115,7 @@ class AccountNotificationsViewModel: BaseEngageViewModel() {
         }
     }
 
-    private fun setUpData(loginResponse: LoginResponse) {
+    private fun setNotificationType(loginResponse: LoginResponse) {
         val currentAccount = LoginResponseUtils.getCurrentAccountInfo(loginResponse)
         currentAccount?.let { currentAccountInfo ->
             accountInfo = currentAccountInfo
