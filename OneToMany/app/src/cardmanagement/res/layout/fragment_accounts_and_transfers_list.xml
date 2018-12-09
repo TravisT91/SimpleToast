@@ -6,7 +6,7 @@
         <variable name="viewModel" type="com.engageft.fis.pscu.feature.AccountsAndTransfersListViewModel"/>
         <variable
             name="palette"
-            type="com.engageft.fis.pscu.feature.Palette"/>
+            type="com.engageft.fis.pscu.feature.branding.Palette"/>
     </data>
 
     <LinearLayout
@@ -16,6 +16,7 @@
         android:background="@color/viewBackground">
 
         <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recyclerView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
