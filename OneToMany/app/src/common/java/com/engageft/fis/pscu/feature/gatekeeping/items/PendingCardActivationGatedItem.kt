@@ -19,25 +19,31 @@ import io.reactivex.schedulers.Schedulers
  * Copyright (c) 2018 Engage FT. All rights reserved.
  */
 class PendingCardActivationGatedItem(private val compositeDisposable: CompositeDisposable) : GatedItem() {
+    private var hasBeenChecked = false
     override fun checkItem(resultListener: GatedItemResultListener) {
-        compositeDisposable.add(
-                EngageService.getInstance().loginResponseAsObservable
-                        .subscribeOn(Schedulers.io())
-                        .observeOn(AndroidSchedulers.mainThread())
-                        .subscribe({ response ->
-                            if (response.isSuccess && response is LoginResponse) {
-                                val currentCard = LoginResponseUtils.getCurrentCard(response)
-                                if (currentCard != null && DebitCardInfoUtils.isPendingActivation(currentCard)) {
-                                    resultListener.onItemCheckFailed()
+        if (!hasBeenChecked) {
+            hasBeenChecked = true
+            compositeDisposable.add(
+                    EngageService.getInstance().loginResponseAsObservable
+                            .subscribeOn(Schedulers.io())
+                            .observeOn(AndroidSchedulers.mainThread())
+                            .subscribe({ response ->
+                                if (response.isSuccess && response is LoginResponse) {
+                                    val currentCard = LoginResponseUtils.getCurrentCard(response)
+                                    if (currentCard != null && DebitCardInfoUtils.isPendingActivation(currentCard)) {
+                                        resultListener.onItemCheckFailed()
+                                    } else {
+                                        resultListener.onItemCheckPassed()
+                                    }
                                 } else {
-                                    resultListener.onItemCheckPassed()
+                                    resultListener.onItemError(null, response.message)
                                 }
-                            } else {
-                                resultListener.onItemError(null, response.message)
+                            }) { e ->
+                                resultListener.onItemError(e, null)
                             }
-                        }) {e ->
-                            resultListener.onItemError(e, null)
-                        }
-        )
+            )
+        } else {
+            resultListener.onItemCheckPassed()
+        }
     }
 }

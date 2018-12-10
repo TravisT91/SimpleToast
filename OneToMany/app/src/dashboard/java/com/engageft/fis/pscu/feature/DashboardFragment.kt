@@ -16,6 +16,7 @@ import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.navigation.findNavController
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.engageft.apptoolbox.BaseViewModel
 import com.engageft.apptoolbox.LotusActivity
@@ -25,9 +26,9 @@ import com.engageft.apptoolbox.view.ProductCardModel
 import com.engageft.engagekit.EngageService
 import com.engageft.fis.pscu.R
 import com.engageft.fis.pscu.databinding.FragmentDashboardBinding
+import com.engageft.fis.pscu.feature.authentication.AuthenticationDialogFragment
 import com.engageft.fis.pscu.feature.branding.BrandingInfoRepo
 import com.engageft.fis.pscu.feature.palettebindings.applyBranding
-import com.engageft.fis.pscu.feature.authentication.AuthenticationDialogFragment
 import com.engageft.fis.pscu.feature.utils.cardStatusStringRes
 import com.google.android.material.tabs.TabLayout
 import com.ob.domain.lookup.DebitCardStatus
@@ -407,11 +408,39 @@ class DashboardFragment : BaseEngageFullscreenFragment(),
 
         dashboardViewModel.animationObservable.observe(this, animationObserver)
 
+        dashboardViewModel.navigationObservable.observe(this, Observer {dashboardNavigationEvent ->
+            when (dashboardNavigationEvent) {
+                DashboardNavigationEvent.ALERTS -> {
+                    Toast.makeText(context!!, "TODO: Navigate to Alerts", Toast.LENGTH_LONG).show()
+                }
+                DashboardNavigationEvent.TRANSACTION_SEARCH -> {
+                    Toast.makeText(context!!, "TODO: Navigate to Transaction Search", Toast.LENGTH_LONG).show()
+                }
+                DashboardNavigationEvent.SECURITY_QUESTIONS -> {
+                    findNavController().navigate(R.id.action_dashboard_fragment_to_changeSecurityQuestionsFragment)
+                }
+                DashboardNavigationEvent.CARD_TRACKER -> {
+                    Toast.makeText(context!!, "TODO: Navigate to Card Tracker", Toast.LENGTH_LONG).show()
+                }
+                DashboardNavigationEvent.SHOW_ONBOARDING_SPLASH -> {
+                    Toast.makeText(context!!, "TODO: Navigate to Onboarding Splash", Toast.LENGTH_LONG).show()
+                }
+                DashboardNavigationEvent.SHOW_POST_30_DAYS_SPLASH -> {
+                    Toast.makeText(context!!, "TODO: Navigate to Post 30 Days Splash", Toast.LENGTH_LONG).show()
+                }
+            }
+        })
+
         // make sure correct tab is showing, after return from TransactionDetailFragment, in particular
         binding.transactionsTabLayout.getTabAt(dashboardViewModel.transactionsTabPosition)?.select()
 
         dashboardViewModel.initBalancesAndNotifications()
         dashboardViewModel.initTransactions()
+    }
+
+    override fun onResume() {
+        super.onResume()
+        dashboardViewModel.runGateKeeper()
     }
 
     override fun onExpandImmediate() {

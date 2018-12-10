@@ -1,7 +1,8 @@
 package com.engageft.fis.pscu.feature.gatekeeping
 
-import com.engageft.fis.pscu.feature.gatekeeping.items.PendingCardActivationGatedItem
-import com.engageft.fis.pscu.feature.gatekeeping.items.SecurityQuestionsGatedItem
+import com.engageft.fis.pscu.feature.gatekeeping.items.RequireAcceptTermsGatedItem
+import com.engageft.fis.pscu.feature.gatekeeping.items.RequireEmailConfirmationGatedItem
+import com.engageft.fis.pscu.feature.gatekeeping.items.TwoFactorAuthGatedItem
 import io.reactivex.disposables.CompositeDisposable
 
 /**
@@ -13,5 +14,8 @@ import io.reactivex.disposables.CompositeDisposable
  * Copyright (c) 2018 Engage FT. All rights reserved.
  */
 class LoginGateKeeper(compositeDisposable: CompositeDisposable, gateKeeperListener: GateKeeperListener) : BaseGateKeeper(gateKeeperListener) {
-    override val gatedItems = arrayListOf(SecurityQuestionsGatedItem(compositeDisposable), PendingCardActivationGatedItem(compositeDisposable))
+    override val gatedItems = arrayListOf(
+            TwoFactorAuthGatedItem(compositeDisposable),
+            RequireEmailConfirmationGatedItem(compositeDisposable),
+            RequireAcceptTermsGatedItem(compositeDisposable))
 }

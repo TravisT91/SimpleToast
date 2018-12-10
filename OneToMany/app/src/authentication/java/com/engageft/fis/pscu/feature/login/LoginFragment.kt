@@ -64,22 +64,24 @@ class LoginFragment : BaseEngageFullscreenFragment() {
                 }
                 LoginViewModel.LoginNavigationEvent.ISSUER_STATEMENT -> {
                     // TODO(jhutchins): Navigate to Issuer Statement
-                    Toast.makeText(context!!, "TODO: Navigate to Issuer Statement", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(context!!, "TODO: Navigate to Issuer Statement", Toast.LENGTH_LONG).show()
                     0
                 }
                 LoginViewModel.LoginNavigationEvent.DISCLOSURES -> {
                     // TODO(jhutchins): Navigate to Disclosures
-                    Toast.makeText(context!!, "TODO: Navigate to Disclosures", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(context!!, "TODO: Navigate to Disclosures", Toast.LENGTH_LONG).show()
                     0
                 }
                 LoginViewModel.LoginNavigationEvent.TWO_FACTOR_AUTHENTICATION -> {
                     //TODO(aHashimi): https://engageft.atlassian.net/browse/SHOW-273
-                    Toast.makeText(context!!, "TODO: Navigate to Two Factor Auth", Toast.LENGTH_SHORT).show()
-                    0
+                    Toast.makeText(context!!, "TODO: Navigate to Two Factor Auth", Toast.LENGTH_LONG).show()
+                    activity!!.finish()
+                    R.id.action_loginFragment_to_authenticatedActivity
                 }
                 LoginViewModel.LoginNavigationEvent.ACCEPT_TERMS -> {
                     //TODO(aHashimi): https://engageft.atlassian.net/browse/SHOW-354
                     //TODO(aHashimi): this's here to bypass Accept terms until it's resolved
+                    Toast.makeText(context!!, "TODO: Navigate to accept terms", Toast.LENGTH_LONG).show()
                     activity!!.finish()
                     R.id.action_loginFragment_to_authenticatedActivity
                 }
