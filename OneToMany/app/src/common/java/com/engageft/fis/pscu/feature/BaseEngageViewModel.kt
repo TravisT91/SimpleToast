@@ -6,7 +6,10 @@ import com.engageft.apptoolbox.BaseViewModel
 import com.engageft.apptoolbox.BuildConfig
 import com.engageft.engagekit.rest.exception.NoConnectivityException
 import com.ob.ws.dom.BasicResponse
+import io.reactivex.Observable
+import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
+import io.reactivex.schedulers.Schedulers
 import java.net.SocketTimeoutException
 import java.net.UnknownHostException
 
@@ -24,33 +27,43 @@ open class BaseEngageViewModel: BaseViewModel() {
     val dialogInfoObservable: MutableLiveData<DialogInfo> = MutableLiveData()
 
     fun handleUnexpectedErrorResponse(response: BasicResponse) {
+        // This is a catch-all utility function to handle all unexpected responses to an API call
+        // and report it essentially as a BUG. In debug builds, let's blow up in the user's face,
+        // but in production, show a generic error, fail gracefully, and report it over crashlytics.
         if (BuildConfig.DEBUG) {
-            dialogInfoObservable.value = DialogInfo(message = response.message)
+            dialogInfoObservable.postValue(DialogInfo(message = response.message))
         } else {
-            dialogInfoObservable.value = DialogInfo(dialogType = DialogInfo.DialogType.GENERIC_ERROR)
-            Crashlytics.log(response.message)
+            dialogInfoObservable.postValue(DialogInfo(dialogType = DialogInfo.DialogType.GENERIC_ERROR))
         }
+        // Report this problem to Crashlytics in case a bug report is not made.
+        Crashlytics.logException(IllegalStateException("handleUnexpectedErrorReponse: " + response.message))
     }
 
     fun handleThrowable(e: Throwable)  {
         when (e) {
             is UnknownHostException -> {
-                dialogInfoObservable.value = DialogInfo(dialogType = DialogInfo.DialogType.NO_INTERNET_CONNECTION)
+                dialogInfoObservable.postValue(DialogInfo(dialogType = DialogInfo.DialogType.NO_INTERNET_CONNECTION))
             }
             is NoConnectivityException -> {
-                dialogInfoObservable.value = DialogInfo(dialogType = DialogInfo.DialogType.NO_INTERNET_CONNECTION)
+                dialogInfoObservable.postValue(DialogInfo(dialogType = DialogInfo.DialogType.NO_INTERNET_CONNECTION))
             }
             is SocketTimeoutException -> {
-                dialogInfoObservable.value = DialogInfo(dialogType = DialogInfo.DialogType.CONNECTION_TIMEOUT)
+                dialogInfoObservable.postValue(DialogInfo(dialogType = DialogInfo.DialogType.CONNECTION_TIMEOUT))
             }
             // Add more specific exceptions here, if needed
             else -> {
+                // This is a catch-all for anything else. Anything caught here is a BUG and should
+                // be reported as such. In Debug builds, we can just blow up in the user's face but
+                // on production, we need to fail gracefully and report the error so we can fix it
+                // later.
                 if (BuildConfig.DEBUG) {
-                    dialogInfoObservable.value = DialogInfo(message = e.message)
+                    dialogInfoObservable.postValue(DialogInfo(message = e.message))
                     e.printStackTrace()
+                    // Just in case the user at the time doesn't report a bug to us.
                 } else {
-                    Crashlytics.logException(e)
+                    dialogInfoObservable.value = DialogInfo(dialogType = DialogInfo.DialogType.GENERIC_ERROR)
                 }
+                Crashlytics.logException(e)
             }
         }
     }
@@ -59,4 +72,30 @@ open class BaseEngageViewModel: BaseViewModel() {
         super.onCleared()
         compositeDisposable.dispose()
     }
+}
+
+inline fun <reified ExpectedClass> Observable<BasicResponse>.subscribeWithProgressAndDefaultErrorHandling(
+        vm: BaseEngageViewModel,
+        crossinline onNext: (ExpectedClass) -> Unit,
+        noinline onError: ((e: Throwable) -> Unit)? = null,
+        noinline onComplete: (() -> Unit?)? = null){
+    vm.progressOverlayShownObservable.value = true
+    vm.compositeDisposable.add(
+            this.subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(
+                    {
+                        if (it.isSuccess && it is ExpectedClass) {
+                            onNext(it)
+                        } else {
+                            vm.handleUnexpectedErrorResponse(it)
+                        }
+                    },
+                    {
+                        vm.progressOverlayShownObservable.value = false
+                        vm.handleThrowable(it)
+                        onError?.invoke(it)
+                    },
+                    {
+                        vm.progressOverlayShownObservable.value = false
+                        onComplete?.invoke()
+                    }))
 }

@@ -1,11 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="OVERVIEW_CARDVIEW_CVV_MASK">CVC %s</string>
-    <string name="OVERVIEW_CARDVIEW_CARDNUMBER_MASK">•••• %s</string>
-    <string name="OVERVIEW_CARDVIEW_CARD_VALID_MASK">Good Thru %s</string>
-
     <string name="OVERVIEW_LOADING_CARD_DETAILS">Updating...</string>
     <string name="OVERVIEW_SHOW_CARD_DETAILS">Show card details</string>
+    <string name="OVERVIEW_SHOW_CARD_DETAILS_AUTHENTICATION_MESSAGE">Please authenticate to show details.</string>
     <string name="OVERVIEW_HIDE_CARD_DETAILS">Hide card details</string>
     <string name="OVERVIEW_CARD_ERROR_DIALOG_MESSAGE">There was an error updating card info. Please try again.</string>
     <string name="OVERVIEW_MOVE_MONEY">Move money</string>
@@ -15,6 +12,7 @@
 
     <string name="OVERVIEW_MORE_CARD_OPTIONS">More options</string>
     <string name="OVERVIEW_CHANGE_CARD_PIN">Change card PIN</string>
+    <string name="OVERVIEW_CHANGE_CARD_PIN_AUTHENTICATION_MESSAGE">Please authenticate to change card PIN.</string>
     <string name="OVERVIEW_REPLACE_CARD">Replace card</string>
     <string name="OVERVIEW_REPORT_LOST_STOLEN">Report lost/stolen</string>
     <string name="OVERVIEW_CANCEL_CARD">Cancel card</string>

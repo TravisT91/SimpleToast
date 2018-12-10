@@ -16,9 +16,64 @@
             app:enterAnim="@anim/nav_enter_anim"
             app:exitAnim="@anim/nav_exit_anim"
             app:popEnterAnim="@anim/nav_pop_enter_anim"
-            app:popExitAnim="@anim/nav_pop_exit_anim">
-        </action>
+            app:popExitAnim="@anim/nav_pop_exit_anim"/>
+        <action
+            android:id="@+id/action_dashboard_fragment_to_replaceCardFragment"
+            app:destination="@id/replaceCardFragment"
+            app:enterAnim="@anim/nav_enter_anim"
+            app:exitAnim="@anim/nav_exit_anim"
+            app:popEnterAnim="@anim/nav_pop_enter_anim"
+            app:popExitAnim="@anim/nav_pop_exit_anim"/>
+        <action
+            android:id="@+id/action_dashboard_fragment_to_reportLostStolenCardFragment"
+            app:destination="@id/reportLostStolenCardFragment"
+            app:enterAnim="@anim/nav_enter_anim"
+            app:exitAnim="@anim/nav_exit_anim"
+            app:popEnterAnim="@anim/nav_pop_enter_anim"
+            app:popExitAnim="@anim/nav_pop_exit_anim"/>
+        <action
+            android:id="@+id/action_dashboard_fragment_to_cancelCardFragment"
+            app:destination="@id/cancelCardFragment"
+            app:enterAnim="@anim/nav_enter_anim"
+            app:exitAnim="@anim/nav_exit_anim"
+            app:popEnterAnim="@anim/nav_pop_enter_anim"
+            app:popExitAnim="@anim/nav_pop_exit_anim"/>
+        <action
+            android:id="@+id/action_dashboard_fragment_to_featureNotAvailable"
+            app:destination="@id/featureNotAvailableFragment"
+            app:enterAnim="@anim/nav_enter_anim"
+            app:exitAnim="@anim/nav_exit_anim"
+            app:popEnterAnim="@anim/nav_pop_enter_anim"
+            app:popExitAnim="@anim/nav_pop_exit_anim"/>
+        <action
+            android:id="@+id/action_dashboard_fragment_to_cardPinFragment"
+            app:destination="@id/cardPinFragment"
+            app:enterAnim="@anim/nav_enter_anim"
+            app:exitAnim="@anim/nav_exit_anim"
+            app:popEnterAnim="@anim/nav_pop_enter_anim"
+            app:popExitAnim="@anim/nav_pop_exit_anim"/>
     </fragment>
+
+    <fragment
+        android:id="@+id/featureNotAvailableFragment"
+        android:name="com.engageft.fis.pscu.feature.CardFeatureNotAvailableFragment"
+        android:label="Feature not available"/>
+
+    <fragment
+        android:id="@+id/replaceCardFragment"
+        android:name="com.engageft.fis.pscu.feature.ReplaceCardFragment"
+        android:label="@string/fragment_title_replace_card"/>
+
+    <fragment
+        android:id="@+id/reportLostStolenCardFragment"
+        android:name="com.engageft.fis.pscu.feature.ReportLostStolenCardFragment"
+        android:label="@string/fragment_title_report_lost_stolen_card"/>
+
+    <fragment
+        android:id="@+id/cancelCardFragment"
+        android:name="com.engageft.fis.pscu.feature.CancelCardFragment"
+        android:label="@string/fragment_title_cancel_card"/>
+
     <fragment
         android:id="@+id/budgets_fragment"
         android:name="com.engageft.fis.pscu.feature.BudgetsFragment"
@@ -28,6 +83,7 @@
             android:name="@string/navigation_override_up"
             android:defaultValue="true" />
     </fragment>
+
     <fragment
         android:id="@+id/goals_fragment"
         android:name="com.engageft.fis.pscu.feature.GoalsFragment"
@@ -40,6 +96,7 @@
             android:name="@string/navigation_override_up"
             android:defaultValue="true" />
     </fragment>
+
     <fragment
         android:id="@+id/account_fragment"
         android:name="com.engageft.fis.pscu.feature.AccountSettingsFragment"
@@ -64,6 +121,7 @@
             android:id="@+id/action_account_fragment_to_changePasswordFragment"
             app:destination="@id/changePasswordFragment" />
     </fragment>
+
     <fragment
         android:id="@+id/goalAdd1Fragment"
         android:name="com.engageft.fis.pscu.feature.GoalAdd1Fragment"
@@ -73,6 +131,7 @@
             android:name="@string/navigation_view_gone"
             android:defaultValue="true" />
     </fragment>
+
     <fragment
         android:id="@+id/cardManagementFragment"
         android:name="com.engageft.fis.pscu.feature.CardManagementFragment"
@@ -81,6 +140,7 @@
             android:name="@string/navigation_override_up"
             android:defaultValue="true" />
     </fragment>
+
     <fragment
         android:id="@+id/helpFragment"
         android:name="com.engageft.fis.pscu.feature.HelpFragment"
@@ -89,6 +149,7 @@
             android:name="@string/navigation_override_up"
             android:defaultValue="true" />
     </fragment>
+
     <fragment
         android:id="@+id/moveMoneyFragment"
         android:name="com.engageft.fis.pscu.feature.MoveMoneyFragment"
@@ -97,6 +158,7 @@
             android:name="@string/navigation_override_up"
             android:defaultValue="true" />
     </fragment>
+
     <!-- This is necessary for navigating from the dashboard, so that the back/up arrow is shown
      rather than the hamburger. -->
     <fragment
@@ -107,18 +169,22 @@
             android:name="@string/navigation_override_up"
             android:defaultValue="false" />
     </fragment>
+
     <fragment
         android:id="@+id/copyrightFragment"
         android:name="com.engageft.fis.pscu.feature.CopyrightFragment"
         android:label="@string/account_copyright_title"/>
+
     <fragment
         android:id="@+id/changeSecurityQuestionsFragment"
         android:name="com.engageft.fis.pscu.feature.ChangeSecurityQuestionsFragment"
         android:label="@string/fragment_title_change_security_questions" />
+
     <fragment
         android:id="@+id/profileFragment"
         android:name="com.engageft.fis.pscu.feature.ProfileFragment"
         android:label="@string/fragment_title_profile" />
+
     <fragment
         android:id="@+id/statementsFragment"
         android:name="com.engageft.fis.pscu.feature.StatementsFragment"
@@ -127,14 +193,19 @@
             android:id="@+id/action_statementsFragment_to_webViewFragment"
             app:destination="@id/webViewFragment" />
     </fragment>
+
     <fragment
         android:id="@+id/webViewFragment"
         android:name="com.engageft.fis.pscu.feature.WebViewFragment"
         android:label="@string/statements_webView_screen_title" />
+
     <fragment
         android:id="@+id/changePasswordFragment"
         android:name="com.engageft.fis.pscu.feature.ChangePasswordFragment"
         android:label="@string/change_password_title" />
 
-
+    <fragment
+        android:id="@+id/cardPinFragment"
+        android:name="com.engageft.fis.pscu.feature.CardPinFragment"
+        android:label="@string/card_pin_screen_title" />
 </navigation>
