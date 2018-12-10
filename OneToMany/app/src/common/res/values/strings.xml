@@ -100,8 +100,8 @@
     <string name="WEBVIEW_NO_EMAIL_CLIENT_FOUND">No email client app found!</string>
 
     <!-- Unsaved Changes Resources -->
-    <string name="dialog_unsaved_changes_title">Unsaved Changes</string>
-    <string name="dialog_unsaved_changes_message">You have unsaved changes, are you sure you want to leave?</string>
-    <string name="dialog_unsaved_changes_positive_text">Leave</string>
-    <string name="dialog_unsaved_changes_negative_text">Stay</string>
+    <string name="dialog_unsaved_changes_title">Leave without saving?</string>
+    <string name="dialog_unsaved_changes_message">Would you like to leave without saving your recent changes?</string>
+    <string name="dialog_unsaved_changes_positive_text">Yes</string>
+    <string name="dialog_unsaved_changes_negative_text">No</string>
 </resources>
