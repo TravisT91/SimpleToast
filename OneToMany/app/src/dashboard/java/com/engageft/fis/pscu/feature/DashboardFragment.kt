@@ -2,6 +2,7 @@ package com.engageft.fis.pscu.feature
 
 import android.animation.ObjectAnimator
 import android.os.Bundle
+import android.util.Log
 import android.util.TypedValue
 import android.view.LayoutInflater
 import android.view.View
@@ -19,15 +20,19 @@ import androidx.paging.PagedList
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.engageft.apptoolbox.BaseViewModel
 import com.engageft.apptoolbox.LotusActivity
-import com.engageft.apptoolbox.LotusFullScreenFragment
 import com.engageft.apptoolbox.ViewUtils.newLotusInstance
 import com.engageft.apptoolbox.view.InformationDialogFragment
 import com.engageft.apptoolbox.view.ProductCardModel
+import com.engageft.engagekit.EngageService
 import com.engageft.engagekit.repository.transaction.vo.Transaction
 import com.engageft.fis.pscu.R
 import com.engageft.fis.pscu.databinding.FragmentDashboardBinding
+import com.engageft.fis.pscu.feature.authentication.AuthenticationDialogFragment
+import com.engageft.fis.pscu.feature.branding.BrandingInfoRepo
+import com.engageft.fis.pscu.feature.palettebindings.applyBranding
 import com.engageft.fis.pscu.feature.utils.cardStatusStringRes
 import com.google.android.material.tabs.TabLayout
+import com.ob.domain.lookup.DebitCardStatus
 import eightbitlab.com.blurview.RenderScriptBlur
 import utilGen1.StringUtils
 import java.math.BigDecimal
@@ -37,10 +42,13 @@ import java.math.BigDecimal
  * <p>
  * UI Fragment for the Dashboard.
  * </p>
- * Created by joeyhutchins on 8/24/18.
+ * Created by Kurt Mueller on 4/17/18.
+ * Ported to gen2 by joeyhutchins on 8/24/18.
  * Copyright (c) 2018 Engage FT. All rights reserved.
  */
-class DashboardFragment : LotusFullScreenFragment(), DashboardExpandableView.DashboardExpandableViewListener, TransactionsAdapter.OnTransactionsAdapterListener {
+class DashboardFragment : BaseEngageFullscreenFragment(),
+        DashboardExpandableView.DashboardExpandableViewListener,
+        TransactionsAdapter.OnTransactionsAdapterListener {
     private lateinit var binding: FragmentDashboardBinding
 
     private lateinit var dashboardViewModel: DashboardViewModel
@@ -74,11 +82,21 @@ class DashboardFragment : LotusFullScreenFragment(), DashboardExpandableView.Das
 
     override fun createViewModel(): BaseViewModel? {
         dashboardViewModel = ViewModelProviders.of(this).get(DashboardViewModel::class.java)
-        return null
+        return dashboardViewModel
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         binding = DataBindingUtil.inflate(layoutInflater, R.layout.fragment_dashboard, container, false)
+        //TODO(ttkachuk) right now card types are no specified by the backend, but we will select the BrandingCard that matches debitCardInfo.cardType when the backend is updated
+        //tracked in FOTM-498
+        BrandingInfoRepo.cards?.get(0)?.let {
+            binding.dashboardExpandableView.cardView.applyBranding(it,dashboardViewModel.compositeDisposable){ e ->
+                Toast.makeText(context, "Failed to retrieve card image", Toast.LENGTH_SHORT).show()
+                Log.e("BRANDING_INFO_FAIL", e.message)
+                //TODO(ttkachuk) right now it is not clear on how we should handle failure to retrieve the card image
+                //tracked in FOTM-497
+            }
+        }
         return binding.root
     }
 
@@ -189,21 +207,17 @@ class DashboardFragment : LotusFullScreenFragment(), DashboardExpandableView.Das
     private fun updateForCardState(cardState: ProductCardViewCardState) {
         when (cardState) {
             ProductCardViewCardState.LOADING -> {
-                progressOverlayDelegate.showProgressOverlay()
                 binding.dashboardExpandableView.overviewShowHideCardDetailsLabel.text = getString(R.string.OVERVIEW_LOADING_CARD_DETAILS)
             }
             ProductCardViewCardState.DETAILS_HIDDEN -> {
-                progressOverlayDelegate.dismissProgressOverlay()
                 binding.dashboardExpandableView.overviewShowHideCardDetailsIcon.setImageDrawable(ContextCompat.getDrawable(context!!, R.drawable.ic_dashboard_card_details_show))
                 binding.dashboardExpandableView.overviewShowHideCardDetailsLabel.text = getString(R.string.OVERVIEW_SHOW_CARD_DETAILS)
             }
             ProductCardViewCardState.DETAILS_SHOWN -> {
-                progressOverlayDelegate.dismissProgressOverlay()
                 binding.dashboardExpandableView.overviewShowHideCardDetailsIcon.setImageDrawable(ContextCompat.getDrawable(context!!, R.drawable.ic_dashboard_card_details_hide))
                 binding.dashboardExpandableView.overviewShowHideCardDetailsLabel.text = getString(R.string.OVERVIEW_HIDE_CARD_DETAILS)
             }
             ProductCardViewCardState.ERROR -> {
-                progressOverlayDelegate.dismissProgressOverlay()
                 binding.dashboardExpandableView.overviewShowHideCardDetailsLabel.text = getString(
                         if (dashboardViewModel.productCardViewModelDelegate.isShowingCardDetails()) R.string.OVERVIEW_HIDE_CARD_DETAILS else R.string.OVERVIEW_SHOW_CARD_DETAILS
                 )
@@ -433,10 +447,11 @@ class DashboardFragment : LotusFullScreenFragment(), DashboardExpandableView.Das
         if (dashboardViewModel.productCardViewModelDelegate.isShowingCardDetails()) {
             dashboardViewModel.productCardViewModelDelegate.hideCardDetails()
         } else {
-            //val dialogFragment = PasswordAuthenticationDialogFragment.newInstance(AUTHENTICATION_REVEAL_CARD_DIALOG_TAG, getString(R.string.BUTTON_CANCEL))
-            //dialogFragment.show(childFragmentManager, AUTHENTICATION_REVEAL_CARD_DIALOG_TAG)
-            // TODO(kurt): hide this behind password auth, once we have PasswordAuthDialogFragment (SHOW-376)
-            dashboardViewModel.productCardViewModelDelegate.showCardDetails()
+            val authDialogFragment = AuthenticationDialogFragment.newInstance(
+                    getString(R.string.OVERVIEW_SHOW_CARD_DETAILS_AUTHENTICATION_MESSAGE)
+            ) { dashboardViewModel.productCardViewModelDelegate.showCardDetails() }
+
+            authDialogFragment.show(childFragmentManager, AuthenticationDialogFragment.TAG)
         }
     }
 
@@ -445,23 +460,61 @@ class DashboardFragment : LotusFullScreenFragment(), DashboardExpandableView.Das
     }
 
     override fun onLockUnlockCard() {
-        Toast.makeText(activity, "Lock/unlock card selected", Toast.LENGTH_SHORT).show()
+        val lock: Boolean? = when(EngageService.getInstance().storageManager.currentCard.status){
+            DebitCardStatus.ACTIVE -> true
+            DebitCardStatus.LOCKED_USER -> false
+            else -> null
+        }
+        lock?.let{ dashboardViewModel.updateCardLockStatus(it)
+        } ?: run {
+            Toast.makeText(
+                    context,
+                    getString(R.string.FEATURE_NOT_AVAILABLE_HEADER),
+                    Toast.LENGTH_SHORT).show() }
     }
 
     override fun onChangePin() {
-        binding.root.findNavController().navigate(R.id.action_dashboard_fragment_to_cardPinFragment)
+        val authDialogFragment = AuthenticationDialogFragment.newInstance(
+                getString(R.string.OVERVIEW_CHANGE_CARD_PIN_AUTHENTICATION_MESSAGE)
+        ) { binding.root.findNavController().navigate(R.id.action_dashboard_fragment_to_cardPinFragment) }
+
+        authDialogFragment.show(childFragmentManager, AuthenticationDialogFragment.TAG)
     }
 
     override fun onReplaceCard() {
-        Toast.makeText(activity, "Replace card selected", Toast.LENGTH_SHORT).show()
+        if (EngageService.getInstance().storageManager.currentCard.status == DebitCardStatus.ACTIVE) {
+            binding.root.findNavController().navigate(R.id.action_dashboard_fragment_to_replaceCardFragment)
+        } else {
+            val bundle = Bundle().apply {
+                putSerializable(CardFeatureNotAvailableFragment.KEY_UNAVAILABLE_FEATURE, CardFeatureNotAvailableFragment.UnavailableFeatureType.REPLACE)
+            }
+            binding.root.findNavController().navigate(R.id.action_dashboard_fragment_to_featureNotAvailable, bundle)
+        }
     }
 
     override fun onReportCardLostStolen() {
-        Toast.makeText(activity, "Report card lost/stolen selected", Toast.LENGTH_SHORT).show()
+        if(EngageService.getInstance().storageManager.currentCard.status == DebitCardStatus.ACTIVE ||
+                EngageService.getInstance().storageManager.currentCard.status == DebitCardStatus.REPLACEMENT_ORDERED) {
+            binding.root.findNavController().navigate(R.id.action_dashboard_fragment_to_reportLostStolenCardFragment)
+        }
+        else {
+            val bundle = Bundle().apply {
+                putSerializable(CardFeatureNotAvailableFragment.KEY_UNAVAILABLE_FEATURE, CardFeatureNotAvailableFragment.UnavailableFeatureType.LOST_STOLEN)
+            }
+            binding.root.findNavController().navigate(R.id.action_dashboard_fragment_to_featureNotAvailable, bundle)
+        }
     }
 
     override fun onCancelCard() {
-        Toast.makeText(activity, "Cancel card selected", Toast.LENGTH_SHORT).show()
+        if(EngageService.getInstance().storageManager.currentCard.status == DebitCardStatus.ACTIVE) {
+            binding.root.findNavController().navigate(R.id.action_dashboard_fragment_to_cancelCardFragment)
+        }
+        else {
+            val bundle = Bundle().apply {
+                putSerializable(CardFeatureNotAvailableFragment.KEY_UNAVAILABLE_FEATURE, CardFeatureNotAvailableFragment.UnavailableFeatureType.CANCEL)
+            }
+            binding.root.findNavController().navigate(R.id.action_dashboard_fragment_to_featureNotAvailable, bundle)
+        }
     }
 
     // TransactionsAdapter.OnTransactionsAdapterListener

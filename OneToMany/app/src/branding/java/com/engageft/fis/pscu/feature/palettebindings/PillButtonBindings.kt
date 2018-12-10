@@ -4,7 +4,7 @@ import androidx.core.content.ContextCompat
 import androidx.databinding.BindingAdapter
 import com.engageft.apptoolbox.R
 import com.engageft.apptoolbox.view.PillButton
-import com.engageft.fis.pscu.feature.Palette
+import com.engageft.fis.pscu.feature.branding.Palette
 
 /**
  * PillButtonBindings
@@ -16,7 +16,7 @@ import com.engageft.fis.pscu.feature.Palette
  */
 
 //Pill Button Bindings
-@BindingAdapter("setThemeFilled", requireAll = true)
+@BindingAdapter("PillButton.setThemeFilled", requireAll = true)
 fun PillButton.setThemeFilled(isFilled: Boolean){
     if (isFilled){
         this.setColorStateList(
@@ -34,7 +34,7 @@ fun PillButton.setThemeFilled(isFilled: Boolean){
     }
 }
 
-@BindingAdapter("setThemeOutlined", requireAll = true)
+@BindingAdapter("PillButton.setThemeOutlined", requireAll = true)
 fun PillButton.setThemeOutlined(isOutlined: Boolean){
     if (isOutlined){
         this.setColorStateList(
