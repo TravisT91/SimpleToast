@@ -6,6 +6,7 @@ import com.engageft.fis.pscu.feature.branding.Palette
 import com.ob.domain.lookup.branding.BrandingCard
 import com.squareup.picasso.Picasso
 import io.reactivex.Single
+import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
 
@@ -19,12 +20,13 @@ import io.reactivex.schedulers.Schedulers
  */
 
 fun ProductCardView.applyBranding(brandingCard: BrandingCard, cd: CompositeDisposable, onFailedToApplyBranding: ((e:Throwable) -> Unit)?) {
-    val picasso = Picasso.Builder(context).loggingEnabled(true).build()
+    val picasso = Picasso.Builder(context).memoryCache(true).build()
     //Using this rx solution we are able to apply the bitmap without having to worry about creating
     //a target and garbage collection, however if we want to set a placeholder image we must do so
     //in xml on the ProductCardView
-    val disposable =  Single.fromCallable { picasso.load(brandingCard.image).get() }
+    cd.add(Single.fromCallable { picasso.load(brandingCard.image).get() }
             .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
             .subscribe (
                     { bitmap ->
                         this.setCardBackground(bitmap)
@@ -34,6 +36,7 @@ fun ProductCardView.applyBranding(brandingCard: BrandingCard, cd: CompositeDispo
                     },
                     { e ->
                         onFailedToApplyBranding?.invoke(e)
-                    })
-    cd.add(disposable)
+                    }
+            )
+    )
 }
