@@ -11,14 +11,15 @@ import com.engageft.apptoolbox.BaseViewModel
 import com.engageft.apptoolbox.adapter.HeaderLabelTitleWithSubtitleSection
 import com.engageft.fis.pscu.databinding.FragmentAccountsAndTransfersListBinding
 import com.engageft.fis.pscu.feature.branding.Palette
+import com.ob.ws.dom.utility.AchLoadInfo
 import io.github.luizgrp.sectionedrecyclerviewadapter.SectionedRecyclerViewAdapter
 import kotlinx.android.synthetic.main.fragment_accounts_and_transfers_list.*
 
 class AccountsAndTransfersListFragment: BaseEngageFullscreenFragment() {
 
     private lateinit var accountsAndTransfersListViewModel: AccountsAndTransfersListViewModel
-//    private lateinit var recyclerViewAdapter: AccountsAndTransfersListRecyclerViewAdapter
-    private lateinit var recyclerViewAdapter: SectionedRecyclerViewAdapter
+    private lateinit var recyclerViewAdapter: AccountsAndTransfersListRecyclerViewAdapter
+//    private lateinit var recyclerViewAdapter: SectionedRecyclerViewAdapter
 
     override fun createViewModel(): BaseViewModel? {
         accountsAndTransfersListViewModel = ViewModelProviders.of(this).get(AccountsAndTransfersListViewModel::class.java)
@@ -33,22 +34,36 @@ class AccountsAndTransfersListFragment: BaseEngageFullscreenFragment() {
             palette = Palette
 
             recyclerView.layoutManager = LinearLayoutManager(context!!)
-//            recyclerViewAdapter = AccountsAndTransfersListRecyclerViewAdapter()
-            recyclerViewAdapter = SectionedRecyclerViewAdapter()
+            recyclerViewAdapter = AccountsAndTransfersListRecyclerViewAdapter(context!!)
+//            recyclerViewAdapter = SectionedRecyclerViewAdapter()
             recyclerView.adapter = recyclerViewAdapter
 
 
         }
 
         accountsAndTransfersListViewModel.apply {
+
             bankAccountStatusObservable.observe(this@AccountsAndTransfersListFragment, Observer {
                 when (it) {
-                    AccountsAndTransfersListViewModel.BankAccountStatus.UNVERIFIED_BANK_ACCOUNT -> {
-                        recyclerViewAdapter.addSection(HeaderLabelTitleWithSubtitleSection(), "type")
-                        recyclerViewAdapter.getSectionPosition("type")
-                        recyclerViewAdapter.notifyHeaderChangedInSection()
+                    AccountsAndTransfersListViewModel.BankAccountStatus.VERIFIED_BANK_ACCOUNT -> {
+                        recyclerViewAdapter.setAccountHeaderData("Header bank section", "SubText of Header")
                     }
                 }
+            })
+
+            achAccountListObservable.observe(this@AccountsAndTransfersListFragment, Observer {
+                recyclerViewAdapter.setAccountData(it)
+            })
+
+            achScheduledLoadListObservable.observe(this@AccountsAndTransfersListFragment, Observer {
+//                recyclerViewAdapter.setScheduledLoadData("Scheduled", it)
+                // convert list of schedule
+                recyclerViewAdapter.setScheduledLoadData("Scheduled", it)
+            })
+
+            achHistoricalLoadListObservable.observe(this@AccountsAndTransfersListFragment, Observer {
+                recyclerViewAdapter.setHistoricalLoadData("Recent Activity", it.second)
+
             })
         }
 
