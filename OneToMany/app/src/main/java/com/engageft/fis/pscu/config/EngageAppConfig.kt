@@ -25,7 +25,7 @@ object EngageAppConfig : BaseAppConfig() {
                 override val websiteUrl: String = "https://staging-pscu.engageft.com" }) {
 
         override val ipCheckUrl: String = "https://api.ipify.org/"
-        override val refCode: String = "MY_CARD_MANAGER.mydccu-android"
+        override val refCode: String = "PSCU.mydccu-android"
         override val appPushParameter: String = "MYCARDMANAGER"
         override val brand: String = "MYCARDMANAGER"
     }
