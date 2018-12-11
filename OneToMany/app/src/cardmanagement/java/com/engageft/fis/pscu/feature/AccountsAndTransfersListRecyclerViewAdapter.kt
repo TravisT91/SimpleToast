@@ -6,6 +6,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import android.view.LayoutInflater
 import android.widget.TextView
+import androidx.recyclerview.widget.DiffUtil
 import com.engageft.fis.pscu.R
 import com.ob.ws.dom.utility.AchLoadInfo
 import com.ob.ws.dom.utility.AchAccountInfo
@@ -81,29 +82,38 @@ class AccountsAndTransfersListRecyclerViewAdapter(private val context: Context):
                 }
             }
             is LabelSectionViewHolder -> {
-                val test: String = mutableList[position] as String
-                holder.labelTextView.text = test
+                holder.labelTextView.text = mutableList[position] as String
             }
             is ScheduledTransferViewHolder -> {
                 holder.apply {
                     val scheduledLoad = mutableList[position] as ScheduledLoad
-                    transferTextView.text = "Recurring Transfers"
-                    val date1 = DateTime(scheduledLoad.scheduleDate).dayOfMonth
-                    val date2 = DateTime(scheduledLoad.scheduleDate2).dayOfMonth
-                    transferSubTextView.text = DisplayDateTimeUtils.getOrdinal(context, date1) + " and " + DisplayDateTimeUtils.getOrdinal(context, date2)+ " " + ScheduledLoad.getTypeStringFromType(scheduledLoad.type)
+                    val scheduledDate = DateTime(scheduledLoad.isoNextRunDate)
+                    dayTextView.text = DisplayDateTimeUtils.getDayTwoDigits(scheduledDate)
+                    monthTextView.text = DisplayDateTimeUtils.getMonthAbbr(scheduledDate)
+
+                    transferTextView.text = "Recurring Transfer"
+                    transferSubTextView.text = ScheduledLoadUtils.getTransferDetailSimpleText(context, scheduledLoad)
+                    amountTextView.text = String.format("+$%s", scheduledLoad.amountOrig)
                 }
             }
             is HistoricalTransferViewHolder -> {
                 holder.apply {
                     val achLoadInfo = mutableList[position] as AchLoadInfo
+
+                    val loadDate = DateTime(achLoadInfo.isoLoadDate)
+                    dayTextView.text = DisplayDateTimeUtils.getDayTwoDigits(loadDate)
+                    monthTextView.text = DisplayDateTimeUtils.getMonthAbbr(loadDate)
+
                     transferTextView.text = "Bank Transfer"
                     transferSubTextView.text = "From account..." + achLoadInfo.achLastDigits
+                    amountTextView.text = String.format("+$%s", achLoadInfo.amount)
                 }
             }
         }
     }
 
     fun setAccountHeaderData(headerText: String, headerSubText: String) {
+        val oldList = mutableList.toList()
         if (mutableList.size > 0) { // removes item if already in list
             val first = mutableList[0]
             if (first is HeaderTextPair) {
@@ -112,10 +122,13 @@ class AccountsAndTransfersListRecyclerViewAdapter(private val context: Context):
         }
         val pair = HeaderTextPair(headerText, headerSubText)
         mutableList.add(0, pair)
-        notifyItemRangeChanged(0, mutableList.size)
+//        notifyItemRangeChanged(0, mutableList.size)
+        DiffUtil.calculateDiff(DiffUtilImplementation(oldList, mutableList))
+                .dispatchUpdatesTo(this)
     }
 
     fun setAccountData(accountInfoList: List<AchAccountInfo>) {
+        val oldList = mutableList.toList()
         var hasHeader = false
         if (mutableList.size > 0) { // checks if header exists
             val first = mutableList[0]
@@ -128,29 +141,34 @@ class AccountsAndTransfersListRecyclerViewAdapter(private val context: Context):
             mutableList.removeAll { it is AchAccountInfo }
         }
         mutableList.addAll(beginPosition, accountInfoList)
-        notifyItemRangeChanged(beginPosition, accountInfoList.size)
-
+//        notifyItemRangeChanged(beginPosition, accountInfoList.size)
+        DiffUtil.calculateDiff(DiffUtilImplementation(oldList, mutableList))
+                .dispatchUpdatesTo(this)
     }
 
     fun setScheduledLoadData(header: String, scheduledLoadList: List<ScheduledLoad>){
         // removes pre-existing items
         removeExistingWithHeader<ScheduledLoad>()
 
-        // adds new data
-        var insertPosition = 0
-        mutableList.forEachIndexed { index, any ->
-            if (any is HeaderTextPair || any is AchAccountInfo) {
-                insertPosition = index + 1
+        var insertPosition = mutableList.size
+        if (scheduledLoadList.isNotEmpty()) {
+            // adds new data. scheduledLoad is added after AchAccountInfo
+            mutableList.forEachIndexed { index, any ->
+                if (any is HeaderTextPair || any is AchAccountInfo) {
+                    insertPosition = index + 1
+                }
             }
+            mutableList.add(insertPosition, header)
+            mutableList.addAll(insertPosition + 1 , scheduledLoadList)
         }
-        mutableList.add(insertPosition, header)
-        mutableList.addAll(insertPosition + 1 , scheduledLoadList)
         notifyItemRangeChanged(insertPosition, scheduledLoadList.size)
     }
 
     fun setHistoricalLoadData(header: String, historicalLoadList: List<AchLoadInfo>){
-        // TODO: remove existing items
+        // removes pre-existing items
         removeExistingWithHeader<AchLoadInfo>()
+
+        // it's always added to the end of adapter list
         val insertPosition = mutableList.size
         mutableList.add(insertPosition, header)
         mutableList.addAll(insertPosition + 1 , historicalLoadList)
@@ -177,7 +195,6 @@ class AccountsAndTransfersListRecyclerViewAdapter(private val context: Context):
     }
 
     override fun getItemCount(): Int {
-        // todo: count = addition of all lists
         return mutableList.size
     }
 
@@ -206,17 +223,53 @@ class AccountsAndTransfersListRecyclerViewAdapter(private val context: Context):
     }
 
     private class ScheduledTransferViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+        val dayTextView: TextView = itemView.findViewById(R.id.dayDateTextView)
+        val monthTextView: TextView = itemView.findViewById(R.id.monthDateTextView)
         val transferTextView: TextView = itemView.findViewById(R.id.transferTextView)
         val transferSubTextView: TextView = itemView.findViewById(R.id.transferSubTextView)
+        val amountTextView: TextView = itemView.findViewById(R.id.amountTextView)
     }
 
     private class HistoricalTransferViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+        val dayTextView: TextView = itemView.findViewById(R.id.dayDateTextView)
+        val monthTextView: TextView = itemView.findViewById(R.id.monthDateTextView)
         val transferTextView: TextView = itemView.findViewById(R.id.transferTextView)
         val transferSubTextView: TextView = itemView.findViewById(R.id.transferSubTextView)
+        val amountTextView: TextView = itemView.findViewById(R.id.amountTextView)
     }
 
-    fun List<AchAccountInfo>.shouldDisplayHeader(): Boolean =
-            achAccountInfoList.isEmpty() || achAccountInfoList[0].achAccountStatus != AchAccountStatus.VERIFIED
-
     private class HeaderTextPair(val headerText: String, val headerSubtext: String)
+
+    class DiffUtilImplementation(val oldList: List<Any>, val newList: List<Any>) : DiffUtil.Callback() {
+        override fun areItemsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
+            // id are the same
+            val oldItem = oldList[oldItemPosition]
+            val newItem = newList[newItemPosition]
+            when(oldItem) {
+                is AchAccountInfo -> {
+                    return newItem is AchAccountInfo && newItem.accountId == oldItem.accountId
+                }
+                is String -> {
+                    return oldItem == newItem
+                }
+                else -> {
+                    return oldItem == newItem
+                }
+            }
+        }
+
+        override fun getOldListSize(): Int {
+            return oldList.size
+        }
+
+        override fun getNewListSize(): Int {
+            return newList.size
+        }
+
+        override fun areContentsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
+            // if IDs are same have contents changed
+            return oldList[oldItemPosition] == newList[newItemPosition]
+        }
+
+    }
 }
