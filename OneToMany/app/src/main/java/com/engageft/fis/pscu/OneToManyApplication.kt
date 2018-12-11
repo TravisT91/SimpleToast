@@ -31,13 +31,13 @@ class OneToManyApplication : LotusApplication() {
         HeapUtils.initHeap(this)
         EngageService.initService(BuildConfig.VERSION_CODE.toString(), this, EngageAppConfig.engageKitConfig)
 
-        setPaletteDefaults()
+        initPalette()
 
         Fabric.with(this, Crashlytics())
     }
 
-    fun setPaletteDefaults(){
-        Palette.setPaletteColors(
+    private fun initPalette(){
+        Palette.initPaletteColors(
             primaryColor = ContextCompat.getColor(this@OneToManyApplication, R.color.primary),
             secondaryColor = ContextCompat.getColor(this@OneToManyApplication, R.color.secondary),
             successColor = ContextCompat.getColor(this@OneToManyApplication, R.color.success),
@@ -46,7 +46,7 @@ class OneToManyApplication : LotusApplication() {
             infoColor = ContextCompat.getColor(this@OneToManyApplication, R.color.info)
         )
 
-        Palette.setFonts(
+        Palette.initFonts(
             font_regular = ResourcesCompat.getFont(this@OneToManyApplication, R.font.font_regular),
             font_bold = ResourcesCompat.getFont(this@OneToManyApplication, R.font.font_bold),
             font_italic = ResourcesCompat.getFont(this@OneToManyApplication, R.font.font_italic),

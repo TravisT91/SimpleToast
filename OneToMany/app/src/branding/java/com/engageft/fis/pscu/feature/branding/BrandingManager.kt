@@ -3,7 +3,6 @@ package com.engageft.fis.pscu.feature.branding
 import com.engageft.engagekit.EngageService
 import com.engageft.engagekit.rest.request.AuthenticatedRequest
 import com.engageft.engagekit.rest.request.RefCodeRequest
-import com.engageft.fis.pscu.OneToManyApplication
 import com.ob.ws.dom.BasicResponse
 import com.ob.ws.dom.BrandingInfoResponse
 import io.reactivex.Observable
@@ -48,14 +47,13 @@ object BrandingManager {
 
     private fun applyBrandingInfo(brandingInfoResponse: BrandingInfoResponse) {
         brandingInfoResponse.brandingInfo.apply {
-            Palette.applyColors(colors)
-            Palette.setFontsFromString(font)
-            BrandingInfo.financialInfo = financialInfo
+            Palette.applyBrandingInfo(brandingInfo = this)
+            BrandingInfoRepo.setBrandingInfo(brandingInfo = this)
         }
     }
 
     fun clearBranding() {
-        OneToManyApplication.sInstance.setPaletteDefaults()
-        BrandingInfo.resetBrandingInfo()
+        Palette.reset()
+        BrandingInfoRepo.reset()
     }
 }

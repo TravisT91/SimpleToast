@@ -3,11 +3,13 @@ package com.engageft.fis.pscu.feature
 import android.graphics.drawable.Drawable
 import android.os.Bundle
 import android.os.Handler
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.WindowManager
 import android.widget.ImageView
+import android.widget.Toast
 import androidx.annotation.ColorInt
 import androidx.core.content.ContextCompat
 import androidx.core.graphics.drawable.DrawableCompat
@@ -18,7 +20,9 @@ import com.engageft.apptoolbox.BaseViewModel
 import com.engageft.apptoolbox.view.InformationDialogFragment
 import com.engageft.fis.pscu.R
 import com.engageft.fis.pscu.databinding.FragmentCardPinBinding
+import com.engageft.fis.pscu.feature.branding.BrandingInfoRepo
 import com.engageft.fis.pscu.feature.branding.Palette
+import com.engageft.fis.pscu.feature.palettebindings.applyBranding
 import com.engageft.fis.pscu.feature.utils.cardStatusStringRes
 
 /**
@@ -46,11 +50,23 @@ class CardPinFragment : BaseEngageFullscreenFragment() {
 
         binding.apply {
             viewModel = cardPinViewModel
+            //TODO(ttkachuk) right now card types are no specified by the backend, but we will select the BrandingCard that matches debitCardInfo.cardType when the backend is updated
+            //tracked in FOTM-498
+            BrandingInfoRepo.cards?.get(0)?.let {
+                binding.cardView.applyBranding(it,cardPinViewModel.compositeDisposable) { e ->
+                    Toast.makeText(context, "Failed to retrieve card image", Toast.LENGTH_SHORT).show()
+                    Log.e("BRANDING_INFO_FAIL", e.message)
+                    //TODO(ttkachuk) right now it is not clear on how we should handle failure to retrieve the card image
+                    //tracked in FOTM-497
+                }
+            }
 
-            listOfImageViews.add(iconImageView1)
-            listOfImageViews.add(iconImageView2)
-            listOfImageViews.add(iconImageView3)
-            listOfImageViews.add(iconImageView4)
+            listOfImageViews.apply {
+                add(iconImageView1)
+                add(iconImageView2)
+                add(iconImageView3)
+                add(iconImageView4)
+            }
 
             pinLayout.setOnClickListener {
                 // requestFocus to show keyboard in case keyboard was dismissed
