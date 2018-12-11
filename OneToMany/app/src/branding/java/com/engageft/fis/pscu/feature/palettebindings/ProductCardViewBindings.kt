@@ -20,7 +20,7 @@ import io.reactivex.schedulers.Schedulers
  */
 
 fun ProductCardView.applyBranding(brandingCard: BrandingCard, cd: CompositeDisposable, onFailedToApplyBranding: ((e:Throwable) -> Unit)?) {
-    val picasso = Picasso.Builder(context).memoryCache(true).build()
+    val picasso = Picasso.Builder(context).build()
     //Using this rx solution we are able to apply the bitmap without having to worry about creating
     //a target and garbage collection, however if we want to set a placeholder image we must do so
     //in xml on the ProductCardView
