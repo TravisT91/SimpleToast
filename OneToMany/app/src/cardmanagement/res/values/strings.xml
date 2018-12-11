@@ -5,7 +5,7 @@
     <string name="TITLE_MOVE_MONEY">Move money</string>
     <string name="MOVE_MONEY_BANK_TRANSFER">Bank transfer</string>
     <string name="MOVE_MONEY_CREDIT_OR_DEBIT_CARD_LOAD">Credit or debit card load</string>
-    <string name="MOVE_MONEY_DIRECT_DEPOSIT">Direct Deposit</string>
+    <string name="MOVE_MONEY_DIRECT_DEPOSIT">Direct deposit</string>
 
     <!-- Card PIN -->
     <string name="card_pin_screen_title">Card PIN</string>
@@ -56,7 +56,7 @@
 
     <!-- Direct Deposit -->
     <string name="DIRECT_DEPOSIT_TITLE">Direct deposit</string>
-    <string name="DIRECT_DEPOSIT_HEADER_TEXT">Use the Routing Number and Account Number below to set up a direct deposit from your employer or any other benefits provider.</string>
+    <string name="DIRECT_DEPOSIT_HEADER_TEXT">Use the Routing number and Account number below to set up a direct deposit from your employer or any other benefits provider.</string>
     <string name="DIRECT_DEPOSIT_ROUTING_NUMBER">Routing number</string>
     <string name="DIRECT_DEPOSIT_ACCOUNT_NUMBER">Account number</string>
     <string name="DIRECT_DEPOSIT_ACCOUNT_TYPE">Account type</string>

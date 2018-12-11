@@ -23,11 +23,12 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
-            <androidx.appcompat.widget.AppCompatTextView
+            <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="@string/DIRECT_DEPOSIT_HEADER_TEXT"
                 parisStyle="@{palette.title4}"
+                android:lineSpacingExtra="4sp"
                 android:gravity="center"
                 android:paddingTop="32dp"
                 android:paddingBottom="32dp"
@@ -42,42 +43,38 @@
                 android:paddingEnd="16dp"
                 android:background="@color/white">
 
-                <com.engageft.apptoolbox.view.TextInputWithLabel
+                <com.engageft.apptoolbox.view.TextWithLabel
                     android:layout_marginTop="16dp"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:id="@+id/routingNumber"
-                    android:enabled="false"
                     InputWithLabel.setThemeWithPalette="@{true}"
                     app:labelText="@string/DIRECT_DEPOSIT_ROUTING_NUMBER"
                     app:inputText="@{viewModel.routingNumber}"/>
 
-                <com.engageft.apptoolbox.view.TextInputWithLabel
+                <com.engageft.apptoolbox.view.TextWithLabel
                     android:layout_marginTop="16dp"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:id="@+id/accountNumber"
-                    android:enabled="false"
                     InputWithLabel.setThemeWithPalette="@{true}"
                     app:labelText="@string/DIRECT_DEPOSIT_ACCOUNT_NUMBER"
                     app:inputText="@{viewModel.accountNumber}"/>
 
-                <com.engageft.apptoolbox.view.TextInputWithLabel
+                <com.engageft.apptoolbox.view.TextWithLabel
                     android:layout_marginTop="16dp"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:id="@+id/accountType"
-                    android:enabled="false"
                     InputWithLabel.setThemeWithPalette="@{true}"
                     app:labelText="@string/DIRECT_DEPOSIT_ACCOUNT_TYPE"
                     app:inputText="@{viewModel.accountType}"/>
 
-                <com.engageft.apptoolbox.view.TextInputWithLabel
+                <com.engageft.apptoolbox.view.TextWithLabel
                     android:layout_marginTop="16dp"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:id="@+id/bankName"
-                    android:enabled="false"
                     InputWithLabel.setThemeWithPalette="@{true}"
                     app:labelText="@string/DIRECT_DEPOSIT_BANK_NAME"
                     app:inputText="@{viewModel.bankName}"/>
