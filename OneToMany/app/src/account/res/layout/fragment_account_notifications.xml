@@ -188,7 +188,7 @@
                 android:background="@{palette.warningColor}">
 
                 <TextView
-                    style="@style/Caption1Quiet"
+                    style="@style/Body"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:paddingStart="16dp"
@@ -204,6 +204,7 @@
                     android:paddingEnd="16dp"
                     android:paddingBottom="16dp"
                     android:paddingTop="8dp"
+                    android:lineSpacingExtra="5sp"
                     android:text="@string/ALERT_SETTINGS_PUSH_DISABLED_SECTION_INSTRUCTION"/>
             </LinearLayout>
 
