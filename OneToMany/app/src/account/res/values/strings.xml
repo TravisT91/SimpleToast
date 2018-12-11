@@ -87,11 +87,11 @@
     <string name="account_notifications_screen_description">For a better experience, we recommend leaving push notifications ON.</string>
     <string name="account_notifications_screen_description_subString">ON</string>
     <string name="account_notifications_screen_footer">\u002AStandard text message rates, fees, and charges apply.</string>
-    <string name="account_notifications_push">Push Notifications</string>
+    <string name="account_notifications_push">Push notifications</string>
     <string name="account_notifications_push_disabled">Disabled</string>
-    <string name="account_notifications_sms">SMS/Text Alerts\u002A</string>
-    <string name="account_notifications_email">Email Notifications</string>
-    <string name="ALERT_SETTINGS_PUSH_DISABLED_SECTION_HEADER">Push Disabled</string>
+    <string name="account_notifications_sms">SMS/Text alerts\u002A</string>
+    <string name="account_notifications_email">Email notifications</string>
+    <string name="ALERT_SETTINGS_PUSH_DISABLED_SECTION_HEADER">Push disabled</string>
     <string name="ALERT_SETTINGS_PUSH_DISABLED_SECTION_INSTRUCTION">You currently have notifications disabled. Select to view Android Notification settings and unblock My Card Manager notifications.</string>
 
 </resources>
