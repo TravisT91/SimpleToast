@@ -104,4 +104,7 @@
     <string name="dialog_unsaved_changes_message">Would you like to leave without saving your recent changes?</string>
     <string name="dialog_unsaved_changes_positive_text">Yes</string>
     <string name="dialog_unsaved_changes_negative_text">No</string>
+
+    <!-- generic/common strings -->
+    <string name="save">Save</string>
 </resources>

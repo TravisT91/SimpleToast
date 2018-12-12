@@ -35,6 +35,12 @@ fun getInputStateList(@ColorInt focusedColor: Int, @ColorInt notFocused : Int, @
     return ColorStateList(s,c)
 }
 
+fun getSwitchColorStateList(@ColorInt checkedColor:Int, @ColorInt unCheckedColor: Int): ColorStateList {
+    val s = arrayOf(intArrayOf(android.R.attr.state_checked), intArrayOf(-android.R.attr.state_checked))
+    val c = intArrayOf(checkedColor, unCheckedColor, unCheckedColor)
+    return ColorStateList(s,c)
+}
+
 @SuppressLint("PrivateResource")
 fun getTextSizeAndTypefaceFromParisStyle(context: Context, style: Style): Pair<Float?, Typeface?> {
     val attrs = style.obtainStyledAttributes(context, R.styleable.TextAppearance)

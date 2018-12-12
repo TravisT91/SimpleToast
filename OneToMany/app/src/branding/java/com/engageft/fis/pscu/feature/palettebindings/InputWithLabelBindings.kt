@@ -19,7 +19,7 @@ import com.engageft.fis.pscu.feature.palettebindings.getTextStateList
  * Copyright (c) 2018 Engage FT. All rights reserved.
  */
 
-@BindingAdapter("inputWithLabel.setThemeWithPalette", requireAll = true)
+@BindingAdapter("InputWithLabel.setThemeWithPalette", requireAll = true)
 fun BaseInputWithLabel.setThemeWithPalette(shouldTheme: Boolean){
     if (shouldTheme) {
 

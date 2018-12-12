@@ -3,20 +3,16 @@ package com.engageft.fis.pscu.feature
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
-import android.os.Environment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
-import com.crashlytics.android.Crashlytics
 import com.engageft.apptoolbox.BaseViewModel
-import com.engageft.apptoolbox.BuildConfig
-import com.engageft.apptoolbox.view.InformationDialogFragment
 import com.engageft.fis.pscu.R
 import com.engageft.fis.pscu.databinding.FragmentCardFeatureNotAvailableBinding
-import com.engageft.fis.pscu.feature.branding.BrandingInfo
+import com.engageft.fis.pscu.feature.branding.BrandingInfoRepo
 import com.engageft.fis.pscu.feature.branding.Palette
 import utilGen1.StringUtils
 import java.lang.IllegalStateException
@@ -97,7 +93,7 @@ class CardFeatureNotAvailableFragment: BaseEngageFullscreenFragment() {
                     getString(R.string.FEATURE_NOT_AVAILABLE_HEADER_SUBSTRING))
 
             callSupportButton.setOnClickListener {
-                BrandingInfo.financialInfo?.supportNumber?.let { number ->
+                BrandingInfoRepo.financialInfo?.supportNumber?.let { number ->
                     activity?.startActivity(Intent(Intent.ACTION_DIAL).apply {
                         data = Uri.parse("tel:$number")
                     })

@@ -6,6 +6,9 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import com.engageft.apptoolbox.BaseViewModel
+import androidx.fragment.app.Fragment
+import androidx.navigation.findNavController
+import com.engageft.fis.pscu.R
 import com.engageft.fis.pscu.databinding.FragmentMoveMoneyBinding
 import com.engageft.fis.pscu.feature.branding.Palette
 
@@ -36,8 +39,7 @@ class MoveMoneyFragment : BaseEngageFullscreenFragment() {
                 Toast.makeText(context,"Credit or Debit Card Load",Toast.LENGTH_SHORT).show()
             }
             directDeposit.setOnClickListener {
-                //TODO(ttkachuk) implement on click listener
-                Toast.makeText(context,"Direct Deposit",Toast.LENGTH_SHORT).show()
+                binding.root.findNavController().navigate(R.id.action_move_money_fragment_to_directDepositFragment)
             }
         }
         return binding.root

@@ -123,6 +123,9 @@
         <action
             android:id="@+id/action_account_fragment_to_changePasswordFragment"
             app:destination="@id/changePasswordFragment" />
+        <action
+            android:id="@+id/action_account_fragment_to_accountNotificationsFragment"
+            app:destination="@id/accountNotificationsFragment" />
     </fragment>
 
     <fragment
@@ -154,6 +157,22 @@
         <argument
             android:name="@string/navigation_override_up"
             android:defaultValue="true" />
+        <action
+            android:id="@+id/action_move_money_fragment_to_directDepositFragment"
+            app:destination="@id/directDepositFragment"
+            app:enterAnim="@anim/nav_enter_anim"
+            app:exitAnim="@anim/nav_exit_anim"
+            app:popEnterAnim="@anim/nav_pop_enter_anim"
+            app:popExitAnim="@anim/nav_pop_exit_anim"/>
+    </fragment>
+
+    <fragment
+        android:id="@+id/directDepositFragment"
+        android:name="com.engageft.fis.pscu.feature.DirectDepositFragment"
+        android:label="@string/DIRECT_DEPOSIT_TITLE">
+        <action
+            android:id="@+id/action_directDepositFragment_to_webViewFragment"
+            app:destination="@id/webViewFragment_directDeposit" />
     </fragment>
 
     <!-- This is necessary for navigating from the dashboard, so that the back/up arrow is shown
@@ -165,6 +184,13 @@
         <argument
             android:name="@string/navigation_override_up"
             android:defaultValue="false" />
+        <action
+            android:id="@+id/action_move_money_fragment_to_directDepositFragment"
+            app:destination="@id/directDepositFragment"
+            app:enterAnim="@anim/nav_enter_anim"
+            app:exitAnim="@anim/nav_exit_anim"
+            app:popEnterAnim="@anim/nav_pop_enter_anim"
+            app:popExitAnim="@anim/nav_pop_exit_anim"/>
     </fragment>
 
     <fragment
@@ -197,6 +223,11 @@
         android:label="@string/statements_webView_screen_title" />
 
     <fragment
+        android:id="@+id/webViewFragment_directDeposit"
+        android:name="com.engageft.fis.pscu.feature.WebViewFragment"
+        android:label="@string/DIRECT_DEPOSIT_TITLE" />
+
+    <fragment
         android:id="@+id/changePasswordFragment"
         android:name="com.engageft.fis.pscu.feature.ChangePasswordFragment"
         android:label="@string/change_password_title" />
@@ -209,4 +240,8 @@
         android:id="@+id/goalAdd2Fragment"
         android:name="com.engageft.fis.pscu.feature.GoalAdd2Fragment"
         android:label="GoalAdd2Fragment" />
+    <fragment
+        android:id="@+id/accountNotificationsFragment"
+        android:name="com.engageft.fis.pscu.feature.AccountNotificationsFragment"
+        android:label="@string/account_notifications_screen_title" />
 </navigation>

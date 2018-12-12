@@ -9,7 +9,6 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
-import androidx.navigation.findNavController
 import androidx.navigation.fragment.findNavController
 import com.engageft.apptoolbox.BaseViewModel
 import com.engageft.apptoolbox.NavigationOverrideClickListener
@@ -121,27 +120,7 @@ class ChangePasswordFragment: BaseEngageFullscreenFragment() {
             dialogInfoObservable.observe(this@ChangePasswordFragment, Observer { dialogInfo ->
                 when (dialogInfo.dialogType) {
                     DialogInfo.DialogType.GENERIC_SUCCESS -> {
-                        val listener = object: InformationDialogFragment.InformationDialogFragmentListener {
-                            override fun onDialogFragmentNegativeButtonClicked() {
-                            }
-
-                            override fun onDialogFragmentPositiveButtonClicked() {
-                                binding.root.findNavController().popBackStack()
-                            }
-
-                            override fun onDialogCancelled() {
-                                binding.root.findNavController().popBackStack()
-                            }
-                        }
-
-                        showDialog(infoDialogGenericSuccessTitleMessageNewInstance(context!!, listener = listener))
-
-                    }
-                    DialogInfo.DialogType.GENERIC_ERROR -> {
-                        showDialog(infoDialogGenericErrorTitleMessageConditionalNewInstance(context!!, dialogInfo))
-                    }
-                    DialogInfo.DialogType.SERVER_ERROR -> {
-                        showDialog(infoDialogGenericErrorTitleMessageConditionalNewInstance(context!!, dialogInfo))
+                        showGenericSuccessDialogMessageAndPopBackstack(binding.root)
                     }
                     else -> {}
                 }

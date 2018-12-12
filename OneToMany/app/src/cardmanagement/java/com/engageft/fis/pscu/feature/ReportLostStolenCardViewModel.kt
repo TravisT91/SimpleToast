@@ -7,7 +7,6 @@ import com.engageft.engagekit.utils.LoginResponseUtils
 import com.engageft.engagekit.utils.engageApi
 import com.ob.ws.dom.BasicResponse
 import com.ob.ws.dom.LoginResponse
-import io.reactivex.disposables.CompositeDisposable
 import utilGen1.StringUtils
 
 class ReportLostStolenCardViewModel : BaseEngageViewModel() {
@@ -20,7 +19,7 @@ class ReportLostStolenCardViewModel : BaseEngageViewModel() {
         val token = EngageService.getInstance().storageManager.loginResponse.token
         val cardId = EngageService.getInstance().storageManager.currentCard.debitCardId
         engageApi().postLostStolenCard(CardRequest(token,cardId).fieldMap)
-                .subscribeWithProgressAndDefaultErrorHandling<BasicResponse>(
+                .subscribeWithDefaultProgressAndErrorHandling<BasicResponse>(
                         this, {
                     lostStolenReportedSuccess.value = true
                     EngageService.getInstance().storageManager.removeLoginResponse()
@@ -32,7 +31,7 @@ class ReportLostStolenCardViewModel : BaseEngageViewModel() {
         loginResponse?.let{ setAddressFromLoginResponse(it) } ?: run {
             progressOverlayShownObservable.value = true
             EngageService.getInstance().loginResponseAsObservable
-                    .subscribeWithProgressAndDefaultErrorHandling<LoginResponse>(
+                    .subscribeWithDefaultProgressAndErrorHandling<LoginResponse>(
                             this, { setAddressFromLoginResponse(it) })
         }
     }
