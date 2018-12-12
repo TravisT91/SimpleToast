@@ -7,7 +7,6 @@ import com.engageft.engagekit.utils.LoginResponseUtils
 import com.engageft.engagekit.utils.engageApi
 import com.ob.ws.dom.BasicResponse
 import com.ob.ws.dom.LoginResponse
-import io.reactivex.disposables.CompositeDisposable
 import utilGen1.StringUtils
 
 class ReplaceCardViewModel : BaseEngageViewModel() {
@@ -21,7 +20,7 @@ class ReplaceCardViewModel : BaseEngageViewModel() {
         val token = EngageService.getInstance().storageManager.loginResponse.token
         val cardId = EngageService.getInstance().storageManager.currentCard.debitCardId
         engageApi().postReplaceCard(CardRequest(token,cardId).fieldMap)
-                .subscribeWithProgressAndDefaultErrorHandling<BasicResponse>(
+                .subscribeWithDefaultProgressAndErrorHandling<BasicResponse>(
                         this, {
                     replacementRequestIsSuccess.value = true
                     EngageService.getInstance().storageManager.removeLoginResponse()
@@ -32,7 +31,7 @@ class ReplaceCardViewModel : BaseEngageViewModel() {
         val loginResponse = EngageService.getInstance().storageManager.loginResponse
         loginResponse?.let{ setAddressFromLoginResponse(it) } ?: run {
             EngageService.getInstance().loginResponseAsObservable
-                    .subscribeWithProgressAndDefaultErrorHandling<LoginResponse>(
+                    .subscribeWithDefaultProgressAndErrorHandling<LoginResponse>(
                             this, { setAddressFromLoginResponse(it) })
         }
     }

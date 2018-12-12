@@ -16,7 +16,7 @@ import com.engageft.fis.pscu.feature.branding.Palette
  */
 
 //Pill Button Bindings
-@BindingAdapter("setThemeFilled", requireAll = true)
+@BindingAdapter("PillButton.setThemeFilled", requireAll = true)
 fun PillButton.setThemeFilled(isFilled: Boolean){
     if (isFilled){
         this.setColorStateList(
@@ -34,7 +34,7 @@ fun PillButton.setThemeFilled(isFilled: Boolean){
     }
 }
 
-@BindingAdapter("setThemeOutlined", requireAll = true)
+@BindingAdapter("PillButton.setThemeOutlined", requireAll = true)
 fun PillButton.setThemeOutlined(isOutlined: Boolean){
     if (isOutlined){
         this.setColorStateList(

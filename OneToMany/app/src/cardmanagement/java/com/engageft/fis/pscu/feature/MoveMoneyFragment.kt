@@ -33,8 +33,7 @@ class MoveMoneyFragment : Fragment() {
                 Toast.makeText(context,"Credit or Debit Card Load",Toast.LENGTH_SHORT).show()
             }
             directDeposit.setOnClickListener {
-                //TODO(ttkachuk) implement on click listener
-                Toast.makeText(context,"Direct Deposit",Toast.LENGTH_SHORT).show()
+                binding.root.findNavController().navigate(R.id.action_move_money_fragment_to_directDepositFragment)
             }
         }
         return binding.root

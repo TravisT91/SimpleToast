@@ -31,7 +31,7 @@ open class BaseEngageViewModel: BaseViewModel() {
         // and report it essentially as a BUG. In debug builds, let's blow up in the user's face,
         // but in production, show a generic error, fail gracefully, and report it over crashlytics.
         if (BuildConfig.DEBUG) {
-            dialogInfoObservable.postValue(DialogInfo(message = response.message))
+            dialogInfoObservable.postValue(DialogInfo(response.message))
         } else {
             dialogInfoObservable.postValue(DialogInfo(dialogType = DialogInfo.DialogType.GENERIC_ERROR))
         }
@@ -74,9 +74,10 @@ open class BaseEngageViewModel: BaseViewModel() {
     }
 }
 
-inline fun <reified ExpectedClass> Observable<BasicResponse>.subscribeWithProgressAndDefaultErrorHandling(
+inline fun <reified ExpectedClass> Observable<BasicResponse>.subscribeWithDefaultProgressAndErrorHandling(
         vm: BaseEngageViewModel,
-        crossinline onNext: (ExpectedClass) -> Unit,
+        crossinline onNextSuccessful: (ExpectedClass) -> Unit,
+        noinline onNextFailed: ((BasicResponse) -> Unit)? = null,
         noinline onError: ((e: Throwable) -> Unit)? = null,
         noinline onComplete: (() -> Unit?)? = null){
     vm.progressOverlayShownObservable.value = true
@@ -84,9 +85,9 @@ inline fun <reified ExpectedClass> Observable<BasicResponse>.subscribeWithProgre
             this.subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(
                     {
                         if (it.isSuccess && it is ExpectedClass) {
-                            onNext(it)
+                            onNextSuccessful(it)
                         } else {
-                            vm.handleUnexpectedErrorResponse(it)
+                            onNextFailed?.invoke(it) ?: run { vm.handleUnexpectedErrorResponse(it) }
                         }
                     },
                     {
