@@ -150,7 +150,7 @@ class AccountsAndTransfersListRecyclerViewAdapter(
         }
         val pair = HeaderTextPair(headerText, headerSubText)
         mutableList.add(0, pair)
-        DiffUtil.calculateDiff(DiffUtilImplementation(oldList, mutableList))
+        DiffUtil.calculateDiff(CustomDiffUtil(oldList, mutableList))
                 .dispatchUpdatesTo(this)
     }
 
@@ -176,7 +176,7 @@ class AccountsAndTransfersListRecyclerViewAdapter(
         } else {
             mutableList.addAll(beginPosition, accountInfoList)
         }
-        DiffUtil.calculateDiff(DiffUtilImplementation(oldList, mutableList))
+        DiffUtil.calculateDiff(CustomDiffUtil(oldList, mutableList))
                 .dispatchUpdatesTo(this)
     }
 
@@ -196,7 +196,7 @@ class AccountsAndTransfersListRecyclerViewAdapter(
             mutableList.add(insertPosition, header)
             mutableList.addAll(insertPosition + 1 , scheduledLoadList)
         }
-        DiffUtil.calculateDiff(DiffUtilImplementation(oldList, mutableList))
+        DiffUtil.calculateDiff(CustomDiffUtil(oldList, mutableList))
                 .dispatchUpdatesTo(this)
     }
 
@@ -213,7 +213,7 @@ class AccountsAndTransfersListRecyclerViewAdapter(
             mutableList.addAll(insertPosition + 1 , historicalLoadList)
         }
 
-        DiffUtil.calculateDiff(DiffUtilImplementation(oldList, mutableList))
+        DiffUtil.calculateDiff(CustomDiffUtil(oldList, mutableList))
                 .dispatchUpdatesTo(this)
     }
 
@@ -282,7 +282,7 @@ class AccountsAndTransfersListRecyclerViewAdapter(
 
     private inner class HeaderTextPair(val headerText: String, val headerSubtext: String)
 
-    class DiffUtilImplementation(private val oldList: List<Any>, private val newList: List<Any>) : DiffUtil.Callback() {
+    class CustomDiffUtil(private val oldList: List<Any>, private val newList: List<Any>) : DiffUtil.Callback() {
         override fun areItemsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
             // id are the same
             val oldItem = oldList[oldItemPosition]

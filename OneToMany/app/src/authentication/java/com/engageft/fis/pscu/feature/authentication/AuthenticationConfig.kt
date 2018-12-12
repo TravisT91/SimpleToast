@@ -9,8 +9,7 @@ package com.engageft.fis.pscu.feature.authentication
  * Copyright (c) 2018 Engage FT. All rights reserved.
  */
 object AuthenticationConfig {
-    // todo: fotm-111 undo
-    const val requireEmailConfirmation: Boolean = false
+    const val requireEmailConfirmation: Boolean = true
 
     // TODO(aHashimi): cases such as when the app doesn't allow demo either in production or demo
     const val demoAccountAvailable: Boolean = true

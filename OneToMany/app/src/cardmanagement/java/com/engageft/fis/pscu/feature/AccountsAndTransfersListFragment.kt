@@ -7,7 +7,6 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
-import androidx.navigation.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.engageft.apptoolbox.BaseViewModel
 import com.engageft.fis.pscu.R
@@ -54,7 +53,6 @@ class AccountsAndTransfersListFragment: BaseEngageFullscreenFragment() {
 
             binding.createTransferButton.setOnClickListener {
                 //TODO(aHashimi): FOTM-113
-                binding.root.findNavController().navigate(R.id.action_accountsAndTransfersListFragment_to_copyrightFragment)
             }
         }
 

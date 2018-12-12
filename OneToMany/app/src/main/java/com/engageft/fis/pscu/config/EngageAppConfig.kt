@@ -17,18 +17,15 @@ object EngageAppConfig : BaseAppConfig() {
     override val engageKitConfig: EngageKitConfig = object : EngageKitConfig(
 
             devEnvironment = object : EngageKitConfig.EngageKitEnvironment() {
-//                override val serviceUrl: String = "https://appdemo.engageft-008.com"
-                override val serviceUrl: String = "https://appdemo.engageft-006.com"
-                override val websiteUrl: String = "https://dev-care.engageft.com" },
-//                override val websiteUrl: String = "https://test-pscu.engageft.com" },
+                override val serviceUrl: String = "https://appdemo.engageft-008.com"
+                override val websiteUrl: String = "https://test-pscu.engageft.com" },
 
             prodEnvironment = object : EngageKitConfig.EngageKitEnvironment() {
                 override val serviceUrl: String = "https://app.engageft-008.com"
                 override val websiteUrl: String = "https://staging-pscu.engageft.com" }) {
 
         override val ipCheckUrl: String = "https://api.ipify.org/"
-//        override val refCode: String = "MY_CARD_MANAGER.mydccu-android"
-        override val refCode: String = "care-android"
+        override val refCode: String = "PSCU.mydccu-android"
         override val appPushParameter: String = "MYCARDMANAGER"
         override val brand: String = "MYCARDMANAGER"
     }
