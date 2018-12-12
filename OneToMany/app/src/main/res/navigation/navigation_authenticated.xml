@@ -159,6 +159,7 @@
             android:defaultValue="true" />
         <action
             android:id="@+id/action_move_money_fragment_to_directDepositFragment"
+            app:destination="@id/directDepositFragment"
             app:enterAnim="@anim/nav_enter_anim"
             app:exitAnim="@anim/nav_exit_anim"
             app:popEnterAnim="@anim/nav_pop_enter_anim"
