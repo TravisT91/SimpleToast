@@ -53,7 +53,7 @@ class AccountSettingsFragment : LotusFullScreenFragment() {
                 binding.root.findNavController().navigate(R.id.action_account_fragment_to_changeSecurityQuestionsFragment)
             }
             notifications.setOnClickListener {
-                //TODO(ttkachuk) implement onCLick
+                binding.root.findNavController().navigate(R.id.action_account_fragment_to_accountNotificationsFragment)
             }
             statements.setOnClickListener {
                 binding.root.findNavController().navigate(R.id.action_account_fragment_to_statementsFragment)

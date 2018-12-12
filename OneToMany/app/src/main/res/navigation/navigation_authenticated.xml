@@ -120,6 +120,9 @@
         <action
             android:id="@+id/action_account_fragment_to_changePasswordFragment"
             app:destination="@id/changePasswordFragment" />
+        <action
+            android:id="@+id/action_account_fragment_to_accountNotificationsFragment"
+            app:destination="@id/accountNotificationsFragment" />
     </fragment>
 
     <fragment
@@ -236,4 +239,10 @@
         android:id="@+id/cardPinFragment"
         android:name="com.engageft.fis.pscu.feature.CardPinFragment"
         android:label="@string/card_pin_screen_title" />
+    <fragment
+        android:id="@+id/accountNotificationsFragment"
+        android:name="com.engageft.fis.pscu.feature.AccountNotificationsFragment"
+        android:label="@string/account_notifications_screen_title" />
+
+
 </navigation>

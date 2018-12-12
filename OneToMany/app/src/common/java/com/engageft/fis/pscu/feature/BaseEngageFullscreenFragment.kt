@@ -3,9 +3,11 @@ package com.engageft.fis.pscu.feature
 import android.os.Bundle
 import android.view.View
 import androidx.lifecycle.Observer
+import androidx.navigation.findNavController
 import com.crashlytics.android.Crashlytics
 import com.engageft.apptoolbox.BuildConfig
 import com.engageft.apptoolbox.LotusFullScreenFragment
+import com.engageft.apptoolbox.view.InformationDialogFragment
 import com.engageft.fis.pscu.R
 import com.engageft.fis.pscu.feature.palettebindings.applyPaletteStyles
 
@@ -19,20 +21,19 @@ import com.engageft.fis.pscu.feature.palettebindings.applyPaletteStyles
  * Copyright (c) 2018 Engage FT. All rights reserved.
  */
 abstract class BaseEngageFullscreenFragment : LotusFullScreenFragment() {
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         viewModel?.let {
             if (it is BaseEngageViewModel) {
-                it.dialogInfoObservable.observe(this, Observer {
-                    when (it.dialogType) {
+                it.dialogInfoObservable.observe(this, Observer { dialogInfo ->
+                    when (dialogInfo.dialogType) {
                         DialogInfo.DialogType.GENERIC_ERROR -> {
-                            showDialog(infoDialogGenericErrorTitleMessageConditionalNewInstance(
-                                    context!!, it)
+                            showDialog(infoDialogGenericErrorTitleMessageConditionalNewInstance(context!!, dialogInfo)
                                     .apply { applyPaletteStyles(this@BaseEngageFullscreenFragment.context!!) })
                         }
                         DialogInfo.DialogType.SERVER_ERROR -> {
-                            showDialog(infoDialogGenericErrorTitleMessageConditionalNewInstance(
-                                    context!!, it)
+                            showDialog(infoDialogGenericErrorTitleMessageConditionalNewInstance(context!!, dialogInfo)
                                     .apply { applyPaletteStyles(this@BaseEngageFullscreenFragment.context!!) })
                         }
                         DialogInfo.DialogType.NO_INTERNET_CONNECTION -> {
@@ -54,6 +55,23 @@ abstract class BaseEngageFullscreenFragment : LotusFullScreenFragment() {
                 })
             }
         }
+    }
+
+    fun showGenericSuccessDialogMessageAndPopBackstack(view: View) {
+        val listener = object: InformationDialogFragment.InformationDialogFragmentListener {
+            override fun onDialogFragmentNegativeButtonClicked() {
+            }
+
+            override fun onDialogFragmentPositiveButtonClicked() {
+                view.findNavController().popBackStack()
+            }
+
+            override fun onDialogCancelled() {
+                view.findNavController().popBackStack()
+            }
+        }
+
+        showDialog(infoDialogGenericSuccessTitleMessageNewInstance(context!!, listener = listener))
     }
 
     fun handleGenericThrowable(e: Throwable) {
