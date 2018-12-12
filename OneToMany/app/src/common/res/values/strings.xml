@@ -99,7 +99,12 @@
     <string name="NO_PDF_APP_FOUND_MESSAGE">Would you like to find an application to view PDF documents in the Play Store?</string>
     <string name="WEBVIEW_NO_EMAIL_CLIENT_FOUND">No email client app found!</string>
 
+    <!-- Unsaved Changes Resources -->
+    <string name="dialog_unsaved_changes_title">Leave without saving?</string>
+    <string name="dialog_unsaved_changes_message">Would you like to leave without saving your recent changes?</string>
+    <string name="dialog_unsaved_changes_positive_text">Yes</string>
+    <string name="dialog_unsaved_changes_negative_text">No</string>
+
     <!-- generic/common strings -->
     <string name="save">Save</string>
-
 </resources>
