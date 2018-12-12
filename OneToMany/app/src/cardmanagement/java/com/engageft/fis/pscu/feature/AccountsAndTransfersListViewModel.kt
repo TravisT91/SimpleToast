@@ -39,6 +39,11 @@ class AccountsAndTransfersListViewModel: BaseEngageViewModel() {
         VERIFIED_BANK_ACCOUNT
     }
 
+    enum class ButtonState {
+        HIDE,
+        SHOW
+    }
+
     enum class Transfers {
         SCHEDULED_TRANSFERS,
         HISTORICAL_TRANSFERS
@@ -49,10 +54,11 @@ class AccountsAndTransfersListViewModel: BaseEngageViewModel() {
 //        HISTORICAL_TRANSFERS
 //    }
     // todo: would make more sense to display Pair<BankAccountStatus, mutableListOf<AchAccountInfo>()>
-    var bankAccountStatusObservable = MutableLiveData<BankAccountStatus>()
-    var achAccountListObservable = MutableLiveData<List<AchAccountInfo>>()
+//    var achAccountsListAndStatusObservable = MutableLiveData<BankAccountStatus>()
+    var achAccountsListAndStatusObservable = MutableLiveData<Pair<BankAccountStatus, List<AchAccountInfo>>>()
     var achScheduledLoadListObservable = MutableLiveData<List<ScheduledLoad>>()
     var achHistoricalLoadListObservable = MutableLiveData<Pair<List<AchAccountInfo>, List<AchLoadInfo>>>()
+    var buttonStateObservable = MutableLiveData<ButtonState>()
 
     init {
         progressOverlayShownObservable.value = true
@@ -181,22 +187,31 @@ class AccountsAndTransfersListViewModel: BaseEngageViewModel() {
 
     private fun initBankAccountStatus() {
         if (achAccountInfoList.isNotEmpty()) {
+
             var verified = false
             for (achAccountInfo in achAccountInfoList) {
                 if (achAccountInfo.achAccountStatus == AchAccountStatus.VERIFIED) {
-                    bankAccountStatusObservable.value = BankAccountStatus.VERIFIED_BANK_ACCOUNT
+                    achAccountsListAndStatusObservable.value = Pair<BankAccountStatus, List<AchAccountInfo>>(
+                            first = BankAccountStatus.VERIFIED_BANK_ACCOUNT,
+                            second = achAccountInfoList)
                     verified = true
                     break
                 }
             }
             if (!verified) {
-                bankAccountStatusObservable.value = BankAccountStatus.UNVERIFIED_BANK_ACCOUNT
+                achAccountsListAndStatusObservable.value = Pair<BankAccountStatus, List<AchAccountInfo>>(
+                        first = BankAccountStatus.UNVERIFIED_BANK_ACCOUNT,
+                        second = achAccountInfoList)
             }
+
+            buttonStateObservable.value = ButtonState.SHOW
         } else {
-            bankAccountStatusObservable.value = BankAccountStatus.NO_BANK_ACCOUNT
+            achAccountsListAndStatusObservable.value = Pair<BankAccountStatus, List<AchAccountInfo>>(
+                    first = BankAccountStatus.NO_BANK_ACCOUNT,
+                    second = achAccountInfoList)
+
+            buttonStateObservable.value = ButtonState.HIDE
         }
-        //
-        achAccountListObservable.value = achAccountInfoList
     }
 
 }

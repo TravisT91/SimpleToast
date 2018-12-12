@@ -1,6 +1,5 @@
 package utilGen1
 
-
 import android.content.Context
 import com.engageft.fis.pscu.R
 import com.ob.ws.dom.utility.AchAccountInfo
@@ -15,13 +14,13 @@ import com.ob.ws.dom.utility.AchAccountInfo
  */
 object AchAccountInfoUtils {
 
-    fun accountDescriptionForDisplay(context: Context, achAccountInfo: AchAccountInfo?): String {
+    fun accountDescriptionForDisplay(context: Context, achAccountInfo: AchAccountInfo): String {
         // achAccountInfo can be null if the accountId passed in the AchLoadInfo doesn't match an existing account
         if (achAccountInfo == null) {
             return String.format("%s %s", context.getString(R.string.BANKACCOUNT_NAME_UNKNOWN), context.getString(R.string.BANKACCOUNT_DESCRIPTION))
         }
         // TODO(aHashimi): maybe this should be format string?
-        return String.format("%s %s %s", achAccountInfo.bankName, context.getString(R.string.BANKACCOUNT_DESCRIPTION), achAccountInfo.accountLastDigits)
+        return String.format(context.getString(R.string.BANKACCOUNT_DESCRIPTION_FORMAT), achAccountInfo.bankName, achAccountInfo.accountLastDigits)
 
     }
 

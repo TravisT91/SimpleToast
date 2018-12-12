@@ -1,23 +1,30 @@
 package com.engageft.fis.pscu.feature
 
 import android.content.Context
+import android.util.Log
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import android.view.LayoutInflater
 import android.widget.TextView
+import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.DiffUtil
 import com.engageft.fis.pscu.R
 import com.ob.ws.dom.utility.AchLoadInfo
 import com.ob.ws.dom.utility.AchAccountInfo
 import com.engageft.engagekit.model.ScheduledLoad
+import com.engageft.fis.pscu.generated.callback.OnClickListener
 import com.ob.domain.lookup.AchAccountStatus
 import org.joda.time.DateTime
+import utilGen1.AchAccountInfoUtils
 import utilGen1.DisplayDateTimeUtils
 import utilGen1.ScheduledLoadUtils
 
 //class AccountsAndTransfersListRecyclerViewAdapter(val accountClickListener: () -> Unit): RecyclerView.Adapter<RecyclerView.ViewHolder>() {
-class AccountsAndTransfersListRecyclerViewAdapter(private val context: Context): RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+class AccountsAndTransfersListRecyclerViewAdapter(
+        private val context: Context,
+        val achAccountClickListener: AchAccountInfoClickListener,
+        val scheduledTransferClickListener: ScheduledLoadListClickListener): RecyclerView.Adapter<RecyclerView.ViewHolder>() {
     // todo: create different viewHolders to readability
     // todo: data binding with recyclerView?
 
@@ -27,6 +34,9 @@ class AccountsAndTransfersListRecyclerViewAdapter(private val context: Context):
         const val TYPE_HISTORICAL_LOAD = 2
         const val TYPE_LABEL = 3
         const val TYPE_ACH_ACCOUNT_HEADER = 4
+        const val TYPE_BANK_ACCOUNT_NONE = 5
+
+        const val EMPTY_LIST_ACCOUNT_ID: Long = -1
     }
 
     private val mutableList = mutableListOf<Any>()
@@ -73,11 +83,21 @@ class AccountsAndTransfersListRecyclerViewAdapter(private val context: Context):
             is BankAccountsViewHolder -> {
                 holder.apply {
                     val achAccountInfo: AchAccountInfo = mutableList[position] as AchAccountInfo
-                    bankNameTextView.text = achAccountInfo.bankName
-                    bankStatusTextView.text = when (achAccountInfo.achAccountStatus) {
-                        AchAccountStatus.VERIFIED -> "Verified"
-                        AchAccountStatus.REMOVED -> "Removed"
-                        else -> "Unverified"
+                    // check if item is empty placeholder achAccountInfo
+                    if (achAccountInfo.achAccountId == EMPTY_LIST_ACCOUNT_ID) {
+                        bankStatusTextView.visibility = View.GONE
+                        bankNameTextView.text = context.getString(R.string.ach_bank_transfer_add_bank)
+                        bankNameTextView.setTextColor(ContextCompat.getColor(context, R.color.textSecondary))
+                    } else {
+                        bankNameTextView.text = AchAccountInfoUtils.accountDescriptionForDisplay(context, achAccountInfo)
+                        bankStatusTextView.text = when (achAccountInfo.achAccountStatus) {
+                            AchAccountStatus.VERIFIED -> context.getString(R.string.ach_bank_transfer_status_verified)
+                            else -> context.getString(R.string.ach_bank_transfer_status_unverified)
+                        }
+                    }
+
+                    holder.itemView.setOnClickListener {
+                        achAccountClickListener.onAchAccountInfoClicked(achAccountInfo.achAccountId)
                     }
                 }
             }
@@ -91,9 +111,13 @@ class AccountsAndTransfersListRecyclerViewAdapter(private val context: Context):
                     dayTextView.text = DisplayDateTimeUtils.getDayTwoDigits(scheduledDate)
                     monthTextView.text = DisplayDateTimeUtils.getMonthAbbr(scheduledDate)
 
-                    transferTextView.text = "Recurring Transfer"
+                    transferTextView.text = context.getString(R.string.ach_bank_transfer_recurring_transfer)
                     transferSubTextView.text = ScheduledLoadUtils.getTransferDetailSimpleText(context, scheduledLoad)
-                    amountTextView.text = String.format("+$%s", scheduledLoad.amountOrig)
+                    amountTextView.text = formatAchIncomingBankTransferAmount(context, scheduledLoad.amountOrig)
+
+                    holder.itemView.setOnClickListener {
+                        scheduledTransferClickListener.onScheduledTransferClicked(scheduledLoad.scheduledLoadId)
+                    }
                 }
             }
             is HistoricalTransferViewHolder -> {
@@ -104,9 +128,9 @@ class AccountsAndTransfersListRecyclerViewAdapter(private val context: Context):
                     dayTextView.text = DisplayDateTimeUtils.getDayTwoDigits(loadDate)
                     monthTextView.text = DisplayDateTimeUtils.getMonthAbbr(loadDate)
 
-                    transferTextView.text = "Bank Transfer"
-                    transferSubTextView.text = "From account..." + achLoadInfo.achLastDigits
-                    amountTextView.text = String.format("+$%s", achLoadInfo.amount)
+                    transferTextView.text = context.getString(R.string.ach_bank_transfer)
+                    transferSubTextView.text = String.format(context.getString(R.string.ach_bank_transfer_from_format), achLoadInfo.achLastDigits)
+                    amountTextView.text = formatAchIncomingBankTransferAmount(context, achLoadInfo.amount)
                 }
             }
         }
@@ -127,7 +151,7 @@ class AccountsAndTransfersListRecyclerViewAdapter(private val context: Context):
                 .dispatchUpdatesTo(this)
     }
 
-    fun setAccountData(accountInfoList: List<AchAccountInfo>) {
+    fun setAchAccountData(accountInfoList: List<AchAccountInfo>) {
         val oldList = mutableList.toList()
         var hasHeader = false
         if (mutableList.size > 0) { // checks if header exists
@@ -140,7 +164,15 @@ class AccountsAndTransfersListRecyclerViewAdapter(private val context: Context):
         if (mutableList.size > beginPosition) { // removes items if already in list
             mutableList.removeAll { it is AchAccountInfo }
         }
-        mutableList.addAll(beginPosition, accountInfoList)
+
+        // check if list is empty, which means an AchAccountInfo doesn't exist
+        if (accountInfoList.isEmpty()) {
+            val placeholder = AchAccountInfo()
+            placeholder.achAccountId = EMPTY_LIST_ACCOUNT_ID
+            mutableList.add(beginPosition, placeholder)
+        } else {
+            mutableList.addAll(beginPosition, accountInfoList)
+        }
 //        notifyItemRangeChanged(beginPosition, accountInfoList.size)
         DiffUtil.calculateDiff(DiffUtilImplementation(oldList, mutableList))
                 .dispatchUpdatesTo(this)
@@ -208,6 +240,11 @@ class AccountsAndTransfersListRecyclerViewAdapter(private val context: Context):
         }
     }
 
+    private fun formatAchIncomingBankTransferAmount(context: Context, amount: String): String {
+        // TODO(aHashimi): when ACH out is supported this string format needs to change as well
+        return String.format(context.getString(R.string.ach_bank_transfer_amount_incoming_format), amount)
+    }
+
     private class AchAccountHeaderViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val titleTextView: TextView = itemView.findViewById(R.id.titleTextView)
         val subtitleTextView: TextView = itemView.findViewById(R.id.subtitleTextView)
@@ -238,7 +275,7 @@ class AccountsAndTransfersListRecyclerViewAdapter(private val context: Context):
         val amountTextView: TextView = itemView.findViewById(R.id.amountTextView)
     }
 
-    private class HeaderTextPair(val headerText: String, val headerSubtext: String)
+    private inner class HeaderTextPair(val headerText: String, val headerSubtext: String)
 
     class DiffUtilImplementation(val oldList: List<Any>, val newList: List<Any>) : DiffUtil.Callback() {
         override fun areItemsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
@@ -271,5 +308,15 @@ class AccountsAndTransfersListRecyclerViewAdapter(private val context: Context):
             return oldList[oldItemPosition] == newList[newItemPosition]
         }
 
+    }
+
+    interface ScheduledLoadListClickListener {
+        //TODO(aHashimi): FOTM-113, should pass object's ID?
+        fun onScheduledTransferClicked(scheduledLoadInfoId: Long)
+    }
+
+    interface AchAccountInfoClickListener {
+        //TODO(aHashimi): FOTM-65, should pass object's ID?
+        fun onAchAccountInfoClicked(achAccountInfoId: Long)
     }
 }

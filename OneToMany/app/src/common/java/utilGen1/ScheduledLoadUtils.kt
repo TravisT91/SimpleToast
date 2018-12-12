@@ -2,25 +2,15 @@ package utilGen1
 
 import android.content.Context
 import android.text.TextUtils
-
-import com.engageft.engagekit.model.FundDebitSource
 import com.engageft.engagekit.model.ScheduledLoad
 import com.engageft.engagekit.utils.BackendDateTimeUtils
 import com.engageft.engagekit.utils.LoginResponseUtils
 import com.engageft.fis.pscu.R
 import com.ob.ws.dom.LoginResponse
 import com.ob.ws.dom.ScheduledLoadsResponse
-import com.ob.ws.dom.utility.AchAccountInfo
 import com.ob.ws.dom.utility.ScheduledLoadInfo
-
-import org.joda.time.DateTime
-
 import java.math.BigDecimal
-import java.util.ArrayList
-import java.util.Collections
-import java.util.Locale
-
-import utilGen1.DisplayDateTimeUtils
+import java.util.*
 
 /**
  * TODO: CLASS NAME
@@ -37,7 +27,6 @@ object ScheduledLoadUtils {
     fun getIncomeScheduledLoads(scheduledLoadsResponse: ScheduledLoadsResponse): MutableList<ScheduledLoad> {
         val incomeLoads = mutableListOf<ScheduledLoadInfo>()
 
-        //todo kotlinize
         if (scheduledLoadsResponse.scheduledLoads != null) {
             for (scheduledLoad in scheduledLoadsResponse.scheduledLoads) {
                 if (scheduledLoad.isExternal) {
@@ -242,8 +231,6 @@ object ScheduledLoadUtils {
                     DisplayDateTimeUtils.getDayOrdinal(context, scheduledDate2!!))
         } else if (ScheduledLoad.SCHED_LOAD_TYPE_WEEKLY == scheduledLoad.typeString) {
             return String.format(context.getString(R.string.TRANSFER_WEEKLY_SIMPLE_LOAD_DESCRIPTION), nextRunDate!!.dayOfWeek().getAsText(Locale.getDefault()))
-        } else if (ScheduledLoad.SCHED_LOAD_TYPE_ALT_WEEKLY == scheduledLoad.typeString) {
-            return String.format(context.getString(R.string.TRANSFER_ALT_WEEKLY_SIMPLE_LOAD_DESCRIPTION), nextRunDate!!.dayOfWeek().getAsText(Locale.getDefault()))
         }
 
         return ""

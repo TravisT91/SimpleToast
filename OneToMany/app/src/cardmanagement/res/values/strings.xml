@@ -54,118 +54,51 @@
     <string name="FEATURE_NOT_AVAILABLE_CANCEL">We can’t cancel your card because it is currently inactive. For more information, please contact customer support.</string>
     <string name="FEATURE_NOT_AVAILABLE_UNKNOWN_FEATURE_TITLE">Feature unavailable</string>
 
-    //TODO(aHashimi) remove unused strings
+    <!-- TODO(aHashimi) remove unused strings after FOTM-111, FOTM-113, and FOTM-65 is complete -->
+    <!-- Move Money Strings -->
     <!-- transfer screens -->
-    <string name="TRANSFER_LIST_VIEW_HEADER">Bank Transfers</string>
-    <string name="TRANSFER_LIST_NONE">No Transfers</string>
-    <string name="TRANSFER_VIEW_HEADER">Transfer Money</string>
-    <string name="TRANSFER_CREATE_SUBHEADER">Create a new transfer.</string>
     <string name="TRANSFER_MONTHLY_TEXT">Once a Month</string>
     <string name="TRANSFER_TWICE_MONTHLY_TEXT">Twice a Month</string>
     <string name="TRANSFER_WEEKLY_TEXT">Once a Week</string>
     <string name="TRANSFER_ALT_WEEKLY_TEXT">Every Other Week</string>
     <string name="TRANSFER_ONCE_TEXT">One Time</string>
-    <string name="TRANSFER_VALID_DAY_ALERT">Enter a valid day of the month.</string>
-    <string name="TRANSFER_VALUE_DAY_ALERT">Enter a value for day of the month.</string>
-    <!-- Non-flavor specific versions, and override in flavors to include the flavor name if desired. -->
-    <string name="TRANSFER_ONETIME_SUCCESS_FORMAT">One time transfer of %s initiated from %s to Millennial Showcase.\n\nYour transfer may take 3 to 5 business days to complete.</string>
-    <!-- Non-flavor specific versions, and override in flavors to include the flavor name if desired. -->
-    <string name="TRANSFER_OUT_ONETIME_SUCCESS_FORMAT">One time transfer of %s initiated from Millennial Showcase to %s.\n\nYour transfer may take 3 to 5 business days to complete.</string>
-    <string name="TRANSFER_SCHEDULED_SUCCESS">Your scheduled transfer of %s was saved.</string>
-    <string name="TRANSFER_SAVE_BUTTON">Transfer</string>
-    <string name="TRANSFER_DISABLED_TEXT">You must have a verified bank account to create a transfer.</string>
-    <string name="TRANSFER_FIELD_AMOUNT_LABEL">How much are you transferring?</string>
-    <string name="TRANSFER_FIELD_FREQUENCY_LABEL">Transfer Frequency</string>
-    <string name="TRANSFER_FIELD_FREQUENCY_DESC">How often do you want to move money to Millennial Showcase?</string>
-    <string name="TRANSFER_FIELD_ACCOUNT_LABEL">From Account</string>
-    <string name="TRANSFER_TO_FIELD_ACCOUNT_LABEL">To Account</string>
-    <string name="TRANSFER_APP_LABEL">Millennial Showcase</string>
-    <string name="TRANSFER_CANNOT_CHANGE_FREQUENCY">Cannot set frequency when transferring out of Millennial Showcase</string>
-    <string name="TRANSFER_FIELD_START_DATE_LABEL">Starting Date</string>
-    <string name="TRANSFER_FIELD_DAY_WEEK_LABEL">Day of the Week</string>
-    <string name="TRANSFER_ACH_OWNER_TEXT">Owner:</string>
-    <string name="TRANSFER_ACH_PENDING_TEXT">Pending Verification</string>
-    <string name="TRANSFER_ACH_VERIFIED">Verified</string>
-    <string name="TRANSFER_AMOUNT_SELECT">Transfer</string>
-    <!-- followed by text field -->
-    <string name="TRANSFER_AMOUNT_OTHER_PLACEHOLDER">enter amount</string>
-    <string name="TRANSFER_ON_LABEL">Transfer on</string>
-    <!-- followed by day field -->
-    <string name="TRANSFER_AND_LABEL">and</string>
-    <!-- followed by day field -->
-    <string name="TRANSFER_MONTH_LABEL">of the month</string>
-    <!-- after day field -->
-    <string name="TRANSFER_START_DATE_LABEL">Starting on</string>
-    <!-- followed by date field -->
-    <string name="TRANSFER_ONETIME_FROM_ALERT">Please select a from account</string>
-    <string name="TRANSFER_ONETIME_AMOUNT_ALERT">Please enter an amount</string>
-    <string name="TRANSFER_ONETIME_CONFIRM_SUBHEADER">Confirm Information</string>
-    <string name="TRANSFER_ONETIME_SUCCESS_SUBHEADER">Transfer Complete!</string>
-    <!-- add money options -->
-    <string name="MENU_BANK_TRANSFER">Bank Transfer</string>
-    <string name="MENU_BANK_TRANSFER_DETAIL">link to checking or savings account</string>
-    <string name="MENU_MOBILE_DEPOSITS">Check Deposit</string>
-    <string name="MENU_MOBILE_DEPOSITS_DETAIL">New - mobile check capture</string>
     <!-- plugs in day, bank and last 4 -->
-    <string name="TRANSFER_MONTHLY_SIMPLE_LOAD_DESCRIPTION">(transferring - %s)</string>
-    <string name="TRANSFER_TWICE_MONTHLY_SIMPLE_LOAD_DESCRIPTION">(transferring - %1$s and %2$s)</string>
-    <string name="TRANSFER_WEEKLY_SIMPLE_LOAD_DESCRIPTION">(transferring - every %s)</string>
-    <string name="TRANSFER_ALT_WEEKLY_SIMPLE_LOAD_DESCRIPTION">(transferring - every other %s)</string>
-    <string name="NEXT_TRANSFER_ON">Next transfer on</string>
-    <string name="TRANSFER_ACCOUNT_DESCRIPTION">%1$s (...%2$s)</string>
+    <string name="TRANSFER_MONTHLY_SIMPLE_LOAD_DESCRIPTION">%s of each month</string>
+    <string name="TRANSFER_TWICE_MONTHLY_SIMPLE_LOAD_DESCRIPTION">%s and %s of each month</string>
+    <string name="TRANSFER_WEEKLY_SIMPLE_LOAD_DESCRIPTION">every %s</string>
+    <string name="TRANSFER_ACCOUNT_DESCRIPTION">%1$s (…%2$s)</string>
+
     <!-- pay -->
-    <string name="PAY_REQUEST_TITLE">Pay or Request</string>
-    <string name="PAY_TITLE">Pay</string>
-    <string name="PAY_STEP_SUBTITLE">Step %1$d of %2$d</string> <!-- insert numbers -->
-    <string name="PAY_FORMAT">Pay %s</string>
-    <string name="PAY_CONFIRM_MESSAGE">You\'re sending %s</string> <!-- insert amount -->
-    <string name="PAY_CONFIRM_DISCLAIMER">*External funds transfer services provided by Cross River Bank, Member FDIC.</string>
-    <string name="REQUEST_TITLE">Request</string>
-    <string name="REQUEST_FORMAT">Request %s</string>
-    <string name="REQUEST_CONFIRM_MESSAGE">You\'re requesting %s</string> <!-- insert amount -->
-    <string name="PAY_SUCCESS_TITLE">Payment Sent</string>
-    <string name="PAY_SUCCESS_SUBTITLE">You sent %s. Millennial Showcase users receive money as soon as it is sent.</string> <!-- insert amount -->
-    <string name="PAY_SUCCESS_MULTI_SUBTITLE">You sent %1$s (%2$dx). Millennial Showcase users receive money as soon as it is sent.</string> <!-- insert amount, number -->
-    <string name="REQUEST_SUCCESS_TITLE">Request Sent</string>
-    <string name="REQUEST_SUCCESS_SUBTITLE">You requested %s</string> <!-- insert amount -->
-    <string name="PAY_REQUEST_SELECT_CONTACTS">Please specify one or more contacts</string>
-    <string name="PAY_REQUEST_NO_CONTACTS_ACCESS">No access to contacts for searching. Enable in Settings.</string>
-    <string name="PAY_INSUFFICIENT_FUNDS_FMT">Insufficient funds on card to make payment. Current balance: %s.</string>
-    <string name="PAY_ONLY_MILLENNIAL_MEMBERS">You can only send money to other Millennial members.</string>
-    <string name="PAY_REQUEST_ONLY_MILLENNIAL_MEMBERS">You can only send money requests to other Millennial members.</string>
-    <string name="PAY_REMOVE_NON_MILLENNIAL_MEMBERS">We\'ll automatically remove the contacts that aren\'t signed up yet.</string>
-    <string name="PAY_SEND_RECEIVE_TITLE">Send / Receive Money</string>
-    <string name="PAY_CREATE_BTN">Create</string>
-    <string name="PAY_ACTIVITY_BTN">Activity</string>
-    <string name="PAY_HISTORY_HEADER_TITLE">Your Latest Activity</string>
-    <string name="PAY_SEARCH_HISTORY_PLACEHOLDER">Search Activity</string>
-    <string name="PAY_SENT_MONEY">Sent Money</string>
-    <string name="PAY_RECEIVED_MONEY">Received Money</string>
-    <string name="PAY_SEND_REQUEST">Request to Send Money</string>
-    <string name="PAY_RECEIVE_REQUEST">Request to Receive Money</string>
     <string name="PAY_TO_FMT">to %s</string>
-    <string name="PAY_TO_FOR_FMT">to %1$s for %2$s</string>
     <string name="PAY_FROM_FMT">from %s</string>
-    <string name="PAY_FROM_FOR_FMT">from %1$s for %2$s</string>
-    <string name="PAY_BUTTON_PAY">Pay</string>
-    <string name="PAY_BUTTON_CANCEL">Cancel</string>
-    <string name="PAY_DISMISS_CONFIRM">You\'re dismissing this request</string>
-    <string name="PAY_DELETE_REQUEST_TITLE">Delete Request</string>
-    <string name="PAY_DELETE_REQUEST_FMT">Delete request to receive money from %s?</string>
-    <string name="PAY_DELETE_REQUEST_BUTTON">Delete Request</string>
-    <string name="PAY_PAYMENT_ACCEPTED">Paid</string>
-    <string name="PAY_PAYMENT_REJECTED">Rejected</string>
-    <string name="AMOUNT_0_INVALID">Enter an amount over $0.</string>
+
     <!-- income methods -->
     <string name="DIRECT_DEPOSIT">Direct Deposit</string>
     <string name="BANK_TRANSFER">Bank Transfer</string>
     <string name="CASH">Cash</string>
     <string name="FUND_DEBIT_CARD">Debit Card</string>
-    <!-- ach screen -->
-    <string name="BANKACCOUNT_DESCRIPTION_FORMAT">%1$s Account (…%2$s)</string>
+
+    <!-- ACH Bank Transfer -->
+    <string name="BANKACCOUNT_DESCRIPTION_FORMAT">%1$s (…%2$s)</string>
     <string name="BANKACCOUNT_DESCRIPTION">Account</string>
     <string name="BANKACCOUNT_NAME_UNKNOWN">Unknown</string>
     <string name="TEXT_CHECKING">Checking</string>
     <string name="TEXT_SAVINGS">Savings</string>
+
+    <string name="ach_bank_transfer_screen_title">ACH bank transfer</string>
+    <string name="ach_bank_transfer_create_transfer">Create transfer</string>
+    <string name="ach_bank_transfer_verify_account">Verify account</string>
+    <string name="ach_bank_transfer_header_title">Transfer money to your My Card Manager account.</string>
+    <string name="ach_bank_transfer_header_description">You must have a verified bank account to create a transfer.</string>
+    <string name="ach_bank_transfer_status_verified">Verified</string>
+    <string name="ach_bank_transfer_status_unverified">Unverified</string>
+    <string name="ach_bank_transfer_add_bank">Add a bank account</string>
+    <string name="ach_bank_transfer_recurring_transfer">Recurring transfer</string>
+    <string name="ach_bank_transfer">Bank transfer</string>
+    <string name="ach_bank_transfer_scheduled">Scheduled</string>
+    <string name="ach_bank_transfer_recent_activity">Recent activity</string>
+    <string name="ach_bank_transfer_amount_incoming_format">+$%s</string>
+    <string name="ach_bank_transfer_from_format">From account …%s</string>
+    <!--End of Move Money strings-->
 
 </resources>
