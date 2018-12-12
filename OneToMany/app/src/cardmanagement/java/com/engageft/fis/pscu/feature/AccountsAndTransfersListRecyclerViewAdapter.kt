@@ -1,7 +1,6 @@
 package com.engageft.fis.pscu.feature
 
 import android.content.Context
-import android.util.Log
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
@@ -13,20 +12,17 @@ import com.engageft.fis.pscu.R
 import com.ob.ws.dom.utility.AchLoadInfo
 import com.ob.ws.dom.utility.AchAccountInfo
 import com.engageft.engagekit.model.ScheduledLoad
-import com.engageft.fis.pscu.generated.callback.OnClickListener
 import com.ob.domain.lookup.AchAccountStatus
 import org.joda.time.DateTime
 import utilGen1.AchAccountInfoUtils
 import utilGen1.DisplayDateTimeUtils
 import utilGen1.ScheduledLoadUtils
 
-//class AccountsAndTransfersListRecyclerViewAdapter(val accountClickListener: () -> Unit): RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 class AccountsAndTransfersListRecyclerViewAdapter(
         private val context: Context,
-        val achAccountClickListener: AchAccountInfoClickListener,
-        val scheduledTransferClickListener: ScheduledLoadListClickListener): RecyclerView.Adapter<RecyclerView.ViewHolder>() {
-    // todo: create different viewHolders to readability
-    // todo: data binding with recyclerView?
+        private val achAccountClickListener: AchAccountInfoClickListener,
+        private val scheduledTransferClickListener: ScheduledLoadListClickListener): RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+
 
     private companion object {
         const val TYPE_ACCOUNT = 0
@@ -34,17 +30,25 @@ class AccountsAndTransfersListRecyclerViewAdapter(
         const val TYPE_HISTORICAL_LOAD = 2
         const val TYPE_LABEL = 3
         const val TYPE_ACH_ACCOUNT_HEADER = 4
-        const val TYPE_BANK_ACCOUNT_NONE = 5
 
         const val EMPTY_LIST_ACCOUNT_ID: Long = -1
     }
 
     private val mutableList = mutableListOf<Any>()
 
-    private val achAccountInfoList = mutableListOf<AchAccountInfo>()
-//    private val historicalAccountInfoList = mutableListOf<ScheduledLoad>()
-//    private val scheduledLoadList = mutableListOf<ScheduledLoad>()
-//    private val historicalLoadList = mutableListOf<AchLoadInfo>()
+    override fun getItemCount(): Int {
+        return mutableList.size
+    }
+
+    override fun getItemViewType(position: Int): Int {
+        return when(mutableList[position]) {
+            is HeaderTextPair -> TYPE_ACH_ACCOUNT_HEADER
+            is AchAccountInfo -> TYPE_ACCOUNT
+            is ScheduledLoad -> TYPE_SCHEDULED_LOAD
+            is AchLoadInfo -> TYPE_HISTORICAL_LOAD
+            else -> TYPE_LABEL
+        }
+    }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         return when (viewType) {
@@ -146,7 +150,6 @@ class AccountsAndTransfersListRecyclerViewAdapter(
         }
         val pair = HeaderTextPair(headerText, headerSubText)
         mutableList.add(0, pair)
-//        notifyItemRangeChanged(0, mutableList.size)
         DiffUtil.calculateDiff(DiffUtilImplementation(oldList, mutableList))
                 .dispatchUpdatesTo(this)
     }
@@ -173,14 +176,14 @@ class AccountsAndTransfersListRecyclerViewAdapter(
         } else {
             mutableList.addAll(beginPosition, accountInfoList)
         }
-//        notifyItemRangeChanged(beginPosition, accountInfoList.size)
         DiffUtil.calculateDiff(DiffUtilImplementation(oldList, mutableList))
                 .dispatchUpdatesTo(this)
     }
 
-    fun setScheduledLoadData(header: String, scheduledLoadList: List<ScheduledLoad>){
+    fun setScheduledLoadData(header: String, scheduledLoadList: List<ScheduledLoad>) {
+        val oldList = mutableList.toList()
         // removes pre-existing items
-        removeExistingWithHeader<ScheduledLoad>()
+        removeExistingWithLabelItem<ScheduledLoad>()
 
         var insertPosition = mutableList.size
         if (scheduledLoadList.isNotEmpty()) {
@@ -193,50 +196,52 @@ class AccountsAndTransfersListRecyclerViewAdapter(
             mutableList.add(insertPosition, header)
             mutableList.addAll(insertPosition + 1 , scheduledLoadList)
         }
-        notifyItemRangeChanged(insertPosition, scheduledLoadList.size)
+        DiffUtil.calculateDiff(DiffUtilImplementation(oldList, mutableList))
+                .dispatchUpdatesTo(this)
     }
 
-    fun setHistoricalLoadData(header: String, historicalLoadList: List<AchLoadInfo>){
+    fun setHistoricalLoadData(header: String, historicalLoadList: List<AchLoadInfo>) {
+        val oldList = mutableList.toList()
         // removes pre-existing items
-        removeExistingWithHeader<AchLoadInfo>()
+        removeExistingWithLabelItem<AchLoadInfo>()
 
-        // it's always added to the end of adapter list
         val insertPosition = mutableList.size
-        mutableList.add(insertPosition, header)
-        mutableList.addAll(insertPosition + 1 , historicalLoadList)
-        notifyItemRangeChanged(insertPosition, historicalLoadList.size)
+
+        if (historicalLoadList.isNotEmpty()) {
+            mutableList.add(insertPosition, header)
+            // it's always added to the end of adapter list
+            mutableList.addAll(insertPosition + 1 , historicalLoadList)
+        }
+
+        DiffUtil.calculateDiff(DiffUtilImplementation(oldList, mutableList))
+                .dispatchUpdatesTo(this)
     }
 
-    private inline fun <reified T> removeExistingWithHeader() {
-        var existingAchLoadInfoBegin = -1
-        kotlin.run search@{
-            //label to exit loop early
+    private inline fun <reified T> removeExistingWithLabelItem() {
+        var existingTransferLoadBegin = -1
+        kotlin.run search@{ //label to exit loop early
             mutableList.forEachIndexed { index, any ->
                 if (any is T) {
-                    if (existingAchLoadInfoBegin == -1) {
-                        existingAchLoadInfoBegin = index
+                    if (existingTransferLoadBegin == -1) {
+                        existingTransferLoadBegin = index
                         return@search
                     }
                 }
             }
         }
         mutableList.removeAll { it is T }
-        if (existingAchLoadInfoBegin != -1) { // remove old header
-            mutableList.removeAt(existingAchLoadInfoBegin - 1)
-        }
-    }
 
-    override fun getItemCount(): Int {
-        return mutableList.size
-    }
-
-    override fun getItemViewType(position: Int): Int {
-        return when(mutableList[position]) {
-            is HeaderTextPair -> TYPE_ACH_ACCOUNT_HEADER
-            is AchAccountInfo -> TYPE_ACCOUNT
-            is ScheduledLoad -> TYPE_SCHEDULED_LOAD
-            is AchLoadInfo -> TYPE_HISTORICAL_LOAD
-            else -> TYPE_LABEL
+        // remove old label section
+        kotlin.run search@{
+            if (existingTransferLoadBegin != -1) {
+                mutableList.forEachIndexed { index, any ->
+                    // label found is the above the list items being removed
+                    if (any is String && index < existingTransferLoadBegin) {
+                        mutableList.removeAt(existingTransferLoadBegin - 1)
+                        return@search
+                    }
+                }
+            }
         }
     }
 
@@ -277,14 +282,24 @@ class AccountsAndTransfersListRecyclerViewAdapter(
 
     private inner class HeaderTextPair(val headerText: String, val headerSubtext: String)
 
-    class DiffUtilImplementation(val oldList: List<Any>, val newList: List<Any>) : DiffUtil.Callback() {
+    class DiffUtilImplementation(private val oldList: List<Any>, private val newList: List<Any>) : DiffUtil.Callback() {
         override fun areItemsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
             // id are the same
             val oldItem = oldList[oldItemPosition]
             val newItem = newList[newItemPosition]
             when(oldItem) {
                 is AchAccountInfo -> {
-                    return newItem is AchAccountInfo && newItem.accountId == oldItem.accountId
+                    return newItem is AchAccountInfo && newItem.achAccountId == oldItem.achAccountId
+                }
+                is ScheduledLoad -> {
+                    return newItem is ScheduledLoad && newItem.scheduledLoadId == oldItem.scheduledLoadId
+                }
+                is AchLoadInfo -> {
+                    return newItem is AchLoadInfo && newItem.loadId == oldItem.loadId
+                }
+                is HeaderTextPair -> {
+                    return newItem is HeaderTextPair && newItem.headerText == oldItem.headerText &&
+                            newItem.headerSubtext == oldItem.headerSubtext
                 }
                 is String -> {
                     return oldItem == newItem

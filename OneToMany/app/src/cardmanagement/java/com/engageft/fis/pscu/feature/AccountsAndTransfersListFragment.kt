@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
+import androidx.navigation.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.engageft.apptoolbox.BaseViewModel
 import com.engageft.fis.pscu.R
@@ -38,18 +39,23 @@ class AccountsAndTransfersListFragment: BaseEngageFullscreenFragment() {
                         override fun onAchAccountInfoClicked(achAccountInfoId: Long) {
                             //TODO(aHashimi): https://engageft.atlassian.net/browse/FOTM-65
                             //TODO(aHashimi): the new screen must check -1 which means CREATE a new bank transfer acct otherwise it's EDIT
-                            Toast.makeText(this@AccountsAndTransfersListFragment.context, "on Ach Account clicked! ID = $achAccountInfoId", Toast.LENGTH_SHORT).show()
+                            Toast.makeText(context!!, "on Ach Account clicked! ID = $achAccountInfoId", Toast.LENGTH_SHORT).show()
                         }
                     },
 
                     object: AccountsAndTransfersListRecyclerViewAdapter.ScheduledLoadListClickListener {
                         override fun onScheduledTransferClicked(scheduledLoadInfoId: Long) {
                             //TODO(aHashimi): https://engageft.atlassian.net/browse/FOTM-113
-                            Toast.makeText(this@AccountsAndTransfersListFragment.context, "on scheduled load clicked! ID = $scheduledLoadInfoId", Toast.LENGTH_SHORT).show()
+                            Toast.makeText(context!!, "on scheduled load clicked! ID = $scheduledLoadInfoId", Toast.LENGTH_SHORT).show()
                         }
                     })
 
             recyclerView.adapter = recyclerViewAdapter
+
+            binding.createTransferButton.setOnClickListener {
+                //TODO(aHashimi): FOTM-113
+                binding.root.findNavController().navigate(R.id.action_accountsAndTransfersListFragment_to_copyrightFragment)
+            }
         }
 
         accountsAndTransfersListViewModel.apply {
@@ -83,10 +89,16 @@ class AccountsAndTransfersListFragment: BaseEngageFullscreenFragment() {
             })
 
             achHistoricalLoadListObservable.observe(this@AccountsAndTransfersListFragment, Observer {
-                recyclerViewAdapter.setHistoricalLoadData(getString(R.string.ach_bank_transfer_recent_activity), it.second)
+                recyclerViewAdapter.setHistoricalLoadData(getString(R.string.ach_bank_transfer_recent_activity), it)
             })
         }
 
         return binding.root
+    }
+
+    override fun onResume() {
+        super.onResume()
+        //TODO(aHashimi): should replace with MutableLiveData<loginResponse> in VM?
+        accountsAndTransfersListViewModel.refreshViews()
     }
 }

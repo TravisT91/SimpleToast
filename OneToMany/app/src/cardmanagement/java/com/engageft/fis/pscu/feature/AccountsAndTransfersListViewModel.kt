@@ -11,16 +11,11 @@ import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 import com.ob.ws.dom.ScheduledLoadsResponse
 import com.ob.ws.dom.utility.DebitCardInfo
-import com.ob.ws.dom.FundingAccountsResponse
-import com.engageft.engagekit.rest.request.FundingAccountsRequest
 import com.engageft.engagekit.utils.BackendDateTimeUtils
 import com.ob.ws.dom.AchLoadsResponse
 import com.engageft.engagekit.rest.request.CardRequest
 import com.engageft.engagekit.utils.LoginResponseUtils
-import com.engageft.engagekit.utils.engageApi
 import utilGen1.ScheduledLoadUtils
-import java.util.*
-
 
 class AccountsAndTransfersListViewModel: BaseEngageViewModel() {
 
@@ -29,9 +24,6 @@ class AccountsAndTransfersListViewModel: BaseEngageViewModel() {
     }
 
     private var achAccountInfoList = mutableListOf<AchAccountInfo>()
-    private var historicalAccountInfoList = mutableListOf<AchAccountInfo>()
-    private var scheduledLoadList = mutableListOf<ScheduledLoad>()
-    private var historicalLoadList = mutableListOf<AchLoadInfo>()
 
     enum class BankAccountStatus {
         NO_BANK_ACCOUNT,
@@ -44,37 +36,45 @@ class AccountsAndTransfersListViewModel: BaseEngageViewModel() {
         SHOW
     }
 
-    enum class Transfers {
-        SCHEDULED_TRANSFERS,
-        HISTORICAL_TRANSFERS
-    }
-
-//    enum class Transfers {
-//        SCHEDULED_TRANSFERS,
-//        HISTORICAL_TRANSFERS
-//    }
-    // todo: would make more sense to display Pair<BankAccountStatus, mutableListOf<AchAccountInfo>()>
-//    var achAccountsListAndStatusObservable = MutableLiveData<BankAccountStatus>()
     var achAccountsListAndStatusObservable = MutableLiveData<Pair<BankAccountStatus, List<AchAccountInfo>>>()
     var achScheduledLoadListObservable = MutableLiveData<List<ScheduledLoad>>()
-    var achHistoricalLoadListObservable = MutableLiveData<Pair<List<AchAccountInfo>, List<AchLoadInfo>>>()
+    var achHistoricalLoadListObservable = MutableLiveData<List<AchLoadInfo>>()
     var buttonStateObservable = MutableLiveData<ButtonState>()
 
+    private var loginResponse: LoginResponse? = null
+
     init {
+        initBankAccountsListAndTransfersList()
+    }
+
+    fun refreshViews() {
+        //TODO(aHashimi): need to create LiveData for observing LoginResponse so we don't have to do this step.
+        //TODO(aHashimi): FOTM-65 & FOTM-113 must do clearLoginResponse
+        // for this main screen to show the updated to item correctly.
+        if (this.loginResponse != EngageService.getInstance().storageManager.loginResponse) {
+            initBankAccountsListAndTransfersList()
+        }
+    }
+
+    private fun initBankAccountsListAndTransfersList() {
         progressOverlayShownObservable.value = true
 
         compositeDisposable.add(EngageService.getInstance().loginResponseAsObservable
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe({ response ->
-                    progressOverlayShownObservable.value = false
+                    // don't hide progressOverlay just yet
                     if (response is LoginResponse) {
+                        loginResponse = response
+
                         achAccountInfoList = response.achAccountList
                         val currentCard = LoginResponseUtils.getCurrentCard(response)
-                        initBankAccountStatus()
-                        // first get scheduled load list, then get historical ach bank account list, at last get the historical loads
-                        getScheduledLoads(currentCard, true)
+                        // the order of invoking these methods don't matter
+                        initBankAccountStatusAndList()
+                        getScheduledLoads(currentCard)
+                        getHistoricalLoads(currentCard)
                     } else {
+                        progressOverlayShownObservable.value = false
                         handleUnexpectedErrorResponse(response)
                     }
                 }, { e ->
@@ -84,71 +84,21 @@ class AccountsAndTransfersListViewModel: BaseEngageViewModel() {
         )
     }
 
-    private fun getScheduledLoads(currentCard: DebitCardInfo, getHistoricalLoadsOnSuccess: Boolean) {
-        //todo show/hide progress
+    private fun getScheduledLoads(currentCard: DebitCardInfo) {
         compositeDisposable.add(
                 EngageService.getInstance().getScheduledLoadsResponseObservable(EngageService.getInstance().authManager.authToken, currentCard, false)
                         .subscribeOn(Schedulers.io())
                         .observeOn(AndroidSchedulers.mainThread())
                         .subscribe({ response ->
-                            if (response.isSuccess && response.javaClass == ScheduledLoadsResponse::class.java) {
-                                val scheduledLoadsResponse = response as ScheduledLoadsResponse
-//                                scheduledLoadList = ScheduledLoadUtils.getScheduledLoads(scheduledLoadsResponse).toMutableList()
-                                achScheduledLoadListObservable.value = ScheduledLoadUtils.getScheduledLoads(scheduledLoadsResponse)
-//                                convertToScheduledLoadDisplay(ScheduledLoadUtils.getScheduledLoads(scheduledLoadsResponse))
-                                if (getHistoricalLoadsOnSuccess) {
-                                    getAccountsList(currentCard)
-                                } else {
-//                                    hideProgressOverlay()
-//                                    setupRecyclerView()
-                                }
+                            if (response.isSuccess && response is ScheduledLoadsResponse) {
+                                achScheduledLoadListObservable.value = ScheduledLoadUtils.getScheduledLoads(response)
                             } else {
-//                                hideProgressOverlay()
-//                                handleErrorResponse(response)
-//                                setupRecyclerView()
+                                progressOverlayShownObservable.value = false
+                                handleUnexpectedErrorResponse(response)
                             }
                         }, { e ->
-//                            hideProgressOverlay()
+                            progressOverlayShownObservable.value = false
                             handleThrowable(e)
-//                            setupRecyclerView()
-                        })
-        )
-    }
-
-//    private fun convertToScheduledLoadDisplay(scheduledLoads: List<ScheduledLoad>) {
-//        // loop thru
-//        val test = ScheduledLoadUtils.getAccountDetailText(context, scheduledLoad, loginResponse)
-//
-//    }
-
-    /**
-     * Attempts to retrieve a list of all accounts used in past transfers, even those no longer configured as active in the app,
-     * so that the list of historical transfers can accurately display the bank name involved in each one. If this step fails,
-     * the list is still displayed but in each case the bank involved will be listed as "Unknown Account".
-     *
-     * @param currentCard the current card
-     */
-    //todo
-    private fun getAccountsList(currentCard: DebitCardInfo) {
-        // todo show/hide progress
-        progressOverlayShownObservable.value = true
-        val accountsRequest = FundingAccountsRequest(EngageService.getInstance().authManager.authToken)
-        compositeDisposable.add(engageApi().postListFundingAccounts(accountsRequest.fieldMap)
-                        .subscribeOn(Schedulers.io())
-                        .observeOn(Schedulers.computation())
-                        .subscribe({ response ->
-                            // the call follows by getHistoricalLoads() so don't hide progressOverlay yet.
-                            historicalAccountInfoList = if (response.isSuccess && response is FundingAccountsResponse ) {
-                                response.achAccountList.toMutableList()
-                            } else {
-                                // set to empty list
-                                mutableListOf()
-                            }
-                            getHistoricalLoads(currentCard)
-                        }, { e ->
-                            // set to empty list
-                            historicalAccountInfoList = mutableListOf()
-                            getHistoricalLoads(currentCard)
                         })
         )
     }
@@ -160,32 +110,28 @@ class AccountsAndTransfersListViewModel: BaseEngageViewModel() {
                         .subscribeOn(Schedulers.io())
                         .observeOn(AndroidSchedulers.mainThread())
                         .subscribe({ response ->
-                            progressOverlayShownObservable.postValue(false)
-                            if (response.isSuccess && response.javaClass == AchLoadsResponse::class.java) {
-                                val loads = (response as AchLoadsResponse).loads
+                            progressOverlayShownObservable.value = false
+                            if (response.isSuccess && response is AchLoadsResponse) {
+                                val loads = response.loads
                                 // sort by date
                                 loads.sortWith(Comparator { one, two ->
                                     val date1 = BackendDateTimeUtils.parseDateTimeFromIso8601String(one.isoLoadDate)
                                     val date2 = BackendDateTimeUtils.parseDateTimeFromIso8601String(two.isoLoadDate)
                                     date2!!.compareTo(date1)
                                 })
-                                historicalLoadList = loads.subList(0, Math.min(loads.size, HISTORICAL_LOADS_LIST_MAX_COUNT))
-                                achHistoricalLoadListObservable.value = Pair<List<AchAccountInfo>, List<AchLoadInfo>>(
-                                        first = achAccountInfoList, second = historicalLoadList)
-//                                setupRecyclerView()
+                                val historicalLoadList = loads.subList(0, Math.min(loads.size, HISTORICAL_LOADS_LIST_MAX_COUNT))
+                                achHistoricalLoadListObservable.value = historicalLoadList
                             } else {
                                 handleUnexpectedErrorResponse(response)
-//                                setupRecyclerView()
                             }
                         }, { e ->
-                            progressOverlayShownObservable.postValue(false)
+                            progressOverlayShownObservable.value = false
                             handleThrowable(e)
-//                            setupRecyclerView()
                         })
         )
     }
 
-    private fun initBankAccountStatus() {
+    private fun initBankAccountStatusAndList() {
         if (achAccountInfoList.isNotEmpty()) {
 
             var verified = false
@@ -213,5 +159,4 @@ class AccountsAndTransfersListViewModel: BaseEngageViewModel() {
             buttonStateObservable.value = ButtonState.HIDE
         }
     }
-
 }
