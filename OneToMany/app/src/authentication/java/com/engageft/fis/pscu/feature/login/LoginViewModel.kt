@@ -1,6 +1,5 @@
 package com.engageft.fis.pscu.feature.login
 
-import android.util.Log
 import androidx.databinding.Observable
 import androidx.databinding.ObservableField
 import androidx.lifecycle.MutableLiveData
@@ -15,12 +14,10 @@ import com.engageft.fis.pscu.feature.WelcomeSharedPreferencesRepo
 import com.engageft.fis.pscu.feature.authentication.AuthenticationConfig
 import com.engageft.fis.pscu.feature.authentication.AuthenticationSharedPreferencesRepo
 import com.engageft.fis.pscu.feature.branding.BrandingManager
-import com.engageft.fis.pscu.feature.subscribeWithProgressAndDefaultErrorHandling
+import com.engageft.fis.pscu.feature.subscribeWithDefaultProgressAndErrorHandling
 import com.ob.ws.dom.BrandingInfoResponse
 import com.ob.ws.dom.DeviceFailResponse
 import com.ob.ws.dom.LoginResponse
-import com.ob.ws.dom.TokenResponse
-import com.ob.ws.dom.tag.TokenRequest
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 
@@ -213,7 +210,7 @@ class LoginViewModel : BaseEngageViewModel() {
                                 { response ->
                                     if (response.isSuccess && response is LoginResponse) {
                                         BrandingManager.getBrandingWithToken(response.token)
-                                                .subscribeWithProgressAndDefaultErrorHandling<BrandingInfoResponse>(
+                                                .subscribeWithDefaultProgressAndErrorHandling<BrandingInfoResponse>(
                                                         this, { handleSuccessfulLoginResponse(response)})
                                     } else if (response is DeviceFailResponse) {
                                         progressOverlayShownObservable.value = false

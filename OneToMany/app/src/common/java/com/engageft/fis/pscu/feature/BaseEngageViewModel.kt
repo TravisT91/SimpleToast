@@ -74,9 +74,10 @@ open class BaseEngageViewModel: BaseViewModel() {
     }
 }
 
-inline fun <reified ExpectedClass> Observable<BasicResponse>.subscribeWithProgressAndDefaultErrorHandling(
+inline fun <reified ExpectedClass> Observable<BasicResponse>.subscribeWithDefaultProgressAndErrorHandling(
         vm: BaseEngageViewModel,
-        crossinline onNext: (ExpectedClass) -> Unit,
+        crossinline onNextSuccessful: (ExpectedClass) -> Unit,
+        noinline onNextFailed: ((BasicResponse) -> Unit)? = null,
         noinline onError: ((e: Throwable) -> Unit)? = null,
         noinline onComplete: (() -> Unit?)? = null){
     vm.progressOverlayShownObservable.value = true
@@ -84,9 +85,9 @@ inline fun <reified ExpectedClass> Observable<BasicResponse>.subscribeWithProgre
             this.subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(
                     {
                         if (it.isSuccess && it is ExpectedClass) {
-                            onNext(it)
+                            onNextSuccessful(it)
                         } else {
-                            vm.handleUnexpectedErrorResponse(it)
+                            onNextFailed?.invoke(it) ?: run { vm.handleUnexpectedErrorResponse(it) }
                         }
                     },
                     {
