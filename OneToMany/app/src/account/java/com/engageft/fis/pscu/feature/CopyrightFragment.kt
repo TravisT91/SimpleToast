@@ -5,10 +5,9 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.engageft.apptoolbox.BaseViewModel
-import com.engageft.apptoolbox.LotusFullScreenFragment
 import com.engageft.fis.pscu.databinding.FragmentCopyrightBinding
 
-class CopyrightFragment: LotusFullScreenFragment() {
+class CopyrightFragment: BaseEngageFullscreenFragment() {
 
     override fun createViewModel(): BaseViewModel? {
         return null

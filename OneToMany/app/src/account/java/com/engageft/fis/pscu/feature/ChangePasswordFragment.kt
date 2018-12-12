@@ -1,10 +1,18 @@
 package com.engageft.fis.pscu.feature
 
 import android.os.Bundle
-import android.view.*
+import android.view.LayoutInflater
+import android.view.Menu
+import android.view.MenuInflater
+import android.view.MenuItem
+import android.view.View
+import android.view.ViewGroup
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
+import androidx.navigation.fragment.findNavController
 import com.engageft.apptoolbox.BaseViewModel
+import com.engageft.apptoolbox.NavigationOverrideClickListener
+import com.engageft.apptoolbox.view.InformationDialogFragment
 import com.engageft.fis.pscu.R
 import com.engageft.fis.pscu.databinding.FragmentChangePasswordBinding
 
@@ -25,8 +33,34 @@ class ChangePasswordFragment: BaseEngageFullscreenFragment() {
         return changePasswordViewModel
     }
 
+    private val navigationOverrideClickListener = object : NavigationOverrideClickListener {
+        override fun onClick(): Boolean {
+            return if (changePasswordViewModel.hasUnsavedChanges()) {
+                showDialog(infoDialogGenericUnsavedChangesNewInstance(context = activity!!, listener = unsavedChangesDialogListener))
+                true
+            } else {
+                false
+            }
+        }
+    }
+
+    private val unsavedChangesDialogListener = object : InformationDialogFragment.InformationDialogFragmentListener {
+        override fun onDialogFragmentPositiveButtonClicked() {
+            findNavController().navigateUp()
+        }
+        override fun onDialogFragmentNegativeButtonClicked() {
+            // Do nothing.
+        }
+        override fun onDialogCancelled() {
+            // Do nothing.
+        }
+    }
+
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val binding = FragmentChangePasswordBinding.inflate(inflater, container, false)
+
+        upButtonOverrideProvider.setUpButtonOverride(navigationOverrideClickListener)
+        backButtonOverrideProvider.setBackButtonOverride(navigationOverrideClickListener)
 
         binding.apply {
             viewModel = changePasswordViewModel

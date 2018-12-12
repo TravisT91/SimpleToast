@@ -7,7 +7,7 @@ import android.view.ViewGroup
 import androidx.appcompat.widget.AppCompatImageView
 import androidx.databinding.DataBindingUtil
 import com.engageft.apptoolbox.BaseViewModel
-import com.engageft.apptoolbox.LotusFullScreenFragment
+import com.engageft.apptoolbox.LotusSubFragment
 import com.engageft.fis.pscu.R
 import com.engageft.fis.pscu.databinding.FragmentWelcomeSharedBinding
 
@@ -19,7 +19,7 @@ import com.engageft.fis.pscu.databinding.FragmentWelcomeSharedBinding
  * Created by Atia Hashimi 11/6/2018.
  * Copyright (c) 2018 Engage FT. All rights reserved.
  */
-class Welcome5Fragment: LotusFullScreenFragment() {
+class Welcome5Fragment: LotusSubFragment() {
 
     lateinit var binding: FragmentWelcomeSharedBinding
 

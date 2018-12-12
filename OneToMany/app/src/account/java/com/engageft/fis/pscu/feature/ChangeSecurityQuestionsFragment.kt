@@ -10,8 +10,9 @@ import android.view.ViewGroup
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.navigation.findNavController
+import androidx.navigation.fragment.findNavController
 import com.engageft.apptoolbox.BaseViewModel
-import com.engageft.apptoolbox.LotusFullScreenFragment
+import com.engageft.apptoolbox.NavigationOverrideClickListener
 import com.engageft.apptoolbox.ViewUtils.newLotusInstance
 import com.engageft.apptoolbox.view.InformationDialogFragment
 import com.engageft.fis.pscu.R
@@ -27,8 +28,32 @@ import com.engageft.fis.pscu.feature.branding.Palette
  * Created by joeyhutchins on 11/12/18.
  * Copyright (c) 2018 Engage FT. All rights reserved.
  */
-class ChangeSecurityQuestionsFragment : LotusFullScreenFragment() {
+class ChangeSecurityQuestionsFragment : BaseEngageFullscreenFragment() {
     private lateinit var changeSecurityQuestionsViewModel: ChangeSecurityQuestionsViewModel
+
+    private val navigationOverrideClickListener = object : NavigationOverrideClickListener {
+        override fun onClick(): Boolean {
+            return if (changeSecurityQuestionsViewModel.hasUnsavedChanges()) {
+                showDialog(infoDialogGenericUnsavedChangesNewInstance(context = activity!!, listener = unsavedChangesDialogListener))
+                true
+            } else {
+                false
+            }
+        }
+    }
+
+    private val unsavedChangesDialogListener = object : InformationDialogFragment.InformationDialogFragmentListener {
+        override fun onDialogFragmentPositiveButtonClicked() {
+            findNavController().navigateUp()
+        }
+        override fun onDialogFragmentNegativeButtonClicked() {
+            // Do nothing.
+        }
+        override fun onDialogCancelled() {
+            // Do nothing.
+        }
+    }
+
     override fun createViewModel(): BaseViewModel? {
         changeSecurityQuestionsViewModel = ViewModelProviders.of(this).get(ChangeSecurityQuestionsViewModel::class.java)
         return changeSecurityQuestionsViewModel
@@ -38,6 +63,9 @@ class ChangeSecurityQuestionsFragment : LotusFullScreenFragment() {
         val binding = FragmentChangeSecurityQuestionsBinding.inflate(inflater, container, false)
         binding.viewModel = changeSecurityQuestionsViewModel
         binding.palette = Palette
+
+        upButtonOverrideProvider.setUpButtonOverride(navigationOverrideClickListener)
+        backButtonOverrideProvider.setBackButtonOverride(navigationOverrideClickListener)
 
         changeSecurityQuestionsViewModel.modeObservable.observe(this, Observer {mode ->
             when (mode) {
