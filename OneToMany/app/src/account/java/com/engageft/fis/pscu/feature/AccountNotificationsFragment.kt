@@ -23,7 +23,7 @@ import kotlinx.android.synthetic.main.fragment_account_notifications.*
 /**
  * AccountNotificationsFragment
  * </p>
- * Fragment that handles account notifications
+ * Fragment for managing Push, SMS, and email notifications settings
  * </p>
  * Created by Atia Hashimi 12/07/18
  * Copyright (c) 2018 Engage FT. All rights reserved.

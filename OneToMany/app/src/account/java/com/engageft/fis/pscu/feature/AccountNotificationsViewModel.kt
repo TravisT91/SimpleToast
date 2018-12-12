@@ -16,7 +16,7 @@ import io.reactivex.schedulers.Schedulers
 /**
  * AccountNotificationsViewModel
  * </p>
- * View Model that handles account notifications
+ * View Model that handles account notifications settings
  * </p>
  * Created by Atia Hashimi 12/07/18
  * Copyright (c) 2018 Engage FT. All rights reserved.

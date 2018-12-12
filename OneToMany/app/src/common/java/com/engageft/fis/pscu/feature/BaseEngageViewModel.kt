@@ -31,7 +31,7 @@ open class BaseEngageViewModel: BaseViewModel() {
         // and report it essentially as a BUG. In debug builds, let's blow up in the user's face,
         // but in production, show a generic error, fail gracefully, and report it over crashlytics.
         if (BuildConfig.DEBUG) {
-            dialogInfoObservable.postValue(DialogInfo(message = response.toString()))
+            dialogInfoObservable.postValue(DialogInfo(response.message))
         } else {
             dialogInfoObservable.postValue(DialogInfo(dialogType = DialogInfo.DialogType.GENERIC_ERROR))
         }
