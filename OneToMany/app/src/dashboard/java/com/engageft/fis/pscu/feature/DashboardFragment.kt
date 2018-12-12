@@ -117,23 +117,23 @@ class DashboardFragment : BaseEngageFullscreenFragment(),
         ViewCompat.setNestedScrollingEnabled(binding.transactionsRecyclerView, false)
 
         // allows disabling scrollview
-        binding.dashboardNestedScrollView.setOnTouchListener { _, _ ->
-            scrollDisabled
-        }
+//        binding.dashboardNestedScrollView.setOnTouchListener { _, _ ->
+//            scrollDisabled
+//        }
 
-        binding.dashboardNestedScrollView.setOnScrollChangeListener { _: NestedScrollView?, _: Int, scrollY: Int, _: Int, _: Int ->
-            when {
-                scrollY == 0 -> binding.toolbarShadowView.visibility = View.INVISIBLE
-                scrollY <= toolbarShadowAnimationScrollRange -> {
-                    binding.toolbarShadowView.alpha = scrollY / toolbarShadowAnimationScrollRangeFloat
-                    binding.toolbarShadowView.visibility = View.VISIBLE
-                }
-                else -> {
-                    binding.toolbarShadowView.alpha = 1F
-                    binding.toolbarShadowView.visibility = View.VISIBLE
-                }
-            }
-        }
+//        binding.dashboardNestedScrollView.setOnScrollChangeListener { _: NestedScrollView?, _: Int, scrollY: Int, _: Int, _: Int ->
+//            when {
+//                scrollY == 0 -> binding.toolbarShadowView.visibility = View.INVISIBLE
+//                scrollY <= toolbarShadowAnimationScrollRange -> {
+//                    binding.toolbarShadowView.alpha = scrollY / toolbarShadowAnimationScrollRangeFloat
+//                    binding.toolbarShadowView.visibility = View.VISIBLE
+//                }
+//                else -> {
+//                    binding.toolbarShadowView.alpha = 1F
+//                    binding.toolbarShadowView.visibility = View.VISIBLE
+//                }
+//            }
+//        }
 
         val spendingClickListener = View.OnClickListener {
             if (!binding.dashboardExpandableView.showingActions) {
@@ -355,9 +355,9 @@ class DashboardFragment : BaseEngageFullscreenFragment(),
 
             // if the main scrollView is not at the top, scroll to top now. Otherwise expanded DashboardExpandableView
             // may be partially offscreen.
-            if (binding.dashboardNestedScrollView.scrollY != 0) {
-                binding.dashboardNestedScrollView.scrollTo(0, 0)
-            }
+//            if (binding.dashboardNestedScrollView.scrollY != 0) {
+//                binding.dashboardNestedScrollView.scrollTo(0, 0)
+//            }
             // Don't let user scroll or click transactions when DashboardExpandableView is expanded
             scrollDisabled = true
             transactionsAdapter.transactionSelectionEnabled = false

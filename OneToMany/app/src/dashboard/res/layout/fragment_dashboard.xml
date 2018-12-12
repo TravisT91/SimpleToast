@@ -14,11 +14,11 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
-            <androidx.core.widget.NestedScrollView
-                android:id="@+id/dashboardNestedScrollView"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:fillViewport="true">
+            <!--<androidx.core.widget.NestedScrollView-->
+                <!--android:id="@+id/dashboardNestedScrollView"-->
+                <!--android:layout_width="match_parent"-->
+                <!--android:layout_height="match_parent"-->
+                <!--android:fillViewport="true">-->
 
                 <FrameLayout
                     android:id="@+id/rootLayout"
@@ -134,7 +134,7 @@
 
                 </FrameLayout>
 
-            </androidx.core.widget.NestedScrollView>
+            <!--</androidx.core.widget.NestedScrollView>-->
 
         </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
