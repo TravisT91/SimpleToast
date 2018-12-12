@@ -1,20 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
     <TextView
+        style="@style/AchHeaderTextStyle"
         android:id="@+id/titleTextView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:padding="16dp"
-        android:text="TextView" />
+        tools:text="@string/ach_bank_transfer_header_title" />
 
     <TextView
+        style="@style/AchHeaderSubTextStyle"
         android:id="@+id/subtitleTextView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:padding="16dp"
-        android:text="TextView" />
+        tools:text="@string/ach_bank_transfer_header_description" />
 </LinearLayout>

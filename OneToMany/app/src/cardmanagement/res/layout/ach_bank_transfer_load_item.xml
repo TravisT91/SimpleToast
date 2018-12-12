@@ -4,27 +4,31 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="vertical">
+    android:background="@color/cellBackground">
+
+    <include
+        android:id="@+id/itemDividerViewTop"
+        layout="@layout/view_horizontal_divider"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
         android:id="@+id/dayDateTextView"
-        style="@style/Title3Loud"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        style="@style/AchBankTransferDateTextStyle"
         android:layout_marginStart="16dp"
         android:layout_marginTop="16dp"
-        android:gravity="top"
         app:layout_constraintBottom_toTopOf="@+id/monthDateTextView"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintTop_toTopOf="@id/itemDividerViewTop"
         app:layout_constraintVertical_chainStyle="packed"
         tools:text="16" />
 
     <TextView
         android:id="@+id/monthDateTextView"
-        style="@style/Caption1Loud"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        style="@style/AchBankTransferMonthTextStyle"
         android:layout_marginStart="16dp"
         android:layout_marginBottom="16dp"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -34,30 +38,29 @@
 
     <TextView
         android:id="@+id/transferTextView"
-        style="@style/Body"
+        style="@style/AchBankTransferTitleTextStyle"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
         android:layout_marginEnd="16dp"
-        android:layout_marginBottom="8dp"
         android:gravity="bottom"
         app:layout_constraintBottom_toTopOf="@+id/transferSubTextView"
         app:layout_constraintEnd_toStartOf="@+id/amountTextView"
         app:layout_constraintStart_toEndOf="@+id/dayDateTextView"
         app:layout_constraintStart_toStartOf="@+id/transferSubTextView"
-        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintTop_toTopOf="@id/itemDividerViewTop"
         app:layout_constraintVertical_chainStyle="packed"
         tools:text="Recurring Transfer" />
 
     <TextView
         android:id="@+id/transferSubTextView"
-        style="@style/Caption1Medium"
+        style="@style/AchBankTransferSubTitleTextStyle"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
         android:layout_marginEnd="16dp"
         android:layout_marginBottom="16dp"
-        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintBottom_toTopOf="@+id/itemDividerViewBottom"
         app:layout_constraintEnd_toStartOf="@+id/amountTextView"
         app:layout_constraintStart_toEndOf="@+id/monthDateTextView"
         app:layout_constraintTop_toBottomOf="@+id/transferTextView"
@@ -65,14 +68,21 @@
 
     <TextView
         android:id="@+id/amountTextView"
-        style="@style/FootnoteMedium"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        style="@style/AchBankTransferAmountTextStyle"
         android:layout_marginTop="16dp"
         android:layout_marginEnd="16dp"
         android:layout_marginBottom="16dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintTop_toTopOf="@id/itemDividerViewTop"
         tools:text="+$200.00" />
+
+    <include
+        android:id="@+id/itemDividerViewBottom"
+        layout="@layout/view_horizontal_divider"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
 </androidx.constraintlayout.widget.ConstraintLayout>

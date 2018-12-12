@@ -214,5 +214,5 @@
     <fragment
         android:id="@+id/accountsAndTransfersListFragment"
         android:name="com.engageft.fis.pscu.feature.AccountsAndTransfersListFragment"
-        android:label="AccountsAndTransfersListFragment" />
+        android:label="@string/ach_bank_transfer_screen_title" />
 </navigation>
