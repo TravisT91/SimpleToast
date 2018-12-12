@@ -167,6 +167,9 @@
             app:exitAnim="@anim/nav_exit_anim"
             app:popEnterAnim="@anim/nav_pop_enter_anim"
             app:popExitAnim="@anim/nav_pop_exit_anim"/>
+        <action
+            android:id="@+id/action_moveMoneyFragment_to_accountsAndTransfersListFragment"
+            app:destination="@id/accountsAndTransfersListFragment" />
     </fragment>
 
     <fragment
@@ -176,9 +179,6 @@
         <action
             android:id="@+id/action_directDepositFragment_to_webViewFragment"
             app:destination="@id/webViewFragment_directDeposit" />
-        <action
-            android:id="@+id/action_moveMoneyFragment_to_accountsAndTransfersListFragment"
-            app:destination="@id/accountsAndTransfersListFragment" />
     </fragment>
 
     <!-- This is necessary for navigating from the dashboard, so that the back/up arrow is shown
