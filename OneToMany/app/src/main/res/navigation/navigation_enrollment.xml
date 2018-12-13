@@ -140,6 +140,9 @@
             app:exitAnim="@anim/nav_exit_anim"
             app:popEnterAnim="@anim/nav_pop_enter_anim"
             app:popExitAnim="@anim/nav_pop_exit_anim" />
+        <argument
+            android:name="@string/navigation_override_up"
+            android:defaultValue="true" />
     </fragment>
     <fragment
         android:id="@+id/sendingEnrollmentFragment"
