@@ -23,8 +23,6 @@ class AccountsAndTransfersListViewModel: BaseEngageViewModel() {
         private const val HISTORICAL_LOADS_LIST_MAX_COUNT = 5
     }
 
-    private var achAccountInfoList = mutableListOf<AchAccountInfo>()
-
     enum class BankAccountStatus {
         NO_BANK_ACCOUNT,
         UNVERIFIED_BANK_ACCOUNT,
@@ -68,10 +66,9 @@ class AccountsAndTransfersListViewModel: BaseEngageViewModel() {
                     if (response is LoginResponse) {
                         loginResponse = response
 
-                        achAccountInfoList = response.achAccountList
                         val currentCard = LoginResponseUtils.getCurrentCard(response)
                         // the order of invoking these methods don't matter
-                        initBankAccountStatusAndList()
+                        initBankAccountStatusAndList(response.achAccountList)
                         // hide progress when the following two API calls are done.
                         shouldHideProgressOverlay = false
                         getScheduledLoads(currentCard)
@@ -134,7 +131,7 @@ class AccountsAndTransfersListViewModel: BaseEngageViewModel() {
         )
     }
 
-    private fun initBankAccountStatusAndList() {
+    private fun initBankAccountStatusAndList(achAccountInfoList: MutableList<AchAccountInfo>) {
         if (achAccountInfoList.isNotEmpty()) {
 
             var verified = false
