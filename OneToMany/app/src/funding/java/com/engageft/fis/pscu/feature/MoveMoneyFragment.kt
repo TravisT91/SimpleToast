@@ -12,7 +12,7 @@ import com.engageft.fis.pscu.databinding.FragmentMoveMoneyBinding
 import com.engageft.fis.pscu.feature.branding.Palette
 
 /**
- * com.engageft.fis.pscu.feature.MoveMoneyFragment
+ * MoveMoneyFragment
  * </p>
  * This fragment presents the user with options to move money
  * </p>

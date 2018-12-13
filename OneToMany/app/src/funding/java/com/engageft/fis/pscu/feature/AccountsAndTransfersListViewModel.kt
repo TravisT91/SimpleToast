@@ -36,12 +36,13 @@ class AccountsAndTransfersListViewModel: BaseEngageViewModel() {
         SHOW
     }
 
-    var achAccountsListAndStatusObservable = MutableLiveData<Pair<BankAccountStatus, List<AchAccountInfo>>>()
-    var achScheduledLoadListObservable = MutableLiveData<List<ScheduledLoad>>()
-    var achHistoricalLoadListObservable = MutableLiveData<List<AchLoadInfo>>()
-    var buttonStateObservable = MutableLiveData<ButtonState>()
+    val achAccountsListAndStatusObservable = MutableLiveData<Pair<BankAccountStatus, List<AchAccountInfo>>>()
+    val achScheduledLoadListObservable = MutableLiveData<List<ScheduledLoad>>()
+    val achHistoricalLoadListObservable = MutableLiveData<List<AchLoadInfo>>()
+    val buttonStateObservable = MutableLiveData<ButtonState>()
 
     private var loginResponse: LoginResponse? = null
+    private var shouldHideProgressOverlay = false
 
     init {
         initBankAccountsListAndTransfersList()
@@ -71,6 +72,8 @@ class AccountsAndTransfersListViewModel: BaseEngageViewModel() {
                         val currentCard = LoginResponseUtils.getCurrentCard(response)
                         // the order of invoking these methods don't matter
                         initBankAccountStatusAndList()
+                        // hide progress when the following two API calls are done.
+                        shouldHideProgressOverlay = false
                         getScheduledLoads(currentCard)
                         getHistoricalLoads(currentCard)
                     } else {
@@ -90,14 +93,14 @@ class AccountsAndTransfersListViewModel: BaseEngageViewModel() {
                         .subscribeOn(Schedulers.io())
                         .observeOn(AndroidSchedulers.mainThread())
                         .subscribe({ response ->
+                            shouldHideProgressOverlay(true)
                             if (response.isSuccess && response is ScheduledLoadsResponse) {
                                 achScheduledLoadListObservable.value = ScheduledLoadUtils.getScheduledLoads(response)
                             } else {
-                                progressOverlayShownObservable.value = false
                                 handleUnexpectedErrorResponse(response)
                             }
                         }, { e ->
-                            progressOverlayShownObservable.value = false
+                            shouldHideProgressOverlay(true)
                             handleThrowable(e)
                         })
         )
@@ -110,7 +113,7 @@ class AccountsAndTransfersListViewModel: BaseEngageViewModel() {
                         .subscribeOn(Schedulers.io())
                         .observeOn(AndroidSchedulers.mainThread())
                         .subscribe({ response ->
-                            progressOverlayShownObservable.value = false
+                            shouldHideProgressOverlay(true)
                             if (response.isSuccess && response is AchLoadsResponse) {
                                 val loads = response.loads
                                 // sort by date
@@ -125,7 +128,7 @@ class AccountsAndTransfersListViewModel: BaseEngageViewModel() {
                                 handleUnexpectedErrorResponse(response)
                             }
                         }, { e ->
-                            progressOverlayShownObservable.value = false
+                            shouldHideProgressOverlay(true)
                             handleThrowable(e)
                         })
         )
@@ -158,5 +161,12 @@ class AccountsAndTransfersListViewModel: BaseEngageViewModel() {
 
             buttonStateObservable.value = ButtonState.HIDE
         }
+    }
+
+    private fun shouldHideProgressOverlay(apiCallDone: Boolean) {
+        if (shouldHideProgressOverlay && apiCallDone) {
+            progressOverlayShownObservable.value = false
+        }
+        shouldHideProgressOverlay = true
     }
 }
