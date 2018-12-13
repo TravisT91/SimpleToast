@@ -12,6 +12,9 @@
         <argument
             android:name="@string/navigation_hide_toolbar"
             android:defaultValue="true" />
+        <action
+            android:id="@+id/action_welcomeViewPagerFragment_to_enrollmentActivity"
+            app:destination="@id/enrollmentActivity" />
     </fragment>
     <fragment
         android:id="@+id/loginFragment"
@@ -24,4 +27,8 @@
         android:id="@+id/authenticatedActivity"
         android:name="com.engageft.fis.pscu.AuthenticatedActivity"
         android:label="AuthenticatedActivity" />
+    <activity
+        android:id="@+id/enrollmentActivity"
+        android:name="com.engageft.fis.pscu.EnrollmentActivity"
+        android:label="EnrollmentActivity" />
 </navigation>
