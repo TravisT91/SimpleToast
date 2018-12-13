@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Direct Deposit -->
+    <string name="DIRECT_DEPOSIT_TITLE">Direct deposit</string>
+    <string name="DIRECT_DEPOSIT_HEADER_TEXT">Use the Routing number and Account number below to set up a direct deposit from your employer or any other benefits provider.</string>
+    <string name="DIRECT_DEPOSIT_ROUTING_NUMBER">Routing number</string>
+    <string name="DIRECT_DEPOSIT_ACCOUNT_NUMBER">Account number</string>
+    <string name="DIRECT_DEPOSIT_ACCOUNT_TYPE">Account type</string>
+    <string name="DIRECT_DEPOSIT_BANK_NAME">Bank name</string>
+    <string name="DIRECT_DEPOSIT_VIEW_PRINTABLE_FORM">View printable form</string>
+    <string name="DIRECT_DEPOSIT_PRINTABLE_URL_UNFORMATTED">%1$s/login/sso?token=%2$s&amp;redirect_to=/account/direct-deposit&amp;embedded=ios</string>
+    <string name="DIRECT_DEPOSIT_ACCOUNT_TYPE_VALUE">Checking</string>
+    <!-- TODO(aHashimi) remove unused strings after FOTM-111, FOTM-113, and FOTM-65 is complete -->
+    <!-- Move Money Strings -->
+    <!-- transfer screens -->
+    <string name="TRANSFER_MONTHLY_TEXT">Once a Month</string>
+    <string name="TRANSFER_TWICE_MONTHLY_TEXT">Twice a Month</string>
+    <string name="TRANSFER_WEEKLY_TEXT">Once a Week</string>
+    <string name="TRANSFER_ALT_WEEKLY_TEXT">Every Other Week</string>
+    <string name="TRANSFER_ONCE_TEXT">One Time</string>
+    <!-- plugs in day, bank and last 4 -->
+    <string name="TRANSFER_MONTHLY_SIMPLE_LOAD_DESCRIPTION">%s of each month</string>
+    <string name="TRANSFER_TWICE_MONTHLY_SIMPLE_LOAD_DESCRIPTION">%s and %s of each month</string>
+    <string name="TRANSFER_WEEKLY_SIMPLE_LOAD_DESCRIPTION">every %s</string>
+    <string name="TRANSFER_ACCOUNT_DESCRIPTION">%1$s (…%2$s)</string>
+
+    <!-- pay -->
+    <string name="PAY_TO_FMT">to %s</string>
+    <string name="PAY_FROM_FMT">from %s</string>
+
+    <!-- income methods -->
+    <string name="DIRECT_DEPOSIT">Direct Deposit</string>
+    <string name="BANK_TRANSFER">Bank Transfer</string>
+    <string name="CASH">Cash</string>
+    <string name="FUND_DEBIT_CARD">Debit Card</string>
+
+    <!-- ACH Bank Transfer -->
+    <string name="BANKACCOUNT_DESCRIPTION_FORMAT">%1$s (…%2$s)</string>
+    <string name="BANKACCOUNT_DESCRIPTION">Account</string>
+    <string name="BANKACCOUNT_NAME_UNKNOWN">Unknown</string>
+    <string name="TEXT_CHECKING">Checking</string>
+    <string name="TEXT_SAVINGS">Savings</string>
+
+    <string name="ach_bank_transfer_screen_title">ACH bank transfer</string>
+    <string name="ach_bank_transfer_create_transfer">Create transfer</string>
+    <string name="ach_bank_transfer_verify_account">Verify account</string>
+    <string name="ach_bank_transfer_header_title">Transfer money to your My Card Manager account.</string>
+    <string name="ach_bank_transfer_header_description">You must have a verified bank account to create a transfer.</string>
+    <string name="ach_bank_transfer_status_verified">Verified</string>
+    <string name="ach_bank_transfer_status_unverified">Unverified</string>
+    <string name="ach_bank_transfer_add_bank">Add a bank account</string>
+    <string name="ach_bank_transfer_recurring_transfer">Recurring transfer</string>
+    <string name="ach_bank_transfer">Bank transfer</string>
+    <string name="ach_bank_transfer_scheduled">Scheduled</string>
+    <string name="ach_bank_transfer_recent_activity">Recent activity</string>
+    <string name="ach_bank_transfer_amount_incoming_format">+$%s</string>
+    <string name="ach_bank_transfer_from_format">From account …%s</string>
+    <!--End of Move Money strings-->
+</resources>

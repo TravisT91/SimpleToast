@@ -34,7 +34,7 @@ class AccountsAndTransfersListFragment: BaseEngageFullscreenFragment() {
             recyclerView.layoutManager = LinearLayoutManager(context!!)
             recyclerViewAdapter = AccountsAndTransfersListRecyclerViewAdapter(context!!,
 
-                    object: AccountsAndTransfersListRecyclerViewAdapter.AchAccountInfoClickListener {
+                    object : AccountsAndTransfersListRecyclerViewAdapter.AchAccountInfoClickListener {
                         override fun onAchAccountInfoClicked(achAccountInfoId: Long) {
                             //TODO(aHashimi): https://engageft.atlassian.net/browse/FOTM-65
                             //TODO(aHashimi): the new screen must check -1 which means CREATE a new bank transfer acct otherwise it's EDIT
@@ -42,7 +42,7 @@ class AccountsAndTransfersListFragment: BaseEngageFullscreenFragment() {
                         }
                     },
 
-                    object: AccountsAndTransfersListRecyclerViewAdapter.ScheduledLoadListClickListener {
+                    object : AccountsAndTransfersListRecyclerViewAdapter.ScheduledLoadListClickListener {
                         override fun onScheduledTransferClicked(scheduledLoadInfoId: Long) {
                             //TODO(aHashimi): https://engageft.atlassian.net/browse/FOTM-113
                             Toast.makeText(context!!, "on scheduled load clicked! ID = $scheduledLoadInfoId", Toast.LENGTH_SHORT).show()
