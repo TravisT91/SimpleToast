@@ -22,8 +22,6 @@ import java.util.*
  */
 object ScheduledLoadUtils {
 
-    val TRANSACTION_ACH_DESCRIPTION_MILLENNIAL = "TRANSACTION_ACH_DESCRIPTION_MILLENNIAL"
-
     fun getIncomeScheduledLoads(scheduledLoadsResponse: ScheduledLoadsResponse): MutableList<ScheduledLoad> {
         val incomeLoads = mutableListOf<ScheduledLoadInfo>()
 

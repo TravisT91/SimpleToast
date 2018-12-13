@@ -9,9 +9,9 @@ import com.engageft.fis.pscu.feature.branding.BrandingInfoRepo
 import com.ob.ws.dom.DirectDepositInfoResponse
 
 /**
- * com.engageft.fis.pscu.feature.DirectDepositViewModel
+ * DirectDepositViewModel
  * </p>
- * This is the corresponding ViewModel to the com.engageft.fis.pscu.feature.DirectDepositFragment.
+ * This is the corresponding ViewModel to the DirectDepositFragment.
  * </p>
  * Created by Travis Tkachuk 12/6/18
  * Copyright (c) 2018 Engage FT. All rights reserved.

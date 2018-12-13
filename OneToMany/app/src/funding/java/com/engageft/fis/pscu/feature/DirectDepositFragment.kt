@@ -12,7 +12,7 @@ import com.engageft.fis.pscu.databinding.FragmentDirectDepositBinding
 import com.engageft.fis.pscu.feature.branding.Palette
 
 /**
- * com.engageft.fis.pscu.feature.DirectDepositFragment
+ * DirectDepositFragment
  * </p>
  * This fragment displays direct deposit info to the user and let's them print a direct deposit form.
  * </p>
