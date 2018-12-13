@@ -252,9 +252,17 @@
         android:name="com.engageft.fis.pscu.feature.AccountNotificationsFragment"
         android:label="@string/account_notifications_screen_title" />
 
-
     <fragment
         android:id="@+id/accountsAndTransfersListFragment"
         android:name="com.engageft.fis.pscu.feature.AccountsAndTransfersListFragment"
-        android:label="@string/ach_bank_transfer_screen_title" />
+        android:label="@string/ach_bank_transfer_screen_title" >
+        <action
+            android:id="@+id/action_accountsAndTransfersListFragment_to_addDeleteAchBankAccountFragment"
+            app:destination="@id/addDeleteAchBankAccountFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/addDeleteAchBankAccountFragment"
+        android:name="com.engageft.fis.pscu.feature.AddDeleteAchBankAccountFragment"
+        android:label="@string/ach_bank_account_add_account_title" />
 </navigation>

@@ -209,9 +209,11 @@ class LoginViewModel : BaseEngageViewModel() {
                         .subscribe(
                                 { response ->
                                     if (response.isSuccess && response is LoginResponse) {
-                                        BrandingManager.getBrandingWithToken(response.token)
-                                                .subscribeWithDefaultProgressAndErrorHandling<BrandingInfoResponse>(
-                                                        this, { handleSuccessfulLoginResponse(response)})
+                                        //TODO: FTM-65 undo when ready for PR
+                                        handleSuccessfulLoginResponse(response)
+//                                        BrandingManager.getBrandingWithToken(response.token)
+//                                                .subscribeWithDefaultProgressAndErrorHandling<BrandingInfoResponse>(
+//                                                        this, { handleSuccessfulLoginResponse(response)})
                                     } else if (response is DeviceFailResponse) {
                                         progressOverlayShownObservable.value = false
                                         navigationObservable.value = LoginNavigationEvent.TWO_FACTOR_AUTHENTICATION

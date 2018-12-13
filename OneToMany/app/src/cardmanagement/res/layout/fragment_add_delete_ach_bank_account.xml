@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <data>
+        <import type="android.view.View"/>
+        <variable
+            name="viewModel"
+            type="com.engageft.fis.pscu.feature.AddDeleteAchBankAccountViewModel"/>
+        <variable
+            name="palette"
+            type="com.engageft.fis.pscu.feature.branding.Palette"/>
+    </data>
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:fillViewport="true">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                android:orientation="vertical"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/cellBackground">
+
+                <com.engageft.apptoolbox.view.TextInputWithLabel
+                    style="@style/TextInputWithLabelStyle"
+                    android:id="@+id/accountNameInputWithLabel"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:padding="16dp"
+                    app:labelText="@string/ach_bank_account_name_label"
+                    app:inputText="@={viewModel.bankName}"/>
+
+                <com.engageft.apptoolbox.view.NumberInputWithLabel
+                    style="@style/TextInputWithLabelStyle"
+                    android:id="@+id/routingNumberInputWithLabel"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:padding="16dp"
+                    app:labelText="@string/ach_bank_account_routing_number_label"
+                app:inputText="@={viewModel.routingNumber}"/>
+
+                <com.engageft.apptoolbox.view.NumberInputWithLabel
+                    style="@style/TextInputWithLabelStyle"
+                    android:id="@+id/accountNumberInputWithLabel"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:padding="16dp"
+                    app:labelText="@string/ach_bank_account_account_number_label"
+                    app:inputText="@={viewModel.accountNumber}"/>
+
+                <com.engageft.apptoolbox.view.BottomSheetListInputWithLabel
+                    style="@style/BottomSheetListInputWithLabelStyle"
+                    android:id="@+id/accountTypeBottomSheet"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingStart="16dp"
+                    android:paddingEnd="16dp"
+                    android:paddingTop="16dp"
+                    app:labelText="@string/ach_bank_account_type_label"
+                    app:inputText="@={viewModel.accountType}"/>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <com.engageft.apptoolbox.view.PillButton
+                    style="@style/ButtonPillPrimaryFilledDefault"
+                    android:id="@+id/submitButton"
+                    android:layout_gravity="center"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="48dp"
+                    android:visibility="@{viewModel.showButton ? View.VISIBLE : View.GONE}"/>
+            </LinearLayout>
+
+        </LinearLayout>
+
+    </ScrollView>
+
+</layout>
+
+

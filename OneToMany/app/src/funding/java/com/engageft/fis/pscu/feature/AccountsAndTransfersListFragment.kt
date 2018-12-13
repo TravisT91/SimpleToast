@@ -106,4 +106,8 @@ class AccountsAndTransfersListFragment: BaseEngageFullscreenFragment() {
         //TODO(aHashimi): should replace with MutableLiveData<loginResponse> in VM?
         accountsAndTransfersListViewModel.refreshViews()
     }
+
+    companion object {
+        const val ACH_BANK_ACCOUNT_ID = "ACH_BANK_ACCOUNT_ID"
+    }
 }

@@ -15,10 +15,10 @@ import com.engageft.fis.pscu.BuildConfig
 
 object EngageAppConfig : BaseAppConfig() {
     override val engageKitConfig: EngageKitConfig = object : EngageKitConfig(
-
+            //TODO: FTM-65 undo when ready for PR
             devEnvironment = object : EngageKitConfig.EngageKitEnvironment() {
-                override val serviceUrl: String = "https://appdemo.engageft-008.com"
-                override val websiteUrl: String = "https://test-pscu.engageft.com" },
+                override val serviceUrl: String = "https://appdemo.engageft-006.com"
+                override val websiteUrl: String = "https://dev-care.engageft.com/" },
 
             prodEnvironment = object : EngageKitConfig.EngageKitEnvironment() {
                 override val serviceUrl: String = "https://app.engageft-008.com"
