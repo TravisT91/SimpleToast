@@ -47,8 +47,6 @@ class AccountsAndTransfersListRecyclerViewAdapter(
 
     override fun getItemViewType(position: Int): Int {
 
-//        if (mutableList.size <= 1) return TYPE_BUTTON // inflate pillButton
-
         if (position == mutableList.size) return TYPE_BUTTON // return pillButton viewType, last item
 
         return when(mutableList[position]) {
