@@ -27,6 +27,7 @@ class SendingEnrollmentFragment : BaseEngageFullscreenFragment() {
     }
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         binding = FragmentSendingEnrollmentBinding.inflate(inflater, container, false)
+        binding.viewModel = enrollmentViewModel
 
         binding.button1.setOnClickListener{
             findNavController().navigate(R.id.action_sendingEnrollmentFragment_to_enrollmentSuccessFragment)

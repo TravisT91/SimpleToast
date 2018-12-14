@@ -25,6 +25,7 @@ class EnrollmentErrorFragment : BaseEngageFullscreenFragment() {
     }
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         binding = FragmentEnrollmentErrorBinding.inflate(inflater, container, false)
+        binding.viewModel = enrollmentViewModel
         return binding.root
     }
 }

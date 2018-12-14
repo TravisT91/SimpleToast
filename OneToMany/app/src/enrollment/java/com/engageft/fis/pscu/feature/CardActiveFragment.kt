@@ -27,6 +27,7 @@ class CardActiveFragment : BaseEngageFullscreenFragment() {
     }
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         binding = FragmentCardActivatedBinding.inflate(inflater, container, false)
+        binding.viewModel = enrollmentViewModel
 
         binding.button1.setOnClickListener{
             findNavController().navigate(R.id.action_cardActiveFragment_to_authenticatedActivity2)
