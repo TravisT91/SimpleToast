@@ -4,10 +4,11 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
-import androidx.navigation.findNavController
+import androidx.lifecycle.ViewModelProviders
+import androidx.navigation.fragment.findNavController
 import com.engageft.apptoolbox.BaseViewModel
 import com.engageft.fis.pscu.R
+import com.engageft.fis.pscu.databinding.FragmentSendingEnrollmentBinding
 
 /**
  * SendingEnrollmentFragment
@@ -18,20 +19,21 @@ import com.engageft.fis.pscu.R
  * Copyright (c) 2018 Engage FT. All rights reserved.
  */
 class SendingEnrollmentFragment : BaseEngageFullscreenFragment() {
+    private lateinit var enrollmentViewModel: EnrollmentViewModel
+    private lateinit var binding: FragmentSendingEnrollmentBinding
     override fun createViewModel(): BaseViewModel? {
-        return null
+        enrollmentViewModel = ViewModelProviders.of(activity!!).get(EnrollmentViewModel::class.java)
+        return enrollmentViewModel
     }
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        val view = inflater.inflate(R.layout.fragment_sending_enrollment, container, false)
+        binding = FragmentSendingEnrollmentBinding.inflate(inflater, container, false)
 
-        val button1 = view.findViewById<Button>(R.id.button1)
-        val button2 = view.findViewById<Button>(R.id.button2)
-        button1.setOnClickListener{
-            view.findNavController().navigate(R.id.action_sendingEnrollmentFragment_to_enrollmentSuccessFragment)
+        binding.button1.setOnClickListener{
+            findNavController().navigate(R.id.action_sendingEnrollmentFragment_to_enrollmentSuccessFragment)
         }
-        button2.setOnClickListener{
-            view.findNavController().navigate(R.id.action_sendingEnrollmentFragment_to_enrollmentErrorFragment)
+        binding.button2.setOnClickListener{
+            findNavController().navigate(R.id.action_sendingEnrollmentFragment_to_enrollmentErrorFragment)
         }
-        return view
+        return binding.root
     }
 }

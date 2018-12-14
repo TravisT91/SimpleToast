@@ -4,8 +4,9 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.lifecycle.ViewModelProviders
 import com.engageft.apptoolbox.BaseViewModel
-import com.engageft.fis.pscu.R
+import com.engageft.fis.pscu.databinding.FragmentEnrollmentErrorBinding
 
 /**
  * EnrollmentErrorFragment
@@ -16,11 +17,14 @@ import com.engageft.fis.pscu.R
  * Copyright (c) 2018 Engage FT. All rights reserved.
  */
 class EnrollmentErrorFragment : BaseEngageFullscreenFragment() {
+    private lateinit var enrollmentViewModel: EnrollmentViewModel
+    private lateinit var binding: FragmentEnrollmentErrorBinding
     override fun createViewModel(): BaseViewModel? {
-        return null
+        enrollmentViewModel = ViewModelProviders.of(activity!!).get(EnrollmentViewModel::class.java)
+        return enrollmentViewModel
     }
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        val view = inflater.inflate(R.layout.fragment_enrollment_error, container, false)
-        return view
+        binding = FragmentEnrollmentErrorBinding.inflate(inflater, container, false)
+        return binding.root
     }
 }
