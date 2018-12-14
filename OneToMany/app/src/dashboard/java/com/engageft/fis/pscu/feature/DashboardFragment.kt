@@ -229,14 +229,9 @@ class DashboardFragment : BaseEngageFullscreenFragment(),
 
     private fun updateSavingsBalance(savingsBalance: BigDecimal?) {
         savingsBalance?.let {
-//            binding.savingsBalanceAmount.text = StringUtils.formatCurrencyStringFractionDigitsReducedHeight(savingsBalance.toFloat(), 0.5f, true)
-//            binding.savingsBalanceAmount.visibility = View.VISIBLE
-//            binding.savingsBalanceLabel.visibility = View.VISIBLE
             transactionsAdapter.savingsBalanceAmount = StringUtils.formatCurrencyStringFractionDigitsReducedHeight(savingsBalance.toFloat(), 0.5f, true)
             transactionsAdapter.setSavingsBalanceVisibility(visible = true)
         } ?: run {
-//            binding.savingsBalanceAmount.visibility = View.GONE
-//            binding.savingsBalanceLabel.visibility = View.GONE
             transactionsAdapter.setSavingsBalanceVisibility(visible = false)
         }
     }
@@ -244,20 +239,13 @@ class DashboardFragment : BaseEngageFullscreenFragment(),
     private fun updateSavingsBalanceState(savingsBalanceState: DashboardBalanceState) {
         when (savingsBalanceState) {
             DashboardBalanceState.LOADING -> {
-//                binding.savingsBalanceAmount.text = getString(R.string.OVERVIEW_BALANCE_LOADING)
-//                binding.savingsBalanceAmount.visibility = View.VISIBLE
-//                binding.savingsBalanceLabel.visibility = View.VISIBLE
                 transactionsAdapter.savingsBalanceAmount = getString(R.string.OVERVIEW_BALANCE_LOADING)
                 transactionsAdapter.setSavingsBalanceVisibility(visible = true)
             }
             DashboardBalanceState.HIDDEN -> {
-//                binding.savingsBalanceAmount.visibility = View.GONE
-//                binding.savingsBalanceLabel.visibility = View.GONE
                 transactionsAdapter.setSavingsBalanceVisibility(visible = false)
             }
             DashboardBalanceState.AVAILABLE -> {
-//                binding.savingsBalanceAmount.visibility = View.VISIBLE
-//                binding.savingsBalanceLabel.visibility = View.VISIBLE
                 transactionsAdapter.setSavingsBalanceVisibility(visible = true)
             }
             DashboardBalanceState.ERROR -> transactionsAdapter.savingsBalanceAmount = getString(R.string.OVERVIEW_BALANCE_ERROR)
@@ -333,11 +321,6 @@ class DashboardFragment : BaseEngageFullscreenFragment(),
         if (show) {
             alphaEnd = 1F
 
-            // if the main scrollView is not at the top, scroll to top now. Otherwise expanded DashboardExpandableView
-            // may be partially offscreen.
-//            if (binding.dashboardNestedScrollView.scrollY != 0) {
-//                binding.dashboardNestedScrollView.scrollTo(0, 0)
-//            }
             // Don't let user scroll or click transactions when DashboardExpandableView is expanded
             scrollDisabled = true
             transactionsAdapter.transactionSelectionEnabled = false
@@ -363,10 +346,7 @@ class DashboardFragment : BaseEngageFullscreenFragment(),
 
         dashboardViewModel.savingsBalanceObservable.observe(this, savingsBalanceObserver)
         dashboardViewModel.savingsBalanceStateObservable.observe(this, savingsBalanceStateObserver)
-
-
-//        dashboardViewModel.allTransactionsObservable.observe(this, allTransactionsObserver)
-//        dashboardViewModel.retrievingTransactionsFinishedObservable.observe(this, retrievingTransactionsFinishedObserver)
+        
         dashboardViewModel.transactionsReadyObservable.observe( this, Observer {
             if (it) {
                 dashboardViewModel.transactionsListObservable.observe(this, transactionsObserver)
@@ -388,6 +368,12 @@ class DashboardFragment : BaseEngageFullscreenFragment(),
 
     private fun expand(animate: Boolean) {
         if (animate) {
+            // if the recyclerview is not at the top, scroll to top now. Otherwise card views in
+            // recyclerview and invisible overlay will not be aligned when overlay becomes visible.
+            binding.transactionsRecyclerView.scrollToPosition(0)
+            // also hide toolbar shadow
+            binding.toolbarShadowView.visibility = View.INVISIBLE
+
             binding.dashboardExpandableView.visibility = View.VISIBLE
             binding.dashboardExpandableView.showActions(true)
         } else {
