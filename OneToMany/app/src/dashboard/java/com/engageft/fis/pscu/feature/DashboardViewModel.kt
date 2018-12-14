@@ -1,22 +1,22 @@
 package com.engageft.fis.pscu.feature
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.paging.PagedList
 import com.engageft.engagekit.EngageService
-import com.engageft.engagekit.event.TransactionsListEvent
 import com.engageft.engagekit.repository.transaction.TransactionRepository
 import com.engageft.engagekit.repository.transaction.vo.Transaction
 import com.engageft.engagekit.rest.request.CardLockUnlockRequest
-import com.engageft.engagekit.tools.TransactionsFilter
 import com.engageft.engagekit.utils.AlertUtils
 import com.engageft.engagekit.utils.LoginResponseUtils
 import com.engageft.engagekit.utils.engageApi
-import com.ob.domain.lookup.TransactionStatus
 import com.ob.ws.dom.BasicResponse
 import com.ob.ws.dom.LoginResponse
+import com.ob.ws.dom.TransactionsResponse
 import com.ob.ws.dom.utility.DebitCardInfo
 import com.ob.ws.dom.utility.TransactionInfo
+import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 import org.joda.time.DateTime
@@ -59,8 +59,6 @@ class DashboardViewModel : BaseEngageViewModel() {
     val animationObservable: MutableLiveData<DashboardAnimationEvent> = MutableLiveData()
 
     private lateinit var debitCardInfo: DebitCardInfo
-    private var transactionsInitialized = false
-    private var isRefreshing = false
 
     // ProductCardView
     fun initCardView() {
@@ -125,30 +123,27 @@ class DashboardViewModel : BaseEngageViewModel() {
     }
 
     // Transactions
-    fun initTransactions(useCached: Boolean = true) {
-        if (!transactionsInitialized) {
-            transactionsInitialized = true
-            compositeDisposable.add(
-                    EngageService.getInstance().loginResponseAsObservable
-                            .subscribeOn(Schedulers.io())
-                            .observeOn(AndroidSchedulers.mainThread())
-                            .subscribe({ response ->
-                                if (response.isSuccess && response is LoginResponse) {
-                                    debitCardInfo = LoginResponseUtils.getCurrentCard(response)
-                                    debitCardInfo.let {
-                                        transactionsListObservable = TransactionRepository.pagedTransactions(debitCardInfo.debitCardId)
-                                        transactionsReadyObservable.postValue(true)
-                                        //TransactionRepository.refreshTransactions(debitCardInfo.debitCardId)
-                                    }
-                                } else {
-                                    handleUnexpectedErrorResponse(response)
+    fun initTransactions() {
+        compositeDisposable.add(
+                EngageService.getInstance().loginResponseAsObservable
+                        .subscribeOn(Schedulers.io())
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .subscribe({ response ->
+                            if (response.isSuccess && response is LoginResponse) {
+                                debitCardInfo = LoginResponseUtils.getCurrentCard(response)
+                                debitCardInfo.let {
+                                    transactionsListObservable = TransactionRepository.pagedTransactions(debitCardInfo.debitCardId)
+                                    transactionsReadyObservable.postValue(true)
+                                    //TransactionRepository.refreshTransactions(debitCardInfo.debitCardId)
                                 }
-                            })
-                            { e ->
-                                handleThrowable(e)
+                            } else {
+                                handleUnexpectedErrorResponse(response)
                             }
-            )
-        }
+                        })
+                        { e ->
+                            handleThrowable(e)
+                        }
+        )
     }
 
     private fun updateNotifications(loginResponse: LoginResponse) {
@@ -176,30 +171,12 @@ class DashboardViewModel : BaseEngageViewModel() {
     }
 
     fun refreshTransactions() {
-        if (!isRefreshing) {
-            isRefreshing = true
-            transactionsInitialized = false
-            initTransactions(false)
-        }
-    }
-
-    private fun handleTransactionsListEvent(event: TransactionsListEvent) {
-        if (isRefreshing) {
-            isRefreshing = false
-            (allTransactionsObservable.value as MutableList).clear()
-        }
-        if (event.isSuccessful) {
-            val newTransactions = EngageService.getInstance().storageManager.transactionsStore.getTransactionsWithFilter(debitCardInfo.debitCardId, TransactionsFilter(event.year, event.month).addStatus(TransactionStatus.PENDING))
-            // add new transactions to existing list, or create a new list if no existing list
-            val transactionsList = allTransactionsObservable.value?.toMutableList() ?: run {
-                mutableListOf<TransactionInfo>()
-            }
-            transactionsList.addAll(newTransactions)
-
-            // TODO(kurt): only update observable once all in-flight requests have completed. Otherwise, we are doing
-            // a lot of extra work to update recyclerview many times, once for each request completion.
-            allTransactionsObservable.value = transactionsList
-        }
+        compositeDisposable.add(
+                Observable.fromCallable { TransactionRepository.clearTransactions() }
+                        .subscribeOn(Schedulers.computation())
+                        .observeOn(Schedulers.computation())
+                        .subscribe()
+        )
     }
 
     // These are called by DashboardFragment in response to user presses in DashboardExpandableView.
