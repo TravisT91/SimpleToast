@@ -1,7 +1,6 @@
 package com.engageft.fis.pscu.feature
 
 import android.animation.ObjectAnimator
-import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import android.util.TypedValue
@@ -17,6 +16,7 @@ import androidx.lifecycle.ViewModelProviders
 import androidx.navigation.findNavController
 import androidx.paging.PagedList
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.engageft.apptoolbox.BaseViewModel
 import com.engageft.apptoolbox.LotusActivity
 import com.engageft.apptoolbox.ViewUtils.newLotusInstance
@@ -24,19 +24,16 @@ import com.engageft.apptoolbox.view.InformationDialogFragment
 import com.engageft.apptoolbox.view.ProductCardModel
 import com.engageft.engagekit.EngageService
 import com.engageft.engagekit.repository.transaction.vo.Transaction
-import com.engageft.fis.pscu.BuildConfig
 import com.engageft.fis.pscu.R
 import com.engageft.fis.pscu.databinding.FragmentDashboardBinding
 import com.engageft.fis.pscu.feature.adapter.DashboardTransactionsAdapter
-import com.engageft.fis.pscu.feature.transactions.adapter.TransactionsAdapter
 import com.engageft.fis.pscu.feature.authentication.AuthenticationDialogFragment
 import com.engageft.fis.pscu.feature.branding.BrandingInfoRepo
 import com.engageft.fis.pscu.feature.palettebindings.applyBranding
+import com.engageft.fis.pscu.feature.transactions.adapter.TransactionsAdapter
 import com.engageft.fis.pscu.feature.utils.cardStatusStringRes
-import com.google.android.material.tabs.TabLayout
 import com.ob.domain.lookup.DebitCardStatus
 import eightbitlab.com.blurview.RenderScriptBlur
-import kotlinx.android.synthetic.main.fragment_statements.*
 import utilGen1.StringUtils
 import java.math.BigDecimal
 
@@ -120,8 +117,11 @@ class DashboardFragment : BaseEngageFullscreenFragment(),
             layoutManager = LinearLayoutManager(context)
             adapter = transactionsAdapter
 
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                setOnScrollChangeListener { view, _, scrollY, _, _ ->
+            addOnScrollListener(object : RecyclerView.OnScrollListener() {
+                override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+                    super.onScrolled(recyclerView, dx, dy)
+
+                    val scrollY = recyclerView.computeVerticalScrollOffset()
                     when {
                         scrollY == 0 -> binding.toolbarShadowView.visibility = View.INVISIBLE
                         scrollY <= toolbarShadowAnimationScrollRange -> {
@@ -134,7 +134,7 @@ class DashboardFragment : BaseEngageFullscreenFragment(),
                         }
                     }
                 }
-            }
+            })
         }
 
         // allows disabling scrollview
