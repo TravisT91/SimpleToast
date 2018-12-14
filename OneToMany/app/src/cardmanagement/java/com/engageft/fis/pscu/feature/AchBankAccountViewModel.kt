@@ -11,7 +11,7 @@ import com.ob.domain.lookup.AchAccountStatus
 import com.ob.ws.dom.utility.AchAccountInfo
 
 
-class AddDeleteAchBankAccountViewModel: BaseEngageViewModel() {
+class AchBankAccountViewModel: BaseEngageViewModel() {
     enum class ButtonState {
         SHOW,
         HIDE
@@ -76,6 +76,10 @@ class AddDeleteAchBankAccountViewModel: BaseEngageViewModel() {
                     handleThrowable(e)
                 })
         )
+    }
+
+    fun deleteAccount() {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 
 

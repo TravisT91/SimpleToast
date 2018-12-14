@@ -5,7 +5,7 @@
         <import type="android.view.View"/>
         <variable
             name="viewModel"
-            type="com.engageft.fis.pscu.feature.AddDeleteAchBankAccountViewModel"/>
+            type="com.engageft.fis.pscu.feature.AchBankAccountViewModel"/>
         <variable
             name="palette"
             type="com.engageft.fis.pscu.feature.branding.Palette"/>
@@ -63,7 +63,9 @@
                     android:paddingEnd="16dp"
                     android:paddingTop="16dp"
                     app:labelText="@string/ach_bank_account_type_label"
-                    app:inputText="@={viewModel.accountType}"/>
+                    app:inputText="@={viewModel.accountType}"
+                    app:bottomSheetDialogTitle="@string/ach_bank_account_type_label"
+                    app:bottomSheetDialogStyle="@style/ListOptionBottomSheetDialogFragmentStyle"/>
 
             </LinearLayout>
 

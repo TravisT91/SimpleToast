@@ -263,6 +263,6 @@
 
     <fragment
         android:id="@+id/addDeleteAchBankAccountFragment"
-        android:name="com.engageft.fis.pscu.feature.AddDeleteAchBankAccountFragment"
+        android:name="com.engageft.fis.pscu.feature.AchBankAccountFragment"
         android:label="@string/ach_bank_account_add_account_title" />
 </navigation>
