@@ -23,6 +23,9 @@ class DashboardTransactionsAdapter(context: Context,
                                    transactionsListener: OnTransactionsAdapterListener?)
     : TransactionsAdapter(context, transactionsListener) {
 
+    // Because there's a single row at position 0 for dashboard data,
+    // must provide a custom paging callback here that accounts for that row
+    // and ensures that paging updates happen in the right position.
     override fun getListUpdateCallback(): ListUpdateCallback {
         return object : ListUpdateCallback {
             override fun onInserted(position: Int, count: Int) {
