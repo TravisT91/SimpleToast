@@ -54,3 +54,17 @@ fun infoDialogGenericSuccessTitleMessageNewInstance(context: Context,
             buttonPositiveText = buttonPositiveText,
             listener = listener)
 }
+
+fun infoDialogGenericUnsavedChangesNewInstance(context: Context,
+                                                    title: String = context.getString(R.string.dialog_unsaved_changes_title),
+                                                    message: String = context.getString(R.string.dialog_unsaved_changes_message),
+                                                    buttonPositiveText: String = context.getString(R.string.dialog_unsaved_changes_positive_text),
+                                                    buttonNegativeText: String = context.getString(R.string.dialog_unsaved_changes_negative_text),
+                                                    listener: InformationDialogFragment.InformationDialogFragmentListener? = null) : InformationDialogFragment {
+    return InformationDialogFragment.newLotusInstance(
+            title = title,
+            message = message,
+            buttonPositiveText = buttonPositiveText,
+            buttonNegativeText = buttonNegativeText,
+            listener = listener)
+}

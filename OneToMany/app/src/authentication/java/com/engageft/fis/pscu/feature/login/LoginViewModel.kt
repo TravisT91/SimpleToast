@@ -20,7 +20,7 @@ import com.engageft.fis.pscu.feature.gatekeeping.LoginGateKeeper
 import com.engageft.fis.pscu.feature.gatekeeping.items.RequireAcceptTermsGatedItem
 import com.engageft.fis.pscu.feature.gatekeeping.items.RequireEmailConfirmationGatedItem
 import com.engageft.fis.pscu.feature.gatekeeping.items.TwoFactorAuthGatedItem
-import com.engageft.fis.pscu.feature.subscribeWithProgressAndDefaultErrorHandling
+import com.engageft.fis.pscu.feature.subscribeWithDefaultProgressAndErrorHandling
 import com.ob.ws.dom.BasicResponse
 import com.ob.ws.dom.BrandingInfoResponse
 import com.ob.ws.dom.DeviceFailResponse
@@ -122,12 +122,9 @@ class LoginViewModel : BaseEngageViewModel(), GateKeeperListener {
 
     override fun onGateOpen() {
         progressOverlayShownObservable.value = false
-
         BrandingManager.getBrandingWithToken(EngageService.getInstance().authManager.authToken)
-                .subscribeWithProgressAndDefaultErrorHandling<BrandingInfoResponse>(
-                        this, {
-                    navigationObservable.value = LoginNavigationEvent.AUTHENTICATED_ACTIVITY
-                })
+                .subscribeWithDefaultProgressAndErrorHandling<BrandingInfoResponse>(
+                        this, { navigationObservable.value = LoginNavigationEvent.AUTHENTICATED_ACTIVITY })
     }
 
     override fun onGatedItemFailed(item: GatedItem) {
