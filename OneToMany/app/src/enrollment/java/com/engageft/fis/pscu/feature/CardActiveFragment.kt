@@ -10,9 +10,9 @@ import com.engageft.apptoolbox.BaseViewModel
 import com.engageft.fis.pscu.R
 
 /**
- * GetStartedFragment
+ * CardActiveFragment
  * <p>
- * First screen in the enrollment flow.
+ * A screen in the enrollment flow.
  * </p>
  * Created by joeyhutchins on 12/13/18.
  * Copyright (c) 2018 Engage FT. All rights reserved.
