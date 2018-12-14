@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import androidx.lifecycle.ViewModelProviders
 import com.engageft.apptoolbox.BaseViewModel
 import com.engageft.fis.pscu.databinding.FragmentEnrollmentErrorBinding
+import com.engageft.fis.pscu.feature.branding.Palette
 
 /**
  * EnrollmentErrorFragment
@@ -26,6 +27,7 @@ class EnrollmentErrorFragment : BaseEngageFullscreenFragment() {
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         binding = FragmentEnrollmentErrorBinding.inflate(inflater, container, false)
         binding.viewModel = enrollmentViewModel
+        binding.palette = Palette
         return binding.root
     }
 }

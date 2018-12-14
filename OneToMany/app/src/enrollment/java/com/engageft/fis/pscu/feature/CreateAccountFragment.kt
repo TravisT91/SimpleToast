@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import androidx.lifecycle.ViewModelProviders
 import com.engageft.apptoolbox.BaseViewModel
 import com.engageft.fis.pscu.databinding.FragmentCreateAccountBinding
+import com.engageft.fis.pscu.feature.branding.Palette
 
 /**
  * CreateAccountFragment
@@ -26,6 +27,7 @@ class CreateAccountFragment : BaseEngageFullscreenFragment() {
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         binding = FragmentCreateAccountBinding.inflate(inflater, container, false)
         binding.viewModel = enrollmentViewModel.createAccountDelegate
+        binding.palette = Palette
         return binding.root
     }
 }

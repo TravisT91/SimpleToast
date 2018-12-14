@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import androidx.lifecycle.ViewModelProviders
 import com.engageft.apptoolbox.BaseViewModel
 import com.engageft.fis.pscu.databinding.FragmentGetStartedBinding
+import com.engageft.fis.pscu.feature.branding.Palette
 
 /**
  * GetStartedFragment
@@ -26,6 +27,7 @@ class GetStartedFragment : BaseEngageFullscreenFragment() {
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         binding = FragmentGetStartedBinding.inflate(inflater, container, false)
         binding.viewModel = enrollmentViewModel.getStartedDelegate
+        binding.palette = Palette
         return binding.root
     }
 }

@@ -9,6 +9,7 @@ import androidx.navigation.fragment.findNavController
 import com.engageft.apptoolbox.BaseViewModel
 import com.engageft.fis.pscu.R
 import com.engageft.fis.pscu.databinding.FragmentCardLinkedBinding
+import com.engageft.fis.pscu.feature.branding.Palette
 
 /**
  * CardLinkedFragment
@@ -28,6 +29,7 @@ class CardLinkedFragment : BaseEngageFullscreenFragment() {
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         binding = FragmentCardLinkedBinding.inflate(inflater, container, false)
         binding.viewModel = enrollmentViewModel
+        binding.palette = Palette
 
         binding.button1.setOnClickListener{
             findNavController().navigate(R.id.action_cardLinkedFragment_to_authenticatedActivity2)

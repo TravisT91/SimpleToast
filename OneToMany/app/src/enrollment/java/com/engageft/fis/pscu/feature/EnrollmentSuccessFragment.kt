@@ -9,6 +9,7 @@ import androidx.navigation.fragment.findNavController
 import com.engageft.apptoolbox.BaseViewModel
 import com.engageft.fis.pscu.R
 import com.engageft.fis.pscu.databinding.FragmentEnrollmentSuccessBinding
+import com.engageft.fis.pscu.feature.branding.Palette
 
 /**
  * EnrollmentSuccessFragment
@@ -28,6 +29,7 @@ class EnrollmentSuccessFragment : BaseEngageFullscreenFragment() {
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         binding = FragmentEnrollmentSuccessBinding.inflate(inflater, container, false)
         binding.viewModel = enrollmentViewModel
+        binding.palette = Palette
         binding.button1.setOnClickListener{
             findNavController().navigate(R.id.action_enrollmentSuccessFragment_to_cardActiveFragment)
         }

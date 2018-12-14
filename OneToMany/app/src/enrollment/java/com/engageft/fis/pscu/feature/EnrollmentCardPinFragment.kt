@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import androidx.lifecycle.ViewModelProviders
 import com.engageft.apptoolbox.BaseViewModel
 import com.engageft.fis.pscu.databinding.FragmentEnrollmentCardPinBinding
+import com.engageft.fis.pscu.feature.branding.Palette
 
 /**
  * EnrollmentCardPinFragment
@@ -26,6 +27,7 @@ class EnrollmentCardPinFragment : BaseEngageFullscreenFragment() {
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         binding = FragmentEnrollmentCardPinBinding.inflate(inflater, container, false)
         binding.viewModel = enrollmentViewModel.cardPinDelegate
+        binding.palette = Palette
         return binding.root
     }
 }

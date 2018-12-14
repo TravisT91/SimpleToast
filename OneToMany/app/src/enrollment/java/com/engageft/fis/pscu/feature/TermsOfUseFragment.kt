@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import androidx.lifecycle.ViewModelProviders
 import com.engageft.apptoolbox.BaseViewModel
 import com.engageft.fis.pscu.databinding.FragmentTermsOfUseBinding
+import com.engageft.fis.pscu.feature.branding.Palette
 
 /**
  * TermsOfUseFragment
@@ -26,6 +27,7 @@ class TermsOfUseFragment : BaseEngageFullscreenFragment() {
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         binding = FragmentTermsOfUseBinding.inflate(inflater, container, false)
         binding.viewModel = enrollmentViewModel.termsOfUseDelegate
+        binding.palette = Palette
         return binding.root
     }
 }

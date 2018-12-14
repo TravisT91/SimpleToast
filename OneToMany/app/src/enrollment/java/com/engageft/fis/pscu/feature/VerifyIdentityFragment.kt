@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import androidx.lifecycle.ViewModelProviders
 import com.engageft.apptoolbox.BaseViewModel
 import com.engageft.fis.pscu.databinding.FragmentVerifyIdentityBinding
+import com.engageft.fis.pscu.feature.branding.Palette
 
 /**
  * VerifyIdentityFragment
@@ -26,6 +27,7 @@ class VerifyIdentityFragment : BaseEngageFullscreenFragment() {
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         binding = FragmentVerifyIdentityBinding.inflate(inflater, container, false)
         binding.viewModel = enrollmentViewModel.verifyIdentityDelegate
+        binding.palette = Palette
         return binding.root
     }
 }
