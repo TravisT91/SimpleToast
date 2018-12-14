@@ -41,14 +41,14 @@ abstract class BaseAuthenticatedActivity : LotusActivity() {
         })
 
         // Add a DEBUG ONLY gesture detector to simular authentication expiration.
-        gestureDetector = EasterEggGestureDetector(this, findViewById(R.id.activityContainer), object : EasterEggGestureListener {
-            override fun onEasterEggActivated() {
-            }
-            override fun onEasterEggDeactivated() {
-                // To simulate auth expiration.
-                EngageService.getInstance().authManager.setAuthExpired()
-            }
-        })
+//        gestureDetector = EasterEggGestureDetector(this, findViewById(R.id.activityContainer), object : EasterEggGestureListener {
+//            override fun onEasterEggActivated() {
+//            }
+//            override fun onEasterEggDeactivated() {
+//                // To simulate auth expiration.
+//                EngageService.getInstance().authManager.setAuthExpired()
+//            }
+//        })
     }
 
     override fun onUserInteraction() {

@@ -7,102 +7,28 @@
     <FrameLayout
         android:id="@+id/dashboard_fragment"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:background="@color/dashboard_tinted_background">
 
         <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
             android:id="@+id/swipeRefreshLayout"
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
-            <!--<androidx.core.widget.NestedScrollView-->
-                <!--android:id="@+id/dashboardNestedScrollView"-->
-                <!--android:layout_width="match_parent"-->
-                <!--android:layout_height="match_parent"-->
-                <!--android:fillViewport="true">-->
+            <FrameLayout
+                android:id="@+id/rootLayout"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
 
-                <FrameLayout
-                    android:id="@+id/rootLayout"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent">
-
-                    <!-- must set android:descendantFocusability="blocksDescendants" or create dummy view to gain focus so that -->
-                    <!-- recyclerView doesn't get the focus. If the RecyclerView gains focus, it scrolls all the way up. -->
-                    <androidx.constraintlayout.widget.ConstraintLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:layout_marginTop="@dimen/dashboard_card_and_actions_height_collapsed"
-                        android:background="@color/dashboard_tinted_background"
-                        android:descendantFocusability="blocksDescendants">
-
-                        <TextView
-                            android:id="@+id/spendingBalanceAmount"
-                            style="@style/DashboardBalanceAmountTextView"
-                            app:layout_constraintStart_toStartOf="parent"
-                            app:layout_constraintTop_toTopOf="parent"
-                            app:layout_constraintEnd_toStartOf="@id/savingsBalanceAmount"
-                            android:text="@string/OVERVIEW_BALANCE_LOADING"
-                            tools:text="$1,224.66" />
-
-                        <TextView
-                            android:id="@+id/spendingBalanceLabel"
-                            style="@style/DashboardBalanceLabelTextView"
-                            app:layout_constraintStart_toStartOf="@id/spendingBalanceAmount"
-                            app:layout_constraintTop_toBottomOf="@id/spendingBalanceAmount"
-                            app:layout_constraintEnd_toEndOf="@id/spendingBalanceAmount"
-                            android:text="@string/OVERVIEW_SPENDING_BALANCE"/>
-
-                        <TextView
-                            android:id="@+id/savingsBalanceAmount"
-                            style="@style/DashboardBalanceAmountTextView"
-                            app:layout_constraintStart_toEndOf="@id/spendingBalanceAmount"
-                            app:layout_constraintTop_toTopOf="parent"
-                            app:layout_constraintEnd_toEndOf="parent"
-                            android:text="@string/OVERVIEW_BALANCE_LOADING"
-                            tools:text="$620.00"/>
-
-                        <TextView
-                            android:id="@+id/savingsBalanceLabel"
-                            style="@style/DashboardBalanceLabelTextView"
-                            app:layout_constraintStart_toStartOf="@id/savingsBalanceAmount"
-                            app:layout_constraintTop_toBottomOf="@id/savingsBalanceAmount"
-                            app:layout_constraintEnd_toEndOf="@id/savingsBalanceAmount"
-                            android:text="@string/OVERVIEW_GOALS_BALANCE"/>
-
-                        <com.google.android.material.tabs.TabLayout
-                            android:id="@+id/transactionsTabLayout"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            app:layout_constraintStart_toStartOf="parent"
-                            app:layout_constraintTop_toBottomOf="@id/spendingBalanceLabel"
-                            app:layout_constraintEnd_toEndOf="parent"
-                            app:layout_constraintBottom_toTopOf="@+id/transactionsRecyclerView"
-                            android:layout_marginTop="8dp"
-                            style="@style/DashboardTransactionsTabLayoutStyle">
-
-                            <com.google.android.material.tabs.TabItem
-                                android:id="@+id/allActivityTabItem"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="@string/OVERVIEW_ALL_ACTIVITY" />
-
-                            <com.google.android.material.tabs.TabItem
-                                android:id="@+id/depositsTabItem"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="@string/OVERVIEW_DEPOSITS" />
-
-                        </com.google.android.material.tabs.TabLayout>
 
                         <androidx.recyclerview.widget.RecyclerView
                             android:id="@+id/transactionsRecyclerView"
                             android:layout_width="match_parent"
-                            android:layout_height="0dp"
+                            android:layout_height="match_parent"
                             app:layout_constraintStart_toStartOf="parent"
-                            app:layout_constraintTop_toBottomOf="@+id/transactionsTabLayout"
+                            app:layout_constraintTop_toTopOf="parent"
                             app:layout_constraintEnd_toEndOf="parent"
                             app:layout_constraintBottom_toBottomOf="parent"
-                            android:background="@android:color/holo_blue_light"
-                            app:layout_behavior="@string/appbar_scrolling_view_behavior"
                             />
 
                         <!-- This can be used to display a message view, like when waiting for card activation. See CARE-399 for an example. -->
@@ -116,7 +42,6 @@
                             app:layout_constraintBottom_toBottomOf="parent"
                             android:visibility="invisible"/>
 
-                    </androidx.constraintlayout.widget.ConstraintLayout>
 
                     <eightbitlab.com.blurview.BlurView
                         android:id="@+id/blurView"
@@ -130,11 +55,10 @@
                     <com.engageft.fis.pscu.feature.DashboardExpandableView
                         android:id="@+id/dashboardExpandableView"
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content"/>
+                        android:layout_height="wrap_content"
+                        android:visibility="invisible"/>
 
                 </FrameLayout>
-
-            <!--</androidx.core.widget.NestedScrollView>-->
 
         </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 

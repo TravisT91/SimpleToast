@@ -1,6 +1,7 @@
 package com.engageft.fis.pscu.feature
 
 import android.animation.ObjectAnimator
+import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import android.util.TypedValue
@@ -10,8 +11,6 @@ import android.view.ViewGroup
 import android.view.WindowManager
 import android.widget.Toast
 import androidx.core.content.ContextCompat
-import androidx.core.view.ViewCompat
-import androidx.core.widget.NestedScrollView
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
@@ -25,8 +24,11 @@ import com.engageft.apptoolbox.view.InformationDialogFragment
 import com.engageft.apptoolbox.view.ProductCardModel
 import com.engageft.engagekit.EngageService
 import com.engageft.engagekit.repository.transaction.vo.Transaction
+import com.engageft.fis.pscu.BuildConfig
 import com.engageft.fis.pscu.R
 import com.engageft.fis.pscu.databinding.FragmentDashboardBinding
+import com.engageft.fis.pscu.feature.adapter.DashboardTransactionsAdapter
+import com.engageft.fis.pscu.feature.transactions.adapter.TransactionsAdapter
 import com.engageft.fis.pscu.feature.authentication.AuthenticationDialogFragment
 import com.engageft.fis.pscu.feature.branding.BrandingInfoRepo
 import com.engageft.fis.pscu.feature.palettebindings.applyBranding
@@ -34,6 +36,7 @@ import com.engageft.fis.pscu.feature.utils.cardStatusStringRes
 import com.google.android.material.tabs.TabLayout
 import com.ob.domain.lookup.DebitCardStatus
 import eightbitlab.com.blurview.RenderScriptBlur
+import kotlinx.android.synthetic.main.fragment_statements.*
 import utilGen1.StringUtils
 import java.math.BigDecimal
 
@@ -48,7 +51,9 @@ import java.math.BigDecimal
  */
 class DashboardFragment : BaseEngageFullscreenFragment(),
         DashboardExpandableView.DashboardExpandableViewListener,
+        DashboardTransactionsAdapter.DashboardTransactionsAdapterListener,
         TransactionsAdapter.OnTransactionsAdapterListener {
+
     private lateinit var binding: FragmentDashboardBinding
 
     private lateinit var dashboardViewModel: DashboardViewModel
@@ -76,9 +81,10 @@ class DashboardFragment : BaseEngageFullscreenFragment(),
     private var toolbarShadowAnimationScrollRange: Int = 0
     private var toolbarShadowAnimationScrollRangeFloat: Float = 0F
 
-    private lateinit var transactionsAdapter: TransactionsAdapter
+    private lateinit var transactionsAdapter: DashboardTransactionsAdapter
 
     private var scrollDisabled = false
+
 
     override fun createViewModel(): BaseViewModel? {
         dashboardViewModel = ViewModelProviders.of(this).get(DashboardViewModel::class.java)
@@ -97,6 +103,7 @@ class DashboardFragment : BaseEngageFullscreenFragment(),
                 //tracked in FOTM-497
             }
         }
+
         return binding.root
     }
 
@@ -108,71 +115,32 @@ class DashboardFragment : BaseEngageFullscreenFragment(),
 
         binding.dashboardExpandableView.listener = this
 
-        transactionsAdapter = TransactionsAdapter(context!!, this)
+        transactionsAdapter = DashboardTransactionsAdapter(context!!, dashboardViewModel.compositeDisposable, this, this)
         binding.transactionsRecyclerView.apply {
             layoutManager = LinearLayoutManager(context)
             adapter = transactionsAdapter
+
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                setOnScrollChangeListener { view, _, scrollY, _, _ ->
+                    when {
+                        scrollY == 0 -> binding.toolbarShadowView.visibility = View.INVISIBLE
+                        scrollY <= toolbarShadowAnimationScrollRange -> {
+                            binding.toolbarShadowView.alpha = scrollY / toolbarShadowAnimationScrollRangeFloat
+                            binding.toolbarShadowView.visibility = View.VISIBLE
+                        }
+                        else -> {
+                            binding.toolbarShadowView.alpha = 1F
+                            binding.toolbarShadowView.visibility = View.VISIBLE
+                        }
+                    }
+                }
+            }
         }
-        // this enables smooth scrolling of the nestedscrollview
-        ViewCompat.setNestedScrollingEnabled(binding.transactionsRecyclerView, false)
 
         // allows disabling scrollview
-//        binding.dashboardNestedScrollView.setOnTouchListener { _, _ ->
-//            scrollDisabled
-//        }
-
-//        binding.dashboardNestedScrollView.setOnScrollChangeListener { _: NestedScrollView?, _: Int, scrollY: Int, _: Int, _: Int ->
-//            when {
-//                scrollY == 0 -> binding.toolbarShadowView.visibility = View.INVISIBLE
-//                scrollY <= toolbarShadowAnimationScrollRange -> {
-//                    binding.toolbarShadowView.alpha = scrollY / toolbarShadowAnimationScrollRangeFloat
-//                    binding.toolbarShadowView.visibility = View.VISIBLE
-//                }
-//                else -> {
-//                    binding.toolbarShadowView.alpha = 1F
-//                    binding.toolbarShadowView.visibility = View.VISIBLE
-//                }
-//            }
-//        }
-
-        val spendingClickListener = View.OnClickListener {
-            if (!binding.dashboardExpandableView.showingActions) {
-                Toast.makeText(activity, "Spending balance selected", Toast.LENGTH_SHORT).show()
-            }
+        binding.transactionsRecyclerView.setOnTouchListener { _, _ ->
+            scrollDisabled
         }
-        binding.spendingBalanceAmount.setOnClickListener(spendingClickListener)
-        binding.spendingBalanceLabel.setOnClickListener(spendingClickListener)
-
-        val savingsClickListener = View.OnClickListener {
-            if (!binding.dashboardExpandableView.showingActions) {
-                Toast.makeText(activity, "Set aside balance selected", Toast.LENGTH_SHORT).show()
-            }
-        }
-        binding.savingsBalanceAmount.setOnClickListener(savingsClickListener)
-        binding.savingsBalanceLabel.setOnClickListener(savingsClickListener)
-
-        binding.transactionsTabLayout.addOnTabSelectedListener(object:TabLayout.OnTabSelectedListener {
-            override fun onTabReselected(tab: TabLayout.Tab?) {
-                // intentionally left blank
-            }
-
-            override fun onTabUnselected(tab: TabLayout.Tab?) {
-                // intentionally left blank
-            }
-
-            override fun onTabSelected(tab: TabLayout.Tab?) {
-                when (binding.transactionsTabLayout.selectedTabPosition) {
-//                    DashboardViewModel.TRANSACTIONS_TAB_POSITION_ALL -> {
-//                        transactionsAdapter.showDepositsOnly = false
-//                    }
-//                    DashboardViewModel.TRANSACTIONS_TAB_POSITION_DEPOSITS -> {
-//                        transactionsAdapter.showDepositsOnly = true
-//                    }
-                }
-                // update view model with position, so that it can be set correctly when fragment is restored
-                dashboardViewModel.transactionsTabPosition = binding.transactionsTabLayout.selectedTabPosition
-            }
-        })
 
         binding.swipeRefreshLayout.setOnRefreshListener {
             dashboardViewModel.refreshBalancesAndNotifications()
@@ -194,6 +162,11 @@ class DashboardFragment : BaseEngageFullscreenFragment(),
 
     private fun updateForCardModel(productCardModel: ProductCardModel) {
         productCardModel.cardStatusText = getString(productCardModel.cardStatus.cardStatusStringRes())
+
+        // update ProductCardView in recyclerview, initially visible
+        transactionsAdapter.productCardModel = productCardModel
+
+        // update ProductCardView in expandable overlay, initially invisible
         binding.dashboardExpandableView.cardView.updateWithProductCardModel(productCardModel)
 
         binding.dashboardExpandableView.overviewLockUnlockCardIcon.setImageDrawable(
@@ -236,51 +209,58 @@ class DashboardFragment : BaseEngageFullscreenFragment(),
         preventScreenCapture(dashboardViewModel.productCardViewModelDelegate.isShowingCardDetails())
     }
 
-    fun updateSpendingBalance(spendingBalance: BigDecimal?) {
+    private fun updateSpendingBalance(spendingBalance: BigDecimal?) {
         spendingBalance?.let {
-            binding.spendingBalanceAmount.text = StringUtils.formatCurrencyStringFractionDigitsReducedHeight(spendingBalance.toFloat(), 0.5f, true)
+            transactionsAdapter.spendingBalanceAmount = StringUtils.formatCurrencyStringFractionDigitsReducedHeight(spendingBalance.toFloat(), 0.5f, true)
         } ?: run {
             // TODO(kurt) what do show when no value?
-            binding.spendingBalanceAmount.text = "..."
+            transactionsAdapter.spendingBalanceAmount = "..."
         }
     }
 
-    fun updateSpendingBalanceState(spendingBalanceState: DashboardBalanceState) {
+    private fun updateSpendingBalanceState(spendingBalanceState: DashboardBalanceState) {
         when (spendingBalanceState) {
-            DashboardBalanceState.LOADING -> binding.spendingBalanceAmount.text = getString(R.string.OVERVIEW_BALANCE_LOADING)
-            DashboardBalanceState.ERROR -> binding.spendingBalanceAmount.text = getString(R.string.OVERVIEW_BALANCE_ERROR)
+            DashboardBalanceState.LOADING -> transactionsAdapter.spendingBalanceAmount = getString(R.string.OVERVIEW_BALANCE_LOADING)
+            DashboardBalanceState.ERROR -> transactionsAdapter.spendingBalanceAmount = getString(R.string.OVERVIEW_BALANCE_ERROR)
             // don't change for other states
             else -> {}
         }
     }
 
-    fun updateSavingsBalance(savingsBalance: BigDecimal?) {
+    private fun updateSavingsBalance(savingsBalance: BigDecimal?) {
         savingsBalance?.let {
-            binding.savingsBalanceAmount.text = StringUtils.formatCurrencyStringFractionDigitsReducedHeight(savingsBalance.toFloat(), 0.5f, true)
-            binding.savingsBalanceAmount.visibility = View.VISIBLE
-            binding.savingsBalanceLabel.visibility = View.VISIBLE
+//            binding.savingsBalanceAmount.text = StringUtils.formatCurrencyStringFractionDigitsReducedHeight(savingsBalance.toFloat(), 0.5f, true)
+//            binding.savingsBalanceAmount.visibility = View.VISIBLE
+//            binding.savingsBalanceLabel.visibility = View.VISIBLE
+            transactionsAdapter.savingsBalanceAmount = StringUtils.formatCurrencyStringFractionDigitsReducedHeight(savingsBalance.toFloat(), 0.5f, true)
+            transactionsAdapter.setSavingsBalanceVisibility(visible = true)
         } ?: run {
-            binding.savingsBalanceAmount.visibility = View.GONE
-            binding.savingsBalanceLabel.visibility = View.GONE
+//            binding.savingsBalanceAmount.visibility = View.GONE
+//            binding.savingsBalanceLabel.visibility = View.GONE
+            transactionsAdapter.setSavingsBalanceVisibility(visible = false)
         }
     }
 
-    fun updateSavingsBalanceState(savingsBalanceState: DashboardBalanceState) {
+    private fun updateSavingsBalanceState(savingsBalanceState: DashboardBalanceState) {
         when (savingsBalanceState) {
             DashboardBalanceState.LOADING -> {
-                binding.savingsBalanceAmount.text = getString(R.string.OVERVIEW_BALANCE_LOADING)
-                binding.savingsBalanceAmount.visibility = View.VISIBLE
-                binding.savingsBalanceLabel.visibility = View.VISIBLE
+//                binding.savingsBalanceAmount.text = getString(R.string.OVERVIEW_BALANCE_LOADING)
+//                binding.savingsBalanceAmount.visibility = View.VISIBLE
+//                binding.savingsBalanceLabel.visibility = View.VISIBLE
+                transactionsAdapter.savingsBalanceAmount = getString(R.string.OVERVIEW_BALANCE_LOADING)
+                transactionsAdapter.setSavingsBalanceVisibility(visible = true)
             }
             DashboardBalanceState.HIDDEN -> {
-                binding.savingsBalanceAmount.visibility = View.GONE
-                binding.savingsBalanceLabel.visibility = View.GONE
+//                binding.savingsBalanceAmount.visibility = View.GONE
+//                binding.savingsBalanceLabel.visibility = View.GONE
+                transactionsAdapter.setSavingsBalanceVisibility(visible = false)
             }
             DashboardBalanceState.AVAILABLE -> {
-                binding.savingsBalanceAmount.visibility = View.VISIBLE
-                binding.savingsBalanceLabel.visibility = View.VISIBLE
+//                binding.savingsBalanceAmount.visibility = View.VISIBLE
+//                binding.savingsBalanceLabel.visibility = View.VISIBLE
+                transactionsAdapter.setSavingsBalanceVisibility(visible = true)
             }
-            DashboardBalanceState.ERROR -> binding.savingsBalanceAmount.text = getString(R.string.OVERVIEW_BALANCE_ERROR)
+            DashboardBalanceState.ERROR -> transactionsAdapter.savingsBalanceAmount = getString(R.string.OVERVIEW_BALANCE_ERROR)
         }
     }
 
@@ -401,9 +381,28 @@ class DashboardFragment : BaseEngageFullscreenFragment(),
         dashboardViewModel.animationObservable.observe(this, animationObserver)
 
         // make sure correct tab is showing, after return from TransactionDetailFragment, in particular
-        binding.transactionsTabLayout.getTabAt(dashboardViewModel.transactionsTabPosition)?.select()
+        //binding.transactionsTabLayout.getTabAt(dashboardViewModel.transactionsTabPosition)?.select() // TODO(kurt)
 
         dashboardViewModel.initBalancesAndNotifications()
+    }
+
+    private fun expand(animate: Boolean) {
+        if (animate) {
+            binding.dashboardExpandableView.visibility = View.VISIBLE
+            binding.dashboardExpandableView.showActions(true)
+        } else {
+            binding.dashboardExpandableView.showActionsImmediate()
+            binding.dashboardExpandableView.visibility = View.VISIBLE
+        }
+    }
+
+    private fun collapse(animate: Boolean) {
+        if (animate) {
+            binding.dashboardExpandableView.showActions(false)
+            // hide view after collapse handled in onCollapseEnd()
+        } else {
+            // TODO(kurt): there is no function to collapseImmediate()
+        }
     }
 
     override fun onExpandImmediate() {
@@ -411,7 +410,8 @@ class DashboardFragment : BaseEngageFullscreenFragment(),
         dashboardViewModel.expandImmediate()
 
         binding.blurView.setOnClickListener {
-            binding.dashboardExpandableView.showActions(false)
+            //binding.dashboardExpandableView.showActions(false)
+            collapse(true)
         }
     }
 
@@ -420,7 +420,8 @@ class DashboardFragment : BaseEngageFullscreenFragment(),
         dashboardViewModel.expandStart()
 
         binding.blurView.setOnClickListener {
-            binding.dashboardExpandableView.showActions(false)
+            //binding.dashboardExpandableView.showActions(false)
+            collapse(true)
         }
     }
 
@@ -437,6 +438,7 @@ class DashboardFragment : BaseEngageFullscreenFragment(),
     }
 
     override fun onCollapseEnd() {
+        binding.dashboardExpandableView.visibility = View.INVISIBLE
         binding.blurView.visibility = View.INVISIBLE
         scrollDisabled = false
         transactionsAdapter.transactionSelectionEnabled = true
@@ -515,6 +517,38 @@ class DashboardFragment : BaseEngageFullscreenFragment(),
             }
             binding.root.findNavController().navigate(R.id.action_dashboard_fragment_to_featureNotAvailable, bundle)
         }
+    }
+
+    // DashboardTransactionsAdapter.DashboardTransactionsAdapterListener
+    override fun onExpandClicked() {
+        expand(true)
+    }
+
+    // DashboardTransactionsAdapter.DashboardTransactionsAdapterListener
+    override fun onSpendingBalanceClicked() {
+        if (!binding.dashboardExpandableView.showingActions) {
+            Toast.makeText(activity, "Spending balance selected", Toast.LENGTH_SHORT).show()
+        }
+    }
+
+    // DashboardTransactionsAdapter.DashboardTransactionsAdapterListener
+    override fun onSavingsBalanceClicked() {
+        if (!binding.dashboardExpandableView.showingActions) {
+            Toast.makeText(activity, "Set aside balance selected", Toast.LENGTH_SHORT).show()
+        }
+    }
+
+    // DashboardTransactionsAdapter.DashboardTransactionsAdapterListener
+    override fun onAllActivityClicked() {
+        // update view model with position, so that it can be set correctly when fragment is restored
+        dashboardViewModel.transactionsTabPosition = DashboardViewModel.TRANSACTIONS_TAB_POSITION_ALL
+        // TODO: tell adapter to show all
+    }
+
+    // DashboardTransactionsAdapter.DashboardTransactionsAdapterListener
+    override fun onDepositsClicked() {
+        dashboardViewModel.transactionsTabPosition = DashboardViewModel.TRANSACTIONS_TAB_POSITION_DEPOSITS
+        // TODO: tell adapter to show deposits
     }
 
     // TransactionsAdapter.OnTransactionsAdapterListener

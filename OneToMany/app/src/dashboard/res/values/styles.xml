@@ -9,10 +9,10 @@
     <style name="DashboardBalanceAmountTextView" parent="LargeTitleQuiet">
         <item name="android:layout_width">0dp</item>
         <item name="android:layout_height">60dp</item>
-        <item name="android:layout_marginStart">@dimen/dashboard_balance_amount_margin_start_end</item>
-        <item name="android:layout_marginTop">@dimen/dashboard_balance_amount_margin_top_bottom</item>
-        <item name="android:layout_marginEnd">@dimen/dashboard_balance_amount_margin_start_end</item>
-        <item name="android:layout_marginBottom">@dimen/dashboard_balance_amount_margin_top_bottom</item>
+        <item name="android:paddingStart">@dimen/dashboard_balance_amount_margin_start_end</item>
+        <item name="android:paddingTop">@dimen/dashboard_balance_amount_margin_top_bottom</item>
+        <item name="android:paddingEnd">@dimen/dashboard_balance_amount_margin_start_end</item>
+        <item name="android:paddingBottom">@dimen/dashboard_balance_amount_margin_top_bottom</item>
         <item name="android:textColor">@color/structure6</item>
         <item name="android:maxLines">1</item>
         <item name="android:gravity">center_horizontal|bottom</item>
@@ -23,10 +23,12 @@
     </style>
 
     <style name="DashboardBalanceLabelTextView" parent="Body">
-        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_width">0dp</item>
         <item name="android:layout_height">wrap_content</item>
-        <item name="android:layout_marginTop">@dimen/dashboard_balance_label_margin_top</item>
+        <item name="android:paddingTop">@dimen/dashboard_balance_label_margin_top</item>
+        <item name="android:paddingBottom">@dimen/dashboard_balance_label_margin_bottom</item>
         <item name="android:textColor">@color/structure5</item>
+        <item name="android:gravity">center</item>
     </style>
 
     <style name="DashboardTransactionsTabLayoutStyle" parent="Widget.MaterialComponents.TabLayout">
