@@ -29,15 +29,9 @@ class AccountsAndTransfersListViewModel: BaseEngageViewModel() {
         VERIFIED_BANK_ACCOUNT
     }
 
-    enum class ButtonState {
-        HIDE,
-        SHOW
-    }
-
-    val achAccountsListAndStatusObservable = MutableLiveData<Pair<BankAccountStatus, List<AchAccountInfo>>>()
+    val achAccountsListAndStatusObservable = MutableLiveData<AchBankAccountListAndStatus>()
     val achScheduledLoadListObservable = MutableLiveData<List<ScheduledLoad>>()
     val achHistoricalLoadListObservable = MutableLiveData<List<AchLoadInfo>>()
-    val buttonStateObservable = MutableLiveData<ButtonState>()
 
     private var loginResponse: LoginResponse? = null
     private var shouldHideProgressOverlay = false
@@ -131,32 +125,30 @@ class AccountsAndTransfersListViewModel: BaseEngageViewModel() {
         )
     }
 
-    private fun initBankAccountStatusAndList(achAccountInfoList: MutableList<AchAccountInfo>) {
+    private fun initBankAccountStatusAndList(achAccountInfoList: List<AchAccountInfo>) {
         if (achAccountInfoList.isNotEmpty()) {
 
             var verified = false
             for (achAccountInfo in achAccountInfoList) {
+
                 if (achAccountInfo.achAccountStatus == AchAccountStatus.VERIFIED) {
-                    achAccountsListAndStatusObservable.value = Pair<BankAccountStatus, List<AchAccountInfo>>(
-                            first = BankAccountStatus.VERIFIED_BANK_ACCOUNT,
-                            second = achAccountInfoList)
+
+                    achAccountsListAndStatusObservable.value = AchBankAccountListAndStatus(
+                            bankStatus = BankAccountStatus.VERIFIED_BANK_ACCOUNT,
+                            achAccountInfoList = achAccountInfoList)
                     verified = true
                     break
                 }
             }
             if (!verified) {
-                achAccountsListAndStatusObservable.value = Pair<BankAccountStatus, List<AchAccountInfo>>(
-                        first = BankAccountStatus.UNVERIFIED_BANK_ACCOUNT,
-                        second = achAccountInfoList)
+                achAccountsListAndStatusObservable.value = AchBankAccountListAndStatus(
+                        bankStatus = BankAccountStatus.UNVERIFIED_BANK_ACCOUNT,
+                        achAccountInfoList = achAccountInfoList)
             }
-
-            buttonStateObservable.value = ButtonState.SHOW
         } else {
-            achAccountsListAndStatusObservable.value = Pair<BankAccountStatus, List<AchAccountInfo>>(
-                    first = BankAccountStatus.NO_BANK_ACCOUNT,
-                    second = achAccountInfoList)
-
-            buttonStateObservable.value = ButtonState.HIDE
+            achAccountsListAndStatusObservable.value = AchBankAccountListAndStatus(
+                    bankStatus = BankAccountStatus.NO_BANK_ACCOUNT,
+                    achAccountInfoList = achAccountInfoList)
         }
     }
 
@@ -166,4 +158,6 @@ class AccountsAndTransfersListViewModel: BaseEngageViewModel() {
         }
         shouldHideProgressOverlay = true
     }
+
+    data class AchBankAccountListAndStatus(val bankStatus: BankAccountStatus, val achAccountInfoList: List<AchAccountInfo>)
 }

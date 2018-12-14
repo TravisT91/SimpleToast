@@ -16,7 +16,6 @@ import com.engageft.fis.pscu.feature.branding.Palette
 class AccountsAndTransfersListFragment: BaseEngageFullscreenFragment() {
 
     private lateinit var accountsAndTransfersListViewModel: AccountsAndTransfersListViewModel
-    private lateinit var binding: FragmentAccountsAndTransfersListBinding
     private lateinit var recyclerViewAdapter: AccountsAndTransfersListRecyclerViewAdapter
 
     override fun createViewModel(): BaseViewModel? {
@@ -25,7 +24,7 @@ class AccountsAndTransfersListFragment: BaseEngageFullscreenFragment() {
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        binding = FragmentAccountsAndTransfersListBinding.inflate(inflater, container, false)
+        val binding = FragmentAccountsAndTransfersListBinding.inflate(inflater, container, false)
 
         binding.apply {
             viewModel = accountsAndTransfersListViewModel
@@ -47,39 +46,47 @@ class AccountsAndTransfersListFragment: BaseEngageFullscreenFragment() {
                             //TODO(aHashimi): https://engageft.atlassian.net/browse/FOTM-113
                             Toast.makeText(context!!, "on scheduled load clicked! ID = $scheduledLoadInfoId", Toast.LENGTH_SHORT).show()
                         }
+                    },
+
+                    object : AccountsAndTransfersListRecyclerViewAdapter.ButtonClickListener {
+                        override fun onButtonClicked() {
+                            accountsAndTransfersListViewModel.apply {
+                                achAccountsListAndStatusObservable.value?.let { achAccountListAndStatus ->
+                                    if (achAccountListAndStatus.bankStatus == AccountsAndTransfersListViewModel.BankAccountStatus.VERIFIED_BANK_ACCOUNT) {
+                                        // TODO(aHashimi): FOTM-113 create transfer
+                                    } else {
+                                        //TODO(aHashimi): FOTM-65 verify bank account
+                                    }
+                                }
+                            }
+                        }
                     })
 
             recyclerView.adapter = recyclerViewAdapter
-
-            binding.createTransferButton.setOnClickListener {
-                //TODO(aHashimi): FOTM-113
-            }
         }
 
         accountsAndTransfersListViewModel.apply {
 
-            achAccountsListAndStatusObservable.observe(this@AccountsAndTransfersListFragment, Observer {
-                when (it.first) {
-                    AccountsAndTransfersListViewModel.BankAccountStatus.VERIFIED_BANK_ACCOUNT -> {
-                        binding.createTransferButton.text = getString(R.string.ach_bank_transfer_create_transfer)
-                    }
-                    else -> {
-                        // show header
-                        recyclerViewAdapter.setAccountHeaderData(getString(R.string.ach_bank_transfer_header_title),
-                                getString(R.string.ach_bank_transfer_header_description))
-                        binding.createTransferButton.text = getString(R.string.ach_bank_transfer_verify_account)
-                    }
-                }
-                recyclerViewAdapter.setAchAccountData(it.second)
-            })
+            achAccountsListAndStatusObservable.observe(this@AccountsAndTransfersListFragment, Observer { achAccountListAndStatus ->
 
-            buttonStateObservable.observe(this@AccountsAndTransfersListFragment, Observer {
-                when (it) {
-                    AccountsAndTransfersListViewModel.ButtonState.SHOW -> binding.createTransferButton.visibility = View.VISIBLE
-                    AccountsAndTransfersListViewModel.ButtonState.HIDE -> binding.createTransferButton.visibility = View.GONE
+                if (achAccountListAndStatus.bankStatus == AccountsAndTransfersListViewModel.BankAccountStatus.VERIFIED_BANK_ACCOUNT) {
+                    recyclerViewAdapter.setButtonTextAndVisibility(getString(R.string.ach_bank_transfer_create_transfer), true)
+                } else {
+                    if (achAccountListAndStatus.bankStatus == AccountsAndTransfersListViewModel.BankAccountStatus.NO_BANK_ACCOUNT) {
+                        recyclerViewAdapter.setButtonTextAndVisibility("", false)
+                    } else {
+                        recyclerViewAdapter.setButtonTextAndVisibility(getString(R.string.ach_bank_transfer_verify_account), true)
+                    }
+                    // show header
+                    recyclerViewAdapter.setAccountHeaderData(getString(R.string.ach_bank_transfer_header_title),
+                            getString(R.string.ach_bank_transfer_header_description))
+
                 }
+
                 //TODO(aHashimi): FOTM-113
                 // activity?.invalidateOptionsMenu()
+
+                recyclerViewAdapter.setAchAccountData(achAccountListAndStatus.achAccountInfoList)
             })
 
             achScheduledLoadListObservable.observe(this@AccountsAndTransfersListFragment, Observer {

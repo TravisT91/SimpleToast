@@ -9,36 +9,19 @@
             type="com.engageft.fis.pscu.feature.branding.Palette"/>
     </data>
 
-    <androidx.core.widget.NestedScrollView
+    <LinearLayout
+        android:orientation="vertical"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:background="@color/viewBackground">
 
-        <LinearLayout
-            android:orientation="vertical"
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recyclerView"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:background="@color/viewBackground">
+            android:layout_height="match_parent">
 
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/recyclerView"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+        </androidx.recyclerview.widget.RecyclerView>
 
-            </androidx.recyclerview.widget.RecyclerView>
-
-            <com.engageft.apptoolbox.view.PillButton
-                android:id="@+id/createTransferButton"
-                style="@style/ButtonPillPrimaryFilledDefault"
-                android:layout_margin="32dp"
-                android:layout_height="wrap_content"
-                android:layout_width="wrap_content"
-                android:layout_gravity="center_horizontal"
-                android:visibility="gone"
-                tools:text="Add a Something" />
-
-        </LinearLayout>
-
-    </androidx.core.widget.NestedScrollView>
-
+    </LinearLayout>
 
 </layout>

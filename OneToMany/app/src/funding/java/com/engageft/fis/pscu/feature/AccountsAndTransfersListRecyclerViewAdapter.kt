@@ -8,6 +8,7 @@ import android.view.LayoutInflater
 import android.widget.TextView
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.DiffUtil
+import com.engageft.apptoolbox.view.PillButton
 import com.engageft.fis.pscu.R
 import com.ob.ws.dom.utility.AchLoadInfo
 import com.ob.ws.dom.utility.AchAccountInfo
@@ -21,7 +22,8 @@ import utilGen1.ScheduledLoadUtils
 class AccountsAndTransfersListRecyclerViewAdapter(
         private val context: Context,
         private val achAccountClickListener: AchAccountInfoClickListener,
-        private val scheduledTransferClickListener: ScheduledLoadListClickListener): RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+        private val scheduledTransferClickListener: ScheduledLoadListClickListener,
+        private val onButtonClickListener: ButtonClickListener): RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
 
     private companion object {
@@ -30,23 +32,32 @@ class AccountsAndTransfersListRecyclerViewAdapter(
         const val TYPE_HISTORICAL_LOAD = 2
         const val TYPE_LABEL = 3
         const val TYPE_ACH_ACCOUNT_HEADER = 4
+        const val TYPE_BUTTON = 5
 
         const val EMPTY_LIST_ACCOUNT_ID: Long = -1
     }
 
     private val mutableList = mutableListOf<Any>()
+    private var buttonText: String = ""
+    private var shouldShowButton: Boolean = false
 
     override fun getItemCount(): Int {
-        return mutableList.size
+        return mutableList.size + 1 // +1 for pillButton
     }
 
     override fun getItemViewType(position: Int): Int {
+
+//        if (mutableList.size <= 1) return TYPE_BUTTON // inflate pillButton
+
+        if (position == mutableList.size) return TYPE_BUTTON // return pillButton viewType, last item
+
         return when(mutableList[position]) {
             is HeaderTextPair -> TYPE_ACH_ACCOUNT_HEADER
             is AchAccountInfo -> TYPE_ACCOUNT
             is ScheduledLoad -> TYPE_SCHEDULED_LOAD
             is AchLoadInfo -> TYPE_HISTORICAL_LOAD
-            else -> TYPE_LABEL
+            is String -> TYPE_LABEL
+            else -> TYPE_BUTTON
         }
     }
 
@@ -68,9 +79,13 @@ class AccountsAndTransfersListRecyclerViewAdapter(
                 val view = LayoutInflater.from(parent.context).inflate(R.layout.ach_bank_transfer_load_item, parent, false)
                 HistoricalTransferViewHolder(view)
             }
-            else -> {
+            TYPE_LABEL -> {
                 val view = LayoutInflater.from(parent.context).inflate(R.layout.ach_bank_transfer_label_item, parent, false)
                 LabelSectionViewHolder(view)
+            }
+            else -> {
+                val view = LayoutInflater.from(parent.context).inflate(R.layout.ach_pill_button_item, parent, false)
+                ButtonViewHolder(view)
             }
         }
     }
@@ -137,7 +152,20 @@ class AccountsAndTransfersListRecyclerViewAdapter(
                     amountTextView.text = formatAchIncomingBankTransferAmount(context, achLoadInfo.amount)
                 }
             }
+            is ButtonViewHolder -> {
+                holder.button.text = buttonText
+                holder.button.visibility = if (shouldShowButton) View.VISIBLE else View.GONE
+                holder.button.setOnClickListener {
+                    onButtonClickListener.onButtonClicked()
+                }
+            }
         }
+    }
+
+    fun setButtonTextAndVisibility(text: String, showButton: Boolean) {
+        buttonText = text
+        shouldShowButton = showButton
+        notifyItemRangeChanged(mutableList.size, 1)
     }
 
     fun setAccountHeaderData(headerText: String, headerSubText: String) {
@@ -280,6 +308,10 @@ class AccountsAndTransfersListRecyclerViewAdapter(
         val amountTextView: TextView = itemView.findViewById(R.id.amountTextView)
     }
 
+    private class ButtonViewHolder(itemView: View): RecyclerView.ViewHolder(itemView) {
+        val button: PillButton = itemView.findViewById(R.id.createTransferButton)
+    }
+
     private inner class HeaderTextPair(val headerText: String, val headerSubtext: String)
 
     class CustomDiffUtil(private val oldList: List<Any>, private val newList: List<Any>) : DiffUtil.Callback() {
@@ -333,5 +365,10 @@ class AccountsAndTransfersListRecyclerViewAdapter(
     interface AchAccountInfoClickListener {
         //TODO(aHashimi): FOTM-65, should pass object's ID?
         fun onAchAccountInfoClicked(achAccountInfoId: Long)
+    }
+
+    interface ButtonClickListener {
+        //TODO(aHashimi): FOTM-65 & FOTM-113
+        fun onButtonClicked()
     }
 }

@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.appcompat.widget.LinearLayoutCompat
+    android:layout_height="wrap_content"
+    android:layout_width="match_parent"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:background="@color/viewBackground"
+    android:gravity="center">
+
+    <com.engageft.apptoolbox.view.PillButton
+        android:id="@+id/createTransferButton"
+        style="@style/ButtonPillPrimaryFilledDefault"
+        android:layout_margin="32dp"
+        android:layout_height="wrap_content"
+        android:layout_width="wrap_content"
+        android:visibility="visible"
+        tools:text="Add a Something"
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools" />
+
+</androidx.appcompat.widget.LinearLayoutCompat>
