@@ -3,63 +3,107 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
 
-    <ScrollView
+    <data>
+        <variable
+            name="Palette"
+            type="com.engageft.fis.pscu.feature.branding.Palette"/>
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:fillViewport="true"
-        tools:background="@drawable/my_card_manager">
+        android:layout_height="match_parent">
 
-        <androidx.constraintlayout.widget.ConstraintLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+        <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+            android:id="@+id/iconLayout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginBottom="8dp"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toTopOf="@id/titleTextView"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintVertical_chainStyle="packed"
+            android:background="@drawable/shape_circle">
 
-            <include
-                layout="@layout/imageview_with_circle_background"
-                android:id="@+id/iconView"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="8dp"
-                android:layout_marginEnd="8dp"
-                android:layout_marginBottom="8dp"
-                app:layout_constraintBottom_toTopOf="@+id/guideline"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent" />
+            <androidx.appcompat.widget.AppCompatImageView
+                android:id="@+id/imageViewIcon"
+                android:layout_width="63dp"
+                android:layout_height="70dp"
+                android:layout_gravity="center"
+                app:srcCompat="@drawable/ingo_icon"/>
 
-            <androidx.constraintlayout.widget.Guideline
-                android:id="@+id/guideline"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                app:layout_constraintGuide_percent=".5" />
+        </FrameLayout>
 
-            <androidx.appcompat.widget.AppCompatTextView
-                android:id="@+id/titleTextView"
-                style="@style/WelcomeTitleStyle"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="16dp"
-                android:layout_marginTop="16dp"
-                android:layout_marginEnd="16dp"
-                android:layout_marginBottom="16dp"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="@+id/guideline"
-                tools:text="@string/welcome_title2" />
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/titleTextView"
+            style="@style/Title1Quiet"
+            parisStyle="@{Palette.title1Quiet}"
+            android:textColor="@color/structure6"
+            android:gravity="center"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="22dp"
+            android:layout_marginEnd="16dp"
+            android:lineSpacingExtra="6sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/iconLayout"
+            app:layout_constraintBottom_toTopOf="@id/messageTextView"
+            android:text="@string/MOBILE_CHECK_DEPOSIT_TITLE" />
 
-            <TextView
-                android:id="@+id/messageTextView"
-                style="@style/WelcomeMessageStyle"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="16dp"
-                android:layout_marginTop="16dp"
-                android:layout_marginEnd="16dp"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/titleTextView"
-                tools:text="@string/welcome_message2" />
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/messageTextView"
+            style="@style/Body"
+            parisStyle="@{Palette.body}"
+            android:textColor="@color/structure5"
+            android:gravity="center"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="15dp"
+            android:layout_marginEnd="16dp"
+            android:lineSpacingExtra="11sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/titleTextView"
+            app:layout_constraintBottom_toTopOf="@id/button"
+            android:text="@string/MOBILE_CHECK_DEPOSIT_SUBTITLE_FORMAT" />
 
-        </androidx.constraintlayout.widget.ConstraintLayout>
-    </ScrollView>
+        <com.engageft.apptoolbox.view.PillButton
+            android:id="@+id/button"
+            style="@style/ButtonPillPrimaryFilledDefault"
+            PillButton.setThemeFilled="@{true}"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="32dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/messageTextView"
+            app:layout_constraintBottom_toTopOf="@id/buttonLearnMore"
+            android:text="@string/MOBILE_CHECK_DEPOSIT_DOWNLOAD_APP" />
+
+        <Button
+            android:id="@+id/buttonLearnMore"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            style="@style/BodyMedium"
+            parisStyle="@{Palette.bodyMedium}"
+            Button.applyPaletteColors="@{true}"
+            android:textColor="@color/primary"
+            android:background="@null"
+            android:textAllCaps="false"
+            android:layout_marginTop="12dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/button"
+            app:layout_constraintBottom_toBottomOf="parent"
+            android:minHeight="@dimen/pill_button_min_height_default"
+            android:text="@string/MOBILE_CHECK_DEPOSIT_LEARN_MORE"
+            />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>
 

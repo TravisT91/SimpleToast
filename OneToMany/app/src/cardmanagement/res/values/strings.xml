@@ -65,4 +65,12 @@
     <string name="DIRECT_DEPOSIT_VIEW_PRINTABLE_FORM">View printable form</string>
     <string name="DIRECT_DEPOSIT_PRINTABLE_URL_UNFORMATTED">%1$s/login/sso?token=%2$s&amp;redirect_to=/account/direct-deposit&amp;embedded=ios</string>
     <string name="DIRECT_DEPOSIT_ACCOUNT_TYPE_VALUE">Checking</string>
+
+    <!-- Mobile check deposit -->
+    <string name="MOBILE_CHECK_DEPOSIT_TITLE">Easily deposit checks with your mobile device.</string>
+    <string name="MOBILE_CHECK_DEPOSIT_SUBTITLE_DOWNLOAD_APP">You can download the Ingo Money App to deposit a check directly on to your My Card Manager card.</string>
+    <string name="MOBILE_CHECK_DEPOSIT_SUBTITLE_OPEN_APP">Use the Ingo Money App to deposit a check directly to your My Card Manager card.</string>
+    <string name="MOBILE_CHECK_DEPOSIT_DOWNLOAD_APP">Download the app</string>
+    <string name="MOBILE_CHECK_DEPOSIT_OPEN_APP">Open Ingo app</string>
+    <string name="MOBILE_CHECK_DEPOSIT_LEARN_MORE">Learn more</string>
 </resources>
