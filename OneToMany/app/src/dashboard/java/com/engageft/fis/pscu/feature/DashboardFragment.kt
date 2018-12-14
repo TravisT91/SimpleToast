@@ -64,9 +64,6 @@ class DashboardFragment : BaseEngageFullscreenFragment(),
     private val savingsBalanceObserver = Observer<BigDecimal> { updateSavingsBalance(it) }
     private val savingsBalanceStateObserver = Observer<DashboardBalanceState> { updateSavingsBalanceState(it!!) }
 
-//    private val allTransactionsObserver = Observer<List<TransactionInfo>> { updateTransactions(it)}
-//    private val retrievingTransactionsFinishedObserver = Observer<Boolean> { retrievingTransactionsFinished(it)}
-
     private val transactionsObserver = Observer<PagedList<Transaction>> {
         pagedList -> transactionsAdapter.submitList(pagedList)
     }
@@ -201,7 +198,6 @@ class DashboardFragment : BaseEngageFullscreenFragment(),
                                 buttonPositiveText = getString(R.string.dialog_information_ok_button)
                         )
                 )
-
             }
         }
 
@@ -346,7 +342,7 @@ class DashboardFragment : BaseEngageFullscreenFragment(),
 
         dashboardViewModel.savingsBalanceObservable.observe(this, savingsBalanceObserver)
         dashboardViewModel.savingsBalanceStateObservable.observe(this, savingsBalanceStateObserver)
-        
+
         dashboardViewModel.transactionsReadyObservable.observe( this, Observer {
             if (it) {
                 dashboardViewModel.transactionsListObservable.observe(this, transactionsObserver)
