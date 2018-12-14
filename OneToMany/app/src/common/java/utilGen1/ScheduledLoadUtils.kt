@@ -10,12 +10,12 @@ import com.ob.ws.dom.LoginResponse
 import com.ob.ws.dom.ScheduledLoadsResponse
 import com.ob.ws.dom.utility.ScheduledLoadInfo
 import java.math.BigDecimal
-import java.util.*
+import java.util.Locale
 
 /**
- * TODO: CLASS NAME
+ * ScheduledLoadUtils
  *
- * TODO: CLASS DESCRIPTION
+ * Provides convenience methods for displaying scheduled load Info
  *
  * Created by Kurt Mueller on 4/15/17.
  * Copyright (c) 2017 Engage FT. All rights reserved.

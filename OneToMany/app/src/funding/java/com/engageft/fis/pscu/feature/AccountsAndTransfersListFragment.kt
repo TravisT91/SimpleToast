@@ -12,7 +12,14 @@ import com.engageft.apptoolbox.BaseViewModel
 import com.engageft.fis.pscu.R
 import com.engageft.fis.pscu.databinding.FragmentAccountsAndTransfersListBinding
 import com.engageft.fis.pscu.feature.branding.Palette
-
+/**
+ * AccountsAndTransfersListFragment
+ * </p>
+ * Fragment for displaying and managing of Ach Bank accounts, scheduled transfers, and past transfers list.
+ * </p>
+ * Created by Atia Hashimi 12/14/18
+ * Copyright (c) 2018 Engage FT. All rights reserved.
+ */
 class AccountsAndTransfersListFragment: BaseEngageFullscreenFragment() {
 
     private lateinit var accountsAndTransfersListViewModel: AccountsAndTransfersListViewModel
@@ -48,14 +55,14 @@ class AccountsAndTransfersListFragment: BaseEngageFullscreenFragment() {
                         }
                     },
 
-                    object : AccountsAndTransfersListRecyclerViewAdapter.ButtonClickListener {
-                        override fun onButtonClicked() {
+                    object : AccountsAndTransfersListRecyclerViewAdapter.CreateTransferButtonClickListener {
+                        override fun onCreateTransferClicked() {
                             accountsAndTransfersListViewModel.apply {
                                 achAccountsListAndStatusObservable.value?.let { achAccountListAndStatus ->
                                     if (achAccountListAndStatus.bankStatus == AccountsAndTransfersListViewModel.BankAccountStatus.VERIFIED_BANK_ACCOUNT) {
                                         // TODO(aHashimi): FOTM-113 create transfer
                                     } else {
-                                        //TODO(aHashimi): FOTM-65 verify bank account
+                                        //TODO(aHashimi): FOTM-65 add/verify bank account
                                     }
                                 }
                             }
