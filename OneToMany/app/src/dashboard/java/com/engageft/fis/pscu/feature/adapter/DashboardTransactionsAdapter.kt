@@ -32,7 +32,6 @@ class DashboardTransactionsAdapter(context: Context,
                 adapterCallback.onInserted(position + 1, count)
             }
 
-
             override fun onRemoved(position: Int, count: Int) {
                 adapterCallback.onRemoved(position + 1, count)
             }
@@ -186,5 +185,4 @@ class DashboardTransactionsAdapter(context: Context,
         const val TRANSACTIONS_TAB_POSITION_ALL = 0
         const val TRANSACTIONS_TAB_POSITION_DEPOSITS = 1
     }
-
 }
