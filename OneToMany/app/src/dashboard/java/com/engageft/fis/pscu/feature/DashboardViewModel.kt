@@ -135,12 +135,10 @@ class DashboardViewModel : BaseEngageViewModel() {
                             .subscribe({ response ->
                                 if (response.isSuccess && response is LoginResponse) {
                                     debitCardInfo = LoginResponseUtils.getCurrentCard(response)
-                                    debitCardInfo?.let {
+                                    debitCardInfo.let {
                                         transactionsListObservable = TransactionRepository.pagedTransactions(debitCardInfo.debitCardId)
                                         transactionsReadyObservable.postValue(true)
-                                        TransactionRepository.refreshTransactions(debitCardInfo.debitCardId)
-                                    } ?: run {
-                                        // TODO: what if no debitCardInfo?
+                                        //TransactionRepository.refreshTransactions(debitCardInfo.debitCardId)
                                     }
                                 } else {
                                     handleUnexpectedErrorResponse(response)

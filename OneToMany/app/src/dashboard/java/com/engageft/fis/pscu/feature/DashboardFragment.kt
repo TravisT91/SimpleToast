@@ -118,6 +118,9 @@ class DashboardFragment : BaseEngageFullscreenFragment(),
                 override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
                     super.onScrolled(recyclerView, dx, dy)
 
+                    // This is a potential UI slowdown, but there's no other way I can find to know precisely how
+                    // far the recyclerview has scrolled. This was recommended here, by a member of the Android team:
+                    // https://stackoverflow.com/questions/29581782/how-to-get-the-scrollposition-in-the-recyclerview-layoutmanager
                     val scrollY = recyclerView.computeVerticalScrollOffset()
                     when {
                         scrollY == 0 -> binding.toolbarShadowView.visibility = View.INVISIBLE
