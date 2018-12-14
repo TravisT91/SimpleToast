@@ -7,8 +7,12 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.core.content.ContextCompat
-import androidx.paging.PagedListAdapter
+import androidx.paging.AsyncPagedListDiffer
+import androidx.paging.PagedList
+import androidx.recyclerview.widget.AdapterListUpdateCallback
+import androidx.recyclerview.widget.AsyncDifferConfig
 import androidx.recyclerview.widget.DiffUtil
+import androidx.recyclerview.widget.ListUpdateCallback
 import androidx.recyclerview.widget.RecyclerView
 import com.engageft.engagekit.repository.transaction.vo.Transaction
 import com.engageft.fis.pscu.R
@@ -27,9 +31,43 @@ import utilGen1.StringUtils
  */
 open class TransactionsAdapter(private val context: Context,
                                private val listener: OnTransactionsAdapterListener?)
-    : PagedListAdapter<Transaction, RecyclerView.ViewHolder>(DIFF_CALLBACK) {
+    : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+    protected val adapterCallback = AdapterListUpdateCallback(this)
+
+    private val asyncDifferConfig = AsyncDifferConfig.Builder<Transaction>(DIFF_CALLBACK).build()
+
+    open fun getListUpdateCallback(): ListUpdateCallback {
+        return object : ListUpdateCallback {
+            override fun onInserted(position: Int, count: Int) {
+                adapterCallback.onInserted(position, count)
+            }
+
+
+            override fun onRemoved(position: Int, count: Int) {
+                adapterCallback.onRemoved(position, count)
+            }
+
+            override fun onMoved(fromPosition: Int, toPosition: Int) {
+                adapterCallback.onMoved(fromPosition, toPosition)
+            }
+
+            override fun onChanged(position: Int, count: Int, payload: Any?) {
+                adapterCallback.onChanged(position, count, payload)
+            }
+        }
+    }
+
+    private val differ = AsyncPagedListDiffer<Transaction>(getListUpdateCallback(), asyncDifferConfig)
+
+    fun submitList(pagedList: PagedList<Transaction>?) {
+        differ.submitList(pagedList)
+    }
 
     var transactionSelectionEnabled: Boolean = true
+
+    override fun getItemCount(): Int {
+        return differ.itemCount
+    }
 
     override fun getItemViewType(position: Int): Int {
 //        return if (transactionsList.isEmpty()) {
@@ -39,7 +77,6 @@ open class TransactionsAdapter(private val context: Context,
 //        }
         return VIEW_TYPE_TRANSACTIONS_DATA
     }
-
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
 //        return when (viewType) {
@@ -53,7 +90,7 @@ open class TransactionsAdapter(private val context: Context,
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         if (holder is TransactionViewHolder) {
-            getItem(position)?.let { transaction ->
+            differ.getItem(position)?.let { transaction ->
                 holder.transaction = transaction
 
                 holder.transactionsView.visibility = View.VISIBLE
