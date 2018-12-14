@@ -18,12 +18,19 @@ import org.joda.time.DateTime
 import utilGen1.AchAccountInfoUtils
 import utilGen1.DisplayDateTimeUtils
 import utilGen1.ScheduledLoadUtils
-
+/**
+ * AccountsAndTransfersListRecyclerViewAdapter
+ * </p>
+ * RecyclerView adapter that displays different UI states based on user's ACH bank accounts, and transfers lists.
+ * </p>
+ * Created by Atia Hashimi 12/14/18
+ * Copyright (c) 2018 Engage FT. All rights reserved.
+ */
 class AccountsAndTransfersListRecyclerViewAdapter(
         private val context: Context,
         private val achAccountClickListener: AchAccountInfoClickListener,
         private val scheduledTransferClickListener: ScheduledLoadListClickListener,
-        private val onButtonClickListener: ButtonClickListener): RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+        private val onButtonClickListener: CreateTransferButtonClickListener): RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
 
     private companion object {
@@ -154,7 +161,7 @@ class AccountsAndTransfersListRecyclerViewAdapter(
                 holder.button.text = buttonText
                 holder.button.visibility = if (shouldShowButton) View.VISIBLE else View.GONE
                 holder.button.setOnClickListener {
-                    onButtonClickListener.onButtonClicked()
+                    onButtonClickListener.onCreateTransferClicked()
                 }
             }
         }
@@ -365,8 +372,8 @@ class AccountsAndTransfersListRecyclerViewAdapter(
         fun onAchAccountInfoClicked(achAccountInfoId: Long)
     }
 
-    interface ButtonClickListener {
+    interface CreateTransferButtonClickListener {
         //TODO(aHashimi): FOTM-65 & FOTM-113
-        fun onButtonClicked()
+        fun onCreateTransferClicked()
     }
 }

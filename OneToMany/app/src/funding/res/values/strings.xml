@@ -1,5 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <!-- Move Money -->
+    <string name="TITLE_MOVE_MONEY">Move money</string>
+    <string name="MOVE_MONEY_BANK_TRANSFER">Bank transfer</string>
+    <string name="MOVE_MONEY_CREDIT_OR_DEBIT_CARD_LOAD">Credit or debit card load</string>
+    <string name="MOVE_MONEY_DIRECT_DEPOSIT">Direct deposit</string>
+
     <!-- Direct Deposit -->
     <string name="DIRECT_DEPOSIT_TITLE">Direct deposit</string>
     <string name="DIRECT_DEPOSIT_HEADER_TEXT">Use the Routing number and Account number below to set up a direct deposit from your employer or any other benefits provider.</string>

@@ -16,7 +16,14 @@ import com.ob.ws.dom.AchLoadsResponse
 import com.engageft.engagekit.rest.request.CardRequest
 import com.engageft.engagekit.utils.LoginResponseUtils
 import utilGen1.ScheduledLoadUtils
-
+/**
+ * AccountsAndTransfersListViewModel
+ * </p>
+ * ViewModel that provides ACH Bank Accounts, scheduled and past transfers lists.
+ * </p>
+ * Created by Atia Hashimi 12/14/18
+ * Copyright (c) 2018 Engage FT. All rights reserved.
+ */
 class AccountsAndTransfersListViewModel: BaseEngageViewModel() {
 
     private companion object {
