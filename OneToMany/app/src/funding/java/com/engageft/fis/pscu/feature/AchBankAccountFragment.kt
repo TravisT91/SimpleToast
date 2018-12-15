@@ -7,11 +7,14 @@ import android.view.MenuInflater
 import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
+import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
+import androidx.navigation.findNavController
 import com.engageft.apptoolbox.BaseViewModel
 import com.engageft.fis.pscu.R
 import com.engageft.fis.pscu.databinding.FragmentAchBankAccountBinding
 import com.engageft.fis.pscu.feature.branding.Palette
+import utilGen1.AchAccountInfoUtils
 
 class AchBankAccountFragment: BaseEngageFullscreenFragment() {
 
@@ -28,10 +31,35 @@ class AchBankAccountFragment: BaseEngageFullscreenFragment() {
         binding.apply {
             viewModel = achBankAccountViewModel
             palette = Palette
+
+            accountTypeBottomSheet.dialogOptions = ArrayList(AchAccountInfoUtils.accountTypeDisplayStrings(context!!))
         }
 
-        savedInstanceState?.let {
-            achBankAccountViewModel.achAccountInfoId = it.getLong(AccountsAndTransfersListFragment.ACH_BANK_ACCOUNT_ID, -1)
+        arguments?.let {
+            achBankAccountViewModel.achAccountInfoId = it.getLong(AccountsAndTransfersListFragment.ACH_BANK_ACCOUNT_ID, 0)
+        }
+
+        achBankAccountViewModel.apply {
+            navigationEventObservable.observe(this@AchBankAccountFragment, Observer {
+                binding.root.findNavController().navigate(R.id.action_accountsAndTransfersListFragment_to_verifyAchBankAccountFragment)
+            })
+
+            formStateObservable.observe(this@AchBankAccountFragment, Observer {
+                activity?.invalidateOptionsMenu()
+            })
+
+            // just to populate the accountType field because we can't reference strings in VMs.
+            populateAccountTypeObservable.observe(this@AchBankAccountFragment, Observer {
+                if (it) {
+                    accountType.set(getString(R.string.TEXT_CHECKING))
+                } else {
+                    accountType.set(getString(R.string.TEXT_SAVINGS))
+                }
+            })
+
+            checkingAccountTypeObservable.observe(this@AchBankAccountFragment, Observer {
+                isChecking = it == getString(R.string.TEXT_CHECKING)
+            })
         }
 
         return binding.root

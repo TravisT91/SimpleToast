@@ -41,7 +41,7 @@ class AccountsAndTransfersListRecyclerViewAdapter(
         const val TYPE_ACH_ACCOUNT_HEADER = 4
         const val TYPE_BUTTON = 5
 
-        const val EMPTY_LIST_ACCOUNT_ID: Long = -1
+        const val EMPTY_LIST_ACCOUNT_ID: Long = 0L
     }
 
     private val mutableList = mutableListOf<Any>()

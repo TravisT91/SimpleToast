@@ -61,5 +61,17 @@
     <string name="ach_bank_transfer_recent_activity">Recent activity</string>
     <string name="ach_bank_transfer_amount_incoming_format">+$%s</string>
     <string name="ach_bank_transfer_from_format">From account …%s</string>
+    <!-- add ACH bank account-->
+    <string name="ach_bank_account_add_account_title">Add account</string>
+    <string name="ach_bank_account_name_label">Bank name</string>
+    <string name="ach_bank_account_routing_number_label">Routing number</string>
+    <string name="ach_bank_account_account_number_label">Account number</string>
+    <string name="ach_bank_account_type_label">Account type</string>
+    <string name="ach_bank_account_button_add">Add</string>
+    <string name="ach_bank_account_menu_delete">Delete</string>
+    <string name="ach_bank_account_verify_button">Verify</string>
+    <string name="ach_bank_account_verify_amount_1">Amount 1</string>
+    <string name="ach_bank_account_verify_amount_2">Amount 2</string>
+    <string name="ach_bank_account_verify_description">Your bank account must be verified before it can be used. In order to verify, you will find two deposits in your account statement that were made by ‘Bank Acct Trial Deposit’. Each deposit will be made within 3–5 business days in amounts between $0.01 and $0.99. Please find each deposit and enter them below.</string>
     <!--End of Move Money strings-->
 </resources>

@@ -259,10 +259,21 @@
         <action
             android:id="@+id/action_accountsAndTransfersListFragment_to_addDeleteAchBankAccountFragment"
             app:destination="@id/addDeleteAchBankAccountFragment" />
+        <action
+            android:id="@+id/action_accountsAndTransfersListFragment_to_verifyAchBankAccountFragment"
+            app:destination="@id/verifyAchBankAccountFragment" />
     </fragment>
 
     <fragment
         android:id="@+id/addDeleteAchBankAccountFragment"
         android:name="com.engageft.fis.pscu.feature.AchBankAccountFragment"
-        android:label="@string/ach_bank_account_add_account_title" />
+        android:label="@string/ach_bank_account_add_account_title" >
+        <action
+            android:id="@+id/action_addDeleteAchBankAccountFragment_to_verifyAchBankAccountFragment"
+            app:destination="@id/verifyAchBankAccountFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/verifyAchBankAccountFragment"
+        android:name="com.engageft.fis.pscu.feature.VerifyAchBankAccountFragment"
+        android:label="VerifyAchBankAccountFragment" />
 </navigation>

@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
+import androidx.navigation.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.engageft.apptoolbox.BaseViewModel
 import com.engageft.fis.pscu.R
@@ -45,6 +46,11 @@ class AccountsAndTransfersListFragment: BaseEngageFullscreenFragment() {
                             //TODO(aHashimi): https://engageft.atlassian.net/browse/FOTM-65
                             //TODO(aHashimi): the new screen must check -1 which means CREATE a new bank transfer acct otherwise it's EDIT
                             Toast.makeText(context!!, "on Ach Account clicked! ID = $achAccountInfoId", Toast.LENGTH_SHORT).show()
+                            val bundle = Bundle().apply {
+                                putLong(ACH_BANK_ACCOUNT_ID, achAccountInfoId)
+                            }
+                            binding.root.findNavController().navigate(R.id.action_accountsAndTransfersListFragment_to_addDeleteAchBankAccountFragment,
+                                    bundle)
                         }
                     },
 
@@ -62,7 +68,8 @@ class AccountsAndTransfersListFragment: BaseEngageFullscreenFragment() {
                                     if (achAccountListAndStatus.bankStatus == AccountsAndTransfersListViewModel.BankAccountStatus.VERIFIED_BANK_ACCOUNT) {
                                         // TODO(aHashimi): FOTM-113 create transfer
                                     } else {
-                                        //TODO(aHashimi): FOTM-65 add/verify bank account
+                                        //TODO(aHashimi): FOTM-65 verify bank account
+                                        binding.root.findNavController().navigate(R.id.action_accountsAndTransfersListFragment_to_verifyAchBankAccountFragment)
                                     }
                                 }
                             }
