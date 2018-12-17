@@ -228,7 +228,7 @@ class DashboardViewModel : BaseEngageViewModel() {
                         EngageService.getInstance().storageManager.loginResponse.token,
                         EngageService.getInstance().storageManager.currentCard.debitCardId,
                         lock).fieldMap)
-                .subscribeWithProgressAndDefaultErrorHandling<BasicResponse>(this, {
+                .subscribeWithDefaultProgressAndErrorHandling<BasicResponse>(this, {
                     EngageService.getInstance().clearLoginAndDashboardResponses()
                     productCardViewModelDelegate.updateCardView() })
     }

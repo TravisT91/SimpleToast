@@ -1,12 +1,17 @@
 package com.engageft.fis.pscu.feature
 
 import android.os.Bundle
-import android.view.*
+import android.view.LayoutInflater
+import android.view.Menu
+import android.view.MenuInflater
+import android.view.MenuItem
+import android.view.View
+import android.view.ViewGroup
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
-import androidx.navigation.findNavController
+import androidx.navigation.fragment.findNavController
 import com.engageft.apptoolbox.BaseViewModel
-import com.engageft.apptoolbox.LotusFullScreenFragment
+import com.engageft.apptoolbox.NavigationOverrideClickListener
 import com.engageft.apptoolbox.view.InformationDialogFragment
 import com.engageft.fis.pscu.R
 import com.engageft.fis.pscu.databinding.FragmentChangePasswordBinding
@@ -19,7 +24,7 @@ import com.engageft.fis.pscu.databinding.FragmentChangePasswordBinding
  * Created by Atia Hashimi on 11/13/18.
  * Copyright (c) 2018 Engage FT. All rights reserved.
  */
-class ChangePasswordFragment: LotusFullScreenFragment() {
+class ChangePasswordFragment: BaseEngageFullscreenFragment() {
 
     private lateinit var changePasswordViewModel: ChangePasswordViewModel
 
@@ -28,8 +33,34 @@ class ChangePasswordFragment: LotusFullScreenFragment() {
         return changePasswordViewModel
     }
 
+    private val navigationOverrideClickListener = object : NavigationOverrideClickListener {
+        override fun onClick(): Boolean {
+            return if (changePasswordViewModel.hasUnsavedChanges()) {
+                showDialog(infoDialogGenericUnsavedChangesNewInstance(context = activity!!, listener = unsavedChangesDialogListener))
+                true
+            } else {
+                false
+            }
+        }
+    }
+
+    private val unsavedChangesDialogListener = object : InformationDialogFragment.InformationDialogFragmentListener {
+        override fun onDialogFragmentPositiveButtonClicked() {
+            findNavController().navigateUp()
+        }
+        override fun onDialogFragmentNegativeButtonClicked() {
+            // Do nothing.
+        }
+        override fun onDialogCancelled() {
+            // Do nothing.
+        }
+    }
+
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val binding = FragmentChangePasswordBinding.inflate(inflater, container, false)
+
+        upButtonOverrideProvider.setUpButtonOverride(navigationOverrideClickListener)
+        backButtonOverrideProvider.setBackButtonOverride(navigationOverrideClickListener)
 
         binding.apply {
             viewModel = changePasswordViewModel
@@ -89,27 +120,7 @@ class ChangePasswordFragment: LotusFullScreenFragment() {
             dialogInfoObservable.observe(this@ChangePasswordFragment, Observer { dialogInfo ->
                 when (dialogInfo.dialogType) {
                     DialogInfo.DialogType.GENERIC_SUCCESS -> {
-                        val listener = object: InformationDialogFragment.InformationDialogFragmentListener {
-                            override fun onDialogFragmentNegativeButtonClicked() {
-                            }
-
-                            override fun onDialogFragmentPositiveButtonClicked() {
-                                binding.root.findNavController().popBackStack()
-                            }
-
-                            override fun onDialogCancelled() {
-                                binding.root.findNavController().popBackStack()
-                            }
-                        }
-
-                        showDialog(infoDialogGenericSuccessTitleMessageNewInstance(context!!, listener = listener))
-
-                    }
-                    DialogInfo.DialogType.GENERIC_ERROR -> {
-                        showDialog(infoDialogGenericErrorTitleMessageConditionalNewInstance(context!!, dialogInfo))
-                    }
-                    DialogInfo.DialogType.SERVER_ERROR -> {
-                        showDialog(infoDialogGenericErrorTitleMessageConditionalNewInstance(context!!, dialogInfo))
+                        showGenericSuccessDialogMessageAndPopBackstack(binding.root)
                     }
                     else -> {}
                 }

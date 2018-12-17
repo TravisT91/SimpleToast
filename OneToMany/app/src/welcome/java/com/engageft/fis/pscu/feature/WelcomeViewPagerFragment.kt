@@ -13,7 +13,6 @@ import androidx.fragment.app.FragmentPagerAdapter
 import androidx.navigation.findNavController
 import androidx.viewpager.widget.ViewPager
 import com.engageft.apptoolbox.BaseViewModel
-import com.engageft.apptoolbox.LotusFullScreenFragment
 import com.engageft.fis.pscu.R
 import com.engageft.fis.pscu.databinding.FragmentWelcomeViewpagerBinding
 /**
@@ -24,7 +23,7 @@ import com.engageft.fis.pscu.databinding.FragmentWelcomeViewpagerBinding
  * Created by Atia Hashimi 11/6/2018.
  * Copyright (c) 2018 Engage FT. All rights reserved.
  */
-class WelcomeViewPagerFragment: LotusFullScreenFragment() {
+class WelcomeViewPagerFragment: BaseEngageFullscreenFragment() {
 
     companion object {
        private const val WELCOME_FRAGMENT_COUNT = 5
