@@ -165,8 +165,15 @@
             app:popEnterAnim="@anim/nav_pop_enter_anim"
             app:popExitAnim="@anim/nav_pop_exit_anim"/>
         <action
-            android:id="@+id/action_moveMoneyFragment_to_mobileCheckDepositFragment"
+            android:id="@+id/action_moveMoneyFragment_to_mobileCheckDepositDownloadFragment"
             app:destination="@id/mobileCheckDepositFragment"
+            app:enterAnim="@anim/nav_enter_anim"
+            app:exitAnim="@anim/nav_exit_anim"
+            app:popEnterAnim="@anim/nav_pop_enter_anim"
+            app:popExitAnim="@anim/nav_pop_exit_anim" />
+        <action
+            android:id="@+id/action_moveMoneyFragment_to_mobileCheckDepositOpenFragment"
+            app:destination="@id/mobileCheckDepositOpenFragment"
             app:enterAnim="@anim/nav_enter_anim"
             app:exitAnim="@anim/nav_exit_anim"
             app:popEnterAnim="@anim/nav_pop_enter_anim"
@@ -199,8 +206,15 @@
             app:popEnterAnim="@anim/nav_pop_enter_anim"
             app:popExitAnim="@anim/nav_pop_exit_anim"/>
         <action
-            android:id="@+id/action_moveMoneyFragment_to_mobileCheckDepositFragment"
+            android:id="@+id/action_moveMoneyFragment_to_mobileCheckDepositDownloadFragment"
             app:destination="@id/mobileCheckDepositFragment"
+            app:enterAnim="@anim/nav_enter_anim"
+            app:exitAnim="@anim/nav_exit_anim"
+            app:popEnterAnim="@anim/nav_pop_enter_anim"
+            app:popExitAnim="@anim/nav_pop_exit_anim" />
+        <action
+            android:id="@+id/action_moveMoneyFragment_to_mobileCheckDepositOpenFragment"
+            app:destination="@id/mobileCheckDepositOpenFragment"
             app:enterAnim="@anim/nav_enter_anim"
             app:exitAnim="@anim/nav_exit_anim"
             app:popEnterAnim="@anim/nav_pop_enter_anim"
@@ -260,6 +274,20 @@
         android:label="@string/account_notifications_screen_title" />
     <fragment
         android:id="@+id/mobileCheckDepositFragment"
-        android:name="com.engageft.fis.pscu.feature.MobileCheckDepositFragment"
-        android:label="MobileCheckDepositFragment" />
+        android:name="com.engageft.fis.pscu.feature.MobileCheckDepositDownloadFragment"
+        android:label="MobileCheckDepositFragment" >
+        <action
+            android:id="@+id/action_mobileCheckDepositFragment_to_mobileCheckDepositOpenFragment"
+            app:destination="@id/mobileCheckDepositOpenFragment"
+            app:popUpTo="@+id/moveMoneyFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/mobileCheckDepositOpenFragment"
+        android:name="com.engageft.fis.pscu.feature.MobileCheckDepositOpenFragment"
+        android:label="MobileCheckDepositOpenFragment" >
+        <action
+            android:id="@+id/action_mobileCheckDepositOpenFragment_to_mobileCheckDepositFragment"
+            app:destination="@id/mobileCheckDepositFragment"
+            app:popUpTo="@+id/moveMoneyFragment" />
+    </fragment>
 </navigation>

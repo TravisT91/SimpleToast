@@ -70,7 +70,7 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/titleTextView"
             app:layout_constraintBottom_toTopOf="@id/button"
-            android:text="@string/MOBILE_CHECK_DEPOSIT_SUBTITLE_FORMAT" />
+            android:text="@string/MOBILE_CHECK_DEPOSIT_SUBTITLE_OPEN_APP" />
 
         <com.engageft.apptoolbox.view.PillButton
             android:id="@+id/button"
@@ -82,27 +82,8 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/messageTextView"
-            app:layout_constraintBottom_toTopOf="@id/buttonLearnMore"
-            android:text="@string/MOBILE_CHECK_DEPOSIT_DOWNLOAD_APP" />
-
-        <Button
-            android:id="@+id/buttonLearnMore"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            style="@style/BodyMedium"
-            parisStyle="@{Palette.bodyMedium}"
-            Button.applyPaletteColors="@{true}"
-            android:textColor="@color/primary"
-            android:background="@null"
-            android:textAllCaps="false"
-            android:layout_marginTop="12dp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/button"
             app:layout_constraintBottom_toBottomOf="parent"
-            android:minHeight="@dimen/pill_button_min_height_default"
-            android:text="@string/MOBILE_CHECK_DEPOSIT_LEARN_MORE"
-            />
+            android:text="@string/MOBILE_CHECK_DEPOSIT_OPEN_APP" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>
