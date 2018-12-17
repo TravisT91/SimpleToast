@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="ENROLLMENT_CARD_NUMBER_LABEL">Card number</string>
+    <string name="ENROLLMENT_DOB_LABEL">Date of birth</string>
+</resources>

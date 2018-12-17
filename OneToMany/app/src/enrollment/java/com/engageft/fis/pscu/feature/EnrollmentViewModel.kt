@@ -1,5 +1,6 @@
 package com.engageft.fis.pscu.feature
 
+import androidx.databinding.ObservableField
 import androidx.navigation.NavController
 
 /**
@@ -72,6 +73,9 @@ class EnrollmentViewModel : BaseEngageViewModel() {
     }
 
     inner class GetStartedDelegate {
+        val cardInput: ObservableField<String> = ObservableField("")
+        val dateOfBirth: ObservableField<String> = ObservableField("")
+
         init {
         }
 
