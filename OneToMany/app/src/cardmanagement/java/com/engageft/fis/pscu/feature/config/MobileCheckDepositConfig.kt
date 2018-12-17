@@ -4,9 +4,9 @@ import android.app.Activity
 import android.content.pm.PackageManager
 
 /**
- * TODO(joeyhutchins): ClassName
+ * MobileCheckDepositConfig
  * <p>
- * TODO(joeyhutchins): Class description.
+ * Config object for providing details of ingo app installation state, package name, and website.
  * </p>
  * Created by joeyhutchins on 12/17/18.
  * Copyright (c) 2018 Engage FT. All rights reserved.

@@ -38,7 +38,7 @@ class MobileCheckDepositOpenFragment : BaseEngageFullscreenFragment() {
 
     override fun onResume() {
         super.onResume()
-        if (MobileCheckDepositConfig.isIngoPackageInstalled(activity!!)) {
+        if (!MobileCheckDepositConfig.isIngoPackageInstalled(activity!!)) {
             findNavController().navigate(R.id.action_mobileCheckDepositOpenFragment_to_mobileCheckDepositFragment)
         }
     }

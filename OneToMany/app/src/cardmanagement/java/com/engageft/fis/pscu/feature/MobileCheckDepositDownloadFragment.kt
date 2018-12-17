@@ -13,9 +13,6 @@ import com.engageft.fis.pscu.R
 import com.engageft.fis.pscu.databinding.FragmentMobileCheckDepositDownloadBinding
 import com.engageft.fis.pscu.feature.config.MobileCheckDepositConfig
 
-
-
-
 /**
  * MobileCheckDepositDownloadFragment
  * <p>
