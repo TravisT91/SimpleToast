@@ -4,6 +4,8 @@ import androidx.databinding.Observable
 import androidx.databinding.ObservableField
 import androidx.lifecycle.MutableLiveData
 import androidx.navigation.NavController
+import org.joda.time.DateTime
+import utilGen1.DisplayDateTimeUtils
 
 /**
  * GetStartedDelegate
@@ -109,10 +111,17 @@ class GetStartedDelegate(private val navController: NavController, private val g
             val pN = dateOfBirth.get()!!
             val newState = if (pN.isEmpty()) {
                 DOBInputValidationError.EMPTY
-            } else if (pN.length != 8) {
-                DOBInputValidationError.INVALID
             } else {
-                DOBInputValidationError.NONE
+                if (pN.length == 10) {
+                    try {
+                        getDateForInput()
+                        DOBInputValidationError.NONE
+                    } catch (e: Exception) {
+                        DOBInputValidationError.INVALID
+                    }
+                } else {
+                    DOBInputValidationError.INVALID
+                }
             }
 
             if (currentState != newState) {
@@ -120,6 +129,10 @@ class GetStartedDelegate(private val navController: NavController, private val g
                 validateNextButtonState()
             }
         }
+    }
+
+    private fun getDateForInput(): DateTime {
+        return DisplayDateTimeUtils.shortDateFormatter.parseDateTime(dateOfBirth.get()!!)
     }
 
     private fun validateNextButtonState() {

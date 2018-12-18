@@ -87,8 +87,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="20dp"
-                        app:labelText="@string/ENROLLMENT_DOB_LABEL"
-                        app:inputText="@={viewModel.dateOfBirth}"/>
+                        app:labelText="@string/ENROLLMENT_DOB_LABEL"/>
                 </LinearLayout>
 
                 <com.engageft.apptoolbox.view.PillButton

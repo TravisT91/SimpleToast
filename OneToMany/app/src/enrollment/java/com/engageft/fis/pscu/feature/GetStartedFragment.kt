@@ -11,6 +11,7 @@ import android.view.inputmethod.EditorInfo
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import com.engageft.apptoolbox.BaseViewModel
+import com.engageft.apptoolbox.view.DateInputWithLabel
 import com.engageft.apptoolbox.view.ProductCardModel
 import com.engageft.fis.pscu.R
 import com.engageft.fis.pscu.databinding.FragmentGetStartedBinding
@@ -43,6 +44,13 @@ class GetStartedFragment : BaseEngageFullscreenFragment() {
                     val productCardModel = ProductCardModel()
                     productCardModel.cardNumberFull = cardNumberInput.getInputTextWithMask().toString()
                     binding.cardView.updateWithProductCardModel(productCardModel)
+                }
+            })
+            // Can't databind this because we want the mask sent to ViewModel as well.
+            dobInput.dateFormat = DateInputWithLabel.DateFormat.MM_DD_YYYY
+            this.dobInput.addTextChangeListener(object : MaskedTextChangedListener.ValueListener {
+                override fun onTextChanged(maskFilled: Boolean, extractedValue: String) {
+                    getStartedViewModel.dateOfBirth.set(binding.dobInput.getInputTextWithMask().toString())
                 }
             })
         }
