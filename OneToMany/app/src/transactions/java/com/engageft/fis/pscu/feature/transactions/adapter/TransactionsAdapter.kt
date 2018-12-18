@@ -125,6 +125,9 @@ open class TransactionsAdapter(private val context: Context,
                 }
 
                 holder.bottomRule.visibility = if (position == itemCount - 1) View.INVISIBLE else View.VISIBLE
+            } ?: run {
+                // got a null item, so show placeholder
+
             }
         }
     }
