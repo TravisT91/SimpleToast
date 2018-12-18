@@ -1,12 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <!-- Move Money -->
-    <string name="TITLE_MOVE_MONEY">Move money</string>
-    <string name="MOVE_MONEY_BANK_TRANSFER">Bank transfer</string>
-    <string name="MOVE_MONEY_CREDIT_OR_DEBIT_CARD_LOAD">Credit or debit card load</string>
-    <string name="MOVE_MONEY_DIRECT_DEPOSIT">Direct deposit</string>
-
     <!-- Card PIN -->
     <string name="card_pin_screen_title">Card PIN</string>
     <string name="card_pin_choose_description">Choose your PIN</string>
@@ -54,14 +48,4 @@
     <string name="FEATURE_NOT_AVAILABLE_CANCEL">We can’t cancel your card because it is currently inactive. For more information, please contact customer support.</string>
     <string name="FEATURE_NOT_AVAILABLE_UNKNOWN_FEATURE_TITLE">Feature unavailable</string>
 
-    <!-- Direct Deposit -->
-    <string name="DIRECT_DEPOSIT_TITLE">Direct deposit</string>
-    <string name="DIRECT_DEPOSIT_HEADER_TEXT">Use the Routing number and Account number below to set up a direct deposit from your employer or any other benefits provider.</string>
-    <string name="DIRECT_DEPOSIT_ROUTING_NUMBER">Routing number</string>
-    <string name="DIRECT_DEPOSIT_ACCOUNT_NUMBER">Account number</string>
-    <string name="DIRECT_DEPOSIT_ACCOUNT_TYPE">Account type</string>
-    <string name="DIRECT_DEPOSIT_BANK_NAME">Bank name</string>
-    <string name="DIRECT_DEPOSIT_VIEW_PRINTABLE_FORM">View printable form</string>
-    <string name="DIRECT_DEPOSIT_PRINTABLE_URL_UNFORMATTED">%1$s/login/sso?token=%2$s&amp;redirect_to=/account/direct-deposit&amp;embedded=ios</string>
-    <string name="DIRECT_DEPOSIT_ACCOUNT_TYPE_VALUE">Checking</string>
 </resources>
