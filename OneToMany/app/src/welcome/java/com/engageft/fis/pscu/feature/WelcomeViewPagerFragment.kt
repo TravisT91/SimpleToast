@@ -66,7 +66,7 @@ class WelcomeViewPagerFragment: BaseEngageFullscreenFragment() {
         }
 
         binding.getStartedButton.setOnClickListener {
-            //TODO(aHashimi): navigate to card activity
+            binding.root.findNavController().navigate(R.id.action_welcomeViewPagerFragment_to_enrollmentActivity)
         }
 
         return binding.root
