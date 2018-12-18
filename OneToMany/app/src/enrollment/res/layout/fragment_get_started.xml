@@ -16,7 +16,7 @@
         android:isScrollContainer="true">
 
         <androidx.constraintlayout.widget.ConstraintLayout
-            android:id="@+id/loginParent"
+            android:id="@+id/parent"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
@@ -26,26 +26,54 @@
                 android:layout_height="wrap_content"
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintVertical_chainStyle="spread_inside"
-                app:layout_constraintBottom_toTopOf="@id/tempNavContainer">
+                app:layout_constraintEnd_toEndOf="parent">
+
+                <FrameLayout
+                    android:id="@+id/placeholderCardView"
+                    android:layout_width="match_parent"
+                    android:layout_height="198dp"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintBottom_toTopOf="@id/loginInputForm">
+                    <com.engageft.apptoolbox.view.ProductCardView
+                        android:id="@+id/cardView"
+                        android:layout_width="wrap_content"
+                        android:layout_height="@dimen/dashboard_card_view_height"
+                        android:layout_gravity="center"
+                        app:condensed="false"
+                        app:cardnumberTextAppearance="@style/EnrollmentPlaceholderCardnumberTextAppearance"
+                        app:providerLogoDrawable="@null"
+                        app:cardLockedIcon="@null"
+                        app:productLogoDrawable="@null"
+                        app:cardBackground="@drawable/card_background_placeholder"
+                        app:cardNumberText="@string/ENROLLMENT_CARD_NUMBER_HINT"
+                        android:elevation="8dp"/>
+                    <androidx.appcompat.widget.AppCompatTextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:gravity="center"
+                        android:textAppearance="@style/EnrollmentPlaceholderCardLabelTextAppearance"
+                        android:text="@string/ENROLLMENT_CARD_NUMBER_PLACEHOLDER_LABEL"
+                        android:elevation="8dp" />
+                </FrameLayout>
 
                 <LinearLayout
                     android:id="@+id/loginInputForm"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    app:layout_constraintTop_toBottomOf="@id/loginTextView"
+                    app:layout_constraintTop_toBottomOf="@id/placeholderCardView"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintBottom_toTopOf="@id/forgotPasswordText"
-                    android:layout_marginTop="14dp"
+                    app:layout_constraintBottom_toTopOf="@id/nextButton"
                     android:orientation="vertical"
                     android:background="@color/white"
                     android:paddingStart="16dp"
                     android:paddingEnd="16dp">
 
                     <com.engageft.apptoolbox.view.CardInputWithLabel
-                        android:id="@+id/usernameInput"
+                        android:id="@+id/cardNumberInput"
                         style="@style/TextInputWithLabelStyle"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -54,7 +82,7 @@
                         app:inputText="@={viewModel.cardInput}"/>
 
                     <com.engageft.apptoolbox.view.DateInputWithLabel
-                        android:id="@+id/passwordInput"
+                        android:id="@+id/dobInput"
                         style="@style/TextInputWithLabelStyle"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -62,18 +90,21 @@
                         app:labelText="@string/ENROLLMENT_DOB_LABEL"
                         app:inputText="@={viewModel.dateOfBirth}"/>
                 </LinearLayout>
-            </androidx.constraintlayout.widget.ConstraintLayout>
 
-            <!--This gets animated in the fragment.-->
-            <com.engageft.apptoolbox.view.PillButton
-                android:id="@+id/loginButton"
-                style="@style/ButtonPillPrimaryFilledDefault"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                app:layout_constraintTop_toBottomOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                android:text="@string/login_submit_button"/>
+                <com.engageft.apptoolbox.view.PillButton
+                    android:id="@+id/nextButton"
+                    style="@style/ButtonPillPrimaryFilledDefault"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="16dp"
+                    android:layout_marginBottom="16dp"
+                    app:layout_constraintTop_toBottomOf="@id/loginInputForm"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    android:visibility="invisible"
+                    android:text="@string/ENROLLMENT_NEXT"/>
+            </androidx.constraintlayout.widget.ConstraintLayout>
 
             <LinearLayout
                 android:id="@+id/tempNavContainer"

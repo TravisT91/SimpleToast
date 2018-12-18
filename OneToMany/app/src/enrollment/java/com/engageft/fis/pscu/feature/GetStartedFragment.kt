@@ -6,8 +6,10 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.lifecycle.ViewModelProviders
 import com.engageft.apptoolbox.BaseViewModel
+import com.engageft.apptoolbox.view.ProductCardModel
 import com.engageft.fis.pscu.databinding.FragmentGetStartedBinding
 import com.engageft.fis.pscu.feature.branding.Palette
+import com.redmadrobot.inputmask.MaskedTextChangedListener
 
 /**
  * GetStartedFragment
@@ -25,9 +27,17 @@ class GetStartedFragment : BaseEngageFullscreenFragment() {
         return enrollmentViewModel
     }
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        binding = FragmentGetStartedBinding.inflate(inflater, container, false)
-        binding.viewModel = enrollmentViewModel.getStartedDelegate
-        binding.palette = Palette
+        binding = FragmentGetStartedBinding.inflate(inflater, container, false).apply {
+            this.viewModel = enrollmentViewModel.getStartedDelegate
+            this.palette = Palette
+            this.cardNumberInput.addTextChangeListener(object : MaskedTextChangedListener.ValueListener {
+                override fun onTextChanged(maskFilled: Boolean, extractedValue: String) {
+                    val productCardModel = ProductCardModel()
+                    productCardModel.cardNumberFull = cardNumberInput.getInputTextWithMask().toString()
+                    binding.cardView.updateWithProductCardModel(productCardModel)
+                }
+            })
+        }
         return binding.root
     }
 }
