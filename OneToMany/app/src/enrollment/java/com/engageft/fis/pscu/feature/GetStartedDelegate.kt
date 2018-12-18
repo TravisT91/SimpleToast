@@ -15,7 +15,7 @@ import utilGen1.DisplayDateTimeUtils
  * Created by joeyhutchins on 12/18/18.
  * Copyright (c) 2018 Engage FT. All rights reserved.
  */
-class GetStartedDelegate(private val navController: NavController, private val getStartedNavigations: EnrollmentViewModel.EnrollmentNavigations.GetStartedNavigations) {
+class GetStartedDelegate(private val viewModel: BaseEngageViewModel, private val navController: NavController, private val getStartedNavigations: EnrollmentViewModel.EnrollmentNavigations.GetStartedNavigations) {
     val cardInput: ObservableField<String> = ObservableField("")
     val dateOfBirth: ObservableField<String> = ObservableField("")
 
@@ -83,7 +83,15 @@ class GetStartedDelegate(private val navController: NavController, private val g
         validateCardNumber(false)
         validateDOB(false)
         if (checkAllFieldsValid()) {
+            val dob = try {
+                getDateForInput()
+            } catch (e: Exception) {
+                viewModel.handleThrowable(e)
+                null
+            }
+            dob?.let { dobDateTime ->
 
+            }
         }
     }
 
