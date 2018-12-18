@@ -5,4 +5,7 @@
     <string name="ENROLLMENT_CARD_NUMBER_HINT">Card number</string>
     <string name="ENROLLMENT_CARD_NUMBER_PLACEHOLDER_LABEL">YOUR CARD HERE</string>
     <string name="ENROLLMENT_NEXT">Next</string>
+    <string name="ENROLLMENT_CARD_NUMBER_INVALID">Please enter a valid 16-digit card number.</string>
+    <string name="ENROLLMENT_CARD_DOB_INVALID">Please enter a valid date of birth.</string>
+    <string name="ENROLLMENT_GET_STARTED_ACTION_NEXT">@string/ENROLLMENT_NEXT</string>
 </resources>

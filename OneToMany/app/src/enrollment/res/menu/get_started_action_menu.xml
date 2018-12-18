@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <item
+        android:title="@string/ENROLLMENT_GET_STARTED_ACTION_NEXT"
+        android:id="@+id/next"
+        android:visible="false"
+        app:showAsAction="ifRoom" />
+
+</menu>

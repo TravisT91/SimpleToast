@@ -1,6 +1,5 @@
 package com.engageft.fis.pscu.feature
 
-import androidx.databinding.ObservableField
 import androidx.navigation.NavController
 
 /**
@@ -23,7 +22,9 @@ import androidx.navigation.NavController
  * Copyright (c) 2018 Engage FT. All rights reserved.
  */
 class EnrollmentViewModel : BaseEngageViewModel() {
-    val getStartedDelegate = GetStartedDelegate()
+    val getStartedDelegate by lazy {
+        GetStartedDelegate(navController, getStartedNavigations)
+    }
 
     // These providers are here to later check isInitialized to determine if the delegates are null or not.
     val cardPinDelegateProvider = lazy {EnrollmentCardPinDelegate()}
@@ -70,34 +71,6 @@ class EnrollmentViewModel : BaseEngageViewModel() {
         }
 
         // TODO(jhutchins): Implement this.
-    }
-
-    inner class GetStartedDelegate {
-        val cardInput: ObservableField<String> = ObservableField("")
-        val dateOfBirth: ObservableField<String> = ObservableField("")
-
-        init {
-        }
-
-        fun onButton1Clicked() {
-            navController.navigate(getStartedNavigations.getStartedToPin)
-        }
-
-        fun onButton2Clicked() {
-            navController.navigate(getStartedNavigations.getStartedToCreateAccount)
-        }
-
-        fun onButton3Clicked() {
-            navController.navigate(getStartedNavigations.getStartedToVerifyIdentity)
-        }
-
-        fun onButton4Clicked() {
-            navController.navigate(getStartedNavigations.getStartedToTerms)
-        }
-
-        fun onButton5Clicked() {
-            navController.navigate(getStartedNavigations.getStartedToSending)
-        }
     }
 
     inner class EnrollmentCardPinDelegate {
