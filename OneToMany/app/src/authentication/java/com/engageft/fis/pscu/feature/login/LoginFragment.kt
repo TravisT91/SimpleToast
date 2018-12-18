@@ -85,6 +85,11 @@ class LoginFragment : BaseEngageFullscreenFragment() {
                     activity!!.finish()
                     R.id.action_loginFragment_to_authenticatedActivity
                 }
+                LoginViewModel.LoginNavigationEvent.SECURITY_QUESTIONS -> {
+                    Toast.makeText(context!!, "Showing security questions", Toast.LENGTH_LONG).show()
+                    activity!!.finish()
+                    R.id.action_login_fragment_to_securityQuestionsActivity
+                }
             }
             if (navDestinationId != 0) {
                 binding.root.findNavController().navigate(navDestinationId)

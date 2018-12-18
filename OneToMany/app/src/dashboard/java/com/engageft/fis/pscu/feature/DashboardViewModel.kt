@@ -16,7 +16,6 @@ import com.engageft.fis.pscu.feature.gatekeeping.GatedItem
 import com.engageft.fis.pscu.feature.gatekeeping.items.OnboardingGatedItem
 import com.engageft.fis.pscu.feature.gatekeeping.items.PendingCardActivationGatedItem
 import com.engageft.fis.pscu.feature.gatekeeping.items.Post30DaysGatedItem
-import com.engageft.fis.pscu.feature.gatekeeping.items.SecurityQuestionsGatedItem
 import com.ob.domain.lookup.TransactionStatus
 import com.ob.ws.dom.BasicResponse
 import com.ob.ws.dom.LoginResponse
@@ -168,9 +167,6 @@ class DashboardViewModel : BaseEngageViewModel(), GateKeeperListener {
 
     override fun onGatedItemFailed(item: GatedItem) {
         when (item) {
-            is SecurityQuestionsGatedItem -> {
-                showSecurityQuestions()
-            }
             is PendingCardActivationGatedItem -> {
                 showCardTracker()
             }
@@ -309,11 +305,6 @@ class DashboardViewModel : BaseEngageViewModel(), GateKeeperListener {
 
     fun showTransactionSearch() {
         navigationObservable.value = DashboardNavigationEvent.TRANSACTION_SEARCH
-        navigationObservable.postValue(DashboardNavigationEvent.NONE)
-    }
-
-    fun showSecurityQuestions() {
-        navigationObservable.value = DashboardNavigationEvent.SECURITY_QUESTIONS
         navigationObservable.postValue(DashboardNavigationEvent.NONE)
     }
 

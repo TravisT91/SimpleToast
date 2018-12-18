@@ -16,7 +16,6 @@ import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.navigation.findNavController
-import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.engageft.apptoolbox.BaseViewModel
 import com.engageft.apptoolbox.ToolbarVisibilityState
@@ -415,9 +414,6 @@ class DashboardFragment : BaseEngageFullscreenFragment(),
                 }
                 DashboardNavigationEvent.TRANSACTION_SEARCH -> {
                     Toast.makeText(context!!, "TODO: Navigate to Transaction Search", Toast.LENGTH_LONG).show()
-                }
-                DashboardNavigationEvent.SECURITY_QUESTIONS -> {
-                    findNavController().navigate(R.id.action_dashboard_fragment_to_changeSecurityQuestionsFragment)
                 }
                 DashboardNavigationEvent.CARD_TRACKER -> {
                     Toast.makeText(context!!, "TODO: Navigate to Card Tracker", Toast.LENGTH_LONG).show()

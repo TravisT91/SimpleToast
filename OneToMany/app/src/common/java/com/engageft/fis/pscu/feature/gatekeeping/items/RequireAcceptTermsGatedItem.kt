@@ -1,6 +1,7 @@
 package com.engageft.fis.pscu.feature.gatekeeping.items
 
 import com.engageft.engagekit.EngageService
+import com.engageft.fis.pscu.feature.authentication.AuthenticationConfig
 import com.engageft.fis.pscu.feature.gatekeeping.GatedItem
 import com.engageft.fis.pscu.feature.gatekeeping.GatedItemResultListener
 import com.ob.ws.dom.LoginResponse
@@ -18,23 +19,27 @@ import io.reactivex.schedulers.Schedulers
  */
 class RequireAcceptTermsGatedItem(private val compositeDisposable: CompositeDisposable) : GatedItem() {
     override fun checkItem(resultListener: GatedItemResultListener) {
-        compositeDisposable.add(
-                EngageService.getInstance().loginResponseAsObservable
-                        .subscribeOn(Schedulers.io())
-                        .observeOn(AndroidSchedulers.mainThread())
-                        .subscribe({ response ->
-                            if (response.isSuccess && response is LoginResponse) {
-                                if (response.isRequireAcceptTerms) {
-                                    resultListener.onItemCheckFailed()
+        if (AuthenticationConfig.requireAcceptTerms) {
+            compositeDisposable.add(
+                    EngageService.getInstance().loginResponseAsObservable
+                            .subscribeOn(Schedulers.io())
+                            .observeOn(AndroidSchedulers.mainThread())
+                            .subscribe({ response ->
+                                if (response.isSuccess && response is LoginResponse) {
+                                    if (response.isRequireAcceptTerms) {
+                                        resultListener.onItemCheckFailed()
+                                    } else {
+                                        resultListener.onItemCheckPassed()
+                                    }
                                 } else {
-                                    resultListener.onItemCheckPassed()
+                                    resultListener.onItemError(null, response.message)
                                 }
-                            } else {
-                                resultListener.onItemError(null, response.message)
+                            }) { e ->
+                                resultListener.onItemError(e, null)
                             }
-                        }) {e ->
-                            resultListener.onItemError(e, null)
-                        }
-        )
+            )
+        } else {
+            resultListener.onItemCheckPassed()
+        }
     }
 }

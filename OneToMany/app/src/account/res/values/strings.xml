@@ -38,7 +38,12 @@
     <string name="SECURITY_QUESTIONS_SUCCESS_MESSAGE_OK">Ok</string>
     <string name="SECURITY_QUESTIONS_ACTION_SAVE">@string/save</string>
 
+    <string name="SECURITY_QUESTIONS_CREATE_BACK_TITLE">Security Questions Required</string>
+    <string name="SECURITY_QUESTIONS_CREATE_BACK_MESSAGE">You will not be able to login until answering security questions for this account. Are you sure you have to leave?</string>
+    <string name="SECURITY_QUESTIONS_CREATE_BACK_POSITIVE">Leave</string>
+    <string name="SECURITY_QUESTIONS_CREATE_BACK_NEGATIVE">Stay</string>
 
+    <!-- PROFILE: -->
     <string name="PROFILE_LEGAL_NAME">Legal name</string>
     <string name="PROFILE_EMAIL">Email address</string>
     <string name="PROFILE_PHONE">Phone number</string>

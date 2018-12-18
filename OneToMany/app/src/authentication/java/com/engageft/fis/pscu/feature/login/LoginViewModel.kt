@@ -19,6 +19,7 @@ import com.engageft.fis.pscu.feature.gatekeeping.GatedItem
 import com.engageft.fis.pscu.feature.gatekeeping.LoginGateKeeper
 import com.engageft.fis.pscu.feature.gatekeeping.items.RequireAcceptTermsGatedItem
 import com.engageft.fis.pscu.feature.gatekeeping.items.RequireEmailConfirmationGatedItem
+import com.engageft.fis.pscu.feature.gatekeeping.items.SecurityQuestionsGatedItem
 import com.engageft.fis.pscu.feature.gatekeeping.items.TwoFactorAuthGatedItem
 import com.engageft.fis.pscu.feature.subscribeWithDefaultProgressAndErrorHandling
 import com.ob.ws.dom.BasicResponse
@@ -43,7 +44,8 @@ class LoginViewModel : BaseEngageViewModel(), GateKeeperListener {
         ISSUER_STATEMENT,
         DISCLOSURES,
         TWO_FACTOR_AUTHENTICATION,
-        ACCEPT_TERMS
+        ACCEPT_TERMS,
+        SECURITY_QUESTIONS
     }
 
     enum class ButtonState {
@@ -139,6 +141,9 @@ class LoginViewModel : BaseEngageViewModel(), GateKeeperListener {
             }
             is RequireAcceptTermsGatedItem -> {
                 navigationObservable.value = LoginNavigationEvent.ACCEPT_TERMS
+            }
+            is SecurityQuestionsGatedItem -> {
+                navigationObservable.value = LoginNavigationEvent.SECURITY_QUESTIONS
             }
         }
     }

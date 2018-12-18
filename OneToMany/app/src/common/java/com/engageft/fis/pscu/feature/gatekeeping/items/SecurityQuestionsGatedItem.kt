@@ -1,11 +1,10 @@
 package com.engageft.fis.pscu.feature.gatekeeping.items
 
-import android.text.TextUtils
 import com.engageft.engagekit.EngageService
-import com.engageft.engagekit.utils.LoginResponseUtils
+import com.engageft.engagekit.rest.request.AuthenticatedRequest
+import com.engageft.fis.pscu.feature.authentication.AuthenticationConfig
 import com.engageft.fis.pscu.feature.gatekeeping.GatedItem
 import com.engageft.fis.pscu.feature.gatekeeping.GatedItemResultListener
-import com.ob.ws.dom.LoginResponse
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
@@ -19,40 +18,21 @@ import io.reactivex.schedulers.Schedulers
  * Copyright (c) 2018 Engage FT. All rights reserved.
  */
 class SecurityQuestionsGatedItem(private val compositeDisposable: CompositeDisposable) : GatedItem() {
-    private var hasBeenChecked = false
     override fun checkItem(resultListener: GatedItemResultListener) {
-        if (!hasBeenChecked) {
-            hasBeenChecked = true
+        if (AuthenticationConfig.requireSecurityQuestions) {
             compositeDisposable.add(
-                    EngageService.getInstance().loginResponseAsObservable
-                            .subscribeOn(Schedulers.io())
-                            .observeOn(AndroidSchedulers.mainThread())
-                            .subscribe({ response ->
-                                if (response.isSuccess && response is LoginResponse) {
-                                    // Note(jhutchins):
-                                    // The onboardingCompleteDate, for some reason, is stored in the DebitCardInfo model.
-                                    // This is weird because we might have more than one card on this account.
-                                    // Will the onboardingCompleteDate be the same for every single DebitCardInfo?
-                                    // The answer is YES, according to Vipin Kumar. This was confirmed on 6-13-18.
-                                    // When asked why we store this date in the cards instead of at the account
-                                    // level (which makes sense), I was told it was done this way due to time
-                                    // constraints and this model was most quickly editable.
-                                    val debitCardInfo = LoginResponseUtils.getCurrentCard(response)
-                                    debitCardInfo?.let {
-                                        if (TextUtils.isEmpty(debitCardInfo.onboardingCompleteDate)) {
-                                            resultListener.onItemCheckFailed()
-                                        } else {
-                                            resultListener.onItemCheckPassed()
-                                        }
-                                    } ?: kotlin.run {
-                                        resultListener.onItemCheckFailed()
-                                    }
-                                } else {
-                                    resultListener.onItemError(null, response.message)
-                                }
-                            }) { e ->
-                                resultListener.onItemError(e, null)
+                        EngageService.getInstance().engageApiInterface.postHasSecurityQuestions(AuthenticatedRequest(EngageService.getInstance().authManager.authToken).fieldMap)
+                       .subscribeOn(Schedulers.io())
+                       .observeOn(AndroidSchedulers.mainThread())
+                       .subscribe({ response ->
+                            if (response.isSuccess && response.message == "true") {
+                                resultListener.onItemCheckPassed()
+                            } else {
+                                resultListener.onItemCheckFailed()
                             }
+                        }) {e ->
+                            resultListener.onItemError(e, null)
+                        }
             )
         } else {
             resultListener.onItemCheckPassed()

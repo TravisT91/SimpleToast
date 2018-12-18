@@ -2,6 +2,7 @@ package com.engageft.fis.pscu.feature.gatekeeping
 
 import com.engageft.fis.pscu.feature.gatekeeping.items.RequireAcceptTermsGatedItem
 import com.engageft.fis.pscu.feature.gatekeeping.items.RequireEmailConfirmationGatedItem
+import com.engageft.fis.pscu.feature.gatekeeping.items.SecurityQuestionsGatedItem
 import com.engageft.fis.pscu.feature.gatekeeping.items.TwoFactorAuthGatedItem
 import io.reactivex.disposables.CompositeDisposable
 
@@ -17,5 +18,6 @@ class LoginGateKeeper(compositeDisposable: CompositeDisposable, gateKeeperListen
     override val gatedItems = arrayListOf(
             TwoFactorAuthGatedItem(compositeDisposable),
             RequireEmailConfirmationGatedItem(compositeDisposable),
-            RequireAcceptTermsGatedItem(compositeDisposable))
+            RequireAcceptTermsGatedItem(compositeDisposable),
+            SecurityQuestionsGatedItem(compositeDisposable))
 }
