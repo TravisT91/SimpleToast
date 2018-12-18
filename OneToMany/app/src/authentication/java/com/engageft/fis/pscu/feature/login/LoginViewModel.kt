@@ -259,6 +259,10 @@ class LoginViewModel : BaseEngageViewModel(), GateKeeperListener {
                                         handleSuccessfulLoginResponse(response)
                                         loginGateKeeper.run()
                                     } else if (response is DeviceFailResponse) {
+                                        // This causes the loginResponse to be fetched twice by the TwoFactorAuthGatedItem
+                                        // - a minor inconvenience.
+                                        // TODO(jhtuchins): The DeviceFailResponse should be cached locally
+                                        // so the fetch doesn't need to happen twice when the GateKeeper runs.
                                         loginGateKeeper.run()
                                     } else {
                                         progressOverlayShownObservable.value = false

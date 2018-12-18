@@ -9,9 +9,9 @@ import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
 
 /**
- * TODO(joeyhutchins): ClassName
+ * TwoFactorAuthGatedItem
  * <p>
- * TODO(joeyhutchins): Class description.
+ * Check if the user needs two factor authentcation.
  * </p>
  * Created by joeyhutchins on 12/10/18.
  * Copyright (c) 2018 Engage FT. All rights reserved.

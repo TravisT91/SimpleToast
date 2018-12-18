@@ -11,9 +11,9 @@ import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
 
 /**
- * TODO(joeyhutchins): ClassName
+ * RequireEmailConfirmationGatedItem
  * <p>
- * TODO(joeyhutchins): Class description.
+ * Check if email confirmation is required and if the config has it enabled. 
  * </p>
  * Created by joeyhutchins on 12/10/18.
  * Copyright (c) 2018 Engage FT. All rights reserved.

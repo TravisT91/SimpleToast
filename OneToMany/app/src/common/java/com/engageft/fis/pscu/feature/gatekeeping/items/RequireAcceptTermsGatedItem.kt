@@ -10,9 +10,11 @@ import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
 
 /**
- * TODO(joeyhutchins): ClassName
+ * RequireAcceptTermsGatedItem
  * <p>
- * TODO(joeyhutchins): Class description.
+ * If the requireAcceptTerms config is enabled, this will run and check if the backend requires the
+ * user to accept terms.
+ * If it does, it will fail the check.
  * </p>
  * Created by joeyhutchins on 12/10/18.
  * Copyright (c) 2018 Engage FT. All rights reserved.
