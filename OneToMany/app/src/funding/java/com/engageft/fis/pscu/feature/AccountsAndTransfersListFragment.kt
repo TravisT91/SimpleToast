@@ -49,7 +49,7 @@ class AccountsAndTransfersListFragment: BaseEngageFullscreenFragment() {
                             val bundle = Bundle().apply {
                                 putLong(ACH_BANK_ACCOUNT_ID, achAccountInfoId)
                             }
-                            binding.root.findNavController().navigate(R.id.action_accountsAndTransfersListFragment_to_addDeleteAchBankAccountFragment,
+                            binding.root.findNavController().navigate(R.id.action_accountsAndTransfersListFragment_to_achBankAccountFragment,
                                     bundle)
                         }
                     },

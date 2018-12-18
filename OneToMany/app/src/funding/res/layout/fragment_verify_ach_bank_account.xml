@@ -12,57 +12,66 @@
             type="com.engageft.fis.pscu.feature.branding.Palette"/>
     </data>
 
-    <androidx.appcompat.widget.LinearLayoutCompat
-        android:orientation="vertical"
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
-
-        <androidx.appcompat.widget.AppCompatTextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:padding="16dp"
-            android:textSize="14sp"
-            android:textColor="@color/textSecondary"
-            android:lineSpacingExtra="13sp"
-            android:gravity="center_horizontal"
-            android:text="@string/ach_bank_account_verify_description"/>
+        android:layout_height="match_parent"
+        android:fillViewport="true">
 
         <androidx.appcompat.widget.LinearLayoutCompat
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:background="@color/cellBackground">
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
 
-            <com.engageft.apptoolbox.view.CurrencyInputWithLabel
-                android:id="@+id/amountInputWithLabel1"
+            <androidx.appcompat.widget.AppCompatTextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:padding="16dp"
-                app:labelText="@string/ach_bank_account_verify_amount_1"
-                app:inputText="@={viewModel.amount1}"/>
+                android:textSize="14sp"
+                android:textColor="@color/textSecondary"
+                android:lineSpacingExtra="13sp"
+                android:gravity="center_horizontal"
+                android:text="@string/ach_bank_account_verify_description"/>
 
-            <com.engageft.apptoolbox.view.CurrencyInputWithLabel
-                android:id="@+id/amountInputWithLabel2"
+            <androidx.appcompat.widget.LinearLayoutCompat
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:paddingEnd="16dp"
-                android:paddingStart="16dp"
-                app:labelText="@string/ach_bank_account_verify_amount_2"
-                app:inputText="@={viewModel.amount2}"/>
+                android:orientation="vertical"
+                android:background="@color/cellBackground">
+
+                <com.engageft.apptoolbox.view.CurrencyInputWithLabel
+                    style="@style/CurrencyInputWithLabelStyle"
+                    android:id="@+id/amountInputWithLabel1"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:padding="16dp"
+                    app:labelText="@string/ach_bank_account_verify_amount_1"
+                    app:inputText="@={viewModel.amount1}"/>
+
+                <com.engageft.apptoolbox.view.CurrencyInputWithLabel
+                    style="@style/CurrencyInputWithLabelStyle"
+                    android:id="@+id/amountInputWithLabel2"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingEnd="16dp"
+                    android:paddingStart="16dp"
+                    app:labelText="@string/ach_bank_account_verify_amount_2"
+                    app:inputText="@={viewModel.amount2}"/>
+
+            </androidx.appcompat.widget.LinearLayoutCompat>
+
+            <com.engageft.apptoolbox.view.PillButton
+                style="@style/ButtonPillPrimaryFilledDefault"
+                android:id="@+id/submitButton"
+                android:layout_gravity="center"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/pillButtonInFormsTopSpace"
+                android:text="@string/ach_bank_account_verify_button"
+                android:onClick="@{() -> viewModel.onVerifyAccount()}"
+                android:visibility="@{viewModel.showButton ? View.VISIBLE : View.GONE}"/>
 
         </androidx.appcompat.widget.LinearLayoutCompat>
+    </ScrollView>
 
-        <com.engageft.apptoolbox.view.PillButton
-            style="@style/ButtonPillPrimaryFilledDefault"
-            android:id="@+id/submitButton"
-            android:layout_gravity="center"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="32dp"
-            android:text="@string/ach_bank_account_verify_button"
-            android:onClick="@{() -> viewModel.onVerifyAccount()}"
-            android:visibility="@{viewModel.showButton ? View.VISIBLE : View.GONE}"/>
-
-    </androidx.appcompat.widget.LinearLayoutCompat>
 
 </layout>

@@ -14,11 +14,13 @@ import com.engageft.apptoolbox.BaseViewModel
 import com.engageft.fis.pscu.R
 import com.engageft.fis.pscu.databinding.FragmentAchBankAccountBinding
 import com.engageft.fis.pscu.feature.branding.Palette
+import kotlinx.android.synthetic.main.fragment_direct_deposit.*
 import utilGen1.AchAccountInfoUtils
 
 class AchBankAccountFragment: BaseEngageFullscreenFragment() {
 
     private lateinit var achBankAccountViewModel: AchBankAccountViewModel
+    private lateinit var binding: FragmentAchBankAccountBinding
 
     override fun createViewModel(): BaseViewModel? {
         achBankAccountViewModel = ViewModelProviders.of(this).get(AchBankAccountViewModel::class.java)
@@ -26,25 +28,29 @@ class AchBankAccountFragment: BaseEngageFullscreenFragment() {
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        val binding = FragmentAchBankAccountBinding.inflate(inflater, container, false)
+        binding = FragmentAchBankAccountBinding.inflate(inflater, container, false)
 
         binding.apply {
             viewModel = achBankAccountViewModel
             palette = Palette
 
-            accountTypeBottomSheet.dialogOptions = ArrayList(AchAccountInfoUtils.accountTypeDisplayStrings(context!!))
-        }
+            arguments?.let {
+                achBankAccountViewModel.achAccountInfoId = it.getLong(AccountsAndTransfersListFragment.ACH_BANK_ACCOUNT_ID, 0)
+            }
 
-        arguments?.let {
-            achBankAccountViewModel.achAccountInfoId = it.getLong(AccountsAndTransfersListFragment.ACH_BANK_ACCOUNT_ID, 0)
+            accountTypeBottomSheet.dialogOptions = ArrayList(AchAccountInfoUtils.accountTypeDisplayStrings(context!!))
         }
 
         achBankAccountViewModel.apply {
             navigationEventObservable.observe(this@AchBankAccountFragment, Observer {
-                binding.root.findNavController().navigate(R.id.action_accountsAndTransfersListFragment_to_verifyAchBankAccountFragment)
+                binding.root.findNavController().navigate(R.id.action_achBankAccountFragment_to_verifyAchBankAccountFragment)
             })
 
             formStateObservable.observe(this@AchBankAccountFragment, Observer {
+                when (it) {
+                    // user can't EDIT actually, so disable all inputFields
+                    AchBankAccountViewModel.FormState.EDIT -> disableAllInputFields()
+                }
                 activity?.invalidateOptionsMenu()
             })
 
@@ -63,6 +69,15 @@ class AchBankAccountFragment: BaseEngageFullscreenFragment() {
         }
 
         return binding.root
+    }
+
+    private fun disableAllInputFields() {
+        binding.apply {
+            accountNameInputWithLabel.isEnabled = false
+            routingNumberInputWithLabel.isEnabled = false
+            accountNumberInputWithLabel.isEnabled = false
+            accountTypeBottomSheet.isEnabled = false
+        }
     }
 
     override fun onResume() {
