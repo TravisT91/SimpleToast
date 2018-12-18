@@ -69,6 +69,7 @@ class AccountsAndTransfersListFragment: BaseEngageFullscreenFragment() {
                                         // TODO(aHashimi): FOTM-113 create transfer
                                     } else {
                                         //TODO(aHashimi): FOTM-65 verify bank account
+                                        //
                                         binding.root.findNavController().navigate(R.id.action_accountsAndTransfersListFragment_to_verifyAchBankAccountFragment)
                                     }
                                 }

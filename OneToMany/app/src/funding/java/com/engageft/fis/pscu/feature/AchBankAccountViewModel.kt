@@ -15,26 +15,24 @@ import com.ob.domain.lookup.AchAccountStatus
 import com.engageft.engagekit.rest.request.AchAccountRequest
 import com.ob.ws.dom.utility.AccountInfo
 
-
 class AchBankAccountViewModel: BaseEngageViewModel() {
-
+    enum class ButtonState {
+        SHOW,
+        HIDE
+    }
     private companion object {
         const val ACCOUNT_NUMBER_FORMAT = "*******%s"
     }
-//    enum class ButtonState {
-//        SHOW,
-//        HIDE
-//    }
 
     enum class AccountStatus {
         VERIFIED,
         UNVERIFIED
     }
 
-    enum class FormState {
-        CREATE,
-        EDIT
-    }
+//    enum class FormState {
+//        CREATE,
+//        EDIT
+//    }
 
     enum class NavigationEvent {
         VERIFY_ACCOUNT
@@ -44,13 +42,15 @@ class AchBankAccountViewModel: BaseEngageViewModel() {
     val routingNumber: ObservableField<String> = ObservableField("")
     val accountNumber: ObservableField<String> = ObservableField("")
     val accountType: ObservableField<String> = ObservableField("")
-    var showButton: ObservableField<Boolean> = ObservableField(false)
+//    var showButton: ObservableField<Boolean> = ObservableField(false)
+    var showDeleteButton: ObservableField<Boolean> = ObservableField(false)
     //    var buttonText: ObservableField<String> = ObservableField("")
     //TODO: not sure how I feel about this
-    var isEditMode: ObservableField<Boolean> = ObservableField(false)
+//    var isEditMode: ObservableField<Boolean> = ObservableField(false)
     var isChecking: Boolean = false
 
-    val navigationEventObservable = MutableLiveData<NavigationEvent>()
+    val navigationEventObservable = MutableLiveData<AchBankAccountNavigationEvent>()
+    val buttonStateObservable = MutableLiveData<ButtonState>()
     val formStateObservable = MutableLiveData<FormState>()
     //    var formState = FormState.CREATE
     val bankAccountStatusObservable = MutableLiveData<AccountStatus>()
@@ -58,10 +58,12 @@ class AchBankAccountViewModel: BaseEngageViewModel() {
     var achAccountInfoId: Long = 0L
     var achAccountInfo: AchAccountInfo? = null
     var currentAccountInfo: AccountInfo? = null
-    val populateAccountTypeObservable = MutableLiveData<Boolean>()
-    val checkingAccountTypeObservable = MutableLiveData<String>()
+//    val populateAccountTypeObservable = MutableLiveData<Boolean>()
+//    val checkingAccountTypeObservable = MutableLiveData<String>()
 
     init {
+        buttonStateObservable.value = ButtonState.HIDE
+
         accountName.addOnPropertyChangedCallback(object : Observable.OnPropertyChangedCallback() {
             override fun onPropertyChanged(sender: Observable?, propertyId: Int) {
                 updateButtonState()
@@ -83,7 +85,7 @@ class AchBankAccountViewModel: BaseEngageViewModel() {
         accountType.addOnPropertyChangedCallback(object : Observable.OnPropertyChangedCallback() {
             override fun onPropertyChanged(sender: Observable?, propertyId: Int) {
                 updateButtonState()
-                checkingAccountTypeObservable.value = accountType.get()!!
+//                checkingAccountTypeObservable.value = accountType.get()!!
             }
         })
 
@@ -104,16 +106,20 @@ class AchBankAccountViewModel: BaseEngageViewModel() {
                         currentAccountInfo = LoginResponseUtils.getCurrentAccountInfo(response)
 
                         achAccountInfo?.let { account ->
-                            formStateObservable.value = FormState.EDIT
-                            isEditMode.set(true)
+                            val editState = FormState.EditState()
+//                            formStateObservable.value = FormState.EditState
+//                            isEditMode.set(true)
                             // populate data
                             accountName.set(account.bankName)
                             accountNumber.set(String.format(ACCOUNT_NUMBER_FORMAT, account.accountLastDigits))
                             routingNumber.set(account.routeNumber)
-                            // TODO(aHashimi): can we get the account types from backend?
-                            populateAccountTypeObservable.value = account.isChecking
+                            editState.isChecking = account.isChecking
+                            editState.isAccountVerified = account.achAccountStatus == AchAccountStatus.VERIFIED
+                            formStateObservable.value = editState
+
+                            showDeleteButton.set(true)
                         } ?: kotlin.run {
-                            formStateObservable.value = FormState.CREATE
+                            formStateObservable.value = FormState.CreateState()
                         }
                     } else {
                         handleUnexpectedErrorResponse(response)
@@ -126,29 +132,26 @@ class AchBankAccountViewModel: BaseEngageViewModel() {
     }
 
     fun updateButtonState() {
-        //
-        showButton.set(if (formStateObservable.value == FormState.CREATE) {
-            (accountName.get()!!.isNotEmpty() && accountNumber.get()!!.isNotEmpty()
-                    && routingNumber.get()!!.isNotEmpty() && accountType.get()!!.isNotEmpty())
-        } else {
-            !isEditMode.get()!! // show button if account is not verified
-        })
-
-        if (formStateObservable.value == FormState.CREATE) {
+        if (formStateObservable.value is FormState.CreateState) {
             if (accountName.get()!!.isNotEmpty() && accountNumber.get()!!.isNotEmpty()
                     && routingNumber.get()!!.isNotEmpty() && accountType.get()!!.isNotEmpty()) {
-                showButton.set(true)
+//                buttonStateObservable.set(true)
+                buttonStateObservable.value = ButtonState.SHOW
             }
         } else {
-            achAccountInfo?.let {
-                if (it.achAccountStatus == AchAccountStatus.UNVERIFIED) {
-                    showButton.set(true)
-                }
-            }
+            buttonStateObservable.value = ButtonState.HIDE
         }
+//        else {
+//            achAccountInfo?.let {
+//                if (it.achAccountStatus == AchAccountStatus.UNVERIFIED) {
+//                    showButton.set(true)
+//                }
+//            }
+//        }
     }
 
-    fun deleteAccount() {
+    fun onDeleteAccount() {
+
         progressOverlayShownObservable.value = true
         compositeDisposable.add(engageApi().postDeleteAchAccount(AchAccountRequest(
                 EngageService.getInstance().authManager.authToken, achAccountInfoId).fieldMap)
@@ -157,8 +160,6 @@ class AchBankAccountViewModel: BaseEngageViewModel() {
                 .subscribe({ response ->
                     progressOverlayShownObservable.value = false
                     if (response.isSuccess) {
-                        // todo must complete
-//                                    showSuccessDialog(getString(R.string.BANKACCOUNT_DELETED_ALERT), true)
                         val loginResponse = EngageService.getInstance().storageManager.loginResponse
                         if (loginResponse != null) {
                             EngageService.getInstance().storageManager.clearForLoginWithDataLoad(false)
@@ -180,13 +181,13 @@ class AchBankAccountViewModel: BaseEngageViewModel() {
 
     fun onAddOrVerifyAccount() {
         when (formStateObservable.value) {
-            FormState.EDIT -> {
+            is FormState.EditState -> {
                 if (achAccountInfo?.achAccountStatus == AchAccountStatus.UNVERIFIED) {
-                    navigationEventObservable.value = NavigationEvent.VERIFY_ACCOUNT
+                    navigationEventObservable.value = AchBankAccountNavigationEvent.VERIFY_ACCOUNT
                 }
                 // else technically button should not be visible
             }
-            FormState.CREATE -> {
+            is FormState.CreateState -> {
                 addBankAccount()
             }
         }
@@ -212,7 +213,7 @@ class AchBankAccountViewModel: BaseEngageViewModel() {
                         progressOverlayShownObservable.value = false
                         if (response.isSuccess) {
                             EngageService.getInstance().storageManager.clearForLoginWithDataLoad(false)
-                            //                                showSuccessDialog(getString(R.string.BANKACCOUNT_CREATED_ALERT), true)
+                            navigationEventObservable.value = AchBankAccountNavigationEvent.BANK_ADDED_SUCCESS
                         } else {
                             handleUnexpectedErrorResponse(response)
                         }
@@ -223,7 +224,32 @@ class AchBankAccountViewModel: BaseEngageViewModel() {
             )
         } ?: kotlin.run {
             //todo show dialog
+            dialogInfoObservable.value = DialogInfo()
         }
 
     }
+}
+
+sealed class FormState {
+    class CreateState: FormState()
+    class EditState(var isChecking: Boolean = false, var isAccountVerified: Boolean = false): FormState()
+}
+
+class AchBankAccountDialogInfo(title: String? = null,
+                           message: String? = null,
+                           tag: String? = null,
+                           dialogType: DialogType = DialogType.GENERIC_ERROR,
+                           var achBankAccountDialogType: AchBankAccountType) : DialogInfo(title, message, tag, dialogType) {
+    enum class AchBankAccountType {
+        DEPOSIT_AMOUNT_MISMATCH,
+        DEPOSIT_AMOUNT_INVALID,
+        DELETE_ACCOUNT_CONFIRMATION,
+    }
+}
+
+enum class AchBankAccountNavigationEvent {
+    BANK_ADDED_SUCCESS,
+    BANK_VERIFIED_SUCCESS,
+    VERIFY_ACCOUNT
+
 }

@@ -265,8 +265,8 @@
     </fragment>
     <fragment
         android:id="@+id/achBankAccountFragment"
-        android:name="com.engageft.fis.pscu.feature.AchBankAccountFragment"
-        android:label="AchBankAccountFragment" >
+        android:name="com.engageft.fis.pscu.feature.AchBankAccountFragment">
+        <!-- must set screen title programmatically -->
         <action
             android:id="@+id/action_achBankAccountFragment_to_verifyAchBankAccountFragment"
             app:destination="@id/verifyAchBankAccountFragment" />
@@ -274,6 +274,6 @@
     <fragment
         android:id="@+id/verifyAchBankAccountFragment"
         android:name="com.engageft.fis.pscu.feature.VerifyAchBankAccountFragment"
-        android:label="VerifyAchBankAccountFragment" />
+        android:label="@string/ach_bank_transfer_verify_account" />
 
 </navigation>

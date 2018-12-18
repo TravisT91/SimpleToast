@@ -8,6 +8,10 @@ import com.engageft.engagekit.EngageService
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 import com.engageft.engagekit.rest.request.AchAccountValidateRequest
+import com.engageft.fis.pscu.feature.login.LoginDialogInfo
+import com.engageft.engagekit.tools.Profiler
+import com.engageft.fis.pscu.config.BaseAppConfig
+
 
 class VerifyAchBankAccountViewModel: BaseEngageViewModel() {
 
@@ -20,7 +24,6 @@ class VerifyAchBankAccountViewModel: BaseEngageViewModel() {
     var achAccountInfoId: Long = 0L
 
     val amount1ShowErrorObservable = MutableLiveData<Boolean>()
-    val amount3ShowErrorObservable = MutableLiveData<Boolean>()
     val amount2ShowErrorObservable = MutableLiveData<Boolean>()
 
     init {
@@ -32,6 +35,7 @@ class VerifyAchBankAccountViewModel: BaseEngageViewModel() {
                 if (amount1ShowErrorObservable.value!!) {
                     validateAmount1()
                 }
+                updateButtonState()
             }
         })
 
@@ -40,58 +44,72 @@ class VerifyAchBankAccountViewModel: BaseEngageViewModel() {
                 if (amount2ShowErrorObservable.value!!) {
                     validateAmount2()
                 }
+                updateButtonState()
             }
         })
     }
 
     fun onVerifyAccount() {
-        progressOverlayShownObservable.value = true
-        //TODO(aHashimi): should send sessionID like gen1?
-        val request = AchAccountValidateRequest(
-                EngageService.getInstance().authManager.authToken,
-                achAccountInfoId,
-                amount1.get()!!,
-                amount2.get()!!, "")
+        if (isAmountValid(amount1.get()!!) && isAmountValid(amount2.get()!!)) {
+            progressOverlayShownObservable.value = true
+            //TODO(aHashimi): should send sessionID like gen1?
+            val request = AchAccountValidateRequest(
+                    EngageService.getInstance().authManager.authToken,
+                    achAccountInfoId,
+                    amount1.get()!!,
+                    amount2.get()!!, "")
 
-        compositeDisposable.add(
-                EngageService.getInstance().engageApiInterface.postValidateAchAccount(request.fieldMap)
-                        .subscribeOn(Schedulers.io())
-                        .observeOn(AndroidSchedulers.mainThread())
-                        .subscribe({ response ->
-                            progressOverlayShownObservable.value = false
-                            if (response.isSuccess) {
-                                EngageService.getInstance().storageManager.clearForLoginWithDataLoad(false)
-                            } else {
-                                handleUnexpectedErrorResponse(response)
-                            }
-                        }, { e ->
-                            progressOverlayShownObservable.value = false
-                            handleThrowable(e)
-                        })
-        )
+            compositeDisposable.add(
+                    EngageService.getInstance().engageApiInterface.postValidateAchAccount(request.fieldMap)
+                            .subscribeOn(Schedulers.io())
+                            .observeOn(AndroidSchedulers.mainThread())
+                            .subscribe({ response ->
+                                progressOverlayShownObservable.value = false
+                                if (response.isSuccess) {
+                                    EngageService.getInstance().storageManager.clearForLoginWithDataLoad(false)
+                                } else {
+//                                    handleUnexpectedErrorResponse(response)
+                                    dialogInfoObservable.value = AchBankAccountDialogInfo(
+                                            dialogType = DialogInfo.DialogType.OTHER,
+                                            achBankAccountDialogType = AchBankAccountDialogInfo.AchBankAccountType.DEPOSIT_AMOUNT_MISMATCH)
+                                }
+                            }, { e ->
+                                progressOverlayShownObservable.value = false
+                                handleThrowable(e)
+                            })
+            )
+        } else {
+            dialogInfoObservable.value = AchBankAccountDialogInfo(
+                    dialogType = DialogInfo.DialogType.OTHER,
+                    achBankAccountDialogType = AchBankAccountDialogInfo.AchBankAccountType.DEPOSIT_AMOUNT_INVALID)
+        }
     }
 
     fun validateAmount1() {
-        amount1ShowErrorObservable.value = !isAmountValid(amount1.get()!!)
+        amount1ShowErrorObservable.value = !(amount1.get()!!.isEmpty() || isAmountValid(amount1.get()!!))
     }
 
     fun validateAmount2() {
-        amount2ShowErrorObservable.value = !isAmountValid(amount2.get()!!)
+        amount2ShowErrorObservable.value = !(amount2.get()!!.isEmpty() || isAmountValid(amount2.get()!!))
     }
 
     private fun isAmountValid(amount: String): Boolean {
-        if (amount.isNotEmpty()) {
-            //todo remove hard-coded currency code
-            val extractedAmount = CurrencyUtils.getNonFormattedDecimalAmountString(
-                    currencyCode = "USD",
-                    stringWithCurrencySymbol = amount)
-            if (extractedAmount.isNotEmpty()) {
-                return extractedAmount.toDouble() in minAmount..maxAmount
-            }
-            return false
+        //todo remove hard-coded currency code
+        val extractedAmount = CurrencyUtils.getNonFormattedDecimalAmountString(
+                currencyCode = "USD",
+                stringWithCurrencySymbol = amount)
+        if (extractedAmount.isNotEmpty()) {
+            return extractedAmount.toDouble() in minAmount..maxAmount
         }
 
-        // if empty, don't show error
-        return true
+        return false
+    }
+
+    private fun updateButtonState() {
+        if (amount1.get()!!.isNotEmpty() && amount2.get()!!.isNotEmpty()) {
+            showButton.set(true)
+        } else {
+            showButton.set(false)
+        }
     }
 }

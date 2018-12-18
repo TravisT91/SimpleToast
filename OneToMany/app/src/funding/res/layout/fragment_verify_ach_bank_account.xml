@@ -23,6 +23,7 @@
             android:layout_height="wrap_content">
 
             <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/instructionsTextView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:padding="16dp"
@@ -30,7 +31,7 @@
                 android:textColor="@color/textSecondary"
                 android:lineSpacingExtra="13sp"
                 android:gravity="center_horizontal"
-                android:text="@string/ach_bank_account_verify_description"/>
+                android:text="@string/ach_bank_account_verify_instructions"/>
 
             <androidx.appcompat.widget.LinearLayoutCompat
                 android:layout_width="match_parent"
@@ -65,7 +66,7 @@
                 android:layout_gravity="center"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/pillButtonInFormsTopSpace"
+                android:layout_marginTop="@dimen/pillButtonTopSpaceInFormsAndLists"
                 android:text="@string/ach_bank_account_verify_button"
                 android:onClick="@{() -> viewModel.onVerifyAccount()}"
                 android:visibility="@{viewModel.showButton ? View.VISIBLE : View.GONE}"/>

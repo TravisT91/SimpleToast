@@ -11,16 +11,21 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.navigation.findNavController
 import com.engageft.apptoolbox.BaseViewModel
+import com.engageft.apptoolbox.ViewUtils.newLotusInstance
+import com.engageft.apptoolbox.view.InformationDialogFragment
 import com.engageft.fis.pscu.R
 import com.engageft.fis.pscu.databinding.FragmentAchBankAccountBinding
 import com.engageft.fis.pscu.feature.branding.Palette
 import kotlinx.android.synthetic.main.fragment_direct_deposit.*
+import kotlinx.android.synthetic.main.fragment_help.*
 import utilGen1.AchAccountInfoUtils
+import javax.microedition.khronos.egl.EGLDisplay
 
 class AchBankAccountFragment: BaseEngageFullscreenFragment() {
 
     private lateinit var achBankAccountViewModel: AchBankAccountViewModel
     private lateinit var binding: FragmentAchBankAccountBinding
+    private var buttonAndMenuText: String = ""
 
     override fun createViewModel(): BaseViewModel? {
         achBankAccountViewModel = ViewModelProviders.of(this).get(AchBankAccountViewModel::class.java)
@@ -39,32 +44,72 @@ class AchBankAccountFragment: BaseEngageFullscreenFragment() {
             }
 
             accountTypeBottomSheet.dialogOptions = ArrayList(AchAccountInfoUtils.accountTypeDisplayStrings(context!!))
+
+            binding.deleteButtonLayout.setOnClickListener {
+                // prompt user if they want to delete
+                showDialog(InformationDialogFragment.newLotusInstance(
+                        title = getString(R.string.alert_error_title_generic),
+                        message = getString(R.string.ach_bank_account_verify_invalid_deposits_error_message),
+                        buttonPositiveText = getString(R.string.dialog_information_ok_button)))
+            }
         }
 
         achBankAccountViewModel.apply {
-            navigationEventObservable.observe(this@AchBankAccountFragment, Observer {
-                binding.root.findNavController().navigate(R.id.action_achBankAccountFragment_to_verifyAchBankAccountFragment)
-            })
+
 
             formStateObservable.observe(this@AchBankAccountFragment, Observer {
+                var screenTitle = ""
+                // todo change to if
+//                when (it) {
+//                    // user can't EDIT actually, so disable all inputFields
+//                    AchBankAccountViewModel.FormState.EDIT -> {
+//                        screenTitle = getString(R.string.ach_bank_transfer_verify_account)
+//                        disableAllInputFields()
+//                    }
+//                }
                 when (it) {
-                    // user can't EDIT actually, so disable all inputFields
-                    AchBankAccountViewModel.FormState.EDIT -> disableAllInputFields()
+                    is FormState.CreateState -> {
+                        screenTitle = getString(R.string.ach_bank_account_add_account_title)
+                        buttonAndMenuText = getString(R.string.ach_bank_account_button_add)
+                    }
+                    is FormState.EditState -> {
+                        screenTitle = getString(R.string.ach_bank_transfer_verify_account)
+                        disableAllInputFields()
+                        if (!it.isAccountVerified) {
+                            binding.deleteButtonLayout.visibility = View.VISIBLE
+                            binding.submitButton.visibility = View.VISIBLE
+                            buttonAndMenuText = getString(R.string.ach_bank_transfer_verify_account)
+                        }
+                        binding.deleteButtonLayout.visibility = View.VISIBLE
+                    }
+                }
+                binding.submitButton.text = buttonAndMenuText
+                // this should be only the first time
+                toolbarController.setToolbarTitle(screenTitle)
+                activity?.invalidateOptionsMenu()
+            })
+
+            buttonStateObservable.observe(this@AchBankAccountFragment, Observer {
+                when (it) {
+                    AchBankAccountViewModel.ButtonState.SHOW -> {
+                        binding.submitButton.visibility = View.VISIBLE
+                    }
+                    AchBankAccountViewModel.ButtonState.HIDE -> {
+                        binding.submitButton.visibility = View.GONE
+                    }
                 }
                 activity?.invalidateOptionsMenu()
             })
 
-            // just to populate the accountType field because we can't reference strings in VMs.
-            populateAccountTypeObservable.observe(this@AchBankAccountFragment, Observer {
-                if (it) {
-                    accountType.set(getString(R.string.TEXT_CHECKING))
-                } else {
-                    accountType.set(getString(R.string.TEXT_SAVINGS))
-                }
-            })
+            navigationEventObservable.observe(this@AchBankAccountFragment, Observer {
+                when (it) {
+                    AchBankAccountNavigationEvent.VERIFY_ACCOUNT -> {
+                        binding.root.findNavController().navigate(R.id.action_achBankAccountFragment_to_verifyAchBankAccountFragment)
+                    }
+                    AchBankAccountNavigationEvent.BANK_ADDED_SUCCESS -> {
 
-            checkingAccountTypeObservable.observe(this@AchBankAccountFragment, Observer {
-                isChecking = it == getString(R.string.TEXT_CHECKING)
+                    }
+                }
             })
         }
 
@@ -91,15 +136,16 @@ class AchBankAccountFragment: BaseEngageFullscreenFragment() {
     }
 
     override fun onPrepareOptionsMenu(menu: Menu?) {
-        val saveMenuItem = menu!!.findItem(R.id.delete)
-        saveMenuItem.isVisible = achBankAccountViewModel.formStateObservable.value == AchBankAccountViewModel.FormState.EDIT
+        val submitMenuItem = menu!!.findItem(R.id.submit)
+        submitMenuItem.title = buttonAndMenuText
+        submitMenuItem.isVisible = achBankAccountViewModel.buttonStateObservable.value == AchBankAccountViewModel.ButtonState.SHOW
         super.onPrepareOptionsMenu(menu)
     }
 
     override fun onOptionsItemSelected(item: MenuItem?): Boolean {
         when(item?.itemId){
-            R.id.delete -> run {
-                achBankAccountViewModel.deleteAccount()
+            R.id.submit -> run {
+                achBankAccountViewModel.onAddOrVerifyAccount()
             }
         }
         return super.onOptionsItemSelected(item)

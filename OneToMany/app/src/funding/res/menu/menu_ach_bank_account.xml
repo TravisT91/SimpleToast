@@ -3,8 +3,8 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <item
-        android:title="@string/ach_bank_account_menu_delete"
-        android:id="@+id/delete"
+        android:title="@string/ach_bank_account_button_add"
+        android:id="@+id/submit"
         android:visible="false"
         app:showAsAction="ifRoom" />
 

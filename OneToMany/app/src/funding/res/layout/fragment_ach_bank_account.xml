@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
     <data>
         <import type="android.view.View"/>
         <variable
@@ -66,25 +67,41 @@
                     app:inputText="@={viewModel.accountType}"
                     app:bottomSheetDialogTitle="@string/ach_bank_account_type_label"
                     app:bottomSheetDialogStyle="@style/ListOptionBottomSheetDialogFragmentStyle"/>
-
             </LinearLayout>
 
-            <LinearLayout
+            <androidx.appcompat.widget.LinearLayoutCompat
+                android:id="@+id/deleteButtonLayout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical">
+                android:layout_marginTop="32dp"
+                android:background="@color/cellBackground"
+                android:visibility="@{viewModel.showDeleteButton ? View.VISIBLE : View.GONE}">
 
-                <com.engageft.apptoolbox.view.PillButton
-                    style="@style/ButtonPillPrimaryFilledDefault"
-                    android:id="@+id/submitButton"
-                    android:layout_gravity="center"
-                    android:layout_width="wrap_content"
+                <TextView
+                    parisStyle="@{palette.body}"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="32dp"
-                    android:onClick="@{() -> viewModel.onAddOrVerifyAccount()}"
-                    android:text="@{viewModel.isEditMode ? @string/ach_bank_account_verify_button : @string/ach_bank_account_button_add}"
-                    android:visibility="@{viewModel.showButton ? View.VISIBLE : View.GONE}"/>
-            </LinearLayout>
+                    android:background="@color/cellBackground"
+                    android:gravity="center_horizontal"
+                    android:paddingTop="@dimen/listItemPaddingTop"
+                    android:paddingBottom="@dimen/listItemPaddingBottom"
+                    android:text="@string/ach_bank_account_delete"
+                    android:textColor="@{palette.errorColor}"
+                    tools:textColor="@color/error"/>
+
+                <include layout="@layout/divider" />
+
+            </androidx.appcompat.widget.LinearLayoutCompat>
+
+            <com.engageft.apptoolbox.view.PillButton
+                style="@style/ButtonPillPrimaryFilledDefault"
+                android:id="@+id/submitButton"
+                android:layout_gravity="center"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="32dp"
+                android:onClick="@{() -> viewModel.onAddOrVerifyAccount()}"
+                android:visibility="@{viewModel.showButton ? View.VISIBLE : View.GONE}"/>
 
         </LinearLayout>
 
