@@ -47,7 +47,7 @@
     <string name="TEXT_CHECKING">Checking</string>
     <string name="TEXT_SAVINGS">Savings</string>
 
-    <string name="ach_bank_transfer_screen_title">ACH bank transfer</string>
+    <string name="ach_bank_transfer_screen_title">Bank transfer</string>
     <string name="ach_bank_transfer_create_transfer">Create transfer</string>
     <string name="ach_bank_transfer_verify_account">Verify account</string>
     <string name="ach_bank_transfer_header_title">Transfer money to your My Card Manager account.</string>

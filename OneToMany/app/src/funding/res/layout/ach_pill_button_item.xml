@@ -9,7 +9,7 @@
     <com.engageft.apptoolbox.view.PillButton
         android:id="@+id/createTransferButton"
         style="@style/ButtonPillPrimaryFilledDefault"
-        android:layout_margin="32dp"
+        android:layout_margin="@dimen/pillButtonTopSpaceInFormsAndLists"
         android:layout_height="wrap_content"
         android:layout_width="wrap_content"
         android:visibility="visible"
