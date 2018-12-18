@@ -4,6 +4,13 @@ import androidx.databinding.Observable
 import androidx.databinding.ObservableField
 import androidx.lifecycle.MutableLiveData
 import androidx.navigation.NavController
+import com.engageft.engagekit.EngageService
+import com.engageft.engagekit.rest.request.ActivationCardInfoRequest
+import com.engageft.fis.pscu.feature.branding.BrandingManager
+import com.ob.ws.dom.ActivationCardInfo
+import com.ob.ws.dom.BrandingInfoResponse
+import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.schedulers.Schedulers
 import org.joda.time.DateTime
 import utilGen1.DisplayDateTimeUtils
 
@@ -15,7 +22,7 @@ import utilGen1.DisplayDateTimeUtils
  * Created by joeyhutchins on 12/18/18.
  * Copyright (c) 2018 Engage FT. All rights reserved.
  */
-class GetStartedDelegate(private val viewModel: BaseEngageViewModel, private val navController: NavController, private val getStartedNavigations: EnrollmentViewModel.EnrollmentNavigations.GetStartedNavigations) {
+class GetStartedDelegate(private val viewModel: EnrollmentViewModel, private val navController: NavController, private val getStartedNavigations: EnrollmentViewModel.EnrollmentNavigations.GetStartedNavigations) {
     val cardInput: ObservableField<String> = ObservableField("")
     val dateOfBirth: ObservableField<String> = ObservableField("")
 
@@ -33,7 +40,8 @@ class GetStartedDelegate(private val viewModel: BaseEngageViewModel, private val
     enum class DOBInputValidationError {
         NONE,
         EMPTY,
-        INVALID
+        INVALID,
+        UNDER_13
     }
     private val cardInputTextWatcher = object : Observable.OnPropertyChangedCallback() {
         override fun onPropertyChanged(sender: Observable?, propertyId: Int) {
@@ -90,7 +98,47 @@ class GetStartedDelegate(private val viewModel: BaseEngageViewModel, private val
                 null
             }
             dob?.let { dobDateTime ->
+                viewModel.progressOverlayShownObservable.value = true
+                val request = ActivationCardInfoRequest(
+                        cardInput.get()!!,
+                        dobDateTime)
+                viewModel.compositeDisposable.add(
+                        EngageService.getInstance().engageApiInterface.postActivationCardInfo(request.fieldMap)
+                                .subscribeOn(Schedulers.io())
+                                .observeOn(AndroidSchedulers.mainThread())
+                                .subscribe({ response ->
+                                    viewModel.progressOverlayShownObservable.value = false
+                                    if (response.isSuccess && response is ActivationCardInfo) {
+                                        val cardInfo = response
+                                        viewModel.activationCardInfo = cardInfo
 
+                                        BrandingManager.getBrandingWithRefCode(cardInfo.refCode)
+                                                .subscribeWithDefaultProgressAndErrorHandling<BrandingInfoResponse>(
+                                                        viewModel, {
+                                                    // TODO(jhutchins): This should be a gateKeeper...
+                                                    if (cardInfo.isParentActivationRequired) {
+
+                                                    } else if (cardInfo.isPinRequired) {
+
+                                                    } else if (cardInfo.isAccountRequired) {
+
+                                                    } else if (cardInfo.isCipRequired) {
+
+                                                    } else if (cardInfo.isTermsRequired) {
+
+                                                    }
+                                                }/*, { failedResponse ->
+                                                    // TODO(jhutchins): Navigate?
+                                                }*/
+                                        )
+                                    } else {
+                                        // TODO(jhutchins): Invalid stuff
+                                    }
+                                }, { e ->
+                                    viewModel.progressOverlayShownObservable.value = false
+                                    viewModel.handleThrowable(e)
+                                })
+                )
             }
         }
     }
@@ -122,8 +170,13 @@ class GetStartedDelegate(private val viewModel: BaseEngageViewModel, private val
             } else {
                 if (pN.length == 10) {
                     try {
-                        getDateForInput()
-                        DOBInputValidationError.NONE
+                        val dateTime = getDateForInput()
+                        val dateTime13YearsAgo = DateTime.now().minusYears(13)
+                        if (dateTime.isAfter(dateTime13YearsAgo)) {
+                            DOBInputValidationError.UNDER_13
+                        } else {
+                            DOBInputValidationError.NONE
+                        }
                     } catch (e: Exception) {
                         DOBInputValidationError.INVALID
                     }

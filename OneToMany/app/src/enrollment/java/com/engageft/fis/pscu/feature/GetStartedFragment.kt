@@ -80,6 +80,9 @@ class GetStartedFragment : BaseEngageFullscreenFragment() {
                     // This shouldn't show an error text.
                     binding.dobInput.setErrorTexts(null)
                 }
+                GetStartedDelegate.DOBInputValidationError.UNDER_13 -> {
+                    binding.dobInput.setErrorTexts(listOf(getString(R.string.ENROLLMENT_CARD_DOB_UNDER_13)))
+                }
             }
         })
 

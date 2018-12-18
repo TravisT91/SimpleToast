@@ -1,6 +1,7 @@
 package com.engageft.fis.pscu.feature
 
 import androidx.navigation.NavController
+import com.ob.ws.dom.ActivationCardInfo
 
 /**
  * EnrollmentViewModel
@@ -23,7 +24,7 @@ import androidx.navigation.NavController
  */
 class EnrollmentViewModel : BaseEngageViewModel() {
     val getStartedDelegate by lazy {
-        GetStartedDelegate(navController, getStartedNavigations)
+        GetStartedDelegate(this, navController, getStartedNavigations)
     }
 
     // These providers are here to later check isInitialized to determine if the delegates are null or not.
@@ -43,6 +44,8 @@ class EnrollmentViewModel : BaseEngageViewModel() {
     private lateinit var createAccountNavigations: EnrollmentNavigations.CreateAccountNavigations
     private lateinit var verifyIdentityNavigations: EnrollmentNavigations.VerifyIdentityNavigations
     private lateinit var termsNavigations: EnrollmentNavigations.TermsNavigations
+
+    lateinit var activationCardInfo: ActivationCardInfo
 
     fun initEnrollmentNavigation(navController: NavController, getStartedNavigations: EnrollmentNavigations.GetStartedNavigations,
                                  cardPinNavigations: EnrollmentNavigations.EnrollmentCardPinNavigations, createAccountNavigations: EnrollmentNavigations.CreateAccountNavigations,
