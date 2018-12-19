@@ -348,6 +348,7 @@ class DashboardFragment : BaseEngageFullscreenFragment(),
 
         dashboardViewModel.transactionsReadyObservable.observe( this, Observer {
             if (it) {
+                dashboardViewModel.transactionsNetworkStateObservable.observe(this, Observer { transactionsAdapter.setNetworkState(it) })
                 dashboardViewModel.transactionsListObservable.observe(this, transactionsObserver)
             }
         })

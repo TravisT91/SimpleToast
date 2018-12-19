@@ -1,21 +1,19 @@
 package com.engageft.fis.pscu.feature
 
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.paging.PagedList
 import com.engageft.engagekit.EngageService
 import com.engageft.engagekit.repository.transaction.TransactionRepository
 import com.engageft.engagekit.repository.transaction.vo.Transaction
+import com.engageft.engagekit.repository.util.NetworkState
 import com.engageft.engagekit.rest.request.CardLockUnlockRequest
 import com.engageft.engagekit.utils.AlertUtils
 import com.engageft.engagekit.utils.LoginResponseUtils
 import com.engageft.engagekit.utils.engageApi
 import com.ob.ws.dom.BasicResponse
 import com.ob.ws.dom.LoginResponse
-import com.ob.ws.dom.TransactionsResponse
 import com.ob.ws.dom.utility.DebitCardInfo
-import com.ob.ws.dom.utility.TransactionInfo
 import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
@@ -42,13 +40,10 @@ class DashboardViewModel : BaseEngageViewModel() {
     var savingsBalanceObservable: MutableLiveData<BigDecimal> = MutableLiveData()
     var savingsBalanceStateObservable: MutableLiveData<DashboardBalanceState> = MutableLiveData()
 
-    // Transactions
-    var allTransactionsObservable: MutableLiveData<List<TransactionInfo>> = MutableLiveData()
-    var retrievingTransactionsFinishedObservable: MutableLiveData<Boolean> = MutableLiveData()
-
     // Room transactions
     val transactionsReadyObservable = MutableLiveData<Boolean>()
     lateinit var transactionsListObservable: LiveData<PagedList<Transaction>>
+    lateinit var transactionsNetworkStateObservable: LiveData<NetworkState>
 
     var notificationsCountObservable: MutableLiveData<Int> = MutableLiveData()
 
@@ -132,9 +127,10 @@ class DashboardViewModel : BaseEngageViewModel() {
                             if (response.isSuccess && response is LoginResponse) {
                                 debitCardInfo = LoginResponseUtils.getCurrentCard(response)
                                 debitCardInfo.let {
-                                    transactionsListObservable = TransactionRepository.pagedTransactions(debitCardInfo.debitCardId)
+                                    val listing = TransactionRepository.pagedTransactions(debitCardInfo.debitCardId)
+                                    transactionsListObservable = listing.pagedList
+                                    transactionsNetworkStateObservable = listing.networkState
                                     transactionsReadyObservable.postValue(true)
-                                    //TransactionRepository.refreshTransactions(debitCardInfo.debitCardId)
                                 }
                             } else {
                                 handleUnexpectedErrorResponse(response)

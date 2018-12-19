@@ -5,6 +5,7 @@ import android.graphics.PorterDuff
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ProgressBar
 import android.widget.TextView
 import androidx.core.content.ContextCompat
 import androidx.paging.AsyncPagedListDiffer
@@ -15,11 +16,13 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListUpdateCallback
 import androidx.recyclerview.widget.RecyclerView
 import com.engageft.engagekit.repository.transaction.vo.Transaction
+import com.engageft.engagekit.repository.util.NetworkState
 import com.engageft.fis.pscu.R
 import com.engageft.fis.pscu.feature.transactions.utils.TransactionUtils
 import com.ob.domain.lookup.TransactionStatus
 import com.ob.domain.lookup.TransactionType
 import utilGen1.StringUtils
+import java.lang.IllegalArgumentException
 
 /**
  *  TransactionsAdapter
@@ -35,6 +38,8 @@ open class TransactionsAdapter(private val context: Context,
     protected val adapterCallback = AdapterListUpdateCallback(this)
 
     private val asyncDifferConfig = AsyncDifferConfig.Builder<Transaction>(DIFF_CALLBACK).build()
+
+    private var networkState: NetworkState? = null
 
     open fun getListUpdateCallback(): ListUpdateCallback {
         return object : ListUpdateCallback {
@@ -59,6 +64,8 @@ open class TransactionsAdapter(private val context: Context,
 
     private val differ = AsyncPagedListDiffer<Transaction>(getListUpdateCallback(), asyncDifferConfig)
 
+    private fun hasExtraRow() = networkState != null && networkState != NetworkState.LOADED
+
     fun submitList(pagedList: PagedList<Transaction>?) {
         differ.submitList(pagedList)
     }
@@ -66,26 +73,28 @@ open class TransactionsAdapter(private val context: Context,
     var transactionSelectionEnabled: Boolean = true
 
     override fun getItemCount(): Int {
-        return differ.itemCount
+        return getItemCountInternal()
+    }
+
+    private fun getItemCountInternal(): Int {
+        return differ.itemCount + if (hasExtraRow()) 1 else 0
     }
 
     override fun getItemViewType(position: Int): Int {
-//        return if (transactionsList.isEmpty()) {
-//            if (isFetchingDataComplete) VIEW_TYPE_NO_TRANSACTIONS else VIEW_TYPE_PLACEHOLDER
-//        } else {
-//            VIEW_TYPE_TRANSACTIONS_DATA
-//        }
-        return VIEW_TYPE_TRANSACTIONS_DATA
+        // don't call getItemCount() directly here, as that can be overriden by a subclass like DashboardTransactionsAdapter
+        return if (hasExtraRow() && position == getItemCountInternal() - 1) {
+            VIEW_TYPE_NETWORK_STATE
+        } else {
+            VIEW_TYPE_TRANSACTIONS_DATA
+        }
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
-//        return when (viewType) {
-//            VIEW_TYPE_TRANSACTIONS_DATA -> TransactionViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.row_transaction_info_view, parent, false))
-//            VIEW_TYPE_NO_TRANSACTIONS -> NoViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.row_text_view_bank_transfer_list_empty, parent, false))
-//            else -> PlaceholderViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.row_transaction_placeholder_view, parent, false))
-//        }
-
-        return TransactionViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.row_transaction_info_view, parent, false))
+        return when (viewType) {
+            VIEW_TYPE_TRANSACTIONS_DATA -> TransactionViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.row_transaction_info_view, parent, false))
+            VIEW_TYPE_NETWORK_STATE -> NetworkStateItemViewHolder.create(parent, null)
+            else -> throw IllegalArgumentException("Unknown view type $viewType")
+        }
     }
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
@@ -125,10 +134,25 @@ open class TransactionsAdapter(private val context: Context,
                 }
 
                 holder.bottomRule.visibility = if (position == itemCount - 1) View.INVISIBLE else View.VISIBLE
-            } ?: run {
-                // got a null item, so show placeholder
-
             }
+        } else if (holder is NetworkStateItemViewHolder) {
+            holder.bindTo(networkState)
+        }
+    }
+
+    fun setNetworkState(newNetworkState: NetworkState?) {
+        val previousState = this.networkState
+        val hadExtraRow = hasExtraRow()
+        this.networkState = newNetworkState
+        val hasExtraRow = hasExtraRow()
+        if (hadExtraRow != hasExtraRow) {
+            if (hadExtraRow) {
+                notifyItemRemoved(itemCount)
+            } else {
+                notifyItemInserted(itemCount)
+            }
+        } else if (hasExtraRow && previousState != newNetworkState) {
+            notifyItemChanged(itemCount - 1)
         }
     }
 
@@ -169,9 +193,7 @@ open class TransactionsAdapter(private val context: Context,
 
     companion object {
         const val VIEW_TYPE_TRANSACTIONS_DATA = 0
-        const val VIEW_TYPE_PLACEHOLDER = 1
-        const val VIEW_TYPE_NO_TRANSACTIONS = 2
-        const val VIEW_TYPE_DASHBOARD_HEADER = 3
+        const val VIEW_TYPE_NETWORK_STATE = 1
 
         const val TRANSACTIONS_LIST_MAX_SIZE = 20
         // based on the layout and devices we could set this to 4 but just to make sure
