@@ -12,9 +12,7 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.navigation.findNavController
 import com.engageft.apptoolbox.BaseViewModel
-import com.engageft.apptoolbox.ViewUtils.newLotusInstance
 import com.engageft.apptoolbox.util.applyTypefaceToSubstringsList
-import com.engageft.apptoolbox.view.InformationDialogFragment
 import com.engageft.fis.pscu.R
 import com.engageft.fis.pscu.config.EngageAppConfig
 import com.engageft.fis.pscu.databinding.FragmentAchBankAccountVerifyBinding
@@ -93,27 +91,6 @@ class AchBankAccountVerifyFragment: BaseEngageFullscreenFragment() {
                 }
                 activity?.invalidateOptionsMenu()
             })
-
-//            dialogInfoObservable.observe(this@AchBankAccountVerifyFragment, Observer {
-//                if (it is AchBankAccountDialogInfo) {
-//                    when (it.achBankAccountDialogType) {
-////                        AchBankAccountDialogInfo.AchBankAccountType.DEPOSIT_AMOUNT_INVALID -> {
-////                            // show error message
-////                            showDialog(InformationDialogFragment.newLotusInstance(
-////                                    title = getString(R.string.alert_error_title_generic),
-////                                    message = getString(R.string.ach_bank_account_verify_invalid_deposits_error_message),
-////                                    buttonPositiveText = getString(R.string.dialog_information_ok_button)))
-////                        }
-//                        AchBankAccountDialogInfo.AchBankAccountType.DEPOSIT_AMOUNT_MISMATCH -> {
-//                            // show error message
-//                            showDialog(InformationDialogFragment.newLotusInstance(
-//                                    title = getString(R.string.ach_bank_account_verify_incorrect_deposit_error_message_title),
-//                                    message = getString(R.string.ach_bank_account_verify_incorrect_deposit_error_message),
-//                                    buttonPositiveText = getString(R.string.dialog_information_ok_button)))
-//                        }
-//                    }
-//                }
-//            })
 
             navigationEventObservable.observe(this@AchBankAccountVerifyFragment, Observer {
                 binding.root.findNavController().navigate(R.id.action_achBankAccountVerifyFragment_to_achBankAccountAddVerifySuccessFragment,
