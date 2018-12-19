@@ -98,45 +98,22 @@ open class TransactionsAdapter(private val context: Context,
     }
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
-        if (holder is TransactionViewHolder) {
-            differ.getItem(position)?.let { transaction ->
-                holder.transaction = transaction
-
-                holder.transactionsView.visibility = View.VISIBLE
-                holder.noTransactionsView.visibility = View.GONE
-
-                val transactionType = TransactionUtils.getTransactionType(transaction)
-
-                holder.dayAndMonthTextView.text = StringUtils.formatDateMonthDayForTransactionRow(transaction.date)
-                holder.storeTextView.text = if (transaction.store.isNullOrBlank()) "" else StringUtils.removeRedundantWhitespace(transaction.store!!)
-                holder.categoryTextView.text = TransactionUtils.getTransactionTypeText(context, transaction, transactionType!!)
-
-                val transactionAmount = transaction.amount.toFloat()
-                val amountString = StringUtils.formatCurrencyStringWithFractionDigits(transactionAmount, true)
-                if (transactionAmount > 0F) {
-                    holder.amountTextView.text = "+$amountString"
-                    holder.amountTextView.setTextColor(ContextCompat.getColor(context, R.color.transactionAmountTextPositive))
-                } else {
-                    holder.amountTextView.text = amountString
-                    holder.amountTextView.setTextColor(ContextCompat.getColor(context, R.color.transactionAmountTextDefault))
-                }
-
-                val transactionStatus = TransactionUtils.getTransactionStatus(transaction)
-                holder.statusTextView.visibility = View.GONE
-                when (transactionStatus) {
-                    TransactionStatus.DECLINED -> {
-                        holder.statusTextView.visibility = View.VISIBLE
-                        holder.statusTextView.text = TransactionUtils.getTransactionStatusText(context, transactionStatus)
-                        holder.itemView.background.setColorFilter(ContextCompat.getColor(context, R.color.transactionRowBackgroundDeclined), PorterDuff.Mode.SRC_ATOP)
-                    }
-                    TransactionStatus.PENDING -> holder.itemView.background.setColorFilter(ContextCompat.getColor(context, R.color.transactionRowBackgroundPending), PorterDuff.Mode.SRC_ATOP)
-                    else -> holder.itemView.background.setColorFilter(ContextCompat.getColor(context, R.color.transactionRowBackgroundDefault), PorterDuff.Mode.SRC_ATOP)
-                }
-
-                holder.bottomRule.visibility = if (position == itemCount - 1) View.INVISIBLE else View.VISIBLE
-            }
-        } else if (holder is NetworkStateItemViewHolder) {
+//        if (holder is TransactionViewHolder) {
+//            if (hasExtraRow() && position == getItemCountInternal() - 1) {
+//                // row is last, so show loading state
+//                holder.bindTo(networkState)
+//            } else {
+//                differ.getItem(position)?.let { transaction ->
+//                    holder.bindTo(transaction)
+//                }
+//            }
+//        }
+        if (holder is NetworkStateItemViewHolder) {
             holder.bindTo(networkState)
+        } else if (holder is TransactionViewHolder) {
+            differ.getItem(position)?.let { transaction ->
+                holder.bindTo(transaction)
+            }
         }
     }
 
@@ -147,7 +124,7 @@ open class TransactionsAdapter(private val context: Context,
         val hasExtraRow = hasExtraRow()
         if (hadExtraRow != hasExtraRow) {
             if (hadExtraRow) {
-                notifyItemRemoved(itemCount)
+                notifyItemChanged(itemCount)
             } else {
                 notifyItemInserted(itemCount)
             }
@@ -159,25 +136,71 @@ open class TransactionsAdapter(private val context: Context,
     inner class TransactionViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         var transaction: Transaction? = null
 
-        val noTransactionsView: View = itemView.findViewById(R.id.rl_no_transactions)
-        val transactionsView: View = itemView.findViewById(R.id.cl_transactions)
+        private val loadingView: View = itemView.findViewById(R.id.pb_loading)
 
-        val dayAndMonthTextView: TextView = itemView.findViewById(R.id.tv_transaction_day_month)
-        val storeTextView: TextView = itemView.findViewById(R.id.tv_transaction_store)
-        val categoryTextView: TextView = itemView.findViewById(R.id.tv_transaction_category)
-        val amountTextView: TextView = itemView.findViewById(R.id.tv_transaction_amount)
-        val statusTextView: TextView = itemView.findViewById(R.id.tv_transaction_status)
+        private val noTransactionsView: View = itemView.findViewById(R.id.rl_no_transactions)
+        private val transactionsView: View = itemView.findViewById(R.id.cl_transactions)
 
-        val bottomRule: View = itemView.findViewById(R.id.view_horizontal_rule_bottom)
+        private val dayAndMonthTextView: TextView = itemView.findViewById(R.id.tv_transaction_day_month)
+        private val storeTextView: TextView = itemView.findViewById(R.id.tv_transaction_store)
+        private val categoryTextView: TextView = itemView.findViewById(R.id.tv_transaction_category)
+        private val amountTextView: TextView = itemView.findViewById(R.id.tv_transaction_amount)
+        private val statusTextView: TextView = itemView.findViewById(R.id.tv_transaction_status)
+
+        private val bottomRule: View = itemView.findViewById(R.id.view_horizontal_rule_bottom)
 
         init {
             this.itemView.setOnClickListener {
-                transaction?.let {
+                transaction?.let { transaction ->
                     if (transactionSelectionEnabled) {
-                        listener?.onTransactionSelected(it)
+                        listener?.onTransactionSelected(transaction)
                     }
                 }
             }
+        }
+
+        fun bindTo(transaction: Transaction) {
+            this.transaction = transaction
+
+            loadingView.visibility = View.INVISIBLE
+            noTransactionsView.visibility = View.INVISIBLE
+            transactionsView.visibility = View.VISIBLE
+
+            val transactionType = TransactionUtils.getTransactionType(transaction)
+
+            dayAndMonthTextView.text = StringUtils.formatDateMonthDayForTransactionRow(transaction.date)
+            storeTextView.text = if (transaction.store.isNullOrBlank()) "" else StringUtils.removeRedundantWhitespace(transaction.store!!)
+            categoryTextView.text = TransactionUtils.getTransactionTypeText(context, transaction, transactionType!!)
+
+            val transactionAmount = transaction.amount.toFloat()
+            val amountString = StringUtils.formatCurrencyStringWithFractionDigits(transactionAmount, true)
+            if (transactionAmount > 0F) {
+                amountTextView.text = "+$amountString"
+                amountTextView.setTextColor(ContextCompat.getColor(context, R.color.transactionAmountTextPositive))
+            } else {
+                amountTextView.text = amountString
+                amountTextView.setTextColor(ContextCompat.getColor(context, R.color.transactionAmountTextDefault))
+            }
+
+            val transactionStatus = TransactionUtils.getTransactionStatus(transaction)
+            statusTextView.visibility = View.GONE
+            when (transactionStatus) {
+                TransactionStatus.DECLINED -> {
+                    statusTextView.visibility = View.VISIBLE
+                    statusTextView.text = TransactionUtils.getTransactionStatusText(context, transactionStatus)
+                    itemView.background.setColorFilter(ContextCompat.getColor(context, R.color.transactionRowBackgroundDeclined), PorterDuff.Mode.SRC_ATOP)
+                }
+                TransactionStatus.PENDING -> itemView.background.setColorFilter(ContextCompat.getColor(context, R.color.transactionRowBackgroundPending), PorterDuff.Mode.SRC_ATOP)
+                else -> itemView.background.setColorFilter(ContextCompat.getColor(context, R.color.transactionRowBackgroundDefault), PorterDuff.Mode.SRC_ATOP)
+            }
+            //bottomRule.visibility = if (position == itemCount - 1) View.INVISIBLE else View.VISIBLE
+        }
+
+        fun bindTo(networkState: NetworkState?) {
+            // currently not using networkState
+            transactionsView.visibility = View.INVISIBLE
+            noTransactionsView.visibility = View.INVISIBLE
+            loadingView.visibility = View.VISIBLE
         }
     }
 

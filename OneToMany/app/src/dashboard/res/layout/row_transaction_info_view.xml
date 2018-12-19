@@ -7,6 +7,14 @@
     android:id="@+id/rowParentLayout"
     android:background="@color/structure1">
 
+    <ProgressBar android:id="@+id/pb_loading"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        style="?android:attr/progressBarStyle"
+        android:visibility="invisible"
+        tools:visibility="visible"
+        android:layout_gravity="center"/>
+
     <androidx.constraintlayout.widget.ConstraintLayout android:id="@+id/rl_no_transactions"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
