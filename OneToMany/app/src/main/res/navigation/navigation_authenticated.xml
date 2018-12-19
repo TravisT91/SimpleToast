@@ -164,6 +164,13 @@
             app:exitAnim="@anim/nav_exit_anim"
             app:popEnterAnim="@anim/nav_pop_enter_anim"
             app:popExitAnim="@anim/nav_pop_exit_anim"/>
+        <action
+            android:id="@+id/action_moveMoneyFragment_to_accountsAndTransfersListFragment"
+            app:destination="@id/accountsAndTransfersListFragment"
+            app:enterAnim="@anim/nav_enter_anim"
+            app:exitAnim="@anim/nav_exit_anim"
+            app:popEnterAnim="@anim/nav_pop_enter_anim"
+            app:popExitAnim="@anim/nav_pop_exit_anim"/>
     </fragment>
 
     <fragment
@@ -244,4 +251,10 @@
         android:id="@+id/accountNotificationsFragment"
         android:name="com.engageft.fis.pscu.feature.AccountNotificationsFragment"
         android:label="@string/account_notifications_screen_title" />
+
+
+    <fragment
+        android:id="@+id/accountsAndTransfersListFragment"
+        android:name="com.engageft.fis.pscu.feature.AccountsAndTransfersListFragment"
+        android:label="@string/ach_bank_transfer_screen_title" />
 </navigation>

@@ -6,7 +6,6 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import com.engageft.apptoolbox.BaseViewModel
-import androidx.fragment.app.Fragment
 import androidx.navigation.findNavController
 import com.engageft.fis.pscu.R
 import com.engageft.fis.pscu.databinding.FragmentMoveMoneyBinding
@@ -31,8 +30,7 @@ class MoveMoneyFragment : BaseEngageFullscreenFragment() {
         binding.apply {
             palette = Palette
             bankTransfer.setOnClickListener {
-                //TODO(ttkachuk) implement on click listener
-                Toast.makeText(context,"Bank Transfer",Toast.LENGTH_SHORT).show()
+                binding.root.findNavController().navigate(R.id.action_moveMoneyFragment_to_accountsAndTransfersListFragment)
             }
             creditOrDebitCardLoad.setOnClickListener {
                 //TODO(ttkachuk) implement on click listener
