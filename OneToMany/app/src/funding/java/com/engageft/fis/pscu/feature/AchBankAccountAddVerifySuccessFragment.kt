@@ -7,8 +7,9 @@ import android.view.ViewGroup
 import androidx.navigation.findNavController
 import com.engageft.apptoolbox.BaseViewModel
 import com.engageft.apptoolbox.NavigationOverrideClickListener
+import com.engageft.apptoolbox.ToolbarVisibilityState
 import com.engageft.fis.pscu.R
-import com.engageft.fis.pscu.databinding.FragmentAchBankAddVerifySuccessBinding
+import com.engageft.fis.pscu.databinding.FragmentAchBankAccountAddVerifySuccessBinding
 import com.engageft.fis.pscu.feature.AchBankAccountAddFragment.Companion.ADDED_SUCCESS_TYPE
 import com.engageft.fis.pscu.feature.AchBankAccountAddFragment.Companion.SUCCESS_SCREEN_TYPE_KEY
 import com.engageft.fis.pscu.feature.AchBankAccountAddFragment.Companion.VERIFIED_SUCCESS_TYPE
@@ -20,7 +21,7 @@ class AchBankAccountAddVerifySuccessFragment: BaseEngageFullscreenFragment() {
         return null
     }
 
-    private lateinit var binding: FragmentAchBankAddVerifySuccessBinding
+    private lateinit var binding: FragmentAchBankAccountAddVerifySuccessBinding
 
     private val navigationOverrideClickListener = object : NavigationOverrideClickListener {
         override fun onClick(): Boolean {
@@ -30,11 +31,11 @@ class AchBankAccountAddVerifySuccessFragment: BaseEngageFullscreenFragment() {
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        binding = FragmentAchBankAddVerifySuccessBinding.inflate(inflater, container, false)
+        binding = FragmentAchBankAccountAddVerifySuccessBinding.inflate(inflater, container, false)
 
         upButtonOverrideProvider.setUpButtonOverride(navigationOverrideClickListener)
         backButtonOverrideProvider.setBackButtonOverride(navigationOverrideClickListener)
-
+        toolbarController.setToolbarVisibility(ToolbarVisibilityState.GONE)
         binding.apply {
             palette = Palette
 

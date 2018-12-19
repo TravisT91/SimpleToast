@@ -11,7 +11,7 @@ import com.engageft.apptoolbox.BaseViewModel
 import com.engageft.apptoolbox.ViewUtils.newLotusInstance
 import com.engageft.apptoolbox.view.InformationDialogFragment
 import com.engageft.fis.pscu.R
-import com.engageft.fis.pscu.databinding.FragmentAchBankDetailBinding
+import com.engageft.fis.pscu.databinding.FragmentAchBankAccountDetailBinding
 import com.engageft.fis.pscu.feature.AccountsAndTransfersListFragment.Companion.ACH_BANK_ACCOUNT_ID
 import com.engageft.fis.pscu.feature.branding.Palette
 
@@ -25,7 +25,7 @@ class AchBankAccountDetailFragment: BaseEngageFullscreenFragment() {
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        val binding = FragmentAchBankDetailBinding.inflate(inflater, container, false)
+        val binding = FragmentAchBankAccountDetailBinding.inflate(inflater, container, false)
         binding.apply {
             viewModel = achBankAccountDetailViewModel
             palette = Palette
@@ -72,9 +72,9 @@ class AchBankAccountDetailFragment: BaseEngageFullscreenFragment() {
 
             checkingAccountTypeObservable.observe(this@AchBankAccountDetailFragment, Observer {
                 if (it) {
-                    binding.accountTypeBottomSheet.inputText = getString(R.string.TEXT_CHECKING)
+                    binding.accountTypeTextWithLabel.inputText = getString(R.string.TEXT_CHECKING)
                 } else {
-                    binding.accountTypeBottomSheet.inputText = getString(R.string.TEXT_SAVINGS)
+                    binding.accountTypeTextWithLabel.inputText = getString(R.string.TEXT_SAVINGS)
                 }
             })
 

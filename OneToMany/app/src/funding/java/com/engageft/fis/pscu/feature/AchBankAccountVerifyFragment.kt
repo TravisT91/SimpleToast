@@ -23,7 +23,6 @@ import com.engageft.fis.pscu.feature.AchBankAccountAddFragment.Companion.VERIFIE
 import com.engageft.fis.pscu.feature.branding.Palette
 
 class AchBankAccountVerifyFragment: BaseEngageFullscreenFragment() {
-    val TAG = "VerifyBankFragment"
     private lateinit var verifyAchBankAccountViewModel: AchBankAccountVerifyViewModel
 
     override fun createViewModel(): BaseViewModel? {
@@ -47,13 +46,13 @@ class AchBankAccountVerifyFragment: BaseEngageFullscreenFragment() {
 
             amountInputWithLabel1.addEditTextFocusChangeListener(View.OnFocusChangeListener { _, hasFocus ->
                 if (!hasFocus) {
-                    verifyAchBankAccountViewModel.validateAmount1AndShowError()
+                    verifyAchBankAccountViewModel.validateNonEmptyAmount1AndShowError()
                 }
             })
 
             amountInputWithLabel2.addEditTextFocusChangeListener(View.OnFocusChangeListener { _, hasFocus ->
                 if (!hasFocus) {
-                    verifyAchBankAccountViewModel.validateAmount2AndShowError()
+                    verifyAchBankAccountViewModel.validateNonEmptyAmount2AndShowError()
                 }
             })
         }
@@ -95,26 +94,26 @@ class AchBankAccountVerifyFragment: BaseEngageFullscreenFragment() {
                 activity?.invalidateOptionsMenu()
             })
 
-            dialogInfoObservable.observe(this@AchBankAccountVerifyFragment, Observer {
-                if (it is AchBankAccountDialogInfo) {
-                    when (it.achBankAccountDialogType) {
-//                        AchBankAccountDialogInfo.AchBankAccountType.DEPOSIT_AMOUNT_INVALID -> {
+//            dialogInfoObservable.observe(this@AchBankAccountVerifyFragment, Observer {
+//                if (it is AchBankAccountDialogInfo) {
+//                    when (it.achBankAccountDialogType) {
+////                        AchBankAccountDialogInfo.AchBankAccountType.DEPOSIT_AMOUNT_INVALID -> {
+////                            // show error message
+////                            showDialog(InformationDialogFragment.newLotusInstance(
+////                                    title = getString(R.string.alert_error_title_generic),
+////                                    message = getString(R.string.ach_bank_account_verify_invalid_deposits_error_message),
+////                                    buttonPositiveText = getString(R.string.dialog_information_ok_button)))
+////                        }
+//                        AchBankAccountDialogInfo.AchBankAccountType.DEPOSIT_AMOUNT_MISMATCH -> {
 //                            // show error message
 //                            showDialog(InformationDialogFragment.newLotusInstance(
-//                                    title = getString(R.string.alert_error_title_generic),
-//                                    message = getString(R.string.ach_bank_account_verify_invalid_deposits_error_message),
+//                                    title = getString(R.string.ach_bank_account_verify_incorrect_deposit_error_message_title),
+//                                    message = getString(R.string.ach_bank_account_verify_incorrect_deposit_error_message),
 //                                    buttonPositiveText = getString(R.string.dialog_information_ok_button)))
 //                        }
-                        AchBankAccountDialogInfo.AchBankAccountType.DEPOSIT_AMOUNT_MISMATCH -> {
-                            // show error message
-                            showDialog(InformationDialogFragment.newLotusInstance(
-                                    title = getString(R.string.ach_bank_account_verify_incorrect_deposit_error_message_title),
-                                    message = getString(R.string.ach_bank_account_verify_incorrect_deposit_error_message),
-                                    buttonPositiveText = getString(R.string.dialog_information_ok_button)))
-                        }
-                    }
-                }
-            })
+//                    }
+//                }
+//            })
 
             navigationEventObservable.observe(this@AchBankAccountVerifyFragment, Observer {
                 binding.root.findNavController().navigate(R.id.action_achBankAccountVerifyFragment_to_achBankAccountAddVerifySuccessFragment,

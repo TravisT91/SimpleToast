@@ -73,9 +73,13 @@ class AccountsAndTransfersListFragment: BaseEngageFullscreenFragment() {
                                     if (achAccountListAndStatus.bankStatus == AccountsAndTransfersListViewModel.BankAccountStatus.VERIFIED_BANK_ACCOUNT) {
                                         // TODO(aHashimi): FOTM-113 create transfer
                                     } else {
-                                        //TODO(aHashimi): FOTM-65 verify bank account
-                                        //
-                                        root.findNavController().navigate(R.id.action_accountsAndTransfersListFragment_to_achBankAccountVerifyFragment)
+                                        // TODO(aHashimi): User can't add more than 1 Ach Bank account, when/if multiple ach bank accounts are added the UI and this logic needs to change.
+                                        // As of now the user can't add more than ach bank account but this will need to change if it did because we're just relying on the first item.
+                                        // the UI logic doesn't make sense and as a result this will need to change as well.
+                                        root.findNavController().navigate(R.id.action_accountsAndTransfersListFragment_to_achBankAccountVerifyFragment,
+                                                Bundle().apply {
+                                                    putLong(ACH_BANK_ACCOUNT_ID, accountsAndTransfersListViewModel.achBankAccountId)
+                                                })
                                     }
                                 }
                             }

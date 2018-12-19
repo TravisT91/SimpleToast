@@ -124,9 +124,11 @@ class LoginViewModel : BaseEngageViewModel(), GateKeeperListener {
 
     override fun onGateOpen() {
         progressOverlayShownObservable.value = false
-        BrandingManager.getBrandingWithToken(EngageService.getInstance().authManager.authToken)
-                .subscribeWithDefaultProgressAndErrorHandling<BrandingInfoResponse>(
-                        this, { navigationObservable.value = LoginNavigationEvent.AUTHENTICATED_ACTIVITY })
+        //todo fotm-65 delete
+        navigationObservable.value = LoginNavigationEvent.AUTHENTICATED_ACTIVITY
+//        BrandingManager.getBrandingWithToken(EngageService.getInstance().authManager.authToken)
+//                .subscribeWithDefaultProgressAndErrorHandling<BrandingInfoResponse>(
+//                        this, { navigationObservable.value = LoginNavigationEvent.AUTHENTICATED_ACTIVITY })
     }
 
     override fun onGatedItemFailed(item: GatedItem) {
@@ -257,6 +259,7 @@ class LoginViewModel : BaseEngageViewModel(), GateKeeperListener {
                                 { response ->
                                     if (response.isSuccess && response is LoginResponse) {
                                         handleSuccessfulLoginResponse(response)
+                                        //todo fotm-65
                                         loginGateKeeper.run()
                                     } else if (response is DeviceFailResponse) {
                                         // This causes the loginResponse to be fetched twice by the TwoFactorAuthGatedItem

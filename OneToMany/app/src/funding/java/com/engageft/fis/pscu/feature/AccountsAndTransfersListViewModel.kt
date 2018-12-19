@@ -36,6 +36,7 @@ class AccountsAndTransfersListViewModel: BaseEngageViewModel() {
         VERIFIED_BANK_ACCOUNT
     }
 
+    var achBankAccountId = 0L
     val achAccountsListAndStatusObservable = MutableLiveData<AchBankAccountListAndStatus>()
     val achScheduledLoadListObservable = MutableLiveData<List<ScheduledLoad>>()
     val achHistoricalLoadListObservable = MutableLiveData<List<AchLoadInfo>>()
@@ -133,6 +134,7 @@ class AccountsAndTransfersListViewModel: BaseEngageViewModel() {
     }
 
     private fun initBankAccountStatusAndList(achAccountInfoList: List<AchAccountInfo>) {
+        //TODO(aHashimi): If we support adding multiple ACH bank accounts, this logic needs to change.
         if (achAccountInfoList.isNotEmpty()) {
 
             var verified = false
@@ -146,6 +148,7 @@ class AccountsAndTransfersListViewModel: BaseEngageViewModel() {
                     verified = true
                     break
                 }
+                achBankAccountId = achAccountInfo.achAccountId
             }
             if (!verified) {
                 achAccountsListAndStatusObservable.value = AchBankAccountListAndStatus(

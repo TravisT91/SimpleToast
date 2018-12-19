@@ -5,10 +5,10 @@ import androidx.databinding.ObservableField
 import androidx.lifecycle.MutableLiveData
 import com.engageft.apptoolbox.util.CurrencyUtils
 import com.engageft.engagekit.EngageService
-import io.reactivex.android.schedulers.AndroidSchedulers
-import io.reactivex.schedulers.Schedulers
 import com.engageft.engagekit.rest.request.AchAccountValidateRequest
 import com.engageft.fis.pscu.config.EngageAppConfig
+import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.schedulers.Schedulers
 
 
 class AchBankAccountVerifyViewModel: BaseEngageViewModel() {
@@ -20,7 +20,6 @@ class AchBankAccountVerifyViewModel: BaseEngageViewModel() {
 
     private val minAmount = 0.01
     private val maxAmount = 0.99
-    val TAG = "VerifyAchBankAccountVM"
     var amount1: ObservableField<String> = ObservableField("")
     var amount2: ObservableField<String> = ObservableField("")
     var achAccountInfoId: Long = 0L
@@ -33,11 +32,11 @@ class AchBankAccountVerifyViewModel: BaseEngageViewModel() {
     init {
         amount1ShowErrorObservable.value = false
         amount2ShowErrorObservable.value = false
-        //TODO: verify account by account id passed. if not found, showDialog & popoff fragment
+
         amount1.addOnPropertyChangedCallback(object : Observable.OnPropertyChangedCallback() {
             override fun onPropertyChanged(sender: Observable?, propertyId: Int) {
                 if (amount1ShowErrorObservable.value!!) {
-                    validateAmount1AndShowError()
+                    validateNonEmptyAmount1AndShowError()
                 }
                 updateButtonState()
             }
@@ -46,7 +45,7 @@ class AchBankAccountVerifyViewModel: BaseEngageViewModel() {
         amount2.addOnPropertyChangedCallback(object : Observable.OnPropertyChangedCallback() {
             override fun onPropertyChanged(sender: Observable?, propertyId: Int) {
                 if (amount2ShowErrorObservable.value!!) {
-                    validateAmount2AndShowError()
+                    validateNonEmptyAmount2AndShowError()
                 }
                 updateButtonState()
             }
@@ -54,9 +53,9 @@ class AchBankAccountVerifyViewModel: BaseEngageViewModel() {
     }
 
     fun onVerifyAccount() {
-        if (isAmountValid(amount1.get()!!) && isAmountValid(amount2.get()!!)) {
+        if (getValidationStatusAndShowErrors()) {
             progressOverlayShownObservable.value = true
-            //TODO(aHashimi): should send sessionID like gen1?
+            //TODO(aHashimi): When ThreatMatrix is setUp pass sessionID
             val request = AchAccountValidateRequest(
                     EngageService.getInstance().authManager.authToken,
                     achAccountInfoId,
@@ -74,10 +73,14 @@ class AchBankAccountVerifyViewModel: BaseEngageViewModel() {
                                     navigationEventObservable.value = AchBankAccountNavigationEvent.BANK_VERIFIED_SUCCESS
                                     navigationEventObservable.value = AchBankAccountNavigationEvent.NONE
                                 } else {
-//                                    handleUnexpectedErrorResponse(response)
-                                    dialogInfoObservable.value = AchBankAccountDialogInfo(
-                                            dialogType = DialogInfo.DialogType.OTHER,
-                                            achBankAccountDialogType = AchBankAccountDialogInfo.AchBankAccountType.DEPOSIT_AMOUNT_MISMATCH)
+                                    // show backend error message
+                                    if (response.message.isNotEmpty()) {
+                                        dialogInfoObservable.value = DialogInfo(
+                                                message = response.message,
+                                                dialogType = DialogInfo.DialogType.SERVER_ERROR)
+                                    } else {
+                                        handleUnexpectedErrorResponse(response)
+                                    }
                                 }
                             }, { e ->
                                 progressOverlayShownObservable.value = false
@@ -87,11 +90,13 @@ class AchBankAccountVerifyViewModel: BaseEngageViewModel() {
         }
     }
 
-    fun validateAmount1AndShowError() {
+    fun validateNonEmptyAmount1AndShowError() {
+        // don't show errors if field is left empty
         amount1ShowErrorObservable.value = !(amount1.get()!!.isEmpty() || isAmountValid(amount1.get()!!))
     }
 
-    fun validateAmount2AndShowError() {
+    fun validateNonEmptyAmount2AndShowError() {
+        // don't show errors if field is left empty
         amount2ShowErrorObservable.value = !(amount2.get()!!.isEmpty() || isAmountValid(amount2.get()!!))
     }
 
@@ -103,6 +108,20 @@ class AchBankAccountVerifyViewModel: BaseEngageViewModel() {
             return extractedAmount.toDouble() in minAmount..maxAmount
         }
 
+        return false
+    }
+
+    private fun getValidationStatusAndShowErrors(): Boolean {
+        if (isAmountValid(amount1.get()!!) && isAmountValid(amount2.get()!!)) {
+            return true
+        } else {
+            if (!isAmountValid(amount1.get()!!)) {
+                amount1ShowErrorObservable.value = true
+            }
+            if (!isAmountValid(amount2.get()!!)) {
+                amount2ShowErrorObservable.value = true
+            }
+        }
         return false
     }
 
