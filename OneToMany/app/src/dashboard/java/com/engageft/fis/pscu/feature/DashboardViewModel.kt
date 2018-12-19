@@ -118,7 +118,7 @@ class DashboardViewModel : BaseEngageViewModel() {
     }
 
     // Transactions
-    fun initTransactions() {
+    fun initTransactions(transactionType: String? = null) {
         compositeDisposable.add(
                 EngageService.getInstance().loginResponseAsObservable
                         .subscribeOn(Schedulers.io())
@@ -127,7 +127,7 @@ class DashboardViewModel : BaseEngageViewModel() {
                             if (response.isSuccess && response is LoginResponse) {
                                 debitCardInfo = LoginResponseUtils.getCurrentCard(response)
                                 debitCardInfo.let {
-                                    val listing = TransactionRepository.pagedTransactions(debitCardInfo.debitCardId)
+                                    val listing = TransactionRepository.pagedTransactions(debitCardInfo.debitCardId, transactionType)
                                     transactionsListObservable = listing.pagedList
                                     transactionsNetworkStateObservable = listing.networkState
                                     transactionsReadyObservable.postValue(true)

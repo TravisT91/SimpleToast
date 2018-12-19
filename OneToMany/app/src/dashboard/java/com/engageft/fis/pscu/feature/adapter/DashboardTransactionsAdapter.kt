@@ -6,7 +6,6 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.appcompat.widget.AppCompatImageButton
-import androidx.recyclerview.widget.ListUpdateCallback
 import androidx.recyclerview.widget.RecyclerView
 import com.engageft.apptoolbox.view.ProductCardModel
 import com.engageft.apptoolbox.view.ProductCardView
@@ -26,24 +25,8 @@ class DashboardTransactionsAdapter(context: Context,
     // Because there's a single row at position 0 for dashboard data,
     // must provide a custom paging callback here that accounts for that row
     // and ensures that paging updates happen in the right position.
-    override fun getListUpdateCallback(): ListUpdateCallback {
-        return object : ListUpdateCallback {
-            override fun onInserted(position: Int, count: Int) {
-                adapterCallback.onInserted(position + 1, count)
-            }
-
-            override fun onRemoved(position: Int, count: Int) {
-                adapterCallback.onRemoved(position + 1, count)
-            }
-
-            override fun onMoved(fromPosition: Int, toPosition: Int) {
-                adapterCallback.onMoved(fromPosition + 1, toPosition + 1)
-            }
-
-            override fun onChanged(position: Int, count: Int, payload: Any?) {
-                adapterCallback.onChanged(position + 1, count, payload)
-            }
-        }
+    override fun adjustedListUpdateCallbackPosition(position: Int): Int {
+        return position + 1
     }
 
     private var headerViewHolder: DashboardHeaderViewHolder? = null

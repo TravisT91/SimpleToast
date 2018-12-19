@@ -33,6 +33,7 @@ import com.engageft.fis.pscu.feature.palettebindings.applyBranding
 import com.engageft.fis.pscu.feature.transactions.adapter.TransactionsAdapter
 import com.engageft.fis.pscu.feature.utils.cardStatusStringRes
 import com.ob.domain.lookup.DebitCardStatus
+import com.ob.domain.lookup.TransactionType
 import eightbitlab.com.blurview.RenderScriptBlur
 import utilGen1.StringUtils
 import java.math.BigDecimal
@@ -526,15 +527,21 @@ class DashboardFragment : BaseEngageFullscreenFragment(),
 
     // DashboardTransactionsAdapter.DashboardTransactionsAdapterListener
     override fun onAllActivityClicked() {
-        // update view model with position, so that it can be set correctly when fragment is restored
-        dashboardViewModel.transactionsTabPosition = DashboardViewModel.TRANSACTIONS_TAB_POSITION_ALL
-        // TODO: tell adapter to show all
+        if (dashboardViewModel.transactionsTabPosition != DashboardViewModel.TRANSACTIONS_TAB_POSITION_ALL) {
+            // update view model with position, so that it can be set correctly when fragment is restored
+            dashboardViewModel.transactionsTabPosition = DashboardViewModel.TRANSACTIONS_TAB_POSITION_ALL
+
+            dashboardViewModel.initTransactions()
+        }
     }
 
     // DashboardTransactionsAdapter.DashboardTransactionsAdapterListener
     override fun onDepositsClicked() {
-        dashboardViewModel.transactionsTabPosition = DashboardViewModel.TRANSACTIONS_TAB_POSITION_DEPOSITS
-        // TODO: tell adapter to show deposits
+        if (dashboardViewModel.transactionsTabPosition != DashboardViewModel.TRANSACTIONS_TAB_POSITION_DEPOSITS) {
+            dashboardViewModel.transactionsTabPosition = DashboardViewModel.TRANSACTIONS_TAB_POSITION_DEPOSITS
+
+            dashboardViewModel.initTransactions(TransactionType.LOAD.name)
+        }
     }
 
     // TransactionsAdapter.OnTransactionsAdapterListener

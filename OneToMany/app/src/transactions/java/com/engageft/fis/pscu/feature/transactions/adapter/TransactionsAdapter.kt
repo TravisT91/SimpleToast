@@ -5,7 +5,6 @@ import android.graphics.PorterDuff
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ProgressBar
 import android.widget.TextView
 import androidx.core.content.ContextCompat
 import androidx.paging.AsyncPagedListDiffer
@@ -22,7 +21,6 @@ import com.engageft.fis.pscu.feature.transactions.utils.TransactionUtils
 import com.ob.domain.lookup.TransactionStatus
 import com.ob.domain.lookup.TransactionType
 import utilGen1.StringUtils
-import java.lang.IllegalArgumentException
 
 /**
  *  TransactionsAdapter
@@ -41,28 +39,31 @@ open class TransactionsAdapter(private val context: Context,
 
     private var networkState: NetworkState? = null
 
-    open fun getListUpdateCallback(): ListUpdateCallback {
-        return object : ListUpdateCallback {
-            override fun onInserted(position: Int, count: Int) {
-                adapterCallback.onInserted(position, count)
-            }
-
-
-            override fun onRemoved(position: Int, count: Int) {
-                adapterCallback.onRemoved(position, count)
-            }
-
-            override fun onMoved(fromPosition: Int, toPosition: Int) {
-                adapterCallback.onMoved(fromPosition, toPosition)
-            }
-
-            override fun onChanged(position: Int, count: Int, payload: Any?) {
-                adapterCallback.onChanged(position, count, payload)
-            }
-        }
+    // subclasses that have additional items before paged list, like DashboardTransactionsAdapter,
+    // need to override this to account for additional rows.
+    protected open fun adjustedListUpdateCallbackPosition(position: Int): Int {
+        return position
     }
 
-    private val differ = AsyncPagedListDiffer<Transaction>(getListUpdateCallback(), asyncDifferConfig)
+    private val differ = AsyncPagedListDiffer<Transaction>(
+            object : ListUpdateCallback {
+                override fun onInserted(position: Int, count: Int) {
+                    adapterCallback.onInserted(adjustedListUpdateCallbackPosition(position), count)
+                }
+
+                override fun onRemoved(position: Int, count: Int) {
+                    adapterCallback.onRemoved(adjustedListUpdateCallbackPosition(position), count)
+                }
+
+                override fun onMoved(fromPosition: Int, toPosition: Int) {
+                    adapterCallback.onMoved(adjustedListUpdateCallbackPosition(fromPosition), adjustedListUpdateCallbackPosition(toPosition))
+                }
+
+                override fun onChanged(position: Int, count: Int, payload: Any?) {
+                    adapterCallback.onChanged(adjustedListUpdateCallbackPosition(position), count, payload)
+                }
+            },
+            asyncDifferConfig)
 
     private fun hasExtraRow() = networkState != null && networkState != NetworkState.LOADED
 
