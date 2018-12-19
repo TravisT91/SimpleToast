@@ -407,11 +407,36 @@ class DashboardFragment : BaseEngageFullscreenFragment(),
 
         dashboardViewModel.animationObservable.observe(this, animationObserver)
 
+        dashboardViewModel.navigationObservable.observe(this, Observer {dashboardNavigationEvent ->
+            when (dashboardNavigationEvent) {
+                DashboardNavigationEvent.ALERTS -> {
+                    Toast.makeText(context!!, "TODO: Navigate to Alerts", Toast.LENGTH_LONG).show()
+                }
+                DashboardNavigationEvent.TRANSACTION_SEARCH -> {
+                    Toast.makeText(context!!, "TODO: Navigate to Transaction Search", Toast.LENGTH_LONG).show()
+                }
+                DashboardNavigationEvent.CARD_TRACKER -> {
+                    Toast.makeText(context!!, "TODO: Navigate to Card Tracker", Toast.LENGTH_LONG).show()
+                }
+                DashboardNavigationEvent.SHOW_ONBOARDING_SPLASH -> {
+                    Toast.makeText(context!!, "TODO: Navigate to Onboarding Splash", Toast.LENGTH_LONG).show()
+                }
+                DashboardNavigationEvent.SHOW_POST_30_DAYS_SPLASH -> {
+                    Toast.makeText(context!!, "TODO: Navigate to Post 30 Days Splash", Toast.LENGTH_LONG).show()
+                }
+            }
+        })
+
         // make sure correct tab is showing, after return from TransactionDetailFragment, in particular
         binding.transactionsTabLayout.getTabAt(dashboardViewModel.transactionsTabPosition)?.select()
 
         dashboardViewModel.initBalancesAndNotifications()
         dashboardViewModel.initTransactions()
+    }
+
+    override fun onResume() {
+        super.onResume()
+        dashboardViewModel.runGateKeeper()
     }
 
     override fun onExpandImmediate() {

@@ -5,6 +5,7 @@
     <string name="MOVE_MONEY_BANK_TRANSFER">Bank transfer</string>
     <string name="MOVE_MONEY_CREDIT_OR_DEBIT_CARD_LOAD">Credit or debit card load</string>
     <string name="MOVE_MONEY_DIRECT_DEPOSIT">Direct deposit</string>
+    <string name="MOVE_MONEY_MOBILE_CHECK_DEPOSIT">Mobile check deposit</string>
 
     <!-- Direct Deposit -->
     <string name="DIRECT_DEPOSIT_TITLE">Direct deposit</string>
@@ -16,6 +17,15 @@
     <string name="DIRECT_DEPOSIT_VIEW_PRINTABLE_FORM">View printable form</string>
     <string name="DIRECT_DEPOSIT_PRINTABLE_URL_UNFORMATTED">%1$s/login/sso?token=%2$s&amp;redirect_to=/account/direct-deposit&amp;embedded=ios</string>
     <string name="DIRECT_DEPOSIT_ACCOUNT_TYPE_VALUE">Checking</string>
+
+    <!-- Mobile check deposit -->
+    <string name="MOBILE_CHECK_DEPOSIT_TITLE">Easily deposit checks with your mobile device.</string>
+    <string name="MOBILE_CHECK_DEPOSIT_SUBTITLE_DOWNLOAD_APP">You can download the Ingo Money App to deposit a check directly on to your My Card Manager card.</string>
+    <string name="MOBILE_CHECK_DEPOSIT_SUBTITLE_OPEN_APP">Use the Ingo Money App to deposit a check directly to your My Card Manager card.</string>
+    <string name="MOBILE_CHECK_DEPOSIT_DOWNLOAD_APP">Download the app</string>
+    <string name="MOBILE_CHECK_DEPOSIT_OPEN_APP">Open Ingo app</string>
+    <string name="MOBILE_CHECK_DEPOSIT_LEARN_MORE">Learn more</string>
+
     <!-- TODO(aHashimi) remove unused strings after FOTM-111, FOTM-113, and FOTM-65 is complete -->
     <!-- Move Money Strings -->
     <!-- transfer screens -->
