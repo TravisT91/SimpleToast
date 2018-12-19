@@ -15,10 +15,17 @@
         <argument
             android:name="@string/navigation_view_gone"
             android:defaultValue="true" />
+        <action
+            android:id="@+id/action_login_fragment_to_securityQuestionsActivity"
+            app:destination="@id/securityQuestionsActivity" />
     </fragment>
 
     <activity
         android:id="@+id/authenticatedActivity"
         android:name="com.engageft.fis.pscu.AuthenticatedActivity"
         android:label="ActivityWithNavigation" />
+    <activity
+        android:id="@+id/securityQuestionsActivity"
+        android:name="com.engageft.fis.pscu.SecurityQuestionsActivity"
+        android:label="SecurityQuestionsActivity" />
 </navigation>
