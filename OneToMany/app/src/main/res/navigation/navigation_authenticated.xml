@@ -194,6 +194,13 @@
             app:exitAnim="@anim/nav_exit_anim"
             app:popEnterAnim="@anim/nav_pop_enter_anim"
             app:popExitAnim="@anim/nav_pop_exit_anim" />
+        <action
+            android:id="@+id/action_moveMoneyFragment_to_accountsAndTransfersListFragment"
+            app:destination="@id/accountsAndTransfersListFragment"
+            app:enterAnim="@anim/nav_enter_anim"
+            app:exitAnim="@anim/nav_exit_anim"
+            app:popEnterAnim="@anim/nav_pop_enter_anim"
+            app:popExitAnim="@anim/nav_pop_exit_anim"/>
     </fragment>
 
     <fragment
@@ -349,5 +356,13 @@
             android:id="@+id/action_mobileCheckDepositOpenFragment_to_mobileCheckDepositFragment"
             app:destination="@id/mobileCheckDepositFragment"
             app:popUpTo="@+id/moveMoneyFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/accountsAndTransfersListFragment"
+        android:name="com.engageft.fis.pscu.feature.AccountsAndTransfersListFragment"
+        android:label="@string/ach_bank_transfer_screen_title">
+        <argument
+            android:name="@string/navigation_view_gone"
+            android:defaultValue="true" />
     </fragment>
 </navigation>
