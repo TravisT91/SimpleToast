@@ -47,5 +47,4 @@
     <string name="FEATURE_NOT_AVAILABLE_LOST_STOLEN">We can’t report your card lost/stolen because it is currently inactive. For more information, please contact customer support.</string>
     <string name="FEATURE_NOT_AVAILABLE_CANCEL">We can’t cancel your card because it is currently inactive. For more information, please contact customer support.</string>
     <string name="FEATURE_NOT_AVAILABLE_UNKNOWN_FEATURE_TITLE">Feature unavailable</string>
-
 </resources>
