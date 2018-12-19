@@ -6,7 +6,7 @@
         <import type="android.view.View"/>
         <variable
             name="viewModel"
-            type="com.engageft.fis.pscu.feature.VerifyAchBankAccountViewModel"/>
+            type="com.engageft.fis.pscu.feature.AchBankAccountVerifyViewModel"/>
         <variable
             name="palette"
             type="com.engageft.fis.pscu.feature.branding.Palette"/>
@@ -68,8 +68,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/pillButtonTopSpaceInFormsAndLists"
                 android:text="@string/ach_bank_account_verify_button"
-                android:onClick="@{() -> viewModel.onVerifyAccount()}"
-                android:visibility="@{viewModel.showButton ? View.VISIBLE : View.GONE}"/>
+                android:onClick="@{() -> viewModel.onVerifyAccount()}"/>
 
         </androidx.appcompat.widget.LinearLayoutCompat>
     </ScrollView>

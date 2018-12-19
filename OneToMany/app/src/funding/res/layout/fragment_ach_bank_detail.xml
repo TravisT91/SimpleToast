@@ -6,7 +6,7 @@
         <import type="android.view.View"/>
         <variable
             name="viewModel"
-            type="com.engageft.fis.pscu.feature.AchBankAccountViewModel"/>
+            type="com.engageft.fis.pscu.feature.AchBankAccountDetailViewModel"/>
         <variable
             name="palette"
             type="com.engageft.fis.pscu.feature.branding.Palette"/>
@@ -28,8 +28,7 @@
                 android:layout_height="wrap_content"
                 android:background="@color/cellBackground">
 
-                <com.engageft.apptoolbox.view.TextInputWithLabel
-                    style="@style/TextInputWithLabelStyle"
+                <com.engageft.apptoolbox.view.TextWithLabel
                     android:id="@+id/accountNameInputWithLabel"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -37,18 +36,15 @@
                     app:labelText="@string/ach_bank_account_name_label"
                     app:inputText="@={viewModel.accountName}"/>
 
-                <com.engageft.apptoolbox.view.NumberInputWithLabel
-                    style="@style/TextInputWithLabelStyle"
+                <com.engageft.apptoolbox.view.TextWithLabel
                     android:id="@+id/routingNumberInputWithLabel"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:padding="16dp"
-                    app:inputMask="[000000000]"
                     app:labelText="@string/ach_bank_account_routing_number_label"
-                app:inputText="@={viewModel.routingNumber}"/>
+                    app:inputText="@={viewModel.routingNumber}"/>
 
-                <com.engageft.apptoolbox.view.NumberInputWithLabel
-                    style="@style/TextInputWithLabelStyle"
+                <com.engageft.apptoolbox.view.TextWithLabel
                     android:id="@+id/accountNumberInputWithLabel"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -56,29 +52,48 @@
                     app:labelText="@string/ach_bank_account_account_number_label"
                     app:inputText="@={viewModel.accountNumber}"/>
 
-                <com.engageft.apptoolbox.view.BottomSheetListInputWithLabel
-                    style="@style/BottomSheetListInputWithLabelStyle"
+                <com.engageft.apptoolbox.view.TextWithLabel
                     android:id="@+id/accountTypeBottomSheet"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:paddingStart="16dp"
                     android:paddingEnd="16dp"
                     android:paddingTop="16dp"
-                    app:labelText="@string/ach_bank_account_type_label"
-                    app:inputText="@={viewModel.accountType}"
-                    app:bottomSheetDialogTitle="@string/ach_bank_account_type_label"
-                    app:bottomSheetDialogStyle="@style/ListOptionBottomSheetDialogFragmentStyle"/>
+                    app:labelText="@string/ach_bank_account_type_label"/>
             </LinearLayout>
+
+            <androidx.appcompat.widget.LinearLayoutCompat
+                android:id="@+id/deleteButtonLayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="32dp"
+                android:background="@color/cellBackground">
+
+                <TextView
+                    parisStyle="@{palette.body}"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@color/cellBackground"
+                    android:gravity="center_horizontal"
+                    android:paddingTop="@dimen/listItemPaddingTop"
+                    android:paddingBottom="@dimen/listItemPaddingBottom"
+                    android:text="@string/ach_bank_account_delete"
+                    android:textColor="@{palette.errorColor}"
+                    tools:textColor="@color/error"/>
+
+                <include layout="@layout/divider" />
+
+            </androidx.appcompat.widget.LinearLayoutCompat>
 
             <com.engageft.apptoolbox.view.PillButton
                 style="@style/ButtonPillPrimaryFilledDefault"
-                android:id="@+id/submitButton"
+                android:id="@+id/verifyAccountButton"
                 android:layout_gravity="center"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="32dp"
-                android:text="@string/ach_bank_account_button_add"
-                android:onClick="@{() -> viewModel.onAddAccount()}"/>
+                android:text="@string/ach_bank_transfer_verify_account"
+                android:visibility="@{viewModel.showButton ? View.VISIBLE : View.GONE}" />
 
         </LinearLayout>
 

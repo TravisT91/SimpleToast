@@ -49,8 +49,13 @@ class AccountsAndTransfersListFragment: BaseEngageFullscreenFragment() {
                             val bundle = Bundle().apply {
                                 putLong(ACH_BANK_ACCOUNT_ID, achAccountInfoId)
                             }
-                            binding.root.findNavController().navigate(R.id.action_accountsAndTransfersListFragment_to_achBankAccountFragment,
-                                    bundle)
+
+                            if (achAccountInfoId == 0L) {
+                               root.findNavController().navigate(R.id.action_accountsAndTransfersListFragment_to_achBankAccountAddFragment, bundle)
+                            } else {
+                                root.findNavController().navigate(R.id.action_accountsAndTransfersListFragment_to_achBankAccountDetailFragment, bundle)
+                            }
+
                         }
                     },
 
@@ -70,7 +75,7 @@ class AccountsAndTransfersListFragment: BaseEngageFullscreenFragment() {
                                     } else {
                                         //TODO(aHashimi): FOTM-65 verify bank account
                                         //
-                                        binding.root.findNavController().navigate(R.id.action_accountsAndTransfersListFragment_to_verifyAchBankAccountFragment)
+                                        root.findNavController().navigate(R.id.action_accountsAndTransfersListFragment_to_achBankAccountVerifyFragment)
                                     }
                                 }
                             }
