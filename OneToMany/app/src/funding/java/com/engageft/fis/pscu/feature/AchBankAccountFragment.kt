@@ -22,6 +22,11 @@ import utilGen1.AchAccountInfoUtils
 import javax.microedition.khronos.egl.EGLDisplay
 
 class AchBankAccountFragment: BaseEngageFullscreenFragment() {
+    companion object {
+        const val SUCCESS_SCREEN_TYPE_KEY = "SUCCESS_SCREEN_TYPE_KEY"
+        const val ADDED_SUCCESS_TYPE = 0
+        const val VERIFIED_SUCCESS_TYPE = 1
+    }
 
     private lateinit var achBankAccountViewModel: AchBankAccountViewModel
     private lateinit var binding: FragmentAchBankAccountBinding
@@ -107,7 +112,11 @@ class AchBankAccountFragment: BaseEngageFullscreenFragment() {
                         binding.root.findNavController().navigate(R.id.action_achBankAccountFragment_to_verifyAchBankAccountFragment)
                     }
                     AchBankAccountNavigationEvent.BANK_ADDED_SUCCESS -> {
-
+                        binding.root.findNavController().navigate(
+                                R.id.action_achBankAccountFragment_to_achBankAddVerifySuccessFragment,
+                                Bundle().apply {
+                                    putInt(SUCCESS_SCREEN_TYPE_KEY, ADDED_SUCCESS_TYPE)
+                                })
                     }
                 }
             })

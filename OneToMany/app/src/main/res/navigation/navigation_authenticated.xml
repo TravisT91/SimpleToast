@@ -270,10 +270,20 @@
         <action
             android:id="@+id/action_achBankAccountFragment_to_verifyAchBankAccountFragment"
             app:destination="@id/verifyAchBankAccountFragment" />
+        <action
+            android:id="@+id/action_achBankAccountFragment_to_achBankAddVerifySuccessFragment"
+            app:destination="@id/achBankAddVerifySuccessFragment" />
     </fragment>
     <fragment
         android:id="@+id/verifyAchBankAccountFragment"
         android:name="com.engageft.fis.pscu.feature.VerifyAchBankAccountFragment"
-        android:label="@string/ach_bank_transfer_verify_account" />
+        android:label="@string/ach_bank_transfer_verify_account" >
+        <action
+            android:id="@+id/action_verifyAchBankAccountFragment_to_achBankAddVerifySuccessFragment"
+            app:destination="@id/achBankAddVerifySuccessFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/achBankAddVerifySuccessFragment"
+        android:name="com.engageft.fis.pscu.feature.AchBankAddVerifySuccessFragment" />
 
 </navigation>

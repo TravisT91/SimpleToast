@@ -1,51 +1,60 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:fillViewport="true"
-    xmlns:android="http://schemas.android.com/apk/res/android">
+<layout>
+    <data>
+        <variable
+            name="palette"
+            type="com.engageft.fis.pscu.feature.branding.Palette"/>
+    </data>
 
-    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    <ScrollView xmlns:app="http://schemas.android.com/apk/res-auto"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:gravity="center"
-        android:orientation="vertical">
+        android:layout_height="match_parent"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:fillViewport="true"
+        xmlns:android="http://schemas.android.com/apk/res/android">
 
-        <androidx.appcompat.widget.AppCompatImageView
-            android:id="@+id/imageView"
+        <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:srcCompat="@drawable/ic_money"
-            android:padding="16dp"/>
+            android:gravity="center"
+            android:orientation="vertical">
 
-        <androidx.appcompat.widget.AppCompatTextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textSize="32sp"
-            android:padding="16dp"
-            android:textColor="#444444"
-            android:lineSpacingExtra="6sp"
-            android:gravity="center_horizontal"
-            tools:text="Your bank account has been verified!" />
+            <androidx.appcompat.widget.AppCompatImageView
+                android:id="@+id/imageView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:srcCompat="@drawable/ic_money"
+                android:padding="16dp"/>
 
-        <androidx.appcompat.widget.AppCompatTextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textSize="16sp"
-            android:paddingStart="16dp"
-            android:paddingEnd="16dp"
-            android:textColor="@color/structure5"
-            android:lineSpacingExtra="7sp"
-            android:gravity="center_horizontal"
-            tools:text="You can now make transfers to and from your bank account." />
+            <androidx.appcompat.widget.AppCompatTextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="32sp"
+                android:padding="16dp"
+                android:textColor="#444444"
+                android:lineSpacingExtra="6sp"
+                android:gravity="center_horizontal"
+                tools:text="Your bank account has been verified!" />
 
-        <com.engageft.apptoolbox.view.PillButton
-            style="@style/ButtonPillPrimaryFilledDefault"
-            android:id="@+id/nextButton"
-            android:layout_margin="32dp"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            tools:text="Done"/>
-    </LinearLayout>
-</ScrollView>
+            <androidx.appcompat.widget.AppCompatTextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="16sp"
+                android:paddingStart="16dp"
+                android:paddingEnd="16dp"
+                android:textColor="@color/structure5"
+                android:lineSpacingExtra="7sp"
+                android:gravity="center_horizontal"
+                tools:text="You can now make transfers to and from your bank account." />
+
+            <com.engageft.apptoolbox.view.PillButton
+                style="@style/ButtonPillPrimaryFilledDefault"
+                android:id="@+id/nextButton"
+                android:layout_margin="32dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                tools:text="Done"/>
+        </LinearLayout>
+    </ScrollView>
+</layout>
+
