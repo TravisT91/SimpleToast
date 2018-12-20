@@ -353,16 +353,22 @@ class DashboardFragment : BaseEngageFullscreenFragment(),
                 dashboardViewModel.transactionsListObservable.observe(this, transactionsObserver)
             }
         })
-        dashboardViewModel.initTransactions()
 
-        binding.transactionsRecyclerView.adapter = transactionsAdapter
+        // make sure correct tab is showing, after return from TransactionDetailFragment, in particular
+        when (dashboardViewModel.transactionsTabPosition) {
+            DashboardViewModel.TRANSACTIONS_TAB_POSITION_ALL -> {
+                transactionsAdapter.selectedDashboardHeaderTabIndex = DashboardViewModel.TRANSACTIONS_TAB_POSITION_ALL
+                loadTransactions(removeExistingObservers = false)
+            }
+            DashboardViewModel.TRANSACTIONS_TAB_POSITION_DEPOSITS -> {
+                transactionsAdapter.selectedDashboardHeaderTabIndex = DashboardViewModel.TRANSACTIONS_TAB_POSITION_DEPOSITS
+                loadTransactions(transactionType = TransactionType.LOAD.name, removeExistingObservers = false)
+            }
+        }
 
         dashboardViewModel.notificationsCountObservable.observe(this, notificationsObserver)
 
         dashboardViewModel.animationObservable.observe(this, animationObserver)
-
-        // make sure correct tab is showing, after return from TransactionDetailFragment, in particular
-        //binding.transactionsTabLayout.getTabAt(dashboardViewModel.transactionsTabPosition)?.select() // TODO(kurt)
 
         dashboardViewModel.initBalancesAndNotifications()
     }
@@ -531,7 +537,7 @@ class DashboardFragment : BaseEngageFullscreenFragment(),
             // update view model with position, so that it can be set correctly when fragment is restored
             dashboardViewModel.transactionsTabPosition = DashboardViewModel.TRANSACTIONS_TAB_POSITION_ALL
 
-            dashboardViewModel.initTransactions()
+            loadTransactions()
         }
     }
 
@@ -540,8 +546,19 @@ class DashboardFragment : BaseEngageFullscreenFragment(),
         if (dashboardViewModel.transactionsTabPosition != DashboardViewModel.TRANSACTIONS_TAB_POSITION_DEPOSITS) {
             dashboardViewModel.transactionsTabPosition = DashboardViewModel.TRANSACTIONS_TAB_POSITION_DEPOSITS
 
-            dashboardViewModel.initTransactions(TransactionType.LOAD.name)
+            loadTransactions(TransactionType.LOAD.name)
         }
+    }
+
+    private fun loadTransactions(transactionType: String? = null, removeExistingObservers: Boolean = true) {
+        if (removeExistingObservers) {
+            // safe to do this after observation has already been setup, as when changing tabs,
+            // but not safe upon initViewModel, when transactionListObservable has not yet been initialized.
+            dashboardViewModel.transactionsListObservable.removeObservers(this)
+            dashboardViewModel.transactionsNetworkStateObservable.removeObservers(this)
+        }
+        transactionsAdapter.clear()
+        dashboardViewModel.clearTransactions { dashboardViewModel.initTransactions(transactionType) }
     }
 
     // TransactionsAdapter.OnTransactionsAdapterListener

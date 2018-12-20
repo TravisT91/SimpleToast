@@ -134,6 +134,10 @@ open class TransactionsAdapter(private val context: Context,
         }
     }
 
+    fun clear() {
+        differ.submitList(null)
+    }
+
     inner class TransactionViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         var transaction: Transaction? = null
 
@@ -163,8 +167,8 @@ open class TransactionsAdapter(private val context: Context,
         fun bindTo(transaction: Transaction) {
             this.transaction = transaction
 
-            loadingView.visibility = View.INVISIBLE
-            noTransactionsView.visibility = View.INVISIBLE
+            loadingView.visibility = View.GONE
+            noTransactionsView.visibility = View.GONE
             transactionsView.visibility = View.VISIBLE
 
             val transactionType = TransactionUtils.getTransactionType(transaction)

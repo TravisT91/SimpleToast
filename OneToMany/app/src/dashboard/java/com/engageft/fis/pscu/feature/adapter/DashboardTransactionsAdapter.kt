@@ -31,6 +31,8 @@ class DashboardTransactionsAdapter(context: Context,
 
     private var headerViewHolder: DashboardHeaderViewHolder? = null
 
+    var selectedDashboardHeaderTabIndex: Int = TRANSACTIONS_TAB_POSITION_ALL
+
     lateinit var productCardView: ProductCardView
     var productCardModel: ProductCardModel? = null
         set(value) {
@@ -131,6 +133,8 @@ class DashboardTransactionsAdapter(context: Context,
             savingsBalanceAmountTextView.setOnClickListener { listener.onSavingsBalanceClicked() }
             savingsBalanceLabelTextView.setOnClickListener { listener.onSavingsBalanceClicked() }
 
+            transactionsTabLayout.getTabAt(selectedDashboardHeaderTabIndex)?.select()
+
             transactionsTabLayout.addOnTabSelectedListener(object:TabLayout.OnTabSelectedListener {
                 override fun onTabReselected(tab: TabLayout.Tab?) {
                     // intentionally left blank
@@ -165,6 +169,7 @@ class DashboardTransactionsAdapter(context: Context,
     companion object {
         const val VIEW_TYPE_DASHBOARD_HEADER = 100 // large value so not to conflict with view types defined in TransactionsAdapter parent class
 
+        // TODO: consolidate these with identical items in DashboardViewModel
         const val TRANSACTIONS_TAB_POSITION_ALL = 0
         const val TRANSACTIONS_TAB_POSITION_DEPOSITS = 1
     }
