@@ -1,14 +1,11 @@
 package com.engageft.fis.pscu.feature
 
-import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Transformations
-import androidx.paging.PagedList
 import com.engageft.engagekit.EngageService
 import com.engageft.engagekit.repository.transaction.TransactionRepository
 import com.engageft.engagekit.repository.transaction.vo.Transaction
 import com.engageft.engagekit.repository.util.Listing
-import com.engageft.engagekit.repository.util.NetworkState
 import com.engageft.engagekit.rest.request.CardLockUnlockRequest
 import com.engageft.engagekit.utils.AlertUtils
 import com.engageft.engagekit.utils.LoginResponseUtils
@@ -43,13 +40,6 @@ class DashboardViewModel : BaseEngageViewModel() {
     var savingsBalanceStateObservable: MutableLiveData<DashboardBalanceState> = MutableLiveData()
 
     // Room transactions
-    val transactionsReadyObservable = MutableLiveData<Boolean>()
-    /* TODO: this needn't be lateinit, and having it so requires transactionsReadyObservable
-     * and lots of complications in DashboardFragment and other places to check if it's
-     * initialized before using it. See PagingSamples SubredditViewModel for possible help here. */
-    lateinit var transactionsListObservable: LiveData<PagedList<Transaction>>
-    lateinit var transactionsNetworkStateObservable: LiveData<NetworkState>
-
     private val repoResult = MutableLiveData<Listing<Transaction>>()
     val transactions = Transformations.switchMap(repoResult) { it.pagedList }!!
     val networkState = Transformations.switchMap(repoResult) { it.networkState }!!
@@ -136,11 +126,7 @@ class DashboardViewModel : BaseEngageViewModel() {
                             if (response.isSuccess && response is LoginResponse) {
                                 debitCardInfo = LoginResponseUtils.getCurrentCard(response)
                                 debitCardInfo.let {
-                                    val listing = TransactionRepository.pagedTransactions(debitCardInfo.debitCardId, transactionType)
-                                    // TODO: see PagingSamples SubredditViewModel for switchMap() to update observable values on the fly without creating new objects
-                                    transactionsListObservable = listing.pagedList
-                                    transactionsNetworkStateObservable = listing.networkState
-                                    transactionsReadyObservable.postValue(true)
+                                    repoResult.value = TransactionRepository.pagedTransactions(debitCardInfo.debitCardId, transactionType)
                                 }
                             } else {
                                 handleUnexpectedErrorResponse(response)

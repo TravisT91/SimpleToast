@@ -125,7 +125,7 @@ open class TransactionsAdapter(private val context: Context,
         val hasExtraRow = hasExtraRow()
         if (hadExtraRow != hasExtraRow) {
             if (hadExtraRow) {
-                notifyItemChanged(itemCount)
+                notifyItemRemoved(itemCount)
             } else {
                 notifyItemInserted(itemCount)
             }
