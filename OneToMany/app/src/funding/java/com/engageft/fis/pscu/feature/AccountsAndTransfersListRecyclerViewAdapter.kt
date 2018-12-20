@@ -368,12 +368,12 @@ class AccountsAndTransfersListRecyclerViewAdapter(
     }
 
     interface AchAccountInfoClickListener {
-        //TODO(aHashimi): FOTM-65, should pass object's ID?
         fun onAchAccountInfoClicked(achAccountInfoId: Long)
     }
 
     interface CreateTransferButtonClickListener {
-        //TODO(aHashimi): FOTM-65 & FOTM-113
+        //TODO(aHashimi): FOTM-113
+        //TODO(aHashimi): supporting multiple ach accounts: which one's being verfied? https://engageft.atlassian.net/browse/FOTM-588
         fun onCreateTransferClicked()
     }
 }

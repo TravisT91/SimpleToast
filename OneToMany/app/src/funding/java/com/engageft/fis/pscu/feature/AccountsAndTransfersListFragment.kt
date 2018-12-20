@@ -43,19 +43,22 @@ class AccountsAndTransfersListFragment: BaseEngageFullscreenFragment() {
 
                     object : AccountsAndTransfersListRecyclerViewAdapter.AchAccountInfoClickListener {
                         override fun onAchAccountInfoClicked(achAccountInfoId: Long) {
-                            //TODO(aHashimi): https://engageft.atlassian.net/browse/FOTM-65
-                            //TODO(aHashimi): the new screen must check -1 which means CREATE a new bank transfer acct otherwise it's EDIT
-                            Toast.makeText(context!!, "on Ach Account clicked! ID = $achAccountInfoId", Toast.LENGTH_SHORT).show()
+
                             val bundle = Bundle().apply {
                                 putLong(ACH_BANK_ACCOUNT_ID, achAccountInfoId)
                             }
 
+                            //TODO(aHashimi): support multiple ACH account later //TODO(aHashimi): https://engageft.atlassian.net/browse/FOTM-588
+                            // if achAccountInfoId = 0, user is creating a new ACH account
                             if (achAccountInfoId == 0L) {
-                               root.findNavController().navigate(R.id.action_accountsAndTransfersListFragment_to_achBankAccountAddFragment, bundle)
+                                if (accountsAndTransfersListViewModel.isAllowedToAddAccount()) {
+                                    root.findNavController().navigate(R.id.action_accountsAndTransfersListFragment_to_achBankAccountAddFragment, bundle)
+                                } else {
+                                    //TODO(aHashimi): https://engageft.atlassian.net/browse/FOTM-588
+                                }
                             } else {
                                 root.findNavController().navigate(R.id.action_accountsAndTransfersListFragment_to_achBankAccountDetailFragment, bundle)
                             }
-
                         }
                     },
 

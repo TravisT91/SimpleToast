@@ -15,6 +15,7 @@ import com.engageft.engagekit.utils.BackendDateTimeUtils
 import com.ob.ws.dom.AchLoadsResponse
 import com.engageft.engagekit.rest.request.CardRequest
 import com.engageft.engagekit.utils.LoginResponseUtils
+import com.ob.ws.dom.utility.AccountInfo
 import utilGen1.ScheduledLoadUtils
 /**
  * AccountsAndTransfersListViewModel
@@ -37,6 +38,7 @@ class AccountsAndTransfersListViewModel: BaseEngageViewModel() {
     }
 
     var achBankAccountId = 0L
+    var accountInfo: AccountInfo? = null
     val achAccountsListAndStatusObservable = MutableLiveData<AchBankAccountListAndStatus>()
     val achScheduledLoadListObservable = MutableLiveData<List<ScheduledLoad>>()
     val achHistoricalLoadListObservable = MutableLiveData<List<AchLoadInfo>>()
@@ -50,7 +52,7 @@ class AccountsAndTransfersListViewModel: BaseEngageViewModel() {
 
     fun refreshViews() {
         //TODO(aHashimi): need to create LiveData for observing LoginResponse so we don't have to do this step.
-        //TODO(aHashimi): FOTM-65 & FOTM-113 must do clearLoginResponse
+        //TODO(aHashimi): FOTM-113 must do clearLoginResponse?
         // for this main screen to show the updated to item correctly.
         if (this.loginResponse != EngageService.getInstance().storageManager.loginResponse) {
             initBankAccountsListAndTransfersList()
@@ -67,7 +69,7 @@ class AccountsAndTransfersListViewModel: BaseEngageViewModel() {
                     // don't hide progressOverlay just yet
                     if (response is LoginResponse) {
                         loginResponse = response
-
+                        accountInfo = LoginResponseUtils.getCurrentAccountInfo(response)
                         val currentCard = LoginResponseUtils.getCurrentCard(response)
                         // the order of invoking these methods don't matter
                         initBankAccountStatusAndList(response.achAccountList)
@@ -134,7 +136,6 @@ class AccountsAndTransfersListViewModel: BaseEngageViewModel() {
     }
 
     private fun initBankAccountStatusAndList(achAccountInfoList: List<AchAccountInfo>) {
-        //TODO(aHashimi): If we support adding multiple ACH bank accounts, this logic needs to change.
         if (achAccountInfoList.isNotEmpty()) {
 
             var verified = false
@@ -167,6 +168,13 @@ class AccountsAndTransfersListViewModel: BaseEngageViewModel() {
             progressOverlayShownObservable.value = false
         }
         shouldHideProgressOverlay = true
+    }
+
+    fun isAllowedToAddAccount(): Boolean {
+        accountInfo?.let { currentAccountInfo ->
+            return currentAccountInfo.accountPermissionsInfo.isAllowAddAchAccount
+        }
+        return false
     }
 
     data class AchBankAccountListAndStatus(val bankStatus: BankAccountStatus, val achAccountInfoList: List<AchAccountInfo>)
