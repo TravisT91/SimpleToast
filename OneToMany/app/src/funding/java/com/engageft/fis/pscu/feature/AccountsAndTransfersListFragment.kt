@@ -48,7 +48,7 @@ class AccountsAndTransfersListFragment: BaseEngageFullscreenFragment() {
                                 putLong(ACH_BANK_ACCOUNT_ID, achAccountInfoId)
                             }
 
-                            //TODO(aHashimi): support multiple ACH account later //TODO(aHashimi): https://engageft.atlassian.net/browse/FOTM-588
+                            //TODO(aHashimi): support multiple ACH account later: https://engageft.atlassian.net/browse/FOTM-588
                             // if achAccountInfoId = 0, user is creating a new ACH account
                             if (achAccountInfoId == 0L) {
                                 if (accountsAndTransfersListViewModel.isAllowedToAddAccount()) {
