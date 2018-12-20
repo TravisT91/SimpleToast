@@ -15,6 +15,7 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.navigation.findNavController
 import androidx.paging.PagedList
+import androidx.recyclerview.widget.DefaultItemAnimator
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.engageft.apptoolbox.BaseViewModel
@@ -23,6 +24,7 @@ import com.engageft.apptoolbox.ViewUtils.newLotusInstance
 import com.engageft.apptoolbox.view.InformationDialogFragment
 import com.engageft.apptoolbox.view.ProductCardModel
 import com.engageft.engagekit.EngageService
+import com.engageft.engagekit.repository.transaction.TransactionRepository
 import com.engageft.engagekit.repository.transaction.vo.Transaction
 import com.engageft.fis.pscu.R
 import com.engageft.fis.pscu.databinding.FragmentDashboardBinding
@@ -33,7 +35,6 @@ import com.engageft.fis.pscu.feature.palettebindings.applyBranding
 import com.engageft.fis.pscu.feature.transactions.adapter.TransactionsAdapter
 import com.engageft.fis.pscu.feature.utils.cardStatusStringRes
 import com.ob.domain.lookup.DebitCardStatus
-import com.ob.domain.lookup.TransactionType
 import eightbitlab.com.blurview.RenderScriptBlur
 import utilGen1.StringUtils
 import java.math.BigDecimal
@@ -145,7 +146,10 @@ class DashboardFragment : BaseEngageFullscreenFragment(),
 
         binding.swipeRefreshLayout.setOnRefreshListener {
             dashboardViewModel.refreshBalancesAndNotifications()
-            dashboardViewModel.refreshTransactions()
+            if (binding.transactionsRecyclerView.itemAnimator == null) {
+                binding.transactionsRecyclerView.itemAnimator = DefaultItemAnimator()
+            }
+            loadTransactions(listOf(TransactionRepository.TransactionRepoType.ALL_ACTIVITY, TransactionRepository.TransactionRepoType.DEPOSITS))
             // viewModel will trigger showing regular activity indicator. Don't show swipe refresh indicator too.
             binding.swipeRefreshLayout.isRefreshing = false
         }
@@ -347,13 +351,6 @@ class DashboardFragment : BaseEngageFullscreenFragment(),
         dashboardViewModel.savingsBalanceObservable.observe(this, savingsBalanceObserver)
         dashboardViewModel.savingsBalanceStateObservable.observe(this, savingsBalanceStateObserver)
 
-//        dashboardViewModel.transactionsReadyObservable.observe( this, Observer {
-//            if (it) {
-//                dashboardViewModel.transactionsNetworkStateObservable.observe(this, Observer { transactionsAdapter.setNetworkState(it) })
-//                dashboardViewModel.transactionsListObservable.observe(this, transactionsObserver)
-//            }
-//        })
-
         dashboardViewModel.networkState.observe(this, Observer { transactionsAdapter.setNetworkState(it) })
         dashboardViewModel.transactions.observe(this, transactionsObserver)
 
@@ -361,13 +358,15 @@ class DashboardFragment : BaseEngageFullscreenFragment(),
         when (dashboardViewModel.transactionsTabPosition) {
             DashboardViewModel.TRANSACTIONS_TAB_POSITION_ALL -> {
                 transactionsAdapter.selectedDashboardHeaderTabIndex = DashboardViewModel.TRANSACTIONS_TAB_POSITION_ALL
-                loadTransactions()
+                //loadTransactions(listOf(TransactionRepository.TransactionRepoType.ALL_ACTIVITY))
             }
             DashboardViewModel.TRANSACTIONS_TAB_POSITION_DEPOSITS -> {
                 transactionsAdapter.selectedDashboardHeaderTabIndex = DashboardViewModel.TRANSACTIONS_TAB_POSITION_DEPOSITS
-                loadTransactions(transactionType = TransactionType.LOAD.name)
+                //loadTransactions(listOf(TransactionRepository.TransactionRepoType.DEPOSITS))
             }
         }
+
+        loadTransactions(listOf(TransactionRepository.TransactionRepoType.ALL_ACTIVITY, TransactionRepository.TransactionRepoType.DEPOSITS))
 
         dashboardViewModel.notificationsCountObservable.observe(this, notificationsObserver)
 
@@ -536,26 +535,18 @@ class DashboardFragment : BaseEngageFullscreenFragment(),
 
     // DashboardTransactionsAdapter.DashboardTransactionsAdapterListener
     override fun onAllActivityClicked() {
-        if (dashboardViewModel.transactionsTabPosition != DashboardViewModel.TRANSACTIONS_TAB_POSITION_ALL) {
-            // update view model with position, so that it can be set correctly when fragment is restored
-            dashboardViewModel.transactionsTabPosition = DashboardViewModel.TRANSACTIONS_TAB_POSITION_ALL
-
-            loadTransactions()
-        }
+        binding.transactionsRecyclerView.itemAnimator = null
+        dashboardViewModel.showAllActivity()
     }
 
     // DashboardTransactionsAdapter.DashboardTransactionsAdapterListener
     override fun onDepositsClicked() {
-        if (dashboardViewModel.transactionsTabPosition != DashboardViewModel.TRANSACTIONS_TAB_POSITION_DEPOSITS) {
-            dashboardViewModel.transactionsTabPosition = DashboardViewModel.TRANSACTIONS_TAB_POSITION_DEPOSITS
-
-            loadTransactions(TransactionType.LOAD.name)
-        }
+        binding.transactionsRecyclerView.itemAnimator = null
+        dashboardViewModel.showDeposits()
     }
 
-    private fun loadTransactions(transactionType: String? = null) {
-        transactionsAdapter.clear()
-        dashboardViewModel.clearTransactions { dashboardViewModel.initTransactions(transactionType) }
+    private fun loadTransactions(repoTypes: List<TransactionRepository.TransactionRepoType>) {
+        dashboardViewModel.clearTransactions(repoTypes) { dashboardViewModel.initTransactions(repoTypes) }
     }
 
     // TransactionsAdapter.OnTransactionsAdapterListener

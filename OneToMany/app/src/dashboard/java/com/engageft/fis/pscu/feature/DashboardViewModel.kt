@@ -10,6 +10,7 @@ import com.engageft.engagekit.rest.request.CardLockUnlockRequest
 import com.engageft.engagekit.utils.AlertUtils
 import com.engageft.engagekit.utils.LoginResponseUtils
 import com.engageft.engagekit.utils.engageApi
+import com.ob.domain.lookup.TransactionType
 import com.ob.ws.dom.BasicResponse
 import com.ob.ws.dom.LoginResponse
 import com.ob.ws.dom.utility.DebitCardInfo
@@ -40,9 +41,15 @@ class DashboardViewModel : BaseEngageViewModel() {
     var savingsBalanceStateObservable: MutableLiveData<DashboardBalanceState> = MutableLiveData()
 
     // Room transactions
-    private val repoResult = MutableLiveData<Listing<Transaction>>()
-    val transactions = Transformations.switchMap(repoResult) { it.pagedList }!!
-    val networkState = Transformations.switchMap(repoResult) { it.networkState }!!
+    private var allTransactionsListing: Listing<Transaction>? = null
+    private var depositTransactionsListing: Listing<Transaction>? = null
+    private val observedTransactionsListing = MutableLiveData<Listing<Transaction>>()
+    val transactions = Transformations.switchMap(observedTransactionsListing) { it.pagedList }!!
+    val networkState = Transformations.switchMap(observedTransactionsListing) { it.networkState }!!
+
+    private val searchTransactionsListing = MutableLiveData<Listing<Transaction>>()
+    val searchTransactions = Transformations.switchMap(searchTransactionsListing) { it.pagedList }!!
+    val searchNetworkState = Transformations.switchMap(searchTransactionsListing) { it.networkState }!!
 
     var notificationsCountObservable: MutableLiveData<Int> = MutableLiveData()
 
@@ -117,7 +124,7 @@ class DashboardViewModel : BaseEngageViewModel() {
     }
 
     // Transactions
-    fun initTransactions(transactionType: String? = null) {
+    fun initTransactions(transactionTypes: List<TransactionRepository.TransactionRepoType>) {
         compositeDisposable.add(
                 EngageService.getInstance().loginResponseAsObservable
                         .subscribeOn(Schedulers.io())
@@ -126,7 +133,18 @@ class DashboardViewModel : BaseEngageViewModel() {
                             if (response.isSuccess && response is LoginResponse) {
                                 debitCardInfo = LoginResponseUtils.getCurrentCard(response)
                                 debitCardInfo.let {
-                                    repoResult.value = TransactionRepository.pagedTransactions(debitCardInfo.debitCardId, transactionType)
+                                    if (transactionTypes.contains(TransactionRepository.TransactionRepoType.ALL_ACTIVITY)) {
+                                        allTransactionsListing = TransactionRepository.pagedTransactions(TransactionRepository.TransactionRepoType.ALL_ACTIVITY, debitCardInfo.debitCardId, null)
+                                    }
+                                    if (transactionTypes.contains(TransactionRepository.TransactionRepoType.DEPOSITS)) {
+                                        depositTransactionsListing = TransactionRepository.pagedTransactions(TransactionRepository.TransactionRepoType.DEPOSITS, debitCardInfo.debitCardId, TransactionType.LOAD.name)
+                                    }
+
+                                    if (transactionsTabPosition == TRANSACTIONS_TAB_POSITION_ALL) {
+                                        showAllActivity(reselect = true)
+                                    } else {
+                                        showDeposits(reselect = true)
+                                    }
                                 }
                             } else {
                                 handleUnexpectedErrorResponse(response)
@@ -136,6 +154,20 @@ class DashboardViewModel : BaseEngageViewModel() {
                             handleThrowable(e)
                         }
         )
+    }
+
+    fun showAllActivity(reselect: Boolean = false) {
+        if (reselect || transactionsTabPosition != TRANSACTIONS_TAB_POSITION_ALL) {
+            transactionsTabPosition = TRANSACTIONS_TAB_POSITION_ALL
+            observedTransactionsListing.value = allTransactionsListing
+        }
+    }
+
+    fun showDeposits(reselect: Boolean = false) {
+        if (reselect || transactionsTabPosition != TRANSACTIONS_TAB_POSITION_DEPOSITS) {
+            transactionsTabPosition = TRANSACTIONS_TAB_POSITION_DEPOSITS
+            observedTransactionsListing.value = depositTransactionsListing
+        }
     }
 
     private fun updateNotifications(loginResponse: LoginResponse) {
@@ -162,18 +194,18 @@ class DashboardViewModel : BaseEngageViewModel() {
         initBalancesAndNotifications()
     }
 
-    fun refreshTransactions() {
+    fun refreshTransactions(repoTypes: List<TransactionRepository.TransactionRepoType>) {
         compositeDisposable.add(
-                Observable.fromCallable { TransactionRepository.clearTransactions() }
+                Observable.fromCallable { TransactionRepository.clearTransactions(repoTypes) }
                         .subscribeOn(Schedulers.computation())
                         .observeOn(Schedulers.computation())
                         .subscribe()
         )
     }
 
-    fun clearTransactions(callBack: (() -> Unit)? = null) {
+    fun clearTransactions(repoTypes: List<TransactionRepository.TransactionRepoType>, callBack: (() -> Unit)? = null) {
         compositeDisposable.add(
-                Observable.fromCallable { TransactionRepository.clearTransactions() }
+                Observable.fromCallable { TransactionRepository.clearTransactions(repoTypes) }
                         .subscribeOn(Schedulers.computation())
                         .observeOn(Schedulers.computation())
                         .subscribe {
