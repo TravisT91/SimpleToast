@@ -12,15 +12,24 @@ import com.engageft.apptoolbox.view.ProductCardView
 import com.engageft.fis.pscu.R
 import com.engageft.fis.pscu.feature.branding.BrandingInfoRepo
 import com.engageft.fis.pscu.feature.palettebindings.applyBranding
-import com.engageft.fis.pscu.feature.transactions.adapter.TransactionsAdapter
+import com.engageft.fis.pscu.feature.transactions.adapter.TransactionsPagedAdapter
 import com.google.android.material.tabs.TabLayout
 import io.reactivex.disposables.CompositeDisposable
 
+/**
+ *  TransactionsPagedAdapter
+ *  </p>
+ *  RecyclerView.Adapter for showing a PagedList of all transactions or just deposit transactions in the Dashboard,
+ *  along with a header showing card view and spending and set-aside balances.
+ *  </p>
+ *  Created by Kurt Mueller on 4/18/18.
+ *  Copyright (c) 2018 Engage FT. All rights reserved.
+ */
 class DashboardTransactionsAdapter(context: Context,
                                    private val compositeDisposable: CompositeDisposable,
                                    private val listener: DashboardTransactionsAdapterListener,
                                    transactionsListener: OnTransactionsAdapterListener?)
-    : TransactionsAdapter(context, transactionsListener) {
+    : TransactionsPagedAdapter(context, transactionsListener) {
 
     // Because there's a single row at position 0 for dashboard data,
     // must provide a custom paging callback here that accounts for that row
@@ -167,7 +176,7 @@ class DashboardTransactionsAdapter(context: Context,
     }
 
     companion object {
-        const val VIEW_TYPE_DASHBOARD_HEADER = 100 // large value so not to conflict with view types defined in TransactionsAdapter parent class
+        const val VIEW_TYPE_DASHBOARD_HEADER = 100 // large value so not to conflict with view types defined in TransactionsPagedAdapter parent class
 
         // TODO: consolidate these with identical items in DashboardViewModel
         const val TRANSACTIONS_TAB_POSITION_ALL = 0

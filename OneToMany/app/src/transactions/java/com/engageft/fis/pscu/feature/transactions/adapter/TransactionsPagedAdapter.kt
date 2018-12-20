@@ -23,15 +23,15 @@ import com.ob.domain.lookup.TransactionType
 import utilGen1.StringUtils
 
 /**
- *  TransactionsAdapter
+ *  TransactionsPagedAdapter
  *  </p>
- *  RecyclerView PagedListAdapter for showing all transactions or just deposit transactions in the Dashboard
+ *  RecyclerView.Adapter for showing a PagedList of transactions
  *  </p>
  *  Created by Kurt Mueller on 4/18/18.
  *  Copyright (c) 2018 Engage FT. All rights reserved.
  */
-open class TransactionsAdapter(private val context: Context,
-                               private val listener: OnTransactionsAdapterListener?)
+open class TransactionsPagedAdapter(private val context: Context,
+                                    private val listener: OnTransactionsAdapterListener?)
     : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
     protected val adapterCallback = AdapterListUpdateCallback(this)
 
@@ -138,6 +138,8 @@ open class TransactionsAdapter(private val context: Context,
         differ.submitList(null)
     }
 
+    // TODO: move this to own class so that it can be reused in TransactionsSimpleAdapter for search results
+    // complication is listener and transactionSelectionEnabled flag
     inner class TransactionViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         var transaction: Transaction? = null
 
@@ -199,13 +201,6 @@ open class TransactionsAdapter(private val context: Context,
                 else -> itemView.background.setColorFilter(ContextCompat.getColor(context, R.color.transactionRowBackgroundDefault), PorterDuff.Mode.SRC_ATOP)
             }
             //bottomRule.visibility = if (position == itemCount - 1) View.INVISIBLE else View.VISIBLE
-        }
-
-        fun bindTo(networkState: NetworkState?) {
-            // currently not using networkState
-            transactionsView.visibility = View.INVISIBLE
-            noTransactionsView.visibility = View.INVISIBLE
-            loadingView.visibility = View.VISIBLE
         }
     }
 

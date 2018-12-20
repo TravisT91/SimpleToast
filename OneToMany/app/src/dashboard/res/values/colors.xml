@@ -5,4 +5,6 @@
     <color name="dashboard_cardview_background">@color/structure1</color>
 
     <color name="transactionsPlaceholderText">@color/structure4</color>
+
+    <color name="dashboard_options_icon">@color/structure6</color>
 </resources>

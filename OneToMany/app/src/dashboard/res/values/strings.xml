@@ -34,6 +34,9 @@
     <string name="OVERVIEW_DEPOSITS">DEPOSITS</string>
 
     <string name="OPTIONS_MENU_NOTIFICATIONS">Notifications</string>
+    <string name="OPTIONS_MENU_SEARCH">Search</string>
+    <string name="OPTIONS_MENU_SEARCHVIEW_PLACEHOLDER">Search transactions</string>
+    <string name="TRANSACTIONS_SEARCH_MESSAGE_MINIMUM_CHARS">Please enter at least two characters.</string>
 
     <!-- Transactions -->
     <string name="OVERVIEW_NO_TRANSACTIONS_PLACEHOLDER">Once you start spending, you\'ll see all transactions show up right here.</string>

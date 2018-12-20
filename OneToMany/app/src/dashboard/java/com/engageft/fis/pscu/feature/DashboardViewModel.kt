@@ -170,6 +170,10 @@ class DashboardViewModel : BaseEngageViewModel() {
         }
     }
 
+    fun searchTransactions(searchString: String) {
+
+    }
+
     private fun updateNotifications(loginResponse: LoginResponse) {
         val accountInfo = LoginResponseUtils.getCurrentAccountInfo(loginResponse)
         if (accountInfo != null) {
