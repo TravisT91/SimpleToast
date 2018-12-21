@@ -14,7 +14,14 @@ import com.engageft.fis.pscu.feature.AchBankAccountAddFragment.Companion.ADDED_S
 import com.engageft.fis.pscu.feature.AchBankAccountAddFragment.Companion.SUCCESS_SCREEN_TYPE_KEY
 import com.engageft.fis.pscu.feature.AchBankAccountAddFragment.Companion.VERIFIED_SUCCESS_TYPE
 import com.engageft.fis.pscu.feature.branding.Palette
-
+/**
+ * AchBankAccountAddVerifySuccessFragment
+ * </p>
+ * Fragment for displaying success status of Adding or Verifying an ACH bank account.
+ * </p>
+ * Created by Atia Hashimi 12/20/18
+ * Copyright (c) 2018 Engage FT. All rights reserved.
+ */
 class AchBankAccountAddVerifySuccessFragment: BaseEngageFullscreenFragment() {
 
     override fun createViewModel(): BaseViewModel? {

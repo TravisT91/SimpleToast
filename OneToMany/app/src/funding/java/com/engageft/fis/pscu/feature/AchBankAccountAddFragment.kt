@@ -14,9 +14,15 @@ import com.engageft.apptoolbox.BaseViewModel
 import com.engageft.fis.pscu.R
 import com.engageft.fis.pscu.databinding.FragmentAchBankAccountAddBinding
 import com.engageft.fis.pscu.feature.branding.Palette
-import kotlinx.android.synthetic.main.fragment_direct_deposit.*
 import utilGen1.AchAccountInfoUtils
-
+/**
+ * AchBankAccountAddFragment
+ * </p>
+ * Fragment for adding an ACH Bank Account.
+ * </p>
+ * Created by Atia Hashimi 12/20/18
+ * Copyright (c) 2018 Engage FT. All rights reserved.
+ */
 class AchBankAccountAddFragment: BaseEngageFullscreenFragment() {
     companion object {
         const val SUCCESS_SCREEN_TYPE_KEY = "SUCCESS_SCREEN_TYPE_KEY"
@@ -24,11 +30,11 @@ class AchBankAccountAddFragment: BaseEngageFullscreenFragment() {
         const val VERIFIED_SUCCESS_TYPE = 1
     }
 
-    private lateinit var achBankAccountViewModel: AchBankAccountViewModel
+    private lateinit var achBankAccountViewModel: AchBankAccountAddViewModel
     private lateinit var binding: FragmentAchBankAccountAddBinding
 
     override fun createViewModel(): BaseViewModel? {
-        achBankAccountViewModel = ViewModelProviders.of(this).get(AchBankAccountViewModel::class.java)
+        achBankAccountViewModel = ViewModelProviders.of(this).get(AchBankAccountAddViewModel::class.java)
         return achBankAccountViewModel
     }
 
@@ -57,10 +63,10 @@ class AchBankAccountAddFragment: BaseEngageFullscreenFragment() {
 
             buttonStateObservable.observe(this@AchBankAccountAddFragment, Observer {
                 when (it) {
-                    AchBankAccountViewModel.ButtonState.SHOW -> {
+                    AchBankAccountAddViewModel.ButtonState.SHOW -> {
                         binding.addButton.visibility = View.VISIBLE
                     }
-                    AchBankAccountViewModel.ButtonState.HIDE -> {
+                    AchBankAccountAddViewModel.ButtonState.HIDE -> {
                         binding.addButton.visibility = View.GONE
                     }
                 }
@@ -106,7 +112,7 @@ class AchBankAccountAddFragment: BaseEngageFullscreenFragment() {
     override fun onPrepareOptionsMenu(menu: Menu?) {
         val submitMenuItem = menu!!.findItem(R.id.submit)
         submitMenuItem.title = getString(R.string.ach_bank_account_button_add)
-        submitMenuItem.isVisible = achBankAccountViewModel.buttonStateObservable.value == AchBankAccountViewModel.ButtonState.SHOW
+        submitMenuItem.isVisible = achBankAccountViewModel.buttonStateObservable.value == AchBankAccountAddViewModel.ButtonState.SHOW
         super.onPrepareOptionsMenu(menu)
     }
 

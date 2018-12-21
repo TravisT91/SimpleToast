@@ -12,7 +12,14 @@ import com.ob.ws.dom.utility.AccountInfo
 import com.ob.ws.dom.utility.AchAccountInfo
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
-
+/**
+ * AchBankAccountDetailViewModel
+ * </p>
+ * ViewModel that manages display data of an ACH bank account. Also handles deletion of an ACH account and navigating to verification step.
+ * </p>
+ * Created by Atia Hashimi 12/20/18
+ * Copyright (c) 2018 Engage FT. All rights reserved.
+ */
 class AchBankAccountDetailViewModel: BaseEngageViewModel() {
 
     private companion object {

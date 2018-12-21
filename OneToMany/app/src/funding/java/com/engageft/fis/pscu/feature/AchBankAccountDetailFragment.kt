@@ -14,7 +14,14 @@ import com.engageft.fis.pscu.R
 import com.engageft.fis.pscu.databinding.FragmentAchBankAccountDetailBinding
 import com.engageft.fis.pscu.feature.AccountsAndTransfersListFragment.Companion.ACH_BANK_ACCOUNT_ID
 import com.engageft.fis.pscu.feature.branding.Palette
-
+/**
+ * AchBankAccountDetailFragment
+ * </p>
+ * Fragment for displaying ACH bank account and deleting it. Also allows user to verify the bank account.
+ * </p>
+ * Created by Atia Hashimi 12/20/18
+ * Copyright (c) 2018 Engage FT. All rights reserved.
+ */
 class AchBankAccountDetailFragment: BaseEngageFullscreenFragment() {
 
     private lateinit var achBankAccountDetailViewModel: AchBankAccountDetailViewModel

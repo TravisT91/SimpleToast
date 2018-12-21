@@ -11,8 +11,15 @@ import com.ob.ws.dom.LoginResponse
 import com.ob.ws.dom.utility.AccountInfo
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
-
-class AchBankAccountViewModel: BaseEngageViewModel() {
+/**
+ * AchBankAccountAddViewModel
+ * </p>
+ * ViewModel that manages adding of an ACH bank account.
+ * </p>
+ * Created by Atia Hashimi 12/20/18
+ * Copyright (c) 2018 Engage FT. All rights reserved.
+ */
+class AchBankAccountAddViewModel: BaseEngageViewModel() {
     enum class ButtonState {
         SHOW,
         HIDE

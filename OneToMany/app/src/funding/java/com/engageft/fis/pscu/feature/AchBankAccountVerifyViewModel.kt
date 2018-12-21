@@ -9,7 +9,14 @@ import com.engageft.engagekit.rest.request.AchAccountValidateRequest
 import com.engageft.fis.pscu.config.EngageAppConfig
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
-
+/**
+ * AchBankAccountVerifyViewModel
+ * </p>
+ * ViewModel that handles verifying an ACH bank account.
+ * </p>
+ * Created by Atia Hashimi 12/20/18
+ * Copyright (c) 2018 Engage FT. All rights reserved.
+ */
 class AchBankAccountVerifyViewModel: BaseEngageViewModel() {
 
     enum class ButtonState {
