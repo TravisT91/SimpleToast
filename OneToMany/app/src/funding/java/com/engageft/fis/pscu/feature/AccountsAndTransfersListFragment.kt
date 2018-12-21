@@ -42,26 +42,19 @@ class AccountsAndTransfersListFragment: BaseEngageFullscreenFragment() {
             recyclerViewAdapter = AccountsAndTransfersListRecyclerViewAdapter(context!!,
 
                     object : AccountsAndTransfersListRecyclerViewAdapter.AchAccountInfoClickListener {
-                        override fun onAddBankAccountClicked() {
-                            TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+                        override fun onAchAccounDetailClicked(achAccountInfoId: Long) {
+                            root.findNavController().navigate(R.id.action_accountsAndTransfersListFragment_to_achBankAccountDetailFragment,
+                                    Bundle().apply {
+                                        putLong(ACH_BANK_ACCOUNT_ID, achAccountInfoId)
+                                    })
                         }
 
-                        override fun onAchAccountInfoClicked(achAccountInfoId: Long) {
-
-                            val bundle = Bundle().apply {
-                                putLong(ACH_BANK_ACCOUNT_ID, achAccountInfoId)
-                            }
-
+                        override fun onAddBankAccountClicked() {
                             //TODO(aHashimi): support multiple ACH account later: https://engageft.atlassian.net/browse/FOTM-588
-                            // if achAccountInfoId = 0, user is creating a new ACH account
-                            if (achAccountInfoId == 0L) {
-                                if (accountsAndTransfersListViewModel.isAllowedToAddAccount()) {
-                                    root.findNavController().navigate(R.id.action_accountsAndTransfersListFragment_to_achBankAccountAddFragment, bundle)
-                                } else {
-                                    //TODO(aHashimi): https://engageft.atlassian.net/browse/FOTM-588
-                                }
+                            if (accountsAndTransfersListViewModel.isAllowedToAddAccount()) {
+                                root.findNavController().navigate(R.id.action_accountsAndTransfersListFragment_to_achBankAccountAddFragment)
                             } else {
-                                root.findNavController().navigate(R.id.action_accountsAndTransfersListFragment_to_achBankAccountDetailFragment, bundle)
+                                //TODO(aHashimi): https://engageft.atlassian.net/browse/FOTM-588
                             }
                         }
                     },

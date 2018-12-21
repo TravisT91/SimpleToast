@@ -121,7 +121,11 @@ class AccountsAndTransfersListRecyclerViewAdapter(
                     }
 
                     holder.itemView.setOnClickListener {
-                        achAccountClickListener.onAchAccountInfoClicked(achAccountInfo.achAccountId)
+                        if (achAccountInfo.achAccountId == EMPTY_LIST_ACCOUNT_ID) {
+                            achAccountClickListener.onAddBankAccountClicked()
+                        } else {
+                            achAccountClickListener.onAchAccounDetailClicked(achAccountInfo.achAccountId)
+                        }
                     }
                 }
             }
@@ -379,7 +383,7 @@ class AccountsAndTransfersListRecyclerViewAdapter(
     }
 
     interface AchAccountInfoClickListener {
-        fun onAchAccountInfoClicked(achAccountInfoId: Long)
+        fun onAchAccounDetailClicked(achAccountInfoId: Long)
         fun onAddBankAccountClicked()
     }
 
