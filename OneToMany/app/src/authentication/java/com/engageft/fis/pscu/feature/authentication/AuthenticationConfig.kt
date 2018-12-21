@@ -9,8 +9,7 @@ package com.engageft.fis.pscu.feature.authentication
  * Copyright (c) 2018 Engage FT. All rights reserved.
  */
 object AuthenticationConfig {
-    //todo fotm-65
-    const val requireEmailConfirmation: Boolean = false
+    const val requireEmailConfirmation: Boolean = true
     const val requireAcceptTerms: Boolean = false
     const val requireSecurityQuestions: Boolean = true
 
