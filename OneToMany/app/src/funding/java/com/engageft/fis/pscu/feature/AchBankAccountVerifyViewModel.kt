@@ -19,8 +19,8 @@ class AchBankAccountVerifyViewModel: BaseEngageViewModel() {
 
     private val minAmount = 0.01
     private val maxAmount = 0.99
-    var amount1: ObservableField<String> = ObservableField("")
-    var amount2: ObservableField<String> = ObservableField("")
+    val amount1: ObservableField<String> = ObservableField("")
+    val amount2: ObservableField<String> = ObservableField("")
     var achAccountInfoId: Long = 0L
 
     val navigationEventObservable = MutableLiveData<AchBankAccountNavigationEvent>()

@@ -73,13 +73,12 @@
             <com.engageft.apptoolbox.view.PillButton
                 style="@style/ButtonPillPrimaryFilledDefault"
                 PillButton.setThemeFilled="@{true}"
-                android:id="@+id/submitButton"
+                android:id="@+id/addButton"
                 android:layout_gravity="center"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="32dp"
-                android:text="@string/ach_bank_account_button_add"
-                android:onClick="@{() -> viewModel.onAddAccount()}"/>
+                android:text="@string/ach_bank_account_button_add"/>
 
         </LinearLayout>
 

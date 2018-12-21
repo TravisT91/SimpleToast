@@ -12,8 +12,9 @@ import androidx.lifecycle.ViewModelProviders
 import androidx.navigation.findNavController
 import com.engageft.apptoolbox.BaseViewModel
 import com.engageft.fis.pscu.R
-import com.engageft.fis.pscu.databinding.FragmentAchBankAccountBinding
+import com.engageft.fis.pscu.databinding.FragmentAchBankAccountAddBinding
 import com.engageft.fis.pscu.feature.branding.Palette
+import kotlinx.android.synthetic.main.fragment_direct_deposit.*
 import utilGen1.AchAccountInfoUtils
 
 class AchBankAccountAddFragment: BaseEngageFullscreenFragment() {
@@ -24,7 +25,7 @@ class AchBankAccountAddFragment: BaseEngageFullscreenFragment() {
     }
 
     private lateinit var achBankAccountViewModel: AchBankAccountViewModel
-    private lateinit var binding: FragmentAchBankAccountBinding
+    private lateinit var binding: FragmentAchBankAccountAddBinding
 
     override fun createViewModel(): BaseViewModel? {
         achBankAccountViewModel = ViewModelProviders.of(this).get(AchBankAccountViewModel::class.java)
@@ -32,7 +33,7 @@ class AchBankAccountAddFragment: BaseEngageFullscreenFragment() {
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        binding = FragmentAchBankAccountBinding.inflate(inflater, container, false)
+        binding = FragmentAchBankAccountAddBinding.inflate(inflater, container, false)
 
         binding.apply {
             viewModel = achBankAccountViewModel
@@ -45,6 +46,11 @@ class AchBankAccountAddFragment: BaseEngageFullscreenFragment() {
                     achBankAccountViewModel.validRoutingNumber()
                 }
             })
+
+            addButton.setOnClickListener {
+                achBankAccountViewModel.isChecking = achBankAccountViewModel.accountType.get()!! == getString(R.string.TEXT_CHECKING)
+                achBankAccountViewModel.onAddAccount()
+            }
         }
 
         achBankAccountViewModel.apply {
@@ -52,10 +58,10 @@ class AchBankAccountAddFragment: BaseEngageFullscreenFragment() {
             buttonStateObservable.observe(this@AchBankAccountAddFragment, Observer {
                 when (it) {
                     AchBankAccountViewModel.ButtonState.SHOW -> {
-                        binding.submitButton.visibility = View.VISIBLE
+                        binding.addButton.visibility = View.VISIBLE
                     }
                     AchBankAccountViewModel.ButtonState.HIDE -> {
-                        binding.submitButton.visibility = View.GONE
+                        binding.addButton.visibility = View.GONE
                     }
                 }
                 activity?.invalidateOptionsMenu()
