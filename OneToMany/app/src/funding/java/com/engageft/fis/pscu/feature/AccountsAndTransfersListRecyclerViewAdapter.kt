@@ -175,14 +175,16 @@ class AccountsAndTransfersListRecyclerViewAdapter(
 
     fun setAccountHeaderData(headerText: String, headerSubText: String) {
         val oldList = mutableList.toList()
-        if (mutableList.size > 0) { // removes item if already in list
-            val first = mutableList[0]
-            if (first is HeaderTextPair) {
-                mutableList.removeAt(0)
-            }
-        }
+        removeHeader()
         val pair = HeaderTextPair(headerText, headerSubText)
         mutableList.add(0, pair)
+        DiffUtil.calculateDiff(CustomDiffUtil(oldList, mutableList))
+                .dispatchUpdatesTo(this)
+    }
+
+    fun removeHeaderAndNotifyAdapter() {
+        val oldList = mutableList.toList()
+        removeHeader()
         DiffUtil.calculateDiff(CustomDiffUtil(oldList, mutableList))
                 .dispatchUpdatesTo(this)
     }
@@ -278,6 +280,15 @@ class AccountsAndTransfersListRecyclerViewAdapter(
         }
     }
 
+    private fun removeHeader() {
+        if (mutableList.size > 0) { // removes item if already in list
+            val first = mutableList[0]
+            if (first is HeaderTextPair) {
+                mutableList.removeAt(0)
+            }
+        }
+    }
+
     private fun formatAchIncomingBankTransferAmount(context: Context, amount: String): String {
         // TODO(aHashimi): when ACH out is supported this string format needs to change as well
         return String.format(context.getString(R.string.ach_bank_transfer_amount_incoming_format), amount)
@@ -369,6 +380,7 @@ class AccountsAndTransfersListRecyclerViewAdapter(
 
     interface AchAccountInfoClickListener {
         fun onAchAccountInfoClicked(achAccountInfoId: Long)
+        fun onAddBankAccountClicked()
     }
 
     interface CreateTransferButtonClickListener {

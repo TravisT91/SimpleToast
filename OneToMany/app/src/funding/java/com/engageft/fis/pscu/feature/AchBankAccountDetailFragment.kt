@@ -81,7 +81,7 @@ class AchBankAccountDetailFragment: BaseEngageFullscreenFragment() {
             navigationEventObservable.observe(this@AchBankAccountDetailFragment, Observer {
                 when (it) {
                     AchBankAccountNavigationEvent.DELETED_BANK_SUCCESS -> {
-                        binding.root.findNavController().navigate(R.id.action_achBankAccountDetailFragment_to_accountsAndTransfersListFragment)
+                        binding.root.findNavController().popBackStack()
                     }
                 }
             })

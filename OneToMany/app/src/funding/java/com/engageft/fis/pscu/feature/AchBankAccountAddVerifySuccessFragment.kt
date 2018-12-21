@@ -25,7 +25,7 @@ class AchBankAccountAddVerifySuccessFragment: BaseEngageFullscreenFragment() {
 
     private val navigationOverrideClickListener = object : NavigationOverrideClickListener {
         override fun onClick(): Boolean {
-            binding.root.findNavController().navigate(R.id.action_achBankAccountAddVerifySuccessFragment_to_accountsAndTransfersListFragment)
+            binding.root.findNavController().popBackStack()
             return true
         }
     }
@@ -57,7 +57,7 @@ class AchBankAccountAddVerifySuccessFragment: BaseEngageFullscreenFragment() {
                     }
                 }
                 nextButton.setOnClickListener {
-                    root.findNavController().navigate(R.id.action_achBankAccountAddVerifySuccessFragment_to_accountsAndTransfersListFragment)
+                    binding.root.findNavController().popBackStack()
                 }
             } ?: run {
                 showGenericSuccessDialogMessageAndPopBackstack(binding.root)

@@ -42,6 +42,10 @@ class AccountsAndTransfersListFragment: BaseEngageFullscreenFragment() {
             recyclerViewAdapter = AccountsAndTransfersListRecyclerViewAdapter(context!!,
 
                     object : AccountsAndTransfersListRecyclerViewAdapter.AchAccountInfoClickListener {
+                        override fun onAddBankAccountClicked() {
+                            TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+                        }
+
                         override fun onAchAccountInfoClicked(achAccountInfoId: Long) {
 
                             val bundle = Bundle().apply {
@@ -98,6 +102,7 @@ class AccountsAndTransfersListFragment: BaseEngageFullscreenFragment() {
 
                 if (achAccountListAndStatus.bankStatus == AccountsAndTransfersListViewModel.BankAccountStatus.VERIFIED_BANK_ACCOUNT) {
                     recyclerViewAdapter.setButtonTextAndVisibility(getString(R.string.ach_bank_transfer_create_transfer), true)
+                    recyclerViewAdapter.removeHeaderAndNotifyAdapter()
                 } else {
                     if (achAccountListAndStatus.bankStatus == AccountsAndTransfersListViewModel.BankAccountStatus.NO_BANK_ACCOUNT) {
                         recyclerViewAdapter.setButtonTextAndVisibility("", false)

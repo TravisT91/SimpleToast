@@ -361,6 +361,9 @@
         android:id="@+id/accountsAndTransfersListFragment"
         android:name="com.engageft.fis.pscu.feature.AccountsAndTransfersListFragment"
         android:label="@string/ach_bank_transfer_screen_title">
+        <argument
+            android:name="@string/navigation_view_gone"
+            android:defaultValue="true" />
         <action
             android:id="@+id/action_accountsAndTransfersListFragment_to_achBankAccountAddFragment"
             app:destination="@id/achBankAccountAddFragment" />
@@ -375,35 +378,44 @@
         android:id="@+id/achBankAccountAddFragment"
         android:name="com.engageft.fis.pscu.feature.AchBankAccountAddFragment"
         android:label="@string/ach_bank_account_add_account_title">
+        <argument
+            android:name="@string/navigation_view_gone"
+            android:defaultValue="true" />
         <action
             android:id="@+id/action_achBankAccountAddFragment_to_achBankAccountAddVerifySuccessFragment"
-            app:destination="@id/achBankAccountAddVerifySuccessFragment" />
+            app:destination="@id/achBankAccountAddVerifySuccessFragment"
+            app:popUpTo="@+id/accountsAndTransfersListFragment"/>
     </fragment>
     <fragment
         android:id="@+id/achBankAccountVerifyFragment"
         android:name="com.engageft.fis.pscu.feature.AchBankAccountVerifyFragment"
         android:label="@string/ach_bank_transfer_verify_account" >
+        <argument
+            android:name="@string/navigation_view_gone"
+            android:defaultValue="true" />
         <action
             android:id="@+id/action_achBankAccountVerifyFragment_to_achBankAccountAddVerifySuccessFragment"
-            app:destination="@id/achBankAccountAddVerifySuccessFragment" />
+            app:destination="@id/achBankAccountAddVerifySuccessFragment"
+            app:popUpTo="@id/accountsAndTransfersListFragment"/>
     </fragment>
     <fragment
         android:id="@+id/achBankAccountAddVerifySuccessFragment"
         android:name="com.engageft.fis.pscu.feature.AchBankAccountAddVerifySuccessFragment" >
-        <action
-            android:id="@+id/action_achBankAccountAddVerifySuccessFragment_to_accountsAndTransfersListFragment"
-            app:destination="@id/accountsAndTransfersListFragment" />
+        <argument
+            android:name="@string/navigation_view_gone"
+            android:defaultValue="true" />
     </fragment>
     <fragment
         android:id="@+id/achBankAccountDetailFragment"
         android:name="com.engageft.fis.pscu.feature.AchBankAccountDetailFragment"
         android:label="@string/ach_bank_transfer_detail_account" >
+        <argument
+            android:name="@string/navigation_view_gone"
+            android:defaultValue="true" />
         <action
             android:id="@+id/action_achBankAccountDetailFragment_to_achBankAccountVerifyFragment"
-            app:destination="@id/achBankAccountVerifyFragment" />
-        <action
-            android:id="@+id/action_achBankAccountDetailFragment_to_accountsAndTransfersListFragment"
-            app:destination="@id/accountsAndTransfersListFragment" />
+            app:destination="@id/achBankAccountVerifyFragment"
+            app:popUpTo="@id/accountsAndTransfersListFragment"/>
     </fragment>
 
 </navigation>

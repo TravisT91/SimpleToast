@@ -29,6 +29,7 @@ class AchBankAccountVerifyViewModel: BaseEngageViewModel() {
     val amount2ShowErrorObservable = MutableLiveData<Boolean>()
 
     init {
+        buttonStateObservable.value = ButtonState.HIDE
         amount1ShowErrorObservable.value = false
         amount2ShowErrorObservable.value = false
 
