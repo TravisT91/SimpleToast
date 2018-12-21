@@ -32,6 +32,8 @@ class AchBankAccountDetailFragment: BaseEngageFullscreenFragment() {
 
             arguments?.let {
                 achBankAccountDetailViewModel.achAccountInfoId = it.getLong(AccountsAndTransfersListFragment.ACH_BANK_ACCOUNT_ID, 0)
+            } ?: run {
+                showGenericSuccessDialogMessageAndPopBackstack(root)
             }
 
             deleteButtonLayout.setOnClickListener {
