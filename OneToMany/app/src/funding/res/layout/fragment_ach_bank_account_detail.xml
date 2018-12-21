@@ -29,6 +29,7 @@
                 android:background="@color/cellBackground">
 
                 <com.engageft.apptoolbox.view.TextWithLabel
+                    style="@style/TextInputWithLabelStyle"
                     android:id="@+id/accountNameTextWithLabel"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -37,6 +38,7 @@
                     app:inputText="@={viewModel.accountName}"/>
 
                 <com.engageft.apptoolbox.view.TextWithLabel
+                    style="@style/TextInputWithLabelStyle"
                     android:id="@+id/routingNumberTextWithLabel"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -45,6 +47,7 @@
                     app:inputText="@={viewModel.routingNumber}"/>
 
                 <com.engageft.apptoolbox.view.TextWithLabel
+                    style="@style/TextInputWithLabelStyle"
                     android:id="@+id/accountNumberTextWithLabel"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -53,6 +56,7 @@
                     app:inputText="@={viewModel.accountNumber}"/>
 
                 <com.engageft.apptoolbox.view.TextWithLabel
+                    style="@style/TextInputWithLabelStyle"
                     android:id="@+id/accountTypeTextWithLabel"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
