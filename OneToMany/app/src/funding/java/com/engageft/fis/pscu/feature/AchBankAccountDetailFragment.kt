@@ -38,7 +38,7 @@ class AchBankAccountDetailFragment: BaseEngageFullscreenFragment() {
 
             deleteButtonLayout.setOnClickListener {
                 // prompt user if they want to delete
-                val bankNameAndNumber = String.format(getString(R.string.TRANSFER_ACCOUNT_DESCRIPTION),
+                val bankNameAndNumber = String.format(getString(R.string.TRANSFER_ACCOUNT_DESCRIPTION_FORMAT),
                         achBankAccountDetailViewModel.achAccountInfo!!.bankName, achBankAccountDetailViewModel.achAccountInfo!!.accountLastDigits)
 
                 val deleteDialogInfo = InformationDialogFragment.newLotusInstance(

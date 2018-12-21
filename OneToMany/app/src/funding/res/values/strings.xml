@@ -38,7 +38,7 @@
     <string name="TRANSFER_MONTHLY_SIMPLE_LOAD_DESCRIPTION">%s of each month</string>
     <string name="TRANSFER_TWICE_MONTHLY_SIMPLE_LOAD_DESCRIPTION">%s and %s of each month</string>
     <string name="TRANSFER_WEEKLY_SIMPLE_LOAD_DESCRIPTION">every %s</string>
-    <string name="TRANSFER_ACCOUNT_DESCRIPTION">%1$s (…%2$s)</string>
+    <string name="TRANSFER_ACCOUNT_DESCRIPTION_FORMAT">%1$s (…%2$s)</string>
 
     <!-- pay -->
     <string name="PAY_TO_FMT">to %s</string>
