@@ -41,6 +41,7 @@ class AchBankAccountVerifyFragment: BaseEngageFullscreenFragment() {
             viewModel = verifyAchBankAccountViewModel
             palette = Palette
 
+            //TODO(Hashimi) https://engageft.atlassian.net/browse/SHOW-459 set maxLength of input fields to 2
             amountInputWithLabel1.currencyCode = EngageAppConfig.currencyCode
             amountInputWithLabel2.currencyCode = EngageAppConfig.currencyCode
 
