@@ -101,10 +101,12 @@ class AchBankAccountVerifyFragment: BaseEngageFullscreenFragment() {
             })
 
             navigationEventObservable.observe(this@AchBankAccountVerifyFragment, Observer {
-                binding.root.findNavController().navigate(R.id.action_achBankAccountVerifyFragment_to_achBankAccountAddVerifySuccessFragment,
-                        Bundle().apply {
-                            putInt(SUCCESS_SCREEN_TYPE_KEY, VERIFIED_SUCCESS_TYPE)
-                        })
+                if (it == AchBankAccountNavigationEvent.BANK_VERIFIED_SUCCESS) {
+                    binding.root.findNavController().navigate(R.id.action_achBankAccountVerifyFragment_to_achBankAccountAddVerifySuccessFragment,
+                            Bundle().apply {
+                                putInt(SUCCESS_SCREEN_TYPE_KEY, VERIFIED_SUCCESS_TYPE)
+                            })
+                }
             })
         }
 
