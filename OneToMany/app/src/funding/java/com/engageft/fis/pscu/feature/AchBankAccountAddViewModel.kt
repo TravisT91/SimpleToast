@@ -99,6 +99,14 @@ class AchBankAccountAddViewModel: BaseEngageViewModel() {
         routingNumberShowErrorObservable.value = !(routingNumber.get()!!.isEmpty() || isRoutingNumberValid())
     }
 
+    fun hasUnsavedChanges(): Boolean {
+        if (accountName.get()!!.isNotEmpty() || routingNumber.get()!!.isNotEmpty()
+                || accountNumber.get()!!.isNotEmpty() || accountType.get()!!.isNotEmpty()) {
+            return true
+        }
+        return false
+    }
+
     fun onAddAccount() {
         if (areAllFieldsValid()) {
             currentAccountInfo?.let { accountInfo ->

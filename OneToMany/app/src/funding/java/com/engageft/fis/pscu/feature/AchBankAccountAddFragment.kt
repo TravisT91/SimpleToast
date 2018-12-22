@@ -10,7 +10,10 @@ import android.view.ViewGroup
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.navigation.findNavController
+import androidx.navigation.fragment.findNavController
 import com.engageft.apptoolbox.BaseViewModel
+import com.engageft.apptoolbox.NavigationOverrideClickListener
+import com.engageft.apptoolbox.view.InformationDialogFragment
 import com.engageft.fis.pscu.R
 import com.engageft.fis.pscu.databinding.FragmentAchBankAccountAddBinding
 import com.engageft.fis.pscu.feature.branding.Palette
@@ -33,6 +36,28 @@ class AchBankAccountAddFragment: BaseEngageFullscreenFragment() {
     private lateinit var achBankAccountViewModel: AchBankAccountAddViewModel
     private lateinit var binding: FragmentAchBankAccountAddBinding
 
+    private val unsavedChangesDialogListener = object : InformationDialogFragment.InformationDialogFragmentListener {
+        override fun onDialogFragmentPositiveButtonClicked() {
+            findNavController().navigateUp()
+        }
+        override fun onDialogFragmentNegativeButtonClicked() {
+            // Do nothing.
+        }
+        override fun onDialogCancelled() {
+            // Do nothing.
+        }
+    }
+
+    private val navigationOverrideClickListener = object : NavigationOverrideClickListener {
+        override fun onClick(): Boolean {
+            if (achBankAccountViewModel.hasUnsavedChanges()) {
+                showDialog(infoDialogGenericUnsavedChangesNewInstance(context = activity!!, listener = unsavedChangesDialogListener))
+                return true
+            }
+            return false
+        }
+    }
+
     override fun createViewModel(): BaseViewModel? {
         achBankAccountViewModel = ViewModelProviders.of(this).get(AchBankAccountAddViewModel::class.java)
         return achBankAccountViewModel
@@ -40,6 +65,9 @@ class AchBankAccountAddFragment: BaseEngageFullscreenFragment() {
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         binding = FragmentAchBankAccountAddBinding.inflate(inflater, container, false)
+
+        upButtonOverrideProvider.setUpButtonOverride(navigationOverrideClickListener)
+        backButtonOverrideProvider.setBackButtonOverride(navigationOverrideClickListener)
 
         binding.apply {
             viewModel = achBankAccountViewModel
