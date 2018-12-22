@@ -42,7 +42,8 @@ class AchBankAccountAddVerifySuccessFragment: BaseEngageFullscreenFragment() {
 
         upButtonOverrideProvider.setUpButtonOverride(navigationOverrideClickListener)
         backButtonOverrideProvider.setBackButtonOverride(navigationOverrideClickListener)
-        toolbarController.setToolbarVisibility(ToolbarVisibilityState.GONE)
+        toolbarController.setToolbarVisibility(ToolbarVisibilityState.INVISIBLE)
+
         binding.apply {
             palette = Palette
 
