@@ -30,7 +30,7 @@ object EngageAppConfig : BaseAppConfig() {
         override val brand: String = "MYCARDMANAGER"
     }
 
-    override val heapAppId: String = if (BuildConfig.DEBUG) "" else ""
+    override val heapAppId: String = if (BuildConfig.DEBUG) "230876127" else "2688943769"
 }
 
 abstract class BaseAppConfig {
