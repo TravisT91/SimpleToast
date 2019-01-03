@@ -42,6 +42,7 @@ class AccountsAndTransfersListFragment: BaseEngageFullscreenFragment() {
             recyclerViewAdapter = AccountsAndTransfersListRecyclerViewAdapter(context!!,
 
                     object : AccountsAndTransfersListRecyclerViewAdapter.AchAccountInfoClickListener {
+
                         override fun onAchAccounDetailClicked(achAccountInfoId: Long) {
                             root.findNavController().navigate(R.id.action_accountsAndTransfersListFragment_to_achBankAccountDetailFragment,
                                     Bundle().apply {
@@ -72,6 +73,7 @@ class AccountsAndTransfersListFragment: BaseEngageFullscreenFragment() {
                                 achAccountsListAndStatusObservable.value?.let { achAccountListAndStatus ->
                                     if (achAccountListAndStatus.bankStatus == AccountsAndTransfersListViewModel.BankAccountStatus.VERIFIED_BANK_ACCOUNT) {
                                         // TODO(aHashimi): FOTM-113 create transfer
+                                        root.findNavController().navigate(R.id.action_accountsAndTransfersListFragment_to_createEditTransferFragment)
                                     } else {
                                         // TODO(aHashimi): User can't add more than 1 Ach Bank account, when/if multiple ach bank accounts are added the UI and this logic needs to change.
                                         // As of now the user can't add more than ach bank account but this will need to change if it did because we're just relying on the first item.
