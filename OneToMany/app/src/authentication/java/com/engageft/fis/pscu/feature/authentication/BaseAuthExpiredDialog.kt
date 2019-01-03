@@ -3,6 +3,7 @@ package com.engageft.fis.pscu.feature.authentication
 import android.os.Bundle
 import androidx.fragment.app.DialogFragment
 import com.engageft.engagekit.EngageService
+import com.engageft.fis.pscu.MoEngageUtils
 import com.engageft.fis.pscu.R
 
 /**
@@ -28,6 +29,7 @@ abstract class BaseAuthExpiredDialog : DialogFragment() {
         super.onDestroyView()
         if (!reauthenticationSucceeded) {
             EngageService.getInstance().authManager.logout()
+            MoEngageUtils.logout()
         }
     }
 

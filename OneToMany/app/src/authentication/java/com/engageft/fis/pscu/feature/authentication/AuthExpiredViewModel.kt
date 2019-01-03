@@ -8,6 +8,7 @@ import com.engageft.apptoolbox.BaseViewModel
 import com.engageft.apptoolbox.BuildConfig
 import com.engageft.engagekit.EngageService
 import com.engageft.engagekit.rest.exception.NoConnectivityException
+import com.engageft.fis.pscu.MoEngageUtils
 import com.engageft.fis.pscu.feature.DialogInfo
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
@@ -57,6 +58,7 @@ class AuthExpiredViewModel : BaseViewModel() {
 
     fun onLogoutClicked() {
         EngageService.getInstance().authManager.logout()
+        MoEngageUtils.logout()
         navigationObservable.value = AuthExpiredNavigationEvent.LOGOUT
     }
 

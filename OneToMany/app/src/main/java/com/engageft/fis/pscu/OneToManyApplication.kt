@@ -11,9 +11,9 @@ import com.engageft.fis.pscu.config.EngageAppConfig
 import io.fabric.sdk.android.Fabric
 
 /**
- * TODO(joeyhutchins): ClassName
+ * OneToManyApplication
  * <p>
- * TODO(joeyhutchins): Class description.
+ * Application for My Card Manager.
  * </p>
  * Created by joeyhutchins on 8/21/18.
  * Copyright (c) 2018 Engage FT. All rights reserved.
@@ -29,6 +29,7 @@ class OneToManyApplication : LotusApplication() {
         sInstance = this
 
         HeapUtils.initHeap(this)
+        MoEngageUtils.initMoEngage()
         EngageService.initService(BuildConfig.VERSION_CODE.toString(), this, EngageAppConfig.engageKitConfig)
 
         initPalette()

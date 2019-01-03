@@ -16,6 +16,7 @@ import com.engageft.apptoolbox.NavigationOverrideClickListener
 import com.engageft.apptoolbox.ViewUtils.newLotusInstance
 import com.engageft.apptoolbox.view.InformationDialogFragment
 import com.engageft.engagekit.EngageService
+import com.engageft.fis.pscu.MoEngageUtils
 import com.engageft.fis.pscu.R
 import com.engageft.fis.pscu.databinding.FragmentChangeSecurityQuestionsBinding
 import com.engageft.fis.pscu.feature.branding.BrandingManager
@@ -71,6 +72,7 @@ class ChangeSecurityQuestionsFragment : BaseEngageFullscreenFragment() {
         override fun onDialogFragmentPositiveButtonClicked() {
             // We are in the SecurityQuestionsActivity if this is the case.
             EngageService.getInstance().authManager.logout()
+            MoEngageUtils.logout()
             BrandingManager.clearBranding()
             activity!!.finish()
             findNavController().navigate(R.id.action_changeSecurityQuestionsFragment2_to_notAuthenticatedActivity2)
