@@ -25,4 +25,8 @@
     <string name="fragment_title_mobile_check_deposit_download">Mobile check deposit</string>
     <string name="fragment_title_mobile_check_deposit_open">Mobile check deposit</string>
 
+    <!-- Notifications -->
+    <string name="channel_id">app_general_channel</string>
+    <string name="channel_name">General</string>
+    <string name="channel_description">Channel for general notifications</string>
 </resources>

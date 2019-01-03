@@ -1,7 +1,5 @@
 package com.engageft.fis.pscu
 
-import android.app.Application
-import android.content.Context
 import com.engageft.fis.pscu.config.EngageAppConfig
 import com.moe.pushlibrary.MoEHelper
 import com.moe.pushlibrary.utils.MoEHelperConstants
@@ -36,6 +34,7 @@ object MoEngageUtils {
             val moEngage = MoEngage.Builder(application, getMoEngageAppId())
                     //.setNotificationSmallIcon(R.drawable.ic_notification) // TODO(kurt): waiting on FOTM-642
                     .setNotificationLargeIcon(R.mipmap.ic_launcher)
+                    //.setSenderId(EngageAppConfig.fcmSenderId) // This is probably not necessary, but included as an option when getting push working
                     .setLogLevel(Logger.VERBOSE)
                     .build()
             MoEngage.initialise(moEngage)

@@ -6,8 +6,8 @@ import com.crashlytics.android.Crashlytics
 import com.engageft.apptoolbox.LotusApplication
 import com.engageft.apptoolbox.R
 import com.engageft.engagekit.EngageService
-import com.engageft.fis.pscu.feature.branding.Palette
 import com.engageft.fis.pscu.config.EngageAppConfig
+import com.engageft.fis.pscu.feature.branding.Palette
 import io.fabric.sdk.android.Fabric
 
 /**
@@ -27,6 +27,8 @@ class OneToManyApplication : LotusApplication() {
     override fun onCreate() {
         super.onCreate()
         sInstance = this
+
+        NotificationUtils.createNotificationChannels(this)
 
         HeapUtils.initHeap(this)
         MoEngageUtils.initMoEngage()

@@ -75,6 +75,7 @@
             android:name="io.fabric.ApiKey"
             android:value="0087770d801e5ae649098c9ada1e25971551d31c" />
 
+        <!-- Listener for Receiving push payload from FCM -->
         <service android:name="com.moengage.firebase.MoEFireBaseMessagingService">
             <intent-filter>
                 <action android:name="com.google.firebase.MESSAGING_EVENT"/>
