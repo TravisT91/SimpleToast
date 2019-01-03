@@ -468,11 +468,9 @@ class DashboardFragment : BaseEngageFullscreenFragment(),
         when (dashboardViewModel.transactionsTabPosition) {
             DashboardViewModel.TRANSACTIONS_TAB_POSITION_ALL -> {
                 transactionsAdapter.selectedDashboardHeaderTabIndex = DashboardViewModel.TRANSACTIONS_TAB_POSITION_ALL
-                //loadTransactions(listOf(TransactionRepository.TransactionRepoType.ALL_ACTIVITY))
             }
             DashboardViewModel.TRANSACTIONS_TAB_POSITION_DEPOSITS -> {
                 transactionsAdapter.selectedDashboardHeaderTabIndex = DashboardViewModel.TRANSACTIONS_TAB_POSITION_DEPOSITS
-                //loadTransactions(listOf(TransactionRepository.TransactionRepoType.DEPOSITS))
             }
         }
 
@@ -481,6 +479,26 @@ class DashboardFragment : BaseEngageFullscreenFragment(),
         dashboardViewModel.notificationsCountObservable.observe(this, notificationsObserver)
 
         dashboardViewModel.animationObservable.observe(this, animationObserver)
+
+        dashboardViewModel.navigationObservable.observe(this, Observer {dashboardNavigationEvent ->
+            when (dashboardNavigationEvent) {
+                DashboardNavigationEvent.ALERTS -> {
+                    Toast.makeText(context!!, "TODO: Navigate to Alerts", Toast.LENGTH_LONG).show()
+                }
+                DashboardNavigationEvent.TRANSACTION_SEARCH -> {
+                    Toast.makeText(context!!, "TODO: Navigate to Transaction Search", Toast.LENGTH_LONG).show()
+                }
+                DashboardNavigationEvent.CARD_TRACKER -> {
+                    Toast.makeText(context!!, "TODO: Navigate to Card Tracker", Toast.LENGTH_LONG).show()
+                }
+                DashboardNavigationEvent.SHOW_ONBOARDING_SPLASH -> {
+                    Toast.makeText(context!!, "TODO: Navigate to Onboarding Splash", Toast.LENGTH_LONG).show()
+                }
+                DashboardNavigationEvent.SHOW_POST_30_DAYS_SPLASH -> {
+                    Toast.makeText(context!!, "TODO: Navigate to Post 30 Days Splash", Toast.LENGTH_LONG).show()
+                }
+            }
+        })
 
         dashboardViewModel.initBalancesAndNotifications()
     }
@@ -508,6 +526,11 @@ class DashboardFragment : BaseEngageFullscreenFragment(),
         } else {
             // TODO(kurt): there is no function to collapseImmediate()
         }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        dashboardViewModel.runGateKeeper()
     }
 
     override fun onExpandImmediate() {

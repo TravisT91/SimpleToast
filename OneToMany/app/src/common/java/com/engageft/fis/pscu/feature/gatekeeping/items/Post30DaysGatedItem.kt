@@ -18,38 +18,44 @@ import io.reactivex.schedulers.Schedulers
  * Copyright (c) 2018 Engage FT. All rights reserved.
  */
 class Post30DaysGatedItem(private val compositeDisposable: CompositeDisposable) : GatedItem() {
+    private var hasBeenChecked = false
     override fun checkItem(resultListener: GatedItemResultListener) {
-        compositeDisposable.add(
-                EngageService.getInstance().loginResponseAsObservable
-                        .subscribeOn(Schedulers.io())
-                        .observeOn(AndroidSchedulers.mainThread())
-                        .subscribe({ response ->
-                            if (response.isSuccess && response is LoginResponse) {
-                                // Setup our Budgets state here for free:
-                                val budgetInfo = response.budgetInfo
+        if (!hasBeenChecked) {
+            hasBeenChecked = true
+            compositeDisposable.add(
+                    EngageService.getInstance().loginResponseAsObservable
+                            .subscribeOn(Schedulers.io())
+                            .observeOn(AndroidSchedulers.mainThread())
+                            .subscribe({ response ->
+                                if (response.isSuccess && response is LoginResponse) {
+                                    // Setup our Budgets state here for free:
+                                    val budgetInfo = response.budgetInfo
 
-                                val daysSinceStart = LoginResponseUtils.daysSinceStart(response)
-                                val budgetAmount = if (budgetInfo.budgetAmount != null && budgetInfo.budgetAmount.isNotEmpty()) {
-                                    try {
-                                        java.lang.Float.parseFloat(budgetInfo.budgetAmount)
-                                    } catch (e: NumberFormatException) {
-                                        resultListener.onItemError(e, null)
+                                    val daysSinceStart = LoginResponseUtils.daysSinceStart(response)
+                                    val budgetAmount = if (budgetInfo.budgetAmount != null && budgetInfo.budgetAmount.isNotEmpty()) {
+                                        try {
+                                            java.lang.Float.parseFloat(budgetInfo.budgetAmount)
+                                        } catch (e: NumberFormatException) {
+                                            resultListener.onItemError(e, null)
+                                        }
+                                    } else {
+                                        0.0f
+                                    }
+                                    val seenSplash = EngageService.getInstance().storageManager.hasSeenBudgets30DaysSplash
+                                    if (daysSinceStart > 30 && budgetAmount == 0.0F && !seenSplash) {
+                                        resultListener.onItemCheckFailed()
+                                    } else {
+                                        resultListener.onItemCheckPassed()
                                     }
                                 } else {
-                                    0.0f
+                                    resultListener.onItemError(null, response.message)
                                 }
-                                val seenSplash = EngageService.getInstance().storageManager.hasSeenBudgets30DaysSplash
-                                if (daysSinceStart > 30 && budgetAmount == 0.0F && !seenSplash) {
-                                    resultListener.onItemCheckFailed()
-                                } else {
-                                    resultListener.onItemCheckPassed()
-                                }
-                            } else {
-                                resultListener.onItemError(null, response.message)
+                            }) { e ->
+                                resultListener.onItemError(e, null)
                             }
-                        }) { e ->
-                            resultListener.onItemError(e, null)
-                        }
-        )
+            )
+        } else {
+            resultListener.onItemCheckPassed()
+        }
     }
 }

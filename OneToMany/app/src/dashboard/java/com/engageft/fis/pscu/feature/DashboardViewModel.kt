@@ -10,6 +10,12 @@ import com.engageft.engagekit.rest.request.CardLockUnlockRequest
 import com.engageft.engagekit.utils.AlertUtils
 import com.engageft.engagekit.utils.LoginResponseUtils
 import com.engageft.engagekit.utils.engageApi
+import com.engageft.fis.pscu.feature.gatekeeping.DashboardGateKeeper
+import com.engageft.fis.pscu.feature.gatekeeping.GateKeeperListener
+import com.engageft.fis.pscu.feature.gatekeeping.GatedItem
+import com.engageft.fis.pscu.feature.gatekeeping.items.OnboardingGatedItem
+import com.engageft.fis.pscu.feature.gatekeeping.items.PendingCardActivationGatedItem
+import com.engageft.fis.pscu.feature.gatekeeping.items.Post30DaysGatedItem
 import com.ob.domain.lookup.TransactionType
 import com.ob.ws.dom.BasicResponse
 import com.ob.ws.dom.LoginResponse
@@ -28,7 +34,7 @@ import java.math.BigDecimal
  *  Created by Kurt Mueller on 4/18/18.
  *  Copyright (c) 2018 Engage FT. All rights reserved.
  */
-class DashboardViewModel : BaseEngageViewModel() {
+class DashboardViewModel : BaseEngageViewModel(), GateKeeperListener {
     val productCardViewModelDelegate = ProductCardViewDelegate(this)
 
     var expirationDateFormatString = "%1\$d/%2\$d" // provide a sensible default, and allow to be overridden
@@ -58,6 +64,8 @@ class DashboardViewModel : BaseEngageViewModel() {
     val navigationObservable = MutableLiveData<DashboardNavigationEvent>()
 
     val animationObservable: MutableLiveData<DashboardAnimationEvent> = MutableLiveData()
+
+    private val dashboardGateKeeper = DashboardGateKeeper(compositeDisposable, this)
 
     private lateinit var debitCardInfo: DebitCardInfo
 
@@ -174,6 +182,37 @@ class DashboardViewModel : BaseEngageViewModel() {
 
     }
 
+    fun runGateKeeper() {
+        dashboardGateKeeper.run()
+    }
+
+    override fun onGateOpen() {
+        // Do nothing, just stay on this screen.
+    }
+
+    override fun onGatedItemFailed(item: GatedItem) {
+        when (item) {
+            is PendingCardActivationGatedItem -> {
+                showCardTracker()
+            }
+            is OnboardingGatedItem -> {
+                showOnboarding()
+            }
+            is Post30DaysGatedItem -> {
+                showPost30DaysSplash()
+            }
+        }
+    }
+
+    override fun onItemError(item: GatedItem, e: Throwable?, message: String?) {
+        message?.let{
+            handleUnexpectedErrorResponse(BasicResponse(false, it))
+        }
+        e?.let {
+            handleThrowable(it)
+        }
+    }
+
     private fun updateNotifications(loginResponse: LoginResponse) {
         val accountInfo = LoginResponseUtils.getCurrentAccountInfo(loginResponse)
         if (accountInfo != null) {
@@ -226,10 +265,27 @@ class DashboardViewModel : BaseEngageViewModel() {
     // parent activity to observe this viewModel's navigationObservable, but leaving here just in case.
     fun showAlerts() {
         navigationObservable.value = DashboardNavigationEvent.ALERTS
+        navigationObservable.postValue(DashboardNavigationEvent.NONE)
     }
 
     fun showTransactionSearch() {
         navigationObservable.value = DashboardNavigationEvent.TRANSACTION_SEARCH
+        navigationObservable.postValue(DashboardNavigationEvent.NONE)
+    }
+
+    fun showCardTracker() {
+        navigationObservable.value = DashboardNavigationEvent.CARD_TRACKER
+        navigationObservable.postValue(DashboardNavigationEvent.NONE)
+    }
+
+    fun showOnboarding() {
+        navigationObservable.value = DashboardNavigationEvent.SHOW_ONBOARDING_SPLASH
+        navigationObservable.postValue(DashboardNavigationEvent.NONE)
+    }
+
+    fun showPost30DaysSplash() {
+        navigationObservable.value = DashboardNavigationEvent.SHOW_POST_30_DAYS_SPLASH
+        navigationObservable.postValue(DashboardNavigationEvent.NONE)
     }
 
     // DashboardExpandableView animation-related functions
@@ -281,7 +337,7 @@ enum class DashboardAnimationEvent {
 }
 
 enum class DashboardNavigationEvent {
-    ALERTS, TRANSACTION_SEARCH
+    NONE, ALERTS, TRANSACTION_SEARCH, SECURITY_QUESTIONS, CARD_TRACKER, SHOW_ONBOARDING_SPLASH, SHOW_POST_30_DAYS_SPLASH
 }
 
 enum class DashboardBalanceState {

@@ -15,8 +15,10 @@ import com.engageft.apptoolbox.BaseViewModel
 import com.engageft.apptoolbox.NavigationOverrideClickListener
 import com.engageft.apptoolbox.ViewUtils.newLotusInstance
 import com.engageft.apptoolbox.view.InformationDialogFragment
+import com.engageft.engagekit.EngageService
 import com.engageft.fis.pscu.R
 import com.engageft.fis.pscu.databinding.FragmentChangeSecurityQuestionsBinding
+import com.engageft.fis.pscu.feature.branding.BrandingManager
 import com.engageft.fis.pscu.feature.branding.Palette
 
 
@@ -24,6 +26,9 @@ import com.engageft.fis.pscu.feature.branding.Palette
  * ChangeSecurityQuestionsFragment
  * <p>
  * Fragment for changing/setting a user's security questions.
+ *
+ * TODO(jhutchins): This fragment needs to be refactored with the understanding that it could be created from
+ * settings or from login in two different contexts with different navigations graphs.
  * </p>
  * Created by joeyhutchins on 11/12/18.
  * Copyright (c) 2018 Engage FT. All rights reserved.
@@ -36,6 +41,14 @@ class ChangeSecurityQuestionsFragment : BaseEngageFullscreenFragment() {
             return if (changeSecurityQuestionsViewModel.hasUnsavedChanges()) {
                 showDialog(infoDialogGenericUnsavedChangesNewInstance(context = activity!!, listener = unsavedChangesDialogListener))
                 true
+            } else if (changeSecurityQuestionsViewModel.modeObservable.value == ChangeSecurityQuestionsViewModel.ChangeSecurityQuestionsMode.CREATE) {
+                showDialog(InformationDialogFragment.newLotusInstance(
+                        title = getString(R.string.SECURITY_QUESTIONS_CREATE_BACK_TITLE),
+                        message = getString(R.string.SECURITY_QUESTIONS_CREATE_BACK_MESSAGE),
+                        buttonPositiveText = getString(R.string.SECURITY_QUESTIONS_CREATE_BACK_POSITIVE),
+                        buttonNegativeText = getString(R.string.SECURITY_QUESTIONS_CREATE_BACK_NEGATIVE),
+                        listener = mustCreateDialogListener))
+                true
             } else {
                 false
             }
@@ -45,6 +58,22 @@ class ChangeSecurityQuestionsFragment : BaseEngageFullscreenFragment() {
     private val unsavedChangesDialogListener = object : InformationDialogFragment.InformationDialogFragmentListener {
         override fun onDialogFragmentPositiveButtonClicked() {
             findNavController().navigateUp()
+        }
+        override fun onDialogFragmentNegativeButtonClicked() {
+            // Do nothing.
+        }
+        override fun onDialogCancelled() {
+            // Do nothing.
+        }
+    }
+
+    private val mustCreateDialogListener = object : InformationDialogFragment.InformationDialogFragmentListener {
+        override fun onDialogFragmentPositiveButtonClicked() {
+            // We are in the SecurityQuestionsActivity if this is the case.
+            EngageService.getInstance().authManager.logout()
+            BrandingManager.clearBranding()
+            activity!!.finish()
+            findNavController().navigate(R.id.action_changeSecurityQuestionsFragment2_to_notAuthenticatedActivity2)
         }
         override fun onDialogFragmentNegativeButtonClicked() {
             // Do nothing.
@@ -103,13 +132,13 @@ class ChangeSecurityQuestionsFragment : BaseEngageFullscreenFragment() {
                             message = getString(R.string.SECURITY_QUESTIONS_SUCCESS_MESSAGE_CREATE),
                             buttonPositiveText = getString(R.string.SECURITY_QUESTIONS_SUCCESS_MESSAGE_OK), listener = object : InformationDialogFragment.InformationDialogFragmentListener {
                         override fun onDialogCancelled() {
-                            binding.root.findNavController().navigateUp()
+                            binding.root.findNavController().navigate(R.id.action_changeSecurityQuestionsFragment2_to_authenticatedActivity2)
                         }
                         override fun onDialogFragmentNegativeButtonClicked() {
-                            binding.root.findNavController().navigateUp()
+                            binding.root.findNavController().navigate(R.id.action_changeSecurityQuestionsFragment2_to_authenticatedActivity2)
                         }
                         override fun onDialogFragmentPositiveButtonClicked() {
-                            binding.root.findNavController().navigateUp()
+                            binding.root.findNavController().navigate(R.id.action_changeSecurityQuestionsFragment2_to_authenticatedActivity2)
                         }
                     }))
                 }

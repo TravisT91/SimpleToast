@@ -1,5 +1,6 @@
 package com.engageft.fis.pscu.feature.palettebindings
 
+import android.widget.Button
 import android.widget.TextView
 import androidx.annotation.ColorInt
 import androidx.appcompat.widget.SwitchCompat
@@ -32,6 +33,18 @@ fun SwitchCompat.setSwitchTintList(@ColorInt thumbCheckedColor: Int, @ColorInt t
                                    @ColorInt thumbUncheckedColor: Int, @ColorInt trackUncheckedColor: Int) {
     this.thumbTintList = getSwitchColorStateList(thumbCheckedColor, thumbUncheckedColor)
     this.trackTintList = getSwitchColorStateList(trackCheckedColor, trackUncheckedColor)
+}
+
+
+@BindingAdapter("Button.applyPaletteColors")
+fun Button.shouldApplyPaletteColors(shouldApply: Boolean) {
+    if (shouldApply) {
+        this.applyPaletteColors()
+    }
+}
+fun Button.applyPaletteColors() {
+    // TODO(jhutchins): Palette should provide click states.
+    this.setTextColor(getTextStateList(Palette.primaryColor, Palette.primaryColor, Palette.primaryColor))
 }
 
 @BindingAdapter("SwitchCompat.applyPaletteColors")

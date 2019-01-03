@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- ACH Bank Transfer -->
+    <style name="AchHeaderTextStyle" parent="Title1Quiet">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:gravity">center_horizontal</item>
+        <item name="android:background">@color/viewBackground</item>
+        <item name="android:textColor">@color/textPrimary</item>
+        <item name="android:padding">16dp</item>
+        <item name="android:lineSpacingExtra">6sp</item>
+    </style>
+
+    <style name="AchHeaderSubTextStyle" parent="Body">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:gravity">center_horizontal</item>
+        <item name="android:background">@color/viewBackground</item>
+        <item name="android:textColor">@color/textSecondary</item>
+        <item name="android:padding">16dp</item>
+        <item name="android:lineSpacingExtra">11sp</item>
+    </style>
+
+    <style name="AchLabelTextStyle" parent="Caption1Medium">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:gravity">center_horizontal</item>
+        <item name="android:background">@color/viewBackground</item>
+        <item name="android:textColor">@color/textSecondary</item>
+        <item name="android:paddingStart">16dp</item>
+        <item name="android:paddingTop">24dp</item>
+        <item name="android:paddingEnd">16dp</item>
+        <item name="android:paddingBottom">16dp</item>
+        <item name="android:textAllCaps">true</item>
+    </style>
+
+    <style name="AchBankTransferDateTextStyle" parent="Title3Loud">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textColor">@color/textPrimary</item>
+    </style>
+
+    <style name="AchBankTransferMonthTextStyle" parent="Caption1Loud">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textColor">@color/textPrimary</item>
+        <item name="android:textAllCaps">true</item>
+    </style>
+
+    <style name="AchBankTransferTitleTextStyle" parent="Body">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textColor">@color/textPrimary</item>
+    </style>
+
+    <style name="AchBankTransferSubTitleTextStyle" parent="Caption1Medium">
+        <item name="android:textColor">@color/textSecondary</item>
+    </style>
+
+    <style name="AchBankTransferAmountTextStyle" parent="FootnoteMedium">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textColor">@color/success</item>
+    </style>
+
+    <style name="AchBankTransferAccountsLayoutStyle">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:background">@color/cellBackground</item>
+        <item name="android:gravity">center_vertical</item>
+        <item name="android:padding">16dp</item>
+    </style>
+
+    <style name="AchBankTransferBankNameStyle" parent="Body">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textColor">@color/black</item>
+    </style>
+
+    <style name="AchBankTransferBankStatusStyle" parent="Caption1">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textColor">@color/black</item>
+    </style>
+    <!-- End of Ach Bank Transfer -->
+</resources>
