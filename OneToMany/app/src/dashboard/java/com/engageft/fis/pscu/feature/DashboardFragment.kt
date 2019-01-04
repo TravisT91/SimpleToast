@@ -40,6 +40,7 @@ import com.engageft.fis.pscu.feature.branding.BrandingInfoRepo
 import com.engageft.fis.pscu.feature.branding.Palette
 import com.engageft.fis.pscu.feature.palettebindings.applyBranding
 import com.engageft.fis.pscu.feature.transactions.adapter.TransactionListener
+import com.engageft.fis.pscu.feature.transactions.adapter.TransactionsSimpleAdapter
 import com.engageft.fis.pscu.feature.utils.cardStatusStringRes
 import com.ob.domain.lookup.DebitCardStatus
 import eightbitlab.com.blurview.RenderScriptBlur
@@ -77,6 +78,10 @@ class DashboardFragment : BaseEngageFullscreenFragment(),
         pagedList -> transactionsAdapter.submitList(pagedList)
     }
 
+    private val searchObserver = Observer<List<Transaction>> {
+        transactionList -> displaySearchResults(transactionList)
+    }
+
     private val notificationsObserver = Observer<Int> { activity?.invalidateOptionsMenu() }
 
     private val animationObserver = Observer<DashboardAnimationEvent> { updateAnimation(it!!) }
@@ -85,10 +90,14 @@ class DashboardFragment : BaseEngageFullscreenFragment(),
     private var toolbarShadowAnimationScrollRangeFloat: Float = 0F
 
     private lateinit var transactionsAdapter: DashboardTransactionsAdapter
-    //private lateinit var searchAdapter:
+    private val searchAdapter: TransactionsSimpleAdapter by lazy {
+        binding.searchRecyclerView.adapter = TransactionsSimpleAdapter(this)
+        binding.searchRecyclerView.layoutManager = LinearLayoutManager(context)
+
+        binding.searchRecyclerView.adapter as TransactionsSimpleAdapter
+    }
 
     private var scrollDisabled = false
-
 
     override fun createViewModel(): BaseViewModel? {
         dashboardViewModel = ViewModelProviders.of(this).get(DashboardViewModel::class.java)
@@ -197,6 +206,9 @@ class DashboardFragment : BaseEngageFullscreenFragment(),
             queryHint = getString(R.string.OPTIONS_MENU_SEARCHVIEW_PLACEHOLDER)
 
             (findViewById(R.id.search_close_btn) as? ImageView)?.setOnClickListener {
+                // clear current results
+                displaySearchResults(listOf())
+                
                 if (query.isNullOrBlank()) {
                     onActionViewCollapsed()
                     endSearch()
@@ -211,11 +223,14 @@ class DashboardFragment : BaseEngageFullscreenFragment(),
 
             setOnQueryTextListener(object : SearchView.OnQueryTextListener {
                 override fun onQueryTextSubmit(query: String?): Boolean {
+                    clearFocus() // required to prevent onQueryTextSubmit being called a second time, onKeyUp (first is onKeyDown)
                     query?.let {
                         val trimmedQuery = it.trim()
                         if (trimmedQuery.length < TRANSACTION_SEARCH_MINIMUM_CHARS) {
                             Toast.makeText(context, getString(R.string.TRANSACTIONS_SEARCH_MESSAGE_MINIMUM_CHARS), Toast.LENGTH_LONG).show()
                         } else {
+                            // clear current results
+                            displaySearchResults(listOf())
                             dashboardViewModel.searchTransactions(it.trim())
                         }
                     }
@@ -465,6 +480,8 @@ class DashboardFragment : BaseEngageFullscreenFragment(),
         dashboardViewModel.networkState.observe(this, Observer { transactionsAdapter.setNetworkState(it) })
         dashboardViewModel.transactions.observe(this, transactionsObserver)
 
+        dashboardViewModel.searchTransactions.observe(this, searchObserver)
+
         // make sure correct tab is showing, after return from TransactionDetailFragment, in particular
         when (dashboardViewModel.transactionsTabPosition) {
             DashboardViewModel.TRANSACTIONS_TAB_POSITION_ALL -> {
@@ -527,6 +544,10 @@ class DashboardFragment : BaseEngageFullscreenFragment(),
         } else {
             // TODO(kurt): there is no function to collapseImmediate()
         }
+    }
+
+    private fun displaySearchResults(transactions: List<Transaction>) {
+        searchAdapter.updateTransactions(transactions)
     }
 
     override fun onResume() {
