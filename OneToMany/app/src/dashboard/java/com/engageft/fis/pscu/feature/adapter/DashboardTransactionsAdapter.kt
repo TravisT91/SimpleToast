@@ -1,6 +1,5 @@
 package com.engageft.fis.pscu.feature.adapter
 
-import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -12,6 +11,7 @@ import com.engageft.apptoolbox.view.ProductCardView
 import com.engageft.fis.pscu.R
 import com.engageft.fis.pscu.feature.branding.BrandingInfoRepo
 import com.engageft.fis.pscu.feature.palettebindings.applyBranding
+import com.engageft.fis.pscu.feature.transactions.adapter.TransactionListener
 import com.engageft.fis.pscu.feature.transactions.adapter.TransactionsPagedAdapter
 import com.google.android.material.tabs.TabLayout
 import io.reactivex.disposables.CompositeDisposable
@@ -25,11 +25,10 @@ import io.reactivex.disposables.CompositeDisposable
  *  Created by Kurt Mueller on 4/18/18.
  *  Copyright (c) 2018 Engage FT. All rights reserved.
  */
-class DashboardTransactionsAdapter(context: Context,
-                                   private val compositeDisposable: CompositeDisposable,
+class DashboardTransactionsAdapter(private val compositeDisposable: CompositeDisposable,
                                    private val listener: DashboardTransactionsAdapterListener,
-                                   transactionsListener: OnTransactionsAdapterListener?)
-    : TransactionsPagedAdapter(context, transactionsListener) {
+                                   transactionsListener: TransactionListener?)
+    : TransactionsPagedAdapter(transactionsListener) {
 
     // Because there's a single row at position 0 for dashboard data,
     // must provide a custom paging callback here that accounts for that row

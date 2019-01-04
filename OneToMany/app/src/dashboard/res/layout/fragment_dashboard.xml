@@ -26,45 +26,45 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent">
 
-                        <androidx.recyclerview.widget.RecyclerView
-                            android:id="@+id/transactionsRecyclerView"
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent"
-                            app:layout_constraintStart_toStartOf="parent"
-                            app:layout_constraintTop_toTopOf="parent"
-                            app:layout_constraintEnd_toEndOf="parent"
-                            app:layout_constraintBottom_toBottomOf="parent"
-                            android:background="@color/cellBackground"
-                            />
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/transactionsRecyclerView"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    android:background="@color/cellBackground"
+                    />
 
-                        <!-- This can be used to display a message view, like when waiting for card activation. See CARE-399 for an example. -->
-                        <FrameLayout
-                            android:id="@+id/message_container"
-                            android:layout_width="0dp"
-                            android:layout_height="0dp"
-                            app:layout_constraintStart_toStartOf="parent"
-                            app:layout_constraintTop_toTopOf="parent"
-                            app:layout_constraintEnd_toEndOf="parent"
-                            app:layout_constraintBottom_toBottomOf="parent"
-                            android:visibility="invisible"/>
+                <!-- This can be used to display a message view, like when waiting for card activation. See CARE-399 for an example. -->
+                <FrameLayout
+                    android:id="@+id/message_container"
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    android:visibility="invisible"/>
 
 
-                    <eightbitlab.com.blurview.BlurView
-                        android:id="@+id/blurView"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:layout_marginTop="@dimen/dashboard_card_and_actions_height_collapsed"
-                        app:blurOverlayColor="@color/dashboard_obscuring_overlay"
-                        android:visibility="invisible"
-                        android:alpha="0" />
+                <eightbitlab.com.blurview.BlurView
+                    android:id="@+id/blurView"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginTop="@dimen/dashboard_card_and_actions_height_collapsed"
+                    app:blurOverlayColor="@color/dashboard_obscuring_overlay"
+                    android:visibility="invisible"
+                    android:alpha="0" />
 
-                    <com.engageft.fis.pscu.feature.DashboardExpandableView
-                        android:id="@+id/dashboardExpandableView"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:visibility="invisible"/>
+                <com.engageft.fis.pscu.feature.DashboardExpandableView
+                    android:id="@+id/dashboardExpandableView"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:visibility="invisible"/>
 
-                </FrameLayout>
+            </FrameLayout>
 
         </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 

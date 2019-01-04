@@ -39,7 +39,7 @@ import com.engageft.fis.pscu.feature.authentication.AuthenticationDialogFragment
 import com.engageft.fis.pscu.feature.branding.BrandingInfoRepo
 import com.engageft.fis.pscu.feature.branding.Palette
 import com.engageft.fis.pscu.feature.palettebindings.applyBranding
-import com.engageft.fis.pscu.feature.transactions.adapter.TransactionsPagedAdapter
+import com.engageft.fis.pscu.feature.transactions.adapter.TransactionListener
 import com.engageft.fis.pscu.feature.utils.cardStatusStringRes
 import com.ob.domain.lookup.DebitCardStatus
 import eightbitlab.com.blurview.RenderScriptBlur
@@ -58,7 +58,7 @@ import java.math.BigDecimal
 class DashboardFragment : BaseEngageFullscreenFragment(),
         DashboardExpandableView.DashboardExpandableViewListener,
         DashboardTransactionsAdapter.DashboardTransactionsAdapterListener,
-        TransactionsPagedAdapter.OnTransactionsAdapterListener {
+        TransactionListener {
 
     private lateinit var binding: FragmentDashboardBinding
 
@@ -85,6 +85,7 @@ class DashboardFragment : BaseEngageFullscreenFragment(),
     private var toolbarShadowAnimationScrollRangeFloat: Float = 0F
 
     private lateinit var transactionsAdapter: DashboardTransactionsAdapter
+    //private lateinit var searchAdapter:
 
     private var scrollDisabled = false
 
@@ -120,7 +121,7 @@ class DashboardFragment : BaseEngageFullscreenFragment(),
 
         binding.dashboardExpandableView.listener = this
 
-        transactionsAdapter = DashboardTransactionsAdapter(context!!, dashboardViewModel.compositeDisposable, this, this)
+        transactionsAdapter = DashboardTransactionsAdapter(dashboardViewModel.compositeDisposable, this, this)
         binding.transactionsRecyclerView.apply {
             layoutManager = LinearLayoutManager(context)
             adapter = transactionsAdapter

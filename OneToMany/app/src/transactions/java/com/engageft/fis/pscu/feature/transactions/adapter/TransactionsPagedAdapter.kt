@@ -1,12 +1,7 @@
 package com.engageft.fis.pscu.feature.transactions.adapter
 
-import android.content.Context
-import android.graphics.PorterDuff
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
-import androidx.core.content.ContextCompat
 import androidx.paging.AsyncPagedListDiffer
 import androidx.paging.PagedList
 import androidx.recyclerview.widget.AdapterListUpdateCallback
@@ -17,10 +12,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.engageft.engagekit.repository.transaction.vo.Transaction
 import com.engageft.engagekit.repository.util.NetworkState
 import com.engageft.fis.pscu.R
-import com.engageft.fis.pscu.feature.transactions.utils.TransactionUtils
-import com.ob.domain.lookup.TransactionStatus
 import com.ob.domain.lookup.TransactionType
-import utilGen1.StringUtils
 
 /**
  *  TransactionsPagedAdapter
@@ -30,9 +22,9 @@ import utilGen1.StringUtils
  *  Created by Kurt Mueller on 4/18/18.
  *  Copyright (c) 2018 Engage FT. All rights reserved.
  */
-open class TransactionsPagedAdapter(private val context: Context,
-                                    private val listener: OnTransactionsAdapterListener?)
-    : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+open class TransactionsPagedAdapter(private val listener: TransactionListener?)
+    : RecyclerView.Adapter<RecyclerView.ViewHolder>(), TransactionListener {
+
     protected val adapterCallback = AdapterListUpdateCallback(this)
 
     private val asyncDifferConfig = AsyncDifferConfig.Builder<Transaction>(DIFF_CALLBACK).build()
@@ -92,7 +84,7 @@ open class TransactionsPagedAdapter(private val context: Context,
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         return when (viewType) {
-            VIEW_TYPE_TRANSACTIONS_DATA -> TransactionViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.row_transaction_info_view, parent, false))
+            VIEW_TYPE_TRANSACTIONS_DATA -> TransactionViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.row_transaction_info_view, parent, false), parent.context, this)
             VIEW_TYPE_NETWORK_STATE -> NetworkStateItemViewHolder.create(parent, null)
             else -> throw IllegalArgumentException("Unknown view type $viewType")
         }
@@ -118,6 +110,12 @@ open class TransactionsPagedAdapter(private val context: Context,
         }
     }
 
+    override fun onTransactionSelected(transaction: Transaction) {
+        if (transactionSelectionEnabled) {
+            listener?.onTransactionSelected(transaction)
+        }
+    }
+
     fun setNetworkState(newNetworkState: NetworkState?) {
         val previousState = this.networkState
         val hadExtraRow = hasExtraRow()
@@ -138,81 +136,11 @@ open class TransactionsPagedAdapter(private val context: Context,
         differ.submitList(null)
     }
 
-    // TODO: move this to own class so that it can be reused in TransactionsSimpleAdapter for search results
-    // complication is listener and transactionSelectionEnabled flag
-    inner class TransactionViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        var transaction: Transaction? = null
-
-        private val loadingView: View = itemView.findViewById(R.id.pb_loading)
-
-        private val noTransactionsView: View = itemView.findViewById(R.id.rl_no_transactions)
-        private val transactionsView: View = itemView.findViewById(R.id.cl_transactions)
-
-        private val dayAndMonthTextView: TextView = itemView.findViewById(R.id.tv_transaction_day_month)
-        private val storeTextView: TextView = itemView.findViewById(R.id.tv_transaction_store)
-        private val categoryTextView: TextView = itemView.findViewById(R.id.tv_transaction_category)
-        private val amountTextView: TextView = itemView.findViewById(R.id.tv_transaction_amount)
-        private val statusTextView: TextView = itemView.findViewById(R.id.tv_transaction_status)
-
-        private val bottomRule: View = itemView.findViewById(R.id.view_horizontal_rule_bottom)
-
-        init {
-            this.itemView.setOnClickListener {
-                transaction?.let { transaction ->
-                    if (transactionSelectionEnabled) {
-                        listener?.onTransactionSelected(transaction)
-                    }
-                }
-            }
-        }
-
-        fun bindTo(transaction: Transaction) {
-            this.transaction = transaction
-
-            loadingView.visibility = View.GONE
-            noTransactionsView.visibility = View.GONE
-            transactionsView.visibility = View.VISIBLE
-
-            val transactionType = TransactionUtils.getTransactionType(transaction)
-
-            dayAndMonthTextView.text = StringUtils.formatDateMonthDayForTransactionRow(transaction.date)
-            storeTextView.text = if (transaction.store.isNullOrBlank()) "" else StringUtils.removeRedundantWhitespace(transaction.store!!)
-            categoryTextView.text = TransactionUtils.getTransactionTypeText(context, transaction, transactionType!!)
-
-            val transactionAmount = transaction.amount.toFloat()
-            val amountString = StringUtils.formatCurrencyStringWithFractionDigits(transactionAmount, true)
-            if (transactionAmount > 0F) {
-                amountTextView.text = "+$amountString"
-                amountTextView.setTextColor(ContextCompat.getColor(context, R.color.transactionAmountTextPositive))
-            } else {
-                amountTextView.text = amountString
-                amountTextView.setTextColor(ContextCompat.getColor(context, R.color.transactionAmountTextDefault))
-            }
-
-            val transactionStatus = TransactionUtils.getTransactionStatus(transaction)
-            statusTextView.visibility = View.GONE
-            when (transactionStatus) {
-                TransactionStatus.DECLINED -> {
-                    statusTextView.visibility = View.VISIBLE
-                    statusTextView.text = TransactionUtils.getTransactionStatusText(context, transactionStatus)
-                    itemView.background.setColorFilter(ContextCompat.getColor(context, R.color.transactionRowBackgroundDeclined), PorterDuff.Mode.SRC_ATOP)
-                }
-                TransactionStatus.PENDING -> itemView.background.setColorFilter(ContextCompat.getColor(context, R.color.transactionRowBackgroundPending), PorterDuff.Mode.SRC_ATOP)
-                else -> itemView.background.setColorFilter(ContextCompat.getColor(context, R.color.transactionRowBackgroundDefault), PorterDuff.Mode.SRC_ATOP)
-            }
-            //bottomRule.visibility = if (position == itemCount - 1) View.INVISIBLE else View.VISIBLE
-        }
-    }
-
 //    private inner class PlaceholderViewHolder(itemView: View) : RecyclerView.TransactionViewHolder(itemView)
 //
 //    private inner class NoViewHolder(itemView: View) : RecyclerView.TransactionViewHolder(itemView) {
 //        val noTransactionsTextView: TextView = itemView.findViewById(R.id.tv_label)
 //    }
-
-    interface OnTransactionsAdapterListener {
-        fun onTransactionSelected(transaction: Transaction)
-    }
 
     companion object {
         const val VIEW_TYPE_TRANSACTIONS_DATA = 0

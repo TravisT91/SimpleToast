@@ -4,9 +4,12 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Transformations
 import com.engageft.engagekit.EngageService
 import com.engageft.engagekit.repository.transaction.TransactionRepository
+import com.engageft.engagekit.repository.transaction.toTransaction
 import com.engageft.engagekit.repository.transaction.vo.Transaction
 import com.engageft.engagekit.repository.util.Listing
+import com.engageft.engagekit.repository.util.NetworkState
 import com.engageft.engagekit.rest.request.CardLockUnlockRequest
+import com.engageft.engagekit.rest.request.TransactionsSearchRequest
 import com.engageft.engagekit.utils.AlertUtils
 import com.engageft.engagekit.utils.LoginResponseUtils
 import com.engageft.engagekit.utils.engageApi
@@ -19,6 +22,7 @@ import com.engageft.fis.pscu.feature.gatekeeping.items.Post30DaysGatedItem
 import com.ob.domain.lookup.TransactionType
 import com.ob.ws.dom.BasicResponse
 import com.ob.ws.dom.LoginResponse
+import com.ob.ws.dom.TransactionsResponse
 import com.ob.ws.dom.utility.DebitCardInfo
 import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
@@ -53,9 +57,8 @@ class DashboardViewModel : BaseEngageViewModel(), GateKeeperListener {
     val transactions = Transformations.switchMap(observedTransactionsListing) { it.pagedList }!!
     val networkState = Transformations.switchMap(observedTransactionsListing) { it.networkState }!!
 
-    private val searchTransactionsListing = MutableLiveData<Listing<Transaction>>()
-    val searchTransactions = Transformations.switchMap(searchTransactionsListing) { it.pagedList }!!
-    val searchNetworkState = Transformations.switchMap(searchTransactionsListing) { it.networkState }!!
+    val searchTransactions: MutableLiveData<List<Transaction>> = MutableLiveData()
+    val searchNetworkState: MutableLiveData<NetworkState> = MutableLiveData()
 
     var notificationsCountObservable: MutableLiveData<Int> = MutableLiveData()
 
@@ -179,7 +182,42 @@ class DashboardViewModel : BaseEngageViewModel(), GateKeeperListener {
     }
 
     fun searchTransactions(searchString: String) {
-
+        //searchNetworkState.value = NetworkState.LOADING
+        progressOverlayShownObservable.value = true
+        val request = TransactionsSearchRequest(
+                EngageService.getInstance().authManager.authToken,
+                searchString
+        )
+        compositeDisposable.add(
+                EngageService.getInstance().engageApiInterface.postSearchTransactions(request.fieldMap)
+                        .subscribeOn(Schedulers.io())
+                        .observeOn(Schedulers.computation())
+                        .subscribe({ response ->
+                            if (response.isSuccess && response is TransactionsResponse) {
+                                if (response.transactionList != null && !response.transactionList.isEmpty()) {
+                                    val transactionList = mutableListOf<Transaction>()
+                                    for (transactionInfo in response.transactionList) {
+                                        transactionList.add(transactionInfo.toTransaction())
+                                    }
+                                    searchTransactions.postValue(transactionList)
+                                    //searchNetworkState.postValue(NetworkState.LOADED)
+                                    progressOverlayShownObservable.postValue(false)
+                                } else {
+                                    // transactions list was null or empty
+                                    searchTransactions.postValue(listOf())
+                                    //searchNetworkState.postValue(NetworkState.LOADED)
+                                    progressOverlayShownObservable.postValue(false)
+                                }
+                            } else {
+                                handleUnexpectedErrorResponse(response)
+                                //searchNetworkState.postValue(NetworkState.error(response.message))
+                                progressOverlayShownObservable.postValue(false)
+                            }
+                        }) { e ->
+                            handleThrowable(e)
+                            progressOverlayShownObservable.postValue(false)
+                        }
+        )
     }
 
     fun runGateKeeper() {
