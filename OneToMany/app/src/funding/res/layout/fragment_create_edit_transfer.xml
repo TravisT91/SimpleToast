@@ -3,7 +3,6 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <data>
-        <import type="android.view.View"/>
         <variable
             name="viewModel"
             type="com.engageft.fis.pscu.feature.CreateEditTransferViewModel"/>
@@ -23,22 +22,12 @@
             android:orientation="vertical">
 
             <androidx.appcompat.widget.AppCompatTextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                style="@style/CreateTransferTitleTextStyle"
                 android:text="@string/ach_bank_transfer_create_title"
-                android:textSize="32sp"
-                android:textColor="#444444"
-                android:lineSpacingExtra="6sp"
-                android:gravity="center_horizontal"/>
+                />
 
             <androidx.appcompat.widget.AppCompatTextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:textSize="16sp"
-                android:textColor="@color/structure5"
-                android:lineSpacingExtra="11sp"
-                android:padding="16dp"
-                android:gravity="center_horizontal"
+                style="@style/CreateTransferSubtitleTextStyle"
                 android:text="@string/ach_bank_transfer_create_subTitle"/>
 
             <androidx.appcompat.widget.LinearLayoutCompat
@@ -58,6 +47,7 @@
                     android:paddingEnd="16dp"
                     android:paddingTop="16dp"
                     app:labelText="@string/ach_bank_transfer_create_from_label"
+                    app:inputText="@={viewModel.fromAccount}"
                     app:bottomSheetDialogTitle="@string/ach_bank_transfer_create_from_account"
                     app:bottomSheetDialogStyle="@style/ListOptionBottomSheetDialogFragmentStyle">
                 </com.engageft.apptoolbox.view.BottomSheetListInputWithLabel>
@@ -71,6 +61,7 @@
                     android:paddingEnd="16dp"
                     android:paddingTop="16dp"
                     app:labelText="@string/ach_bank_transfer_create_to_label"
+                    app:inputText="@={viewModel.toAccount}"
                     app:bottomSheetDialogTitle="@string/ach_bank_transfer_create_to_account"
                     app:bottomSheetDialogStyle="@style/ListOptionBottomSheetDialogFragmentStyle"/>
 
@@ -82,7 +73,8 @@
                     android:paddingStart="16dp"
                     android:paddingEnd="16dp"
                     android:paddingTop="16dp"
-                    app:labelText="@string/ach_bank_transfer_create_amount_label"/>
+                    app:labelText="@string/ach_bank_transfer_create_amount_label"
+                    app:inputText="@={viewModel.amount}"/>
 
                 <com.engageft.apptoolbox.view.BottomSheetListInputWithLabel
                     style="@style/BottomSheetListInputWithLabelStyle"
@@ -93,6 +85,7 @@
                     android:paddingEnd="16dp"
                     android:paddingTop="16dp"
                     app:labelText="@string/ach_bank_transfer_create_frequency_label"
+                    app:inputText="@={viewModel.frequency}"
                     app:bottomSheetDialogTitle="@string/ach_bank_transfer_create_frequency_title"
                     app:bottomSheetDialogStyle="@style/ListOptionBottomSheetDialogFragmentStyle"/>
 
@@ -106,6 +99,7 @@
                     android:paddingTop="16dp"
                     android:visibility="gone"
                     app:labelText="@string/ach_bank_transfer_create_monthly_label"
+                    app:inputText="@={viewModel.date1}"
                     app:bottomSheetDialogTitle="@string/ach_bank_transfer_create_monthly_label"
                     app:bottomSheetDialogStyle="@style/ListOptionBottomSheetDialogFragmentStyle"/>
 
@@ -119,6 +113,7 @@
                     android:paddingTop="16dp"
                     android:visibility="gone"
                     app:labelText="@string/ach_bank_transfer_create_bimonthly_second_label"
+                    app:inputText="@={viewModel.date2}"
                     app:bottomSheetDialogTitle="@string/ach_bank_transfer_create_bimonthly_second_label"
                     app:bottomSheetDialogStyle="@style/ListOptionBottomSheetDialogFragmentStyle"/>
 
@@ -132,6 +127,7 @@
                     android:paddingTop="16dp"
                     android:visibility="gone"
                     app:labelText="@string/ach_bank_transfer_create_weekly_label"
+                    app:inputText="@={viewModel.dayOfWeek}"
                     app:bottomSheetDialogTitle="@string/ach_bank_transfer_create_weekly_title"
                     app:bottomSheetDialogStyle="@style/ListOptionBottomSheetDialogFragmentStyle"/>
 

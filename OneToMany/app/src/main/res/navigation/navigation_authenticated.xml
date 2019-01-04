@@ -444,6 +444,18 @@
     <fragment
         android:id="@+id/createEditTransferFragment"
         android:name="com.engageft.fis.pscu.feature.CreateEditTransferFragment"
+        android:label="@string/ach_bank_transfer_create_transfer" >
+        <action
+            android:id="@+id/action_createEditTransferFragment_to_createTransferConfirmationFragment"
+            app:destination="@id/createTransferConfirmationFragment"
+            app:enterAnim="@anim/nav_enter_anim"
+            app:exitAnim="@anim/nav_exit_anim"
+            app:popEnterAnim="@anim/nav_pop_enter_anim"
+            app:popExitAnim="@anim/nav_pop_exit_anim"/>
+    </fragment>
+    <fragment
+        android:id="@+id/createTransferConfirmationFragment"
+        android:name="com.engageft.fis.pscu.feature.CreateTransferConfirmationFragment"
         android:label="@string/ach_bank_transfer_create_transfer" />
 
 </navigation>

@@ -59,6 +59,15 @@ class AccountsAndTransfersListViewModel: BaseEngageViewModel() {
         }
     }
 
+    fun isBankVerified(): Boolean {
+        achAccountsListAndStatusObservable.value?.let {
+            if (it.bankStatus == AccountsAndTransfersListViewModel.BankAccountStatus.VERIFIED_BANK_ACCOUNT) {
+                return true
+            }
+        }
+        return false
+    }
+
     private fun initBankAccountsListAndTransfersList() {
         progressOverlayShownObservable.value = true
 
