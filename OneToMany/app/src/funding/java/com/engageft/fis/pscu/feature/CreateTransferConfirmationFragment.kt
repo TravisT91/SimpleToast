@@ -50,11 +50,11 @@ class CreateTransferConfirmationFragment: BaseEngageFullscreenFragment() {
             when(createTransferViewModel.frequencyType) {
                 ScheduledLoad.SCHED_LOAD_TYPE_TWICE_MONTHLY -> {
                     frequencyTextView.text = String.format(getString(R.string.ach_bank_transfer_create_confirmation_frequency_format),
-                            getString(R.string.TRANSFER_TWICE_MONTHLY_TEXT), createTransferViewModel.scheduledDate1)
+                            getString(R.string.TRANSFER_TWICE_MONTHLY_TEXT), DisplayDateTimeUtils.getMediumFormatted(DateTime(createTransferViewModel.scheduledDate1)))
                 }
                 ScheduledLoad.SCHED_LOAD_TYPE_MONTHLY -> {
                     frequencyTextView.text = String.format(getString(R.string.ach_bank_transfer_create_confirmation_frequency_format),
-                            getString(R.string.TRANSFER_MONTHLY_TEXT), createTransferViewModel.scheduledDate1)
+                            getString(R.string.TRANSFER_MONTHLY_TEXT), DisplayDateTimeUtils.getMediumFormatted(DateTime(createTransferViewModel.scheduledDate1)))
                 }
                 ScheduledLoad.SCHED_LOAD_TYPE_WEEKLY -> {
                     frequencyTextView.text = String.format(getString(R.string.TRANSFER_WEEKLY_SIMPLE_LOAD_DESCRIPTION),

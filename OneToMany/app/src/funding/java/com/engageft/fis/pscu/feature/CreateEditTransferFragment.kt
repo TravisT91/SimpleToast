@@ -1,7 +1,6 @@
 package com.engageft.fis.pscu.feature
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.Menu
 import android.view.MenuInflater
@@ -18,10 +17,13 @@ import com.engageft.apptoolbox.ViewUtils.newLotusInstance
 import com.engageft.apptoolbox.view.BottomSheetListInputWithLabel
 import com.engageft.apptoolbox.view.InformationDialogFragment
 import com.engageft.engagekit.model.ScheduledLoad
+import com.engageft.engagekit.model.ScheduledLoad.SCHED_LOAD_TYPE_MONTHLY
 import com.engageft.fis.pscu.R
 import com.engageft.fis.pscu.config.EngageAppConfig
 import com.engageft.fis.pscu.databinding.FragmentCreateEditTransferBinding
+import com.engageft.fis.pscu.feature.AccountsAndTransfersListFragment.Companion.SCHEDULED_LOAD_ID
 import com.engageft.fis.pscu.feature.branding.Palette
+import com.ob.ws.dom.utility.AchAccountInfo
 import org.joda.time.DateTime
 import utilGen1.AchAccountInfoUtils
 import utilGen1.DisplayDateTimeUtils
@@ -31,6 +33,9 @@ class CreateEditTransferFragment: BaseEngageFullscreenFragment() {
 
     lateinit var createEditTransferViewModel: CreateEditTransferViewModel
     lateinit var binding: FragmentCreateEditTransferBinding
+    var achAccountsIndexMap = HashMap<Int, AchAccountInfo>()
+    var cardsInfoIndexMap = HashMap<Int, CreateEditTransferViewModel.CardInfo>()
+    val accountsToDisplay = mutableListOf<String>()
 
     private val unsavedChangesDialogListener = object : InformationDialogFragment.InformationDialogFragmentListener {
         override fun onDialogFragmentPositiveButtonClicked() {
@@ -67,6 +72,17 @@ class CreateEditTransferFragment: BaseEngageFullscreenFragment() {
             viewModel = createEditTransferViewModel
             palette = Palette
 
+            arguments?.let {
+                val scheduledLoadId = it.getLong(SCHEDULED_LOAD_ID, -1L)
+                // don't populate the old data if user has edited the fields
+                if (scheduledLoadId != -1L && !createEditTransferViewModel.hasUnsavedChanges()) {
+                    createEditTransferViewModel.initScheduledLoads(scheduledLoadId)
+                    deleteButtonLayout.visibility = View.VISIBLE
+                    titleTextView.visibility = View.GONE
+                    subTitleTextView.visibility = View.GONE
+                }
+            }
+
             val frequencyTypesList: ArrayList<CharSequence> = ArrayList(ScheduledLoadUtils.getFrequencyDisplayStringsForTransfer(context!!))
             frequencyBottomSheet.dialogOptions = frequencyTypesList
             daysOfWeekBottomSheet.dialogOptions = ArrayList(DisplayDateTimeUtils.daysOfWeekList())
@@ -75,7 +91,7 @@ class CreateEditTransferFragment: BaseEngageFullscreenFragment() {
             date2BottomSheet.minimumDate = DateTime.now()
             date2BottomSheet.maximumDate = DateTime.now().plusMonths(2)
             amountInputWithLabel.currencyCode = EngageAppConfig.currencyCode
-            accountToBottomSheet.isEnabled = false
+//            accountToBottomSheet.isEnabled = false
 
             if (createEditTransferViewModel.frequency.get()!!.isNotEmpty()) {
                 var index = 0
@@ -97,30 +113,41 @@ class CreateEditTransferFragment: BaseEngageFullscreenFragment() {
 
             accountFromBottomSheet.setOnListSelectedListener(object: BottomSheetListInputWithLabel.OnListSelectedListener {
                 override fun onItemSelectedIndex(index: Int) {
-                    createEditTransferViewModel.achAccountListObservable.value?.let { achAccountsList ->
-                        if (achAccountsList.isNotEmpty()) {
-                            if (index <= achAccountsList.size - 1) {
-                                // set ach account id that's selected
-                                createEditTransferViewModel.achAccountInfoId = achAccountsList[index].achAccountId
-                                // pre-populate the To field
-                                accountToBottomSheet.inputText = getString(R.string.programName)
-                            } else {
-                                InformationDialogFragment.newLotusInstance( title = getString(R.string.alert_error_title_generic),
-                                        message ="ACH out is not supported. Please select a correct bank account.", buttonPositiveText = getString(R.string.dialog_information_ok_button),
-                                        listener = object : InformationDialogFragment.InformationDialogFragmentListener{
-                                            override fun onDialogFragmentNegativeButtonClicked() {}
+                    val achAccountInfo = achAccountsIndexMap[index]
+                    achAccountInfo?.let {
+                        createEditTransferViewModel.achAccountId = achAccountInfo.achAccountId
 
-                                            override fun onDialogFragmentPositiveButtonClicked() {
-                                                accountFromBottomSheet.inputText = ""
-                                            }
+                        // populate the To field to the first item of card Info
+                        for (entry in cardsInfoIndexMap) {
+                            accountToBottomSheet.inputText = String.format(getString(R.string.BANKACCOUNT_DESCRIPTION_FORMAT), entry.value.name, entry.value.lastFour)
+                            createEditTransferViewModel.cardId = entry.value.cardId
 
-                                            override fun onDialogCancelled() {
-                                                accountFromBottomSheet.inputText = ""
-                                            }
-                                        }).show(activity!!.supportFragmentManager, "wrongAccountDialog")
-                            }
+                            break
                         }
+                    } ?: kotlin.run {
+                        promptUnsupportedAccount()
+                        // reset field
+                        accountFromBottomSheet.inputText = ""
                     }
+                }
+            })
+
+            accountToBottomSheet.setOnListSelectedListener(object: BottomSheetListInputWithLabel.OnListSelectedListener {
+                override fun onItemSelectedIndex(index: Int) {
+                    val cardInfo = cardsInfoIndexMap[index]
+                    cardInfo?.let {
+                        createEditTransferViewModel.cardId = it.cardId
+
+                        //populate the From field
+                        for (entry in achAccountsIndexMap) {
+                            accountFromBottomSheet.inputText = AchAccountInfoUtils.accountDescriptionForDisplay(context!!, entry.value)
+                            break
+                        }
+                    } ?: kotlin.run {
+                        promptUnsupportedAccount()
+                        accountToBottomSheet.inputText = ""
+                    }
+
                 }
             })
 
@@ -133,17 +160,28 @@ class CreateEditTransferFragment: BaseEngageFullscreenFragment() {
         backButtonOverrideProvider.setBackButtonOverride(navigationOverrideClickListener)
 
         createEditTransferViewModel.apply {
-            achAccountListObservable.observe(this@CreateEditTransferFragment, Observer {
-                val achAccountList = mutableListOf<String>()
-                for (achAccountInfo in it) {
-                    achAccountList.add(AchAccountInfoUtils.accountDescriptionForDisplay(context!!, achAccountInfo))
+
+            cardsInfoAndAchAccountsListsObservable.observe(this@CreateEditTransferFragment, Observer {
+                val cardsInfoList = it.first
+                val achAccountsList = it.second
+
+                var index = 0
+
+                //format bank name with last four digits
+                for (achAccountInfo in achAccountsList) {
+                    accountsToDisplay.add(AchAccountInfoUtils.accountDescriptionForDisplay(context!!, achAccountInfo))
+                    achAccountsIndexMap[index] = achAccountInfo
+                    index++
                 }
-                // add current account/program name
-                achAccountList.add(getString(R.string.programName))
-                if (achAccountList.isNotEmpty()) {
-                    binding.accountFromBottomSheet.dialogOptions = ArrayList(achAccountList)
-                    binding.accountToBottomSheet.dialogOptions = ArrayList(achAccountList)
+
+                for (cardNameAndLastFour in cardsInfoList) {
+                    accountsToDisplay.add(String.format(getString(R.string.BANKACCOUNT_DESCRIPTION_FORMAT), cardNameAndLastFour.name, cardNameAndLastFour.lastFour))
+                    cardsInfoIndexMap[index] = cardNameAndLastFour
+                    index++
                 }
+
+                binding.accountFromBottomSheet.dialogOptions = ArrayList(accountsToDisplay)
+                binding.accountToBottomSheet.dialogOptions = ArrayList(accountsToDisplay)
             })
 
             buttonStateObservable.observe(this@CreateEditTransferFragment, Observer {
@@ -153,9 +191,34 @@ class CreateEditTransferFragment: BaseEngageFullscreenFragment() {
                 }
                 activity?.invalidateOptionsMenu()
             })
+
+            fromAccountObservable.observe(this@CreateEditTransferFragment, Observer {
+                fromAccount.set(AchAccountInfoUtils.accountDescriptionForDisplay(context!!, it))
+            })
+
+            toAccountObservable.observe(this@CreateEditTransferFragment, Observer {
+                toAccount.set(String.format(getString(R.string.BANKACCOUNT_DESCRIPTION_FORMAT), it.name, it.lastFour))
+            })
+
+            navigationEventObservable.observe(this@CreateEditTransferFragment, Observer {
+                binding.root.findNavController().popBackStack(R.id.accountsAndTransfersListFragment, false)
+            })
         }
 
         return binding.root
+    }
+
+    private fun promptUnsupportedAccount() {
+        InformationDialogFragment.newLotusInstance(title = "Select another account",
+                message = "Transferring out is not supported. Please select another account.",
+                buttonPositiveText = getString(R.string.dialog_information_ok_button),
+                listener = object : InformationDialogFragment.InformationDialogFragmentListener {
+                    override fun onDialogFragmentNegativeButtonClicked() {}
+
+                    override fun onDialogFragmentPositiveButtonClicked() {}
+
+                    override fun onDialogCancelled() {}
+                }).show(activity!!.supportFragmentManager, "wrongAccountDialog")
     }
 
     // this index parameter is mapped to the frequencyTypesList
@@ -213,27 +276,33 @@ class CreateEditTransferFragment: BaseEngageFullscreenFragment() {
     private fun navigateToConfirmationScreen() {
         val frequencyType = ScheduledLoadUtils.getFrequencyTypeStringForDisplayString(context!!, createEditTransferViewModel.frequency.get()!!)
         var scheduledDate: String? = null
-        // set scheduledDate from week of day selected
-        if (frequencyType == ScheduledLoad.SCHED_LOAD_TYPE_WEEKLY) {
-            val selectedDay = DisplayDateTimeUtils.getDayOfWeekNumber(createEditTransferViewModel.dayOfWeek.get()!!)
-            val now = DateTime.now()
-            val today: Int = DateTime.now().dayOfWeek + 1 // jodaTime is zero-based
-            val nextRecurringDay = if (selectedDay > today) {
-                selectedDay - today
-            } else {
-                DAYS_IN_A_WEEK - today + selectedDay
-            }
-            scheduledDate = now.plusDays(nextRecurringDay).toString()
+
+        val bundle = Bundle().apply {
+            putLong(ACH_ACCOUNT_ID, createEditTransferViewModel.achAccountId)
+            putLong(CARD_ID, createEditTransferViewModel.cardId)
+            putString(TRANSFER_AMOUNT, createEditTransferViewModel.amount.get())
+            putString(TRANSFER_FREQUENCY, frequencyType)
         }
-        binding.root.findNavController().navigate(R.id.action_createEditTransferFragment_to_createTransferConfirmationFragment,
-                Bundle().apply {
-                    putLong(ACH_ACCOUNT_ID, createEditTransferViewModel.achAccountInfoId)
-                    putLong(CARD_ID, createEditTransferViewModel.cardId)
-                    putString(TRANSFER_AMOUNT, createEditTransferViewModel.amount.get())
-                    putString(TRANSFER_FREQUENCY, frequencyType)
-                    putString(TRANSFER_DATE1, scheduledDate ?: createEditTransferViewModel.date1.get())
-                    putString(TRANSFER_DATE2, createEditTransferViewModel.date2.get())
-                })
+
+        // set scheduledDate from week of day selected
+        when (frequencyType) {
+            ScheduledLoad.SCHED_LOAD_TYPE_WEEKLY -> {
+                val selectedDay = DisplayDateTimeUtils.getDayOfWeekNumber(createEditTransferViewModel.dayOfWeek.get()!!)
+                val now = DateTime.now()
+                val today: Int = DateTime.now().dayOfWeek + 1 // jodaTime is zero-based
+                val nextRecurringDay = if (selectedDay > today) {
+                    selectedDay - today
+                } else {
+                    DAYS_IN_A_WEEK - today + selectedDay
+                }
+                scheduledDate = now.plusDays(nextRecurringDay).toString()
+                bundle.putString(TRANSFER_DATE1, scheduledDate)
+            }
+            ScheduledLoad.SCHED_LOAD_TYPE_MONTHLY -> bundle.putString(TRANSFER_DATE1, DisplayDateTimeUtils.mediumDateFormatter.parseDateTime(createEditTransferViewModel.date1.get()).toString())
+            ScheduledLoad.SCHED_LOAD_TYPE_TWICE_MONTHLY -> bundle.putString(TRANSFER_DATE2, DisplayDateTimeUtils.mediumDateFormatter.parseDateTime(createEditTransferViewModel.date2.get()).toString())
+        }
+
+        binding.root.findNavController().navigate(R.id.action_createEditTransferFragment_to_createTransferConfirmationFragment, bundle)
     }
 
     companion object {

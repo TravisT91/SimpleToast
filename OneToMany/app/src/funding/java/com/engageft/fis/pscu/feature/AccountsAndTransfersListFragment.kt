@@ -67,7 +67,12 @@ class AccountsAndTransfersListFragment: BaseEngageFullscreenFragment() {
                     object : AccountsAndTransfersListRecyclerViewAdapter.ScheduledLoadListClickListener {
                         override fun onScheduledTransferClicked(scheduledLoadInfoId: Long) {
                             //TODO(aHashimi): https://engageft.atlassian.net/browse/FOTM-113
-                            Toast.makeText(context!!, "on scheduled load clicked! ID = $scheduledLoadInfoId", Toast.LENGTH_SHORT).show()
+//                            Toast.makeText(context!!, "on scheduled load clicked! ID = $scheduledLoadInfoId", Toast.LENGTH_SHORT).show()
+                            root.findNavController().navigate(R.id.action_accountsAndTransfersListFragment_to_createEditTransferFragment,
+                                    Bundle().apply {
+                                        putLong(SCHEDULED_LOAD_ID, scheduledLoadInfoId)
+                                    })
+
                         }
                     },
 
@@ -156,5 +161,6 @@ class AccountsAndTransfersListFragment: BaseEngageFullscreenFragment() {
 
     companion object {
         const val ACH_BANK_ACCOUNT_ID = "ACH_BANK_ACCOUNT_ID"
+        const val SCHEDULED_LOAD_ID = "SCHEDULED_LOAD_ID"
     }
 }

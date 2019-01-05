@@ -20,7 +20,7 @@ import com.engageft.fis.pscu.R.id.logout
 import com.engageft.engagekit.tools.MixpanelEvent
 import com.engageft.engagekit.rest.request.FundingFundAchAccountRequest
 import com.ob.ws.dom.utility.AchAccountInfo
-
+import com.ob.ws.dom.utility.SubPurseInfo
 
 
 class CreateTransferConfirmationViewModel: BaseEngageViewModel() {
@@ -77,9 +77,9 @@ class CreateTransferConfirmationViewModel: BaseEngageViewModel() {
         newLoad.typeString = frequencyType
         newLoad.amount = amount
         // dates should be yyyy-MM-dd for server
-        newLoad.scheduleDate = BackendDateTimeUtils.getYMDStringFromDateTime(DateTime.parse(scheduledDate1, DisplayDateTimeUtils.mediumDateFormatter))
+        newLoad.scheduleDate = BackendDateTimeUtils.getYMDStringFromDateTime(DateTime(scheduledDate1))
         if (scheduledDate2.isNotEmpty()) {
-            newLoad.scheduleDate2 = BackendDateTimeUtils.getYMDStringFromDateTime(DateTime.parse(scheduledDate2, DisplayDateTimeUtils.mediumDateFormatter))
+            newLoad.scheduleDate2 = BackendDateTimeUtils.getYMDStringFromDateTime(DateTime(scheduledDate2))
         }
 
         newLoad.achAccountId = achAccountInfoId.toString()
@@ -101,10 +101,6 @@ class CreateTransferConfirmationViewModel: BaseEngageViewModel() {
                         .subscribe({ response ->
                             progressOverlayShownObservable.value = false
                             if (response.isSuccess) {
-//                                currentCard?.let {
-//                                    EngageService.getInstance().forceDebitCardInfoRefresh(it)
-//                                    EngageService.getInstance().storageManager.clearScheduledLoadsCache(it)
-//                                }
                                 EngageService.getInstance().clearLoginAndDashboardResponses()
                                 navigationEventObservable.value = NavigationEvent.TRANSFER_SUCCESS
                             } else {
