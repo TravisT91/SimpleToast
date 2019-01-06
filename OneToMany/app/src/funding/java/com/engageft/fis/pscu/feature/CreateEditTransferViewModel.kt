@@ -20,7 +20,6 @@ import utilGen1.ScheduledLoadUtils
 import com.engageft.engagekit.rest.request.ScheduledLoadRequest
 
 
-
 class CreateEditTransferViewModel: BaseEngageViewModel() {
 
     private companion object {
@@ -89,6 +88,28 @@ class CreateEditTransferViewModel: BaseEngageViewModel() {
         frequency.addOnPropertyChangedCallback(object: Observable.OnPropertyChangedCallback() {
             override fun onPropertyChanged(sender: Observable?, propertyId: Int) {
                 updateButtonState()
+                when (frequency.get()) {
+                    FREQUENCY_ONETIME -> {
+                        date1Show.set(false)
+                        date2Show.set(false)
+                        dayOfWeekShow.set(false)
+                    }
+                    FREQUENCY_WEEKLY -> {
+                        dayOfWeekShow.set(true)
+                        date1Show.set(false)
+                        date2Show.set(false)
+                    }
+                    FREQUENCY_MONTHLY -> {
+                        date1Show.set(true)
+                        date2Show.set(false)
+                        dayOfWeekShow.set(false)
+                    }
+                    FREQUENCY_BIMONTHLY -> {
+                        date1Show.set(true)
+                        date2Show.set(true)
+                        dayOfWeekShow.set(false)
+                    }
+                }
             }
         })
 

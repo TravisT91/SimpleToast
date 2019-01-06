@@ -8,18 +8,15 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.navigation.findNavController
 import com.engageft.apptoolbox.BaseViewModel
+import com.engageft.apptoolbox.util.CurrencyUtils
 import com.engageft.engagekit.model.ScheduledLoad
 import com.engageft.fis.pscu.R
+import com.engageft.fis.pscu.config.EngageAppConfig
 import com.engageft.fis.pscu.databinding.FragmentCreateTransferConfirmBinding
-import com.engageft.fis.pscu.feature.CreateEditTransferFragment.Companion.ACH_ACCOUNT_ID
-import com.engageft.fis.pscu.feature.CreateEditTransferFragment.Companion.CARD_ID
-import com.engageft.fis.pscu.feature.CreateEditTransferFragment.Companion.TRANSFER_AMOUNT
-import com.engageft.fis.pscu.feature.CreateEditTransferFragment.Companion.TRANSFER_DATE1
-import com.engageft.fis.pscu.feature.CreateEditTransferFragment.Companion.TRANSFER_DATE2
-import com.engageft.fis.pscu.feature.CreateEditTransferFragment.Companion.TRANSFER_FREQUENCY
 import com.engageft.fis.pscu.feature.branding.Palette
 import org.joda.time.DateTime
 import utilGen1.DisplayDateTimeUtils
+import java.lang.IllegalStateException
 
 class CreateTransferConfirmationFragment: BaseEngageFullscreenFragment() {
     private lateinit var createTransferViewModel: CreateTransferConfirmationViewModel
@@ -40,12 +37,12 @@ class CreateTransferConfirmationFragment: BaseEngageFullscreenFragment() {
                 createTransferViewModel.achAccountInfoId = bundle.getLong(ACH_ACCOUNT_ID, -1L)
                 createTransferViewModel.cardId = bundle.getLong(CARD_ID, -1L)
                 createTransferViewModel.amount = bundle.getString(TRANSFER_AMOUNT, "")
-                createTransferViewModel.scheduledDate1 = bundle.getString(TRANSFER_DATE1, "")
-                createTransferViewModel.scheduledDate2 = bundle.getString(TRANSFER_DATE2, "")
+                createTransferViewModel.scheduledDate1 = bundle.getSerializable(TRANSFER_DATE1) as? DateTime
+                createTransferViewModel.scheduledDate2 = bundle.getSerializable(TRANSFER_DATE2) as? DateTime
                 createTransferViewModel.frequencyType = bundle.getString(TRANSFER_FREQUENCY, "")
-            }
+            } ?: throw IllegalStateException("must pass data")
 
-            amountTextView.text = createTransferViewModel.amount
+            amountTextView.text = String.format("%s%s", CurrencyUtils.getCurrencySymbol(EngageAppConfig.currencyCode), createTransferViewModel.amount)
 
             when(createTransferViewModel.frequencyType) {
                 ScheduledLoad.SCHED_LOAD_TYPE_TWICE_MONTHLY -> {
@@ -73,6 +70,56 @@ class CreateTransferConfirmationFragment: BaseEngageFullscreenFragment() {
             }
         })
 
+        createTransferViewModel.dialogInfoObservable.observe(this, Observer {
+            if (it.dialogType == DialogInfo.DialogType.SERVER_ERROR) {
+                infoDialogGenericErrorTitleMessageConditionalNewInstance(context!!, it)
+            }
+        })
+
         return binding.root
+    }
+
+    companion object {
+        const val CARD_ID = "CARD_ID"
+        const val ACH_ACCOUNT_ID = "ACH_ACCOUNT_ID"
+        const val TRANSFER_AMOUNT = "TRANSFER_AMOUNT"
+        const val TRANSFER_FREQUENCY = "TRANSFER_FREQUENCY"
+        const val TRANSFER_DATE1 = "TRANSFER_DATE1"
+        const val TRANSFER_DATE2 = "TRANSFER_DATE2"
+
+        private const val DAYS_IN_A_WEEK = 7
+
+        fun createBundle(achAccountId: Long, cardId: Long, frequency: String, amount: String, scheduledDate1: DateTime?,
+                      scheduledDate2: DateTime?, dayOfWeek: String): Bundle {
+
+            return Bundle().apply {
+                putLong(ACH_ACCOUNT_ID, achAccountId)
+                putLong(CARD_ID, cardId)
+                putString(TRANSFER_AMOUNT, amount)
+                putString(TRANSFER_FREQUENCY, frequency)
+
+                // set scheduledDate from week of day selected
+                when (frequency) {
+                    ScheduledLoad.SCHED_LOAD_TYPE_WEEKLY -> {
+                        val selectedDay = DisplayDateTimeUtils.getDayOfWeekNumber(dayOfWeek)
+                        val now = DateTime.now()
+                        val today: Int = DateTime.now().dayOfWeek + 1 // jodaTime is zero-based
+                        val nextRecurringDay = if (selectedDay > today) {
+                            selectedDay - today
+                        } else {
+                            DAYS_IN_A_WEEK - today + selectedDay
+                        }
+                        putSerializable(TRANSFER_DATE1, now.plusDays(nextRecurringDay))
+                    }
+                    ScheduledLoad.SCHED_LOAD_TYPE_MONTHLY -> {
+                        putSerializable(TRANSFER_DATE1, scheduledDate1)
+                    }
+                    ScheduledLoad.SCHED_LOAD_TYPE_TWICE_MONTHLY -> {
+                        putSerializable(TRANSFER_DATE1, scheduledDate1)
+                        putSerializable(TRANSFER_DATE2, scheduledDate2)
+                    }
+                }
+            }
+        }
     }
 }

@@ -14,10 +14,9 @@ import androidx.navigation.fragment.findNavController
 import com.engageft.apptoolbox.BaseViewModel
 import com.engageft.apptoolbox.NavigationOverrideClickListener
 import com.engageft.apptoolbox.ViewUtils.newLotusInstance
+import com.engageft.apptoolbox.util.CurrencyUtils
 import com.engageft.apptoolbox.view.BottomSheetListInputWithLabel
 import com.engageft.apptoolbox.view.InformationDialogFragment
-import com.engageft.engagekit.model.ScheduledLoad
-import com.engageft.engagekit.model.ScheduledLoad.SCHED_LOAD_TYPE_MONTHLY
 import com.engageft.fis.pscu.R
 import com.engageft.fis.pscu.config.EngageAppConfig
 import com.engageft.fis.pscu.databinding.FragmentCreateEditTransferBinding
@@ -91,25 +90,6 @@ class CreateEditTransferFragment: BaseEngageFullscreenFragment() {
             date2BottomSheet.minimumDate = DateTime.now()
             date2BottomSheet.maximumDate = DateTime.now().plusMonths(2)
             amountInputWithLabel.currencyCode = EngageAppConfig.currencyCode
-//            accountToBottomSheet.isEnabled = false
-
-            if (createEditTransferViewModel.frequency.get()!!.isNotEmpty()) {
-                var index = 0
-                for (type in frequencyTypesList) {
-                    if (type == createEditTransferViewModel.frequency.get()) {
-                        setFrequencySubviewsVisibility(index)
-                        break
-                    }
-                    index++
-                }
-            }
-
-            frequencyBottomSheet.setOnListSelectedListener(object: BottomSheetListInputWithLabel.OnListSelectedListener {
-                override fun onItemSelectedIndex(index: Int) {
-                    // this index is mapped to the frequencyTypesList
-                    setFrequencySubviewsVisibility(index)
-                }
-            })
 
             accountFromBottomSheet.setOnListSelectedListener(object: BottomSheetListInputWithLabel.OnListSelectedListener {
                 override fun onItemSelectedIndex(index: Int) {
@@ -221,32 +201,6 @@ class CreateEditTransferFragment: BaseEngageFullscreenFragment() {
                 }).show(activity!!.supportFragmentManager, "wrongAccountDialog")
     }
 
-    // this index parameter is mapped to the frequencyTypesList
-    private fun setFrequencySubviewsVisibility(index: Int) {
-        when (index) {
-            0 -> {
-                binding.date1BottomSheet.visibility = View.GONE
-                binding.date2BottomSheet.visibility = View.GONE
-                binding.daysOfWeekBottomSheet.visibility = View.GONE
-            }
-            1 -> {
-                binding.date1BottomSheet.visibility = View.VISIBLE
-                binding.date2BottomSheet.visibility = View.GONE
-                binding.daysOfWeekBottomSheet.visibility = View.GONE
-            }
-            2 -> {
-                binding.date1BottomSheet.visibility = View.VISIBLE
-                binding.date2BottomSheet.visibility = View.VISIBLE
-                binding.daysOfWeekBottomSheet.visibility = View.GONE
-            }
-            3 -> {
-                binding.date1BottomSheet.visibility = View.GONE
-                binding.date2BottomSheet.visibility = View.GONE
-                binding.daysOfWeekBottomSheet.visibility = View.VISIBLE
-            }
-        }
-    }
-
     override fun onResume() {
         super.onResume()
         setHasOptionsMenu(true)
@@ -275,44 +229,27 @@ class CreateEditTransferFragment: BaseEngageFullscreenFragment() {
 
     private fun navigateToConfirmationScreen() {
         val frequencyType = ScheduledLoadUtils.getFrequencyTypeStringForDisplayString(context!!, createEditTransferViewModel.frequency.get()!!)
-        var scheduledDate: String? = null
 
-        val bundle = Bundle().apply {
-            putLong(ACH_ACCOUNT_ID, createEditTransferViewModel.achAccountId)
-            putLong(CARD_ID, createEditTransferViewModel.cardId)
-            putString(TRANSFER_AMOUNT, createEditTransferViewModel.amount.get())
-            putString(TRANSFER_FREQUENCY, frequencyType)
+        val date1 = if (createEditTransferViewModel.date1.get()!!.isNotEmpty()) {
+            DisplayDateTimeUtils.mediumDateFormatter.parseDateTime(createEditTransferViewModel.date1.get())
+        } else {
+            null
         }
 
-        // set scheduledDate from week of day selected
-        when (frequencyType) {
-            ScheduledLoad.SCHED_LOAD_TYPE_WEEKLY -> {
-                val selectedDay = DisplayDateTimeUtils.getDayOfWeekNumber(createEditTransferViewModel.dayOfWeek.get()!!)
-                val now = DateTime.now()
-                val today: Int = DateTime.now().dayOfWeek + 1 // jodaTime is zero-based
-                val nextRecurringDay = if (selectedDay > today) {
-                    selectedDay - today
-                } else {
-                    DAYS_IN_A_WEEK - today + selectedDay
-                }
-                scheduledDate = now.plusDays(nextRecurringDay).toString()
-                bundle.putString(TRANSFER_DATE1, scheduledDate)
-            }
-            ScheduledLoad.SCHED_LOAD_TYPE_MONTHLY -> bundle.putString(TRANSFER_DATE1, DisplayDateTimeUtils.mediumDateFormatter.parseDateTime(createEditTransferViewModel.date1.get()).toString())
-            ScheduledLoad.SCHED_LOAD_TYPE_TWICE_MONTHLY -> bundle.putString(TRANSFER_DATE2, DisplayDateTimeUtils.mediumDateFormatter.parseDateTime(createEditTransferViewModel.date2.get()).toString())
+        val date2 = if (createEditTransferViewModel.date2.get()!!.isNotEmpty()) {
+            DisplayDateTimeUtils.mediumDateFormatter.parseDateTime(createEditTransferViewModel.date2.get())
+        } else {
+            null
         }
 
-        binding.root.findNavController().navigate(R.id.action_createEditTransferFragment_to_createTransferConfirmationFragment, bundle)
-    }
-
-    companion object {
-        const val CARD_ID = "CARD_ID"
-        const val ACH_ACCOUNT_ID = "ACH_ACCOUNT_ID"
-        const val TRANSFER_AMOUNT = "TRANSFER_AMOUNT"
-        const val TRANSFER_FREQUENCY = "TRANSFER_FREQUENCY"
-        const val TRANSFER_DATE1 = "TRANSFER_DATE1"
-        const val TRANSFER_DATE2 = "TRANSFER_DATE2"
-
-        const val DAYS_IN_A_WEEK = 7
+        binding.root.findNavController().navigate(R.id.action_createEditTransferFragment_to_createTransferConfirmationFragment,
+                CreateTransferConfirmationFragment.createBundle(
+                        achAccountId = createEditTransferViewModel.achAccountId,
+                        cardId = createEditTransferViewModel.cardId,
+                        frequency = frequencyType,
+                        amount = CurrencyUtils.getNonFormattedDecimalAmountString(currencyCode = EngageAppConfig.currencyCode, stringWithCurrencySymbol = createEditTransferViewModel.amount.get()!!),
+                        scheduledDate1 = date1,
+                        scheduledDate2 = date2,
+                        dayOfWeek = createEditTransferViewModel.dayOfWeek.get()!!))
     }
 }
