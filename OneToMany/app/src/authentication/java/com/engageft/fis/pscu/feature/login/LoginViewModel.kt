@@ -14,7 +14,15 @@ import com.engageft.fis.pscu.feature.WelcomeSharedPreferencesRepo
 import com.engageft.fis.pscu.feature.authentication.AuthenticationConfig
 import com.engageft.fis.pscu.feature.authentication.AuthenticationSharedPreferencesRepo
 import com.engageft.fis.pscu.feature.branding.BrandingManager
+import com.engageft.fis.pscu.feature.gatekeeping.GateKeeperListener
+import com.engageft.fis.pscu.feature.gatekeeping.GatedItem
+import com.engageft.fis.pscu.feature.gatekeeping.LoginGateKeeper
+import com.engageft.fis.pscu.feature.gatekeeping.items.RequireAcceptTermsGatedItem
+import com.engageft.fis.pscu.feature.gatekeeping.items.RequireEmailConfirmationGatedItem
+import com.engageft.fis.pscu.feature.gatekeeping.items.SecurityQuestionsGatedItem
+import com.engageft.fis.pscu.feature.gatekeeping.items.TwoFactorAuthGatedItem
 import com.engageft.fis.pscu.feature.subscribeWithDefaultProgressAndErrorHandling
+import com.ob.ws.dom.BasicResponse
 import com.ob.ws.dom.BrandingInfoResponse
 import com.ob.ws.dom.DeviceFailResponse
 import com.ob.ws.dom.LoginResponse
@@ -29,14 +37,15 @@ import io.reactivex.schedulers.Schedulers
  * Created by joeyhutchins on 10/15/18.
  * Copyright (c) 2018 Engage FT. All rights reserved.
  */
-class LoginViewModel : BaseEngageViewModel() {
+class LoginViewModel : BaseEngageViewModel(), GateKeeperListener {
 
     enum class LoginNavigationEvent {
         AUTHENTICATED_ACTIVITY,
         ISSUER_STATEMENT,
         DISCLOSURES,
         TWO_FACTOR_AUTHENTICATION,
-        ACCEPT_TERMS
+        ACCEPT_TERMS,
+        SECURITY_QUESTIONS
     }
 
     enum class ButtonState {
@@ -66,6 +75,8 @@ class LoginViewModel : BaseEngageViewModel() {
     val testMode: ObservableField<Boolean> = ObservableField(false)
 
     val loadingOverlayDialogObservable: MutableLiveData<LoadingOverlayDialog> = MutableLiveData()
+
+    private val loginGateKeeper = LoginGateKeeper(compositeDisposable, this)
 
     init {
         loginButtonState.value = ButtonState.HIDE
@@ -108,6 +119,42 @@ class LoginViewModel : BaseEngageViewModel() {
         if (AuthenticationSharedPreferencesRepo.isFirstUse()) {
             rememberMe.set(true)
             AuthenticationSharedPreferencesRepo.clearFirstUse()
+        }
+    }
+
+    override fun onGateOpen() {
+        progressOverlayShownObservable.value = false
+        BrandingManager.getBrandingWithToken(EngageService.getInstance().authManager.authToken)
+                .subscribeWithDefaultProgressAndErrorHandling<BrandingInfoResponse>(
+                        this, { navigationObservable.value = LoginNavigationEvent.AUTHENTICATED_ACTIVITY })
+    }
+
+    override fun onGatedItemFailed(item: GatedItem) {
+        progressOverlayShownObservable.value = false
+        when (item) {
+            is TwoFactorAuthGatedItem -> {
+                navigationObservable.value = LoginNavigationEvent.TWO_FACTOR_AUTHENTICATION
+            }
+            is RequireEmailConfirmationGatedItem -> {
+                dialogInfoObservable.value = LoginDialogInfo(dialogType = DialogInfo.DialogType.OTHER,
+                        loginDialogType = LoginDialogInfo.LoginDialogType.EMAIL_VERIFICATION_PROMPT)
+            }
+            is RequireAcceptTermsGatedItem -> {
+                navigationObservable.value = LoginNavigationEvent.ACCEPT_TERMS
+            }
+            is SecurityQuestionsGatedItem -> {
+                navigationObservable.value = LoginNavigationEvent.SECURITY_QUESTIONS
+            }
+        }
+    }
+
+    override fun onItemError(item: GatedItem, e: Throwable?, message: String?) {
+        progressOverlayShownObservable.value = false
+        message?.let{
+            handleUnexpectedErrorResponse(BasicResponse(false, it))
+        }
+        e?.let {
+            handleThrowable(it)
         }
     }
 
@@ -209,12 +256,14 @@ class LoginViewModel : BaseEngageViewModel() {
                         .subscribe(
                                 { response ->
                                     if (response.isSuccess && response is LoginResponse) {
-                                        BrandingManager.getBrandingWithToken(response.token)
-                                                .subscribeWithDefaultProgressAndErrorHandling<BrandingInfoResponse>(
-                                                        this, { handleSuccessfulLoginResponse(response)})
+                                        handleSuccessfulLoginResponse(response)
+                                        loginGateKeeper.run()
                                     } else if (response is DeviceFailResponse) {
-                                        progressOverlayShownObservable.value = false
-                                        navigationObservable.value = LoginNavigationEvent.TWO_FACTOR_AUTHENTICATION
+                                        // This causes the loginResponse to be fetched twice by the TwoFactorAuthGatedItem
+                                        // - a minor inconvenience.
+                                        // TODO(jhtuchins): The DeviceFailResponse should be cached locally
+                                        // so the fetch doesn't need to happen twice when the GateKeeper runs.
+                                        loginGateKeeper.run()
                                     } else {
                                         progressOverlayShownObservable.value = false
                                         dialogInfoObservable.value = DialogInfo(dialogType = DialogInfo.DialogType.SERVER_ERROR, message = response.message)
@@ -238,15 +287,6 @@ class LoginViewModel : BaseEngageViewModel() {
         }
 
         conditionallySaveUsername()
-
-        if (AuthenticationConfig.requireEmailConfirmation && LoginResponseUtils.requireEmailVerification(loginResponse)) {
-            dialogInfoObservable.value = LoginDialogInfo(dialogType = DialogInfo.DialogType.OTHER,
-                    loginDialogType = LoginDialogInfo.LoginDialogType.EMAIL_VERIFICATION_PROMPT)
-        } else if (loginResponse.isRequireAcceptTerms) {
-            navigationObservable.value = LoginNavigationEvent.ACCEPT_TERMS
-        } else {
-            navigationObservable.value = LoginNavigationEvent.AUTHENTICATED_ACTIVITY
-        }
     }
 
     private fun validateEmail() {

@@ -1,6 +1,7 @@
 package com.engageft.fis.pscu.feature.gatekeeping
 
 import com.engageft.fis.pscu.feature.gatekeeping.items.OnboardingGatedItem
+import com.engageft.fis.pscu.feature.gatekeeping.items.PendingCardActivationGatedItem
 import com.engageft.fis.pscu.feature.gatekeeping.items.Post30DaysGatedItem
 import io.reactivex.disposables.CompositeDisposable
 
@@ -13,5 +14,8 @@ import io.reactivex.disposables.CompositeDisposable
  * Copyright (c) 2018 Engage FT. All rights reserved.
  */
 class DashboardGateKeeper(compositeDisposable: CompositeDisposable, gateKeeperListener: GateKeeperListener) : BaseGateKeeper(gateKeeperListener) {
-    override val gatedItems = arrayListOf(OnboardingGatedItem(compositeDisposable), Post30DaysGatedItem(compositeDisposable))
+    override val gatedItems = arrayListOf(
+            PendingCardActivationGatedItem(compositeDisposable),
+            OnboardingGatedItem(compositeDisposable),
+            Post30DaysGatedItem(compositeDisposable))
 }

@@ -7,7 +7,7 @@ import com.ob.ws.dom.ActivationCardInfo
 /**
  * TermsRequiredGatedItem
  * <p>
- * Fail if user needs to accept terms. 
+ * Fail if user needs to accept terms.
  * </p>
  * Created by joeyhutchins on 1/7/19.
  * Copyright (c) 2019 Engage FT. All rights reserved.

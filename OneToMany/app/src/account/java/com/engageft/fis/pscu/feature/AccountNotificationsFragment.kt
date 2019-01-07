@@ -14,8 +14,11 @@ import androidx.core.content.ContextCompat
 import androidx.core.content.res.ResourcesCompat
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
+import androidx.navigation.fragment.findNavController
 import com.engageft.apptoolbox.BaseViewModel
+import com.engageft.apptoolbox.NavigationOverrideClickListener
 import com.engageft.apptoolbox.util.applyTypefaceToSubstring
+import com.engageft.apptoolbox.view.InformationDialogFragment
 import com.engageft.fis.pscu.R
 import com.engageft.fis.pscu.databinding.FragmentAccountNotificationsBinding
 import com.engageft.fis.pscu.feature.branding.Palette
@@ -33,6 +36,29 @@ class AccountNotificationsFragment: BaseEngageFullscreenFragment() {
     private lateinit var accountNotificationsViewModel: AccountNotificationsViewModel
     private lateinit var binding: FragmentAccountNotificationsBinding
 
+    private val unsavedChangesDialogListener = object : InformationDialogFragment.InformationDialogFragmentListener {
+        override fun onDialogFragmentPositiveButtonClicked() {
+            findNavController().navigateUp()
+        }
+        override fun onDialogFragmentNegativeButtonClicked() {
+            // Do nothing.
+        }
+        override fun onDialogCancelled() {
+            // Do nothing.
+        }
+    }
+
+    private val navigationOverrideClickListener = object : NavigationOverrideClickListener {
+        override fun onClick(): Boolean {
+            return if (accountNotificationsViewModel.hasUnsavedChanges()) {
+                showDialog(infoDialogGenericUnsavedChangesNewInstance(context = activity!!, listener = unsavedChangesDialogListener))
+                true
+            } else {
+                false
+            }
+        }
+    }
+
     override fun createViewModel(): BaseViewModel? {
         accountNotificationsViewModel = ViewModelProviders.of(this).get(AccountNotificationsViewModel::class.java)
         return accountNotificationsViewModel
@@ -40,6 +66,10 @@ class AccountNotificationsFragment: BaseEngageFullscreenFragment() {
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         binding = FragmentAccountNotificationsBinding.inflate(inflater, container, false)
+
+        backButtonOverrideProvider.setBackButtonOverride(navigationOverrideClickListener)
+        upButtonOverrideProvider.setUpButtonOverride(navigationOverrideClickListener)
+
         binding.apply {
             binding.viewModel = accountNotificationsViewModel
             binding.palette = Palette

@@ -10,6 +10,8 @@ package com.engageft.fis.pscu.feature.authentication
  */
 object AuthenticationConfig {
     const val requireEmailConfirmation: Boolean = true
+    const val requireAcceptTerms: Boolean = false
+    const val requireSecurityQuestions: Boolean = true
 
     // TODO(aHashimi): cases such as when the app doesn't allow demo either in production or demo
     const val demoAccountAvailable: Boolean = true

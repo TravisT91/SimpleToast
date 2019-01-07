@@ -21,8 +21,10 @@ android {
         // Below is the version string that tracks real releases for this app. When creating a build for
         // QA or release, increment and use the version string below. the master branch should always
         // use 0.0 with versionCode = 1
-//        versionCode 4
-//        versionName "0.3" + "." + versionCode
+        //
+        // first number is Major release, second is feature release, third is bug update release.
+//        versionCode 5
+//        versionName "0.4.0"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         multiDexEnabled true
 
@@ -54,11 +56,11 @@ android {
             java.srcDirs = ['src/main/java', 'src/authentication/java', 'src/common/java', 'src/splash/java',
                             'src/dashboard/java', 'src/budgets/java', 'src/account/java', 'src/goals/java',
                             'src/help/java', 'src/cardmanagement/java', 'src/branding/java', 'src/welcome/java',
-                            'src/transactions/java', 'src/enrollment/java']
+                            'src/transactions/java', 'src/enrollment/java', 'src/funding/java']
             res.srcDirs = ['src/main/res', 'src/authentication/res', 'src/common/res', 'src/splash/res',
                            'src/dashboard/res', 'src/budgets/res', 'src/account/res', 'src/goals/res',
                            'src/help/res', 'src/cardmanagement/res', 'src/welcome/res', 'src/transactions/res',
-                            'src/enrollment/res']
+                            'src/enrollment/res', 'src/funding/res']
         }
     }
 }
