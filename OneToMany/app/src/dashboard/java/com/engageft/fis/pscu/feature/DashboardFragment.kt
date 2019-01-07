@@ -25,6 +25,7 @@ import androidx.recyclerview.widget.DefaultItemAnimator
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.engageft.apptoolbox.BaseViewModel
+import com.engageft.apptoolbox.NavigationOverrideClickListener
 import com.engageft.apptoolbox.ToolbarVisibilityState
 import com.engageft.apptoolbox.ViewUtils.newLotusInstance
 import com.engageft.apptoolbox.view.InformationDialogFragment
@@ -98,6 +99,17 @@ class DashboardFragment : BaseEngageFullscreenFragment(),
     }
 
     private var scrollDisabled = false
+
+//    private val navigationOverrideClickListener = object : NavigationOverrideClickListener {
+//        override fun onClick(): Boolean {
+//            return if (changePasswordViewModel.hasUnsavedChanges()) {
+//                showDialog(infoDialogGenericUnsavedChangesNewInstance(context = activity!!, listener = unsavedChangesDialogListener))
+//                true
+//            } else {
+//                false
+//            }
+//        }
+//    }
 
     override fun createViewModel(): BaseViewModel? {
         dashboardViewModel = ViewModelProviders.of(this).get(DashboardViewModel::class.java)
@@ -208,7 +220,7 @@ class DashboardFragment : BaseEngageFullscreenFragment(),
             (findViewById(R.id.search_close_btn) as? ImageView)?.setOnClickListener {
                 // clear current results
                 displaySearchResults(listOf())
-                
+
                 if (query.isNullOrBlank()) {
                     onActionViewCollapsed()
                     endSearch()
