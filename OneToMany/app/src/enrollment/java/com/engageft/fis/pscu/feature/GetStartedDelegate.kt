@@ -7,7 +7,7 @@ import androidx.navigation.NavController
 import com.engageft.engagekit.EngageService
 import com.engageft.engagekit.rest.request.ActivationCardInfoRequest
 import com.engageft.fis.pscu.feature.branding.BrandingManager
-import com.engageft.fis.pscu.feature.gatekeeping.EnrollmentGateKeeper
+import com.engageft.fis.pscu.feature.gatekeeping.GetStartedEnrollmentGateKeeper
 import com.engageft.fis.pscu.feature.gatekeeping.GateKeeperListener
 import com.engageft.fis.pscu.feature.gatekeeping.GatedItem
 import com.engageft.fis.pscu.feature.gatekeeping.items.AccountRequiredGatedItem
@@ -164,7 +164,7 @@ class GetStartedDelegate(private val viewModel: EnrollmentViewModel, private val
                                                         dialogObservable.value = GetStartedDialog.UNDER_18
                                                         dialogObservable.postValue(GetStartedDialog.NONE)
                                                     } else {
-                                                        val gateKeeper = EnrollmentGateKeeper(cardInfo, gateKeeperListener)
+                                                        val gateKeeper = GetStartedEnrollmentGateKeeper(cardInfo, gateKeeperListener)
                                                         gateKeeper.run()
                                                     }
                                                 }, { failedResponse ->
@@ -192,7 +192,7 @@ class GetStartedDelegate(private val viewModel: EnrollmentViewModel, private val
     }
 
     fun onLegalGuardianYesClicked() {
-        val gateKeeper = EnrollmentGateKeeper(viewModel.activationCardInfo, gateKeeperListener)
+        val gateKeeper = GetStartedEnrollmentGateKeeper(viewModel.activationCardInfo, gateKeeperListener)
         gateKeeper.run()
     }
 
