@@ -34,6 +34,7 @@ class CreateTransferConfirmationFragment: BaseEngageFullscreenFragment() {
             palette = Palette
 
             arguments?.let { bundle ->
+                createTransferViewModel.scheduledLoadId = bundle.getLong(SCHEDULED_LOAD_ID, 0)
                 createTransferViewModel.achAccountInfoId = bundle.getLong(ACH_ACCOUNT_ID, -1L)
                 createTransferViewModel.cardId = bundle.getLong(CARD_ID, -1L)
                 createTransferViewModel.amount = bundle.getString(TRANSFER_AMOUNT, "")
@@ -80,6 +81,7 @@ class CreateTransferConfirmationFragment: BaseEngageFullscreenFragment() {
     }
 
     companion object {
+        const val SCHEDULED_LOAD_ID = "SCHEDULED_LOAD_ID"
         const val CARD_ID = "CARD_ID"
         const val ACH_ACCOUNT_ID = "ACH_ACCOUNT_ID"
         const val TRANSFER_AMOUNT = "TRANSFER_AMOUNT"
@@ -89,10 +91,11 @@ class CreateTransferConfirmationFragment: BaseEngageFullscreenFragment() {
 
         private const val DAYS_IN_A_WEEK = 7
 
-        fun createBundle(achAccountId: Long, cardId: Long, frequency: String, amount: String, scheduledDate1: DateTime?,
+        fun createBundle(scheduledLoadId: Long = 0, achAccountId: Long, cardId: Long, frequency: String, amount: String, scheduledDate1: DateTime?,
                       scheduledDate2: DateTime?, dayOfWeek: String): Bundle {
 
             return Bundle().apply {
+                putLong(SCHEDULED_LOAD_ID, scheduledLoadId)
                 putLong(ACH_ACCOUNT_ID, achAccountId)
                 putLong(CARD_ID, cardId)
                 putString(TRANSFER_AMOUNT, amount)

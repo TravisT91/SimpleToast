@@ -147,7 +147,6 @@ object ScheduledLoadUtils {
         displayStrings.add(getFrequencyDisplayStringForType(context, ScheduledLoad.SCHED_LOAD_TYPE_MONTHLY))
         displayStrings.add(getFrequencyDisplayStringForType(context, ScheduledLoad.SCHED_LOAD_TYPE_TWICE_MONTHLY))
         displayStrings.add(getFrequencyDisplayStringForType(context, ScheduledLoad.SCHED_LOAD_TYPE_WEEKLY))
-        displayStrings.add(getFrequencyDisplayStringForType(context, ScheduledLoad.SCHED_LOAD_TYPE_ALT_WEEKLY))
 
         return displayStrings
     }

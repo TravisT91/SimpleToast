@@ -51,7 +51,6 @@ class CreateEditTransferViewModel: BaseEngageViewModel() {
 //    var debitCardInfoList: List<DebitCardInfo> = mutableListOf()
     val buttonStateObservable: MutableLiveData<ButtonState> = MutableLiveData()
     val fromAccount : ObservableField<String> = ObservableField("")
-
     val toAccount : ObservableField<String> = ObservableField("")
     val amount : ObservableField<String> = ObservableField("")
     val frequency : ObservableField<String> = ObservableField("")
@@ -155,7 +154,9 @@ class CreateEditTransferViewModel: BaseEngageViewModel() {
         )
     }
 
+    var scheduledLoadId = 0L
     fun initScheduledLoads(scheduledLoadId: Long) {
+        this.scheduledLoadId = scheduledLoadId
         progressOverlayShownObservable.value = true
         compositeDisposable.add(EngageService.getInstance().loginResponseAsObservable
                 .subscribeOn(Schedulers.io())
@@ -165,9 +166,7 @@ class CreateEditTransferViewModel: BaseEngageViewModel() {
                     if (response is LoginResponse) {
                         getScheduledLoads(scheduledLoadId, LoginResponseUtils.getCurrentCard(response))
                         achAccountList = response.achAccountList
-                        //TODO(aHashimi): ScheduledLoad should have cardId but backend doesn't return it, workaround for now
                         cardId = LoginResponseUtils.getCurrentCard(response).debitCardId
-
                     } else {
                         dialogInfoObservable.value = DialogInfo()
                     }

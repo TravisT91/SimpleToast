@@ -32,6 +32,7 @@ class CreateTransferConfirmationViewModel: BaseEngageViewModel() {
     var cardId = -1L
 
     val navigationEventObservable: MutableLiveData<NavigationEvent> = MutableLiveData()
+    var scheduledLoadId: Long = 0
 
     init {
         progressOverlayShownObservable.value = true
@@ -77,6 +78,8 @@ class CreateTransferConfirmationViewModel: BaseEngageViewModel() {
             newLoad.scheduleDate2 = BackendDateTimeUtils.getYMDStringFromDateTime(it)
         }
 
+        // if EDIT, must pass the the id
+        newLoad.scheduledLoadId = scheduledLoadId
         newLoad.achAccountId = achAccountInfoId.toString()
         newLoad.cardId = cardId.toString()
 
@@ -99,15 +102,7 @@ class CreateTransferConfirmationViewModel: BaseEngageViewModel() {
                                 EngageService.getInstance().clearLoginAndDashboardResponses()
                                 navigationEventObservable.value = NavigationEvent.TRANSFER_SUCCESS
                             } else {
-                                if (response is ValidationErrors) {
-                                    if (response.error.isNotEmpty()) {
-                                        dialogInfoObservable.value = DialogInfo(dialogType = DialogInfo.DialogType.SERVER_ERROR, message = response.error.elementAt(0).message)
-                                    } else {
-                                        handleUnexpectedErrorResponse(response)
-                                    }
-                                } else {
-                                    handleUnexpectedErrorResponse(response)
-                                }
+                                showBackendErrorOrGenericMessage(response)
                             }
                         }, { e ->
                             progressOverlayShownObservable.value = false
@@ -116,6 +111,19 @@ class CreateTransferConfirmationViewModel: BaseEngageViewModel() {
         )
     }
 
+    private fun showBackendErrorOrGenericMessage(response: BasicResponse) {
+        if (response.message.isNotEmpty()) {
+            dialogInfoObservable.value = DialogInfo(dialogType = DialogInfo.DialogType.SERVER_ERROR, message = response.message)
+        } else if (response is ValidationErrors) {
+            if (response.error.isNotEmpty()) {
+                dialogInfoObservable.value = DialogInfo(dialogType = DialogInfo.DialogType.SERVER_ERROR, message = response.error.elementAt(0).message)
+            } else {
+                handleUnexpectedErrorResponse(response)
+            }
+        } else {
+            handleUnexpectedErrorResponse(response)
+        }
+    }
 
     private fun executeOneTimeAchLoad(sessionId: String = "") {
         progressOverlayShownObservable.value = true

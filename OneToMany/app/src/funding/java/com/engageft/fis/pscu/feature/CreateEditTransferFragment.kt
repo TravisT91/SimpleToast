@@ -30,11 +30,11 @@ import utilGen1.ScheduledLoadUtils
 
 class CreateEditTransferFragment: BaseEngageFullscreenFragment() {
 
-    lateinit var createEditTransferViewModel: CreateEditTransferViewModel
-    lateinit var binding: FragmentCreateEditTransferBinding
-    var achAccountsIndexMap = HashMap<Int, AchAccountInfo>()
-    var cardsInfoIndexMap = HashMap<Int, CreateEditTransferViewModel.CardInfo>()
-    val accountsToDisplay = mutableListOf<String>()
+    private lateinit var createEditTransferViewModel: CreateEditTransferViewModel
+    private lateinit var binding: FragmentCreateEditTransferBinding
+    private var achAccountsIndexMap = HashMap<Int, AchAccountInfo>()
+    private var cardsInfoIndexMap = HashMap<Int, CreateEditTransferViewModel.CardInfo>()
+    private val accountsToDisplay = mutableListOf<String>()
 
     private val unsavedChangesDialogListener = object : InformationDialogFragment.InformationDialogFragmentListener {
         override fun onDialogFragmentPositiveButtonClicked() {
@@ -71,18 +71,47 @@ class CreateEditTransferFragment: BaseEngageFullscreenFragment() {
             viewModel = createEditTransferViewModel
             palette = Palette
 
+            var frequencyTypesList: ArrayList<CharSequence> = ArrayList()
+
             arguments?.let {
-                val scheduledLoadId = it.getLong(SCHEDULED_LOAD_ID, -1L)
-                // don't populate the old data if user has edited the fields
-                if (scheduledLoadId != -1L && !createEditTransferViewModel.hasUnsavedChanges()) {
-                    createEditTransferViewModel.initScheduledLoads(scheduledLoadId)
-                    deleteButtonLayout.visibility = View.VISIBLE
-                    titleTextView.visibility = View.GONE
-                    subTitleTextView.visibility = View.GONE
+                val scheduledLoadId = it.getLong(SCHEDULED_LOAD_ID, SCHEDULED_LOAD_ID_DEFAULT)
+
+                //it's in EDIT MODE
+                if (scheduledLoadId != SCHEDULED_LOAD_ID_DEFAULT) {
+                    // don't populate the old data if user has edited the fields and navigates back to this fragment from confirmation
+                    if (!createEditTransferViewModel.hasUnsavedChanges()) {
+                        createEditTransferViewModel.initScheduledLoads(scheduledLoadId)
+                        deleteButtonLayout.visibility = View.VISIBLE
+                        titleTextView.visibility = View.GONE
+                        subTitleTextView.visibility = View.GONE
+                    }
+
+                    deleteButtonLayout.setOnClickListener {
+                        showDialog(InformationDialogFragment.newLotusInstance(title = getString(R.string.ach_bank_transfer_delete_transfer_title),
+                                message = String.format(getString(R.string.ach_bank_transfer_delete_transfer_message_format),
+                                        createEditTransferViewModel.frequency.get(), createEditTransferViewModel.fromAccount.get()),
+                                buttonPositiveText = getString(R.string.dialog_information_yes_button),
+                                buttonNegativeText = getString(R.string.dialog_information_no_button),
+                                listener = object: InformationDialogFragment.InformationDialogFragmentListener {
+                                    override fun onDialogFragmentNegativeButtonClicked() {
+                                    }
+
+                                    override fun onDialogFragmentPositiveButtonClicked() {
+                                        createEditTransferViewModel.onDeleteScheduledLoad()
+                                    }
+
+                                    override fun onDialogCancelled() {
+                                    }
+
+                                }))
+                    }
+                    // don't show one-time frequency type in EDIT mode
+                    frequencyTypesList = ArrayList(ScheduledLoadUtils.getFrequencyDisplayStringsForIncome(context!!))
+                } else {
+                    frequencyTypesList = ArrayList(ScheduledLoadUtils.getFrequencyDisplayStringsForTransfer(context!!))
                 }
             }
 
-            val frequencyTypesList: ArrayList<CharSequence> = ArrayList(ScheduledLoadUtils.getFrequencyDisplayStringsForTransfer(context!!))
             frequencyBottomSheet.dialogOptions = frequencyTypesList
             daysOfWeekBottomSheet.dialogOptions = ArrayList(DisplayDateTimeUtils.daysOfWeekList())
             date1BottomSheet.minimumDate = DateTime.now()
@@ -127,7 +156,6 @@ class CreateEditTransferFragment: BaseEngageFullscreenFragment() {
                         promptUnsupportedAccount()
                         accountToBottomSheet.inputText = ""
                     }
-
                 }
             })
 
@@ -243,7 +271,7 @@ class CreateEditTransferFragment: BaseEngageFullscreenFragment() {
         }
 
         binding.root.findNavController().navigate(R.id.action_createEditTransferFragment_to_createTransferConfirmationFragment,
-                CreateTransferConfirmationFragment.createBundle(
+                CreateTransferConfirmationFragment.createBundle(scheduledLoadId = createEditTransferViewModel.scheduledLoadId,
                         achAccountId = createEditTransferViewModel.achAccountId,
                         cardId = createEditTransferViewModel.cardId,
                         frequency = frequencyType,
@@ -251,5 +279,9 @@ class CreateEditTransferFragment: BaseEngageFullscreenFragment() {
                         scheduledDate1 = date1,
                         scheduledDate2 = date2,
                         dayOfWeek = createEditTransferViewModel.dayOfWeek.get()!!))
+    }
+
+    companion object {
+        private const val SCHEDULED_LOAD_ID_DEFAULT = -1L
     }
 }
