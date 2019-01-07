@@ -9,4 +9,8 @@
     <string name="ENROLLMENT_CARD_DOB_INVALID">Please enter a valid date of birth.</string>
     <string name="ENROLLMENT_CARD_DOB_UNDER_13">Account user must be at least 13 years old.</string>
     <string name="ENROLLMENT_GET_STARTED_ACTION_NEXT">@string/ENROLLMENT_NEXT</string>
+    <string name="ENROLLMENT_GET_STARTED_UNDER_18_TITLE">Cardholder under 18</string>
+    <string name="ENROLLMENT_GET_STARTED_UNDER_18_MESSAGE">A parent/legal guardian must activate your card. Are you the parent/legal guardian of the cardholder?</string>
+    <string name="ENROLLMENT_GET_STARTED_UNDER_18_POSITIVE">YES</string>
+    <string name="ENROLLMENT_GET_STARTED_UNDER_18_NEGATIVE">NO</string>
 </resources>

@@ -7,6 +7,13 @@ import androidx.navigation.NavController
 import com.engageft.engagekit.EngageService
 import com.engageft.engagekit.rest.request.ActivationCardInfoRequest
 import com.engageft.fis.pscu.feature.branding.BrandingManager
+import com.engageft.fis.pscu.feature.gatekeeping.EnrollmentGateKeeper
+import com.engageft.fis.pscu.feature.gatekeeping.GateKeeperListener
+import com.engageft.fis.pscu.feature.gatekeeping.GatedItem
+import com.engageft.fis.pscu.feature.gatekeeping.items.AccountRequiredGatedItem
+import com.engageft.fis.pscu.feature.gatekeeping.items.CIPRequiredGatedItem
+import com.engageft.fis.pscu.feature.gatekeeping.items.PinRequiredGatedItem
+import com.engageft.fis.pscu.feature.gatekeeping.items.TermsRequiredGatedItem
 import com.ob.ws.dom.ActivationCardInfo
 import com.ob.ws.dom.BrandingInfoResponse
 import io.reactivex.android.schedulers.AndroidSchedulers
@@ -23,8 +30,35 @@ import utilGen1.DisplayDateTimeUtils
  * Copyright (c) 2018 Engage FT. All rights reserved.
  */
 class GetStartedDelegate(private val viewModel: EnrollmentViewModel, private val navController: NavController, private val getStartedNavigations: EnrollmentViewModel.EnrollmentNavigations.GetStartedNavigations) {
+    private val gateKeeperListener: GateKeeperListener = object : GateKeeperListener {
+        override fun onGateOpen() {
+            navController.navigate(getStartedNavigations.getStartedToSending)
+        }
+
+        override fun onGatedItemFailed(item: GatedItem) {
+            when (item) {
+                is PinRequiredGatedItem -> {
+                    navController.navigate(getStartedNavigations.getStartedToPin)
+                }
+                is AccountRequiredGatedItem -> {
+                    navController.navigate(getStartedNavigations.getStartedToCreateAccount)
+                }
+                is CIPRequiredGatedItem -> {
+                    navController.navigate(getStartedNavigations.getStartedToVerifyIdentity)
+                }
+                is TermsRequiredGatedItem -> {
+                    navController.navigate(getStartedNavigations.getStartedToTerms)
+                }
+            }
+        }
+
+        override fun onItemError(item: GatedItem, e: Throwable?, message: String?) {
+            // Intentionally empty and will never be called.
+        }
+    }
     val cardInput: ObservableField<String> = ObservableField("")
     val dateOfBirth: ObservableField<String> = ObservableField("")
+    val dialogObservable = MutableLiveData<GetStartedDialog>()
 
     enum class NextButtonState {
         GONE,
@@ -43,6 +77,12 @@ class GetStartedDelegate(private val viewModel: EnrollmentViewModel, private val
         INVALID,
         UNDER_13
     }
+
+    enum class GetStartedDialog {
+        NONE,
+        UNDER_18
+    }
+
     private val cardInputTextWatcher = object : Observable.OnPropertyChangedCallback() {
         override fun onPropertyChanged(sender: Observable?, propertyId: Int) {
             validateCardNumber(true)
@@ -65,6 +105,7 @@ class GetStartedDelegate(private val viewModel: EnrollmentViewModel, private val
         dateOfBirthValidationObservable.value = DOBInputValidationError.NONE
         cardInput.addOnPropertyChangedCallback(cardInputTextWatcher)
         dateOfBirth.addOnPropertyChangedCallback(dateOfBirthInputTextWatcher)
+        dialogObservable.value = GetStartedDialog.NONE
     }
 
     fun onButton1Clicked() {
@@ -115,24 +156,31 @@ class GetStartedDelegate(private val viewModel: EnrollmentViewModel, private val
                                         BrandingManager.getBrandingWithRefCode(cardInfo.refCode)
                                                 .subscribeWithDefaultProgressAndErrorHandling<BrandingInfoResponse>(
                                                         viewModel, {
-                                                    // TODO(jhutchins): This should be a gateKeeper...
+                                                    // If the card is already activated, the backend will
+                                                    // send the message and it'd handled below in the
+                                                    // "failedResponse" block.
+
                                                     if (cardInfo.isParentActivationRequired) {
-
-                                                    } else if (cardInfo.isPinRequired) {
-
-                                                    } else if (cardInfo.isAccountRequired) {
-
-                                                    } else if (cardInfo.isCipRequired) {
-
-                                                    } else if (cardInfo.isTermsRequired) {
-
+                                                        dialogObservable.value = GetStartedDialog.UNDER_18
+                                                        dialogObservable.postValue(GetStartedDialog.NONE)
+                                                    } else {
+                                                        val gateKeeper = EnrollmentGateKeeper(cardInfo, gateKeeperListener)
+                                                        gateKeeper.run()
                                                     }
-                                                }/*, { failedResponse ->
-                                                    // TODO(jhutchins): Navigate?
-                                                }*/
+                                                }, { failedResponse ->
+                                                    viewModel.handleUnexpectedErrorResponse(failedResponse)
+                                                }
                                         )
                                     } else {
-                                        // TODO(jhutchins): Invalid stuff
+                                        // This sucks because "EXPECTED" errors can come
+                                        // in here with strings but also UNEXPECTED errors
+                                        // can come. There is no way for us to reliably
+                                        // distinguish them, therefore we cannot
+                                        // track unexpected via Crashlytics.
+                                        viewModel.progressOverlayShownObservable.value = false
+                                        viewModel.dialogInfoObservable.value = DialogInfo(title = "Error", message = response.message)
+                                        // This is a workaround to essentially "clear" the dialog after an error was shown.
+                                        viewModel.dialogInfoObservable.postValue(DialogInfo(dialogType = DialogInfo.DialogType.OTHER))
                                     }
                                 }, { e ->
                                     viewModel.progressOverlayShownObservable.value = false
@@ -141,6 +189,11 @@ class GetStartedDelegate(private val viewModel: EnrollmentViewModel, private val
                 )
             }
         }
+    }
+
+    fun onLegalGuardianYesClicked() {
+        val gateKeeper = EnrollmentGateKeeper(viewModel.activationCardInfo, gateKeeperListener)
+        gateKeeper.run()
     }
 
     fun validateCardNumber(conditionallyIfError: Boolean) {

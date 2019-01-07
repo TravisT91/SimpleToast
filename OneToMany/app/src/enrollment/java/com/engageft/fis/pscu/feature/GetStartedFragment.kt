@@ -11,7 +11,9 @@ import android.view.inputmethod.EditorInfo
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import com.engageft.apptoolbox.BaseViewModel
+import com.engageft.apptoolbox.ViewUtils.newLotusInstance
 import com.engageft.apptoolbox.view.DateInputWithLabel
+import com.engageft.apptoolbox.view.InformationDialogFragment
 import com.engageft.apptoolbox.view.ProductCardModel
 import com.engageft.fis.pscu.R
 import com.engageft.fis.pscu.databinding.FragmentGetStartedBinding
@@ -96,6 +98,33 @@ class GetStartedFragment : BaseEngageFullscreenFragment() {
                     binding.nextButton.visibility = View.VISIBLE
                     binding.nextButton.isEnabled = true
                     activity?.invalidateOptionsMenu()
+                }
+            }
+        })
+        getStartedViewModel.dialogObservable.observe(this, Observer { dialogEvent ->
+            when (dialogEvent) {
+                GetStartedDelegate.GetStartedDialog.NONE -> {
+                    // Do nothing.
+                }
+                GetStartedDelegate.GetStartedDialog.UNDER_18 -> {
+                    val listener = object : InformationDialogFragment.InformationDialogFragmentListener {
+                        override fun onDialogFragmentNegativeButtonClicked() {
+                            // User clicked "no". Keep them on this screen.
+                        }
+                        override fun onDialogFragmentPositiveButtonClicked() {
+                            getStartedViewModel.onLegalGuardianYesClicked()
+                        }
+                        override fun onDialogCancelled() {
+                            // User exited dialog, keep them on this screen.
+                        }
+                    }
+                    showDialog(InformationDialogFragment.newLotusInstance(
+                            title = getString(R.string.ENROLLMENT_GET_STARTED_UNDER_18_TITLE),
+                            message = getString(R.string.ENROLLMENT_GET_STARTED_UNDER_18_MESSAGE),
+                            buttonPositiveText = getString(R.string.ENROLLMENT_GET_STARTED_UNDER_18_POSITIVE),
+                            buttonNegativeText = getString(R.string.ENROLLMENT_GET_STARTED_UNDER_18_NEGATIVE),
+                            layoutType = InformationDialogFragment.LayoutType.BUTTONS_SIDE_BY_SIDE,
+                            listener = listener))
                 }
             }
         })
