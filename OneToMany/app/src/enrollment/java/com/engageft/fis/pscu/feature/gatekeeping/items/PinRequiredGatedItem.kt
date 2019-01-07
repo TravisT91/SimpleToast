@@ -5,9 +5,9 @@ import com.engageft.fis.pscu.feature.gatekeeping.GatedItemResultListener
 import com.ob.ws.dom.ActivationCardInfo
 
 /**
- * TODO(joeyhutchins): ClassName
+ * PinRequiredGatedItem
  * <p>
- * TODO(joeyhutchins): Class description.
+ * Fail if required to create card PIN
  * </p>
  * Created by joeyhutchins on 1/7/19.
  * Copyright (c) 2019 Engage FT. All rights reserved.
