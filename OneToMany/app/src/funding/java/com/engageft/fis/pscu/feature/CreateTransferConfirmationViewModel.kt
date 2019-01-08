@@ -16,11 +16,9 @@ import org.joda.time.DateTime
 class CreateTransferConfirmationViewModel: BaseEngageViewModel() {
 
     enum class NavigationEvent {
-        TRANSFER_SUCCESS,
-        NONE
+        TRANSFER_SUCCESS
     }
 
-    var scheduledLoadId: Long = 0L
     var frequencyType = ""
     var amount = ""
     var scheduledDate1: DateTime? = null
@@ -80,7 +78,6 @@ class CreateTransferConfirmationViewModel: BaseEngageViewModel() {
                             if (response.isSuccess) {
                                 EngageService.getInstance().clearLoginAndDashboardResponses()
                                 navigationEventObservable.value = NavigationEvent.TRANSFER_SUCCESS
-                                navigationEventObservable.value = NavigationEvent.NONE
                             } else {
                                 showBackendErrorOrGenericMessage(response)
                             }

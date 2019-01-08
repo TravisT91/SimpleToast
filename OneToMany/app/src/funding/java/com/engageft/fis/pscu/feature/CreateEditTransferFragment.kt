@@ -71,20 +71,17 @@ class CreateEditTransferFragment: BaseEngageFullscreenFragment() {
             viewModel = createEditTransferViewModel
             palette = Palette
 
-            var frequencyTypesList: ArrayList<CharSequence> = ArrayList()
-
             arguments?.let {
                 val scheduledLoadId = it.getLong(SCHEDULED_LOAD_ID, SCHEDULED_LOAD_ID_DEFAULT)
 
                 //it's in EDIT MODE
                 if (scheduledLoadId != SCHEDULED_LOAD_ID_DEFAULT) {
+
                     // don't populate the old data if user has edited the fields and navigates back to this fragment from confirmation
-                    if (!createEditTransferViewModel.hasUnsavedChanges()) {
-                        createEditTransferViewModel.initScheduledLoads(scheduledLoadId)
-                        deleteButtonLayout.visibility = View.VISIBLE
-                        titleTextView.visibility = View.GONE
-                        subTitleTextView.visibility = View.GONE
-                    }
+                    createEditTransferViewModel.initScheduledLoads(scheduledLoadId)
+                    deleteButtonLayout.visibility = View.VISIBLE
+                    titleTextView.visibility = View.GONE
+                    subTitleTextView.visibility = View.GONE
 
                     deleteButtonLayout.setOnClickListener {
                         val infoDialog = InformationDialogFragment.newLotusInstance(title = getString(R.string.ach_bank_transfer_delete_transfer_title),
@@ -107,14 +104,19 @@ class CreateEditTransferFragment: BaseEngageFullscreenFragment() {
                         infoDialog.positiveButtonTextColor = Palette.errorColor
                         showDialog(infoDialog)
                     }
-                    // don't show one-time frequency type in EDIT mode
-                    frequencyTypesList = ArrayList(ScheduledLoadUtils.getFrequencyDisplayStringsForIncome(context!!))
-                } else {
-                    frequencyTypesList = ArrayList(ScheduledLoadUtils.getFrequencyDisplayStringsForTransfer(context!!))
+
+                    // set fields to disabled in EDIT mode so user can't edit it but they can delete their recurring transfer
+                    accountFromBottomSheet.isEnabled = false
+                    accountToBottomSheet.isEnabled = false
+                    amountInputWithLabel.isEnabled = false
+                    frequencyBottomSheet.isEnabled = false
+                    daysOfWeekBottomSheet.isEnabled = false
+                    date1BottomSheet.isEnabled = false
+                    date2BottomSheet.isEnabled = false
                 }
             }
 
-            frequencyBottomSheet.dialogOptions = frequencyTypesList
+            frequencyBottomSheet.dialogOptions = ArrayList(ScheduledLoadUtils.getFrequencyDisplayStringsForTransfer(context!!))
             daysOfWeekBottomSheet.dialogOptions = ArrayList(DisplayDateTimeUtils.daysOfWeekList())
             date1BottomSheet.minimumDate = DateTime.now()
             date1BottomSheet.maximumDate = DateTime.now().plusMonths(2)
@@ -125,6 +127,7 @@ class CreateEditTransferFragment: BaseEngageFullscreenFragment() {
             accountFromBottomSheet.setOnListSelectedListener(object: BottomSheetListInputWithLabel.OnListSelectedListener {
                 override fun onItemSelectedIndex(index: Int) {
                     val achAccountInfo = achAccountsIndexMap[index]
+
                     achAccountInfo?.let {
                         createEditTransferViewModel.achAccountId = achAccountInfo.achAccountId
 
@@ -146,6 +149,7 @@ class CreateEditTransferFragment: BaseEngageFullscreenFragment() {
             accountToBottomSheet.setOnListSelectedListener(object: BottomSheetListInputWithLabel.OnListSelectedListener {
                 override fun onItemSelectedIndex(index: Int) {
                     val cardInfo = cardsInfoIndexMap[index]
+
                     cardInfo?.let {
                         createEditTransferViewModel.cardId = it.cardId
 
@@ -179,13 +183,17 @@ class CreateEditTransferFragment: BaseEngageFullscreenFragment() {
 
                 //format bank name with last four digits
                 for (achAccountInfo in achAccountsList) {
+                    // add bank name to the list for bottomSheet list
                     accountsToDisplay.add(AchAccountInfoUtils.accountDescriptionForDisplay(context!!, achAccountInfo))
+                    // mapping index to object when user selects account from accountsToDisplay
                     achAccountsIndexMap[index] = achAccountInfo
                     index++
                 }
 
                 for (cardNameAndLastFour in cardsInfoList) {
+                    // add cardInfo to the list for bottomSheet list
                     accountsToDisplay.add(String.format(getString(R.string.BANKACCOUNT_DESCRIPTION_FORMAT), cardNameAndLastFour.name, cardNameAndLastFour.lastFour))
+                    // mapping index to object when user selects account from accountsToDisplay
                     cardsInfoIndexMap[index] = cardNameAndLastFour
                     index++
                 }
@@ -203,10 +211,12 @@ class CreateEditTransferFragment: BaseEngageFullscreenFragment() {
             })
 
             fromAccountObservable.observe(this@CreateEditTransferFragment, Observer {
+                // format ACH bank name with last 4 digits
                 fromAccount.set(AchAccountInfoUtils.accountDescriptionForDisplay(context!!, it))
             })
 
             toAccountObservable.observe(this@CreateEditTransferFragment, Observer {
+                // format Card Info with last four
                 toAccount.set(String.format(getString(R.string.BANKACCOUNT_DESCRIPTION_FORMAT), it.name, it.lastFour))
             })
 
@@ -273,7 +283,7 @@ class CreateEditTransferFragment: BaseEngageFullscreenFragment() {
         }
 
         binding.root.findNavController().navigate(R.id.action_createEditTransferFragment_to_createTransferConfirmationFragment,
-                CreateTransferConfirmationFragment.createBundle(scheduledLoadId = createEditTransferViewModel.scheduledLoadId,
+                CreateTransferConfirmationFragment.createBundle(
                         achAccountId = createEditTransferViewModel.achAccountId,
                         cardId = createEditTransferViewModel.cardId,
                         frequency = frequencyType,

@@ -23,7 +23,6 @@
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
-
             <androidx.appcompat.widget.AppCompatTextView
                 android:id="@+id/titleTextView"
                 style="@style/CreateTransferTitleTextStyle"
@@ -45,6 +44,7 @@
 
                 <com.engageft.apptoolbox.view.BottomSheetListInputWithLabel
                     style="@style/BottomSheetListInputWithLabelStyle"
+                    InputWithLabel.setThemeWithPalette="@{true}"
                     android:id="@+id/accountFromBottomSheet"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -59,6 +59,7 @@
 
                 <com.engageft.apptoolbox.view.BottomSheetListInputWithLabel
                     style="@style/BottomSheetListInputWithLabelStyle"
+                    InputWithLabel.setThemeWithPalette="@{true}"
                     android:id="@+id/accountToBottomSheet"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -72,6 +73,7 @@
 
                 <com.engageft.apptoolbox.view.CurrencyInputWithLabel
                     style="@style/CurrencyInputWithLabelStyle"
+                    InputWithLabel.setThemeWithPalette="@{true}"
                     android:id="@+id/amountInputWithLabel"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -83,6 +85,7 @@
 
                 <com.engageft.apptoolbox.view.BottomSheetListInputWithLabel
                     style="@style/BottomSheetListInputWithLabelStyle"
+                    InputWithLabel.setThemeWithPalette="@{true}"
                     android:id="@+id/frequencyBottomSheet"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -96,6 +99,7 @@
 
                 <com.engageft.apptoolbox.view.DatePickerInputWithLabel
                     style="@style/BottomSheetListInputWithLabelStyle"
+                    InputWithLabel.setThemeWithPalette="@{true}"
                     android:id="@+id/date1BottomSheet"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -109,6 +113,7 @@
 
                 <com.engageft.apptoolbox.view.DatePickerInputWithLabel
                     style="@style/BottomSheetListInputWithLabelStyle"
+                    InputWithLabel.setThemeWithPalette="@{true}"
                     android:id="@+id/date2BottomSheet"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -122,6 +127,7 @@
 
                 <com.engageft.apptoolbox.view.BottomSheetListInputWithLabel
                     style="@style/BottomSheetListInputWithLabelStyle"
+                    InputWithLabel.setThemeWithPalette="@{true}"
                     android:id="@+id/daysOfWeekBottomSheet"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
