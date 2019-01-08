@@ -1,4 +1,4 @@
-package com.engageft.fis.pscu.feature
+package com.engageft.fis.pscu.feature.achtransfer
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -12,7 +12,8 @@ import com.engageft.apptoolbox.ViewUtils.newLotusInstance
 import com.engageft.apptoolbox.view.InformationDialogFragment
 import com.engageft.fis.pscu.R
 import com.engageft.fis.pscu.databinding.FragmentAchBankAccountDetailBinding
-import com.engageft.fis.pscu.feature.AccountsAndTransfersListFragment.Companion.ACH_BANK_ACCOUNT_ID
+import com.engageft.fis.pscu.feature.BaseEngageFullscreenFragment
+import com.engageft.fis.pscu.feature.achtransfer.AccountsAndTransfersListFragment.Companion.ACH_BANK_ACCOUNT_ID
 import com.engageft.fis.pscu.feature.branding.Palette
 /**
  * AchBankAccountDetailFragment

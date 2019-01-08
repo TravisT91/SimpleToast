@@ -1,4 +1,4 @@
-package com.engageft.fis.pscu.feature
+package com.engageft.fis.pscu.feature.achtransfer
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -13,7 +13,10 @@ import com.engageft.engagekit.model.ScheduledLoad
 import com.engageft.fis.pscu.R
 import com.engageft.fis.pscu.config.EngageAppConfig
 import com.engageft.fis.pscu.databinding.FragmentCreateTransferConfirmBinding
+import com.engageft.fis.pscu.feature.BaseEngageFullscreenFragment
+import com.engageft.fis.pscu.feature.DialogInfo
 import com.engageft.fis.pscu.feature.branding.Palette
+import com.engageft.fis.pscu.feature.infoDialogGenericErrorTitleMessageConditionalNewInstance
 import org.joda.time.DateTime
 import utilGen1.DisplayDateTimeUtils
 import java.lang.IllegalStateException

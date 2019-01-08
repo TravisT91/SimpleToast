@@ -116,6 +116,7 @@
     <string name="ach_bank_transfer_create_ach_out_title">Select another account</string>
     <string name="ach_bank_transfer_create_ach_out_message">Transferring out is not supported. Please select another account.</string>
     <string name="ach_bank_transfer_create_ach_in_message">Transferring money into your card is not allowed. Please select another account.</string>
+    <string name="ach_bank_transfer_edit_transfer_screen_title">Recurring transfer</string>
     <string name="ach_bank_transfer_delete_transfer_title">Delete transfer?</string>
     <string name="ach_bank_transfer_delete_transfer_message_format">Delete your recurring transfer %s from %s?</string>
     <!--End of Move Money strings-->

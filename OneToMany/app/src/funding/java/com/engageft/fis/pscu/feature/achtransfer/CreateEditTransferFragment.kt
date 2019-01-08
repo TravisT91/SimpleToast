@@ -1,4 +1,4 @@
-package com.engageft.fis.pscu.feature
+package com.engageft.fis.pscu.feature.achtransfer
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -20,8 +20,10 @@ import com.engageft.apptoolbox.view.InformationDialogFragment
 import com.engageft.fis.pscu.R
 import com.engageft.fis.pscu.config.EngageAppConfig
 import com.engageft.fis.pscu.databinding.FragmentCreateEditTransferBinding
-import com.engageft.fis.pscu.feature.AccountsAndTransfersListFragment.Companion.SCHEDULED_LOAD_ID
+import com.engageft.fis.pscu.feature.BaseEngageFullscreenFragment
+import com.engageft.fis.pscu.feature.achtransfer.AccountsAndTransfersListFragment.Companion.SCHEDULED_LOAD_ID
 import com.engageft.fis.pscu.feature.branding.Palette
+import com.engageft.fis.pscu.feature.infoDialogGenericUnsavedChangesNewInstance
 import com.ob.ws.dom.utility.AchAccountInfo
 import org.joda.time.DateTime
 import utilGen1.AchAccountInfoUtils
@@ -77,6 +79,8 @@ class CreateEditTransferFragment: BaseEngageFullscreenFragment() {
                 //it's in EDIT MODE
                 if (scheduledLoadId != SCHEDULED_LOAD_ID_DEFAULT) {
 
+                    toolbarController.setToolbarTitle(getString(R.string.ach_bank_transfer_edit_transfer_screen_title))
+
                     // don't populate the old data if user has edited the fields and navigates back to this fragment from confirmation
                     createEditTransferViewModel.initScheduledLoads(scheduledLoadId)
                     deleteButtonLayout.visibility = View.VISIBLE
@@ -113,6 +117,8 @@ class CreateEditTransferFragment: BaseEngageFullscreenFragment() {
                     daysOfWeekBottomSheet.isEnabled = false
                     date1BottomSheet.isEnabled = false
                     date2BottomSheet.isEnabled = false
+                } else {
+                    toolbarController.setToolbarTitle(getString(R.string.ach_bank_transfer_create_transfer))
                 }
             }
 

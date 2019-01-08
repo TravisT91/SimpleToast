@@ -1,4 +1,4 @@
-package com.engageft.fis.pscu.feature
+package com.engageft.fis.pscu.feature.achtransfer
 
 import androidx.lifecycle.MutableLiveData
 import com.engageft.engagekit.EngageService
@@ -15,6 +15,7 @@ import com.engageft.engagekit.utils.BackendDateTimeUtils
 import com.ob.ws.dom.AchLoadsResponse
 import com.engageft.engagekit.rest.request.CardRequest
 import com.engageft.engagekit.utils.LoginResponseUtils
+import com.engageft.fis.pscu.feature.BaseEngageViewModel
 import com.ob.ws.dom.utility.AccountInfo
 import utilGen1.ScheduledLoadUtils
 /**
@@ -61,7 +62,7 @@ class AccountsAndTransfersListViewModel: BaseEngageViewModel() {
 
     fun isBankVerified(): Boolean {
         achAccountsListAndStatusObservable.value?.let {
-            if (it.bankStatus == AccountsAndTransfersListViewModel.BankAccountStatus.VERIFIED_BANK_ACCOUNT) {
+            if (it.bankStatus == BankAccountStatus.VERIFIED_BANK_ACCOUNT) {
                 return true
             }
         }

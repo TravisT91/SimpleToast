@@ -3,7 +3,7 @@
     <data>
         <variable
             name="viewModel"
-            type="com.engageft.fis.pscu.feature.CreateTransferConfirmationViewModel"/>
+            type="com.engageft.fis.pscu.feature.achtransfer.CreateTransferConfirmationViewModel"/>
         <variable
             name="palette"
             type="com.engageft.fis.pscu.feature.branding.Palette"/>

@@ -366,7 +366,7 @@
     </fragment>
     <fragment
         android:id="@+id/accountsAndTransfersListFragment"
-        android:name="com.engageft.fis.pscu.feature.AccountsAndTransfersListFragment"
+        android:name="com.engageft.fis.pscu.feature.achtransfer.AccountsAndTransfersListFragment"
         android:label="@string/ach_bank_transfer_screen_title">
         <argument
             android:name="@string/navigation_view_gone"
@@ -402,7 +402,7 @@
     </fragment>
     <fragment
         android:id="@+id/achBankAccountAddFragment"
-        android:name="com.engageft.fis.pscu.feature.AchBankAccountAddFragment"
+        android:name="com.engageft.fis.pscu.feature.achtransfer.AchBankAccountAddFragment"
         android:label="@string/ach_bank_account_add_account_title">
         <argument
             android:name="@string/navigation_view_gone"
@@ -415,7 +415,7 @@
     </fragment>
     <fragment
         android:id="@+id/achBankAccountVerifyFragment"
-        android:name="com.engageft.fis.pscu.feature.AchBankAccountVerifyFragment"
+        android:name="com.engageft.fis.pscu.feature.achtransfer.AchBankAccountVerifyFragment"
         android:label="@string/ach_bank_transfer_verify_account">
         <argument
             android:name="@string/navigation_view_gone"
@@ -428,14 +428,14 @@
     </fragment>
     <fragment
         android:id="@+id/achBankAccountAddVerifySuccessFragment"
-        android:name="com.engageft.fis.pscu.feature.AchBankAccountAddVerifySuccessFragment">
+        android:name="com.engageft.fis.pscu.feature.achtransfer.AchBankAccountAddVerifySuccessFragment">
         <argument
             android:name="@string/navigation_view_gone"
             android:defaultValue="true" />
     </fragment>
     <fragment
         android:id="@+id/achBankAccountDetailFragment"
-        android:name="com.engageft.fis.pscu.feature.AchBankAccountDetailFragment"
+        android:name="com.engageft.fis.pscu.feature.achtransfer.AchBankAccountDetailFragment"
         android:label="@string/ach_bank_transfer_detail_account">
         <argument
             android:name="@string/navigation_view_gone"
@@ -450,8 +450,7 @@
     </fragment>
     <fragment
         android:id="@+id/createEditTransferFragment"
-        android:name="com.engageft.fis.pscu.feature.CreateEditTransferFragment"
-        android:label="@string/ach_bank_transfer_create_transfer" >
+        android:name="com.engageft.fis.pscu.feature.achtransfer.CreateEditTransferFragment" >
         <action
             android:id="@+id/action_createEditTransferFragment_to_createTransferConfirmationFragment"
             app:destination="@id/createTransferConfirmationFragment"
@@ -462,7 +461,7 @@
     </fragment>
     <fragment
         android:id="@+id/createTransferConfirmationFragment"
-        android:name="com.engageft.fis.pscu.feature.CreateTransferConfirmationFragment"
+        android:name="com.engageft.fis.pscu.feature.achtransfer.CreateTransferConfirmationFragment"
         android:label="@string/ach_bank_transfer_create_transfer" />
 
 </navigation>

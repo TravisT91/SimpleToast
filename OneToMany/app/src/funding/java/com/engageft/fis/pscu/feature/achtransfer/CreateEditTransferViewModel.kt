@@ -1,13 +1,16 @@
-package com.engageft.fis.pscu.feature
+package com.engageft.fis.pscu.feature.achtransfer
 
 import androidx.databinding.Observable
 import androidx.databinding.ObservableField
 import androidx.lifecycle.MutableLiveData
-import com.engageft.apptoolbox.util.CurrencyUtils
 import com.engageft.engagekit.EngageService
 import com.engageft.engagekit.model.ScheduledLoad
+import com.engageft.engagekit.rest.request.ScheduledLoadRequest
 import com.engageft.engagekit.utils.LoginResponseUtils
+import com.engageft.fis.pscu.feature.BaseEngageViewModel
+import com.engageft.fis.pscu.feature.DialogInfo
 import com.engageft.fis.pscu.feature.branding.BrandingInfoRepo
+import com.ob.ws.dom.BasicResponse
 import com.ob.ws.dom.LoginResponse
 import com.ob.ws.dom.ScheduledLoadsResponse
 import com.ob.ws.dom.utility.AchAccountInfo
@@ -16,11 +19,6 @@ import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 import utilGen1.DisplayDateTimeUtils
 import utilGen1.ScheduledLoadUtils
-import com.engageft.engagekit.rest.request.ScheduledLoadRequest
-import com.engageft.engagekit.utils.ResponseUtils
-import com.ob.ws.dom.BasicResponse
-import okhttp3.Response
-
 
 class CreateEditTransferViewModel: BaseEngageViewModel() {
 
@@ -51,10 +49,10 @@ class CreateEditTransferViewModel: BaseEngageViewModel() {
     val fromAccount = ObservableField("")
     val toAccount  = ObservableField("")
     val amount = ObservableField("")
-    val frequency : ObservableField<String> = ObservableField("")
-    val date1 : ObservableField<String> = ObservableField("")
-    val date2 : ObservableField<String> = ObservableField("")
-    val dayOfWeek : ObservableField<String> = ObservableField("")
+    val frequency = ObservableField("")
+    val date1 = ObservableField("")
+    val date2 = ObservableField("")
+    val dayOfWeek = ObservableField("")
     var dayOfWeekShow = ObservableField(false)
     var date1Show = ObservableField(false)
     var date2Show = ObservableField(false)
@@ -65,7 +63,7 @@ class CreateEditTransferViewModel: BaseEngageViewModel() {
     private set
 
     private var currentScheduledLoad: ScheduledLoad? = null
-    private var achAccountList : List<AchAccountInfo> = mutableListOf()
+    private var achAccountList: List<AchAccountInfo> = mutableListOf()
     private var debitCardList: MutableList<DebitCardInfo> = mutableListOf()
 
     init {
