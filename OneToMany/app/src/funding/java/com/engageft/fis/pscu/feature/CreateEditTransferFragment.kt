@@ -139,7 +139,8 @@ class CreateEditTransferFragment: BaseEngageFullscreenFragment() {
                             break
                         }
                     } ?: kotlin.run {
-                        promptUnsupportedAccount()
+                        //TODO(aHashimi): ACH Out is not support, show dialog to the user when they select their card
+                        promptUnsupportedAccount(getString(R.string.ach_bank_transfer_create_ach_out_message))
                         // reset field
                         accountFromBottomSheet.inputText = ""
                     }
@@ -151,15 +152,23 @@ class CreateEditTransferFragment: BaseEngageFullscreenFragment() {
                     val cardInfo = cardsInfoIndexMap[index]
 
                     cardInfo?.let {
-                        createEditTransferViewModel.cardId = it.cardId
 
-                        //populate the From field
-                        for (entry in achAccountsIndexMap) {
-                            accountFromBottomSheet.inputText = AchAccountInfoUtils.accountDescriptionForDisplay(context!!, entry.value)
-                            break
+                        // check if user is allowed to transfer money to their account
+                        if (createEditTransferViewModel.isAchFundingAllowed) {
+                            createEditTransferViewModel.cardId = it.cardId
+
+                            //populate the From field
+                            for (entry in achAccountsIndexMap) {
+                                accountFromBottomSheet.inputText = AchAccountInfoUtils.accountDescriptionForDisplay(context!!, entry.value)
+                                break
+                            }
+                        } else {
+                            promptUnsupportedAccount(getString(R.string.ach_bank_transfer_create_ach_in_message))
+                            accountToBottomSheet.inputText = ""
                         }
                     } ?: kotlin.run {
-                        promptUnsupportedAccount()
+                        //TODO(aHashimi): ACH Out is not support, show dialog to the user when they select their card
+                        promptUnsupportedAccount(getString(R.string.ach_bank_transfer_create_ach_out_message))
                         accountToBottomSheet.inputText = ""
                     }
                 }
@@ -228,9 +237,9 @@ class CreateEditTransferFragment: BaseEngageFullscreenFragment() {
         return binding.root
     }
 
-    private fun promptUnsupportedAccount() {
+    private fun promptUnsupportedAccount(message: String) {
         InformationDialogFragment.newLotusInstance(title = getString(R.string.ach_bank_transfer_create_ach_out_title),
-                message = getString(R.string.ach_bank_transfer_create_ach_out_message),
+                message = message,
                 buttonPositiveText = getString(R.string.dialog_information_ok_button),
                 listener = object : InformationDialogFragment.InformationDialogFragmentListener {
                     override fun onDialogFragmentNegativeButtonClicked() {}

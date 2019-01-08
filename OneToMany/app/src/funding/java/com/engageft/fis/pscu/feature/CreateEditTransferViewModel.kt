@@ -17,7 +17,9 @@ import io.reactivex.schedulers.Schedulers
 import utilGen1.DisplayDateTimeUtils
 import utilGen1.ScheduledLoadUtils
 import com.engageft.engagekit.rest.request.ScheduledLoadRequest
+import com.engageft.engagekit.utils.ResponseUtils
 import com.ob.ws.dom.BasicResponse
+import okhttp3.Response
 
 
 class CreateEditTransferViewModel: BaseEngageViewModel() {
@@ -59,6 +61,8 @@ class CreateEditTransferViewModel: BaseEngageViewModel() {
 
     var achAccountId = -1L
     var cardId = -1L
+    var isAchFundingAllowed = false
+    private set
 
     private var currentScheduledLoad: ScheduledLoad? = null
     private var achAccountList : List<AchAccountInfo> = mutableListOf()
@@ -132,6 +136,9 @@ class CreateEditTransferViewModel: BaseEngageViewModel() {
                 .subscribe({ response ->
                     progressOverlayShownObservable.value = false
                     if (response is LoginResponse) {
+
+                        isAchFundingAllowed = LoginResponseUtils.getCurrentAccountInfo(response).accountPermissionsInfo.isAchEnabled
+
                         debitCardList = LoginResponseUtils.getAllCardsSorted(response)
                         cardsInfoAndAchAccountsListsObservable.value = Pair(first = getCardInfoList(debitCardList),
                                 second = response.achAccountList)
