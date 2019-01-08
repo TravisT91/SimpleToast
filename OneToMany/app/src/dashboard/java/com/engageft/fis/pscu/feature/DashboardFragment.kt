@@ -45,7 +45,7 @@ import java.math.BigDecimal
  * Ported to gen2 by joeyhutchins on 8/24/18.
  * Copyright (c) 2018 Engage FT. All rights reserved.
  */
-class DashboardFragment : BaseEngageFullscreenFragment(),
+class DashboardFragment : BaseEngagePageFragment(),
         DashboardExpandableView.DashboardExpandableViewListener,
         TransactionsAdapter.OnTransactionsAdapterListener {
     private lateinit var binding: FragmentDashboardBinding
@@ -164,7 +164,7 @@ class DashboardFragment : BaseEngageFullscreenFragment(),
                         transactionsAdapter.showDepositsOnly = true
                     }
                 }
-                // update view model with position, so that it can be set correctly when fragment is restored
+                // update view model with position, so that it can be set correctly when baseFragmentIm is restored
                 dashboardViewModel.transactionsTabPosition = binding.transactionsTabLayout.selectedTabPosition
             }
         })
@@ -217,7 +217,7 @@ class DashboardFragment : BaseEngageFullscreenFragment(),
                         if (dashboardViewModel.productCardViewModelDelegate.isShowingCardDetails()) R.string.OVERVIEW_HIDE_CARD_DETAILS else R.string.OVERVIEW_SHOW_CARD_DETAILS
                 )
 
-                showDialog(
+                fragmentDelegate.showDialog(
                         InformationDialogFragment.newLotusInstance(
                                 message = getString(R.string.OVERVIEW_CARD_ERROR_DIALOG_MESSAGE),
                                 buttonPositiveText = getString(R.string.dialog_information_ok_button)
@@ -315,7 +315,7 @@ class DashboardFragment : BaseEngageFullscreenFragment(),
             transactionsAdapter.updateTransactionsList(it)
         }
         // swipeToRefresh showProgressOverlay in viewModel, remove here
-        progressOverlayDelegate.dismissProgressOverlay()
+        fragmentDelegate.dismissProgressOverlay()
     }
 
     fun showMessageContainerWithView(messageView: View) {

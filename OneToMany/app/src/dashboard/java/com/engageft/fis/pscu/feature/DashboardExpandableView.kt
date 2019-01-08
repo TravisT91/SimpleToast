@@ -75,7 +75,7 @@ class DashboardExpandableView : ConstraintLayout {
     }
 
     // Must save expanded/collapsed state so that it is shown correctly after returning to Dashboard from
-    // a fragment like card lock/unlock that is displayed while Dashboard is expanded. View is recreated
+    // a baseFragmentIm like card lock/unlock that is displayed while Dashboard is expanded. View is recreated
     // in this case, and will always be collapsed unless state is saved and restored.
     // See https://medium.com/@kirillsuslov/how-to-save-android-view-state-in-kotlin-9dbe96074d49
     public override fun onSaveInstanceState(): Parcelable? {
@@ -339,7 +339,7 @@ class DashboardExpandableView : ConstraintLayout {
                 // animation is complete
                 showingActions = !showingActions
                 expandCollapseButton.isEnabled = true
-                // so containing fragment can set its obscuring overlay visibility to INVISIBLE rather
+                // so containing baseFragmentIm can set its obscuring overlay visibility to INVISIBLE rather
                 // than leaving it VISIBLE with alpha 0, which could affect performance
                 if (show) {
                     listener?.onExpandEnd()

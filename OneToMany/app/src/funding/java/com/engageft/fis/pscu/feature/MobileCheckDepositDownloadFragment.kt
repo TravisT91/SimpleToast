@@ -21,7 +21,7 @@ import com.engageft.fis.pscu.feature.config.MobileCheckDepositConfig
  * Created by joeyhutchins on 12/14/18.
  * Copyright (c) 2018 Engage FT. All rights reserved.
  */
-class MobileCheckDepositDownloadFragment : BaseEngageFullscreenFragment() {
+class MobileCheckDepositDownloadFragment : BaseEngagePageFragment() {
     override fun createViewModel(): BaseViewModel? {
         return null
     }
@@ -41,7 +41,7 @@ class MobileCheckDepositDownloadFragment : BaseEngageFullscreenFragment() {
                 val myIntent = Intent(Intent.ACTION_VIEW, Uri.parse(MobileCheckDepositConfig.ingoAppWebsite))
                 startActivity(myIntent)
             } catch (e: ActivityNotFoundException) {
-                handleGenericThrowable(e)
+                engageFragmentDelegate.handleGenericThrowable(e)
             }
         }
         return binding.root

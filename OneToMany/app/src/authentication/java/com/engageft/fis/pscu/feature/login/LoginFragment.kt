@@ -20,7 +20,7 @@ import com.engageft.apptoolbox.view.InformationDialogFragment
 import com.engageft.engagekit.utils.DeviceUtils
 import com.engageft.fis.pscu.R
 import com.engageft.fis.pscu.databinding.FragmentLoginBinding
-import com.engageft.fis.pscu.feature.BaseEngageFullscreenFragment
+import com.engageft.fis.pscu.feature.BaseEngagePageFragment
 import com.engageft.fis.pscu.feature.DialogInfo
 import com.engageft.fis.pscu.feature.EasterEggGestureDetector
 import com.engageft.fis.pscu.feature.EasterEggGestureListener
@@ -34,7 +34,7 @@ import com.engageft.fis.pscu.feature.infoDialogSimpleMessageNoTitle
  * Created by joeyhutchins on 8/24/18.
  * Copyright (c) 2018 Engage FT. All rights reserved.
  */
-class LoginFragment : BaseEngageFullscreenFragment() {
+class LoginFragment : BaseEngagePageFragment() {
     private lateinit var constraintSet: ConstraintSet
     private lateinit var contentConstraintSet: ConstraintSet
     private lateinit var binding: FragmentLoginBinding
@@ -54,7 +54,7 @@ class LoginFragment : BaseEngageFullscreenFragment() {
         contentConstraintSet = ConstraintSet()
         contentConstraintSet.clone(binding.contentBox)
 
-        val vm = (viewModel as LoginViewModel)
+        val vm = (fragmentDelegate.viewModel as LoginViewModel)
         binding.viewModel = vm
         vm.navigationObservable.observe(this, Observer { splashNavigationEvent : LoginViewModel.LoginNavigationEvent ->
             val navDestinationId = when (splashNavigationEvent) {
@@ -176,7 +176,7 @@ class LoginFragment : BaseEngageFullscreenFragment() {
                                     vm.logout()
                                 }
                             }
-                            showDialog(InformationDialogFragment.newLotusInstance(
+                            fragmentDelegate.showDialog(InformationDialogFragment.newLotusInstance(
                                     title = getString(R.string.login_confirm_email_alert_title),
                                     message = getString(R.string.login_confirm_email_alert_message),
                                     buttonPositiveText = getString(R.string.login_confirm_email_send_button),
@@ -185,7 +185,7 @@ class LoginFragment : BaseEngageFullscreenFragment() {
                                     listener = listener))
                         }
                         LoginDialogInfo.LoginDialogType.EMAIL_VERIFICATION_SUCCESS -> {
-                            showDialog(infoDialogSimpleMessageNoTitle(context!!,
+                            fragmentDelegate.showDialog(infoDialogSimpleMessageNoTitle(context!!,
                                     message = getString(R.string.login_confirm_email_success)))
                         }
                     }
@@ -196,10 +196,10 @@ class LoginFragment : BaseEngageFullscreenFragment() {
             when (loadingOverlayDialog) {
                 LoginViewModel.LoadingOverlayDialog.CREATING_DEMO_ACCOUNT -> {
                     //TODO(aHashimi) message textView runs to the edges of screen. https://engageft.atlassian.net/browse/SHOW-399
-                    progressOverlayDelegate.showProgressOverlay(getString(R.string.login_preview_wait_message), R.style.LoadingOverlayDialogStyle)
+                    fragmentDelegate.showProgressOverlay(getString(R.string.login_preview_wait_message), R.style.LoadingOverlayDialogStyle)
                 }
                 LoginViewModel.LoadingOverlayDialog.DISMISS_DIALOG -> {
-                    progressOverlayDelegate.dismissProgressOverlay()
+                    fragmentDelegate.dismissProgressOverlay()
                 }
             }
         })

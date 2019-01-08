@@ -15,18 +15,17 @@ import com.engageft.fis.pscu.databinding.FragmentCardFeatureNotAvailableBinding
 import com.engageft.fis.pscu.feature.branding.BrandingInfoRepo
 import com.engageft.fis.pscu.feature.branding.Palette
 import utilGen1.StringUtils
-import java.lang.IllegalStateException
 
 /**
  * CardFeatureNotAvailableFragment
  * </p>
- * This fragment lets the user know that the feature they selected is not available to them.
+ * This baseFragmentIm lets the user know that the feature they selected is not available to them.
  * </p>
  * Created by Travis Tkachuk 12/3/18
  * Copyright (c) 2018 Engage FT. All rights reserved.
  */
 
-class CardFeatureNotAvailableFragment: BaseEngageFullscreenFragment() {
+class CardFeatureNotAvailableFragment: BaseEngagePageFragment() {
 
     override fun createViewModel(): BaseViewModel? {
         return ViewModelProviders.of(this).get(CardFeatureNotAvailableViewModel::class.java)
@@ -84,7 +83,7 @@ class CardFeatureNotAvailableFragment: BaseEngageFullscreenFragment() {
         val binding = FragmentCardFeatureNotAvailableBinding.inflate(inflater,container,false).apply {
 
             palette = Palette
-            cardFeatureNotAvailableViewModel = (viewModel as CardFeatureNotAvailableViewModel)
+            cardFeatureNotAvailableViewModel = (fragmentDelegate.viewModel as CardFeatureNotAvailableViewModel)
 
             title.text = StringUtils.applyTypefaceAndColorToSubString(
                     Palette.primaryColor,
@@ -99,8 +98,8 @@ class CardFeatureNotAvailableFragment: BaseEngageFullscreenFragment() {
                     })
                 } ?: run {
                     val e  = IllegalStateException("Support number is null.")
-                    handleGenericThrowable(e)
-                    showDialog(infoDialogGenericErrorTitleMessageNewInstance(context!!))
+                    engageFragmentDelegate.handleGenericThrowable(e)
+                    fragmentDelegate.showDialog(infoDialogGenericErrorTitleMessageNewInstance(context!!))
                 }
             }
         }
@@ -113,7 +112,7 @@ class CardFeatureNotAvailableFragment: BaseEngageFullscreenFragment() {
         if (feature == UnavailableFeatureType.UNKNOWN){
             throw UnavailableFeatureType.unknownFeatureException
         }
-        (viewModel as? CardFeatureNotAvailableViewModel)?.apply {
+        (fragmentDelegate.viewModel as? CardFeatureNotAvailableViewModel)?.apply {
             this.feature.observe(this@CardFeatureNotAvailableFragment, Observer {
                 message = getMessageByFeature(it)
                 (activity as? AppCompatActivity)?.supportActionBar?.title = getTitleByFeature(it)

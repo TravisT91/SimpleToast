@@ -33,7 +33,7 @@ import com.engageft.fis.pscu.feature.utils.cardStatusStringRes
  * Created by Atia Hashimi on 12/3/18.
  * Copyright (c) 2018 Engage FT. All rights reserved.
  */
-class CardPinFragment : BaseEngageFullscreenFragment() {
+class CardPinFragment : BaseEngagePageFragment() {
 
     private lateinit var binding: FragmentCardPinBinding
     private lateinit var cardPinViewModel: CardPinViewModel
@@ -154,7 +154,7 @@ class CardPinFragment : BaseEngageFullscreenFragment() {
                             }
                         }
 
-                        showDialog(infoDialogGenericSuccessTitleMessageNewInstance(context!!, listener = listener))
+                        fragmentDelegate.showDialog(infoDialogGenericSuccessTitleMessageNewInstance(context!!, listener = listener))
                     }
                     else -> {}
                 }
@@ -173,7 +173,7 @@ class CardPinFragment : BaseEngageFullscreenFragment() {
 
     override fun onResume() {
         super.onResume()
-        // must do Handler().post() because when this fragment is displayed from DashboardFragment,
+        // must do Handler().post() because when this baseFragmentIm is displayed from DashboardFragment,
         // the keyboard doesn't get displayed
         Handler().post {
             binding.pinInputField.requestFocus()

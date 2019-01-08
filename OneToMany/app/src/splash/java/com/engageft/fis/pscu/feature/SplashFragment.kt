@@ -16,13 +16,13 @@ import com.engageft.fis.pscu.databinding.FragmentSplashBinding
 /**
  * SplashFragment
  * <p>
- * First fragment in the navigation of the application. Here, we determine where to navigate the user
+ * First baseFragmentIm in the navigation of the application. Here, we determine where to navigate the user
  * after initialization.
  * </p>
  * Created by joeyhutchins on 8/22/18.
  * Copyright (c) 2018 Engage FT. All rights reserved.
  */
-class SplashFragment : BaseEngageFullscreenFragment() {
+class SplashFragment : BaseEngagePageFragment() {
     lateinit var binding: FragmentSplashBinding
 
     override fun createViewModel(): BaseViewModel? {
@@ -31,7 +31,7 @@ class SplashFragment : BaseEngageFullscreenFragment() {
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_splash, container, false)
 
-        (viewModel as SplashScreenViewModel).navigationObservable.observe(this, Observer { splashNavigationEvent : SplashScreenViewModel.SplashNavigationEvent ->
+        (fragmentDelegate.viewModel as SplashScreenViewModel).navigationObservable.observe(this, Observer { splashNavigationEvent : SplashScreenViewModel.SplashNavigationEvent ->
             val destinationId = when (splashNavigationEvent) {
                 SplashScreenViewModel.SplashNavigationEvent.FIRST_TIME -> {
                     R.id.action_splashFragment_to_welcomeActivity

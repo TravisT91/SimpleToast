@@ -29,11 +29,11 @@ class AuthenticatedActivity : BaseAuthenticatedActivity() {
     }
 
     override fun onBackPressed() {
-        // If the currently displayed fragment is DashboardFragment, give it a chance to handle back pressed.
+        // If the currently displayed baseFragmentIm is DashboardFragment, give it a chance to handle back pressed.
         // It will do so if its DashboardExpandableView with card management options is expanded, by collapsing it.
-        // If it's not expanded, or if the currently displayed fragment is not DashboardFragment, let
+        // If it's not expanded, or if the currently displayed baseFragmentIm is not DashboardFragment, let
         // the parent Activity class handle onBackPressed().
-        // This is a one-off hack for dashboard fragment. A more general approach is in SHOW-445.
+        // This is a one-off hack for dashboard baseFragmentIm. A more general approach is in SHOW-445.
         val navHost = supportFragmentManager.findFragmentById(R.id.navHost)
         navHost?.let { navFragment ->
             navFragment.childFragmentManager.primaryNavigationFragment?.let { currentFragment ->

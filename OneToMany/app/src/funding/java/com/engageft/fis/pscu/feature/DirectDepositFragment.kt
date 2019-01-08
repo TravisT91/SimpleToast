@@ -14,13 +14,13 @@ import com.engageft.fis.pscu.feature.branding.Palette
 /**
  * DirectDepositFragment
  * </p>
- * This fragment displays direct deposit info to the user and let's them print a direct deposit form.
+ * This baseFragmentIm displays direct deposit info to the user and let's them print a direct deposit form.
  * </p>
  * Created by Travis Tkachuk 12/6/18
  * Copyright (c) 2018 Engage FT. All rights reserved.
  */
 
-class DirectDepositFragment: BaseEngageFullscreenFragment(){
+class DirectDepositFragment: BaseEngagePageFragment(){
 
     override fun createViewModel(): BaseViewModel? {
         return ViewModelProviders.of(this).get(DirectDepositViewModel::class.java).apply {

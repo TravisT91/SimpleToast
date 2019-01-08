@@ -18,13 +18,13 @@ import utilGen1.StringUtils
 /**
  * CancelCardFragment
  * </p>
- * This fragment allows the user to cancel their card.
+ * This baseFragmentIm allows the user to cancel their card.
  * </p>
  * Created by Travis Tkachuk 11/28/18
  * Copyright (c) 2018 Engage FT. All rights reserved.
  */
 
-class CancelCardFragment : BaseEngageFullscreenFragment() {
+class CancelCardFragment : BaseEngagePageFragment() {
 
     override fun createViewModel(): BaseViewModel? {
         return  ViewModelProviders.of(this).get(CancelCardViewModel::class.java)
@@ -35,7 +35,7 @@ class CancelCardFragment : BaseEngageFullscreenFragment() {
 
             palette = Palette
 
-            cancelCardViewModel =  (viewModel as? CancelCardViewModel)?.apply {
+            cancelCardViewModel =  (fragmentDelegate.viewModel as? CancelCardViewModel)?.apply {
                 val successObserver = Observer<Boolean> {
                     if (it) showCardCanceledConfirmationDialog()
                 }
@@ -67,7 +67,7 @@ class CancelCardFragment : BaseEngageFullscreenFragment() {
                     }
 
                     override fun onDialogFragmentPositiveButtonClicked() {
-                        (viewModel as? CancelCardViewModel)?.onCancelClicked()
+                        (fragmentDelegate.viewModel as? CancelCardViewModel)?.onCancelClicked()
                     }
 
                     override fun onDialogCancelled() {
@@ -77,7 +77,7 @@ class CancelCardFragment : BaseEngageFullscreenFragment() {
                 }
         )
         dialog.applyPaletteStyles(context!!)
-        showDialog(dialog)
+        fragmentDelegate.showDialog(dialog)
     }
 
     private fun showCardCanceledConfirmationDialog(){
@@ -101,6 +101,6 @@ class CancelCardFragment : BaseEngageFullscreenFragment() {
                 }
         )
         dialog.applyPaletteStyles(context!!)
-        showDialog(dialog)
+        fragmentDelegate.showDialog(dialog)
     }
 }

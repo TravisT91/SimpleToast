@@ -15,12 +15,12 @@ import com.engageft.fis.pscu.feature.config.MobileCheckDepositConfig
 /**
  * MoveMoneyFragment
  * </p>
- * This fragment presents the user with options to move money
+ * This baseFragmentIm presents the user with options to move money
  * </p>
  * Created by Travis Tkachuk 11/2/18
  * Copyright (c) 2018 Engage FT. All rights reserved.
  */
-class MoveMoneyFragment : BaseEngageFullscreenFragment() {
+class MoveMoneyFragment : BaseEngagePageFragment() {
     override fun createViewModel(): BaseViewModel? {
         return null
     }
