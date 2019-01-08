@@ -110,6 +110,7 @@ class AchBankAccountAddViewModel: BaseEngageViewModel() {
     fun onAddAccount() {
         if (areAllFieldsValid()) {
             currentAccountInfo?.let { accountInfo ->
+                val isChecking = accountType.get() == ACCOUNT_TYPE_CHECKING
 
                 progressOverlayShownObservable.value = true
 
@@ -157,6 +158,10 @@ class AchBankAccountAddViewModel: BaseEngageViewModel() {
             return true
         }
         return false
+    }
+
+    private companion object {
+        const val ACCOUNT_TYPE_CHECKING = "Checking"
     }
 }
 
