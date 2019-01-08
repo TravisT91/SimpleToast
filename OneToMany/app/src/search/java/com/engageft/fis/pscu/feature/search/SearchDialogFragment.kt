@@ -3,6 +3,7 @@ package com.engageft.fis.pscu.feature.search
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
+import android.view.KeyEvent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -69,7 +70,7 @@ class SearchDialogFragment : DialogFragment(), TransactionListener {
         })
 
         binding.searchEditText.setOnEditorActionListener { textView, actionId, event ->
-            if (actionId == EditorInfo.IME_ACTION_GO || actionId == EditorInfo.IME_ACTION_UNSPECIFIED) {
+            if (actionId == EditorInfo.IME_ACTION_GO || (actionId == EditorInfo.IME_ACTION_UNSPECIFIED && event.action == KeyEvent.ACTION_UP)) {
                 textView?.apply {
                     viewModel.searchTransactions(text.trim().toString())
                 }
