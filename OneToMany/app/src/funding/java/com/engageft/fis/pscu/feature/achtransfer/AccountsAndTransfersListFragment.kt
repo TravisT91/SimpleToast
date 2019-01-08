@@ -66,8 +66,6 @@ class AccountsAndTransfersListFragment: BaseEngageFullscreenFragment() {
 
                     object : AccountsAndTransfersListRecyclerViewAdapter.ScheduledLoadListClickListener {
                         override fun onScheduledTransferClicked(scheduledLoadInfoId: Long) {
-                            //TODO(aHashimi): https://engageft.atlassian.net/browse/FOTM-113
-//                            Toast.makeText(context!!, "on scheduled load clicked! ID = $scheduledLoadInfoId", Toast.LENGTH_SHORT).show()
                             root.findNavController().navigate(R.id.action_accountsAndTransfersListFragment_to_createEditTransferFragment,
                                     Bundle().apply {
                                         putLong(SCHEDULED_LOAD_ID, scheduledLoadInfoId)
@@ -133,7 +131,6 @@ class AccountsAndTransfersListFragment: BaseEngageFullscreenFragment() {
 
     override fun onResume() {
         super.onResume()
-        //TODO(aHashimi): should replace with MutableLiveData<loginResponse> in VM?
         accountsAndTransfersListViewModel.refreshViews()
         setHasOptionsMenu(true)
     }

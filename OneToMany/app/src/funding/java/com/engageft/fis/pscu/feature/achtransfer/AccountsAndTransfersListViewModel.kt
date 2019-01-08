@@ -52,8 +52,6 @@ class AccountsAndTransfersListViewModel: BaseEngageViewModel() {
     }
 
     fun refreshViews() {
-        //TODO(aHashimi): need to create LiveData for observing LoginResponse so we don't have to do this step.
-        //TODO(aHashimi): FOTM-113 must do clearLoginResponse?
         // for this main screen to show the updated to item correctly.
         if (this.loginResponse != EngageService.getInstance().storageManager.loginResponse) {
             initBankAccountsListAndTransfersList()
