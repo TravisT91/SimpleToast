@@ -87,12 +87,12 @@ class CreateEditTransferFragment: BaseEngageFullscreenFragment() {
                     }
 
                     deleteButtonLayout.setOnClickListener {
-                        showDialog(InformationDialogFragment.newLotusInstance(title = getString(R.string.ach_bank_transfer_delete_transfer_title),
+                        val infoDialog = InformationDialogFragment.newLotusInstance(title = getString(R.string.ach_bank_transfer_delete_transfer_title),
                                 message = String.format(getString(R.string.ach_bank_transfer_delete_transfer_message_format),
                                         createEditTransferViewModel.frequency.get(), createEditTransferViewModel.fromAccount.get()),
                                 buttonPositiveText = getString(R.string.dialog_information_yes_button),
                                 buttonNegativeText = getString(R.string.dialog_information_no_button),
-                                listener = object: InformationDialogFragment.InformationDialogFragmentListener {
+                                listener = object : InformationDialogFragment.InformationDialogFragmentListener {
                                     override fun onDialogFragmentNegativeButtonClicked() {
                                     }
 
@@ -103,7 +103,9 @@ class CreateEditTransferFragment: BaseEngageFullscreenFragment() {
                                     override fun onDialogCancelled() {
                                     }
 
-                                }))
+                                })
+                        infoDialog.positiveButtonTextColor = Palette.errorColor
+                        showDialog(infoDialog)
                     }
                     // don't show one-time frequency type in EDIT mode
                     frequencyTypesList = ArrayList(ScheduledLoadUtils.getFrequencyDisplayStringsForIncome(context!!))
@@ -217,8 +219,8 @@ class CreateEditTransferFragment: BaseEngageFullscreenFragment() {
     }
 
     private fun promptUnsupportedAccount() {
-        InformationDialogFragment.newLotusInstance(title = "Select another account",
-                message = "Transferring out is not supported. Please select another account.",
+        InformationDialogFragment.newLotusInstance(title = getString(R.string.ach_bank_transfer_create_ach_out_title),
+                message = getString(R.string.ach_bank_transfer_create_ach_out_message),
                 buttonPositiveText = getString(R.string.dialog_information_ok_button),
                 listener = object : InformationDialogFragment.InformationDialogFragmentListener {
                     override fun onDialogFragmentNegativeButtonClicked() {}
