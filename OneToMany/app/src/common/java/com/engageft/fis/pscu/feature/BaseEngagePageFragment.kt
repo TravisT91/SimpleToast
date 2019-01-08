@@ -11,8 +11,10 @@ import com.engageft.apptoolbox.LotusPageFragment
 /**
  * BaseEngagePageFragment
  * <p>
- * Base Fragment paired with BaseEngageViewModel that automatically handles error logging for generic and
- * unhandled cases.
+ * Defines additional abstraction for a PageFragment that handles shared features with the BaseEngageDialogFragment
+ * and BaseEngageSubFragment.
+ *
+ * These features are defined in the BaseEngageFragmentDelegate.
  * </p>
  * Created by joeyhutchins on 11/15/18.
  * Copyright (c) 2018 Engage FT. All rights reserved.

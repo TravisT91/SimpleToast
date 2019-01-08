@@ -16,9 +16,10 @@ import com.engageft.fis.pscu.R
 import com.engageft.fis.pscu.feature.palettebindings.applyPaletteStyles
 
 /**
- * TODO(joeyhutchins): ClassName
+ * BaseEngageFragmentDelegate
  * <p>
- * TODO(joeyhutchins): Class description.
+ * Shared features for the PageFragment, SubFragment, and DialogFragment. These features include unexpected
+ * errors and repsonse handling and a few generic success dialogs. 
  * </p>
  * Created by joeyhutchins on 1/8/19.
  * Copyright (c) 2019 Engage FT. All rights reserved.

@@ -9,9 +9,12 @@ import com.engageft.apptoolbox.BaseFragmentDelegate
 import com.engageft.apptoolbox.LotusDialogFragment
 
 /**
- * TODO(joeyhutchins): ClassName
+ * BaseEngageDialogFragment
  * <p>
- * TODO(joeyhutchins): Class description.
+ * Defines additional abstraction for a DialogFragment that handles shared features with the BaseEngagePageFragment
+ * and BaseEngageSubFragment.
+ *
+ * These features are defined in the BaseEngageFragmentDelegate.
  * </p>
  * Created by joeyhutchins on 1/8/19.
  * Copyright (c) 2019 Engage FT. All rights reserved.
