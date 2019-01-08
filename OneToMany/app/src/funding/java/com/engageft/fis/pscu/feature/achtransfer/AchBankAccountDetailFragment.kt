@@ -15,6 +15,8 @@ import com.engageft.fis.pscu.databinding.FragmentAchBankAccountDetailBinding
 import com.engageft.fis.pscu.feature.BaseEngageFullscreenFragment
 import com.engageft.fis.pscu.feature.achtransfer.AccountsAndTransfersListFragment.Companion.ACH_BANK_ACCOUNT_ID
 import com.engageft.fis.pscu.feature.branding.Palette
+import java.lang.IllegalStateException
+
 /**
  * AchBankAccountDetailFragment
  * </p>
@@ -41,7 +43,7 @@ class AchBankAccountDetailFragment: BaseEngageFullscreenFragment() {
             arguments?.let {
                 achBankAccountDetailViewModel.achAccountInfoId = it.getLong(AccountsAndTransfersListFragment.ACH_BANK_ACCOUNT_ID, 0)
             } ?: run {
-                showGenericSuccessDialogMessageAndPopBackstack(root)
+                throw IllegalStateException("must pass arguments")
             }
 
             deleteButtonLayout.setOnClickListener {

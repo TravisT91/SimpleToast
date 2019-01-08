@@ -84,7 +84,6 @@ class AchBankAccountAddFragment: BaseEngageFullscreenFragment() {
             })
 
             addButton.setOnClickListener {
-                achBankAccountViewModel.isChecking = achBankAccountViewModel.accountType.get()!! == getString(R.string.TEXT_CHECKING)
                 achBankAccountViewModel.onAddAccount()
             }
         }

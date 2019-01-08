@@ -15,6 +15,8 @@ import com.engageft.fis.pscu.feature.achtransfer.AchBankAccountAddFragment.Compa
 import com.engageft.fis.pscu.feature.achtransfer.AchBankAccountAddFragment.Companion.SUCCESS_SCREEN_TYPE_KEY
 import com.engageft.fis.pscu.feature.achtransfer.AchBankAccountAddFragment.Companion.VERIFIED_SUCCESS_TYPE
 import com.engageft.fis.pscu.feature.branding.Palette
+import java.lang.IllegalStateException
+
 /**
  * AchBankAccountAddVerifySuccessFragment
  * </p>
@@ -62,14 +64,14 @@ class AchBankAccountAddVerifySuccessFragment: BaseEngageFullscreenFragment() {
                         nextButton.text = getString(R.string.ach_bank_account_verified_successful_done_button)
                     }
                     else -> {
-                        showGenericSuccessDialogMessageAndPopBackstack(binding.root)
+                        throw IllegalStateException("Unknown success type")
                     }
                 }
                 nextButton.setOnClickListener {
                     binding.root.findNavController().popBackStack()
                 }
             } ?: run {
-                showGenericSuccessDialogMessageAndPopBackstack(binding.root)
+                throw IllegalStateException("Arguments required")
             }
         }
         return binding.root
