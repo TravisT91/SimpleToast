@@ -26,7 +26,7 @@ import com.engageft.fis.pscu.feature.palettebindings.applyPaletteStyles
 class BaseEngageFragmentDelegate(private val engageFragmentIm: BaseEngageFragmentIm) {
     private val lifecycleObserver = object : LifecycleObserver {
         @OnLifecycleEvent(Lifecycle.Event.ON_START)
-        fun onCreateListener() {
+        fun onStartListener() {
             engageFragmentIm.getBaseFragmentDelegate().viewModel?.let { baseViewModel ->
                 if (baseViewModel is BaseEngageViewModel) {
                     baseViewModel.dialogInfoObservable.observe(engageFragmentIm.getAndroidLifecycleOwner(), Observer { dialogInfo ->

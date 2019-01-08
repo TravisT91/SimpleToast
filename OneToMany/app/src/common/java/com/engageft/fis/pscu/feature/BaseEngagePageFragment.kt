@@ -35,7 +35,7 @@ abstract class BaseEngagePageFragment : LotusPageFragment(), BaseEngageFragmentI
     }
 
     override fun getAndroidLifecycleOwner(): LifecycleOwner {
-        return viewLifecycleOwner
+        return this
     }
 
     override fun getAndroidLifecycle(): Lifecycle {

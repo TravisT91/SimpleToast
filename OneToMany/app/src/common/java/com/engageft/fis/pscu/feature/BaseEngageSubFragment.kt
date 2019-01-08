@@ -34,7 +34,7 @@ abstract class BaseEngageSubFragment : LotusSubFragment(), BaseEngageFragmentIm 
     }
 
     override fun getAndroidLifecycleOwner(): LifecycleOwner {
-        return viewLifecycleOwner
+        return this
     }
 
     override fun getAndroidLifecycle(): Lifecycle {

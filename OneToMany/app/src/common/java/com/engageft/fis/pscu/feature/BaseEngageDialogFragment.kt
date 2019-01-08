@@ -34,7 +34,7 @@ abstract class BaseEngageDialogFragment : LotusDialogFragment(), BaseEngageFragm
     }
 
     override fun getAndroidLifecycleOwner(): LifecycleOwner {
-        return viewLifecycleOwner
+        return this
     }
 
     override fun getAndroidLifecycle(): Lifecycle {
