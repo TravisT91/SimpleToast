@@ -18,6 +18,7 @@ import io.reactivex.schedulers.Schedulers
 import utilGen1.DisplayDateTimeUtils
 import utilGen1.ScheduledLoadUtils
 import com.engageft.engagekit.rest.request.ScheduledLoadRequest
+import com.ob.ws.dom.BasicResponse
 
 
 class CreateEditTransferViewModel: BaseEngageViewModel() {
@@ -319,19 +320,65 @@ class CreateEditTransferViewModel: BaseEngageViewModel() {
         return false
     }
 
+//    fun onDeleteScheduledLoad() {
+//        progressOverlayShownObservable.value = true
+//
+//        compositeDisposable.add(EngageService.getInstance().loginResponseAsObservable
+//                .subscribeOn(Schedulers.io())
+//                .observeOn(AndroidSchedulers.mainThread())
+//                .subscribe({ response ->
+//                    if (response is LoginResponse) {
+//                        val accountInfo = LoginResponseUtils.getCurrentAccountInfo(response)
+//                        val currentCard = LoginResponseUtils.getCurrentCard(response)
+//                        deleteScheduledLoad()
+//                    } else {
+//                        // hide prog
+//                        handleUnexpectedErrorResponse(response)
+//                    }
+//                }, { e ->
+//                    progressOverlayShownObservable.value = false
+//                    handleThrowable(e)
+//                })
+//        )
+//    }
+
     fun onDeleteScheduledLoad() {
         progressOverlayShownObservable.value = true
 
-        compositeDisposable.add(EngageService.getInstance().loginResponseAsObservable
+        currentScheduledLoad?.let { scheduledLoad ->
+            val request = ScheduledLoadRequest(EngageService.getInstance().authManager.authToken, scheduledLoad.scheduledLoadId)
+            postCancelScheduledLoad(request.fieldMap) { // first is successful
+                if (scheduledLoad.isHasDuplicate) {
+                    val request2 = ScheduledLoadRequest(EngageService.getInstance().authManager.authToken, scheduledLoad.scheduledLoadIdDup)
+                    postCancelScheduledLoad(request2.fieldMap) { // successful
+
+                        EngageService.getInstance().storageManager.clearForLoginWithDataLoad(false)
+
+                        navigationEventObservable.value = NavigationEvent.DELETE_SUCCESS
+                        navigationEventObservable.value = NavigationEvent.NONE
+                    }
+                } else { // Does not have duplicate
+
+                    EngageService.getInstance().storageManager.clearForLoginWithDataLoad(false)
+
+                    navigationEventObservable.value = NavigationEvent.DELETE_SUCCESS
+                    navigationEventObservable.value = NavigationEvent.NONE
+                }
+
+                EngageService.getInstance().storageManager.clearForLoginWithDataLoad(false)
+            }
+        }
+    }
+
+    private fun postCancelScheduledLoad(map: MutableMap<String, String>, cancelLoadSuccessObserver: () -> Unit) {
+        compositeDisposable.add(EngageService.getInstance().engageApiInterface.postCancelScheduledLoad(map)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe({ response ->
-                    if (response is LoginResponse) {
-                        val accountInfo = LoginResponseUtils.getCurrentAccountInfo(response)
-                        val currentCard = LoginResponseUtils.getCurrentCard(response)
-                        deleteScheduledLoad(currentCard)
+                .subscribe({ response: BasicResponse ->
+                    if (response.isSuccess) {
+                        cancelLoadSuccessObserver()
                     } else {
-                        // hide prog
+                        progressOverlayShownObservable.value = false
                         handleUnexpectedErrorResponse(response)
                     }
                 }, { e ->
@@ -339,56 +386,6 @@ class CreateEditTransferViewModel: BaseEngageViewModel() {
                     handleThrowable(e)
                 })
         )
-    }
-
-    private fun deleteScheduledLoad(currentCard: DebitCardInfo?) {
-        if (currentCard != null) {
-            val request = ScheduledLoadRequest(EngageService.getInstance().authManager.authToken, currentScheduledLoad!!.scheduledLoadId)
-            compositeDisposable.add(
-                    EngageService.getInstance().engageApiInterface.postCancelScheduledLoad(request.fieldMap)
-                            .subscribeOn(Schedulers.io())
-                            .observeOn(AndroidSchedulers.mainThread())
-                            .subscribe({ response ->
-                                if (response.isSuccess) {
-                                    if (currentScheduledLoad!!.isHasDuplicate) {
-                                        val request2 = ScheduledLoadRequest(EngageService.getInstance().authManager.authToken, currentScheduledLoad!!.scheduledLoadIdDup)
-
-                                        compositeDisposable.add(
-                                                EngageService.getInstance().engageApiInterface.postCancelScheduledLoad(request2.fieldMap)
-                                                        .subscribeOn(Schedulers.io())
-                                                        .observeOn(AndroidSchedulers.mainThread())
-                                                        .subscribe({ response1 ->
-                                                            if (response1.isSuccess) {
-//                                                                EngageService.getInstance().storageManager.clearScheduledLoadsCache(currentCard)
-                                                                EngageService.getInstance().storageManager.clearForLoginWithDataLoad(false)
-//                                                                getScheduledLoads(currentCard, false)
-                                                                navigationEventObservable.value = NavigationEvent.DELETE_SUCCESS
-                                                                navigationEventObservable.value = NavigationEvent.NONE
-                                                            } else {
-                                                                progressOverlayShownObservable.value = false
-                                                                handleUnexpectedErrorResponse(response1)
-                                                            }
-                                                        }, { e1 ->
-                                                            progressOverlayShownObservable.value = false
-                                                            handleThrowable(e1)
-                                                        })
-                                        )
-                                    } else {
-                                        navigationEventObservable.value = NavigationEvent.DELETE_SUCCESS
-                                        navigationEventObservable.value = NavigationEvent.NONE
-//                                        EngageService.getInstance().storageManager.clearScheduledLoadsCache(currentCard)
-                                        EngageService.getInstance().storageManager.clearForLoginWithDataLoad(false)
-                                    }
-                                } else {
-                                    progressOverlayShownObservable.value = false
-                                    handleUnexpectedErrorResponse(response)
-                                }
-                            }, { e ->
-                                progressOverlayShownObservable.value = false
-                                handleThrowable(e)
-                            })
-            )
-        }
     }
 
     private fun hasFrequencyDateChanged(): Boolean {
