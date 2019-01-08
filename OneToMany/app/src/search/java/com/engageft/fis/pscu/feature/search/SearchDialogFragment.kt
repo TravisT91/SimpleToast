@@ -70,7 +70,7 @@ class SearchDialogFragment : DialogFragment(), TransactionListener {
         })
 
         binding.searchEditText.setOnEditorActionListener { textView, actionId, event ->
-            if (actionId == EditorInfo.IME_ACTION_GO || (actionId == EditorInfo.IME_ACTION_UNSPECIFIED && event.action == KeyEvent.ACTION_DOWN)) {
+            if (actionId == EditorInfo.IME_ACTION_DONE || (actionId == EditorInfo.IME_ACTION_UNSPECIFIED && event.action == KeyEvent.ACTION_DOWN)) {
                 textView?.apply {
                     viewModel.searchTransactions(text.trim().toString())
                 }

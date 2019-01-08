@@ -6,10 +6,10 @@ import androidx.recyclerview.widget.RecyclerView
 import com.engageft.engagekit.repository.transaction.vo.Transaction
 import com.engageft.fis.pscu.R
 
-class TransactionsSimpleAdapter(private val listener: TransactionListener?)
+open class TransactionsSimpleAdapter(protected val listener: TransactionListener?)
     : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
-    private var transactions: List<Transaction> = listOf()
+    protected var transactions: List<Transaction> = listOf()
 
     fun updateTransactions(transactions: List<Transaction>) {
         this.transactions = transactions

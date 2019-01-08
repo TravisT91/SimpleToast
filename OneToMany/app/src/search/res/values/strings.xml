@@ -2,4 +2,5 @@
 <resources>
     <string name="SEARCH_HINT">Search transactions</string>
     <string name="SEARCH_MESSAGE_MINIMUM_CHARS">Please enter at least two characters.</string>
+    <string name="EMPTY_SEARCH_MESSAGE">No search results</string>
 </resources>
