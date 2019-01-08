@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+        <variable name="viewModel" type="com.engageft.fis.pscu.feature.search.SearchDialogFragmentViewModel"/>
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/cellBackground">
+
+        <androidx.cardview.widget.CardView
+            android:id="@+id/searchCardView"
+            android:layout_width="0dp"
+            app:cardElevation="4dp"
+            app:cardUseCompatPadding="false"
+            android:layout_margin="8dp"
+            android:layout_height="48dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintEnd_toEndOf="parent">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_gravity="center_vertical"
+                android:gravity="center_vertical">
+
+                <androidx.appcompat.widget.AppCompatImageButton
+                    android:id="@+id/searchBackButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="20dp"
+                    android:layout_marginEnd="28dp"
+                    app:srcCompat="@drawable/ic_back"
+                    android:background="@null"/>
+
+                <androidx.appcompat.widget.AppCompatEditText
+                    android:id="@+id/searchEditText"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:fontFamily="@font/font_regular"
+                    android:inputType="textNoSuggestions"
+                    android:imeOptions="actionGo"
+                    android:background="@null"
+                    android:hint="@string/SEARCH_HINT" />
+
+                <androidx.appcompat.widget.AppCompatImageButton
+                    android:id="@+id/searchClearButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="8dp"
+                    android:layout_marginEnd="16dp"
+                    app:srcCompat="@drawable/ic_clear"
+                    android:background="@null"
+                    android:visibility="invisible"
+                    tools:visibility="visible"/>
+
+            </LinearLayout>
+
+        </androidx.cardview.widget.CardView>
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/searchRecyclerView"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_marginBottom="8dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/searchCardView" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</layout>

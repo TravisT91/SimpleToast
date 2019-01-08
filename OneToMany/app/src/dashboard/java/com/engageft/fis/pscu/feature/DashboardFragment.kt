@@ -40,6 +40,7 @@ import com.engageft.fis.pscu.feature.authentication.AuthenticationDialogFragment
 import com.engageft.fis.pscu.feature.branding.BrandingInfoRepo
 import com.engageft.fis.pscu.feature.branding.Palette
 import com.engageft.fis.pscu.feature.palettebindings.applyBranding
+import com.engageft.fis.pscu.feature.search.SearchDialogFragment
 import com.engageft.fis.pscu.feature.transactions.adapter.TransactionListener
 import com.engageft.fis.pscu.feature.transactions.adapter.TransactionsSimpleAdapter
 import com.engageft.fis.pscu.feature.utils.cardStatusStringRes
@@ -293,8 +294,10 @@ class DashboardFragment : BaseEngageFullscreenFragment(),
     }
 
     private fun prepareToSearch() {
-        binding.searchRecyclerView.visibility = View.VISIBLE
-        binding.swipeRefreshLayout.visibility = View.INVISIBLE
+        //binding.searchRecyclerView.visibility = View.VISIBLE
+        //binding.swipeRefreshLayout.visibility = View.INVISIBLE
+        val searchDialogFragment = SearchDialogFragment()
+        searchDialogFragment.show(activity!!.supportFragmentManager, "Search")
     }
 
     private fun endSearch(): Boolean {

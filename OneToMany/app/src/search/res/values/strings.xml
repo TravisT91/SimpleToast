@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="SEARCH_HINT">Search transactions</string>
+    <string name="SEARCH_MESSAGE_MINIMUM_CHARS">Please enter at least two characters.</string>
+</resources>
