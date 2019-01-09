@@ -15,7 +15,7 @@ buildscript {
         appCompatVersion = "1.0.0"
         supportDesignVersion = "1.0.0"
         navigationVersion = '1.0.0-alpha07'
-
+        
         heapVersion = "0.8.1"
 
         rxJavaVersion = '2.2.2'
@@ -45,6 +45,8 @@ buildscript {
         classpath "com.heapanalytics.android:heap-android-gradle:$heapVersion"
 
         classpath 'io.fabric.tools:gradle:1.+'
+
+        classpath "com.google.gms:google-services:4.2.0"
 
         // NOTE: Do not place your application dependencies here; they belong
         // in the individual module build.gradle files

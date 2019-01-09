@@ -31,6 +31,9 @@ import utilGen1.DisplayDateTimeUtils
  * Copyright (c) 2018 Engage FT. All rights reserved.
  */
 class GetStartedDelegate(private val viewModel: EnrollmentViewModel, private val navController: NavController, private val getStartedNavigations: EnrollmentViewModel.EnrollmentNavigations.GetStartedNavigations) {
+    companion object {
+        const val TAG = "GetStartedDelegate"
+    }
     private val gateKeeperListener: GateKeeperListener = object : GateKeeperListener {
         override fun onGateOpen() {
             navController.navigate(getStartedNavigations.getStartedToSending)
@@ -60,6 +63,8 @@ class GetStartedDelegate(private val viewModel: EnrollmentViewModel, private val
     val cardInput: ObservableField<String> = ObservableField("")
     val dateOfBirth: ObservableField<String> = ObservableField("")
     val dialogObservable = MutableLiveData<GetStartedDialog>()
+
+    lateinit var cardNumber: String
 
     enum class NextButtonState {
         GONE,
@@ -152,6 +157,7 @@ class GetStartedDelegate(private val viewModel: EnrollmentViewModel, private val
                                     viewModel.progressOverlayShownObservable.value = false
                                     if (response.isSuccess && response is ActivationCardInfo) {
                                         viewModel.activationCardInfo = response
+                                        cardNumber = cardInput.get()!!
 
                                         BrandingManager.getBrandingWithRefCode(response.refCode)
                                                 .subscribeWithDefaultProgressAndErrorHandling<BrandingInfoResponse>(
@@ -184,7 +190,7 @@ class GetStartedDelegate(private val viewModel: EnrollmentViewModel, private val
                                         // distinguish them, therefore we cannot
                                         // track unexpected via Crashlytics.
                                         viewModel.progressOverlayShownObservable.value = false
-                                        viewModel.dialogInfoObservable.value = DialogInfo(title = "Error", message = response.message)
+                                        viewModel.handleBackendErrorForForms(response, "$TAG - Unexpected empty error.")
                                         // This is a workaround to essentially "clear" the dialog after an error was shown.
                                         viewModel.dialogInfoObservable.postValue(DialogInfo(dialogType = DialogInfo.DialogType.OTHER))
                                     }

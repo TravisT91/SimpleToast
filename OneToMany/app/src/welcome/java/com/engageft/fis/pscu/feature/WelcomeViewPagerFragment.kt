@@ -23,7 +23,7 @@ import com.engageft.fis.pscu.databinding.FragmentWelcomeViewpagerBinding
  * Created by Atia Hashimi 11/6/2018.
  * Copyright (c) 2018 Engage FT. All rights reserved.
  */
-class WelcomeViewPagerFragment: BaseEngageFullscreenFragment() {
+class WelcomeViewPagerFragment: BaseEngagePageFragment() {
 
     companion object {
        private const val WELCOME_FRAGMENT_COUNT = 5

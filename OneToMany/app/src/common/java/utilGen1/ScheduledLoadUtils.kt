@@ -256,7 +256,7 @@ object ScheduledLoadUtils {
             // It's a debit source
             try {
                 val fundDebitSource = LoginResponseUtils.getFundDebitSourceById(loginResponse, java.lang.Long.valueOf(scheduledLoad.ccAccountId))
-                accountDetailText = String.format(context.getString(R.string.TRANSFER_ACCOUNT_DESCRIPTION), context.getString(R.string.FUND_DEBIT_CARD), fundDebitSource!!.lastFour)
+                accountDetailText = String.format(context.getString(R.string.TRANSFER_ACCOUNT_DESCRIPTION_FORMAT), context.getString(R.string.FUND_DEBIT_CARD), fundDebitSource!!.lastFour)
             } catch (e: NumberFormatException) {
                 // intentionally left blank
             }

@@ -7,6 +7,7 @@ import com.engageft.apptoolbox.BaseViewModel
 import com.engageft.apptoolbox.BuildConfig
 import com.engageft.engagekit.rest.exception.NoConnectivityException
 import com.ob.ws.dom.BasicResponse
+import com.ob.ws.dom.ValidationErrors
 import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
@@ -37,7 +38,7 @@ open class BaseEngageViewModel: BaseViewModel() {
             dialogInfoObservable.postValue(DialogInfo(dialogType = DialogInfo.DialogType.GENERIC_ERROR))
         }
         // Report this problem to Crashlytics in case a bug report is not made.
-        Crashlytics.logException(IllegalStateException("handleUnexpectedErrorReponse: " + response.message))
+        Crashlytics.logException(IllegalStateException("handleUnexpectedErrorResponse: " + response.message))
     }
 
     fun handleThrowable(e: Throwable)  {
@@ -72,6 +73,22 @@ open class BaseEngageViewModel: BaseViewModel() {
     override fun onCleared() {
         super.onCleared()
         compositeDisposable.dispose()
+    }
+}
+
+fun BaseEngageViewModel.handleBackendErrorForForms(response: BasicResponse, contextualMessage: String) {
+    if (response.message.isNotEmpty()) {
+        dialogInfoObservable.value = DialogInfo(dialogType = DialogInfo.DialogType.SERVER_ERROR, message = response.message)
+    } else if (response is ValidationErrors) {
+        if (response.error.isNotEmpty()) {
+            dialogInfoObservable.value = DialogInfo(dialogType = DialogInfo.DialogType.SERVER_ERROR, message = response.error.elementAt(0).message)
+        } else {
+            response.message = contextualMessage
+            handleUnexpectedErrorResponse(response)
+        }
+    } else {
+        response.message = contextualMessage
+        handleUnexpectedErrorResponse(response)
     }
 }
 

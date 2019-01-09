@@ -15,6 +15,10 @@ import io.reactivex.schedulers.Schedulers
 class CardPinViewModel: BaseEngageViewModel(), CardPinViewModelListener {
     val cardPinViewModelDelegate = CardPinViewModelDelegate(this, this)
 
+    init {
+        cardPinViewModelDelegate.productCardViewModelDelegate.updateCardView()
+    }
+
     override fun onPostPin(pinNumber: Int) {
         val currentCard = EngageService.getInstance().storageManager.currentCard
         progressOverlayShownObservable.value = true

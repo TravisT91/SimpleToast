@@ -24,7 +24,7 @@ import utilGen1.StringUtils
  * Copyright (c) 2018 Engage FT. All rights reserved.
  */
 
-class ReportLostStolenCardFragment : BaseEngageFullscreenFragment() {
+class ReportLostStolenCardFragment : BaseEngagePageFragment() {
 
     override fun createViewModel(): BaseViewModel? {
         return  ViewModelProviders.of(this).get(ReportLostStolenCardViewModel::class.java)
@@ -35,7 +35,7 @@ class ReportLostStolenCardFragment : BaseEngageFullscreenFragment() {
 
             palette = Palette
 
-            reportLostStolenCardViewModel =  (viewModel as? ReportLostStolenCardViewModel)?.apply {
+            reportLostStolenCardViewModel =  (fragmentDelegate.viewModel as? ReportLostStolenCardViewModel)?.apply {
                 val successObserver = Observer<Boolean> {
                     if (it) showNewCardOrderedConfirmationDialog()
                 }
@@ -67,7 +67,7 @@ class ReportLostStolenCardFragment : BaseEngageFullscreenFragment() {
                     }
 
                     override fun onDialogFragmentPositiveButtonClicked() {
-                        (viewModel as? ReportLostStolenCardViewModel)?.onReportLostStolenClicked()
+                        (fragmentDelegate.viewModel as? ReportLostStolenCardViewModel)?.onReportLostStolenClicked()
                     }
 
                     override fun onDialogCancelled() {
@@ -77,7 +77,7 @@ class ReportLostStolenCardFragment : BaseEngageFullscreenFragment() {
                 }
         )
         dialog.applyPaletteStyles(context!!)
-        showDialog(dialog)
+        fragmentDelegate.showDialog(dialog)
     }
 
     private fun showNewCardOrderedConfirmationDialog(){
@@ -101,6 +101,6 @@ class ReportLostStolenCardFragment : BaseEngageFullscreenFragment() {
                 }
         )
         dialog.applyPaletteStyles(context!!)
-        showDialog(dialog)
+        fragmentDelegate.showDialog(dialog)
     }
 }

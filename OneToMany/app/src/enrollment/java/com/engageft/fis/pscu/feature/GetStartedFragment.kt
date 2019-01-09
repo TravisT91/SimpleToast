@@ -28,7 +28,7 @@ import com.redmadrobot.inputmask.MaskedTextChangedListener
  * Created by joeyhutchins on 12/13/18.
  * Copyright (c) 2018 Engage FT. All rights reserved.
  */
-class GetStartedFragment : BaseEngageFullscreenFragment() {
+class GetStartedFragment : BaseEngagePageFragment() {
     private lateinit var enrollmentViewModel: EnrollmentViewModel
     private lateinit var getStartedViewModel: GetStartedDelegate
     private lateinit var binding: FragmentGetStartedBinding
@@ -118,7 +118,7 @@ class GetStartedFragment : BaseEngageFullscreenFragment() {
                             // User exited dialog, keep them on this screen.
                         }
                     }
-                    showDialog(InformationDialogFragment.newLotusInstance(
+                    fragmentDelegate.showDialog(InformationDialogFragment.newLotusInstance(
                             title = getString(R.string.ENROLLMENT_GET_STARTED_UNDER_18_TITLE),
                             message = getString(R.string.ENROLLMENT_GET_STARTED_UNDER_18_MESSAGE),
                             buttonPositiveText = getString(R.string.ENROLLMENT_GET_STARTED_UNDER_18_POSITIVE),

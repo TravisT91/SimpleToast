@@ -1,12 +1,15 @@
 package com.engageft.fis.pscu.feature
 
 import androidx.navigation.NavController
+import com.engageft.apptoolbox.view.ProductCardModel
+import com.engageft.apptoolbox.view.ProductCardModelCardStatus
 import com.engageft.fis.pscu.feature.gatekeeping.CardPinEnrollmentGateKeeper
 import com.engageft.fis.pscu.feature.gatekeeping.GateKeeperListener
 import com.engageft.fis.pscu.feature.gatekeeping.GatedItem
 import com.engageft.fis.pscu.feature.gatekeeping.items.AccountRequiredGatedItem
 import com.engageft.fis.pscu.feature.gatekeeping.items.CIPRequiredGatedItem
 import com.engageft.fis.pscu.feature.gatekeeping.items.TermsRequiredGatedItem
+import com.ob.domain.lookup.DebitCardStatus
 import com.ob.ws.dom.ActivationCardInfo
 
 /**
@@ -110,6 +113,57 @@ class EnrollmentViewModel : BaseEngageViewModel() {
 
         var pinNumber = 0
 
+        init {
+            cardPinViewModelDelegate.productCardViewModelDelegate.cardStateObservable.value = ProductCardViewCardState.DETAILS_HIDDEN
+            val productCardModel = ProductCardModel()
+            productCardModel.cardholderName = String.format("%s %s", activationCardInfo.firstName, activationCardInfo.lastName)
+            productCardModel.cardStatusText = activationCardInfo.cardStatus
+            productCardModel.cardStatus = productCardModelStatusFromActivationInfo(activationCardInfo)
+            productCardModel.cardStatusOkay = true
+            productCardModel.cardLocked = productCardModel.cardStatus == ProductCardModelCardStatus.CARD_STATUS_LOCKED
+            productCardModel.cardNumberPartial = getStartedDelegate.cardNumber.substring(11, 15)
+
+            cardPinViewModelDelegate.productCardViewModelDelegate.cardInfoModelObservable.value = productCardModel
+        }
+
+        private fun productCardModelStatusFromActivationInfo(activationCardInfo: ActivationCardInfo): ProductCardModelCardStatus {
+            return when (activationCardInfo.cardStatus) {
+                DebitCardStatus.ACTIVE.toString() -> {
+                    ProductCardModelCardStatus.CARD_STATUS_ACTIVE
+                }
+//                DebitCardStatus.PENDING_CREATE.toString() -> {
+//                    ProductCardModelCardStatus.CARD_STATUS_PENDING
+//                }
+                DebitCardStatus.PENDING_ACTIVATION.toString() -> {
+                    ProductCardModelCardStatus.CARD_STATUS_PENDING
+                }
+//                DebitCardStatus.REPLACEMENT_ORDERED.toString() -> {
+//                    ProductCardModelCardStatus.CARD_STATUS_REPLACED
+//                }
+                DebitCardStatus.CANCELED.toString() -> {
+                    ProductCardModelCardStatus.CARD_STATUS_CANCELED
+                }
+                DebitCardStatus.REPLACED.toString() -> {
+                    ProductCardModelCardStatus.CARD_STATUS_REPLACED
+                }
+                DebitCardStatus.LOCKED_USER.toString() -> {
+                    ProductCardModelCardStatus.CARD_STATUS_LOCKED
+                }
+                DebitCardStatus.LOCKED_PARENT.toString() -> {
+                    ProductCardModelCardStatus.CARD_STATUS_LOCKED
+                }
+                DebitCardStatus.LOCKED_CSR.toString() -> {
+                    ProductCardModelCardStatus.CARD_STATUS_LOCKED
+                }
+                DebitCardStatus.LOCKED_ADMIN.toString() -> {
+                    ProductCardModelCardStatus.CARD_STATUS_LOCKED
+                }
+                else -> {
+                    // This is bad...
+                    throw IllegalStateException("Unknown card status. ")
+                }
+            }
+        }
 
         override fun onPostPin(pinNumber: Int) {
             this.pinNumber = pinNumber

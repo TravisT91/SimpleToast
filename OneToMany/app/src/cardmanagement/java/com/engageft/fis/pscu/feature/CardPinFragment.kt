@@ -34,7 +34,7 @@ import com.engageft.fis.pscu.feature.utils.cardStatusStringRes
  * Created by Atia Hashimi on 12/3/18.
  * Copyright (c) 2018 Engage FT. All rights reserved.
  */
-class CardPinFragment : BaseEngageFullscreenFragment() {
+class CardPinFragment : BaseEngagePageFragment() {
 
     private lateinit var binding: FragmentCardPinBinding
     private lateinit var cardPinViewModel: CardPinViewModelDelegate
@@ -65,7 +65,7 @@ class CardPinFragment : BaseEngageFullscreenFragment() {
             //TODO(ttkachuk) right now card types are no specified by the backend, but we will select the BrandingCard that matches debitCardInfo.cardType when the backend is updated
             //tracked in FOTM-498
             BrandingInfoRepo.cards?.get(0)?.let {
-                binding.cardView.applyBranding(it, (super@CardPinFragment.viewModel!! as BaseEngageViewModel).compositeDisposable) { e ->
+                binding.cardView.applyBranding(it, (super@CardPinFragment.fragmentDelegate.viewModel!! as BaseEngageViewModel).compositeDisposable) { e ->
                     Toast.makeText(context, "Failed to retrieve card image", Toast.LENGTH_SHORT).show()
                     Log.e("BRANDING_INFO_FAIL", e.message)
                     //TODO(ttkachuk) right now it is not clear on how we should handle failure to retrieve the card image
@@ -150,7 +150,7 @@ class CardPinFragment : BaseEngageFullscreenFragment() {
                 }
             })
 
-            (viewModel!! as BaseEngageViewModel).dialogInfoObservable.observe(this@CardPinFragment, Observer {
+            (fragmentDelegate.viewModel!! as BaseEngageViewModel).dialogInfoObservable.observe(this@CardPinFragment, Observer {
                 when (it.dialogType) {
                     DialogInfo.DialogType.GENERIC_SUCCESS -> {
                         val listener = object: InformationDialogFragment.InformationDialogFragmentListener {
@@ -166,7 +166,7 @@ class CardPinFragment : BaseEngageFullscreenFragment() {
                             }
                         }
 
-                        showDialog(infoDialogGenericSuccessTitleMessageNewInstance(context!!, listener = listener))
+                        fragmentDelegate.showDialog(infoDialogGenericSuccessTitleMessageNewInstance(context!!, listener = listener))
                     }
                     else -> {}
                 }
@@ -176,8 +176,6 @@ class CardPinFragment : BaseEngageFullscreenFragment() {
                 productCardModel.cardStatusText = getString(productCardModel.cardStatus.cardStatusStringRes())
                 binding.cardView.updateWithProductCardModel(productCardModel)
             })
-
-            productCardViewModelDelegate.updateCardView()
         }
 
         return binding.root
