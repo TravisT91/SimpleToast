@@ -118,7 +118,7 @@ class GetStartedFragment : BaseEngagePageFragment() {
                             // User exited dialog, keep them on this screen.
                         }
                     }
-                    showDialog(InformationDialogFragment.newLotusInstance(
+                    fragmentDelegate.showDialog(InformationDialogFragment.newLotusInstance(
                             title = getString(R.string.ENROLLMENT_GET_STARTED_UNDER_18_TITLE),
                             message = getString(R.string.ENROLLMENT_GET_STARTED_UNDER_18_MESSAGE),
                             buttonPositiveText = getString(R.string.ENROLLMENT_GET_STARTED_UNDER_18_POSITIVE),
