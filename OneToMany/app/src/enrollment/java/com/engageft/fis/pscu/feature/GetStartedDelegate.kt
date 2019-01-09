@@ -1,6 +1,5 @@
 package com.engageft.fis.pscu.feature
 
-import android.util.Log
 import androidx.databinding.Observable
 import androidx.databinding.ObservableField
 import androidx.lifecycle.MutableLiveData
@@ -174,13 +173,7 @@ class GetStartedDelegate(private val viewModel: EnrollmentViewModel, private val
                                                         gateKeeper.run()
                                                     }
                                                 }, { failedResponse ->
-                                                    Log.e("Joey", "Unexpeected error")
                                                     viewModel.handleUnexpectedErrorResponse(failedResponse)
-                                                }, { e : Throwable ->
-                                                    Log.e("Joey", "found you")
-                                                }, {
-                                                    Log.e("Joey", "Hello")
-                                                    Unit
                                                 }
                                         )
                                     } else {
@@ -195,12 +188,8 @@ class GetStartedDelegate(private val viewModel: EnrollmentViewModel, private val
                                         viewModel.dialogInfoObservable.postValue(DialogInfo(dialogType = DialogInfo.DialogType.OTHER))
                                     }
                                 }, { e ->
-                                    Log.e("Joey", "uhhhh")
                                     viewModel.progressOverlayShownObservable.value = false
                                     viewModel.handleThrowable(e)
-                                }, {
-                                    Log.e("Joey", "what")
-                                    Unit
                                 })
                 )
             }

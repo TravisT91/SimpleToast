@@ -1,6 +1,5 @@
 package com.engageft.fis.pscu.feature
 
-import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import com.crashlytics.android.Crashlytics
 import com.engageft.apptoolbox.BaseViewModel
@@ -103,21 +102,17 @@ inline fun <reified ExpectedClass> Observable<BasicResponse>.subscribeWithDefaul
             this.subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(
                     {
                         if (it.isSuccess && it is ExpectedClass) {
-                            Log.e("Joey", "onNextSuccessful")
                             onNextSuccessful(it)
                         } else {
-                            Log.e("Joey", "onNextFailed")
                             onNextFailed?.invoke(it) ?: run { vm.handleUnexpectedErrorResponse(it) }
                         }
                     },
                     {
-                        Log.e("Joey", "throwable")
                         vm.progressOverlayShownObservable.value = false
                         vm.handleThrowable(it)
                         onError?.invoke(it)
                     },
                     {
-                        Log.e("Joey", "onComplete")
                         vm.progressOverlayShownObservable.value = false
                         onComplete?.invoke()
                     }))
