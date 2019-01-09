@@ -33,7 +33,7 @@ import utilGen1.DisplayDateTimeUtils
  * Imported, and modified by Atia Hashimi 11/22/218
  * Copyright (c) 2018 Engage FT. All rights reserved.
  */
-class StatementsFragment: BaseEngageFullscreenFragment() {
+class StatementsFragment: BaseEngagePageFragment() {
 
     private val sectionAdapter: SectionedRecyclerViewAdapter = SectionedRecyclerViewAdapter()
     private lateinit var statementsViewModel: StatementsViewModel

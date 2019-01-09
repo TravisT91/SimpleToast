@@ -28,7 +28,7 @@ import com.redmadrobot.inputmask.MaskedTextChangedListener
  * Created by joeyhutchins on 12/13/18.
  * Copyright (c) 2018 Engage FT. All rights reserved.
  */
-class GetStartedFragment : BaseEngageFullscreenFragment() {
+class GetStartedFragment : BaseEngagePageFragment() {
     private lateinit var enrollmentViewModel: EnrollmentViewModel
     private lateinit var getStartedViewModel: GetStartedDelegate
     private lateinit var binding: FragmentGetStartedBinding

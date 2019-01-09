@@ -20,7 +20,7 @@ import com.engageft.fis.pscu.feature.branding.Palette
  * Copyright (c) 2018 Engage FT. All rights reserved.
  */
 
-class DirectDepositFragment: BaseEngageFullscreenFragment(){
+class DirectDepositFragment: BaseEngagePageFragment(){
 
     override fun createViewModel(): BaseViewModel? {
         return ViewModelProviders.of(this).get(DirectDepositViewModel::class.java).apply {

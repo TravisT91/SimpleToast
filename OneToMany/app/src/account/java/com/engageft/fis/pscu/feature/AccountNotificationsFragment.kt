@@ -31,7 +31,7 @@ import kotlinx.android.synthetic.main.fragment_account_notifications.*
  * Created by Atia Hashimi 12/07/18
  * Copyright (c) 2018 Engage FT. All rights reserved.
  */
-class AccountNotificationsFragment: BaseEngageFullscreenFragment() {
+class AccountNotificationsFragment: BaseEngagePageFragment() {
 
     private lateinit var accountNotificationsViewModel: AccountNotificationsViewModel
     private lateinit var binding: FragmentAccountNotificationsBinding
@@ -51,7 +51,7 @@ class AccountNotificationsFragment: BaseEngageFullscreenFragment() {
     private val navigationOverrideClickListener = object : NavigationOverrideClickListener {
         override fun onClick(): Boolean {
             return if (accountNotificationsViewModel.hasUnsavedChanges()) {
-                showDialog(infoDialogGenericUnsavedChangesNewInstance(context = activity!!, listener = unsavedChangesDialogListener))
+                fragmentDelegate.showDialog(infoDialogGenericUnsavedChangesNewInstance(context = activity!!, listener = unsavedChangesDialogListener))
                 true
             } else {
                 false
@@ -124,7 +124,7 @@ class AccountNotificationsFragment: BaseEngageFullscreenFragment() {
 
             dialogInfoObservable.observe(this@AccountNotificationsFragment, Observer { dialogInfo ->
                 if (dialogInfo.dialogType == DialogInfo.DialogType.GENERIC_SUCCESS) {
-                    showGenericSuccessDialogMessageAndPopBackstack(binding.root)
+                    engageFragmentDelegate.showGenericSuccessDialogMessageAndPopBackstack(binding.root)
                 }
             })
         }

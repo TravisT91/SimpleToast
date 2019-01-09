@@ -15,7 +15,7 @@ import com.engageft.fis.pscu.R
  * Created by joeyhutchins on 8/24/18.
  * Copyright (c) 2018 Engage FT. All rights reserved.
  */
-class GoalAdd2Fragment : BaseEngageFullscreenFragment() {
+class GoalAdd2Fragment : BaseEngagePageFragment() {
 
     override fun createViewModel(): BaseViewModel? {
         return null
