@@ -11,8 +11,7 @@
         <!--app:showAsAction="always" />-->
 
     <item android:id="@+id/action_search_transactions"
-        android:searchIcon="@drawable/ic_option_dashboard_fragment_search"
-        app:actionViewClass="androidx.appcompat.widget.SearchView"
+        android:icon="@drawable/ic_option_dashboard_fragment_search"
         android:title="@string/OPTIONS_MENU_SEARCH"
         app:showAsAction="always"/>
 

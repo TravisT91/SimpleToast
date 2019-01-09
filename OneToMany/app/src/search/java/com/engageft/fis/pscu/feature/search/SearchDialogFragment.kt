@@ -8,33 +8,30 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.WindowManager
-import androidx.databinding.DataBindingUtil
-import androidx.fragment.app.DialogFragment
-import androidx.lifecycle.ViewModelProviders
-import com.engageft.fis.pscu.R
-import com.engageft.fis.pscu.databinding.DialogFragmentSearchBinding
 import android.view.inputmethod.EditorInfo
 import android.widget.Toast
+import androidx.databinding.DataBindingUtil
+import androidx.fragment.app.DialogFragment
 import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.engageft.apptoolbox.util.hideKeyboard
 import com.engageft.engagekit.repository.transaction.vo.Transaction
+import com.engageft.fis.pscu.R
+import com.engageft.fis.pscu.databinding.DialogFragmentSearchBinding
+import com.engageft.fis.pscu.feature.search.adapter.TransactionsSearchAdapter
 import com.engageft.fis.pscu.feature.transactions.adapter.TransactionListener
-import com.engageft.fis.pscu.feature.transactions.adapter.TransactionsSimpleAdapter
 
 class SearchDialogFragment : DialogFragment(), TransactionListener {
 
     private lateinit var viewModel: SearchDialogFragmentViewModel
     private lateinit var binding: DialogFragmentSearchBinding
 
-    private val searchAdapter: TransactionsSimpleAdapter by lazy {
-        binding.searchRecyclerView.adapter = TransactionsSimpleAdapter(this)
+    private val searchAdapter: TransactionsSearchAdapter by lazy {
+        binding.searchRecyclerView.adapter = TransactionsSearchAdapter(this)
         binding.searchRecyclerView.layoutManager = LinearLayoutManager(context)
 
-        binding.searchRecyclerView.adapter as TransactionsSimpleAdapter
-    }
-
-    private val searchObserver = Observer<List<Transaction>> {
-        transactionList -> displaySearchResults(transactionList)
+        binding.searchRecyclerView.adapter as TransactionsSearchAdapter
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -46,6 +43,8 @@ class SearchDialogFragment : DialogFragment(), TransactionListener {
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         dialog.window!!.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE)
         binding = DataBindingUtil.inflate(layoutInflater, R.layout.dialog_fragment_search, container, false)
+
+        searchAdapter.resetSearch()
 
         binding.searchBackButton.setOnClickListener {
             dismiss()
@@ -61,17 +60,14 @@ class SearchDialogFragment : DialogFragment(), TransactionListener {
             }
 
             override fun afterTextChanged(editable: Editable) {
-                if (editable.isNotBlank()) {
-                    binding.searchClearButton.visibility = View.VISIBLE
-                } else {
-                    binding.searchClearButton.visibility = View.INVISIBLE
-                }
+                binding.searchClearButton.visibility = if (editable.isNotBlank()) View.VISIBLE else View.INVISIBLE
             }
         })
 
         binding.searchEditText.setOnEditorActionListener { textView, actionId, event ->
             if (actionId == EditorInfo.IME_ACTION_DONE || (actionId == EditorInfo.IME_ACTION_UNSPECIFIED && event.action == KeyEvent.ACTION_DOWN)) {
                 textView?.apply {
+                    binding.searchEditText.hideKeyboard()
                     viewModel.searchTransactions(text.trim().toString())
                 }
                 true
@@ -79,19 +75,16 @@ class SearchDialogFragment : DialogFragment(), TransactionListener {
         }
 
         binding.searchClearButton.setOnClickListener {
+            searchAdapter.resetSearch()
             binding.searchEditText.setText("")
         }
 
         viewModel = ViewModelProviders.of(this).get(SearchDialogFragmentViewModel::class.java)
         viewModel.searchTransactions.observe(this, Observer<List<Transaction>> {
-            transactionList -> displaySearchResults(transactionList)
+            transactionList -> if (transactionList.isEmpty()) searchAdapter.showNoResults(getString(R.string.EMPTY_SEARCH_MESSAGE)) else searchAdapter.updateTransactions(transactionList)
         })
 
         return binding.root
-    }
-
-    private fun displaySearchResults(transactions: List<Transaction>) {
-        searchAdapter.updateTransactions(transactions)
     }
 
     override fun onTransactionSelected(transaction: Transaction) {

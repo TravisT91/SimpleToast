@@ -11,10 +11,7 @@ import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import android.view.WindowManager
-import android.widget.ImageView
-import android.widget.TextView
 import android.widget.Toast
-import androidx.appcompat.widget.SearchView
 import androidx.core.content.ContextCompat
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
@@ -25,7 +22,6 @@ import androidx.recyclerview.widget.DefaultItemAnimator
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.engageft.apptoolbox.BaseViewModel
-import com.engageft.apptoolbox.NavigationOverrideClickListener
 import com.engageft.apptoolbox.ToolbarVisibilityState
 import com.engageft.apptoolbox.ViewUtils.newLotusInstance
 import com.engageft.apptoolbox.view.InformationDialogFragment
@@ -38,11 +34,9 @@ import com.engageft.fis.pscu.databinding.FragmentDashboardBinding
 import com.engageft.fis.pscu.feature.adapter.DashboardTransactionsAdapter
 import com.engageft.fis.pscu.feature.authentication.AuthenticationDialogFragment
 import com.engageft.fis.pscu.feature.branding.BrandingInfoRepo
-import com.engageft.fis.pscu.feature.branding.Palette
 import com.engageft.fis.pscu.feature.palettebindings.applyBranding
 import com.engageft.fis.pscu.feature.search.SearchDialogFragment
 import com.engageft.fis.pscu.feature.transactions.adapter.TransactionListener
-import com.engageft.fis.pscu.feature.transactions.adapter.TransactionsSimpleAdapter
 import com.engageft.fis.pscu.feature.utils.cardStatusStringRes
 import com.ob.domain.lookup.DebitCardStatus
 import eightbitlab.com.blurview.RenderScriptBlur
@@ -80,10 +74,6 @@ class DashboardFragment : BaseEngageFullscreenFragment(),
         pagedList -> transactionsAdapter.submitList(pagedList)
     }
 
-    private val searchObserver = Observer<List<Transaction>> {
-        transactionList -> displaySearchResults(transactionList)
-    }
-
     private val notificationsObserver = Observer<Int> { activity?.invalidateOptionsMenu() }
 
     private val animationObserver = Observer<DashboardAnimationEvent> { updateAnimation(it!!) }
@@ -92,12 +82,6 @@ class DashboardFragment : BaseEngageFullscreenFragment(),
     private var toolbarShadowAnimationScrollRangeFloat: Float = 0F
 
     private lateinit var transactionsAdapter: DashboardTransactionsAdapter
-    private val searchAdapter: TransactionsSimpleAdapter by lazy {
-        binding.searchRecyclerView.adapter = TransactionsSimpleAdapter(this)
-        binding.searchRecyclerView.layoutManager = LinearLayoutManager(context)
-
-        binding.searchRecyclerView.adapter as TransactionsSimpleAdapter
-    }
 
     private var scrollDisabled = false
 
@@ -212,69 +196,6 @@ class DashboardFragment : BaseEngageFullscreenFragment(),
 //            }
 //            BadgeUtils.setBadgeCount(activity, icon, notificationsCount)
 //        }
-
-        val item = menu?.findItem(R.id.action_search_transactions)
-        val searchView = item?.actionView as? SearchView
-        searchView?.apply {
-            queryHint = getString(R.string.OPTIONS_MENU_SEARCHVIEW_PLACEHOLDER)
-
-            (findViewById(R.id.search_close_btn) as? ImageView)?.setOnClickListener {
-                // clear current results
-                displaySearchResults(listOf())
-
-                if (query.isNullOrBlank()) {
-                    onActionViewCollapsed()
-                    endSearch()
-                } else {
-                    setQuery("", false)
-                }
-            }
-
-            setOnSearchClickListener {
-                prepareToSearch()
-            }
-
-            setOnQueryTextListener(object : SearchView.OnQueryTextListener {
-                override fun onQueryTextSubmit(query: String?): Boolean {
-                    clearFocus() // required to prevent onQueryTextSubmit being called a second time, onKeyUp (first is onKeyDown)
-                    query?.let {
-                        val trimmedQuery = it.trim()
-                        if (trimmedQuery.length < TRANSACTION_SEARCH_MINIMUM_CHARS) {
-                            Toast.makeText(context, getString(R.string.TRANSACTIONS_SEARCH_MESSAGE_MINIMUM_CHARS), Toast.LENGTH_LONG).show()
-                        } else {
-                            // clear current results
-                            displaySearchResults(listOf())
-                            dashboardViewModel.searchTransactions(it.trim())
-                        }
-                    }
-                    return true
-                }
-
-                override fun onQueryTextChange(newText: String?): Boolean {
-                    // intentionally left blank
-                    return true
-                }
-
-            })
-        }
-    }
-
-    override fun onPrepareOptionsMenu(menu: Menu?) {
-        super.onPrepareOptionsMenu(menu)
-
-        val item = menu?.findItem(R.id.action_search_transactions)
-        val searchView = item?.actionView as? SearchView
-        searchView?.apply {
-            // TODO: set typeface of textview, etc.
-            /* from gen1:
-            // Next color the search textview and set typeface
-        textView.setTextColor(ContextCompat.getColor(getContext(), R.color.themeDefaultTextDark));
-        textView.setHintTextColor(ContextCompat.getColor(getContext(), R.color.themeNavigationTitle));
-             */
-            (findViewById(androidx.appcompat.R.id.search_src_text) as? TextView)?.apply {
-                typeface = Palette.font_regular
-            }
-        }
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
@@ -286,24 +207,12 @@ class DashboardFragment : BaseEngageFullscreenFragment(),
             if (id == R.id.action_notifications) {
                 //listener?.onAlertsNotificationsOptionsItem()
                 return true
+            } else if (id == R.id.action_search_transactions) {
+                SearchDialogFragment().show(activity!!.supportFragmentManager, "Search")
             }
-            // search is handled with SearchView
         }
 
         return super.onOptionsItemSelected(item)
-    }
-
-    private fun prepareToSearch() {
-        //binding.searchRecyclerView.visibility = View.VISIBLE
-        //binding.swipeRefreshLayout.visibility = View.INVISIBLE
-        val searchDialogFragment = SearchDialogFragment()
-        searchDialogFragment.show(activity!!.supportFragmentManager, "Search")
-    }
-
-    private fun endSearch(): Boolean {
-        binding.searchRecyclerView.visibility = View.INVISIBLE
-        binding.swipeRefreshLayout.visibility = View.VISIBLE
-        return true
     }
 
     private fun updateForCardModel(productCardModel: ProductCardModel) {
@@ -495,8 +404,6 @@ class DashboardFragment : BaseEngageFullscreenFragment(),
         dashboardViewModel.networkState.observe(this, Observer { transactionsAdapter.setNetworkState(it) })
         dashboardViewModel.transactions.observe(this, transactionsObserver)
 
-        dashboardViewModel.searchTransactions.observe(this, searchObserver)
-
         // make sure correct tab is showing, after return from TransactionDetailFragment, in particular
         when (dashboardViewModel.transactionsTabPosition) {
             DashboardViewModel.TRANSACTIONS_TAB_POSITION_ALL -> {
@@ -559,10 +466,6 @@ class DashboardFragment : BaseEngageFullscreenFragment(),
         } else {
             // TODO(kurt): there is no function to collapseImmediate()
         }
-    }
-
-    private fun displaySearchResults(transactions: List<Transaction>) {
-        searchAdapter.updateTransactions(transactions)
     }
 
     override fun onResume() {

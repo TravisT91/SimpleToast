@@ -46,6 +46,8 @@
                     android:layout_weight="1"
                     android:fontFamily="@font/font_regular"
                     android:inputType="textNoSuggestions"
+                    android:maxLines="1"
+                    android:scrollHorizontally="false"
                     android:imeOptions="actionDone"
                     android:background="@null"
                     android:hint="@string/SEARCH_HINT" />
@@ -73,7 +75,8 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/searchCardView" />
+            app:layout_constraintTop_toBottomOf="@+id/searchCardView"
+            android:background="@color/cellBackground"/>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

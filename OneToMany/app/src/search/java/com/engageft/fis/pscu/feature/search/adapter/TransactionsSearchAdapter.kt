@@ -3,11 +3,24 @@ package com.engageft.fis.pscu.feature.search.adapter
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import com.engageft.engagekit.repository.transaction.vo.Transaction
 import com.engageft.fis.pscu.R
 import com.engageft.fis.pscu.feature.transactions.adapter.TransactionListener
 import com.engageft.fis.pscu.feature.transactions.adapter.TransactionsSimpleAdapter
 
 class TransactionsSearchAdapter(listener: TransactionListener?) : TransactionsSimpleAdapter(listener) {
+
+    private var message: String? = null
+
+    fun showNoResults(message: String?) {
+        this.message = message
+        updateTransactions(listOf())
+    }
+
+    fun resetSearch() {
+        this.message = null
+        updateTransactions(listOf())
+    }
 
     override fun getItemCount(): Int {
         return if (transactions.isEmpty()) 1 else super.getItemCount()
@@ -19,13 +32,13 @@ class TransactionsSearchAdapter(listener: TransactionListener?) : TransactionsSi
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         return if (viewType == VIEW_TYPE_PLACEHOLDER) {
-            EmptySearchViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.row_transaction_info_view, parent, false), parent.context)
+            EmptySearchViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.row_empty_search, parent, false), parent.context)
         } else super.onCreateViewHolder(parent, viewType)
     }
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         if (holder is EmptySearchViewHolder) {
-
+            holder.setMessage(message)
         } else super.onBindViewHolder(holder, position)
     }
 
