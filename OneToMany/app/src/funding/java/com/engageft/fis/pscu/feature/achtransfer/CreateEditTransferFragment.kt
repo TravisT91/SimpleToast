@@ -66,6 +66,11 @@ class CreateEditTransferFragment: BaseEngageFullscreenFragment() {
         return createEditTransferViewModel
     }
 
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setHasOptionsMenu(true)
+    }
+
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         binding = FragmentCreateEditTransferBinding.inflate(inflater, container, false)
 
@@ -254,11 +259,6 @@ class CreateEditTransferFragment: BaseEngageFullscreenFragment() {
 
                     override fun onDialogCancelled() {}
                 }).show(activity!!.supportFragmentManager, "wrongAccountDialog")
-    }
-
-    override fun onResume() {
-        super.onResume()
-        setHasOptionsMenu(true)
     }
 
     override fun onCreateOptionsMenu(menu: Menu?, inflater: MenuInflater?) {

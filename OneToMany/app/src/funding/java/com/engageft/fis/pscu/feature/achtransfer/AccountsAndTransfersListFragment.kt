@@ -35,6 +35,11 @@ class AccountsAndTransfersListFragment: BaseEngageFullscreenFragment() {
         return accountsAndTransfersListViewModel
     }
 
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setHasOptionsMenu(true)
+    }
+
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         binding = FragmentAccountsAndTransfersListBinding.inflate(inflater, container, false)
 
@@ -132,7 +137,6 @@ class AccountsAndTransfersListFragment: BaseEngageFullscreenFragment() {
     override fun onResume() {
         super.onResume()
         accountsAndTransfersListViewModel.refreshViews()
-        setHasOptionsMenu(true)
     }
 
     override fun onCreateOptionsMenu(menu: Menu?, inflater: MenuInflater?) {

@@ -65,6 +65,11 @@ class AchBankAccountAddFragment: BaseEngageFullscreenFragment() {
         return achBankAccountViewModel
     }
 
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setHasOptionsMenu(true)
+    }
+
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         binding = FragmentAchBankAccountAddBinding.inflate(inflater, container, false)
 
@@ -126,11 +131,6 @@ class AchBankAccountAddFragment: BaseEngageFullscreenFragment() {
         }
 
         return binding.root
-    }
-
-    override fun onResume() {
-        super.onResume()
-        setHasOptionsMenu(true)
     }
 
     override fun onCreateOptionsMenu(menu: Menu?, inflater: MenuInflater?) {
