@@ -27,7 +27,7 @@ import com.engageft.fis.pscu.feature.BaseEngageDialogFragment
 /**
  * AuthenticationDialogFragment
  * <p>
- * Authentication dialog baseFragmentIm that can prompt for fingerprint auth, passcode, or password.
+ * Authentication dialog fragment that can prompt for fingerprint auth, passcode, or password.
  *
  * </p>
  * Created by kurteous on 12/1/18.

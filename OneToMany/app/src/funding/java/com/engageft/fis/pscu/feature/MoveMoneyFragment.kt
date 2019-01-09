@@ -5,8 +5,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
-import com.engageft.apptoolbox.BaseViewModel
 import androidx.navigation.findNavController
+import com.engageft.apptoolbox.BaseViewModel
 import com.engageft.fis.pscu.R
 import com.engageft.fis.pscu.databinding.FragmentMoveMoneyBinding
 import com.engageft.fis.pscu.feature.branding.Palette
@@ -15,7 +15,7 @@ import com.engageft.fis.pscu.feature.config.MobileCheckDepositConfig
 /**
  * MoveMoneyFragment
  * </p>
- * This baseFragmentIm presents the user with options to move money
+ * This fragment presents the user with options to move money
  * </p>
  * Created by Travis Tkachuk 11/2/18
  * Copyright (c) 2018 Engage FT. All rights reserved.

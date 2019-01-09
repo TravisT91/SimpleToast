@@ -22,8 +22,8 @@ import com.engageft.fis.pscu.feature.branding.Palette
 /**
  * AccountSettingsFragment
  * <p>
- * This baseFragmentIm presents the user with settings options which will navigate them to the appropriate
- * baseFragmentIm to adjust that setting.
+ * This fragment presents the user with settings options which will navigate them to the appropriate
+ * fragment to adjust that setting.
  * </p>
  * Created by joeyhutchins on 8/24/18.
  * Copyright (c) 2018 Engage FT. All rights reserved.

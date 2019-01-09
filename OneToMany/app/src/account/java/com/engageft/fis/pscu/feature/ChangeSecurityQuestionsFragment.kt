@@ -27,7 +27,7 @@ import com.engageft.fis.pscu.feature.branding.Palette
  * <p>
  * Fragment for changing/setting a user's security questions.
  *
- * TODO(jhutchins): This baseFragmentIm needs to be refactored with the understanding that it could be created from
+ * TODO(jhutchins): This fragment needs to be refactored with the understanding that it could be created from
  * settings or from login in two different contexts with different navigations graphs.
  * </p>
  * Created by joeyhutchins on 11/12/18.

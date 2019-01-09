@@ -16,7 +16,7 @@ import com.engageft.fis.pscu.databinding.FragmentSplashBinding
 /**
  * SplashFragment
  * <p>
- * First baseFragmentIm in the navigation of the application. Here, we determine where to navigate the user
+ * First fragment in the navigation of the application. Here, we determine where to navigate the user
  * after initialization.
  * </p>
  * Created by joeyhutchins on 8/22/18.

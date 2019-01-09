@@ -164,7 +164,7 @@ class DashboardFragment : BaseEngagePageFragment(),
                         transactionsAdapter.showDepositsOnly = true
                     }
                 }
-                // update view model with position, so that it can be set correctly when baseFragmentIm is restored
+                // update view model with position, so that it can be set correctly when fragment is restored
                 dashboardViewModel.transactionsTabPosition = binding.transactionsTabLayout.selectedTabPosition
             }
         })

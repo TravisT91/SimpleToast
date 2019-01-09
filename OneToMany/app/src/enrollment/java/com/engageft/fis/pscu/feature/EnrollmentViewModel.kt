@@ -5,8 +5,8 @@ import androidx.navigation.NavController
 /**
  * EnrollmentViewModel
  * <p>
- * Activity-level viewmodel managing all the Enrollment flow. Each baseFragmentIm is broken up into lazy-
- * initialized delegates. It is determined on the first baseFragmentIm which delegates will be needed,
+ * Activity-level viewmodel managing all the Enrollment flow. Each fragment is broken up into lazy-
+ * initialized delegates. It is determined on the first fragment which delegates will be needed,
  * and by the end of the flow, only the 'isInitialized' delegates will be needed to submit a final
  * form.
  *

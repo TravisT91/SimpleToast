@@ -18,7 +18,7 @@ import utilGen1.StringUtils
 /**
  * CancelCardFragment
  * </p>
- * This baseFragmentIm allows the user to cancel their card.
+ * This fragment allows the user to cancel their card.
  * </p>
  * Created by Travis Tkachuk 11/28/18
  * Copyright (c) 2018 Engage FT. All rights reserved.

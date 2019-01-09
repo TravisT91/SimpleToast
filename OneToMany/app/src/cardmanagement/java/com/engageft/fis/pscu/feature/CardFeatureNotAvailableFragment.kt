@@ -19,7 +19,7 @@ import utilGen1.StringUtils
 /**
  * CardFeatureNotAvailableFragment
  * </p>
- * This baseFragmentIm lets the user know that the feature they selected is not available to them.
+ * This fragment lets the user know that the feature they selected is not available to them.
  * </p>
  * Created by Travis Tkachuk 12/3/18
  * Copyright (c) 2018 Engage FT. All rights reserved.

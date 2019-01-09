@@ -173,7 +173,7 @@ class CardPinFragment : BaseEngagePageFragment() {
 
     override fun onResume() {
         super.onResume()
-        // must do Handler().post() because when this baseFragmentIm is displayed from DashboardFragment,
+        // must do Handler().post() because when this fragment is displayed from DashboardFragment,
         // the keyboard doesn't get displayed
         Handler().post {
             binding.pinInputField.requestFocus()

@@ -41,7 +41,7 @@ import java.util.*
 /**
  * WebViewFragment
  *
- * WebView baseFragmentIm that displays a webView, and shows webView in PDF format.
+ * WebView fragment that displays a webView, and shows webView in PDF format.
  *
  * Created by Kurt Mueller on 2/20/17.
  * Converted to Kotlin, imported partially by Atia Hashimi on 11/16/18.

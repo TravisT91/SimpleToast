@@ -18,7 +18,7 @@ import utilGen1.StringUtils
 /**
  * ReportLostStolenCardFragment
  * </p>
- * This baseFragmentIm allows the user to report a card as lost or stolen.
+ * This fragment allows the user to report a card as lost or stolen.
  * </p>
  * Created by Travis Tkachuk 11/28/18
  * Copyright (c) 2018 Engage FT. All rights reserved.
