@@ -19,7 +19,7 @@ import com.engageft.fis.pscu.feature.branding.Palette
  * Created by joeyhutchins on 12/13/18.
  * Copyright (c) 2018 Engage FT. All rights reserved.
  */
-class CardLinkedFragment : BaseEngageFullscreenFragment() {
+class CardLinkedFragment : BaseEngagePageFragment() {
     private lateinit var enrollmentViewModel: EnrollmentViewModel
     private lateinit var binding: FragmentCardLinkedBinding
     override fun createViewModel(): BaseViewModel? {

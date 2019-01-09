@@ -4,6 +4,7 @@ import android.os.Bundle
 import androidx.fragment.app.DialogFragment
 import com.engageft.engagekit.EngageService
 import com.engageft.fis.pscu.R
+import com.engageft.fis.pscu.feature.BaseEngageDialogFragment
 
 /**
  * BaseAuthExpiredDialog
@@ -14,7 +15,7 @@ import com.engageft.fis.pscu.R
  * Created by joeyhutchins on 11/7/18.
  * Copyright (c) 2018 Engage FT. All rights reserved.
  */
-abstract class BaseAuthExpiredDialog : DialogFragment() {
+abstract class BaseAuthExpiredDialog : BaseEngageDialogFragment() {
     private var reauthenticationSucceeded = false
 
     override fun onCreate(savedInstanceState: Bundle?) {

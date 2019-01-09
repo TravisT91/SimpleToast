@@ -21,7 +21,7 @@ import com.engageft.fis.pscu.feature.branding.Palette
  * Created by Atia Hashimi 12/14/18
  * Copyright (c) 2018 Engage FT. All rights reserved.
  */
-class AccountsAndTransfersListFragment: BaseEngageFullscreenFragment() {
+class AccountsAndTransfersListFragment: BaseEngagePageFragment() {
 
     private lateinit var accountsAndTransfersListViewModel: AccountsAndTransfersListViewModel
     private lateinit var recyclerViewAdapter: AccountsAndTransfersListRecyclerViewAdapter

@@ -7,7 +7,7 @@ import android.view.ViewGroup
 import com.engageft.apptoolbox.BaseViewModel
 import com.engageft.fis.pscu.databinding.FragmentCopyrightBinding
 
-class CopyrightFragment: BaseEngageFullscreenFragment() {
+class CopyrightFragment: BaseEngagePageFragment() {
 
     override fun createViewModel(): BaseViewModel? {
         return null
