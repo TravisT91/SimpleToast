@@ -79,6 +79,7 @@ dependencies {
     // Dependencies for Android Architectural Components
     implementation "androidx.lifecycle:lifecycle-extensions:$rootProject.archLifecycleVersion"
     kapt "androidx.lifecycle:lifecycle-compiler:$rootProject.archLifecycleVersion"
+    implementation 'com.google.firebase:firebase-core:16.0.6'
     implementation "com.heapanalytics.android:heap-android-client:$rootProject.heapVersion"
     implementation 'com.eightbitlab:blurview:1.5.0'
     // For styling views programmatically
@@ -96,3 +97,5 @@ dependencies {
     // for printing webview contents
     implementation 'org.jsoup:jsoup:1.10.3'
 }
+
+apply plugin: 'com.google.gms.google-services'
