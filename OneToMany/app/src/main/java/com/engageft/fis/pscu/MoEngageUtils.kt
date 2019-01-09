@@ -32,9 +32,8 @@ object MoEngageUtils {
         if (isMoEngageEnabled()) {
             val application = OneToManyApplication.sInstance
             val moEngage = MoEngage.Builder(application, getMoEngageAppId())
-                    //.setNotificationSmallIcon(R.drawable.ic_notification) // TODO(kurt): waiting on FOTM-642
+                    .setNotificationSmallIcon(R.drawable.ic_notification) // TODO(kurt): waiting on FOTM-642 for updated icon
                     .setNotificationLargeIcon(R.mipmap.ic_launcher)
-                    //.setSenderId(EngageAppConfig.fcmSenderId) // This is probably not necessary, but included as an option when getting push working
                     .setLogLevel(Logger.VERBOSE)
                     .build()
             MoEngage.initialise(moEngage)
