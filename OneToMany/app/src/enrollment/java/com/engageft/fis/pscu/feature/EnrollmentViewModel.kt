@@ -1,6 +1,12 @@
 package com.engageft.fis.pscu.feature
 
 import androidx.navigation.NavController
+import com.engageft.fis.pscu.feature.gatekeeping.CardPinEnrollmentGateKeeper
+import com.engageft.fis.pscu.feature.gatekeeping.GateKeeperListener
+import com.engageft.fis.pscu.feature.gatekeeping.GatedItem
+import com.engageft.fis.pscu.feature.gatekeeping.items.AccountRequiredGatedItem
+import com.engageft.fis.pscu.feature.gatekeeping.items.CIPRequiredGatedItem
+import com.engageft.fis.pscu.feature.gatekeeping.items.TermsRequiredGatedItem
 import com.ob.ws.dom.ActivationCardInfo
 
 /**
@@ -76,9 +82,40 @@ class EnrollmentViewModel : BaseEngageViewModel() {
         // TODO(jhutchins): Implement this.
     }
 
-    inner class EnrollmentCardPinDelegate {
-        init {
+    inner class EnrollmentCardPinDelegate : CardPinViewModelListener {
+        val cardPinViewModelDelegate = CardPinViewModelDelegate(this@EnrollmentViewModel, this)
+        private val gateKeeperListener: GateKeeperListener = object : GateKeeperListener {
+            override fun onGateOpen() {
+                navController.navigate(cardPinNavigations.cardPINToSending)
+            }
 
+            override fun onGatedItemFailed(item: GatedItem) {
+                when (item) {
+                    is AccountRequiredGatedItem -> {
+                        navController.navigate(cardPinNavigations.cardPINToCreateAccount)
+                    }
+                    is CIPRequiredGatedItem -> {
+                        navController.navigate(cardPinNavigations.cardPINToVerifyIdentity)
+                    }
+                    is TermsRequiredGatedItem -> {
+                        navController.navigate(cardPinNavigations.cardPINToTerms)
+                    }
+                }
+            }
+
+            override fun onItemError(item: GatedItem, e: Throwable?, message: String?) {
+                // Intentionally empty and will never be called.
+            }
+        }
+
+        var pinNumber = 0
+
+
+        override fun onPostPin(pinNumber: Int) {
+            this.pinNumber = pinNumber
+
+            val gateKeeper = CardPinEnrollmentGateKeeper(activationCardInfo, gateKeeperListener)
+            gateKeeper.run()
         }
 
         fun onButton1Clicked() {

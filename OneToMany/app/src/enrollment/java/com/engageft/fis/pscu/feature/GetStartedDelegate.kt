@@ -1,5 +1,6 @@
 package com.engageft.fis.pscu.feature
 
+import android.util.Log
 import androidx.databinding.Observable
 import androidx.databinding.ObservableField
 import androidx.lifecycle.MutableLiveData
@@ -7,9 +8,9 @@ import androidx.navigation.NavController
 import com.engageft.engagekit.EngageService
 import com.engageft.engagekit.rest.request.ActivationCardInfoRequest
 import com.engageft.fis.pscu.feature.branding.BrandingManager
-import com.engageft.fis.pscu.feature.gatekeeping.GetStartedEnrollmentGateKeeper
 import com.engageft.fis.pscu.feature.gatekeeping.GateKeeperListener
 import com.engageft.fis.pscu.feature.gatekeeping.GatedItem
+import com.engageft.fis.pscu.feature.gatekeeping.GetStartedEnrollmentGateKeeper
 import com.engageft.fis.pscu.feature.gatekeeping.items.AccountRequiredGatedItem
 import com.engageft.fis.pscu.feature.gatekeeping.items.CIPRequiredGatedItem
 import com.engageft.fis.pscu.feature.gatekeeping.items.PinRequiredGatedItem
@@ -150,25 +151,30 @@ class GetStartedDelegate(private val viewModel: EnrollmentViewModel, private val
                                 .subscribe({ response ->
                                     viewModel.progressOverlayShownObservable.value = false
                                     if (response.isSuccess && response is ActivationCardInfo) {
-                                        val cardInfo = response
-                                        viewModel.activationCardInfo = cardInfo
+                                        viewModel.activationCardInfo = response
 
-                                        BrandingManager.getBrandingWithRefCode(cardInfo.refCode)
+                                        BrandingManager.getBrandingWithRefCode(response.refCode)
                                                 .subscribeWithDefaultProgressAndErrorHandling<BrandingInfoResponse>(
                                                         viewModel, {
                                                     // If the card is already activated, the backend will
                                                     // send the message and it'd handled below in the
                                                     // "failedResponse" block.
 
-                                                    if (cardInfo.isParentActivationRequired) {
+                                                    if (response.isParentActivationRequired) {
                                                         dialogObservable.value = GetStartedDialog.UNDER_18
                                                         dialogObservable.postValue(GetStartedDialog.NONE)
                                                     } else {
-                                                        val gateKeeper = GetStartedEnrollmentGateKeeper(cardInfo, gateKeeperListener)
+                                                        val gateKeeper = GetStartedEnrollmentGateKeeper(response, gateKeeperListener)
                                                         gateKeeper.run()
                                                     }
                                                 }, { failedResponse ->
+                                                    Log.e("Joey", "Unexpeected error")
                                                     viewModel.handleUnexpectedErrorResponse(failedResponse)
+                                                }, { e : Throwable ->
+                                                    Log.e("Joey", "found you")
+                                                }, {
+                                                    Log.e("Joey", "Hello")
+                                                    Unit
                                                 }
                                         )
                                     } else {
@@ -183,8 +189,12 @@ class GetStartedDelegate(private val viewModel: EnrollmentViewModel, private val
                                         viewModel.dialogInfoObservable.postValue(DialogInfo(dialogType = DialogInfo.DialogType.OTHER))
                                     }
                                 }, { e ->
+                                    Log.e("Joey", "uhhhh")
                                     viewModel.progressOverlayShownObservable.value = false
                                     viewModel.handleThrowable(e)
+                                }, {
+                                    Log.e("Joey", "what")
+                                    Unit
                                 })
                 )
             }
