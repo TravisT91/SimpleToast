@@ -29,7 +29,6 @@ class AchBankAccountAddViewModel: BaseEngageViewModel() {
     val routingNumber: ObservableField<String> = ObservableField("")
     val accountNumber: ObservableField<String> = ObservableField("")
     val accountType: ObservableField<String> = ObservableField("")
-    var isChecking: Boolean = false
 
     val navigationEventObservable = MutableLiveData<AchBankAccountNavigationEvent>()
     val buttonStateObservable = MutableLiveData<ButtonState>()
@@ -132,7 +131,7 @@ class AchBankAccountAddViewModel: BaseEngageViewModel() {
                                 navigationEventObservable.value = AchBankAccountNavigationEvent.BANK_ADDED_SUCCESS
                                 navigationEventObservable.postValue(AchBankAccountNavigationEvent.NONE)
                             } else {
-                                handleUnexpectedErrorResponse(response)
+                                handleBackendErrorForForms(response, "$TAG: failed to add an ACH account")
                             }
                         }, { e ->
                             progressOverlayShownObservable.value = false
@@ -162,6 +161,7 @@ class AchBankAccountAddViewModel: BaseEngageViewModel() {
 
     private companion object {
         const val ACCOUNT_TYPE_CHECKING = "Checking"
+        const val TAG = "AchBankAccountAddViewModel"
     }
 }
 

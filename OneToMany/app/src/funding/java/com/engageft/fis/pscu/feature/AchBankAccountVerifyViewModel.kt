@@ -80,14 +80,7 @@ class AchBankAccountVerifyViewModel: BaseEngageViewModel() {
                                     navigationEventObservable.value = AchBankAccountNavigationEvent.BANK_VERIFIED_SUCCESS
                                     navigationEventObservable.value = AchBankAccountNavigationEvent.NONE
                                 } else {
-                                    // show backend error message
-                                    if (response.message.isNotEmpty()) {
-                                        dialogInfoObservable.value = DialogInfo(
-                                                message = response.message,
-                                                dialogType = DialogInfo.DialogType.SERVER_ERROR)
-                                    } else {
-                                        handleUnexpectedErrorResponse(response)
-                                    }
+                                    handleBackendErrorForForms(response, "$TAG: failed to verify ACH account")
                                 }
                             }, { e ->
                                 progressOverlayShownObservable.value = false
@@ -138,5 +131,9 @@ class AchBankAccountVerifyViewModel: BaseEngageViewModel() {
         } else {
             buttonStateObservable.value = ButtonState.HIDE
         }
+    }
+
+    private companion object {
+        const val TAG = "AchBankAccountVerifyViewModel"
     }
 }
