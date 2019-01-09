@@ -493,17 +493,7 @@ class DashboardFragment : BaseEngageFullscreenFragment(),
     }
 
     override fun onLockUnlockCard() {
-        val lock: Boolean? = when(EngageService.getInstance().storageManager.currentCard.status){
-            DebitCardStatus.ACTIVE -> true
-            DebitCardStatus.LOCKED_USER -> false
-            else -> null
-        }
-        lock?.let{ dashboardViewModel.updateCardLockStatus(it)
-        } ?: run {
-            Toast.makeText(
-                    context,
-                    getString(R.string.FEATURE_NOT_AVAILABLE_HEADER),
-                    Toast.LENGTH_SHORT).show() }
+        binding.root.findNavController().navigate(R.id.action_dashboard_fragment_to_cardLockUnlockFragment)
     }
 
     override fun onChangePin() {

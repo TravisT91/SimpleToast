@@ -354,17 +354,6 @@ class DashboardViewModel : BaseEngageViewModel(), GateKeeperListener {
         const val TRANSACTIONS_TAB_POSITION_ALL = 0
         const val TRANSACTIONS_TAB_POSITION_DEPOSITS = 1
     }
-
-    fun updateCardLockStatus(lock: Boolean){
-        engageApi().postLockCard(
-                CardLockUnlockRequest(
-                        EngageService.getInstance().storageManager.loginResponse.token,
-                        EngageService.getInstance().storageManager.currentCard.debitCardId,
-                        lock).fieldMap)
-                .subscribeWithDefaultProgressAndErrorHandling<BasicResponse>(this, {
-                    EngageService.getInstance().clearLoginAndDashboardResponses()
-                    productCardViewModelDelegate.updateCardView() })
-    }
 }
 
 enum class DashboardAnimationEvent {
