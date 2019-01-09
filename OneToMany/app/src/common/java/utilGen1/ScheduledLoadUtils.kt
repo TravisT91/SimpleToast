@@ -127,7 +127,6 @@ object ScheduledLoadUtils {
             ScheduledLoad.SCHED_LOAD_TYPE_MONTHLY -> context.getString(R.string.TRANSFER_MONTHLY_TEXT)
             ScheduledLoad.SCHED_LOAD_TYPE_TWICE_MONTHLY -> context.getString(R.string.TRANSFER_TWICE_MONTHLY_TEXT)
             ScheduledLoad.SCHED_LOAD_TYPE_WEEKLY -> context.getString(R.string.TRANSFER_WEEKLY_TEXT)
-            ScheduledLoad.SCHED_LOAD_TYPE_ALT_WEEKLY -> context.getString(R.string.TRANSFER_ALT_WEEKLY_TEXT)
             else -> context.getString(R.string.TRANSFER_ONCE_TEXT)
         }
     }

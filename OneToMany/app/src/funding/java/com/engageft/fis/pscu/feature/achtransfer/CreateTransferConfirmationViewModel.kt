@@ -7,9 +7,8 @@ import com.engageft.engagekit.rest.request.FundingFundAchAccountRequest
 import com.engageft.engagekit.rest.request.ScheduledLoadAchAddRequest
 import com.engageft.engagekit.utils.BackendDateTimeUtils
 import com.engageft.fis.pscu.feature.BaseEngageViewModel
-import com.engageft.fis.pscu.feature.DialogInfo
+import com.engageft.fis.pscu.feature.handleBackendErrorForForms
 import com.ob.ws.dom.BasicResponse
-import com.ob.ws.dom.ValidationErrors
 import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
@@ -81,7 +80,7 @@ class CreateTransferConfirmationViewModel: BaseEngageViewModel() {
                                 EngageService.getInstance().clearLoginAndDashboardResponses()
                                 navigationEventObservable.value = NavigationEvent.TRANSFER_SUCCESS
                             } else {
-                                showBackendErrorOrGenericMessage(response)
+                                handleBackendErrorForForms(response, "$TAG: creating a recurring transfer failed.")
                             }
                         }, { e ->
                             progressOverlayShownObservable.value = false
@@ -110,7 +109,7 @@ class CreateTransferConfirmationViewModel: BaseEngageViewModel() {
                                 EngageService.getInstance().clearLoginAndDashboardResponses()
                                 navigationEventObservable.value = NavigationEvent.TRANSFER_SUCCESS
                             } else {
-                                showBackendErrorOrGenericMessage(response)
+                                handleBackendErrorForForms(response, "$TAG: creating one-time transfer failed.")
                             }
                         }, { e ->
                             progressOverlayShownObservable.value = false
@@ -119,17 +118,7 @@ class CreateTransferConfirmationViewModel: BaseEngageViewModel() {
         )
     }
 
-    private fun showBackendErrorOrGenericMessage(response: BasicResponse) {
-        if (response.message.isNotEmpty()) {
-            dialogInfoObservable.value = DialogInfo(dialogType = DialogInfo.DialogType.SERVER_ERROR, message = response.message)
-        } else if (response is ValidationErrors) {
-            if (response.error.isNotEmpty()) {
-                dialogInfoObservable.value = DialogInfo(dialogType = DialogInfo.DialogType.SERVER_ERROR, message = response.error.elementAt(0).message)
-            } else {
-                handleUnexpectedErrorResponse(response)
-            }
-        } else {
-            handleUnexpectedErrorResponse(response)
-        }
+    private companion object {
+        const val TAG = "CreateTransferConfirmationViewModel"
     }
 }

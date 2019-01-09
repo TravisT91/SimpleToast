@@ -8,7 +8,7 @@ import com.engageft.engagekit.EngageService
 import com.engageft.engagekit.rest.request.AchAccountValidateRequest
 import com.engageft.fis.pscu.config.EngageAppConfig
 import com.engageft.fis.pscu.feature.BaseEngageViewModel
-import com.engageft.fis.pscu.feature.DialogInfo
+import com.engageft.fis.pscu.feature.handleBackendErrorForForms
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 /**
