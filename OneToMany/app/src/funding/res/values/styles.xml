@@ -82,5 +82,33 @@
         <item name="android:layout_height">wrap_content</item>
         <item name="android:textColor">@color/black</item>
     </style>
+
+    <style name="AchBankAccountVerifyTitleStyle" parent="Footnote">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:padding">16dp</item>
+        <item name="android:textColor">@color/textSecondary</item>
+        <item name="android:lineSpacingExtra">13sp</item>
+        <item name="android:gravity">center_horizontal</item>
+    </style>
+
+    <style name="AchBankAccountAddVerifySuccessTitleStyle" parent="Title1Quiet">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:padding">16dp</item>
+        <item name="android:textColor">@color/textPrimary</item>
+        <item name="android:lineSpacingExtra">6sp</item>
+        <item name="android:gravity">center_horizontal</item>
+    </style>
+
+    <style name="AchBankAccountAddVerifySuccessSubtitleStyle" parent="Body">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:padding">16dp</item>
+        <item name="android:textColor">@color/textSecondary</item>
+        <item name="android:lineSpacingExtra">7sp</item>
+        <item name="android:gravity">center_horizontal</item>
+    </style>
+
     <!-- End of Ach Bank Transfer -->
 </resources>
