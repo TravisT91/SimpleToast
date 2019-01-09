@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="ENROLLMENT_CARD_NUMBER_LABEL">Card number</string>
+    <string name="ENROLLMENT_DOB_LABEL">Date of birth (MM/DD/YYYY)</string>
+    <string name="ENROLLMENT_CARD_NUMBER_HINT">Card number</string>
+    <string name="ENROLLMENT_CARD_NUMBER_PLACEHOLDER_LABEL">YOUR CARD HERE</string>
+    <string name="ENROLLMENT_NEXT">Next</string>
+    <string name="ENROLLMENT_CARD_NUMBER_INVALID">Please enter a valid 16-digit card number.</string>
+    <string name="ENROLLMENT_CARD_DOB_INVALID">Please enter a valid date of birth.</string>
+    <string name="ENROLLMENT_CARD_DOB_UNDER_13">Account user must be at least 13 years old.</string>
+    <string name="ENROLLMENT_GET_STARTED_ACTION_NEXT">@string/ENROLLMENT_NEXT</string>
+    <string name="ENROLLMENT_GET_STARTED_UNDER_18_TITLE">Cardholder under 18</string>
+    <string name="ENROLLMENT_GET_STARTED_UNDER_18_MESSAGE">A parent/legal guardian must activate your card. Are you the parent/legal guardian of the cardholder?</string>
+    <string name="ENROLLMENT_GET_STARTED_UNDER_18_POSITIVE">YES</string>
+    <string name="ENROLLMENT_GET_STARTED_UNDER_18_NEGATIVE">NO</string>
+</resources>

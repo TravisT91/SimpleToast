@@ -90,6 +90,9 @@ dependencies {
     // For image loading
     implementation 'com.squareup.picasso:picasso:2.71828'
 
+    // For input masking InputWithLabel objects.
+    implementation 'com.redmadrobot:inputmask:3.4.4'
+
     implementation('com.crashlytics.sdk.android:crashlytics:2.9.6@aar') {
         transitive = true
     }

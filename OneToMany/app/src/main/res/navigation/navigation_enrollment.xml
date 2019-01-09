@@ -6,7 +6,7 @@
     <fragment
         android:id="@+id/cardActiveFragment"
         android:name="com.engageft.fis.pscu.feature.CardActiveFragment"
-        android:label="CardActiveFragment" >
+        android:label="" >
         <action
             android:id="@+id/action_cardActiveFragment_to_authenticatedActivity2"
             app:destination="@id/authenticatedActivity2" />
@@ -14,7 +14,7 @@
     <fragment
         android:id="@+id/cardLinkedFragment"
         android:name="com.engageft.fis.pscu.feature.CardLinkedFragment"
-        android:label="CardLinkedFragment" >
+        android:label="" >
         <action
             android:id="@+id/action_cardLinkedFragment_to_authenticatedActivity2"
             app:destination="@id/authenticatedActivity2" />
@@ -22,7 +22,7 @@
     <fragment
         android:id="@+id/createAccountFragment"
         android:name="com.engageft.fis.pscu.feature.CreateAccountFragment"
-        android:label="CreateAccountFragment" >
+        android:label="@string/fragment_title_enrollment_create_account" >
         <action
             android:id="@+id/action_createAccountFragment_to_verifyIdentityFragment"
             app:destination="@id/verifyIdentityFragment"
@@ -48,7 +48,7 @@
     <fragment
         android:id="@+id/enrollmentCardPinFragment"
         android:name="com.engageft.fis.pscu.feature.EnrollmentCardPinFragment"
-        android:label="EnrollmentCardPinFragment" >
+        android:label="@string/fragment_title_enrollment_card_pin" >
         <action
             android:id="@+id/action_enrollmentCardPinFragment_to_createAccountFragment"
             app:destination="@id/createAccountFragment"
@@ -81,11 +81,11 @@
     <fragment
         android:id="@+id/enrollmentErrorFragment"
         android:name="com.engageft.fis.pscu.feature.EnrollmentErrorFragment"
-        android:label="EnrollmentErrorFragment" />
+        android:label="" />
     <fragment
         android:id="@+id/enrollmentSuccessFragment"
         android:name="com.engageft.fis.pscu.feature.EnrollmentSuccessFragment"
-        android:label="EnrollmentSuccessFragment" >
+        android:label="" >
         <action
             android:id="@+id/action_enrollmentSuccessFragment_to_cardActiveFragment"
             app:destination="@id/cardActiveFragment"
@@ -104,7 +104,7 @@
     <fragment
         android:id="@+id/getStartedFragment"
         android:name="com.engageft.fis.pscu.feature.GetStartedFragment"
-        android:label="GetStartedFragment" >
+        android:label="@string/fragment_title_enrollment_get_started" >
         <action
             android:id="@+id/action_getStartedFragment_to_enrollmentCardPinFragment"
             app:destination="@id/enrollmentCardPinFragment"
@@ -147,7 +147,7 @@
     <fragment
         android:id="@+id/sendingEnrollmentFragment"
         android:name="com.engageft.fis.pscu.feature.SendingEnrollmentFragment"
-        android:label="SendingEnrollmentFragment" >
+        android:label="" >
         <action
             android:id="@+id/action_sendingEnrollmentFragment_to_enrollmentSuccessFragment"
             app:destination="@id/enrollmentSuccessFragment"
@@ -166,7 +166,7 @@
     <fragment
         android:id="@+id/termsOfUseFragment"
         android:name="com.engageft.fis.pscu.feature.TermsOfUseFragment"
-        android:label="TermsOfUseFragment" >
+        android:label="@string/fragment_title_enrollment_terms" >
         <action
             android:id="@+id/action_termsOfUseFragment_to_sendingEnrollmentFragment"
             app:destination="@id/sendingEnrollmentFragment"
@@ -178,7 +178,7 @@
     <fragment
         android:id="@+id/verifyIdentityFragment"
         android:name="com.engageft.fis.pscu.feature.VerifyIdentityFragment"
-        android:label="VerifyIdentityFragment" >
+        android:label="@string/fragment_title_enrollment_verify_identity" >
         <action
             android:id="@+id/action_verifyIdentityFragment_to_termsOfUseFragment"
             app:destination="@id/termsOfUseFragment"
@@ -197,5 +197,5 @@
     <activity
         android:id="@+id/authenticatedActivity2"
         android:name="com.engageft.fis.pscu.AuthenticatedActivity"
-        android:label="AuthenticatedActivity" />
+        android:label="" />
 </navigation>

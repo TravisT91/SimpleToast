@@ -27,7 +27,7 @@ import com.engageft.fis.pscu.feature.branding.Palette
  * Created by Atia Hashimi 12/20/18
  * Copyright (c) 2018 Engage FT. All rights reserved.
  */
-class AchBankAccountVerifyFragment: BaseEngageFullscreenFragment() {
+class AchBankAccountVerifyFragment: BaseEngagePageFragment() {
     private lateinit var verifyAchBankAccountViewModel: AchBankAccountVerifyViewModel
 
     override fun createViewModel(): BaseViewModel? {
