@@ -627,8 +627,4 @@ class DashboardFragment : BaseEngageFullscreenFragment(),
         // TODO(kurt): Pass transactionInfo to TransactionDetailFragment through navigation bundle (see onMoveMoney(), above)
         Toast.makeText(activity, "Transaction selected: " + transaction.store, Toast.LENGTH_SHORT).show()
     }
-
-    companion object {
-        private const val TRANSACTION_SEARCH_MINIMUM_CHARS = 2
-    }
 }

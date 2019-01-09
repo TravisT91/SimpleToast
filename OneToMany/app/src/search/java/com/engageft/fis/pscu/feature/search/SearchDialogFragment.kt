@@ -15,6 +15,7 @@ import androidx.fragment.app.DialogFragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.engageft.apptoolbox.ProgressOverlayDelegate
 import com.engageft.apptoolbox.util.hideKeyboard
 import com.engageft.engagekit.repository.transaction.vo.Transaction
 import com.engageft.fis.pscu.R
@@ -26,6 +27,8 @@ class SearchDialogFragment : DialogFragment(), TransactionListener {
 
     private lateinit var viewModel: SearchDialogFragmentViewModel
     private lateinit var binding: DialogFragmentSearchBinding
+
+    private var progressOverlayDelegate: ProgressOverlayDelegate? = null
 
     private val searchAdapter: TransactionsSearchAdapter by lazy {
         binding.searchRecyclerView.adapter = TransactionsSearchAdapter(this)
@@ -52,23 +55,27 @@ class SearchDialogFragment : DialogFragment(), TransactionListener {
 
         binding.searchEditText.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(charSequence: CharSequence, i: Int, i1: Int, i2: Int) {
-
+                // Do nothing
             }
 
             override fun onTextChanged(charSequence: CharSequence, i: Int, i1: Int, i2: Int) {
-
+                binding.searchClearButton.visibility = if (charSequence.isNotBlank()) View.VISIBLE else View.INVISIBLE
             }
 
             override fun afterTextChanged(editable: Editable) {
-                binding.searchClearButton.visibility = if (editable.isNotBlank()) View.VISIBLE else View.INVISIBLE
+                // Do nothing
             }
         })
 
         binding.searchEditText.setOnEditorActionListener { textView, actionId, event ->
             if (actionId == EditorInfo.IME_ACTION_DONE || (actionId == EditorInfo.IME_ACTION_UNSPECIFIED && event.action == KeyEvent.ACTION_DOWN)) {
                 textView?.apply {
-                    binding.searchEditText.hideKeyboard()
-                    viewModel.searchTransactions(text.trim().toString())
+                    if (text.trim().length < TRANSACTION_SEARCH_MINIMUM_CHARS) {
+                        Toast.makeText(context, getString(R.string.TRANSACTIONS_SEARCH_MESSAGE_MINIMUM_CHARS), Toast.LENGTH_LONG).show()
+                    } else {
+                        binding.searchEditText.hideKeyboard()
+                        viewModel.searchTransactions(text.trim().toString())
+                    }
                 }
                 true
             } else false
@@ -84,10 +91,16 @@ class SearchDialogFragment : DialogFragment(), TransactionListener {
             transactionList -> if (transactionList.isEmpty()) searchAdapter.showNoResults(getString(R.string.EMPTY_SEARCH_MESSAGE)) else searchAdapter.updateTransactions(transactionList)
         })
 
+        progressOverlayDelegate = ProgressOverlayDelegate(com.engageft.apptoolbox.R.style.LoadingOverlayDialogStyle, this, viewModel)
+
         return binding.root
     }
 
     override fun onTransactionSelected(transaction: Transaction) {
         Toast.makeText(activity, "Transaction selected: " + transaction.store, Toast.LENGTH_SHORT).show()
+    }
+
+    companion object {
+        private const val TRANSACTION_SEARCH_MINIMUM_CHARS = 2
     }
 }

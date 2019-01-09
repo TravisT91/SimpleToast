@@ -10,6 +10,11 @@ class EmptySearchViewHolder(itemView: View, val context: Context) : RecyclerView
     private val messageTextView: TextView = itemView.findViewById(R.id.emptyLabel)
 
     fun setMessage(message: String?) {
-        messageTextView.text = if (message.isNullOrBlank()) "" else message
+        if (message.isNullOrBlank()) {
+            messageTextView.visibility = View.GONE
+        } else {
+            messageTextView.text = message
+            messageTextView.visibility = View.VISIBLE
+        }
     }
 }

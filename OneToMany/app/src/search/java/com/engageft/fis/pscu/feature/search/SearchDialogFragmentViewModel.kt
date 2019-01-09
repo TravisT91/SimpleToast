@@ -14,7 +14,6 @@ class SearchDialogFragmentViewModel : BaseEngageViewModel() {
     val searchTransactions: MutableLiveData<List<Transaction>> = MutableLiveData()
 
     fun searchTransactions(searchString: String) {
-        //searchNetworkState.value = NetworkState.LOADING
         progressOverlayShownObservable.value = true
         val request = TransactionsSearchRequest(
                 EngageService.getInstance().authManager.authToken,
@@ -32,17 +31,14 @@ class SearchDialogFragmentViewModel : BaseEngageViewModel() {
                                         transactionList.add(transactionInfo.toTransaction())
                                     }
                                     searchTransactions.postValue(transactionList)
-                                    //searchNetworkState.postValue(NetworkState.LOADED)
                                     progressOverlayShownObservable.postValue(false)
                                 } else {
                                     // transactions list was null or empty
                                     searchTransactions.postValue(listOf())
-                                    //searchNetworkState.postValue(NetworkState.LOADED)
                                     progressOverlayShownObservable.postValue(false)
                                 }
                             } else {
                                 handleUnexpectedErrorResponse(response)
-                                //searchNetworkState.postValue(NetworkState.error(response.message))
                                 progressOverlayShownObservable.postValue(false)
                             }
                         }) { e ->
