@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
+import androidx.navigation.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.engageft.apptoolbox.BaseViewModel
 import com.engageft.fis.pscu.R
@@ -20,7 +21,7 @@ import com.engageft.fis.pscu.feature.branding.Palette
  * Created by Atia Hashimi 12/14/18
  * Copyright (c) 2018 Engage FT. All rights reserved.
  */
-class AccountsAndTransfersListFragment: BaseEngageFullscreenFragment() {
+class AccountsAndTransfersListFragment: BaseEngagePageFragment() {
 
     private lateinit var accountsAndTransfersListViewModel: AccountsAndTransfersListViewModel
     private lateinit var recyclerViewAdapter: AccountsAndTransfersListRecyclerViewAdapter
@@ -41,10 +42,20 @@ class AccountsAndTransfersListFragment: BaseEngageFullscreenFragment() {
             recyclerViewAdapter = AccountsAndTransfersListRecyclerViewAdapter(context!!,
 
                     object : AccountsAndTransfersListRecyclerViewAdapter.AchAccountInfoClickListener {
-                        override fun onAchAccountInfoClicked(achAccountInfoId: Long) {
-                            //TODO(aHashimi): https://engageft.atlassian.net/browse/FOTM-65
-                            //TODO(aHashimi): the new screen must check -1 which means CREATE a new bank transfer acct otherwise it's EDIT
-                            Toast.makeText(context!!, "on Ach Account clicked! ID = $achAccountInfoId", Toast.LENGTH_SHORT).show()
+                        override fun onAchAccounDetailClicked(achAccountInfoId: Long) {
+                            root.findNavController().navigate(R.id.action_accountsAndTransfersListFragment_to_achBankAccountDetailFragment,
+                                    Bundle().apply {
+                                        putLong(ACH_BANK_ACCOUNT_ID, achAccountInfoId)
+                                    })
+                        }
+
+                        override fun onAddBankAccountClicked() {
+                            //TODO(aHashimi): support multiple ACH account later: https://engageft.atlassian.net/browse/FOTM-588
+                            if (accountsAndTransfersListViewModel.isAllowedToAddAccount()) {
+                                root.findNavController().navigate(R.id.action_accountsAndTransfersListFragment_to_achBankAccountAddFragment)
+                            } else {
+                                //TODO(aHashimi): https://engageft.atlassian.net/browse/FOTM-588
+                            }
                         }
                     },
 
@@ -62,7 +73,13 @@ class AccountsAndTransfersListFragment: BaseEngageFullscreenFragment() {
                                     if (achAccountListAndStatus.bankStatus == AccountsAndTransfersListViewModel.BankAccountStatus.VERIFIED_BANK_ACCOUNT) {
                                         // TODO(aHashimi): FOTM-113 create transfer
                                     } else {
-                                        //TODO(aHashimi): FOTM-65 add/verify bank account
+                                        // TODO(aHashimi): User can't add more than 1 Ach Bank account, when/if multiple ach bank accounts are added the UI and this logic needs to change.
+                                        // As of now the user can't add more than ach bank account but this will need to change if it did because we're just relying on the first item.
+                                        // the UI logic doesn't make sense and as a result this will need to change as well.
+                                        root.findNavController().navigate(R.id.action_accountsAndTransfersListFragment_to_achBankAccountVerifyFragment,
+                                                Bundle().apply {
+                                                    putLong(ACH_BANK_ACCOUNT_ID, accountsAndTransfersListViewModel.achBankAccountId)
+                                                })
                                     }
                                 }
                             }
@@ -78,6 +95,7 @@ class AccountsAndTransfersListFragment: BaseEngageFullscreenFragment() {
 
                 if (achAccountListAndStatus.bankStatus == AccountsAndTransfersListViewModel.BankAccountStatus.VERIFIED_BANK_ACCOUNT) {
                     recyclerViewAdapter.setButtonTextAndVisibility(getString(R.string.ach_bank_transfer_create_transfer), true)
+                    recyclerViewAdapter.removeHeaderAndNotifyAdapter()
                 } else {
                     if (achAccountListAndStatus.bankStatus == AccountsAndTransfersListViewModel.BankAccountStatus.NO_BANK_ACCOUNT) {
                         recyclerViewAdapter.setButtonTextAndVisibility("", false)
@@ -112,5 +130,9 @@ class AccountsAndTransfersListFragment: BaseEngageFullscreenFragment() {
         super.onResume()
         //TODO(aHashimi): should replace with MutableLiveData<loginResponse> in VM?
         accountsAndTransfersListViewModel.refreshViews()
+    }
+
+    companion object {
+        const val ACH_BANK_ACCOUNT_ID = "ACH_BANK_ACCOUNT_ID"
     }
 }

@@ -18,10 +18,11 @@ import androidx.appcompat.app.AlertDialog
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
+import com.engageft.apptoolbox.BaseViewModel
 import com.engageft.apptoolbox.util.setTextSizeAndFont
 import com.engageft.apptoolbox.util.showKeyboard
-import com.engageft.apptoolbox.view.SafeDialogFragment
 import com.engageft.fis.pscu.R
+import com.engageft.fis.pscu.feature.BaseEngageDialogFragment
 
 /**
  * AuthenticationDialogFragment
@@ -32,7 +33,7 @@ import com.engageft.fis.pscu.R
  * Created by kurteous on 12/1/18.
  * Copyright (c) 2018 Engage FT. All rights reserved.
  */
-class AuthenticationDialogFragment : SafeDialogFragment() {
+class AuthenticationDialogFragment : BaseEngageDialogFragment() {
 
     private var message: CharSequence? = null
     private var styleResId: Int = NOT_SET
@@ -69,6 +70,11 @@ class AuthenticationDialogFragment : SafeDialogFragment() {
     private var authenticationSuccessFunction: (() -> Unit)? = null
 
     private lateinit var viewModel: AuthenticationDialogViewModel
+
+    override fun createViewModel(): BaseViewModel? {
+        viewModel = ViewModelProviders.of(this).get(AuthenticationDialogViewModel::class.java)
+        return viewModel
+    }
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         arguments?.apply {

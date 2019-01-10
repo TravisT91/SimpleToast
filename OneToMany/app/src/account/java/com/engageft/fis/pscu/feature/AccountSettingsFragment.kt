@@ -29,7 +29,7 @@ import com.engageft.fis.pscu.feature.branding.Palette
  * Copyright (c) 2018 Engage FT. All rights reserved.
  */
 
-class AccountSettingsFragment : BaseEngageFullscreenFragment() {
+class AccountSettingsFragment : BaseEngagePageFragment() {
     private lateinit var accountSettingsViewModel: AccountSettingsViewModel
 
     override fun createViewModel(): BaseViewModel? {
