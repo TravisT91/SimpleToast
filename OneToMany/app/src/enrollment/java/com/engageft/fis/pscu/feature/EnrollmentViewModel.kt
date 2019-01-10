@@ -1,5 +1,6 @@
 package com.engageft.fis.pscu.feature
 
+import androidx.databinding.ObservableField
 import androidx.navigation.NavController
 import com.ob.ws.dom.ActivationCardInfo
 
@@ -77,7 +78,16 @@ class EnrollmentViewModel : BaseEngageViewModel() {
     }
 
     inner class CreateAccountDelegate {
+
+        val emailInput: ObservableField<String> = ObservableField("")
+        val passwordInput: ObservableField<String> = ObservableField("")
+        val passwordConfirmInput: ObservableField<String> = ObservableField("")
+
         init {
+
+        }
+
+        fun onNextClicked() {
 
         }
 

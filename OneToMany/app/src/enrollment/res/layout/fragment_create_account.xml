@@ -8,31 +8,127 @@
             name="palette"
             type="com.engageft.fis.pscu.feature.branding.Palette"/>
     </data>
-    <androidx.constraintlayout.widget.ConstraintLayout
+
+    <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="vertical">
-            <Button
-                android:id="@+id/button1"
+        android:fillViewport="true"
+        android:layout_height="match_parent"
+        android:isScrollContainer="true">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/parent"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/contentBox"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent">
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    style="@style/Title1Quiet"
+                    android:id="@+id/loginTextView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="24dp"
+                    android:layout_marginBottom="22dp"
+                    android:textColor="@color/structure6"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintBottom_toTopOf="@id/loginInputForm"
+                    android:text="@string/ENROLLMENT_CREATE_ACCOUNT_TITLE"/>
+
+                <LinearLayout
+                    android:id="@+id/loginInputForm"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintTop_toBottomOf="@id/placeholderCardView"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintBottom_toTopOf="@id/nextButton"
+                    android:orientation="vertical"
+                    android:background="@color/white"
+                    android:paddingStart="16dp"
+                    android:paddingEnd="16dp">
+
+                    <com.engageft.apptoolbox.view.TextInputWithLabel
+                        android:id="@+id/emailInput"
+                        style="@style/TextInputWithLabelStyle"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="20dp"
+                        app:labelText="@string/ENROLLMENT_CREATE_ACCOUNT_EMAIL_LABEL"
+                        app:inputText="@={viewModel.emailInput}"/>
+
+                    <com.engageft.apptoolbox.view.PasswordInputWithLabel
+                        android:id="@+id/passwordInput"
+                        style="@style/PasswordInputWithLabelStyle"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="20dp"
+                        app:labelText="@string/ENROLLMENT_CREATE_ACCOUNT_PASSWORD_LABEL"
+                        app:inputText="@={viewModel.passwordInput}"/>
+
+                    <com.engageft.apptoolbox.view.PasswordInputWithLabel
+                        android:id="@+id/passwordConfirmInput"
+                        style="@style/PasswordInputWithLabelStyle"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="20dp"
+                        app:labelText="@string/ENROLLMENT_CREATE_ACCOUNT_CONFIRM_PASSWORD_LABEL"
+                        app:inputText="@={viewModel.passwordConfirmInput}"/>
+                </LinearLayout>
+
+                <com.engageft.apptoolbox.view.PillButton
+                    android:id="@+id/nextButton"
+                    style="@style/ButtonPillPrimaryFilledDefault"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="16dp"
+                    android:layout_marginBottom="16dp"
+                    app:layout_constraintTop_toBottomOf="@id/loginInputForm"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    android:onClick="@{() -> viewModel.onNextClicked()}"
+                    android:visibility="gone"
+                    android:text="@string/ENROLLMENT_NEXT"/>
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <LinearLayout
+                android:id="@+id/tempNavContainer"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:onClick="@{() -> viewModel.onButton1Clicked()}"
-                android:text="verify identity"/>
-            <Button
-                android:id="@+id/button2"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:onClick="@{() -> viewModel.onButton2Clicked()}"
-                android:text="terms of use"/>
-            <Button
-                android:id="@+id/button3"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:onClick="@{() -> viewModel.onButton3Clicked()}"
-                android:text="sending"/>
-        </LinearLayout>
-    </androidx.constraintlayout.widget.ConstraintLayout>
+                app:layout_constraintTop_toBottomOf="@id/contentBox"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                android:gravity="center"
+                android:orientation="vertical">
+                <Button
+                    android:id="@+id/button1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:onClick="@{() -> viewModel.onButton1Clicked()}"
+                    android:text="verify identity"/>
+                <Button
+                    android:id="@+id/button2"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:onClick="@{() -> viewModel.onButton2Clicked()}"
+                    android:text="terms of use"/>
+                <Button
+                    android:id="@+id/button3"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:onClick="@{() -> viewModel.onButton3Clicked()}"
+                    android:text="sending"/>
+            </LinearLayout>
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </androidx.core.widget.NestedScrollView>
 </layout>
