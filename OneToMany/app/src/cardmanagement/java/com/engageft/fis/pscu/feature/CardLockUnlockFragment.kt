@@ -16,10 +16,7 @@ import com.engageft.apptoolbox.view.InformationDialogFragment
 import com.engageft.fis.pscu.R
 import com.engageft.fis.pscu.databinding.FragmentCardLockUnlockBinding
 import com.engageft.fis.pscu.feature.branding.Palette
-import kotlinx.android.synthetic.main.dialog_fragment_authentication.*
-import kotlinx.android.synthetic.main.fragment_cancel_card.*
 import kotlinx.android.synthetic.main.fragment_card_lock_unlock.*
-import java.lang.IllegalStateException
 
 class CardLockUnlockFragment: BaseEngageFullscreenFragment() {
 

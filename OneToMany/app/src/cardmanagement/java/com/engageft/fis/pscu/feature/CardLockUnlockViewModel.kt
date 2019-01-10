@@ -1,13 +1,10 @@
 package com.engageft.fis.pscu.feature
 
-import android.widget.Toast
 import androidx.lifecycle.MutableLiveData
 import com.engageft.engagekit.EngageService
 import com.engageft.engagekit.rest.request.CardLockUnlockRequest
 import com.engageft.engagekit.utils.LoginResponseUtils
-import com.engageft.engagekit.utils.ResponseUtils
 import com.engageft.engagekit.utils.engageApi
-import com.engageft.fis.pscu.R
 import com.ob.domain.lookup.DebitCardStatus
 import com.ob.ws.dom.BasicResponse
 import com.ob.ws.dom.LoginResponse
@@ -73,7 +70,6 @@ class CardLockUnlockViewModel: BaseEngageViewModel() {
                 .subscribeWithDefaultProgressAndErrorHandling<BasicResponse>(this, {
                     EngageService.getInstance().clearLoginAndDashboardResponses()
                     cardStatusObservable.value = CardStatus.CHANGED_SUCCESS
-//                    productCardViewModelDelegate.updateCardView()
                 })
     }
 }
