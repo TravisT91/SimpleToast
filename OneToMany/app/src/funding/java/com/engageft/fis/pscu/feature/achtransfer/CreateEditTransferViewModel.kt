@@ -42,7 +42,6 @@ class CreateEditTransferViewModel: BaseEngageViewModel() {
     val toAccountObservable = MutableLiveData<CardInfo>()
 
     val navigationEventObservable = MutableLiveData<NavigationEvent>()
-    val cardsInfoAndAchAccountsListsObservable: MutableLiveData<Pair<List<CardInfo>, List<AchAccountInfo>>> = MutableLiveData()
 
     val buttonStateObservable: MutableLiveData<ButtonState> = MutableLiveData()
 
@@ -57,14 +56,11 @@ class CreateEditTransferViewModel: BaseEngageViewModel() {
     var date1Show = ObservableField(false)
     var date2Show = ObservableField(false)
 
-    var achAccountId = -1L
-    var cardId = -1L
-    var isAchFundingAllowed = false
-    private set
+    var achAccountInfo: AchAccountInfo? = null
+    var currentCard: DebitCardInfo? = null
 
     private var currentScheduledLoad: ScheduledLoad? = null
     private var achAccountList: List<AchAccountInfo> = mutableListOf()
-    private var debitCardList: MutableList<DebitCardInfo> = mutableListOf()
 
     init {
         buttonStateObservable.value = ButtonState.HIDE
@@ -134,12 +130,19 @@ class CreateEditTransferViewModel: BaseEngageViewModel() {
                 .subscribe({ response ->
                     progressOverlayShownObservable.value = false
                     if (response is LoginResponse) {
-
-                        isAchFundingAllowed = LoginResponseUtils.getCurrentAccountInfo(response).accountPermissionsInfo.isAchEnabled
-
-                        debitCardList = LoginResponseUtils.getAllCardsSorted(response)
-                        cardsInfoAndAchAccountsListsObservable.value = Pair(first = getCardInfoList(debitCardList),
-                                second = response.achAccountList)
+                        val isAchFundingAllowed = LoginResponseUtils.getCurrentAccountInfo(response).accountPermissionsInfo.isAchEnabled
+                        if (isAchFundingAllowed) {
+                            //TODO(aHashimi): populate the To and From account fields since multiple cards and ACH out is not supported.
+                            if (response.achAccountList.isNotEmpty()) {
+                                // multiple ACH Banks aren't allowed
+                                achAccountInfo = response.achAccountList[0]
+                                fromAccountObservable.value = achAccountInfo
+                            }
+                            currentCard = LoginResponseUtils.getCurrentCard(response)
+                            toAccountObservable.value = getCardInfo(currentCard!!)
+                        } else {
+                            dialogInfoObservable.value = DialogInfo(dialogType = DialogInfo.DialogType.OTHER)
+                        }
                     } else {
                         handleUnexpectedErrorResponse(response)
                     }
@@ -159,8 +162,6 @@ class CreateEditTransferViewModel: BaseEngageViewModel() {
                     // don't hide the progressOverlay yet
                     if (response is LoginResponse) {
                         getScheduledLoads(scheduledLoadId, LoginResponseUtils.getCurrentCard(response))
-                        achAccountList = response.achAccountList
-                        cardId = LoginResponseUtils.getCurrentCard(response).debitCardId
                     } else {
                         dialogInfoObservable.value = DialogInfo()
                     }
@@ -196,8 +197,7 @@ class CreateEditTransferViewModel: BaseEngageViewModel() {
     }
 
     fun updateButtonState() {
-        if (fromAccount.get()!!.isNotEmpty() && toAccount.get()!!.isNotEmpty() && amount.get()!!.isNotEmpty()
-                && hasFrequencySelected() && hasUnsavedChanges()) {
+        if (amount.get()!!.isNotEmpty() && hasFrequencySelected() && hasUnsavedChanges()) {
             buttonStateObservable.value = ButtonState.SHOW
         } else {
             buttonStateObservable.value = ButtonState.HIDE
@@ -205,8 +205,7 @@ class CreateEditTransferViewModel: BaseEngageViewModel() {
     }
 
     fun hasUnsavedChanges(): Boolean {
-        if (formMode == FormMode.CREATE && (fromAccount.get()!!.isNotEmpty()
-                && toAccount.get()!!.isNotEmpty() || amount.get()!!.isNotEmpty() || frequency.get()!!.isNotEmpty())) {
+        if (formMode == FormMode.CREATE && (amount.get()!!.isNotEmpty() || frequency.get()!!.isNotEmpty())) {
             return true
         }
         return false
@@ -244,7 +243,6 @@ class CreateEditTransferViewModel: BaseEngageViewModel() {
 
     private fun populateFields(scheduledLoad: ScheduledLoad) {
         currentScheduledLoad = scheduledLoad
-        achAccountId = scheduledLoad.achAccountId.toLong()
         formMode = FormMode.EDIT
 
         for (achAccountInfo in achAccountList) {
@@ -255,19 +253,8 @@ class CreateEditTransferViewModel: BaseEngageViewModel() {
             }
         }
 
-        for (debitCardInfo in debitCardList) {
-
-            if (debitCardInfo.debitCardId == cardId) {
-                BrandingInfoRepo.cards?.let { brandingCardsList ->
-                    for (brandingCard in brandingCardsList) {
-                        if (debitCardInfo.cardType == brandingCard.type) {
-                            toAccountObservable.value = CardInfo(cardId = debitCardInfo.debitCardId, name = brandingCard.name, lastFour = debitCardInfo.lastFour)
-                            break
-                        }
-                    }
-                }
-                break
-            }
+        currentCard?.let {
+            toAccountObservable.value = getCardInfo(it)
         }
 
         amount.set(scheduledLoad.amount)
@@ -296,19 +283,16 @@ class CreateEditTransferViewModel: BaseEngageViewModel() {
         }
     }
 
-    private fun getCardInfoList(debitCardList: List<DebitCardInfo> ): List<CardInfo> {
-        val listOfCardsInfo : MutableList<CardInfo> = mutableListOf()
-
-        for (debitCardInfo in debitCardList) {
-            BrandingInfoRepo.cards?.let { brandingCardsList ->
-                for (brandingCard in brandingCardsList) {
-                    if (debitCardInfo.cardType == brandingCard.type) {
-                        listOfCardsInfo.add(CardInfo(cardId = debitCardInfo.debitCardId, name = brandingCard.name, lastFour = debitCardInfo.lastFour))
-                    }
+    private fun getCardInfo(debitCardInfo: DebitCardInfo) : CardInfo? {
+        BrandingInfoRepo.cards?.let { brandingCardsList ->
+            for (brandingCard in brandingCardsList) {
+                if (debitCardInfo.cardType == brandingCard.type) {
+                    return CardInfo(cardId = debitCardInfo.debitCardId, name = brandingCard.name, lastFour = debitCardInfo.lastFour)
                 }
             }
         }
-        return listOfCardsInfo
+
+        return null
     }
 
     private fun hasFrequencySelected(): Boolean {

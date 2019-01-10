@@ -8,10 +8,8 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.navigation.findNavController
 import com.engageft.apptoolbox.BaseViewModel
-import com.engageft.apptoolbox.util.CurrencyUtils
 import com.engageft.engagekit.model.ScheduledLoad
 import com.engageft.fis.pscu.R
-import com.engageft.fis.pscu.config.EngageAppConfig
 import com.engageft.fis.pscu.databinding.FragmentCreateTransferConfirmBinding
 import com.engageft.fis.pscu.feature.BaseEngageFullscreenFragment
 import com.engageft.fis.pscu.feature.DialogInfo
@@ -19,7 +17,7 @@ import com.engageft.fis.pscu.feature.branding.Palette
 import com.engageft.fis.pscu.feature.infoDialogGenericErrorTitleMessageConditionalNewInstance
 import org.joda.time.DateTime
 import utilGen1.DisplayDateTimeUtils
-import java.lang.IllegalStateException
+import utilGen1.StringUtils
 
 class CreateTransferConfirmationFragment: BaseEngageFullscreenFragment() {
     private lateinit var createTransferViewModel: CreateTransferConfirmationViewModel
@@ -45,7 +43,7 @@ class CreateTransferConfirmationFragment: BaseEngageFullscreenFragment() {
                 createTransferViewModel.frequencyType = bundle.getString(TRANSFER_FREQUENCY, "")
             } ?: throw IllegalStateException("must pass data")
 
-            amountTextView.text = String.format("%s%s", CurrencyUtils.getCurrencySymbol(EngageAppConfig.currencyCode), createTransferViewModel.amount)
+            amountTextView.text = StringUtils.formatCurrencyStringFractionDigitsReducedHeight(createTransferViewModel.amount, 0.5f, true)
 
             when(createTransferViewModel.frequencyType) {
                 ScheduledLoad.SCHED_LOAD_TYPE_TWICE_MONTHLY -> {
