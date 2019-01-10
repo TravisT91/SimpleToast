@@ -13,6 +13,7 @@ import com.engageft.fis.pscu.R
 import com.engageft.fis.pscu.databinding.FragmentReplaceCardBinding
 import com.engageft.fis.pscu.feature.branding.Palette
 import com.engageft.fis.pscu.feature.palettebindings.applyPaletteStyles
+import com.engageft.fis.pscu.feature.utils.showAlertConfirmationDialog
 import utilGen1.StringUtils
 
 /**
@@ -51,6 +52,27 @@ class ReplaceCardFragment : BaseEngagePageFragment() {
                     doNotKnowText.text.toString(),
                     getString(R.string.REPLACE_CARD_DO_NOT_KNOW_SUBSTRING))
 
+            orderReplacementButton.setOnClickListener {
+
+                val dialogInfo = showAlertConfirmationDialog(context!!,
+                        title = getString(R.string.REPLACE_CARD_REPLACEMENT_ALERT_TITLE),
+                        message = getString(R.string.REPLACE_CARD_REPLACEMENT_ALERT_MESSAGE),
+                        listener = object : InformationDialogFragment.InformationDialogFragmentListener {
+                            override fun onDialogFragmentNegativeButtonClicked() {
+                            }
+
+                            override fun onDialogFragmentPositiveButtonClicked() {
+                                replaceCardViewModel?.onOrderReplacementClicked()
+                            }
+
+                            override fun onDialogCancelled() {
+                            }
+
+                        })
+
+                dialogInfo.applyPaletteStyles(context!!)
+                fragmentDelegate.showDialog(dialogInfo)
+            }
 
         }
         return binding.root

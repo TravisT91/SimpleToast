@@ -16,6 +16,8 @@ import com.engageft.apptoolbox.view.InformationDialogFragment
 import com.engageft.fis.pscu.R
 import com.engageft.fis.pscu.databinding.FragmentCardLockUnlockBinding
 import com.engageft.fis.pscu.feature.branding.Palette
+import com.engageft.fis.pscu.feature.palettebindings.applyPaletteStyles
+import com.engageft.fis.pscu.feature.utils.showAlertConfirmationDialog
 import kotlinx.android.synthetic.main.fragment_card_lock_unlock.*
 
 class CardLockUnlockFragment: BaseEngagePageFragment() {
@@ -40,15 +42,19 @@ class CardLockUnlockFragment: BaseEngagePageFragment() {
 
             lockUnlockButton.setOnClickListener {
                 // alert: Are you sure you want to ---- your card?
-                val cardStatus = if (cardLockUnlockViewModel.isCardLocked()) {
-                    String.format(getString(R.string.card_lock_unlock_alert_confirmation_format), getString(R.string.card_unlock_word).toLowerCase())
+                var title: String
+                var message: String
+                if (cardLockUnlockViewModel.isCardLocked()) {
+                    title = getString(R.string.card_unlock_button_text)
+                    message = String.format(getString(R.string.card_lock_unlock_alert_confirmation_format), getString(R.string.card_unlock_word).toLowerCase())
                 } else {
-                    String.format(getString(R.string.card_lock_unlock_alert_confirmation_format), getString(R.string.card_lock_word).toLowerCase())
+                    title = getString(R.string.card_lock_button_text)
+                    message = String.format(getString(R.string.card_lock_unlock_alert_confirmation_format), getString(R.string.card_lock_word).toLowerCase())
                 }
 
-                val dialogInfo = infoDialogYesNoNewInstance(context!!,
-                        title = getString(R.string.alert_continue_title_confirmation),
-                        message = String.format(getString(R.string.card_change_confirmation_alert_format), cardStatus),
+                val dialogInfo = showAlertConfirmationDialog(context!!,
+                        title = title,
+                        message = message,
                         listener = object : InformationDialogFragment.InformationDialogFragmentListener {
                             override fun onDialogFragmentNegativeButtonClicked() {
                             }
@@ -61,7 +67,8 @@ class CardLockUnlockFragment: BaseEngagePageFragment() {
                             }
 
                         })
-                dialogInfo.positiveButtonTextColor = Palette.errorColor
+
+                dialogInfo.applyPaletteStyles(context!!)
 
                 fragmentDelegate.showDialog(dialogInfo)
             }

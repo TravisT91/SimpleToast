@@ -17,6 +17,8 @@
     <string name="REPLACE_CARD_ORDER_REPLACEMENT">Order replacement</string>
     <string name="REPLACE_CARD_REPLACEMENT_ORDERED_TITLE">Replacement ordered</string>
     <string name="REPLACE_CARD_REPLACEMENT_ORDERED_MESSAGE">Your replacement card has been ordered. It will arrive with 5–7 days.</string>
+    <string name="REPLACE_CARD_REPLACEMENT_ALERT_TITLE">Replace card?</string>
+    <string name="REPLACE_CARD_REPLACEMENT_ALERT_MESSAGE">This will replace your current card and can\'t be undone.</string>
 
     <!-- Lost/Stolen Card -->
     <string name="LOST_STOLEN_CARD_REPLACEMENT_HEADER">We will automatically send you a new card.</string>
@@ -56,13 +58,9 @@
     <string name="card_lock_button_text">Lock card</string>
     <string name="card_unlock_button_text">Unlock card</string>
     <string name="card_lock_unlock_success_message_format">Your card has been successfully %s.</string>
-    <!--<string name="card_locked_word">LOCKED</string>-->
     <string name="card_unlocked_word">unlocked</string>
     <string name="card_lock_word">lock</string>
     <string name="card_unlock_word">unlock</string>
-    <string name="card_lock_unlock_alert_confirmation_format">%s your card</string>
-
-    <!-- card change alert confirmation -->
-    <string name="card_change_confirmation_alert_format">Are you sure you want %s?</string>
+    <string name="card_lock_unlock_alert_confirmation_format">This will %s your current card.</string>
 
 </resources>

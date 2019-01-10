@@ -88,7 +88,6 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:text="@string/REPLACE_CARD_ORDER_REPLACEMENT"
-                android:onClick="@{() -> ReplaceCardViewModel.onOrderReplacementClicked()}"
                 PillButton.setThemeFilled="@{true}" />
 
         </LinearLayout>
