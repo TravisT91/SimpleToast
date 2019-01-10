@@ -141,7 +141,7 @@ class GetStartedFragment : BaseEngagePageFragment() {
             }
         })
         binding.dobInput.setImeOptions(EditorInfo.IME_ACTION_GO)
-        binding.dobInput.onImeAction(EditorInfo.IME_ACTION_DONE) { getStartedViewModel.onNextClicked() }
+        binding.dobInput.onImeAction(EditorInfo.IME_ACTION_GO) { getStartedViewModel.onNextClicked() }
         return binding.root
     }
 
@@ -163,7 +163,7 @@ class GetStartedFragment : BaseEngagePageFragment() {
 
     override fun onOptionsItemSelected(item: MenuItem?): Boolean {
         when(item?.itemId){
-            R.id.save -> run {
+            R.id.next -> run {
                 getStartedViewModel.onNextClicked()
             }
         }
