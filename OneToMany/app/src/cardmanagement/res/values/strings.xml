@@ -17,7 +17,6 @@
     <string name="REPLACE_CARD_ORDER_REPLACEMENT">Order replacement</string>
     <string name="REPLACE_CARD_REPLACEMENT_ORDERED_TITLE">Replacement ordered</string>
     <string name="REPLACE_CARD_REPLACEMENT_ORDERED_MESSAGE">Your replacement card has been ordered. It will arrive with 5–7 days.</string>
-    <string name="REPLACE_CARD_REPLACEMENT_ALERT_MESSAGE">This cannot be undone.</string>
 
     <!-- Lost/Stolen Card -->
     <string name="LOST_STOLEN_CARD_REPLACEMENT_HEADER">We will automatically send you a new card.</string>
