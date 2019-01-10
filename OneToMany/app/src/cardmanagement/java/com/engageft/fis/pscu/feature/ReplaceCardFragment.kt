@@ -24,7 +24,7 @@ import utilGen1.StringUtils
  * Copyright (c) 2018 Engage FT. All rights reserved.
  */
 
-class ReplaceCardFragment : BaseEngageFullscreenFragment() {
+class ReplaceCardFragment : BaseEngagePageFragment() {
 
     override fun createViewModel(): BaseViewModel? {
         return  ViewModelProviders.of(this).get(ReplaceCardViewModel::class.java)
@@ -35,7 +35,7 @@ class ReplaceCardFragment : BaseEngageFullscreenFragment() {
 
             palette = Palette
 
-            replaceCardViewModel =  (viewModel as? ReplaceCardViewModel)?.apply {
+            replaceCardViewModel =  (fragmentDelegate.viewModel as? ReplaceCardViewModel)?.apply {
                 val successObserver = Observer<Boolean> { if (it) showSuccessDialog() }
                 replacementRequestIsSuccess.observe(this@ReplaceCardFragment, successObserver)
             }
@@ -77,6 +77,6 @@ class ReplaceCardFragment : BaseEngageFullscreenFragment() {
                 }
         )
         dialog.applyPaletteStyles(context!!)
-        showDialog(dialog)
+        fragmentDelegate.showDialog(dialog)
     }
 }

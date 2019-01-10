@@ -28,7 +28,7 @@ import utilGen1.AchAccountInfoUtils
  * Created by Atia Hashimi 12/20/18
  * Copyright (c) 2018 Engage FT. All rights reserved.
  */
-class AchBankAccountAddFragment: BaseEngageFullscreenFragment() {
+class AchBankAccountAddFragment: BaseEngagePageFragment() {
     companion object {
         const val SUCCESS_SCREEN_TYPE_KEY = "SUCCESS_SCREEN_TYPE_KEY"
         const val ADDED_SUCCESS_TYPE = 0
@@ -53,7 +53,7 @@ class AchBankAccountAddFragment: BaseEngageFullscreenFragment() {
     private val navigationOverrideClickListener = object : NavigationOverrideClickListener {
         override fun onClick(): Boolean {
             if (achBankAccountViewModel.hasUnsavedChanges()) {
-                showDialog(infoDialogGenericUnsavedChangesNewInstance(context = activity!!, listener = unsavedChangesDialogListener))
+                fragmentDelegate.showDialog(infoDialogGenericUnsavedChangesNewInstance(context = activity!!, listener = unsavedChangesDialogListener))
                 return true
             }
             return false

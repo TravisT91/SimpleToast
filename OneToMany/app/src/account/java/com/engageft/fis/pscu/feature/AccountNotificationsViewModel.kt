@@ -115,6 +115,11 @@ class AccountNotificationsViewModel: BaseEngageViewModel() {
         }
     }
 
+    fun hasUnsavedChanges(): Boolean {
+        return pushObservable.value != accountInfo!!.pushEnabled() || smsObservable.value != accountInfo!!.smsEnabled()
+                || emailObservable.value != accountInfo!!.emailEnabled()
+    }
+
     private fun setNotificationType(loginResponse: LoginResponse) {
         val currentAccount = LoginResponseUtils.getCurrentAccountInfo(loginResponse)
         currentAccount?.let { currentAccountInfo ->
@@ -136,12 +141,10 @@ class AccountNotificationsViewModel: BaseEngageViewModel() {
     }
 
     private fun updateSaveButtonState() {
-        if (pushObservable.value == accountInfo!!.pushEnabled()
-                && smsObservable.value == accountInfo!!.smsEnabled()
-                && emailObservable.value == accountInfo!!.emailEnabled()) {
-            saveButtonStateObservable.value = SaveButtonState.HIDE
-        } else {
+        if (hasUnsavedChanges()) {
             saveButtonStateObservable.value = SaveButtonState.SHOW
+        } else {
+            saveButtonStateObservable.value = SaveButtonState.HIDE
         }
     }
 }

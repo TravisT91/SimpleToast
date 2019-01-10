@@ -33,16 +33,16 @@ import com.engageft.fis.pscu.feature.branding.Palette
  * Created by joeyhutchins on 11/12/18.
  * Copyright (c) 2018 Engage FT. All rights reserved.
  */
-class ChangeSecurityQuestionsFragment : BaseEngageFullscreenFragment() {
+class ChangeSecurityQuestionsFragment : BaseEngagePageFragment() {
     private lateinit var changeSecurityQuestionsViewModel: ChangeSecurityQuestionsViewModel
 
     private val navigationOverrideClickListener = object : NavigationOverrideClickListener {
         override fun onClick(): Boolean {
             return if (changeSecurityQuestionsViewModel.hasUnsavedChanges()) {
-                showDialog(infoDialogGenericUnsavedChangesNewInstance(context = activity!!, listener = unsavedChangesDialogListener))
+                fragmentDelegate.showDialog(infoDialogGenericUnsavedChangesNewInstance(context = activity!!, listener = unsavedChangesDialogListener))
                 true
             } else if (changeSecurityQuestionsViewModel.modeObservable.value == ChangeSecurityQuestionsViewModel.ChangeSecurityQuestionsMode.CREATE) {
-                showDialog(InformationDialogFragment.newLotusInstance(
+                fragmentDelegate.showDialog(InformationDialogFragment.newLotusInstance(
                         title = getString(R.string.SECURITY_QUESTIONS_CREATE_BACK_TITLE),
                         message = getString(R.string.SECURITY_QUESTIONS_CREATE_BACK_MESSAGE),
                         buttonPositiveText = getString(R.string.SECURITY_QUESTIONS_CREATE_BACK_POSITIVE),
@@ -113,7 +113,7 @@ class ChangeSecurityQuestionsFragment : BaseEngageFullscreenFragment() {
             when (navEvent) {
                 ChangeSecurityQuestionsViewModel.ChangeSecurityQuestionsNavigation.NONE -> {}
                 ChangeSecurityQuestionsViewModel.ChangeSecurityQuestionsNavigation.CHANGE_SUCCESSFUL -> {
-                    showDialog(InformationDialogFragment.newLotusInstance(title = getString(R.string.SECURITY_QUESTIONS_SUCCESS_TITLE),
+                    fragmentDelegate.showDialog(InformationDialogFragment.newLotusInstance(title = getString(R.string.SECURITY_QUESTIONS_SUCCESS_TITLE),
                             message = getString(R.string.SECURITY_QUESTIONS_SUCCESS_MESSAGE_CHANGE),
                             buttonPositiveText = getString(R.string.SECURITY_QUESTIONS_SUCCESS_MESSAGE_OK), listener = object : InformationDialogFragment.InformationDialogFragmentListener {
                         override fun onDialogCancelled() {
@@ -128,7 +128,7 @@ class ChangeSecurityQuestionsFragment : BaseEngageFullscreenFragment() {
                     }))
                 }
                 ChangeSecurityQuestionsViewModel.ChangeSecurityQuestionsNavigation.CREATE_SUCCESSFUL -> {
-                    showDialog(InformationDialogFragment.newLotusInstance(title = getString(R.string.SECURITY_QUESTIONS_SUCCESS_TITLE),
+                    fragmentDelegate.showDialog(InformationDialogFragment.newLotusInstance(title = getString(R.string.SECURITY_QUESTIONS_SUCCESS_TITLE),
                             message = getString(R.string.SECURITY_QUESTIONS_SUCCESS_MESSAGE_CREATE),
                             buttonPositiveText = getString(R.string.SECURITY_QUESTIONS_SUCCESS_MESSAGE_OK), listener = object : InformationDialogFragment.InformationDialogFragmentListener {
                         override fun onDialogCancelled() {
