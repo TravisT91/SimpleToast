@@ -18,7 +18,7 @@ import com.engageft.fis.pscu.databinding.FragmentCardLockUnlockBinding
 import com.engageft.fis.pscu.feature.branding.Palette
 import kotlinx.android.synthetic.main.fragment_card_lock_unlock.*
 
-class CardLockUnlockFragment: BaseEngageFullscreenFragment() {
+class CardLockUnlockFragment: BaseEngagePageFragment() {
 
     private lateinit var cardLockUnlockViewModel: CardLockUnlockViewModel
 
@@ -63,7 +63,7 @@ class CardLockUnlockFragment: BaseEngageFullscreenFragment() {
                         })
                 dialogInfo.positiveButtonTextColor = Palette.errorColor
 
-                showDialog(dialogInfo)
+                fragmentDelegate.showDialog(dialogInfo)
             }
         }
 
@@ -93,7 +93,7 @@ class CardLockUnlockFragment: BaseEngageFullscreenFragment() {
                         getString(R.string.CARD_STATUS_DISPLAY_LOCKED).toLowerCase()
                     }
                     val successMessage = String.format(getString(R.string.card_lock_unlock_success_message_format), successStatus)
-                    showDialog(InformationDialogFragment.newLotusInstance(message = successMessage,
+                    fragmentDelegate.showDialog(InformationDialogFragment.newLotusInstance(message = successMessage,
                             buttonPositiveText = getString(R.string.dialog_information_ok_button),
                             listener = object: InformationDialogFragment.InformationDialogFragmentListener {
                                 override fun onDialogFragmentNegativeButtonClicked() {
@@ -109,7 +109,7 @@ class CardLockUnlockFragment: BaseEngageFullscreenFragment() {
                             }))
                 }
                 CardLockUnlockViewModel.CardStatus.UNKNOWN -> {
-                    throw IllegalStateException("Unknown CardStatus type. CardStatus must either be ACTIVE or LOCKED_USER")
+                    throw IllegalStateException("Unknown CardStatus type.")
                 }
             }
         })
