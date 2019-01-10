@@ -41,9 +41,8 @@ class CardLockUnlockFragment: BaseEngagePageFragment() {
                     getString(R.string.card_lock_unlock_header_substring))
 
             lockUnlockButton.setOnClickListener {
-                // alert: Are you sure you want to ---- your card?
-                var title: String
-                var message: String
+                val title: String
+                val message: String
                 if (cardLockUnlockViewModel.isCardLocked()) {
                     title = getString(R.string.card_unlock_button_text)
                     message = String.format(getString(R.string.card_lock_unlock_alert_confirmation_format), getString(R.string.card_unlock_word).toLowerCase())
