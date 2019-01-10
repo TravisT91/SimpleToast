@@ -4,12 +4,16 @@ import androidx.databinding.Observable
 import androidx.databinding.ObservableField
 import androidx.lifecycle.MutableLiveData
 import androidx.navigation.NavController
+import com.engageft.engagekit.EngageService
+import com.engageft.engagekit.rest.request.MayRegisterRequest
 import com.engageft.fis.pscu.feature.gatekeeping.CreateAccountEnrollmentGateKeeper
 import com.engageft.fis.pscu.feature.gatekeeping.GateKeeperListener
 import com.engageft.fis.pscu.feature.gatekeeping.GatedItem
 import com.engageft.fis.pscu.feature.gatekeeping.items.CIPRequiredGatedItem
 import com.engageft.fis.pscu.feature.gatekeeping.items.TermsRequiredGatedItem
 import com.engageft.fis.pscu.feature.utils.isValidPassword
+import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.schedulers.Schedulers
 
 /**
  * CreateAccountDelegate
@@ -111,11 +115,36 @@ class CreateAccountDelegate(private val viewModel: EnrollmentViewModel, private 
         validatePasswordInput(false)
         validateConfirmPasswordInput(false)
         if (checkAllFieldsValid()) {
-            this.userEmail = emailInput.get()!!
-            this.userPassword = passwordInput.get()!!
+            val email = emailInput.get()!!
+            val request = MayRegisterRequest(email)
+            viewModel.progressOverlayShownObservable.value = true
+            viewModel.compositeDisposable.add(
+                    EngageService.getInstance().engageApiInterface.postDebitRequestMayRegister(request.fieldMap)
+                            .subscribeOn(Schedulers.io())
+                            .observeOn(AndroidSchedulers.mainThread())
+                            .subscribe({ response ->
+                                viewModel.progressOverlayShownObservable.value = false
+                                if (response.isSuccess) {
+                                    this.userEmail = emailInput.get()!!
+                                    this.userPassword = passwordInput.get()!!
 
-            val gateKeeper = CreateAccountEnrollmentGateKeeper(viewModel.activationCardInfo, gateKeeperListener)
-            gateKeeper.run()
+                                    val gateKeeper = CreateAccountEnrollmentGateKeeper(viewModel.activationCardInfo, gateKeeperListener)
+                                    gateKeeper.run()
+                                } else {
+                                    // This sucks because "EXPECTED" errors can come
+                                    // in here with strings but also UNEXPECTED errors
+                                    // can come. There is no way for us to reliably
+                                    // distinguish them, therefore we cannot
+                                    // track unexpected via Crashlytics.
+                                    viewModel.handleBackendErrorForForms(response, "${GetStartedDelegate.TAG} - Unexpected empty error.")
+                                    // This is a workaround to essentially "clear" the dialog after an error was shown.
+                                    viewModel.dialogInfoObservable.postValue(DialogInfo(dialogType = DialogInfo.DialogType.OTHER))
+                                }
+                            }, { e ->
+                                viewModel.progressOverlayShownObservable.value = false
+                                viewModel.handleThrowable(e)
+                            })
+            )
         }
     }
 

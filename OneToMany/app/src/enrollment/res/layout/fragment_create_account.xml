@@ -81,6 +81,34 @@
                         android:layout_marginTop="20dp"
                         app:labelText="@string/ENROLLMENT_CREATE_ACCOUNT_CONFIRM_PASSWORD_LABEL"
                         app:inputText="@={viewModel.passwordConfirmInput}"/>
+
+                    <!--TODO(jhutchins): Enable fingerprint auth FOTM-464-->
+                    <!--<FrameLayout-->
+                        <!--android:layout_width="match_parent"-->
+                        <!--android:layout_marginTop="20dp"-->
+                        <!--android:layout_height="wrap_content">-->
+
+                        <!--<TextView-->
+                            <!--android:id="@+id/touchId"-->
+                            <!--style="@style/Body"-->
+                            <!--parisStyle="@{palette.body}"-->
+                            <!--android:layout_width="match_parent"-->
+                            <!--android:layout_height="wrap_content"-->
+                            <!--android:paddingTop="@dimen/listItemPaddingTop"-->
+                            <!--android:paddingBottom="@dimen/listItemPaddingBottom"-->
+                            <!--android:text="@string/ENROLLMENT_CREATE_ACCOUNT_ENABLE_FINGERPRINT"-->
+                            <!--android:textColor="@color/accountSettingsItemTextColor" />-->
+
+                        <!--<Switch-->
+                            <!--android:id="@+id/touchIdSwitch"-->
+                            <!--android:layout_width="wrap_content"-->
+                            <!--android:layout_height="wrap_content"-->
+                            <!--android:layout_gravity="center_vertical|end"-->
+                            <!--switchButtonTint="@{palette.successColor}"-->
+                            <!--android:checked="true"-->
+                            <!--android:paddingEnd="@dimen/listPaddingStart" />-->
+
+                    <!--</FrameLayout>-->
                 </LinearLayout>
 
                 <com.engageft.apptoolbox.view.PillButton

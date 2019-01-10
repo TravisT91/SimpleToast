@@ -18,4 +18,5 @@
     <string name="ENROLLMENT_CREATE_ACCOUNT_CONFIRM_PASSWORD_LABEL">Confirm Password</string>
     <string name="ENROLLMENT_CREATE_ACCOUNT_TITLE">Let\'s create a login</string>
     <string name="ENROLLMENT_CREATE_ACCOUNT_ACTION_NEXT">@string/ENROLLMENT_NEXT</string>
+    <string name="ENROLLMENT_CREATE_ACCOUNT_ENABLE_FINGERPRINT">Enable fingerprint</string>
 </resources>
