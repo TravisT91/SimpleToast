@@ -49,10 +49,10 @@ class CreateTransferConfirmationViewModel: BaseEngageViewModel() {
         scheduledLoad.amount = amount
 
         scheduledDate1?.let {
-            scheduledLoad.scheduleDate = BackendDateTimeUtils.getYMDStringFromDateTime(it)
+            scheduledLoad.scheduleDate = BackendDateTimeUtils.getIso8601String(it)
         }
         scheduledDate2?.let {
-            scheduledLoad.scheduleDate2 = BackendDateTimeUtils.getYMDStringFromDateTime(it)
+            scheduledLoad.scheduleDate2 = BackendDateTimeUtils.getIso8601String(it)
         }
 
         return scheduledLoad
