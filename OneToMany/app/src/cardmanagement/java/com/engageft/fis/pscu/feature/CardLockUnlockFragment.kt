@@ -17,7 +17,7 @@ import com.engageft.fis.pscu.R
 import com.engageft.fis.pscu.databinding.FragmentCardLockUnlockBinding
 import com.engageft.fis.pscu.feature.branding.Palette
 import com.engageft.fis.pscu.feature.palettebindings.applyPaletteStyles
-import com.engageft.fis.pscu.feature.utils.showAlertConfirmationDialog
+import com.engageft.fis.pscu.feature.utils.informationDialogAlertConfirmation
 import kotlinx.android.synthetic.main.fragment_card_lock_unlock.*
 
 class CardLockUnlockFragment: BaseEngagePageFragment() {
@@ -51,21 +51,8 @@ class CardLockUnlockFragment: BaseEngagePageFragment() {
                     message = String.format(getString(R.string.card_lock_unlock_alert_confirmation_format), getString(R.string.card_lock_word).toLowerCase())
                 }
 
-                val dialogInfo = showAlertConfirmationDialog(context!!,
-                        title = title,
-                        message = message,
-                        listener = object : InformationDialogFragment.InformationDialogFragmentListener {
-                            override fun onDialogFragmentNegativeButtonClicked() {
-                            }
-
-                            override fun onDialogFragmentPositiveButtonClicked() {
-                                cardLockUnlockViewModel.onLockUnlock()
-                            }
-
-                            override fun onDialogCancelled() {
-                            }
-
-                        })
+                val dialogInfo = informationDialogAlertConfirmation(context!!,
+                        title = title, message = message) { cardLockUnlockViewModel.onLockUnlock() }
 
                 dialogInfo.applyPaletteStyles(context!!)
 
