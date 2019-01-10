@@ -23,7 +23,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_margin="16dp"
-                android:onClick="@{() -> viewModel.onButton1Clicked()}"
+                android:onClick="@{() -> viewModel.onAcceptTermsClicked()}"
                 android:text="@string/ENROLLMENT_TERMS_OF_USE_ACCEPT"/>
 
             <com.engageft.apptoolbox.view.PillButton

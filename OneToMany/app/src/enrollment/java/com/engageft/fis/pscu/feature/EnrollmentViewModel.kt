@@ -113,7 +113,7 @@ class EnrollmentViewModel : BaseEngageViewModel() {
 
         }
 
-        fun onButton1Clicked() {
+        fun onAcceptTermsClicked() {
             navController.navigate(termsNavigations.termsToSending)
         }
     }
