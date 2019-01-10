@@ -19,10 +19,10 @@ import com.ob.domain.lookup.TransactionType
  *  </p>
  *  RecyclerView.Adapter for showing a PagedList of transactions
  *  </p>
- *  Created by Kurt Mueller on 4/18/18.
+ *  Created by Kurt Mueller on 12/10/18.
  *  Copyright (c) 2018 Engage FT. All rights reserved.
  */
-open class TransactionsPagedAdapter(private val listener: TransactionListener?)
+open class TransactionsPagedAdapter(private val listener: TransactionListener?, protected val retryCallback: () -> Unit)
     : RecyclerView.Adapter<RecyclerView.ViewHolder>(), TransactionListener {
 
     protected val adapterCallback = AdapterListUpdateCallback(this)
@@ -85,22 +85,12 @@ open class TransactionsPagedAdapter(private val listener: TransactionListener?)
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         return when (viewType) {
             VIEW_TYPE_TRANSACTIONS_DATA -> TransactionViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.row_transaction_info_view, parent, false), parent.context, this)
-            VIEW_TYPE_NETWORK_STATE -> NetworkStateItemViewHolder.create(parent, null)
+            VIEW_TYPE_NETWORK_STATE -> NetworkStateItemViewHolder.create(parent, retryCallback)
             else -> throw IllegalArgumentException("Unknown view type $viewType")
         }
     }
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
-//        if (holder is TransactionViewHolder) {
-//            if (hasExtraRow() && position == getItemCountInternal() - 1) {
-//                // row is last, so show loading state
-//                holder.bindTo(networkState)
-//            } else {
-//                differ.getItem(position)?.let { transaction ->
-//                    holder.bindTo(transaction)
-//                }
-//            }
-//        }
         if (holder is NetworkStateItemViewHolder) {
             holder.bindTo(networkState)
         } else if (holder is TransactionViewHolder) {

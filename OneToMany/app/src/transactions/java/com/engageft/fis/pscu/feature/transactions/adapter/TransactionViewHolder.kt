@@ -12,6 +12,14 @@ import com.engageft.fis.pscu.feature.transactions.utils.TransactionUtils
 import com.ob.domain.lookup.TransactionStatus
 import utilGen1.StringUtils
 
+/**
+ * TransactionViewHolder
+ * <p>
+ * RecyclerView view holder for displaying transaction row.
+ * </p>
+ * Created by kurteous on 1/6/19.
+ * Copyright (c) 2019 Engage FT. All rights reserved.
+ */
 class TransactionViewHolder(itemView: View, val context: Context, val listener: TransactionListener?) : RecyclerView.ViewHolder(itemView) {
     private var transaction: Transaction? = null
 

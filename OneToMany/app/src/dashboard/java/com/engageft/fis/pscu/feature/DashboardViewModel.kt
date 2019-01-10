@@ -4,12 +4,9 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Transformations
 import com.engageft.engagekit.EngageService
 import com.engageft.engagekit.repository.transaction.TransactionRepository
-import com.engageft.engagekit.repository.transaction.toTransaction
 import com.engageft.engagekit.repository.transaction.vo.Transaction
 import com.engageft.engagekit.repository.util.Listing
-import com.engageft.engagekit.repository.util.NetworkState
 import com.engageft.engagekit.rest.request.CardLockUnlockRequest
-import com.engageft.engagekit.rest.request.TransactionsSearchRequest
 import com.engageft.engagekit.utils.AlertUtils
 import com.engageft.engagekit.utils.LoginResponseUtils
 import com.engageft.engagekit.utils.engageApi
@@ -22,12 +19,10 @@ import com.engageft.fis.pscu.feature.gatekeeping.items.Post30DaysGatedItem
 import com.ob.domain.lookup.TransactionType
 import com.ob.ws.dom.BasicResponse
 import com.ob.ws.dom.LoginResponse
-import com.ob.ws.dom.TransactionsResponse
 import com.ob.ws.dom.utility.DebitCardInfo
 import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
-import org.joda.time.DateTime
 import java.math.BigDecimal
 
 /**
@@ -56,9 +51,6 @@ class DashboardViewModel : BaseEngageViewModel(), GateKeeperListener {
     private val observedTransactionsListing = MutableLiveData<Listing<Transaction>>()
     val transactions = Transformations.switchMap(observedTransactionsListing) { it.pagedList }!!
     val networkState = Transformations.switchMap(observedTransactionsListing) { it.networkState }!!
-
-    val searchTransactions: MutableLiveData<List<Transaction>> = MutableLiveData()
-    val searchNetworkState: MutableLiveData<NetworkState> = MutableLiveData()
 
     var notificationsCountObservable: MutableLiveData<Int> = MutableLiveData()
 
@@ -181,45 +173,6 @@ class DashboardViewModel : BaseEngageViewModel(), GateKeeperListener {
         }
     }
 
-    fun searchTransactions(searchString: String) {
-        //searchNetworkState.value = NetworkState.LOADING
-        progressOverlayShownObservable.value = true
-        val request = TransactionsSearchRequest(
-                EngageService.getInstance().authManager.authToken,
-                searchString
-        )
-        compositeDisposable.add(
-                EngageService.getInstance().engageApiInterface.postSearchTransactions(request.fieldMap)
-                        .subscribeOn(Schedulers.io())
-                        .observeOn(Schedulers.computation())
-                        .subscribe({ response ->
-                            if (response.isSuccess && response is TransactionsResponse) {
-                                if (response.transactionList != null && !response.transactionList.isEmpty()) {
-                                    val transactionList = mutableListOf<Transaction>()
-                                    for (transactionInfo in response.transactionList) {
-                                        transactionList.add(transactionInfo.toTransaction())
-                                    }
-                                    searchTransactions.postValue(transactionList)
-                                    //searchNetworkState.postValue(NetworkState.LOADED)
-                                    progressOverlayShownObservable.postValue(false)
-                                } else {
-                                    // transactions list was null or empty
-                                    searchTransactions.postValue(listOf())
-                                    //searchNetworkState.postValue(NetworkState.LOADED)
-                                    progressOverlayShownObservable.postValue(false)
-                                }
-                            } else {
-                                handleUnexpectedErrorResponse(response)
-                                //searchNetworkState.postValue(NetworkState.error(response.message))
-                                progressOverlayShownObservable.postValue(false)
-                            }
-                        }) { e ->
-                            handleThrowable(e)
-                            progressOverlayShownObservable.postValue(false)
-                        }
-        )
-    }
-
     fun runGateKeeper() {
         dashboardGateKeeper.run()
     }
@@ -298,19 +251,14 @@ class DashboardViewModel : BaseEngageViewModel(), GateKeeperListener {
         )
     }
 
+    fun initTransactions() {
+        val repoTypes = listOf(TransactionRepository.TransactionRepoType.ALL_ACTIVITY, TransactionRepository.TransactionRepoType.DEPOSITS)
+        clearTransactions(repoTypes) { initTransactions(repoTypes) }
+    }
+
     // These are called by DashboardFragment in response to user presses in DashboardExpandableView.
     // May not be needed depending on how alerts and search are implemented. May not need DashboardFragment's
     // parent activity to observe this viewModel's navigationObservable, but leaving here just in case.
-    fun showAlerts() {
-        navigationObservable.value = DashboardNavigationEvent.ALERTS
-        navigationObservable.postValue(DashboardNavigationEvent.NONE)
-    }
-
-    fun showTransactionSearch() {
-        navigationObservable.value = DashboardNavigationEvent.TRANSACTION_SEARCH
-        navigationObservable.postValue(DashboardNavigationEvent.NONE)
-    }
-
     fun showCardTracker() {
         navigationObservable.value = DashboardNavigationEvent.CARD_TRACKER
         navigationObservable.postValue(DashboardNavigationEvent.NONE)
@@ -347,13 +295,7 @@ class DashboardViewModel : BaseEngageViewModel(), GateKeeperListener {
         animationObservable.value = DashboardAnimationEvent.COLLAPSE_END
     }
 
-    private fun datesAreSameMonthAndYear(date1: DateTime?, date2: DateTime?): Boolean {
-        return date1 != null && date2 != null && date1.year == date2.year && date1.monthOfYear == date2.monthOfYear
-    }
-
     companion object {
-        const val MAX_MONTHS_TO_LOAD = 6
-
         const val TRANSACTIONS_TAB_POSITION_ALL = 0
         const val TRANSACTIONS_TAB_POSITION_DEPOSITS = 1
     }

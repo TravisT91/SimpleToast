@@ -3,11 +3,18 @@ package com.engageft.fis.pscu.feature.search.adapter
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import com.engageft.engagekit.repository.transaction.vo.Transaction
 import com.engageft.fis.pscu.R
 import com.engageft.fis.pscu.feature.transactions.adapter.TransactionListener
 import com.engageft.fis.pscu.feature.transactions.adapter.TransactionsSimpleAdapter
 
+/**
+ * TransactionsSearchAdapter
+ * <p>
+ * RecyclerView Adapter for showing transaction search results.
+ * </p>
+ * Created by kurteous on 1/6/19.
+ * Copyright (c) 2019 Engage FT. All rights reserved.
+ */
 class TransactionsSearchAdapter(listener: TransactionListener?) : TransactionsSimpleAdapter(listener) {
 
     private var message: String? = null

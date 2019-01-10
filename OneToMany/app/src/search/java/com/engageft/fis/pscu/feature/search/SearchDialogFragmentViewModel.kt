@@ -9,6 +9,14 @@ import com.engageft.fis.pscu.feature.BaseEngageViewModel
 import com.ob.ws.dom.TransactionsResponse
 import io.reactivex.schedulers.Schedulers
 
+/**
+ * SearchDialogFragmentViewModel
+ * <p>
+ * ViewModel to manage transaction searches
+ * </p>
+ * Created by kurteous on 1/6/19.
+ * Copyright (c) 2019 Engage FT. All rights reserved.
+ */
 class SearchDialogFragmentViewModel : BaseEngageViewModel() {
 
     val searchTransactions: MutableLiveData<List<Transaction>> = MutableLiveData()

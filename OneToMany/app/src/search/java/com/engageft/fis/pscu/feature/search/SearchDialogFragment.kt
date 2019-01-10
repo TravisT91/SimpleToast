@@ -15,20 +15,32 @@ import androidx.fragment.app.DialogFragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.engageft.apptoolbox.ProgressOverlayDelegate
+import com.engageft.apptoolbox.BaseViewModel
 import com.engageft.apptoolbox.util.hideKeyboard
 import com.engageft.engagekit.repository.transaction.vo.Transaction
 import com.engageft.fis.pscu.R
 import com.engageft.fis.pscu.databinding.DialogFragmentSearchBinding
+import com.engageft.fis.pscu.feature.BaseEngageDialogFragment
 import com.engageft.fis.pscu.feature.search.adapter.TransactionsSearchAdapter
 import com.engageft.fis.pscu.feature.transactions.adapter.TransactionListener
 
-class SearchDialogFragment : DialogFragment(), TransactionListener {
+/**
+ * SearchDialogFragment
+ * <p>
+ * Fragment for transaction searches
+ * </p>
+ * Created by kurteous on 1/6/19.
+ * Copyright (c) 2019 Engage FT. All rights reserved.
+ */
+class SearchDialogFragment : BaseEngageDialogFragment(), TransactionListener {
+    override fun createViewModel(): BaseViewModel? {
+        viewModel = ViewModelProviders.of(this).get(SearchDialogFragmentViewModel::class.java)
+
+        return viewModel
+    }
 
     private lateinit var viewModel: SearchDialogFragmentViewModel
     private lateinit var binding: DialogFragmentSearchBinding
-
-    private var progressOverlayDelegate: ProgressOverlayDelegate? = null
 
     private val searchAdapter: TransactionsSearchAdapter by lazy {
         binding.searchRecyclerView.adapter = TransactionsSearchAdapter(this)
@@ -86,12 +98,9 @@ class SearchDialogFragment : DialogFragment(), TransactionListener {
             binding.searchEditText.setText("")
         }
 
-        viewModel = ViewModelProviders.of(this).get(SearchDialogFragmentViewModel::class.java)
         viewModel.searchTransactions.observe(this, Observer<List<Transaction>> {
             transactionList -> if (transactionList.isEmpty()) searchAdapter.showNoResults(getString(R.string.EMPTY_SEARCH_MESSAGE)) else searchAdapter.updateTransactions(transactionList)
         })
-
-        progressOverlayDelegate = ProgressOverlayDelegate(com.engageft.apptoolbox.R.style.LoadingOverlayDialogStyle, this, viewModel)
 
         return binding.root
     }

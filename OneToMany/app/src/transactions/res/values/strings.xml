@@ -16,5 +16,5 @@
     <string name="TRANSACTIONS_NONE">No transactions</string>
     <string name="TRANSACTIONS_PAY">Pay</string>
 
-    <string name="retry">Retry</string>
+    <string name="TRANSACTIONS_FETCH_RETRY">Retry</string>
 </resources>

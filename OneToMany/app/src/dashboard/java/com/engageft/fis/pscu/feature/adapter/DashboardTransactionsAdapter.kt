@@ -17,18 +17,19 @@ import com.google.android.material.tabs.TabLayout
 import io.reactivex.disposables.CompositeDisposable
 
 /**
- *  TransactionsPagedAdapter
+ *  DashboardTransactionsAdapter
  *  </p>
  *  RecyclerView.Adapter for showing a PagedList of all transactions or just deposit transactions in the Dashboard,
  *  along with a header showing card view and spending and set-aside balances.
  *  </p>
- *  Created by Kurt Mueller on 4/18/18.
+ *  Created by Kurt Mueller on 12/10/18.
  *  Copyright (c) 2018 Engage FT. All rights reserved.
  */
 class DashboardTransactionsAdapter(private val compositeDisposable: CompositeDisposable,
                                    private val listener: DashboardTransactionsAdapterListener,
-                                   transactionsListener: TransactionListener?)
-    : TransactionsPagedAdapter(transactionsListener) {
+                                   transactionsListener: TransactionListener?,
+                                   retryCallback: () -> Unit)
+    : TransactionsPagedAdapter(transactionsListener, retryCallback) {
 
     // Because there's a single row at position 0 for dashboard data,
     // must provide a custom paging callback here that accounts for that row

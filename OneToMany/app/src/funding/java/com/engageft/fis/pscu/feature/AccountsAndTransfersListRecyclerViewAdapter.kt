@@ -41,7 +41,7 @@ class AccountsAndTransfersListRecyclerViewAdapter(
         const val TYPE_ACH_ACCOUNT_HEADER = 4
         const val TYPE_BUTTON = 5
 
-        const val EMPTY_LIST_ACCOUNT_ID: Long = -1
+        const val EMPTY_LIST_ACCOUNT_ID: Long = 0L
     }
 
     private val mutableList = mutableListOf<Any>()
@@ -121,7 +121,11 @@ class AccountsAndTransfersListRecyclerViewAdapter(
                     }
 
                     holder.itemView.setOnClickListener {
-                        achAccountClickListener.onAchAccountInfoClicked(achAccountInfo.achAccountId)
+                        if (achAccountInfo.achAccountId == EMPTY_LIST_ACCOUNT_ID) {
+                            achAccountClickListener.onAddBankAccountClicked()
+                        } else {
+                            achAccountClickListener.onAchAccounDetailClicked(achAccountInfo.achAccountId)
+                        }
                     }
                 }
             }
@@ -175,14 +179,16 @@ class AccountsAndTransfersListRecyclerViewAdapter(
 
     fun setAccountHeaderData(headerText: String, headerSubText: String) {
         val oldList = mutableList.toList()
-        if (mutableList.size > 0) { // removes item if already in list
-            val first = mutableList[0]
-            if (first is HeaderTextPair) {
-                mutableList.removeAt(0)
-            }
-        }
+        removeHeader()
         val pair = HeaderTextPair(headerText, headerSubText)
         mutableList.add(0, pair)
+        DiffUtil.calculateDiff(CustomDiffUtil(oldList, mutableList))
+                .dispatchUpdatesTo(this)
+    }
+
+    fun removeHeaderAndNotifyAdapter() {
+        val oldList = mutableList.toList()
+        removeHeader()
         DiffUtil.calculateDiff(CustomDiffUtil(oldList, mutableList))
                 .dispatchUpdatesTo(this)
     }
@@ -278,6 +284,15 @@ class AccountsAndTransfersListRecyclerViewAdapter(
         }
     }
 
+    private fun removeHeader() {
+        if (mutableList.size > 0) { // removes item if already in list
+            val first = mutableList[0]
+            if (first is HeaderTextPair) {
+                mutableList.removeAt(0)
+            }
+        }
+    }
+
     private fun formatAchIncomingBankTransferAmount(context: Context, amount: String): String {
         // TODO(aHashimi): when ACH out is supported this string format needs to change as well
         return String.format(context.getString(R.string.ach_bank_transfer_amount_incoming_format), amount)
@@ -368,12 +383,13 @@ class AccountsAndTransfersListRecyclerViewAdapter(
     }
 
     interface AchAccountInfoClickListener {
-        //TODO(aHashimi): FOTM-65, should pass object's ID?
-        fun onAchAccountInfoClicked(achAccountInfoId: Long)
+        fun onAchAccounDetailClicked(achAccountInfoId: Long)
+        fun onAddBankAccountClicked()
     }
 
     interface CreateTransferButtonClickListener {
-        //TODO(aHashimi): FOTM-65 & FOTM-113
+        //TODO(aHashimi): FOTM-113
+        //TODO(aHashimi): supporting multiple ach accounts: which one's being verfied? https://engageft.atlassian.net/browse/FOTM-588
         fun onCreateTransferClicked()
     }
 }

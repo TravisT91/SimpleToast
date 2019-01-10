@@ -27,7 +27,6 @@ import com.engageft.apptoolbox.ViewUtils.newLotusInstance
 import com.engageft.apptoolbox.view.InformationDialogFragment
 import com.engageft.apptoolbox.view.ProductCardModel
 import com.engageft.engagekit.EngageService
-import com.engageft.engagekit.repository.transaction.TransactionRepository
 import com.engageft.engagekit.repository.transaction.vo.Transaction
 import com.engageft.fis.pscu.R
 import com.engageft.fis.pscu.databinding.FragmentDashboardBinding
@@ -52,7 +51,7 @@ import java.math.BigDecimal
  * Ported to gen2 by joeyhutchins on 8/24/18.
  * Copyright (c) 2018 Engage FT. All rights reserved.
  */
-class DashboardFragment : BaseEngageFullscreenFragment(),
+class DashboardFragment : BaseEngagePageFragment(),
         DashboardExpandableView.DashboardExpandableViewListener,
         DashboardTransactionsAdapter.DashboardTransactionsAdapterListener,
         TransactionListener {
@@ -85,17 +84,6 @@ class DashboardFragment : BaseEngageFullscreenFragment(),
 
     private var scrollDisabled = false
 
-//    private val navigationOverrideClickListener = object : NavigationOverrideClickListener {
-//        override fun onClick(): Boolean {
-//            return if (changePasswordViewModel.hasUnsavedChanges()) {
-//                showDialog(infoDialogGenericUnsavedChangesNewInstance(context = activity!!, listener = unsavedChangesDialogListener))
-//                true
-//            } else {
-//                false
-//            }
-//        }
-//    }
-
     override fun createViewModel(): BaseViewModel? {
         dashboardViewModel = ViewModelProviders.of(this).get(DashboardViewModel::class.java)
         return dashboardViewModel
@@ -127,7 +115,7 @@ class DashboardFragment : BaseEngageFullscreenFragment(),
 
         binding.dashboardExpandableView.listener = this
 
-        transactionsAdapter = DashboardTransactionsAdapter(dashboardViewModel.compositeDisposable, this, this)
+        transactionsAdapter = DashboardTransactionsAdapter(dashboardViewModel.compositeDisposable, this, this, dashboardViewModel::initTransactions)
         binding.transactionsRecyclerView.apply {
             layoutManager = LinearLayoutManager(context)
             adapter = transactionsAdapter
@@ -165,7 +153,7 @@ class DashboardFragment : BaseEngageFullscreenFragment(),
             if (binding.transactionsRecyclerView.itemAnimator == null) {
                 binding.transactionsRecyclerView.itemAnimator = DefaultItemAnimator()
             }
-            loadTransactions(listOf(TransactionRepository.TransactionRepoType.ALL_ACTIVITY, TransactionRepository.TransactionRepoType.DEPOSITS))
+            dashboardViewModel.initTransactions()
             // viewModel will trigger showing regular activity indicator. Don't show swipe refresh indicator too.
             binding.swipeRefreshLayout.isRefreshing = false
         }
@@ -250,7 +238,7 @@ class DashboardFragment : BaseEngageFullscreenFragment(),
                         if (dashboardViewModel.productCardViewModelDelegate.isShowingCardDetails()) R.string.OVERVIEW_HIDE_CARD_DETAILS else R.string.OVERVIEW_SHOW_CARD_DETAILS
                 )
 
-                showDialog(
+                fragmentDelegate.showDialog(
                         InformationDialogFragment.newLotusInstance(
                                 message = getString(R.string.OVERVIEW_CARD_ERROR_DIALOG_MESSAGE),
                                 buttonPositiveText = getString(R.string.dialog_information_ok_button)
@@ -414,7 +402,7 @@ class DashboardFragment : BaseEngageFullscreenFragment(),
             }
         }
 
-        loadTransactions(listOf(TransactionRepository.TransactionRepoType.ALL_ACTIVITY, TransactionRepository.TransactionRepoType.DEPOSITS))
+        dashboardViewModel.initTransactions()
 
         dashboardViewModel.notificationsCountObservable.observe(this, notificationsObserver)
 
@@ -616,10 +604,6 @@ class DashboardFragment : BaseEngageFullscreenFragment(),
     override fun onDepositsClicked() {
         binding.transactionsRecyclerView.itemAnimator = null
         dashboardViewModel.showDeposits()
-    }
-
-    private fun loadTransactions(repoTypes: List<TransactionRepository.TransactionRepoType>) {
-        dashboardViewModel.clearTransactions(repoTypes) { dashboardViewModel.initTransactions(repoTypes) }
     }
 
     // TransactionsPagedAdapter.OnTransactionsAdapterListener
