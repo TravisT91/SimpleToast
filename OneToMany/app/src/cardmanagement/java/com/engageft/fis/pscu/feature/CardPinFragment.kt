@@ -39,6 +39,8 @@ class CardPinFragment : BaseEngagePageFragment() {
     private lateinit var binding: FragmentCardPinBinding
     private lateinit var cardPinViewModel: CardPinViewModelDelegate
     private val listOfImageViews = ArrayList<ImageView>()
+    private lateinit var unselectedDot: Drawable
+    private lateinit var selectedDot: Drawable
 
     override fun createViewModel(): BaseViewModel? {
         // This Fragment's usage is supported in two places:
@@ -60,6 +62,9 @@ class CardPinFragment : BaseEngagePageFragment() {
         binding = FragmentCardPinBinding.inflate(inflater, container, false)
         activity!!.window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_NOTHING)
 
+        unselectedDot = ContextCompat.getDrawable(context!!, R.drawable.card_pin_unselected_dot_shape)!!
+        selectedDot = ContextCompat.getDrawable(context!!, R.drawable.card_pin_selected_dot_shape)!!
+        DrawableCompat.setTint(selectedDot, Palette.primaryColor)
         binding.apply {
             viewModel = cardPinViewModel
             //TODO(ttkachuk) right now card types are no specified by the backend, but we will select the BrandingCard that matches debitCardInfo.cardType when the backend is updated
@@ -73,6 +78,7 @@ class CardPinFragment : BaseEngagePageFragment() {
                 }
             }
 
+            listOfImageViews.clear()
             listOfImageViews.apply {
                 add(iconImageView1)
                 add(iconImageView2)
@@ -147,6 +153,9 @@ class CardPinFragment : BaseEngagePageFragment() {
                     CardPinViewModelDelegate.PinDigits.DIGIT_ADDED -> {
                         pinDigitAdded(it.second)
                     }
+                    CardPinViewModelDelegate.PinDigits.DIGITS_CLEARED -> {
+                        pinDigitsCleared()
+                    }
                 }
             })
 
@@ -190,6 +199,11 @@ class CardPinFragment : BaseEngagePageFragment() {
         }
     }
 
+    override fun onDestroyView() {
+        super.onDestroyView()
+        cardPinViewModel.cardPinDigitsState.removeObservers(this)
+    }
+
     private fun updateView(text: String, @ColorInt textColor: Int, drawable: Drawable) {
         binding.apply {
             chooseDescriptionTextView.text = text
@@ -202,12 +216,19 @@ class CardPinFragment : BaseEngagePageFragment() {
     }
 
     private fun pinDigitAdded(index: Int) {
-        val drawable = ContextCompat.getDrawable(context!!, R.drawable.card_pin_selected_dot_shape)!!
-        DrawableCompat.setTint(drawable, Palette.primaryColor)
-        listOfImageViews[index].background = drawable
+        for (i in 0..index) {
+            listOfImageViews[i].background = selectedDot
+        }
     }
 
     private fun pinDigitDeleted(index: Int) {
-        listOfImageViews[index].background = ContextCompat.getDrawable(context!!, R.drawable.card_pin_unselected_dot_shape)
+        listOfImageViews[index].background = unselectedDot
+    }
+
+    private fun pinDigitsCleared() {
+        listOfImageViews[0].background = unselectedDot
+        listOfImageViews[1].background = unselectedDot
+        listOfImageViews[2].background = unselectedDot
+        listOfImageViews[3].background = unselectedDot
     }
 }

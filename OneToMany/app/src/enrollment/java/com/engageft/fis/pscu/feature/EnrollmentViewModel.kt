@@ -1,15 +1,6 @@
 package com.engageft.fis.pscu.feature
 
 import androidx.navigation.NavController
-import com.engageft.apptoolbox.view.ProductCardModel
-import com.engageft.apptoolbox.view.ProductCardModelCardStatus
-import com.engageft.fis.pscu.feature.gatekeeping.CardPinEnrollmentGateKeeper
-import com.engageft.fis.pscu.feature.gatekeeping.GateKeeperListener
-import com.engageft.fis.pscu.feature.gatekeeping.GatedItem
-import com.engageft.fis.pscu.feature.gatekeeping.items.AccountRequiredGatedItem
-import com.engageft.fis.pscu.feature.gatekeeping.items.CIPRequiredGatedItem
-import com.engageft.fis.pscu.feature.gatekeeping.items.TermsRequiredGatedItem
-import com.ob.domain.lookup.DebitCardStatus
 import com.ob.ws.dom.ActivationCardInfo
 
 /**
@@ -37,7 +28,7 @@ class EnrollmentViewModel : BaseEngageViewModel() {
     }
 
     // These providers are here to later check isInitialized to determine if the delegates are null or not.
-    val cardPinDelegateProvider = lazy {EnrollmentCardPinDelegate()}
+    val cardPinDelegateProvider = lazy {EnrollmentCardPinDelegate(this, navController, cardPinNavigations)}
     val createAccountDelegateProvider = lazy {CreateAccountDelegate()}
     val verifyIdentityDelegateProvider = lazy {VerifyIdentityDelegate()}
     val termsOfUseDelegateProvider = lazy {TermsOfUseDelegate()}
@@ -54,6 +45,7 @@ class EnrollmentViewModel : BaseEngageViewModel() {
     private lateinit var verifyIdentityNavigations: EnrollmentNavigations.VerifyIdentityNavigations
     private lateinit var termsNavigations: EnrollmentNavigations.TermsNavigations
 
+    // Filled in by the
     lateinit var activationCardInfo: ActivationCardInfo
 
     fun initEnrollmentNavigation(navController: NavController, getStartedNavigations: EnrollmentNavigations.GetStartedNavigations,
@@ -83,110 +75,6 @@ class EnrollmentViewModel : BaseEngageViewModel() {
         }
 
         // TODO(jhutchins): Implement this.
-    }
-
-    inner class EnrollmentCardPinDelegate : CardPinViewModelListener {
-        val cardPinViewModelDelegate = CardPinViewModelDelegate(this@EnrollmentViewModel, this)
-        private val gateKeeperListener: GateKeeperListener = object : GateKeeperListener {
-            override fun onGateOpen() {
-                navController.navigate(cardPinNavigations.cardPINToSending)
-            }
-
-            override fun onGatedItemFailed(item: GatedItem) {
-                when (item) {
-                    is AccountRequiredGatedItem -> {
-                        navController.navigate(cardPinNavigations.cardPINToCreateAccount)
-                    }
-                    is CIPRequiredGatedItem -> {
-                        navController.navigate(cardPinNavigations.cardPINToVerifyIdentity)
-                    }
-                    is TermsRequiredGatedItem -> {
-                        navController.navigate(cardPinNavigations.cardPINToTerms)
-                    }
-                }
-            }
-
-            override fun onItemError(item: GatedItem, e: Throwable?, message: String?) {
-                // Intentionally empty and will never be called.
-            }
-        }
-
-        var pinNumber = 0
-
-        init {
-            cardPinViewModelDelegate.productCardViewModelDelegate.cardStateObservable.value = ProductCardViewCardState.DETAILS_HIDDEN
-            val productCardModel = ProductCardModel()
-            productCardModel.cardholderName = String.format("%s %s", activationCardInfo.firstName, activationCardInfo.lastName)
-            productCardModel.cardStatusText = activationCardInfo.cardStatus
-            productCardModel.cardStatus = productCardModelStatusFromActivationInfo(activationCardInfo)
-            productCardModel.cardStatusOkay = true
-            productCardModel.cardLocked = productCardModel.cardStatus == ProductCardModelCardStatus.CARD_STATUS_LOCKED
-            productCardModel.cardNumberPartial = getStartedDelegate.cardNumber.substring(11, 15)
-
-            cardPinViewModelDelegate.productCardViewModelDelegate.cardInfoModelObservable.value = productCardModel
-        }
-
-        private fun productCardModelStatusFromActivationInfo(activationCardInfo: ActivationCardInfo): ProductCardModelCardStatus {
-            return when (activationCardInfo.cardStatus) {
-                DebitCardStatus.ACTIVE.toString() -> {
-                    ProductCardModelCardStatus.CARD_STATUS_ACTIVE
-                }
-//                DebitCardStatus.PENDING_CREATE.toString() -> {
-//                    ProductCardModelCardStatus.CARD_STATUS_PENDING
-//                }
-                DebitCardStatus.PENDING_ACTIVATION.toString() -> {
-                    ProductCardModelCardStatus.CARD_STATUS_PENDING
-                }
-//                DebitCardStatus.REPLACEMENT_ORDERED.toString() -> {
-//                    ProductCardModelCardStatus.CARD_STATUS_REPLACED
-//                }
-                DebitCardStatus.CANCELED.toString() -> {
-                    ProductCardModelCardStatus.CARD_STATUS_CANCELED
-                }
-                DebitCardStatus.REPLACED.toString() -> {
-                    ProductCardModelCardStatus.CARD_STATUS_REPLACED
-                }
-                DebitCardStatus.LOCKED_USER.toString() -> {
-                    ProductCardModelCardStatus.CARD_STATUS_LOCKED
-                }
-                DebitCardStatus.LOCKED_PARENT.toString() -> {
-                    ProductCardModelCardStatus.CARD_STATUS_LOCKED
-                }
-                DebitCardStatus.LOCKED_CSR.toString() -> {
-                    ProductCardModelCardStatus.CARD_STATUS_LOCKED
-                }
-                DebitCardStatus.LOCKED_ADMIN.toString() -> {
-                    ProductCardModelCardStatus.CARD_STATUS_LOCKED
-                }
-                else -> {
-                    // This is bad...
-                    throw IllegalStateException("Unknown card status. ")
-                }
-            }
-        }
-
-        override fun onPostPin(pinNumber: Int) {
-            this.pinNumber = pinNumber
-
-            val gateKeeper = CardPinEnrollmentGateKeeper(activationCardInfo, gateKeeperListener)
-            gateKeeper.run()
-        }
-
-        fun onButton1Clicked() {
-            navController.navigate(cardPinNavigations.cardPINToCreateAccount)
-        }
-
-        fun onButton2Clicked() {
-            navController.navigate(cardPinNavigations.cardPINToVerifyIdentity)
-        }
-
-        fun onButton3Clicked() {
-            navController.navigate(cardPinNavigations.cardPINToTerms)
-        }
-
-        fun onButton4Clicked() {
-            navController.navigate(cardPinNavigations.cardPINToSending)
-        }
     }
 
     inner class CreateAccountDelegate {

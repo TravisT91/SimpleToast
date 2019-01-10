@@ -25,7 +25,8 @@ class CardPinViewModelDelegate(private val engageViewModel: BaseEngageViewModel,
 
     enum class PinDigits {
         DIGIT_ADDED,
-        DIGIT_DELETED
+        DIGIT_DELETED,
+        DIGITS_CLEARED
     }
 
     val cardPinStateObservable = MutableLiveData<CardPinState>()
@@ -42,9 +43,13 @@ class CardPinViewModelDelegate(private val engageViewModel: BaseEngageViewModel,
             }
 
             if (field.length in 0..PIN_LENGTH) {
-                when {
-                    field.length > temp.length -> cardPinDigitsState.value = Pair(PinDigits.DIGIT_ADDED, field.length - 1)
-                    field.length < temp.length -> cardPinDigitsState.value = Pair(PinDigits.DIGIT_DELETED, temp.length - 1)
+                if (temp.length > 1 && field.isEmpty()) {
+                    cardPinDigitsState.value = Pair(PinDigits.DIGITS_CLEARED, 0)
+                } else {
+                    when {
+                        field.length > temp.length -> cardPinDigitsState.value = Pair(PinDigits.DIGIT_ADDED, field.length - 1)
+                        field.length < temp.length -> cardPinDigitsState.value = Pair(PinDigits.DIGIT_DELETED, temp.length - 1)
+                    }
                 }
 
                 if (field.length == PIN_LENGTH) {
@@ -59,9 +64,13 @@ class CardPinViewModelDelegate(private val engageViewModel: BaseEngageViewModel,
             field = value
 
             if (field.length in 0..PIN_LENGTH) {
-                when {
-                    field.length > temp.length -> cardPinDigitsState.value = Pair(PinDigits.DIGIT_ADDED, field.length - 1)
-                    field.length < temp.length -> cardPinDigitsState.value = Pair(PinDigits.DIGIT_DELETED, temp.length - 1)
+                if (temp.length > 1 && field.isEmpty()) {
+                    cardPinDigitsState.value = Pair(PinDigits.DIGITS_CLEARED, 0)
+                } else {
+                    when {
+                        field.length > temp.length -> cardPinDigitsState.value = Pair(PinDigits.DIGIT_ADDED, field.length - 1)
+                        field.length < temp.length -> cardPinDigitsState.value = Pair(PinDigits.DIGIT_DELETED, temp.length - 1)
+                    }
                 }
 
                 if (field.length == PIN_LENGTH) {
@@ -80,25 +89,14 @@ class CardPinViewModelDelegate(private val engageViewModel: BaseEngageViewModel,
 
     private fun submit() {
         if (isValidPin(pinNumber)) {
+            val result = pinNumber.toInt()
+            
+            // reset...
+            cardPinStateObservable.value = CardPinState.INITIAL_ENTER_PIN
+            pinNumber = ""
+            confirmPinNumber = ""
 
-            cardPinViewModelListener.onPostPin(pinNumber.toInt())
-//            progressOverlayShownObservable.value = true
-//            compositeDisposable.add(
-//                    EngageService.getInstance().setCardPinObservable(currentCard, pinNumber.toInt())
-//                            .subscribeOn(Schedulers.io())
-//                            .observeOn(AndroidSchedulers.mainThread())
-//                            .subscribe({ response ->
-//                                progressOverlayShownObservable.value = false
-//                                if (response.isSuccess) {
-//                                    dialogInfoObservable.value = DialogInfo(dialogType = DialogInfo.DialogType.GENERIC_SUCCESS)
-//                                } else {
-//                                    dialogInfoObservable.value = DialogInfo(dialogType = DialogInfo.DialogType.SERVER_ERROR, message = response.message)
-//                                }
-//                            }, { e ->
-//                                progressOverlayShownObservable.value = false
-//                                handleThrowable(e)
-//                            })
-//            )
+            cardPinViewModelListener.onPostPin(result)
         } else {
             // this is redundant for CardPinFragment, technically this should not happen
             cardPinStateObservable.value = CardPinState.INVALID_PIN
