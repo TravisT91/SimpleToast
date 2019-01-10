@@ -11,7 +11,7 @@ import com.engageft.apptoolbox.BaseViewModel
 import com.engageft.engagekit.model.ScheduledLoad
 import com.engageft.fis.pscu.R
 import com.engageft.fis.pscu.databinding.FragmentCreateTransferConfirmBinding
-import com.engageft.fis.pscu.feature.BaseEngageFullscreenFragment
+import com.engageft.fis.pscu.feature.BaseEngagePageFragment
 import com.engageft.fis.pscu.feature.DialogInfo
 import com.engageft.fis.pscu.feature.branding.Palette
 import com.engageft.fis.pscu.feature.infoDialogGenericErrorTitleMessageConditionalNewInstance
@@ -19,7 +19,7 @@ import org.joda.time.DateTime
 import utilGen1.DisplayDateTimeUtils
 import utilGen1.StringUtils
 
-class CreateTransferConfirmationFragment: BaseEngageFullscreenFragment() {
+class CreateTransferConfirmationFragment: BaseEngagePageFragment() {
     private lateinit var createTransferViewModel: CreateTransferConfirmationViewModel
 
     override fun createViewModel(): BaseViewModel? {

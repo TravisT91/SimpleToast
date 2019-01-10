@@ -33,21 +33,21 @@ object DisplayDateTimeUtils {
     private const val TAG = "DisplayDateTimeUtils"
 
     // Localized format patterns:
-    private val fullFormatter = DateTimeFormat.fullDate() // "Thursday, November 27, 2016";
-    private val longDateFormatter = DateTimeFormat.longDate() // February 10, 2017;
+    val fullFormatter = DateTimeFormat.fullDate() // "Thursday, November 27, 2016";
+    val longDateFormatter = DateTimeFormat.longDate() // February 10, 2017;
     val mediumDateFormatter = DateTimeFormat.mediumDate() // "Feb 10, 2017";
 
     // strings.xml format patterns:
     // TODO(travis): Are these strings localized? If not, we should probably make them constants.
     val shortDateFormatter: DateTimeFormatter = DateTimeFormat.forPattern(OneToManyApplication.sInstance.getString(R.string.format_datetime_short)) // 02/10/2017;
     val hourMinuteSecondMillisFormatter: DateTimeFormatter = DateTimeFormat.forPattern(OneToManyApplication.sInstance.getString(R.string.format_datetime_hour_minute_second_milli))
-    private val monthYearFormatter = DateTimeFormat.forPattern(OneToManyApplication.sInstance.getString(R.string.format_datetime_month_year)) // "Nov 2016";
-    private val monthFullYearFormatter = DateTimeFormat.forPattern(OneToManyApplication.sInstance.getString(R.string.format_datetime_fullmonth_year)) // "November 2016";
-    private val monthAbbrDayTwoDigitsFormatter = DateTimeFormat.forPattern(OneToManyApplication.sInstance.getString(R.string.format_datetime_month_day)) // "Nov 15"
+    val monthYearFormatter = DateTimeFormat.forPattern(OneToManyApplication.sInstance.getString(R.string.format_datetime_month_year)) // "Nov 2016";
+    val monthFullYearFormatter = DateTimeFormat.forPattern(OneToManyApplication.sInstance.getString(R.string.format_datetime_fullmonth_year)) // "November 2016";
+    val monthAbbrDayTwoDigitsFormatter = DateTimeFormat.forPattern(OneToManyApplication.sInstance.getString(R.string.format_datetime_month_day)) // "Nov 15"
     val yearMonthDayFormatter: DateTimeFormatter = DateTimeFormat.forPattern(OneToManyApplication.sInstance.getString(R.string.format_datetime_year_shortmonth_day)) // "2017-03-07";
     val monthDayFormatter: DateTimeFormatter = DateTimeFormat.forPattern(OneToManyApplication.sInstance.getString(R.string.format_datetime_longmonth_day)) // "November 27";
-    private val monthDayDigitsFormatter = DateTimeFormat.forPattern(OneToManyApplication.sInstance.getString(R.string.format_datetime_shortmonth_day)) // "01/15";
-    private val expirationMonthYearFormatter = DateTimeFormat.forPattern(OneToManyApplication.sInstance.getString(R.string.format_datetime_shortmonth_year)) // "01/16"
+    val monthDayDigitsFormatter = DateTimeFormat.forPattern(OneToManyApplication.sInstance.getString(R.string.format_datetime_shortmonth_day)) // "01/15";
+    val expirationMonthYearFormatter = DateTimeFormat.forPattern(OneToManyApplication.sInstance.getString(R.string.format_datetime_shortmonth_year)) // "01/16"
 
     // Other format patterns:
     private val monthFullFormatter = DateTimeFormat.forPattern("MMMM") // "November";

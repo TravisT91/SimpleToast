@@ -19,7 +19,7 @@ import com.engageft.apptoolbox.view.InformationDialogFragment
 import com.engageft.fis.pscu.R
 import com.engageft.fis.pscu.config.EngageAppConfig
 import com.engageft.fis.pscu.databinding.FragmentCreateEditTransferBinding
-import com.engageft.fis.pscu.feature.BaseEngageFullscreenFragment
+import com.engageft.fis.pscu.feature.BaseEngagePageFragment
 import com.engageft.fis.pscu.feature.DialogInfo
 import com.engageft.fis.pscu.feature.achtransfer.AccountsAndTransfersListFragment.Companion.SCHEDULED_LOAD_ID
 import com.engageft.fis.pscu.feature.branding.Palette
@@ -29,7 +29,7 @@ import utilGen1.AchAccountInfoUtils
 import utilGen1.DisplayDateTimeUtils
 import utilGen1.ScheduledLoadUtils
 
-class CreateEditTransferFragment: BaseEngageFullscreenFragment() {
+class CreateEditTransferFragment: BaseEngagePageFragment() {
 
     private lateinit var createEditTransferViewModel: CreateEditTransferViewModel
     private lateinit var binding: FragmentCreateEditTransferBinding
@@ -49,7 +49,7 @@ class CreateEditTransferFragment: BaseEngageFullscreenFragment() {
     private val navigationOverrideClickListener = object : NavigationOverrideClickListener {
         override fun onClick(): Boolean {
             return if (createEditTransferViewModel.hasUnsavedChanges()) {
-                showDialog(infoDialogGenericUnsavedChangesNewInstance(context = activity!!, listener = unsavedChangesDialogListener))
+                fragmentDelegate.showDialog(infoDialogGenericUnsavedChangesNewInstance(context = activity!!, listener = unsavedChangesDialogListener))
                 true
             } else {
                 false
@@ -106,7 +106,7 @@ class CreateEditTransferFragment: BaseEngageFullscreenFragment() {
 
                                 })
                         infoDialog.positiveButtonTextColor = Palette.errorColor
-                        showDialog(infoDialog)
+                        fragmentDelegate.showDialog(infoDialog)
                     }
 
                     // set fields to disabled in EDIT mode so user can't edit it but they can delete their recurring transfer
@@ -174,7 +174,7 @@ class CreateEditTransferFragment: BaseEngageFullscreenFragment() {
     }
 
     private fun promptAchIsNotAllowed() {
-        InformationDialogFragment.newLotusInstance(
+        fragmentDelegate.showDialog(InformationDialogFragment.newLotusInstance(
                 message = getString(R.string.ach_bank_transfer_create_ach_alert_message),
                 buttonPositiveText = getString(R.string.dialog_information_ok_button),
                 listener = object : InformationDialogFragment.InformationDialogFragmentListener {
@@ -185,7 +185,7 @@ class CreateEditTransferFragment: BaseEngageFullscreenFragment() {
                     }
 
                     override fun onDialogCancelled() {}
-                }).show(activity!!.supportFragmentManager, "wrongAccountDialog")
+                }))
     }
 
     override fun onCreateOptionsMenu(menu: Menu?, inflater: MenuInflater?) {

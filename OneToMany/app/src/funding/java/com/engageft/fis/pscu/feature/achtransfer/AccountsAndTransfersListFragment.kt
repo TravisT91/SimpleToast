@@ -14,7 +14,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.engageft.apptoolbox.BaseViewModel
 import com.engageft.fis.pscu.R
 import com.engageft.fis.pscu.databinding.FragmentAccountsAndTransfersListBinding
-import com.engageft.fis.pscu.feature.BaseEngageFullscreenFragment
+import com.engageft.fis.pscu.feature.BaseEngagePageFragment
 import com.engageft.fis.pscu.feature.branding.Palette
 /**
  * AccountsAndTransfersListFragment

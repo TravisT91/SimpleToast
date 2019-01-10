@@ -10,7 +10,7 @@ import com.engageft.apptoolbox.NavigationOverrideClickListener
 import com.engageft.apptoolbox.ToolbarVisibilityState
 import com.engageft.fis.pscu.R
 import com.engageft.fis.pscu.databinding.FragmentAchBankAccountAddVerifySuccessBinding
-import com.engageft.fis.pscu.feature.BaseEngageFullscreenFragment
+import com.engageft.fis.pscu.feature.BaseEngagePageFragment
 import com.engageft.fis.pscu.feature.achtransfer.AchBankAccountAddFragment.Companion.ADDED_SUCCESS_TYPE
 import com.engageft.fis.pscu.feature.achtransfer.AchBankAccountAddFragment.Companion.SUCCESS_SCREEN_TYPE_KEY
 import com.engageft.fis.pscu.feature.achtransfer.AchBankAccountAddFragment.Companion.VERIFIED_SUCCESS_TYPE
