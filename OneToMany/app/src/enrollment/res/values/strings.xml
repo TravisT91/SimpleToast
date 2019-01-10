@@ -13,4 +13,8 @@
     <string name="ENROLLMENT_GET_STARTED_UNDER_18_MESSAGE">A parent/legal guardian must activate your card. Are you the parent/legal guardian of the cardholder?</string>
     <string name="ENROLLMENT_GET_STARTED_UNDER_18_POSITIVE">YES</string>
     <string name="ENROLLMENT_GET_STARTED_UNDER_18_NEGATIVE">NO</string>
+    <string name="ENROLLMENT_TERMS_OF_USE_ACCEPT">Accept terms</string>
+    <string name="ENROLLMENT_TERMS_OF_USE_DECLINE">Decline</string>
+    <string name="ENROLLMENT_TERMS_OF_USE_ALERT_TITLE">Decline terms</string>
+    <string name="ENROLLMENT_TERMS_OF_USE_ALERT_MESSAGE">Are you sure you want to decline terms? Doing this will not allow you to continue.</string>
 </resources>

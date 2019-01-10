@@ -12,15 +12,30 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
         <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="vertical">
-            <Button
-                android:id="@+id/button1"
-                android:layout_width="wrap_content"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:gravity="bottom">
+            <com.engageft.apptoolbox.view.PillButton
+                style="@style/ButtonPillPrimaryFilledDefault"
+                PillButton.setThemeFilled="@{true}"
+                android:id="@+id/acceptTermsButton"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_margin="16dp"
                 android:onClick="@{() -> viewModel.onButton1Clicked()}"
-                android:text="sending"/>
+                android:text="@string/ENROLLMENT_TERMS_OF_USE_ACCEPT"/>
+
+            <com.engageft.apptoolbox.view.PillButton
+                style="@style/ButtonPillSecondaryOutlinedDefault"
+                PillButton.setThemeOutlined="@{true}"
+                android:id="@+id/declineTermsButton"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="16dp"
+                android:layout_marginStart="16dp"
+                android:layout_marginBottom="16dp"
+                android:text="@string/ENROLLMENT_TERMS_OF_USE_DECLINE"/>
         </LinearLayout>
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>
