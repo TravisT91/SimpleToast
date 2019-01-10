@@ -45,7 +45,6 @@ class EnrollmentViewModel : BaseEngageViewModel() {
     private lateinit var verifyIdentityNavigations: EnrollmentNavigations.VerifyIdentityNavigations
     private lateinit var termsNavigations: EnrollmentNavigations.TermsNavigations
 
-    // Filled in by the
     lateinit var activationCardInfo: ActivationCardInfo
 
     fun initEnrollmentNavigation(navController: NavController, getStartedNavigations: EnrollmentNavigations.GetStartedNavigations,
