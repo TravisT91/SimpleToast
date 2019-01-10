@@ -50,8 +50,8 @@ class CardLockUnlockViewModel: BaseEngageViewModel() {
 
     fun isCardLocked(): Boolean {
         when (currentCard.status) {
-            DebitCardStatus.ACTIVE ->  return false // it's unlocked, lock it
-            DebitCardStatus.LOCKED_USER -> return true // it's locked, unlock it
+            DebitCardStatus.ACTIVE ->  return false
+            DebitCardStatus.LOCKED_USER -> return true
         }
 
         return false
