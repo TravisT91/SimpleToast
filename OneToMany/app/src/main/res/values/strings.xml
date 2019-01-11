@@ -24,6 +24,11 @@
     <string name="fragment_title_cancel_card">Cancel card</string>
     <string name="fragment_title_mobile_check_deposit_download">Mobile check deposit</string>
     <string name="fragment_title_mobile_check_deposit_open">Mobile check deposit</string>
+    <string name="fragment_title_enrollment_get_started">Get started</string>
+    <string name="fragment_title_enrollment_card_pin">Card PIN</string>
+    <string name="fragment_title_enrollment_create_account">Create account</string>
+    <string name="fragment_title_enrollment_verify_identity">Verify identity</string>
+    <string name="fragment_title_enrollment_terms">Terms of use</string>
 
     <!-- Notifications -->
     <string name="channel_id">app_general_channel</string>

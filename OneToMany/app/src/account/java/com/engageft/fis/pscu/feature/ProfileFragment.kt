@@ -28,13 +28,13 @@ import com.engageft.fis.pscu.feature.utils.StringUtils
  * Created by joeyhutchins on 11/12/18.
  * Copyright (c) 2018 Engage FT. All rights reserved.
  */
-class ProfileFragment : BaseEngageFullscreenFragment() {
+class ProfileFragment : BaseEngagePageFragment() {
     private lateinit var profileViewModel: ProfileViewModel
 
     private val navigationOverrideClickListener = object : NavigationOverrideClickListener {
         override fun onClick(): Boolean {
             return if (profileViewModel.hasUnsavedChanges()) {
-                showDialog(infoDialogGenericUnsavedChangesNewInstance(context = activity!!, listener = unsavedChangesDialogListener))
+                fragmentDelegate.showDialog(infoDialogGenericUnsavedChangesNewInstance(context = activity!!, listener = unsavedChangesDialogListener))
                 true
             } else {
                 false
@@ -96,7 +96,7 @@ class ProfileFragment : BaseEngageFullscreenFragment() {
                     }
                 }
                 var message = StringUtils.concatenateFromList(messages, "\n\n")
-                showDialog(InformationDialogFragment.newLotusInstance(title = if (wasError) getString(R.string.PROFILE_ERROR_TITLE) else getString(R.string.PROFILE_SUCCESS_TITLE),
+                fragmentDelegate.showDialog(InformationDialogFragment.newLotusInstance(title = if (wasError) getString(R.string.PROFILE_ERROR_TITLE) else getString(R.string.PROFILE_SUCCESS_TITLE),
                         message = message,
                         buttonPositiveText = getString(R.string.PROFILE_SUCCESS_MESSAGE_OK)))
             }

@@ -10,7 +10,12 @@ import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.util.TypedValue
-import android.view.*
+import android.view.LayoutInflater
+import android.view.Menu
+import android.view.MenuInflater
+import android.view.MenuItem
+import android.view.View
+import android.view.ViewGroup
 import android.webkit.WebResourceError
 import android.webkit.WebResourceRequest
 import android.webkit.WebView
@@ -42,7 +47,7 @@ import java.util.*
  * Converted to Kotlin, imported partially by Atia Hashimi on 11/16/18.
  * Copyright (c) 2017 Engage FT. All rights reserved.
  */
-class WebViewFragment : BaseEngageFullscreenFragment() {
+class WebViewFragment : BaseEngagePageFragment() {
 
     // Using custom WebView, even though only need its functionality when showing agreements.
     private lateinit var webView: ScrollToBottomWebView
@@ -111,7 +116,7 @@ class WebViewFragment : BaseEngageFullscreenFragment() {
             override fun onPageFinished(view: WebView, url: String) {
                 removeHeadersAndFooter()
                 removeLeftRightPadding()
-                progressOverlayDelegate.dismissProgressOverlay()
+                fragmentDelegate.dismissProgressOverlay()
                 loadSuccess()
                 if (forPrint && showPdfImmediately) {
                     exportPdfIntent()
@@ -120,14 +125,14 @@ class WebViewFragment : BaseEngageFullscreenFragment() {
 
             @RequiresApi(Build.VERSION_CODES.M)
             override fun onReceivedError(view: WebView?, request: WebResourceRequest?, error: WebResourceError?) {
-                progressOverlayDelegate.dismissProgressOverlay()
+                fragmentDelegate.dismissProgressOverlay()
                 loadFailure(error?.description.toString())
             }
 
             @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
             override fun onReceivedError(view: WebView, errorCode: Int,
                                          description: String, failingUrl: String) {
-                progressOverlayDelegate.dismissProgressOverlay()
+                fragmentDelegate.dismissProgressOverlay()
                 loadFailure(description)
             }
 
@@ -142,11 +147,11 @@ class WebViewFragment : BaseEngageFullscreenFragment() {
 
         if (!initialUrl.isNullOrEmpty()) {
             if (!isNetworkAvailable()) {
-                showDialog(infoDialogGenericErrorTitleMessageNewInstance(context!!,
+                fragmentDelegate.showDialog(infoDialogGenericErrorTitleMessageNewInstance(context!!,
                         message = getString(R.string.alert_error_message_no_internet_connection),
                         listener = dialogInfoListener))
             } else {
-                progressOverlayDelegate.showProgressOverlay()
+                fragmentDelegate.showProgressOverlay()
 
                 if (forPrint) {
                     Thread(Runnable {
@@ -158,7 +163,7 @@ class WebViewFragment : BaseEngageFullscreenFragment() {
                                     result?.let { url ->
                                         loadWebView(url)
                                     } ?: run {
-                                        showDialog(infoDialogGenericErrorTitleMessageNewInstance(context!!, listener = dialogInfoListener))
+                                        fragmentDelegate.showDialog(infoDialogGenericErrorTitleMessageNewInstance(context!!, listener = dialogInfoListener))
                                     }
                                 }
                             }
@@ -220,7 +225,7 @@ class WebViewFragment : BaseEngageFullscreenFragment() {
             if (infos.size > 0) {
                 startActivity(i)
             } else {
-                showDialog(infoDialogGenericErrorTitleMessageNewInstance(context!!, message = getString(R.string.WEBVIEW_NO_EMAIL_CLIENT_FOUND)))
+                fragmentDelegate.showDialog(infoDialogGenericErrorTitleMessageNewInstance(context!!, message = getString(R.string.WEBVIEW_NO_EMAIL_CLIENT_FOUND)))
             }
 
             view.reload()
@@ -284,7 +289,7 @@ class WebViewFragment : BaseEngageFullscreenFragment() {
                             context!!.applicationContext.packageName + ".file_provider",
                             file)
                 } catch (e: Exception) {
-                    handleGenericThrowable(e)
+                    engageFragmentDelegate.handleGenericThrowable(e)
                 }
 
                 if (fileUri != null) {
@@ -301,8 +306,8 @@ class WebViewFragment : BaseEngageFullscreenFragment() {
             }
 
             override fun onError(e: Throwable) {
-                handleGenericThrowable(e)
-                showDialog(infoDialogGenericErrorTitleMessageNewInstance(context!!, listener = dialogInfoListener))
+                engageFragmentDelegate.handleGenericThrowable(e)
+                fragmentDelegate.showDialog(infoDialogGenericErrorTitleMessageNewInstance(context!!, listener = dialogInfoListener))
             }
 
             override fun onComplete() {}
@@ -332,7 +337,7 @@ class WebViewFragment : BaseEngageFullscreenFragment() {
 
             override fun onDialogCancelled() {}
         }
-        showDialog(infoDialogYesNoNewInstance(context!!, title = getString(R.string.NO_PDF_APP_FOUND_TITLE),
+        fragmentDelegate.showDialog(infoDialogYesNoNewInstance(context!!, title = getString(R.string.NO_PDF_APP_FOUND_TITLE),
                 message = getString(R.string.NO_PDF_APP_FOUND_MESSAGE), listener = listener))
     }
 
@@ -406,8 +411,8 @@ class WebViewFragment : BaseEngageFullscreenFragment() {
             // h1 and h2 styles render huge on the screen
             return doc.toString().replace("<h1", "<h3").replace("<h2", "<h3")
         } catch (e: IOException) {
-            handleGenericThrowable(e)
-            showDialog(infoDialogGenericErrorTitleMessageNewInstance(context!!))
+            engageFragmentDelegate.handleGenericThrowable(e)
+            fragmentDelegate.showDialog(infoDialogGenericErrorTitleMessageNewInstance(context!!))
             return null
         }
     }
@@ -418,8 +423,8 @@ class WebViewFragment : BaseEngageFullscreenFragment() {
             val protocolAndHost = url.protocol + "://" + url.host
             webView.loadDataWithBaseURL(protocolAndHost, result, "text/html", "utf-8", null)
         } catch (e: MalformedURLException) {
-            handleGenericThrowable(e)
-            showDialog(infoDialogGenericErrorTitleMessageNewInstance(context!!))
+            engageFragmentDelegate.handleGenericThrowable(e)
+            fragmentDelegate.showDialog(infoDialogGenericErrorTitleMessageNewInstance(context!!))
         }
     }
 }

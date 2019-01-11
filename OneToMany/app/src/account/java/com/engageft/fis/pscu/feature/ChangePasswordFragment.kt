@@ -24,7 +24,7 @@ import com.engageft.fis.pscu.databinding.FragmentChangePasswordBinding
  * Created by Atia Hashimi on 11/13/18.
  * Copyright (c) 2018 Engage FT. All rights reserved.
  */
-class ChangePasswordFragment: BaseEngageFullscreenFragment() {
+class ChangePasswordFragment: BaseEngagePageFragment() {
 
     private lateinit var changePasswordViewModel: ChangePasswordViewModel
 
@@ -36,7 +36,7 @@ class ChangePasswordFragment: BaseEngageFullscreenFragment() {
     private val navigationOverrideClickListener = object : NavigationOverrideClickListener {
         override fun onClick(): Boolean {
             return if (changePasswordViewModel.hasUnsavedChanges()) {
-                showDialog(infoDialogGenericUnsavedChangesNewInstance(context = activity!!, listener = unsavedChangesDialogListener))
+                fragmentDelegate.showDialog(infoDialogGenericUnsavedChangesNewInstance(context = activity!!, listener = unsavedChangesDialogListener))
                 true
             } else {
                 false
@@ -120,7 +120,7 @@ class ChangePasswordFragment: BaseEngageFullscreenFragment() {
             dialogInfoObservable.observe(this@ChangePasswordFragment, Observer { dialogInfo ->
                 when (dialogInfo.dialogType) {
                     DialogInfo.DialogType.GENERIC_SUCCESS -> {
-                        showGenericSuccessDialogMessageAndPopBackstack(binding.root)
+                        engageFragmentDelegate.showGenericSuccessDialogMessageAndPopBackstack(binding.root)
                     }
                     else -> {}
                 }
