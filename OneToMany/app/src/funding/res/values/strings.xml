@@ -88,7 +88,7 @@
     <string name="ach_bank_account_delete_confirmation_message_format">Would you like to delete %s?</string>
     <string name="ach_bank_account_delete">Delete</string>
     <string name="ach_bank_account_added_successful_title">Your bank account was successfully added.</string>
-    <string name="ach_bank_account_added_successful_subtitle">Next, we’ll make two small deposits into your account that are used for verification.\n\nDeposits will be made between 3–5 business days. All bank accounts must be verified.</string>
+    <string name="ach_bank_account_added_successful_subtitle">Next, we’ll make two small deposits into your account that are used for verification.\n\nDeposits will be made in 3–5 business days. All bank accounts must be verified.</string>
     <string name="ach_bank_account_added_successful_done_button">Done</string>
     <string name="ach_bank_account_verified_successful_title">Your bank account has been verified!</string>
     <string name="ach_bank_account_verified_successful_subtitle">You can now make transfers to and from your bank account.</string>

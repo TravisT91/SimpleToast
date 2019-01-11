@@ -44,6 +44,7 @@ class AchBankAccountAddVerifySuccessFragment: BaseEngagePageFragment() {
 
         upButtonOverrideProvider.setUpButtonOverride(navigationOverrideClickListener)
         backButtonOverrideProvider.setBackButtonOverride(navigationOverrideClickListener)
+        //TODO(aHashimi): user can still click UP button, this's a bug. https://engageft.atlassian.net/browse/FOTM-707
         toolbarController.setToolbarVisibility(ToolbarVisibilityState.INVISIBLE)
 
         binding.apply {

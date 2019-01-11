@@ -407,6 +407,7 @@
         <argument
             android:name="@string/navigation_view_gone"
             android:defaultValue="true" />
+        <!-- TODO(aHashimi): there's an animation bug? https://engageft.atlassian.net/browse/FOTM-708 -->
         <action
             android:id="@+id/action_achBankAccountAddFragment_to_achBankAccountAddVerifySuccessFragment"
             app:destination="@id/achBankAccountAddVerifySuccessFragment"
