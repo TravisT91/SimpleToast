@@ -5,12 +5,9 @@ import androidx.databinding.ObservableField
 import androidx.lifecycle.MutableLiveData
 import androidx.navigation.NavController
 import com.engageft.apptoolbox.util.isDigitsOnly
-import com.engageft.fis.pscu.feature.gatekeeping.CardPinEnrollmentGateKeeper
 import com.engageft.fis.pscu.feature.gatekeeping.GateKeeperListener
 import com.engageft.fis.pscu.feature.gatekeeping.GatedItem
 import com.engageft.fis.pscu.feature.gatekeeping.VerifyIdentityEnrollmentGateKeeper
-import com.engageft.fis.pscu.feature.gatekeeping.items.AccountRequiredGatedItem
-import com.engageft.fis.pscu.feature.gatekeeping.items.CIPRequiredGatedItem
 import com.engageft.fis.pscu.feature.gatekeeping.items.TermsRequiredGatedItem
 
 class VerifyIdentityDelegate(private val viewModel: EnrollmentViewModel,
