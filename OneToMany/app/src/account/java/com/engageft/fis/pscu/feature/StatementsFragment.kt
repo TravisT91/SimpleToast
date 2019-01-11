@@ -47,6 +47,7 @@ class StatementsFragment: BaseEngagePageFragment() {
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         binding = FragmentStatementsBinding.inflate(inflater, container, false)
+
         binding.recyclerView.layoutManager = LinearLayoutManager(context!!)
         binding.recyclerView.adapter = sectionAdapter
 
