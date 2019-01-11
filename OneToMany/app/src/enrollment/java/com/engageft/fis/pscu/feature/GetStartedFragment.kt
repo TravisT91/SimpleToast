@@ -163,7 +163,7 @@ class GetStartedFragment : BaseEngagePageFragment() {
 
     override fun onOptionsItemSelected(item: MenuItem?): Boolean {
         when(item?.itemId){
-            R.id.next -> run {
+            R.id.next -> {
                 getStartedViewModel.onNextClicked()
             }
         }

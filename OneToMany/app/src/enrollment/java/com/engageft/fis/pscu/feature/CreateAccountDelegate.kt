@@ -150,7 +150,7 @@ class CreateAccountDelegate(private val viewModel: EnrollmentViewModel, private 
 
     fun validateEmailInput(conditionallyIfError: Boolean) {
         val currentState = emailValidationObservable.value
-        if (conditionallyIfError && currentState != EmailValidationError.NONE && currentState != EmailValidationError.EMPTY || !conditionallyIfError) {
+        if ((conditionallyIfError && currentState != EmailValidationError.NONE && currentState != EmailValidationError.EMPTY) || !conditionallyIfError) {
             val newState = if (emailInput.get()!!.isEmpty()) {
                 EmailValidationError.EMPTY
             } else if (!emailInput.get()!!.contains("@") ) {
@@ -168,7 +168,8 @@ class CreateAccountDelegate(private val viewModel: EnrollmentViewModel, private 
 
     fun validatePasswordInput(conditionallyIfError: Boolean) {
         val currentState = passwordValidationObservable.value
-        if (conditionallyIfError && currentState != PasswordValidationError.NONE && currentState != PasswordValidationError.EMPTY || !conditionallyIfError) {
+
+        if ((conditionallyIfError && currentState != PasswordValidationError.NONE && currentState != PasswordValidationError.EMPTY) || !conditionallyIfError) {
             val password = passwordInput.get()!!
             val newState = if (password.isEmpty()) {
                 PasswordValidationError.EMPTY
@@ -189,7 +190,7 @@ class CreateAccountDelegate(private val viewModel: EnrollmentViewModel, private 
 
     fun validateConfirmPasswordInput(conditionallyIfError: Boolean) {
         val currentState = confirmPasswordValidationObservable.value
-        if (conditionallyIfError && currentState != ConfirmPasswordValidationError.NONE && currentState != ConfirmPasswordValidationError.EMPTY || !conditionallyIfError) {
+        if ((conditionallyIfError && currentState != ConfirmPasswordValidationError.NONE && currentState != ConfirmPasswordValidationError.EMPTY) || !conditionallyIfError) {
             val confirmedPassword = passwordConfirmInput.get()!!
             val newState = if (confirmedPassword.isEmpty()) {
                 ConfirmPasswordValidationError.EMPTY

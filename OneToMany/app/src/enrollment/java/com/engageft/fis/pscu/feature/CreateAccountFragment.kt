@@ -136,7 +136,7 @@ class CreateAccountFragment : BaseEngagePageFragment() {
 
     override fun onOptionsItemSelected(item: MenuItem?): Boolean {
         when(item?.itemId){
-            R.id.next -> run {
+            R.id.next -> {
                 createAccountViewModel.onNextClicked()
             }
         }
