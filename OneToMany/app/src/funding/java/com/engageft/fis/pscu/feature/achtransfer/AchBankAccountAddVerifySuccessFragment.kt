@@ -1,4 +1,4 @@
-package com.engageft.fis.pscu.feature
+package com.engageft.fis.pscu.feature.achtransfer
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -10,9 +10,10 @@ import com.engageft.apptoolbox.NavigationOverrideClickListener
 import com.engageft.apptoolbox.ToolbarVisibilityState
 import com.engageft.fis.pscu.R
 import com.engageft.fis.pscu.databinding.FragmentAchBankAccountAddVerifySuccessBinding
-import com.engageft.fis.pscu.feature.AchBankAccountAddFragment.Companion.ADDED_SUCCESS_TYPE
-import com.engageft.fis.pscu.feature.AchBankAccountAddFragment.Companion.SUCCESS_SCREEN_TYPE_KEY
-import com.engageft.fis.pscu.feature.AchBankAccountAddFragment.Companion.VERIFIED_SUCCESS_TYPE
+import com.engageft.fis.pscu.feature.BaseEngagePageFragment
+import com.engageft.fis.pscu.feature.achtransfer.AchBankAccountAddFragment.Companion.ADDED_SUCCESS_TYPE
+import com.engageft.fis.pscu.feature.achtransfer.AchBankAccountAddFragment.Companion.SUCCESS_SCREEN_TYPE_KEY
+import com.engageft.fis.pscu.feature.achtransfer.AchBankAccountAddFragment.Companion.VERIFIED_SUCCESS_TYPE
 import com.engageft.fis.pscu.feature.branding.Palette
 
 /**
@@ -43,6 +44,7 @@ class AchBankAccountAddVerifySuccessFragment: BaseEngagePageFragment() {
 
         upButtonOverrideProvider.setUpButtonOverride(navigationOverrideClickListener)
         backButtonOverrideProvider.setBackButtonOverride(navigationOverrideClickListener)
+        //TODO(aHashimi): user can still click UP button, this's a bug. https://engageft.atlassian.net/browse/FOTM-707
         toolbarController.setToolbarVisibility(ToolbarVisibilityState.INVISIBLE)
 
         binding.apply {

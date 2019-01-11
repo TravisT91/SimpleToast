@@ -1,10 +1,12 @@
-package com.engageft.fis.pscu.feature
+package com.engageft.fis.pscu.feature.achtransfer
 
 import android.os.Bundle
 import android.view.LayoutInflater
+import android.view.Menu
+import android.view.MenuInflater
+import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.navigation.findNavController
@@ -12,6 +14,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.engageft.apptoolbox.BaseViewModel
 import com.engageft.fis.pscu.R
 import com.engageft.fis.pscu.databinding.FragmentAccountsAndTransfersListBinding
+import com.engageft.fis.pscu.feature.BaseEngagePageFragment
 import com.engageft.fis.pscu.feature.branding.Palette
 /**
  * AccountsAndTransfersListFragment
@@ -25,14 +28,20 @@ class AccountsAndTransfersListFragment: BaseEngagePageFragment() {
 
     private lateinit var accountsAndTransfersListViewModel: AccountsAndTransfersListViewModel
     private lateinit var recyclerViewAdapter: AccountsAndTransfersListRecyclerViewAdapter
+    private lateinit var binding: FragmentAccountsAndTransfersListBinding
 
     override fun createViewModel(): BaseViewModel? {
         accountsAndTransfersListViewModel = ViewModelProviders.of(this).get(AccountsAndTransfersListViewModel::class.java)
         return accountsAndTransfersListViewModel
     }
 
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setHasOptionsMenu(true)
+    }
+
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        val binding = FragmentAccountsAndTransfersListBinding.inflate(inflater, container, false)
+        binding = FragmentAccountsAndTransfersListBinding.inflate(inflater, container, false)
 
         binding.apply {
             viewModel = accountsAndTransfersListViewModel
@@ -42,6 +51,7 @@ class AccountsAndTransfersListFragment: BaseEngagePageFragment() {
             recyclerViewAdapter = AccountsAndTransfersListRecyclerViewAdapter(context!!,
 
                     object : AccountsAndTransfersListRecyclerViewAdapter.AchAccountInfoClickListener {
+
                         override fun onAchAccounDetailClicked(achAccountInfoId: Long) {
                             root.findNavController().navigate(R.id.action_accountsAndTransfersListFragment_to_achBankAccountDetailFragment,
                                     Bundle().apply {
@@ -61,27 +71,26 @@ class AccountsAndTransfersListFragment: BaseEngagePageFragment() {
 
                     object : AccountsAndTransfersListRecyclerViewAdapter.ScheduledLoadListClickListener {
                         override fun onScheduledTransferClicked(scheduledLoadInfoId: Long) {
-                            //TODO(aHashimi): https://engageft.atlassian.net/browse/FOTM-113
-                            Toast.makeText(context!!, "on scheduled load clicked! ID = $scheduledLoadInfoId", Toast.LENGTH_SHORT).show()
+                            root.findNavController().navigate(R.id.action_accountsAndTransfersListFragment_to_createEditTransferFragment,
+                                    Bundle().apply {
+                                        putLong(SCHEDULED_LOAD_ID, scheduledLoadInfoId)
+                                    })
+
                         }
                     },
 
                     object : AccountsAndTransfersListRecyclerViewAdapter.CreateTransferButtonClickListener {
                         override fun onCreateTransferClicked() {
-                            accountsAndTransfersListViewModel.apply {
-                                achAccountsListAndStatusObservable.value?.let { achAccountListAndStatus ->
-                                    if (achAccountListAndStatus.bankStatus == AccountsAndTransfersListViewModel.BankAccountStatus.VERIFIED_BANK_ACCOUNT) {
-                                        // TODO(aHashimi): FOTM-113 create transfer
-                                    } else {
-                                        // TODO(aHashimi): User can't add more than 1 Ach Bank account, when/if multiple ach bank accounts are added the UI and this logic needs to change.
-                                        // As of now the user can't add more than ach bank account but this will need to change if it did because we're just relying on the first item.
-                                        // the UI logic doesn't make sense and as a result this will need to change as well.
-                                        root.findNavController().navigate(R.id.action_accountsAndTransfersListFragment_to_achBankAccountVerifyFragment,
-                                                Bundle().apply {
-                                                    putLong(ACH_BANK_ACCOUNT_ID, accountsAndTransfersListViewModel.achBankAccountId)
-                                                })
-                                    }
-                                }
+                            if (accountsAndTransfersListViewModel.isBankVerified()) {
+                                root.findNavController().navigate(R.id.action_accountsAndTransfersListFragment_to_createEditTransferFragment)
+                            } else {
+                                // TODO(aHashimi): User can't add more than 1 Ach Bank account, when/if multiple ach bank accounts are added the UI and this logic needs to change.
+                                // As of now the user can't add more than ach bank account but this will need to change if it did because we're just relying on the first item.
+                                // the UI logic doesn't make sense and as a result this will need to change as well.
+                                root.findNavController().navigate(R.id.action_accountsAndTransfersListFragment_to_achBankAccountVerifyFragment,
+                                        Bundle().apply {
+                                            putLong(ACH_BANK_ACCOUNT_ID, accountsAndTransfersListViewModel.achBankAccountId)
+                                        })
                             }
                         }
                     })
@@ -108,8 +117,7 @@ class AccountsAndTransfersListFragment: BaseEngagePageFragment() {
 
                 }
 
-                //TODO(aHashimi): FOTM-113
-                // activity?.invalidateOptionsMenu()
+                activity?.invalidateOptionsMenu()
 
                 recyclerViewAdapter.setAchAccountData(achAccountListAndStatus.achAccountInfoList)
             })
@@ -128,11 +136,32 @@ class AccountsAndTransfersListFragment: BaseEngagePageFragment() {
 
     override fun onResume() {
         super.onResume()
-        //TODO(aHashimi): should replace with MutableLiveData<loginResponse> in VM?
         accountsAndTransfersListViewModel.refreshViews()
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu?, inflater: MenuInflater?) {
+        inflater?.inflate(R.menu.menu_create_transfer, menu)
+        super.onCreateOptionsMenu(menu, inflater)
+    }
+
+    override fun onPrepareOptionsMenu(menu: Menu?) {
+        val menuItem = menu!!.findItem(R.id.createTransfer)
+        menuItem.title = getString(R.string.ach_bank_transfer_create_next_button)
+        menuItem.isVisible = accountsAndTransfersListViewModel.isBankVerified()
+        super.onPrepareOptionsMenu(menu)
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem?): Boolean {
+        when(item?.itemId){
+            R.id.createTransfer -> run {
+                binding.root.findNavController().navigate(R.id.action_accountsAndTransfersListFragment_to_createEditTransferFragment)
+            }
+        }
+        return super.onOptionsItemSelected(item)
     }
 
     companion object {
         const val ACH_BANK_ACCOUNT_ID = "ACH_BANK_ACCOUNT_ID"
+        const val SCHEDULED_LOAD_ID = "SCHEDULED_LOAD_ID"
     }
 }
