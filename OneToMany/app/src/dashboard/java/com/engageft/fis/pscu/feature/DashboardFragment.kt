@@ -84,14 +84,18 @@ class DashboardFragment : BaseEngagePageFragment(),
 
     private var scrollDisabled = false
 
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+
+        setHasOptionsMenu(true)
+    }
+
     override fun createViewModel(): BaseViewModel? {
         dashboardViewModel = ViewModelProviders.of(this).get(DashboardViewModel::class.java)
         return dashboardViewModel
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        setHasOptionsMenu(true)
-
         binding = DataBindingUtil.inflate(layoutInflater, R.layout.fragment_dashboard, container, false)
         //TODO(ttkachuk) right now card types are no specified by the backend, but we will select the BrandingCard that matches debitCardInfo.cardType when the backend is updated
         //tracked in FOTM-498
