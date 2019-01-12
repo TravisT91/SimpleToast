@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/navigation_graph"
+    app:startDestination="@+id/changeSecurityQuestionsFragment2">
+
+    <fragment
+        android:id="@+id/changeSecurityQuestionsFragment2"
+        android:name="com.engageft.fis.pscu.feature.ChangeSecurityQuestionsFragment"
+        android:label="@string/fragment_title_change_security_questions" >
+        <argument
+            android:name="@string/navigation_view_gone"
+            android:defaultValue="true" />
+        <action
+            android:id="@+id/action_changeSecurityQuestionsFragment2_to_authenticatedActivity2"
+            app:destination="@id/authenticatedActivity2" />
+        <action
+            android:id="@+id/action_changeSecurityQuestionsFragment2_to_notAuthenticatedActivity2"
+            app:destination="@id/notAuthenticatedActivity2" />
+    </fragment>
+    <activity
+        android:id="@+id/authenticatedActivity2"
+        android:name="com.engageft.fis.pscu.AuthenticatedActivity"
+        android:label="AuthenticatedActivity" />
+    <activity
+        android:id="@+id/notAuthenticatedActivity2"
+        android:name="com.engageft.fis.pscu.NotAuthenticatedActivity"
+        android:label="NotAuthenticatedActivity" />
+</navigation>

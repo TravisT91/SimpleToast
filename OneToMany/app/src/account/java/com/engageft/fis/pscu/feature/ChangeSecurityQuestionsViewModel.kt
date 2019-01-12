@@ -8,7 +8,6 @@ import com.engageft.engagekit.rest.request.AuthenticatedRequest
 import com.engageft.engagekit.rest.request.SetSecurityQuestionsRequest
 import com.ob.ws.dom.SecurityQuestionsResponse
 import io.reactivex.android.schedulers.AndroidSchedulers
-import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
 
 /**
@@ -29,10 +28,14 @@ class ChangeSecurityQuestionsViewModel : BaseEngageViewModel() {
     enum class ChangeSecurityQuestionsMode {
         FETCHING, CHANGE, CREATE // CREATE is for first time, CHANGE is if questions were already set.
     }
+    enum class SaveButtonState {
+        GONE,
+        VISIBLE_ENABLED
+    }
 
-    private val compositeDisposable = CompositeDisposable()
     val navigationObservable = MutableLiveData<ChangeSecurityQuestionsNavigation>()
     val modeObservable = MutableLiveData<ChangeSecurityQuestionsMode>()
+    val saveButtonStateObservable = MutableLiveData<SaveButtonState>()
     val questions1List = MutableLiveData<List<String>>()
     val questions2List = MutableLiveData<List<String>>()
     val question1 : ObservableField<String> = ObservableField("")
@@ -46,6 +49,7 @@ class ChangeSecurityQuestionsViewModel : BaseEngageViewModel() {
     init {
         progressOverlayShownObservable.value = true
         modeObservable.value = ChangeSecurityQuestionsMode.FETCHING
+        saveButtonStateObservable.value = SaveButtonState.GONE
         questions1List.value = null
         questions2List.value = null
 
@@ -59,17 +63,19 @@ class ChangeSecurityQuestionsViewModel : BaseEngageViewModel() {
                 validateSaveButtonState()
             }
         })
-        loadSecurityQuestionState()
         question1.addOnPropertyChangedCallback(object : Observable.OnPropertyChangedCallback(){
             override fun onPropertyChanged(observable: Observable?, field: Int) {
                 invalidateDisplayLists()
+                validateSaveButtonState()
             }
         })
         question2.addOnPropertyChangedCallback(object : Observable.OnPropertyChangedCallback(){
             override fun onPropertyChanged(observable: Observable?, field: Int) {
                 invalidateDisplayLists()
+                validateSaveButtonState()
             }
         })
+        loadSecurityQuestionState()
     }
 
     /**
@@ -77,7 +83,6 @@ class ChangeSecurityQuestionsViewModel : BaseEngageViewModel() {
      */
     fun onSaveClicked() {
         progressOverlayShownObservable.value = true
-
 
         val questionsAndAnswers = ArrayList<androidx.core.util.Pair<String, String>>()
         questionsAndAnswers.add(androidx.core.util.Pair(question1.get()!!, answer1.get()!!.trim { it <= ' ' }))
@@ -105,8 +110,16 @@ class ChangeSecurityQuestionsViewModel : BaseEngageViewModel() {
         )
     }
 
+    fun hasUnsavedChanges(): Boolean {
+        return question1.get()!!.isNotEmpty() || question2.get()!!.isNotEmpty() || answer1.get()!!.isNotEmpty() || answer2.get()!!.isNotEmpty()
+    }
+
     private fun validateSaveButtonState() {
-        saveEnabled.set( answer1.get()!!.isNotBlank() && answer2.get()!!.isNotBlank() )
+        if (answer1.get()!!.isNotBlank() && answer2.get()!!.isNotBlank() && question1.get()!!.isNotBlank() && question2.get()!!.isNotBlank()) {
+            saveButtonStateObservable.value = SaveButtonState.VISIBLE_ENABLED
+        } else {
+            saveButtonStateObservable.value = SaveButtonState.GONE
+        }
     }
 
     private fun loadSecurityQuestionState() {

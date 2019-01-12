@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- States List -->
+    <string-array name="state_list_options">
+        <item>@string/state_AK</item>
+        <item>@string/state_AL</item>
+        <item>@string/state_AR</item>
+        <item>@string/state_AZ</item>
+        <item>@string/state_CA</item>
+        <item>@string/state_CO</item>
+        <item>@string/state_CT</item>
+        <item>@string/state_DE</item>
+        <item>@string/state_FL</item>
+        <item>@string/state_GA</item>
+        <item>@string/state_HI</item>
+        <item>@string/state_IA</item>
+        <item>@string/state_ID</item>
+        <item>@string/state_IL</item>
+        <item>@string/state_IN</item>
+        <item>@string/state_KS</item>
+        <item>@string/state_KY</item>
+        <item>@string/state_LA</item>
+        <item>@string/state_MA</item>
+        <item>@string/state_MD</item>
+        <item>@string/state_ME</item>
+        <item>@string/state_MI</item>
+        <item>@string/state_MN</item>
+        <item>@string/state_MO</item>
+        <item>@string/state_MS</item>
+        <item>@string/state_MT</item>
+        <item>@string/state_NC</item>
+        <item>@string/state_ND</item>
+        <item>@string/state_NE</item>
+        <item>@string/state_NH</item>
+        <item>@string/state_NJ</item>
+        <item>@string/state_NM</item>
+        <item>@string/state_NV</item>
+        <item>@string/state_NY</item>
+        <item>@string/state_OH</item>
+        <item>@string/state_OK</item>
+        <item>@string/state_OR</item>
+        <item>@string/state_PA</item>
+        <item>@string/state_RI</item>
+        <item>@string/state_SC</item>
+        <item>@string/state_SD</item>
+        <item>@string/state_TN</item>
+        <item>@string/state_TX</item>
+        <item>@string/state_UT</item>
+        <item>@string/state_VA</item>
+        <item>@string/state_VT</item>
+        <item>@string/state_WA</item>
+        <item>@string/state_WI</item>
+        <item>@string/state_WV</item>
+        <item>@string/state_WY</item>
+    </string-array>
+
+    <string name="state_AK" translatable="false">AK</string>
+    <string name="state_AL" translatable="false">AL</string>
+    <string name="state_AR" translatable="false">AR</string>
+    <string name="state_AZ" translatable="false">AZ</string>
+    <string name="state_CA" translatable="false">CA</string>
+    <string name="state_CO" translatable="false">CO</string>
+    <string name="state_CT" translatable="false">CT</string>
+    <string name="state_DE" translatable="false">DE</string>
+    <string name="state_FL" translatable="false">FL</string>
+    <string name="state_GA" translatable="false">GA</string>
+    <string name="state_HI" translatable="false">HI</string>
+    <string name="state_IA" translatable="false">IA</string>
+    <string name="state_ID" translatable="false">ID</string>
+    <string name="state_IL" translatable="false">IL</string>
+    <string name="state_IN" translatable="false">IN</string>
+    <string name="state_KS" translatable="false">KS</string>
+    <string name="state_KY" translatable="false">KY</string>
+    <string name="state_LA" translatable="false">LA</string>
+    <string name="state_MA" translatable="false">MA</string>
+    <string name="state_MD" translatable="false">MD</string>
+    <string name="state_ME" translatable="false">ME</string>
+    <string name="state_MI" translatable="false">MI</string>
+    <string name="state_MN" translatable="false">MN</string>
+    <string name="state_MO" translatable="false">MO</string>
+    <string name="state_MS" translatable="false">MS</string>
+    <string name="state_MT" translatable="false">MT</string>
+    <string name="state_NC" translatable="false">NC</string>
+    <string name="state_ND" translatable="false">ND</string>
+    <string name="state_NE" translatable="false">NE</string>
+    <string name="state_NH" translatable="false">NH</string>
+    <string name="state_NJ" translatable="false">NJ</string>
+    <string name="state_NM" translatable="false">NM</string>
+    <string name="state_NV" translatable="false">NV</string>
+    <string name="state_NY" translatable="false">NY</string>
+    <string name="state_OH" translatable="false">OH</string>
+    <string name="state_OK" translatable="false">OK</string>
+    <string name="state_OR" translatable="false">OR</string>
+    <string name="state_PA" translatable="false">PA</string>
+    <string name="state_RI" translatable="false">RI</string>
+    <string name="state_SC" translatable="false">SC</string>
+    <string name="state_SD" translatable="false">SD</string>
+    <string name="state_TN" translatable="false">TN</string>
+    <string name="state_TX" translatable="false">TX</string>
+    <string name="state_UT" translatable="false">UT</string>
+    <string name="state_VA" translatable="false">VA</string>
+    <string name="state_VT" translatable="false">VT</string>
+    <string name="state_WA" translatable="false">WA</string>
+    <string name="state_WI" translatable="false">WI</string>
+    <string name="state_WV" translatable="false">WV</string>
+    <string name="state_WY" translatable="false">WY</string>
+</resources>

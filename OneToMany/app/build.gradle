@@ -20,8 +20,11 @@ android {
         versionName "0.0"
         // Below is the version string that tracks real releases for this app. When creating a build for
         // QA or release, increment and use the version string below. the master branch should always
-        // use 0.0
-//        versionName "0.1" + "." + versionCode
+        // use 0.0 with versionCode = 1
+        //
+        // first number is Major release, second is feature release, third is bug update release.
+//        versionCode 5
+//        versionName "0.4.0"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         multiDexEnabled true
 
@@ -52,10 +55,12 @@ android {
         main {
             java.srcDirs = ['src/main/java', 'src/authentication/java', 'src/common/java', 'src/splash/java',
                             'src/dashboard/java', 'src/budgets/java', 'src/account/java', 'src/goals/java',
-                            'src/help/java', 'src/cardmanagement/java', 'src/palette/java', 'src/welcome/java']
+                            'src/help/java', 'src/cardmanagement/java', 'src/branding/java', 'src/welcome/java',
+                            'src/transactions/java', 'src/enrollment/java', 'src/funding/java']
             res.srcDirs = ['src/main/res', 'src/authentication/res', 'src/common/res', 'src/splash/res',
                            'src/dashboard/res', 'src/budgets/res', 'src/account/res', 'src/goals/res',
-                           'src/help/res', 'src/cardmanagement/res', 'src/welcome/res']
+                           'src/help/res', 'src/cardmanagement/res', 'src/welcome/res', 'src/transactions/res',
+                            'src/enrollment/res', 'src/funding/res']
         }
     }
 }
@@ -74,13 +79,30 @@ dependencies {
     // Dependencies for Android Architectural Components
     implementation "androidx.lifecycle:lifecycle-extensions:$rootProject.archLifecycleVersion"
     kapt "androidx.lifecycle:lifecycle-compiler:$rootProject.archLifecycleVersion"
+    implementation 'com.google.firebase:firebase-core:16.0.6'
+    implementation 'com.google.firebase:firebase-messaging:17.3.4'
+
     implementation "com.heapanalytics.android:heap-android-client:$rootProject.heapVersion"
+    implementation 'com.moengage:moe-android-sdk:9.2.03'
+
+    implementation 'com.eightbitlab:blurview:1.5.0'
     // For styling views programmatically
     implementation 'com.airbnb.android:paris:1.1.0'
+    implementation "io.github.luizgrp.sectionedrecyclerviewadapter:sectionedrecyclerviewadapter:$rootProject.sectionedRecylerViewVersion"
     // If you're using Paris annotations.
-    annotationProcessor 'com.airbnb.android:paris-processor:1.1.0'
+    kapt 'com.airbnb.android:paris-processor:1.1.0'
+    // For image loading
+    implementation 'com.squareup.picasso:picasso:2.71828'
+
+    // For input masking InputWithLabel objects.
+    implementation 'com.redmadrobot:inputmask:3.4.4'
 
     implementation('com.crashlytics.sdk.android:crashlytics:2.9.6@aar') {
         transitive = true
     }
+
+    // for printing webview contents
+    implementation 'org.jsoup:jsoup:1.10.3'
 }
+
+apply plugin: 'com.google.gms.google-services'

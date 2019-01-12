@@ -12,31 +12,38 @@ import com.engageft.fis.pscu.BuildConfig
  * Created by joeyhutchins on 10/16/18.
  * Copyright (c) 2018 Engage FT. All rights reserved.
  */
+
 object EngageAppConfig : BaseAppConfig() {
-    override val engageKitConfig: EngageKitConfig = object : EngageKitConfig(object : EngageKitConfig.EngageKitEnvironment() {
-        override val serviceUrl: String = "https://appdemo.onbudget.com"
-        override val websiteUrl: String = "https://dev-millennial.engageft.com"
-    }, object : EngageKitConfig.EngageKitEnvironment() {
-        override val serviceUrl: String = "https://app.onbudget.com"
-        override val websiteUrl: String = "https://account.myengageft.com"
-    }) {
+    override val engageKitConfig: EngageKitConfig = object : EngageKitConfig(
+
+            devEnvironment = object : EngageKitConfig.EngageKitEnvironment() {
+                override val serviceUrl: String = "https://appdemo.engageft-008.com"
+                override val websiteUrl: String = "https://test-pscu.engageft.com" },
+
+            prodEnvironment = object : EngageKitConfig.EngageKitEnvironment() {
+                override val serviceUrl: String = "https://app.engageft-008.com"
+                override val websiteUrl: String = "https://staging-pscu.engageft.com" }) {
+
         override val ipCheckUrl: String = "https://api.ipify.org/"
-        override val refCode: String = "showcase"
-        override val appPushParameter: String = "SHOWCASE"
-        override val brand: String = "SHOWCASE"
+        override val refCode: String = "PSCU.mydccu-android"
+        override val appPushParameter: String = "MYCARDMANAGER"
+        override val brand: String = "MYCARDMANAGER"
     }
 
-    override val heapAppId: String = if (BuildConfig.DEBUG) "" else ""
+    override val heapAppId: String = if (BuildConfig.DEBUG) "230876127" else "2688943769"
+    override val moEngageAppId: String = "TZA5EGIIKJIHIZPRPBP7Z2WY"
 }
 
 abstract class BaseAppConfig {
     abstract val engageKitConfig: EngageKitConfig
     abstract val heapAppId: String
+    abstract val moEngageAppId: String
 
     // Defaults:
     open val supportPhone: String = "18662392008"
     open val supportEmail: String = "service@myengageft.com"
     open val supportTechnicalPhone: String = "18662392008"
+    open val currencyCode: String = "USD"
 
     var isUsingProdEnvironment: Boolean
         set(value) {

@@ -11,13 +11,13 @@ import android.view.ViewGroup
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.navigation.findNavController
+import androidx.navigation.fragment.findNavController
 import com.engageft.apptoolbox.BaseViewModel
-import com.engageft.apptoolbox.LotusFullScreenFragment
 import com.engageft.fis.pscu.BuildConfig
 import com.engageft.fis.pscu.NotAuthenticatedActivity
 import com.engageft.fis.pscu.R
 import com.engageft.fis.pscu.databinding.FragmentAccountBinding
-import kotlinx.android.synthetic.main.fragment_account.*
+import com.engageft.fis.pscu.feature.branding.Palette
 
 /**
  * AccountSettingsFragment
@@ -29,7 +29,7 @@ import kotlinx.android.synthetic.main.fragment_account.*
  * Copyright (c) 2018 Engage FT. All rights reserved.
  */
 
-class AccountSettingsFragment : LotusFullScreenFragment() {
+class AccountSettingsFragment : BaseEngagePageFragment() {
     private lateinit var accountSettingsViewModel: AccountSettingsViewModel
 
     override fun createViewModel(): BaseViewModel? {
@@ -43,20 +43,19 @@ class AccountSettingsFragment : LotusFullScreenFragment() {
         binding.palette = Palette
         binding.apply {
             profile.setOnClickListener {
-                //TODO(ttkachuk) implement onCLick
+                binding.root.findNavController().navigate(R.id.action_account_fragment_to_profileFragment)
             }
             password.setOnClickListener {
-                //TODO(ttkachuk) implement onCLick
+                findNavController().navigate(R.id.action_account_fragment_to_changePasswordFragment)
             }
-
             securityQuestions.setOnClickListener {
                 binding.root.findNavController().navigate(R.id.action_account_fragment_to_changeSecurityQuestionsFragment)
             }
             notifications.setOnClickListener {
-                //TODO(ttkachuk) implement onCLick
+                binding.root.findNavController().navigate(R.id.action_account_fragment_to_accountNotificationsFragment)
             }
             statements.setOnClickListener {
-                //TODO(ttkachuk) implement onCLick
+                binding.root.findNavController().navigate(R.id.action_account_fragment_to_statementsFragment)
             }
             secondaryAccount.setOnClickListener {
                 //TODO(ttkachuk) implement onCLick
@@ -88,7 +87,7 @@ class AccountSettingsFragment : LotusFullScreenFragment() {
     }
 
     override fun onCreateOptionsMenu(menu: Menu?, inflater: MenuInflater?) {
-        inflater?.inflate(R.menu.settings_menu, menu)
+        inflater?.inflate(R.menu.settings_action_menu, menu)
         super.onCreateOptionsMenu(menu, inflater)
     }
 

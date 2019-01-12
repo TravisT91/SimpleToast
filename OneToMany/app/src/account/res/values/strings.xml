@@ -14,6 +14,7 @@
     <string name="SETTINGS_LOG_OUT">Log out</string>
     <string name="SETTINGS_COPYRIGHT">Copyright</string>
     <string name="SETTINGS_DISCLOSURES">Disclosures</string>
+    <string name="SETTINGS_ACTION_HELP">Help</string>
 
     <!-- Copyright -->
     <!--TODO(aHashimi): replace with the actual copyright text-->
@@ -27,7 +28,7 @@
     <string name="SECURITY_QUESTIONS_LIST_LABEL_1">Question 1</string>
     <string name="SECURITY_QUESTIONS_LIST_LABEL_2">Question 2</string>
     <string name="SECURITY_QUESTIONS_ANSWER_LABEL">Answer</string>
-    <string name="SECURITY_QUESTIONS_BUTTON_SAVE">Save</string>
+    <string name="SECURITY_QUESTIONS_BUTTON_SAVE">@string/save</string>
     <string name="SECURITY_QUESTIONS_LIST_TITLE">Select a question from the list below.</string>
     <string name="SECURITY_QUESTIONS_LIST_SUBTITLE">You can change this at any time.</string>
 
@@ -35,5 +36,67 @@
     <string name="SECURITY_QUESTIONS_SUCCESS_MESSAGE_CHANGE">You have successfully changed your security questions.</string>
     <string name="SECURITY_QUESTIONS_SUCCESS_MESSAGE_CREATE">You have successfully set your security questions.</string>
     <string name="SECURITY_QUESTIONS_SUCCESS_MESSAGE_OK">Ok</string>
+    <string name="SECURITY_QUESTIONS_ACTION_SAVE">@string/save</string>
+
+    <string name="SECURITY_QUESTIONS_CREATE_BACK_TITLE">Security Questions Required</string>
+    <string name="SECURITY_QUESTIONS_CREATE_BACK_MESSAGE">You will not be able to login until answering security questions for this account. Are you sure you have to leave?</string>
+    <string name="SECURITY_QUESTIONS_CREATE_BACK_POSITIVE">Leave</string>
+    <string name="SECURITY_QUESTIONS_CREATE_BACK_NEGATIVE">Stay</string>
+
+    <!-- PROFILE: -->
+    <string name="PROFILE_LEGAL_NAME">Legal name</string>
+    <string name="PROFILE_EMAIL">Email address</string>
+    <string name="PROFILE_PHONE">Phone number</string>
+    <string name="PROFILE_STREET">Street address</string>
+    <string name="PROFILE_APT_SUITE">Apt/Suite# (optional)</string>
+    <string name="PROFILE_CITY">City</string>
+    <string name="PROFILE_STATE">State</string>
+    <string name="PROFILE_ZIP">Zip code</string>
+    <string name="PROFILE_STATE_LIST_TITLE">Select state</string>
+    <string name="PROFILE_STATE_LIST_SUBTITLE"></string>
+    <string name="PROFILE_INPUT_ERROR_EMPTY">This field cannot be empty.</string>
+    <string name="PROFILE_INPUT_ERROR_EMAIL_AT_REQUIRED">Please enter a valid email address.</string>
+    <string name="PROFILE_INPUT_ERROR_PHONE_NOT_TEN">Please enter a 10-digit phone number.</string>
+    <string name="PROFILE_INPUT_ERROR_ZIP_NOT_FIVE">Please enter a 5-digit zip code.</string>
+    <string name="PROFILE_SUCCESS_TITLE">Success</string>
+    <string name="PROFILE_ERROR_TITLE">Error</string>
+    <string name="PROFILE_SUCCESS_MESSAGE_CHANGE_EMAIL">You have successfully changed your email.</string>
+    <string name="PROFILE_SUCCESS_MESSAGE_CHANGE_PHONE">You have successfully changed your phone number.</string>
+    <string name="PROFILE_SUCCESS_MESSAGE_CHANGE_ADDRESS">You have successfully changed your address.</string>
+    <string name="PROFILE_SUCCESS_MESSAGE_OK">Ok</string>
+    <string name="PROFILE_ACTION_SAVE">@string/save</string>
+
+    <string name="STATEMENT_FILTER_URL">%1$s/login/sso?token=%2$s&amp;redirect_to=/account/statements?filter=%3$s-%4$s&amp;embedded=ios</string>
+    <string name="statements_screen_title">Statements</string>
+    <string name="statements_webView_screen_title">Statement</string>
+    <string name="statements_description_empty">There are no statements available.</string>
+    <string name="statements_description_empty_substring">no statements</string>
+    <string name="statements_subDescription_empty">Please check back again soon.</string>
+    <string name="statements_description">Select a statement to view, save, or send.</string>
+    <string name="statements_description_substring">view, save, or send.</string>
+    <string name="statements_subDescription_format">Statements for last month are not available until the %s of next month.</string>
+
+    <string name="change_password_title">App Password</string>
+    <string name="change_password_requirement">Passwords must be at least 6 characters long, should contain at least one letter and one number and should not have been used by you in the past.</string>
+    <string name="change_password_error_message_invalid_1">Min 6 character(s)</string>
+    <string name="change_password_error_message_invalid_2">Min 1 number(s)</string>
+    <string name="change_password_error_message_mismatch">Passwords do not match</string>
+    <string name="change_password_enter_current_password">Enter current password</string>
+    <string name="change_password_enter_new_password">Enter new password</string>
+    <string name="change_password_confirm_new_password">Confirm new password</string>
+    <string name="change_password_update_button">Update</string>
+
+    <!-- account notifications -->
+    <string name="account_notifications_save_button">@string/save</string>
+    <string name="account_notifications_screen_title">Notifications</string>
+    <string name="account_notifications_screen_description">For a better experience, we recommend leaving push notifications ON.</string>
+    <string name="account_notifications_screen_description_subString">ON</string>
+    <string name="account_notifications_screen_footer">\u002AStandard text message rates, fees, and charges apply.</string>
+    <string name="account_notifications_push">Push notifications</string>
+    <string name="account_notifications_push_disabled">Disabled</string>
+    <string name="account_notifications_sms">SMS/Text alerts\u002A</string>
+    <string name="account_notifications_email">Email notifications</string>
+    <string name="ALERT_SETTINGS_PUSH_DISABLED_SECTION_HEADER">Push disabled</string>
+    <string name="ALERT_SETTINGS_PUSH_DISABLED_SECTION_INSTRUCTION">You currently have notifications disabled. Select to view Android Notification settings and unblock My Card Manager notifications.</string>
 
 </resources>

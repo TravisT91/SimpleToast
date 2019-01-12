@@ -3,10 +3,11 @@ package com.engageft.fis.pscu.feature.authentication
 import androidx.databinding.Observable
 import androidx.databinding.ObservableField
 import androidx.lifecycle.MutableLiveData
-import com.engageft.apptoolbox.BaseViewModel
 import com.engageft.engagekit.EngageService
+import com.engageft.fis.pscu.MoEngageUtils
+import com.engageft.fis.pscu.feature.BaseEngageViewModel
+import com.engageft.fis.pscu.feature.DialogInfo
 import io.reactivex.android.schedulers.AndroidSchedulers
-import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
 
 /**
@@ -17,24 +18,27 @@ import io.reactivex.schedulers.Schedulers
  * Created by joeyhutchins on 11/6/18.
  * Copyright (c) 2018 Engage FT. All rights reserved.
  */
-class AuthExpiredViewModel : BaseViewModel() {
+class AuthExpiredViewModel : BaseEngageViewModel() {
     enum class AuthExpiredNavigationEvent {
         LOGOUT,
         LOGIN_SUCCESS,
-        LOGIN_ERROR,
         FORGOT_PASSWORD,
         NONE
     }
-    private val compositeDisposable = CompositeDisposable()
+
+    enum class LoginButtonState {
+        GONE,
+        VISIBLE_ENABLED
+    }
 
     val navigationObservable = MutableLiveData<AuthExpiredNavigationEvent>()
+    val loginButtonStateObservable = MutableLiveData<LoginButtonState>()
 
     var password : ObservableField<String> = ObservableField("")
 
-    val signInEnabled: ObservableField<Boolean> = ObservableField(false)
-
     init {
         navigationObservable.value = AuthExpiredNavigationEvent.NONE
+        loginButtonStateObservable.value = LoginButtonState.GONE
         password.addOnPropertyChangedCallback(object : Observable.OnPropertyChangedCallback(){
             override fun onPropertyChanged(observable: Observable?, field: Int) {
                 validatePassword()
@@ -44,6 +48,7 @@ class AuthExpiredViewModel : BaseViewModel() {
 
     fun onLogoutClicked() {
         EngageService.getInstance().authManager.logout()
+        MoEngageUtils.logout()
         navigationObservable.value = AuthExpiredNavigationEvent.LOGOUT
     }
 
@@ -61,13 +66,11 @@ class AuthExpiredViewModel : BaseViewModel() {
                                     if (response.isSuccess) {
                                         navigationObservable.value = AuthExpiredNavigationEvent.LOGIN_SUCCESS
                                     } else {
-                                        // TODO(jhutchins): Handle error.
-                                        navigationObservable.value = AuthExpiredNavigationEvent.LOGIN_ERROR
+                                        dialogInfoObservable.value = DialogInfo(dialogType = DialogInfo.DialogType.SERVER_ERROR, message = response.message)
                                     }
                                 }, { e ->
                             progressOverlayShownObservable.value = false
-                            // TODO(jhutchins): Handle error.
-                            navigationObservable.value = AuthExpiredNavigationEvent.LOGIN_ERROR
+                            handleThrowable(e)
                         }))
     }
 
@@ -78,9 +81,9 @@ class AuthExpiredViewModel : BaseViewModel() {
     private fun validatePassword() {
         val passwordText = password.get()
         if (!passwordText.isNullOrEmpty()) {
-            signInEnabled.set(true)
+            loginButtonStateObservable.value = LoginButtonState.VISIBLE_ENABLED
         } else {
-            signInEnabled.set(false)
+            loginButtonStateObservable.value = LoginButtonState.GONE
         }
     }
 }

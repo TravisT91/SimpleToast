@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Transactions -->
+    <color name="transactionDateText">@color/structure6</color>
+    <color name="transactionStoreText">@color/structure6</color>
+    <color name="transactionCategoryText">@color/structure4</color>
+
+    <color name="transactionAmountTextDefault">@color/structure6</color>
+    <color name="transactionAmountTextPositive">@color/success</color>
+    <color name="transactionRowBackgroundPending">@color/structure2</color>
+    <color name="transactionRowBackgroundDeclined">@color/structure2</color>
+    <color name="transactionRowBackgroundDefault">@color/white</color>
+</resources>

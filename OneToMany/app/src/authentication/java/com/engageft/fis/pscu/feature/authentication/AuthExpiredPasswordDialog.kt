@@ -9,7 +9,7 @@ import android.view.WindowManager
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
-import com.engageft.apptoolbox.ProgressOverlayDelegate
+import com.engageft.apptoolbox.BaseViewModel
 import com.engageft.fis.pscu.NotAuthenticatedActivity
 import com.engageft.fis.pscu.R
 import com.engageft.fis.pscu.databinding.DialogExpiredPasswordBinding
@@ -26,12 +26,13 @@ class AuthExpiredPasswordDialog : BaseAuthExpiredDialog() {
     private lateinit var authExpiredViewModel: AuthExpiredViewModel
     private lateinit var binding: DialogExpiredPasswordBinding
 
-    private val progressOverlayStyle: Int = com.engageft.apptoolbox.R.style.LoadingOverlayDialogStyle
-    protected lateinit var progressOverlayDelegate: ProgressOverlayDelegate
+    override fun createViewModel(): BaseViewModel? {
+        authExpiredViewModel = ViewModelProviders.of(this).get(AuthExpiredViewModel::class.java)
+        return authExpiredViewModel
+    }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         dialog.window!!.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE)
-        authExpiredViewModel = ViewModelProviders.of(this).get(AuthExpiredViewModel::class.java)
         binding = DataBindingUtil.inflate(layoutInflater, R.layout.dialog_expired_password, container, false)
         binding.viewModel = authExpiredViewModel
 
@@ -47,21 +48,23 @@ class AuthExpiredPasswordDialog : BaseAuthExpiredDialog() {
                 AuthExpiredViewModel.AuthExpiredNavigationEvent.FORGOT_PASSWORD -> {
                     // TODO(jhutchins): Forgot password flow
                 }
-                AuthExpiredViewModel.AuthExpiredNavigationEvent.LOGIN_ERROR -> {
-                    // TODO(jhutcihns): How to show error.
-                }
                 AuthExpiredViewModel.AuthExpiredNavigationEvent.LOGIN_SUCCESS -> {
                     reauthenticationSucceeded()
                 }
             }
         })
 
+        authExpiredViewModel.loginButtonStateObservable.observe(this, Observer { buttonState ->
+            when (buttonState) {
+                AuthExpiredViewModel.LoginButtonState.GONE -> {
+                    binding.buttonSignIn.visibility = View.GONE
+                }
+                AuthExpiredViewModel.LoginButtonState.VISIBLE_ENABLED -> {
+                    binding.buttonSignIn.visibility = View.VISIBLE
+                }
+            }
+        })
+
         return binding.root
-    }
-
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-
-        progressOverlayDelegate = ProgressOverlayDelegate(progressOverlayStyle, this, authExpiredViewModel)
     }
 }

@@ -5,7 +5,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.engageft.apptoolbox.BaseViewModel
-import com.engageft.apptoolbox.LotusFullScreenFragment
 import com.engageft.fis.pscu.R
 
 /**
@@ -16,7 +15,7 @@ import com.engageft.fis.pscu.R
  * Created by joeyhutchins on 8/24/18.
  * Copyright (c) 2018 Engage FT. All rights reserved.
  */
-class BudgetsFragment : LotusFullScreenFragment() {
+class BudgetsFragment : BaseEngagePageFragment() {
 
     override fun createViewModel(): BaseViewModel? {
         return null

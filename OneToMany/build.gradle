@@ -14,13 +14,16 @@ buildscript {
         constraintLayoutVersion = '1.1.3'
         appCompatVersion = "1.0.0"
         supportDesignVersion = "1.0.0"
-        navigationVersion = '1.0.0-alpha06'
-        ktxVersion = '0.3'
+        navigationVersion = '1.0.0-alpha07'
+        
+        heapVersion = "0.8.1"
 
-        heapVersion = "0.7.1"
+        rxJavaVersion = '2.2.2'
+        rxAndroidVersion = '2.1.0'
+
+        sectionedRecylerViewVersion = '1.2.0'
 
         // The following version redefinitions for engagekit:
-        android_support_lib_version = "27.1.1"
         archLifecycleVersion = "2.0.0" // We'll have to make this match the app later, potentially.
         kotlin_version = kotlinVersion
         // End engagekit versions
@@ -42,6 +45,8 @@ buildscript {
         classpath "com.heapanalytics.android:heap-android-gradle:$heapVersion"
 
         classpath 'io.fabric.tools:gradle:1.+'
+
+        classpath "com.google.gms:google-services:4.2.0"
 
         // NOTE: Do not place your application dependencies here; they belong
         // in the individual module build.gradle files

@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Move Money -->
+    <string name="TITLE_MOVE_MONEY">Move money</string>
+    <string name="MOVE_MONEY_BANK_TRANSFER">Bank transfer</string>
+    <string name="MOVE_MONEY_CREDIT_OR_DEBIT_CARD_LOAD">Credit or debit card load</string>
+    <string name="MOVE_MONEY_DIRECT_DEPOSIT">Direct deposit</string>
+    <string name="MOVE_MONEY_MOBILE_CHECK_DEPOSIT">Mobile check deposit</string>
+
+    <!-- Direct Deposit -->
+    <string name="DIRECT_DEPOSIT_TITLE">Direct deposit</string>
+    <string name="DIRECT_DEPOSIT_HEADER_TEXT">Use the Routing number and Account number below to set up a direct deposit from your employer or any other benefits provider.</string>
+    <string name="DIRECT_DEPOSIT_ROUTING_NUMBER">Routing number</string>
+    <string name="DIRECT_DEPOSIT_ACCOUNT_NUMBER">Account number</string>
+    <string name="DIRECT_DEPOSIT_ACCOUNT_TYPE">Account type</string>
+    <string name="DIRECT_DEPOSIT_BANK_NAME">Bank name</string>
+    <string name="DIRECT_DEPOSIT_VIEW_PRINTABLE_FORM">View printable form</string>
+    <string name="DIRECT_DEPOSIT_PRINTABLE_URL_UNFORMATTED">%1$s/login/sso?token=%2$s&amp;redirect_to=/account/direct-deposit&amp;embedded=ios</string>
+    <string name="DIRECT_DEPOSIT_ACCOUNT_TYPE_VALUE">Checking</string>
+
+    <!-- Mobile check deposit -->
+    <string name="MOBILE_CHECK_DEPOSIT_TITLE">Easily deposit checks with your mobile device.</string>
+    <string name="MOBILE_CHECK_DEPOSIT_SUBTITLE_DOWNLOAD_APP">You can download the Ingo Money App to deposit a check directly on to your My Card Manager card.</string>
+    <string name="MOBILE_CHECK_DEPOSIT_SUBTITLE_OPEN_APP">Use the Ingo Money App to deposit a check directly to your My Card Manager card.</string>
+    <string name="MOBILE_CHECK_DEPOSIT_DOWNLOAD_APP">Download the app</string>
+    <string name="MOBILE_CHECK_DEPOSIT_OPEN_APP">Open Ingo app</string>
+    <string name="MOBILE_CHECK_DEPOSIT_LEARN_MORE">Learn more</string>
+
+    <!-- Move Money Strings -->
+    <!-- transfer screens -->
+    <string name="TRANSFER_MONTHLY_TEXT">Once a month</string>
+    <string name="TRANSFER_TWICE_MONTHLY_TEXT">Twice a month</string>
+    <string name="TRANSFER_WEEKLY_TEXT">Once a week</string>
+    <string name="TRANSFER_ONCE_TEXT">One-time</string>
+    <!-- plugs in day, bank and last 4 -->
+    <string name="TRANSFER_MONTHLY_SIMPLE_LOAD_DESCRIPTION">%s of each month</string>
+    <string name="TRANSFER_TWICE_MONTHLY_SIMPLE_LOAD_DESCRIPTION">%s and %s of each month</string>
+    <string name="TRANSFER_WEEKLY_SIMPLE_LOAD_DESCRIPTION">every %s</string>
+    <string name="TRANSFER_ACCOUNT_DESCRIPTION_FORMAT">%1$s (…%2$s)</string>
+
+    <!-- pay -->
+    <string name="PAY_TO_FMT">to %s</string>
+    <string name="PAY_FROM_FMT">from %s</string>
+
+    <!-- income methods -->
+    <string name="DIRECT_DEPOSIT">Direct Deposit</string>
+    <string name="BANK_TRANSFER">Bank Transfer</string>
+    <string name="CASH">Cash</string>
+    <string name="FUND_DEBIT_CARD">Debit Card</string>
+
+    <!-- ACH Bank Transfer -->
+    <string name="BANKACCOUNT_DESCRIPTION_FORMAT">%1$s (…%2$s)</string>
+    <string name="BANKACCOUNT_DESCRIPTION">Account</string>
+    <string name="BANKACCOUNT_NAME_UNKNOWN">Unknown</string>
+    <string name="TEXT_CHECKING">Checking</string>
+    <string name="TEXT_SAVINGS">Savings</string>
+
+    <string name="ach_bank_transfer_screen_title">Bank transfer</string>
+    <string name="ach_bank_transfer_create_transfer">Create transfer</string>
+    <string name="ach_bank_transfer_verify_account">Verify account</string>
+    <string name="ach_bank_transfer_header_title">Transfer money to your spending account.</string>
+    <string name="ach_bank_transfer_header_description">You must have a verified bank account to create a transfer.</string>
+    <string name="ach_bank_transfer_status_verified">Verified</string>
+    <string name="ach_bank_transfer_status_unverified">Unverified</string>
+    <string name="ach_bank_transfer_add_bank">Add a bank account</string>
+    <string name="ach_bank_transfer_recurring_transfer">Recurring transfer</string>
+    <string name="ach_bank_transfer">Bank transfer</string>
+    <string name="ach_bank_transfer_scheduled">Scheduled</string>
+    <string name="ach_bank_transfer_recent_activity">Recent activity</string>
+    <string name="ach_bank_transfer_amount_incoming_format">+$%s</string>
+    <string name="ach_bank_transfer_from_format">From account …%s</string>
+    <!-- add ACH bank account -->
+    <string name="ach_bank_account_add_account_title">Add account</string>
+    <string name="ach_bank_transfer_detail_account">Account</string>
+    <string name="ach_bank_account_name_label">Bank name</string>
+    <string name="ach_bank_account_routing_number_label">Routing number</string>
+    <string name="ach_bank_account_account_number_label">Account number</string>
+    <string name="ach_bank_account_type_label">Account type</string>
+    <string name="ach_bank_account_button_add">Add</string>
+    <string name="ach_bank_account_verify_button">Submit</string>
+    <string name="ach_bank_account_verify_amount_1">Amount 1</string>
+    <string name="ach_bank_account_verify_amount_2">Amount 2</string>
+    <string name="ach_bank_account_verify_amount_error_message">Please be sure to enter a valid currency amount.</string>
+    <string name="ach_bank_account_verify_instructions">Your bank account must be verified before it can be used. In order to verify, you will find two deposits in your account statement that were made by ‘Bank Acct Trial Deposit’. Each deposit will be made within 3–5 business days in amounts between $0.01 and $0.99. Please find each deposit and enter them below.</string>
+    <string name="ach_bank_account_verify_instructions_substring1">3–5 business days</string>
+    <string name="ach_bank_account_verify_instructions_substring2">$0.01 and $0.99.</string>
+    <string name="ach_bank_account_delete_confirmation_title">Delete account?</string>
+    <string name="ach_bank_account_delete_confirmation_message_format">Would you like to delete %s?</string>
+    <string name="ach_bank_account_delete">Delete</string>
+    <string name="ach_bank_account_added_successful_title">Your bank account was successfully added.</string>
+    <string name="ach_bank_account_added_successful_subtitle">Next, we’ll make two small deposits into your account that are used for verification.\n\nDeposits will be made in 3–5 business days. All bank accounts must be verified.</string>
+    <string name="ach_bank_account_added_successful_done_button">Done</string>
+    <string name="ach_bank_account_verified_successful_title">Your bank account has been verified!</string>
+    <string name="ach_bank_account_verified_successful_subtitle">You can now make transfers to and from your bank account.</string>
+    <string name="ach_bank_account_verified_successful_done_button">Got it!</string>
+    <string name="routing_number_validation_error_message">Please enter 9 digits</string>
+    <string name="ach_bank_transfer_create_title">Create a bank transfer</string>
+    <string name="ach_bank_transfer_create_subTitle">You can transfer one-time, once a week, or once or twice a month</string>
+    <string name="ach_bank_transfer_create_from_label">From</string>
+    <string name="ach_bank_transfer_create_to_label">To</string>
+    <string name="ach_bank_transfer_create_amount_label">How much</string>
+    <string name="ach_bank_transfer_create_frequency_label">How often</string>
+    <string name="ach_bank_transfer_create_weekly_label">Transfer day of the week</string>
+    <string name="ach_bank_transfer_create_weekly_title">Day of week</string>
+    <string name="ach_bank_transfer_create_monthly_label">First transfer date</string>
+    <string name="ach_bank_transfer_create_bimonthly_second_label">Second transfer date</string>
+    <string name="ach_bank_transfer_create_from_account">From account</string>
+    <string name="ach_bank_transfer_create_to_account">To account</string>
+    <string name="ach_bank_transfer_create_frequency_title">How often?</string>
+    <string name="ach_bank_transfer_create_next_button">Next</string>
+    <string name="ach_bank_transfer_create_start_transferring">Start transferring</string>
+    <string name="ach_bank_transfer_create_confirmation_frequency_format">%s starting %s</string>
+    <string name="ach_bank_transfer_create_confirmation_transfer">Transfer</string>
+    <string name="ach_bank_transfer_create_ach_alert_message">Transferring money into your card is not allowed.</string>
+    <string name="ach_bank_transfer_edit_transfer_screen_title">Recurring transfer</string>
+    <string name="ach_bank_transfer_delete_transfer_title">Delete transfer?</string>
+    <string name="ach_bank_transfer_delete_transfer_message_format">Delete your recurring transfer %s from %s?</string>
+    <!--End of Move Money strings-->
+</resources>

@@ -6,17 +6,29 @@ import androidx.lifecycle.MutableLiveData
 import com.engageft.engagekit.EngageService
 import com.engageft.engagekit.rest.request.CreateDemoAccountRequest
 import com.engageft.engagekit.utils.LoginResponseUtils
+import com.engageft.fis.pscu.HeapUtils
+import com.engageft.fis.pscu.MoEngageUtils
+import com.engageft.fis.pscu.OneToManyApplication
+import com.engageft.fis.pscu.config.EngageAppConfig
 import com.engageft.fis.pscu.feature.BaseEngageViewModel
 import com.engageft.fis.pscu.feature.DialogInfo
 import com.engageft.fis.pscu.feature.WelcomeSharedPreferencesRepo
 import com.engageft.fis.pscu.feature.authentication.AuthenticationConfig
 import com.engageft.fis.pscu.feature.authentication.AuthenticationSharedPreferencesRepo
-import com.engageft.fis.pscu.HeapUtils
-import com.engageft.fis.pscu.config.EngageAppConfig
+import com.engageft.fis.pscu.feature.branding.BrandingManager
+import com.engageft.fis.pscu.feature.gatekeeping.GateKeeperListener
+import com.engageft.fis.pscu.feature.gatekeeping.GatedItem
+import com.engageft.fis.pscu.feature.gatekeeping.LoginGateKeeper
+import com.engageft.fis.pscu.feature.gatekeeping.items.RequireAcceptTermsGatedItem
+import com.engageft.fis.pscu.feature.gatekeeping.items.RequireEmailConfirmationGatedItem
+import com.engageft.fis.pscu.feature.gatekeeping.items.SecurityQuestionsGatedItem
+import com.engageft.fis.pscu.feature.gatekeeping.items.TwoFactorAuthGatedItem
+import com.engageft.fis.pscu.feature.subscribeWithDefaultProgressAndErrorHandling
+import com.ob.ws.dom.BasicResponse
+import com.ob.ws.dom.BrandingInfoResponse
 import com.ob.ws.dom.DeviceFailResponse
 import com.ob.ws.dom.LoginResponse
 import io.reactivex.android.schedulers.AndroidSchedulers
-import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
 
 /**
@@ -27,25 +39,15 @@ import io.reactivex.schedulers.Schedulers
  * Created by joeyhutchins on 10/15/18.
  * Copyright (c) 2018 Engage FT. All rights reserved.
  */
-class LoginViewModel : BaseEngageViewModel() {
-    private var loginResponse: LoginResponse? = null
+class LoginViewModel : BaseEngageViewModel(), GateKeeperListener {
 
     enum class LoginNavigationEvent {
         AUTHENTICATED_ACTIVITY,
         ISSUER_STATEMENT,
         DISCLOSURES,
         TWO_FACTOR_AUTHENTICATION,
-        ACCEPT_TERMS
-    }
-
-    enum class UsernameValidationError {
-        NONE,
-        INVALID_CREDENTIALS, // Generic username/password not valid error type.
-    }
-
-    enum class PasswordValidationError {
-        NONE,
-        INVALID_CREDENTIALS // Generic username/password not valid error type.
+        ACCEPT_TERMS,
+        SECURITY_QUESTIONS
     }
 
     enum class ButtonState {
@@ -58,15 +60,13 @@ class LoginViewModel : BaseEngageViewModel() {
         DISMISS_DIALOG
     }
 
-    private val compositeDisposable = CompositeDisposable()
+    private lateinit var token: String
 
     val navigationObservable = MutableLiveData<LoginNavigationEvent>()
 
     val username : ObservableField<String> = ObservableField("")
-    var usernameError : MutableLiveData<UsernameValidationError> = MutableLiveData()
 
     var password : ObservableField<String> = ObservableField("")
-    var passwordError : MutableLiveData<PasswordValidationError> = MutableLiveData()
 
     val rememberMe: ObservableField<Boolean> = ObservableField(false)
 
@@ -77,6 +77,8 @@ class LoginViewModel : BaseEngageViewModel() {
     val testMode: ObservableField<Boolean> = ObservableField(false)
 
     val loadingOverlayDialogObservable: MutableLiveData<LoadingOverlayDialog> = MutableLiveData()
+
+    private val loginGateKeeper = LoginGateKeeper(compositeDisposable, this)
 
     init {
         loginButtonState.value = ButtonState.HIDE
@@ -119,6 +121,42 @@ class LoginViewModel : BaseEngageViewModel() {
         if (AuthenticationSharedPreferencesRepo.isFirstUse()) {
             rememberMe.set(true)
             AuthenticationSharedPreferencesRepo.clearFirstUse()
+        }
+    }
+
+    override fun onGateOpen() {
+        progressOverlayShownObservable.value = false
+        BrandingManager.getBrandingWithToken(EngageService.getInstance().authManager.authToken)
+                .subscribeWithDefaultProgressAndErrorHandling<BrandingInfoResponse>(
+                        this, { navigationObservable.value = LoginNavigationEvent.AUTHENTICATED_ACTIVITY })
+    }
+
+    override fun onGatedItemFailed(item: GatedItem) {
+        progressOverlayShownObservable.value = false
+        when (item) {
+            is TwoFactorAuthGatedItem -> {
+                navigationObservable.value = LoginNavigationEvent.TWO_FACTOR_AUTHENTICATION
+            }
+            is RequireEmailConfirmationGatedItem -> {
+                dialogInfoObservable.value = LoginDialogInfo(dialogType = DialogInfo.DialogType.OTHER,
+                        loginDialogType = LoginDialogInfo.LoginDialogType.EMAIL_VERIFICATION_PROMPT)
+            }
+            is RequireAcceptTermsGatedItem -> {
+                navigationObservable.value = LoginNavigationEvent.ACCEPT_TERMS
+            }
+            is SecurityQuestionsGatedItem -> {
+                navigationObservable.value = LoginNavigationEvent.SECURITY_QUESTIONS
+            }
+        }
+    }
+
+    override fun onItemError(item: GatedItem, e: Throwable?, message: String?) {
+        progressOverlayShownObservable.value = false
+        message?.let{
+            handleUnexpectedErrorResponse(BasicResponse(false, it))
+        }
+        e?.let {
+            handleThrowable(it)
         }
     }
 
@@ -180,44 +218,38 @@ class LoginViewModel : BaseEngageViewModel() {
     }
 
     fun onConfirmEmail() {
+        progressOverlayShownObservable.value = true
+        compositeDisposable.add(EngageService.getInstance().verificationEmailObservable(token)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe({ response ->
+                    progressOverlayShownObservable.value = false
 
-        loginResponse?.let {
-            progressOverlayShownObservable.value = true
-            compositeDisposable.add(EngageService.getInstance().verificationEmailObservable(it.token)
-                    .subscribeOn(Schedulers.io())
-                    .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe({ response ->
-                        progressOverlayShownObservable.value = false
-
-                        if (response.isSuccess) {
-                            dialogInfoObservable.value = LoginDialogInfo(dialogType = DialogInfo.DialogType.OTHER,
-                                    loginDialogType = LoginDialogInfo.LoginDialogType.EMAIL_VERIFICATION_SUCCESS)
-                        } else {
-                            dialogInfoObservable.value = LoginDialogInfo(
-                                    message = response.message,
-                                    dialogType = DialogInfo.DialogType.SERVER_ERROR)
-                        }
-                    }, { e ->
-                        progressOverlayShownObservable.value = false
-                        logout()
-                        handleThrowable(e)
-                    })
-            )
-        } ?: run {
-            dialogInfoObservable.value = LoginDialogInfo()
-        }
+                    if (response.isSuccess) {
+                        dialogInfoObservable.value = LoginDialogInfo(dialogType = DialogInfo.DialogType.OTHER,
+                                loginDialogType = LoginDialogInfo.LoginDialogType.EMAIL_VERIFICATION_SUCCESS)
+                    } else {
+                        dialogInfoObservable.value = LoginDialogInfo(
+                                message = response.message,
+                                dialogType = DialogInfo.DialogType.SERVER_ERROR)
+                    }
+                }, { e ->
+                    progressOverlayShownObservable.value = false
+                    logout()
+                    handleThrowable(e)
+                })
+        )
     }
 
     fun logout() {
         EngageService.getInstance().authManager.logout()
+        MoEngageUtils.logout()
     }
 
     private fun login(username: String, password: String) {
         // Make sure there's no stale data. Might want to keep some around, but for now, just wipe it all out.
         EngageService.getInstance().authManager.logout()
-
-        // let's clear previous credentials error messages if applicable
-        clearErrorTexts()
+        MoEngageUtils.logout()
 
         progressOverlayShownObservable.value = true
 
@@ -227,17 +259,18 @@ class LoginViewModel : BaseEngageViewModel() {
                         .observeOn(AndroidSchedulers.mainThread())
                         .subscribe(
                                 { response ->
-                                    progressOverlayShownObservable.value = false
                                     if (response.isSuccess && response is LoginResponse) {
                                         handleSuccessfulLoginResponse(response)
+                                        loginGateKeeper.run()
                                     } else if (response is DeviceFailResponse) {
-                                        navigationObservable.value = LoginNavigationEvent.TWO_FACTOR_AUTHENTICATION
+                                        // This causes the loginResponse to be fetched twice by the TwoFactorAuthGatedItem
+                                        // - a minor inconvenience.
+                                        // TODO(jhtuchins): The DeviceFailResponse should be cached locally
+                                        // so the fetch doesn't need to happen twice when the GateKeeper runs.
+                                        loginGateKeeper.run()
                                     } else {
-                                        // we’re not yet truly parsing error types, and instead assume any error means invalid credentials.
-                                        // so set backend error response message as "invalid credentials" for now until true error handling has been implemented.
-                                        // https://engageft.atlassian.net/browse/SHOW-364
-                                        usernameError.value = UsernameValidationError.INVALID_CREDENTIALS
-                                        passwordError.value = PasswordValidationError.INVALID_CREDENTIALS
+                                        progressOverlayShownObservable.value = false
+                                        dialogInfoObservable.value = DialogInfo(dialogType = DialogInfo.DialogType.SERVER_ERROR, message = response.message)
                                     }
                                 }, { e ->
                             progressOverlayShownObservable.value = false
@@ -246,41 +279,20 @@ class LoginViewModel : BaseEngageViewModel() {
         )
     }
 
-    private fun clearErrorTexts() {
-        usernameError.value?.let {
-            if (it == UsernameValidationError.INVALID_CREDENTIALS) {
-                usernameError.value = UsernameValidationError.NONE
-            }
-        }
-        passwordError.value?.let {
-            if (it == PasswordValidationError.INVALID_CREDENTIALS) {
-                passwordError.value = PasswordValidationError.NONE
-            }
-        }
-    }
-
     private fun handleSuccessfulLoginResponse(loginResponse: LoginResponse) {
-        this.loginResponse = loginResponse
-
+        token = loginResponse.token
         // set the Get started flag to true after the successful login, so the Welcome screen doesn't get displayed again
         WelcomeSharedPreferencesRepo.applyHasSeenGetStarted(true)
 
-        // Setup unique user identifier for Heap analytics
         val accountInfo = LoginResponseUtils.getCurrentAccountInfo(loginResponse)
         if (accountInfo != null && accountInfo.accountId != 0L) {
+            // Setup unique user identifier for Heap analytics
             HeapUtils.identifyUser(accountInfo.accountId.toString())
+            // Setup user attributes for MoEngage
+            MoEngageUtils.setUserAttributes(accountInfo)
         }
 
         conditionallySaveUsername()
-
-        if (AuthenticationConfig.requireEmailConfirmation && LoginResponseUtils.requireEmailVerification(loginResponse)) {
-            dialogInfoObservable.value = LoginDialogInfo(dialogType = DialogInfo.DialogType.OTHER,
-                    loginDialogType = LoginDialogInfo.LoginDialogType.EMAIL_VERIFICATION_PROMPT)
-        } else if (loginResponse.isRequireAcceptTerms) {
-            navigationObservable.value = LoginNavigationEvent.ACCEPT_TERMS
-        } else {
-            navigationObservable.value = LoginNavigationEvent.AUTHENTICATED_ACTIVITY
-        }
     }
 
     private fun validateEmail() {

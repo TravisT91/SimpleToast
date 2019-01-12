@@ -5,7 +5,6 @@
     <string name="nav_drawer_title_dashboard">Overview</string>
     <string name="nav_drawer_title_budgets">Budgets</string>
     <string name="nav_drawer_title_goals">Set-aside</string>
-    <string name="nav_drawer_title_cardmanagement">Card Management</string>
     <string name="nav_drawer_title_account">Account settings</string>
     <string name="nav_drawer_title_help">Help</string>
     <string name="nav_drawer_card_header_format">Card %d</string>
@@ -16,8 +15,23 @@
     <string name="fragment_title_goals">Goals</string>
     <string name="fragment_title_cardmanagement">Card management</string>
     <string name="fragment_title_account">Settings</string>
-    <string name="fragment_title_help">Help Center</string>
+    <string name="fragment_title_help">Help center</string>
     <string name="fragment_title_goals_add_step_1">Adding Goal: Step 1</string>
     <string name="fragment_title_change_security_questions">Security questions</string>
+    <string name="fragment_title_profile">Profile</string>
+    <string name="fragment_title_replace_card">Replace card</string>
+    <string name="fragment_title_report_lost_stolen_card">Report lost/stolen</string>
+    <string name="fragment_title_cancel_card">Cancel card</string>
+    <string name="fragment_title_mobile_check_deposit_download">Mobile check deposit</string>
+    <string name="fragment_title_mobile_check_deposit_open">Mobile check deposit</string>
+    <string name="fragment_title_enrollment_get_started">Get started</string>
+    <string name="fragment_title_enrollment_card_pin">Card PIN</string>
+    <string name="fragment_title_enrollment_create_account">Create account</string>
+    <string name="fragment_title_enrollment_verify_identity">Verify identity</string>
+    <string name="fragment_title_enrollment_terms">Terms of use</string>
 
+    <!-- Notifications -->
+    <string name="channel_id">app_general_channel</string>
+    <string name="channel_name">General</string>
+    <string name="channel_description">Channel for general notifications</string>
 </resources>

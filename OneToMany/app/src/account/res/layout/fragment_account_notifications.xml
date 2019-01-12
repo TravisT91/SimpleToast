@@ -1,0 +1,233 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <data>
+        <variable name="viewModel" type="com.engageft.fis.pscu.feature.AccountNotificationsViewModel"/>
+        <variable
+            name="palette"
+            type="com.engageft.fis.pscu.feature.branding.Palette"/>
+    </data>
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/viewBackground"
+        android:fillViewport="true">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/descriptionTextView"
+                style="@style/NotificationsDescriptionStyle"
+                android:text="@string/account_notifications_screen_description" />
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@color/cellBackground">
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:id="@+id/pushRowLayout"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:padding="16dp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent">
+
+                    <TextView
+                        android:id="@+id/pushTextView"
+                        style="@style/NotificationsPushStyle"
+                        android:layout_marginEnd="8dp"
+                        android:text="@string/account_notifications_push"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintBottom_toTopOf="@+id/pushDisabledTextView"
+                        app:layout_constraintEnd_toStartOf="@+id/pushSwitch"
+                        app:layout_constraintHorizontal_bias="0.5"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:layout_constraintVertical_chainStyle="spread_inside"
+                        tools:text="Push Notifications" />
+
+                    <TextView
+                        android:id="@+id/pushDisabledTextView"
+                        style="@style/NotificationsPushSubLabelStyle"
+                        android:layout_marginEnd="8dp"
+                        android:text="@string/account_notifications_push_disabled"
+                        android:visibility="visible"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toStartOf="@+id/pushSwitch"
+                        app:layout_constraintHorizontal_bias="0.5"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/pushTextView"
+                        tools:text="Push Disabled" />
+
+                    <androidx.appcompat.widget.SwitchCompat
+                        SwitchCompat.applyPaletteColors="@{true}"
+                        android:id="@+id/pushSwitch"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginEnd="8dp"
+                        android:onCheckedChanged="@{(switch, isChecked) -> viewModel.onPushCheckChanged(isChecked)}"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+                <include
+                    android:id="@+id/pushDivider"
+                    layout="@layout/view_horizontal_divider_indent_start"
+                    android:layout_width="0dp"
+                    android:layout_height="1dp"
+                    android:layout_marginStart="16dp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/pushRowLayout" />
+
+                <TextView
+                    style="@style/NotificationsSmsStyle"
+                    android:id="@+id/smsTextView"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginTop="16dp"
+                    android:layout_marginEnd="8dp"
+                    android:text="@string/account_notifications_sms"
+                    app:layout_constraintEnd_toStartOf="@+id/smsSwitch"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/pushDivider" />
+
+                <TextView
+                    style="@style/NotificationsSmsSubLabelStyle"
+                    android:id="@+id/smsNumberTextView"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginEnd="8dp"
+                    android:text="@={viewModel.phoneNumber}"
+                    app:layout_constraintEnd_toStartOf="@+id/smsSwitch"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/smsTextView"
+                    tools:text="(555)760-1234" />
+
+                <include
+                    android:id="@+id/smsDivider"
+                    layout="@layout/view_horizontal_divider_indent_start"
+                    android:layout_width="wrap_content"
+                    android:layout_height="1dp"
+                    android:layout_marginTop="16dp"
+                    android:layout_marginStart="16dp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/smsNumberTextView" />
+
+                <androidx.appcompat.widget.SwitchCompat
+                    SwitchCompat.applyPaletteColors="@{true}"
+                    android:id="@+id/smsSwitch"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="16dp"
+                    android:layout_marginEnd="24dp"
+                    android:layout_marginBottom="16dp"
+                    android:onCheckedChanged="@{(switch, isChecked) -> viewModel.onSmsCheckChanged(isChecked)}"
+                    app:layout_constraintBottom_toTopOf="@+id/smsDivider"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/pushDivider" />
+
+                <TextView
+                    style="@style/NotificationsEmailStyle"
+                    android:id="@+id/emailTextView"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginTop="16dp"
+                    android:layout_marginEnd="8dp"
+                    android:text="@string/account_notifications_email"
+                    app:layout_constraintBottom_toTopOf="@+id/emailDivider"
+                    app:layout_constraintEnd_toStartOf="@+id/emailSwitch"
+                    app:layout_constraintHorizontal_bias="0.5"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/smsDivider" />
+
+                <androidx.appcompat.widget.SwitchCompat
+                    SwitchCompat.applyPaletteColors="@{true}"
+                    android:id="@+id/emailSwitch"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="24dp"
+                    android:onCheckedChanged="@{(switch, isChecked) -> viewModel.onEmailCheckChanged(isChecked)}"
+                    app:layout_constraintBottom_toTopOf="@+id/emailDivider"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/smsDivider" />
+
+                <include
+                    android:id="@+id/emailDivider"
+                    layout="@layout/view_horizontal_divider_indent_start"
+                    android:layout_width="wrap_content"
+                    android:layout_height="1dp"
+                    android:layout_marginTop="16dp"
+                    android:layout_marginStart="16dp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/emailTextView" />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:id="@+id/pushAlertLayout"
+                android:visibility="gone"
+                android:background="@{palette.warningColor}">
+
+                <TextView
+                    style="@style/Body"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingStart="16dp"
+                    android:paddingEnd="16dp"
+                    android:paddingTop="16dp"
+                    android:text="@string/ALERT_SETTINGS_PUSH_DISABLED_SECTION_HEADER"/>
+
+                <TextView
+                    style="@style/FootnoteQuiet"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingStart="16dp"
+                    android:paddingEnd="16dp"
+                    android:paddingBottom="16dp"
+                    android:paddingTop="8dp"
+                    android:lineSpacingExtra="5sp"
+                    android:text="@string/ALERT_SETTINGS_PUSH_DISABLED_SECTION_INSTRUCTION"/>
+            </LinearLayout>
+
+            <TextView
+                style="@style/NotificationsFooterStyle"
+                android:text="@string/account_notifications_screen_footer" />
+
+            <com.engageft.apptoolbox.view.PillButton
+                android:id="@+id/saveButton"
+                style="@style/ButtonPillPrimaryFilledDefault"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginEnd="16dp"
+                android:layout_marginStart="16dp"
+                android:layout_marginBottom="16dp"
+                android:layout_marginTop="32dp"
+                android:onClick="@{() -> viewModel.onSaveClicked()}"
+                android:text="@string/account_notifications_save_button"
+                PillButton.setThemeFilled="@{true}"/>
+
+        </LinearLayout>
+
+    </ScrollView>
+</layout>
+
