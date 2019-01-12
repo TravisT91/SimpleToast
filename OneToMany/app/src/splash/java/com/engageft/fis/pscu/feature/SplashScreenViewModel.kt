@@ -4,6 +4,7 @@ import android.os.Handler
 import androidx.lifecycle.LiveData
 import com.engageft.apptoolbox.BaseViewModel
 import com.engageft.engagekit.EngageService
+import com.engageft.fis.pscu.MoEngageUtils
 import com.ob.ws.dom.LoginResponse
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
@@ -59,10 +60,12 @@ class SplashScreenViewModel : BaseViewModel() {
                                             SplashNavigationEvent.LOGGED_IN
                                         } else {
                                             EngageService.getInstance().authManager.logout()
+                                            MoEngageUtils.logout()
                                             SplashNavigationEvent.NOT_LOGGED_IN
                                         }
                                     }, { _ ->
                                         EngageService.getInstance().authManager.logout()
+                                        MoEngageUtils.logout()
                                         value = SplashNavigationEvent.NOT_LOGGED_IN
                                     })
                     )

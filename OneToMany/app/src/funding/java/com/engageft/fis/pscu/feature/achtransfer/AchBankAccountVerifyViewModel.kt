@@ -1,4 +1,4 @@
-package com.engageft.fis.pscu.feature
+package com.engageft.fis.pscu.feature.achtransfer
 
 import androidx.databinding.Observable
 import androidx.databinding.ObservableField
@@ -7,6 +7,8 @@ import com.engageft.apptoolbox.util.CurrencyUtils
 import com.engageft.engagekit.EngageService
 import com.engageft.engagekit.rest.request.AchAccountValidateRequest
 import com.engageft.fis.pscu.config.EngageAppConfig
+import com.engageft.fis.pscu.feature.BaseEngageViewModel
+import com.engageft.fis.pscu.feature.handleBackendErrorForForms
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 /**

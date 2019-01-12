@@ -31,11 +31,13 @@ object EngageAppConfig : BaseAppConfig() {
     }
 
     override val heapAppId: String = if (BuildConfig.DEBUG) "230876127" else "2688943769"
+    override val moEngageAppId: String = "TZA5EGIIKJIHIZPRPBP7Z2WY"
 }
 
 abstract class BaseAppConfig {
     abstract val engageKitConfig: EngageKitConfig
     abstract val heapAppId: String
+    abstract val moEngageAppId: String
 
     // Defaults:
     open val supportPhone: String = "18662392008"

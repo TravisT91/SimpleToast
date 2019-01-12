@@ -2,6 +2,7 @@ package com.engageft.fis.pscu.feature
 
 import androidx.lifecycle.MutableLiveData
 import com.engageft.engagekit.EngageService
+import com.engageft.fis.pscu.MoEngageUtils
 import com.engageft.fis.pscu.feature.branding.BrandingManager
 
 /**
@@ -22,6 +23,7 @@ class AccountSettingsViewModel : BaseEngageViewModel() {
 
     fun onLogoutClicked() {
         EngageService.getInstance().authManager.logout()
+        MoEngageUtils.logout()
         BrandingManager.clearBranding()
         navigationObservable.value = AccountSettingsNavigation.LOGOUT
     }
