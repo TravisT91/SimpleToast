@@ -55,7 +55,6 @@ class VerifyIdentityDelegate(private val viewModel: EnrollmentViewModel,
 
         ssn.addOnPropertyChangedCallback(object: Observable.OnPropertyChangedCallback() {
             override fun onPropertyChanged(sender: Observable?, propertyId: Int) {
-                updateButtonState()
                 validateSSNConditionally(true)
             }
         })
@@ -63,14 +62,16 @@ class VerifyIdentityDelegate(private val viewModel: EnrollmentViewModel,
 
     fun validateSSNConditionally(validateConditionally: Boolean) {
         val currentState = ssnValidationErrorObservable.value
-        if ((validateConditionally && currentState != ssnValidationError.NONE)
-                || (!validateConditionally && currentState != ssnValidationError.EMPTY)) {
+        if ((validateConditionally && currentState != ssnValidationError.NONE && currentState != ssnValidationError.EMPTY)
+                || !validateConditionally) {
             when {
                 ssn.get()!!.isEmpty() -> ssnValidationErrorObservable.value = ssnValidationError.EMPTY
                 isSsnValid() -> ssnValidationErrorObservable.value = ssnValidationError.NONE
                 else -> ssnValidationErrorObservable.value = ssnValidationError.INVALID
             }
         }
+
+        updateButtonState()
     }
 
     fun onNextClicked() {
@@ -83,7 +84,8 @@ class VerifyIdentityDelegate(private val viewModel: EnrollmentViewModel,
     }
 
     private fun updateButtonState() {
-        nextButtonObservable.value = if (ssn.get()!!.isEmpty()) {
+        nextButtonObservable.value = if (ssn.get()!!.isEmpty()
+                || ssnValidationErrorObservable.value == ssnValidationError.INVALID) {
             NextButtonState.GONE
         } else {
             NextButtonState.VISIBLE_ENABLED

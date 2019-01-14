@@ -73,13 +73,12 @@ class VerifyIdentityFragment : BaseEngagePageFragment() {
                     when (it) {
                         VerifyIdentityDelegate.ssnValidationError.INVALID -> {
                             if (SSNInputWithLabel.isEnabled) {
-                                SSNInputWithLabel.setErrorTexts(listOf(getString(R.string.ENROLLMENT_VERIFY_IDENTITY_SSN_TEXT)))
+                                SSNInputWithLabel.setErrorTexts(listOf(getString(R.string.ENROLLMENT_VERIFY_IDENTITY_ERROR_MESSAGE)))
                             }
                         }
                         else -> {
                             SSNInputWithLabel.setErrorTexts(null)
                         }
-
                     }
                 })
             }
