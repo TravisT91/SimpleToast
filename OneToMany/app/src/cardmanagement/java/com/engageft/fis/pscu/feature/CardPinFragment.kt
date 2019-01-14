@@ -25,6 +25,7 @@ import com.engageft.fis.pscu.feature.branding.BrandingInfoRepo
 import com.engageft.fis.pscu.feature.branding.Palette
 import com.engageft.fis.pscu.feature.palettebindings.applyBranding
 import com.engageft.fis.pscu.feature.utils.cardStatusStringRes
+import com.ob.domain.lookup.branding.BrandingCard
 
 /**
  * CardPinFragment
@@ -37,16 +38,19 @@ import com.engageft.fis.pscu.feature.utils.cardStatusStringRes
 class CardPinFragment : BaseEngagePageFragment() {
 
     private lateinit var binding: FragmentCardPinBinding
+    private lateinit var viewModel: BaseEngageViewModel
     private lateinit var cardPinViewModel: CardPinViewModelDelegate
     private val listOfImageViews = ArrayList<ImageView>()
     private lateinit var unselectedDot: Drawable
     private lateinit var selectedDot: Drawable
 
+    private val brandingCardObserver = Observer<BrandingCard> { updateBrandingCard(it) }
+
     override fun createViewModel(): BaseViewModel? {
         // This Fragment's usage is supported in two places:
         // 1. The Enrollment flow as a part of the EnrollmentViewModel
         // 2. The CardManagement flow as a part of the CardPinViewModel.
-        val viewModel = if (activity is EnrollmentActivity) {
+        viewModel = if (activity is EnrollmentActivity) {
             val vm = ViewModelProviders.of(activity!!).get(EnrollmentViewModel::class.java)
             cardPinViewModel = vm.cardPinDelegate.cardPinViewModelDelegate
             vm
@@ -144,6 +148,7 @@ class CardPinFragment : BaseEngagePageFragment() {
                     }
                 }
             })
+            brandingCardObservable.observe(this@CardPinFragment, brandingCardObserver)
 
             cardPinDigitsState.observe(this@CardPinFragment, Observer {
                 when (it.first) {
@@ -188,6 +193,17 @@ class CardPinFragment : BaseEngagePageFragment() {
         }
 
         return binding.root
+    }
+
+    private fun updateBrandingCard(brandingCard: BrandingCard?) {
+        brandingCard?.let {
+            binding.cardView.applyBranding(it, viewModel.compositeDisposable) { e ->
+                Toast.makeText(context, "Failed to retrieve card image", Toast.LENGTH_SHORT).show()
+                Log.e("BRANDING_INFO_FAIL", e.message)
+                //TODO(ttkachuk) right now it is not clear on how we should handle failure to retrieve the card image
+                //tracked in FOTM-497
+            }
+        }
     }
 
     override fun onResume() {

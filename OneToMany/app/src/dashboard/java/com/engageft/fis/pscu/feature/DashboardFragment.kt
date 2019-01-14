@@ -26,11 +26,11 @@ import com.engageft.engagekit.EngageService
 import com.engageft.fis.pscu.R
 import com.engageft.fis.pscu.databinding.FragmentDashboardBinding
 import com.engageft.fis.pscu.feature.authentication.AuthenticationDialogFragment
-import com.engageft.fis.pscu.feature.branding.BrandingInfoRepo
 import com.engageft.fis.pscu.feature.palettebindings.applyBranding
 import com.engageft.fis.pscu.feature.utils.cardStatusStringRes
 import com.google.android.material.tabs.TabLayout
 import com.ob.domain.lookup.DebitCardStatus
+import com.ob.domain.lookup.branding.BrandingCard
 import com.ob.ws.dom.utility.TransactionInfo
 import eightbitlab.com.blurview.RenderScriptBlur
 import utilGen1.StringUtils
@@ -68,6 +68,8 @@ class DashboardFragment : BaseEngagePageFragment(),
 
     private val animationObserver = Observer<DashboardAnimationEvent> { updateAnimation(it!!) }
 
+    private val brandingCardObserver = Observer<BrandingCard> { updateBrandingCard(it) }
+
     private var toolbarShadowAnimationScrollRange: Int = 0
     private var toolbarShadowAnimationScrollRangeFloat: Float = 0F
 
@@ -82,16 +84,6 @@ class DashboardFragment : BaseEngagePageFragment(),
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         binding = DataBindingUtil.inflate(layoutInflater, R.layout.fragment_dashboard, container, false)
-        //TODO(ttkachuk) right now card types are no specified by the backend, but we will select the BrandingCard that matches debitCardInfo.cardType when the backend is updated
-        //tracked in FOTM-498
-        BrandingInfoRepo.cards?.get(0)?.let {
-            binding.dashboardExpandableView.cardView.applyBranding(it,dashboardViewModel.compositeDisposable){ e ->
-                Toast.makeText(context, "Failed to retrieve card image", Toast.LENGTH_SHORT).show()
-                Log.e("BRANDING_INFO_FAIL", e.message)
-                //TODO(ttkachuk) right now it is not clear on how we should handle failure to retrieve the card image
-                //tracked in FOTM-497
-            }
-        }
         return binding.root
     }
 
@@ -302,6 +294,17 @@ class DashboardFragment : BaseEngagePageFragment(),
         }
     }
 
+    private fun updateBrandingCard(brandingCard: BrandingCard?) {
+        brandingCard?.let {
+            binding.dashboardExpandableView.cardView.applyBranding(it,dashboardViewModel.compositeDisposable){ e ->
+                Toast.makeText(context, "Failed to retrieve card image", Toast.LENGTH_SHORT).show()
+                Log.e("BRANDING_INFO_FAIL", e.message)
+                //TODO(ttkachuk) right now it is not clear on how we should handle failure to retrieve the card image
+                //tracked in FOTM-497
+            }
+        }
+    }
+
     private fun retrievingTransactionsFinished(transactionsComplete: Boolean?) {
         transactionsComplete?.let {
             if (it) {
@@ -406,6 +409,8 @@ class DashboardFragment : BaseEngagePageFragment(),
         dashboardViewModel.notificationsCountObservable.observe(this, notificationsObserver)
 
         dashboardViewModel.animationObservable.observe(this, animationObserver)
+
+        dashboardViewModel.brandingCardObservable.observe(this, brandingCardObserver)
 
         dashboardViewModel.navigationObservable.observe(this, Observer {dashboardNavigationEvent ->
             when (dashboardNavigationEvent) {
