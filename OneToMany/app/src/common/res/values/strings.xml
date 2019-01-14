@@ -87,6 +87,8 @@
     <string name="alert_success_title_generic">Success</string>
     <string name="alert_success_message_generic">Your changes have been saved.</string>
 
+    <string name="alert_continue_confirmation_message">Do you want to continue?</string>
+
     <string name="dialog_information_cancel_button">Cancel</string>
     <string name="dialog_information_ok_button">OK</string>
 
