@@ -50,6 +50,12 @@ class BaseEngageFragmentDelegate(private val engageFragmentIm: BaseEngageFragmen
                                         message = engageFragmentIm.getAndroidContext().getString(R.string.alert_error_message_no_internet_connection))
                                         .apply { applyPaletteStyles(engageFragmentIm.getAndroidContext()) })
                             }
+                            DialogInfo.DialogType.UNKNOWN_HOST -> {
+                                engageFragmentIm.getBaseFragmentDelegate().showDialog(infoDialogGenericErrorTitleMessageNewInstance(
+                                        engageFragmentIm.getAndroidContext(),
+                                        message = engageFragmentIm.getAndroidContext().getString(R.string.alert_error_message_unknown_host))
+                                        .apply { applyPaletteStyles(engageFragmentIm.getAndroidContext()) })
+                            }
                             DialogInfo.DialogType.CONNECTION_TIMEOUT -> {
                                 engageFragmentIm.getBaseFragmentDelegate().showDialog(infoDialogGenericErrorTitleMessageNewInstance(
                                         engageFragmentIm.getAndroidContext(),
