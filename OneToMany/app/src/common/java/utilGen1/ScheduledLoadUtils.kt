@@ -127,22 +127,17 @@ object ScheduledLoadUtils {
             ScheduledLoad.SCHED_LOAD_TYPE_MONTHLY -> context.getString(R.string.TRANSFER_MONTHLY_TEXT)
             ScheduledLoad.SCHED_LOAD_TYPE_TWICE_MONTHLY -> context.getString(R.string.TRANSFER_TWICE_MONTHLY_TEXT)
             ScheduledLoad.SCHED_LOAD_TYPE_WEEKLY -> context.getString(R.string.TRANSFER_WEEKLY_TEXT)
-            ScheduledLoad.SCHED_LOAD_TYPE_ALT_WEEKLY -> context.getString(R.string.TRANSFER_ALT_WEEKLY_TEXT)
             else -> context.getString(R.string.TRANSFER_ONCE_TEXT)
         }
     }
 
     fun getFrequencyTypeStringForDisplayString(context: Context, displayString: String): String {
-        return if (displayString == context.getString(R.string.TRANSFER_ONCE_TEXT)) {
-            ScheduledLoad.SCHED_LOAD_TYPE_ONCE
-        } else if (displayString == context.getString(R.string.TRANSFER_MONTHLY_TEXT)) {
-            ScheduledLoad.SCHED_LOAD_TYPE_MONTHLY
-        } else if (displayString == context.getString(R.string.TRANSFER_TWICE_MONTHLY_TEXT)) {
-            ScheduledLoad.SCHED_LOAD_TYPE_TWICE_MONTHLY
-        } else if (displayString == context.getString(R.string.TRANSFER_WEEKLY_TEXT)) {
-            ScheduledLoad.SCHED_LOAD_TYPE_WEEKLY
-        } else {
-            ScheduledLoad.SCHED_LOAD_TYPE_ALT_WEEKLY
+        return when (displayString) {
+            context.getString(R.string.TRANSFER_ONCE_TEXT) -> ScheduledLoad.SCHED_LOAD_TYPE_ONCE
+            context.getString(R.string.TRANSFER_MONTHLY_TEXT) -> ScheduledLoad.SCHED_LOAD_TYPE_MONTHLY
+            context.getString(R.string.TRANSFER_TWICE_MONTHLY_TEXT) -> ScheduledLoad.SCHED_LOAD_TYPE_TWICE_MONTHLY
+            context.getString(R.string.TRANSFER_WEEKLY_TEXT) -> ScheduledLoad.SCHED_LOAD_TYPE_WEEKLY
+            else -> ScheduledLoad.SCHED_LOAD_TYPE_ALT_WEEKLY
         }
     }
 
@@ -151,7 +146,6 @@ object ScheduledLoadUtils {
         displayStrings.add(getFrequencyDisplayStringForType(context, ScheduledLoad.SCHED_LOAD_TYPE_MONTHLY))
         displayStrings.add(getFrequencyDisplayStringForType(context, ScheduledLoad.SCHED_LOAD_TYPE_TWICE_MONTHLY))
         displayStrings.add(getFrequencyDisplayStringForType(context, ScheduledLoad.SCHED_LOAD_TYPE_WEEKLY))
-        displayStrings.add(getFrequencyDisplayStringForType(context, ScheduledLoad.SCHED_LOAD_TYPE_ALT_WEEKLY))
 
         return displayStrings
     }
@@ -159,10 +153,9 @@ object ScheduledLoadUtils {
     fun getFrequencyDisplayStringsForTransfer(context: Context): List<String> {
         val displayStrings = ArrayList<String>()
         displayStrings.add(getFrequencyDisplayStringForType(context, ScheduledLoad.SCHED_LOAD_TYPE_ONCE))
+        displayStrings.add(getFrequencyDisplayStringForType(context, ScheduledLoad.SCHED_LOAD_TYPE_WEEKLY))
         displayStrings.add(getFrequencyDisplayStringForType(context, ScheduledLoad.SCHED_LOAD_TYPE_MONTHLY))
         displayStrings.add(getFrequencyDisplayStringForType(context, ScheduledLoad.SCHED_LOAD_TYPE_TWICE_MONTHLY))
-        displayStrings.add(getFrequencyDisplayStringForType(context, ScheduledLoad.SCHED_LOAD_TYPE_WEEKLY))
-        displayStrings.add(getFrequencyDisplayStringForType(context, ScheduledLoad.SCHED_LOAD_TYPE_ALT_WEEKLY))
 
         return displayStrings
     }

@@ -1,4 +1,4 @@
-package com.engageft.fis.pscu.feature
+package com.engageft.fis.pscu.feature.achtransfer
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -16,7 +16,9 @@ import com.engageft.apptoolbox.NavigationOverrideClickListener
 import com.engageft.apptoolbox.view.InformationDialogFragment
 import com.engageft.fis.pscu.R
 import com.engageft.fis.pscu.databinding.FragmentAchBankAccountAddBinding
+import com.engageft.fis.pscu.feature.BaseEngagePageFragment
 import com.engageft.fis.pscu.feature.branding.Palette
+import com.engageft.fis.pscu.feature.infoDialogGenericUnsavedChangesNewInstance
 import utilGen1.AchAccountInfoUtils
 /**
  * AchBankAccountAddFragment
@@ -61,6 +63,11 @@ class AchBankAccountAddFragment: BaseEngagePageFragment() {
     override fun createViewModel(): BaseViewModel? {
         achBankAccountViewModel = ViewModelProviders.of(this).get(AchBankAccountAddViewModel::class.java)
         return achBankAccountViewModel
+    }
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setHasOptionsMenu(true)
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -126,11 +133,6 @@ class AchBankAccountAddFragment: BaseEngagePageFragment() {
         return binding.root
     }
 
-    override fun onResume() {
-        super.onResume()
-        setHasOptionsMenu(true)
-    }
-
     override fun onCreateOptionsMenu(menu: Menu?, inflater: MenuInflater?) {
         inflater?.inflate(R.menu.menu_ach_bank_account, menu)
         super.onCreateOptionsMenu(menu, inflater)
@@ -145,7 +147,7 @@ class AchBankAccountAddFragment: BaseEngagePageFragment() {
 
     override fun onOptionsItemSelected(item: MenuItem?): Boolean {
         when(item?.itemId){
-            R.id.submit -> run {
+            R.id.submit -> {
                 achBankAccountViewModel.onAddAccount()
             }
         }

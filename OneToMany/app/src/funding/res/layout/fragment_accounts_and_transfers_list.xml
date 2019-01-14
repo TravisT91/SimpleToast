@@ -3,7 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
-        <variable name="viewModel" type="com.engageft.fis.pscu.feature.AccountsAndTransfersListViewModel"/>
+        <variable name="viewModel" type="com.engageft.fis.pscu.feature.achtransfer.AccountsAndTransfersListViewModel"/>
         <variable
             name="palette"
             type="com.engageft.fis.pscu.feature.branding.Palette"/>

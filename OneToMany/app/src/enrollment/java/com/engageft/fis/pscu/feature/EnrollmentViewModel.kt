@@ -77,10 +77,6 @@ class EnrollmentViewModel : BaseEngageViewModel() {
     }
 
     inner class TermsOfUseDelegate {
-        init {
-
-        }
-
         fun onAcceptTermsClicked() {
             navController.navigate(termsNavigations.termsToSending)
         }

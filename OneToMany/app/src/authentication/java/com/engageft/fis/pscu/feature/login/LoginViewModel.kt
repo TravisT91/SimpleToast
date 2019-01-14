@@ -7,6 +7,8 @@ import com.engageft.engagekit.EngageService
 import com.engageft.engagekit.rest.request.CreateDemoAccountRequest
 import com.engageft.engagekit.utils.LoginResponseUtils
 import com.engageft.fis.pscu.HeapUtils
+import com.engageft.fis.pscu.MoEngageUtils
+import com.engageft.fis.pscu.OneToManyApplication
 import com.engageft.fis.pscu.config.EngageAppConfig
 import com.engageft.fis.pscu.feature.BaseEngageViewModel
 import com.engageft.fis.pscu.feature.DialogInfo
@@ -241,11 +243,13 @@ class LoginViewModel : BaseEngageViewModel(), GateKeeperListener {
 
     fun logout() {
         EngageService.getInstance().authManager.logout()
+        MoEngageUtils.logout()
     }
 
     private fun login(username: String, password: String) {
         // Make sure there's no stale data. Might want to keep some around, but for now, just wipe it all out.
         EngageService.getInstance().authManager.logout()
+        MoEngageUtils.logout()
 
         progressOverlayShownObservable.value = true
 
@@ -280,10 +284,12 @@ class LoginViewModel : BaseEngageViewModel(), GateKeeperListener {
         // set the Get started flag to true after the successful login, so the Welcome screen doesn't get displayed again
         WelcomeSharedPreferencesRepo.applyHasSeenGetStarted(true)
 
-        // Setup unique user identifier for Heap analytics
         val accountInfo = LoginResponseUtils.getCurrentAccountInfo(loginResponse)
         if (accountInfo != null && accountInfo.accountId != 0L) {
+            // Setup unique user identifier for Heap analytics
             HeapUtils.identifyUser(accountInfo.accountId.toString())
+            // Setup user attributes for MoEngage
+            MoEngageUtils.setUserAttributes(accountInfo)
         }
 
         conditionallySaveUsername()
