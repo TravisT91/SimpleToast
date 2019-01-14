@@ -4,6 +4,7 @@ import androidx.databinding.Observable
 import androidx.databinding.ObservableField
 import androidx.lifecycle.MutableLiveData
 import com.engageft.engagekit.EngageService
+import com.engageft.fis.pscu.MoEngageUtils
 import com.engageft.fis.pscu.feature.utils.isValidPassword
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
@@ -108,6 +109,7 @@ class ChangePasswordViewModel: BaseEngageViewModel() {
                 )
             } else {
                 EngageService.getInstance().authManager.logout()
+                MoEngageUtils.logout()
             }
         }
     }

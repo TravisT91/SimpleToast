@@ -110,5 +110,44 @@
         <item name="android:gravity">center_horizontal</item>
     </style>
 
+    <style name="CreateTransferTitleTextStyle" parent="Title1Quiet">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textColor">@color/textPrimary</item>
+        <item name="android:gravity">center_horizontal</item>
+    </style>
+
+    <style name="CreateTransferSubtitleTextStyle" parent="Body">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:padding">16dp</item>
+        <item name="android:lineSpacingExtra">11sp</item>
+        <item name="android:textColor">@color/textSecondary</item>
+        <item name="android:gravity">center_horizontal</item>
+    </style>
+
+    <style name="CreateTransferConfirmationTitleTextStyle" parent="Title1Quiet">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:padding">16dp</item>
+        <item name="android:textColor">@color/textPrimary</item>
+        <item name="android:gravity">center_horizontal</item>
+    </style>
+
+    <style name="CreateTransferConfirmationAmountTextStyle" parent="LargeTitleMedium">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textColor">@color/textPrimary</item>
+        <item name="android:gravity">center_horizontal</item>
+    </style>
+
+    <style name="CreateTransferConfirmationRecurringTextStyle" parent="Body">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textColor">@color/textSecondary</item>
+        <item name="android:gravity">center_horizontal</item>
+    </style>
+
+
     <!-- End of Ach Bank Transfer -->
 </resources>

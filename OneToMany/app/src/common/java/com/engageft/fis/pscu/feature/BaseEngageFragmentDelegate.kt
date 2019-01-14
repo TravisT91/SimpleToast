@@ -65,7 +65,12 @@ class BaseEngageFragmentDelegate(private val engageFragmentIm: BaseEngageFragmen
             }
         }
         @OnLifecycleEvent(Lifecycle.Event.ON_STOP)
-        fun onDestroyListener() {
+        fun onStopListener() {
+            engageFragmentIm.getBaseFragmentDelegate().viewModel?.let { baseViewModel ->
+                if (baseViewModel is BaseEngageViewModel) {
+                    baseViewModel.dialogInfoObservable.removeObservers(engageFragmentIm.getAndroidLifecycleOwner())
+                }
+            }
         }
     }
 
