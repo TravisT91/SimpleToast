@@ -90,12 +90,9 @@ class EnrollmentViewModel : BaseEngageViewModel() {
         }
     }
 
+    //TODO(aHashimi): Not completed, this should be its own class
     inner class TermsOfUseDelegate {
-        init {
-
-        }
-
-        fun onButton1Clicked() {
+        fun onAcceptTermsClicked() {
             navController.navigate(termsNavigations.termsToSending)
         }
     }
