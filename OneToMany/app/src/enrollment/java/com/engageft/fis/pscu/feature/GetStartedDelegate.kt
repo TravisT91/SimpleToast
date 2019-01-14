@@ -203,7 +203,7 @@ class GetStartedDelegate(private val viewModel: EnrollmentViewModel, private val
 
     fun validateCardNumber(conditionallyIfError: Boolean) {
         val currentState = cardNumberValidationObservable.value
-        if (conditionallyIfError && currentState != CardInputValidationError.NONE || !conditionallyIfError) {
+        if ((conditionallyIfError && currentState != CardInputValidationError.NONE) || !conditionallyIfError) {
             val newState = if (cardInput.get()!!.isEmpty()) {
                 CardInputValidationError.EMPTY
             } else if (cardInput.get()!!.length != 16 ) {
@@ -221,7 +221,7 @@ class GetStartedDelegate(private val viewModel: EnrollmentViewModel, private val
 
     fun validateDOB(conditionallyIfError: Boolean) {
         val currentState = dateOfBirthValidationObservable.value
-        if (conditionallyIfError && currentState != DOBInputValidationError.NONE || !conditionallyIfError) {
+        if ((conditionallyIfError && currentState != DOBInputValidationError.NONE) || !conditionallyIfError) {
             val pN = dateOfBirth.get()!!
             val newState = if (pN.isEmpty()) {
                 DOBInputValidationError.EMPTY

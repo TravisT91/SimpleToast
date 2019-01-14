@@ -13,15 +13,20 @@ import com.ob.domain.lookup.DebitCardStatus
 import com.ob.ws.dom.ActivationCardInfo
 
 /**
- * TODO(joeyhutchins): ClassName
+ * EnrollmentCardPinDelegate
  * <p>
- * TODO(joeyhutchins): Class description.
+ * Delegated class handling viewModel operations relating to the Card Pin feature.
  * </p>
  * Created by joeyhutchins on 1/9/19.
  * Copyright (c) 2019 Engage FT. All rights reserved.
  */
 class EnrollmentCardPinDelegate(private val viewModel: EnrollmentViewModel, private val navController: NavController, private val cardPinNavigations: EnrollmentViewModel.EnrollmentNavigations.EnrollmentCardPinNavigations)
     : CardPinViewModelListener {
+    companion object {
+        const val STRING_LENGTH_CREDIT_CARD = 16
+        const val INDEX_LAST_FOUR_DIGITS_START = 11
+        const val INDEX_LAST_FOUR_DIGITS_END = 15
+    }
     val cardPinViewModelDelegate = CardPinViewModelDelegate(viewModel, this)
     private val gateKeeperListener: GateKeeperListener = object : GateKeeperListener {
         override fun onGateOpen() {
@@ -57,25 +62,23 @@ class EnrollmentCardPinDelegate(private val viewModel: EnrollmentViewModel, priv
         productCardModel.cardStatus = productCardModelStatusFromActivationInfo(viewModel.activationCardInfo)
         productCardModel.cardStatusOkay = true
         productCardModel.cardLocked = productCardModel.cardStatus == ProductCardModelCardStatus.CARD_STATUS_LOCKED
-        productCardModel.cardNumberPartial = viewModel.getStartedDelegate.cardNumber.substring(11, 15)
+        productCardModel.cardNumberPartial = getLastFourFromCreditCard(viewModel.getStartedDelegate.cardNumber)
 
         cardPinViewModelDelegate.productCardViewModelDelegate.cardInfoModelObservable.value = productCardModel
     }
 
+    /**
+     * I am attempting to resolve differences in DebitCardStatus enums to ProductCardModelCardStatus
+     * enums. Some don't exist in the other. 
+     */
     private fun productCardModelStatusFromActivationInfo(activationCardInfo: ActivationCardInfo): ProductCardModelCardStatus {
         return when (activationCardInfo.cardStatus) {
             DebitCardStatus.ACTIVE.toString() -> {
                 ProductCardModelCardStatus.CARD_STATUS_ACTIVE
             }
-//                DebitCardStatus.PENDING_CREATE.toString() -> {
-//                    ProductCardModelCardStatus.CARD_STATUS_PENDING
-//                }
             DebitCardStatus.PENDING_ACTIVATION.toString() -> {
                 ProductCardModelCardStatus.CARD_STATUS_PENDING
             }
-//                DebitCardStatus.REPLACEMENT_ORDERED.toString() -> {
-//                    ProductCardModelCardStatus.CARD_STATUS_REPLACED
-//                }
             DebitCardStatus.CANCELED.toString() -> {
                 ProductCardModelCardStatus.CARD_STATUS_CANCELED
             }
@@ -99,6 +102,13 @@ class EnrollmentCardPinDelegate(private val viewModel: EnrollmentViewModel, priv
                 throw IllegalStateException("Unknown card status. ")
             }
         }
+    }
+
+    private fun getLastFourFromCreditCard(cardNumber: String): String {
+        if (cardNumber.length != STRING_LENGTH_CREDIT_CARD) {
+            throw IllegalArgumentException("Invalid credit card number string with length ${cardNumber.length}. Expected $STRING_LENGTH_CREDIT_CARD")
+        }
+        return cardNumber.substring(INDEX_LAST_FOUR_DIGITS_START, INDEX_LAST_FOUR_DIGITS_END)
     }
 
     override fun onPostPin(pinNumber: Int) {

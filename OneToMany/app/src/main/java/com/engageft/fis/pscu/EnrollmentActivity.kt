@@ -14,6 +14,9 @@ import com.engageft.fis.pscu.feature.EnrollmentViewModel
  * Created by joeyhutchins on 12/13/18.
  * Copyright (c) 2018 Engage FT. All rights reserved.
  */
+
+
+
 class EnrollmentActivity : LotusActivity() {
     private lateinit var enrollmentViewModel: EnrollmentViewModel
     private val enrollmentActivityConfig = object : LotusActivityConfig() {
@@ -45,3 +48,5 @@ class EnrollmentActivity : LotusActivity() {
                 EnrollmentViewModel.EnrollmentNavigations.TermsNavigations(R.id.action_termsOfUseFragment_to_sendingEnrollmentFragment))
     }
 }
+
+

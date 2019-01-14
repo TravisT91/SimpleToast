@@ -133,7 +133,7 @@ class AchBankAccountVerifyFragment: BaseEngagePageFragment() {
 
     override fun onOptionsItemSelected(item: MenuItem?): Boolean {
         when(item?.itemId){
-            R.id.submit -> run {
+            R.id.submit -> {
                 verifyAchBankAccountViewModel.onVerifyAccount()
             }
         }

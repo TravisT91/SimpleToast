@@ -195,7 +195,13 @@ class CardPinFragment : BaseEngagePageFragment() {
         // must do Handler().post() because when this fragment is displayed from DashboardFragment,
         // the keyboard doesn't get displayed
         Handler().post {
-            binding.pinInputField.requestFocus()
+            if (binding.pinInputField.visibility == View.VISIBLE) {
+                binding.pinInputField.clearFocus()
+                binding.pinInputField.requestFocus()
+            } else {
+                binding.confirmPinInputField.clearFocus()
+                binding.confirmPinInputField.requestFocus()
+            }
         }
     }
 

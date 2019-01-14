@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+        <variable
+            name="Palette"
+            type="com.engageft.fis.pscu.feature.branding.Palette"/>
+        <variable
+            name="viewModel"
+            type="com.engageft.fis.pscu.feature.CardLockUnlockViewModel"/>
+    </data>
+
+    <ScrollView
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:fillViewport="true">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:paddingEnd="16dp"
+            android:paddingStart="16dp"
+            android:gravity="center">
+
+            <TextView
+                android:id="@+id/headerTextView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                parisStyle="@{Palette.title1Quiet}"
+                android:textColor="@color/structure6"
+                android:lineSpacingExtra="6sp"
+                tools:textSize="32sp"
+                tools:fontFamily="@font/font_light"
+                android:layout_marginBottom="16dp"
+                tools:text="@string/card_lock_unlock_header"/>
+
+            <TextView
+                android:id="@+id/subHeaderTextView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/card_lock_unlock_sub_header"
+                android:gravity="center"
+                android:lineSpacingExtra="5sp"
+                parisStyle="@{Palette.body}"
+                android:textColor="@color/structure5"
+                tools:textSize="16sp"
+                tools:fontFamily="@font/font_regular" />
+
+            <TextView
+                android:id="@+id/statusTextView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:layout_marginTop="48dp"
+                android:layout_marginBottom="24dp"
+                android:layout_marginStart="16dp"
+                android:layout_marginEnd="16dp"
+                tools:text="Your card is currently UNLOCKED"/>
+
+            <com.engageft.apptoolbox.view.PillButton
+                android:id="@+id/lockUnlockButton"
+                style="@style/ButtonPillPrimaryFilledDefault"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                PillButton.setThemeFilled="@{true}"
+                tools:text="@string/card_lock_button_text"/>
+
+        </LinearLayout>
+
+    </ScrollView>
+
+</layout>
