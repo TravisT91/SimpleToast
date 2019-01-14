@@ -68,6 +68,7 @@
                 <include layout="@layout/divider"/>
 
                 <com.engageft.apptoolbox.view.SSNInputWithLabel
+                    style="@style/PasswordInputWithLabelStyle"
                     android:id="@+id/SSNInputWithLabel"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -82,7 +83,6 @@
             <com.engageft.apptoolbox.view.PillButton
                 style="@style/ButtonPillPrimaryFilledDefault"
                 android:id="@+id/nextButton"
-                PillButton.setThemeFilled="@{true}"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="16dp"
