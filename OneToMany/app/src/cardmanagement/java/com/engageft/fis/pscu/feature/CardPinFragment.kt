@@ -18,6 +18,7 @@ import androidx.lifecycle.ViewModelProviders
 import androidx.navigation.findNavController
 import com.engageft.apptoolbox.BaseViewModel
 import com.engageft.apptoolbox.view.InformationDialogFragment
+import com.engageft.fis.pscu.EnrollmentActivity
 import com.engageft.fis.pscu.R
 import com.engageft.fis.pscu.databinding.FragmentCardPinBinding
 import com.engageft.fis.pscu.feature.branding.BrandingInfoRepo
@@ -36,24 +37,40 @@ import com.engageft.fis.pscu.feature.utils.cardStatusStringRes
 class CardPinFragment : BaseEngagePageFragment() {
 
     private lateinit var binding: FragmentCardPinBinding
-    private lateinit var cardPinViewModel: CardPinViewModel
+    private lateinit var cardPinViewModel: CardPinViewModelDelegate
     private val listOfImageViews = ArrayList<ImageView>()
+    private lateinit var unselectedDot: Drawable
+    private lateinit var selectedDot: Drawable
 
     override fun createViewModel(): BaseViewModel? {
-        cardPinViewModel = ViewModelProviders.of(this).get(CardPinViewModel::class.java)
-        return cardPinViewModel
+        // This Fragment's usage is supported in two places:
+        // 1. The Enrollment flow as a part of the EnrollmentViewModel
+        // 2. The CardManagement flow as a part of the CardPinViewModel.
+        val viewModel = if (activity is EnrollmentActivity) {
+            val vm = ViewModelProviders.of(activity!!).get(EnrollmentViewModel::class.java)
+            cardPinViewModel = vm.cardPinDelegate.cardPinViewModelDelegate
+            vm
+        } else {
+            val vm = ViewModelProviders.of(this).get(CardPinViewModel::class.java)
+            cardPinViewModel = vm.cardPinViewModelDelegate
+            vm
+        }
+        return viewModel
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         binding = FragmentCardPinBinding.inflate(inflater, container, false)
         activity!!.window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_NOTHING)
 
+        unselectedDot = ContextCompat.getDrawable(context!!, R.drawable.card_pin_unselected_dot_shape)!!
+        selectedDot = ContextCompat.getDrawable(context!!, R.drawable.card_pin_selected_dot_shape)!!
+        DrawableCompat.setTint(selectedDot, Palette.primaryColor)
         binding.apply {
             viewModel = cardPinViewModel
             //TODO(ttkachuk) right now card types are no specified by the backend, but we will select the BrandingCard that matches debitCardInfo.cardType when the backend is updated
             //tracked in FOTM-498
             BrandingInfoRepo.cards?.get(0)?.let {
-                binding.cardView.applyBranding(it,cardPinViewModel.compositeDisposable) { e ->
+                binding.cardView.applyBranding(it, (super@CardPinFragment.fragmentDelegate.viewModel!! as BaseEngageViewModel).compositeDisposable) { e ->
                     Toast.makeText(context, "Failed to retrieve card image", Toast.LENGTH_SHORT).show()
                     Log.e("BRANDING_INFO_FAIL", e.message)
                     //TODO(ttkachuk) right now it is not clear on how we should handle failure to retrieve the card image
@@ -61,6 +78,7 @@ class CardPinFragment : BaseEngagePageFragment() {
                 }
             }
 
+            listOfImageViews.clear()
             listOfImageViews.apply {
                 add(iconImageView1)
                 add(iconImageView2)
@@ -83,7 +101,7 @@ class CardPinFragment : BaseEngagePageFragment() {
         cardPinViewModel.apply {
             cardPinStateObservable.observe(this@CardPinFragment, Observer {
                 when (it) {
-                    CardPinViewModel.CardPinState.MISMATCH_PIN -> {
+                    CardPinViewModelDelegate.CardPinState.MISMATCH_PIN -> {
                         // do Hanlder().post so that the last PIN digit drawable gets drawn then this code is run, otherwise, it happens so fast.
                         Handler().post {
                             binding.pinInputField.visibility = View.VISIBLE
@@ -100,7 +118,7 @@ class CardPinFragment : BaseEngagePageFragment() {
                                     drawable)
                         }
                     }
-                    CardPinViewModel.CardPinState.CONFIRM_PIN -> {
+                    CardPinViewModelDelegate.CardPinState.CONFIRM_PIN -> {
                         // do Hanlder().post so that the last PIN digit drawable gets drawn then this code is run, otherwise, it happens really fast.
                         Handler().post {
                             binding.pinInputField.visibility = View.GONE
@@ -112,14 +130,14 @@ class CardPinFragment : BaseEngagePageFragment() {
                                     ContextCompat.getDrawable(context!!, R.drawable.card_pin_unselected_dot_shape)!!)
                         }
                     }
-                    CardPinViewModel.CardPinState.INVALID_PIN -> {
+                    CardPinViewModelDelegate.CardPinState.INVALID_PIN -> {
                         val drawable = ContextCompat.getDrawable(context!!, R.drawable.card_pin_error_dot_shape)!!
                         drawable.setTint(Palette.errorColor)
                         updateView(getString(R.string.card_pin_choose_description),
                                 Palette.errorColor,
                                 drawable)
                     }
-                    CardPinViewModel.CardPinState.INITIAL_ENTER_PIN -> {
+                    CardPinViewModelDelegate.CardPinState.INITIAL_ENTER_PIN -> {
                         updateView(getString(R.string.card_pin_choose_description),
                                 ContextCompat.getColor(context!!, R.color.textPrimary),
                                 ContextCompat.getDrawable(context!!, R.drawable.card_pin_unselected_dot_shape)!!)
@@ -129,16 +147,19 @@ class CardPinFragment : BaseEngagePageFragment() {
 
             cardPinDigitsState.observe(this@CardPinFragment, Observer {
                 when (it.first) {
-                    CardPinViewModel.PinDigits.DIGIT_DELETED -> {
+                    CardPinViewModelDelegate.PinDigits.DIGIT_DELETED -> {
                         pinDigitDeleted(it.second)
                     }
-                    CardPinViewModel.PinDigits.DIGIT_ADDED -> {
+                    CardPinViewModelDelegate.PinDigits.DIGIT_ADDED -> {
                         pinDigitAdded(it.second)
+                    }
+                    CardPinViewModelDelegate.PinDigits.DIGITS_CLEARED -> {
+                        pinDigitsCleared()
                     }
                 }
             })
 
-            dialogInfoObservable.observe(this@CardPinFragment, Observer {
+            (fragmentDelegate.viewModel!! as BaseEngageViewModel).dialogInfoObservable.observe(this@CardPinFragment, Observer {
                 when (it.dialogType) {
                     DialogInfo.DialogType.GENERIC_SUCCESS -> {
                         val listener = object: InformationDialogFragment.InformationDialogFragmentListener {
@@ -164,8 +185,6 @@ class CardPinFragment : BaseEngagePageFragment() {
                 productCardModel.cardStatusText = getString(productCardModel.cardStatus.cardStatusStringRes())
                 binding.cardView.updateWithProductCardModel(productCardModel)
             })
-
-            productCardViewModelDelegate.updateCardView()
         }
 
         return binding.root
@@ -176,8 +195,19 @@ class CardPinFragment : BaseEngagePageFragment() {
         // must do Handler().post() because when this fragment is displayed from DashboardFragment,
         // the keyboard doesn't get displayed
         Handler().post {
-            binding.pinInputField.requestFocus()
+            if (binding.pinInputField.visibility == View.VISIBLE) {
+                binding.pinInputField.clearFocus()
+                binding.pinInputField.requestFocus()
+            } else {
+                binding.confirmPinInputField.clearFocus()
+                binding.confirmPinInputField.requestFocus()
+            }
         }
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        cardPinViewModel.cardPinDigitsState.removeObservers(this)
     }
 
     private fun updateView(text: String, @ColorInt textColor: Int, drawable: Drawable) {
@@ -192,12 +222,19 @@ class CardPinFragment : BaseEngagePageFragment() {
     }
 
     private fun pinDigitAdded(index: Int) {
-        val drawable = ContextCompat.getDrawable(context!!, R.drawable.card_pin_selected_dot_shape)!!
-        DrawableCompat.setTint(drawable, Palette.primaryColor)
-        listOfImageViews[index].background = drawable
+        for (i in 0..index) {
+            listOfImageViews[i].background = selectedDot
+        }
     }
 
     private fun pinDigitDeleted(index: Int) {
-        listOfImageViews[index].background = ContextCompat.getDrawable(context!!, R.drawable.card_pin_unselected_dot_shape)
+        listOfImageViews[index].background = unselectedDot
+    }
+
+    private fun pinDigitsCleared() {
+        listOfImageViews[0].background = unselectedDot
+        listOfImageViews[1].background = unselectedDot
+        listOfImageViews[2].background = unselectedDot
+        listOfImageViews[3].background = unselectedDot
     }
 }

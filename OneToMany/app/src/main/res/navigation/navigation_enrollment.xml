@@ -47,7 +47,7 @@
     </fragment>
     <fragment
         android:id="@+id/enrollmentCardPinFragment"
-        android:name="com.engageft.fis.pscu.feature.EnrollmentCardPinFragment"
+        android:name="com.engageft.fis.pscu.feature.CardPinFragment"
         android:label="@string/fragment_title_enrollment_card_pin" >
         <action
             android:id="@+id/action_enrollmentCardPinFragment_to_createAccountFragment"

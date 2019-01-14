@@ -63,6 +63,8 @@ class GetStartedDelegate(private val viewModel: EnrollmentViewModel, private val
     val dateOfBirth: ObservableField<String> = ObservableField("")
     val dialogObservable = MutableLiveData<GetStartedDialog>()
 
+    lateinit var cardNumber: String
+
     enum class NextButtonState {
         GONE,
         VISIBLE_ENABLED
@@ -153,21 +155,21 @@ class GetStartedDelegate(private val viewModel: EnrollmentViewModel, private val
                                 .subscribe({ response ->
                                     viewModel.progressOverlayShownObservable.value = false
                                     if (response.isSuccess && response is ActivationCardInfo) {
-                                        val cardInfo = response
-                                        viewModel.activationCardInfo = cardInfo
+                                        viewModel.activationCardInfo = response
+                                        cardNumber = cardInput.get()!!
 
-                                        BrandingManager.getBrandingWithRefCode(cardInfo.refCode)
+                                        BrandingManager.getBrandingWithRefCode(response.refCode)
                                                 .subscribeWithDefaultProgressAndErrorHandling<BrandingInfoResponse>(
                                                         viewModel, {
                                                     // If the card is already activated, the backend will
                                                     // send the message and it'd handled below in the
                                                     // "failedResponse" block.
 
-                                                    if (cardInfo.isParentActivationRequired) {
+                                                    if (response.isParentActivationRequired) {
                                                         dialogObservable.value = GetStartedDialog.UNDER_18
                                                         dialogObservable.postValue(GetStartedDialog.NONE)
                                                     } else {
-                                                        val gateKeeper = GetStartedEnrollmentGateKeeper(cardInfo, gateKeeperListener)
+                                                        val gateKeeper = GetStartedEnrollmentGateKeeper(response, gateKeeperListener)
                                                         gateKeeper.run()
                                                     }
                                                 }, { failedResponse ->
