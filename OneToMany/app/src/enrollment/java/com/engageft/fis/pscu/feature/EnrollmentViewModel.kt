@@ -29,7 +29,7 @@ class EnrollmentViewModel : BaseEngageViewModel() {
 
     // These providers are here to later check isInitialized to determine if the delegates are null or not.
     val cardPinDelegateProvider = lazy {EnrollmentCardPinDelegate(this, navController, cardPinNavigations)}
-    val createAccountDelegateProvider = lazy {CreateAccountDelegate()}
+    val createAccountDelegateProvider = lazy {CreateAccountDelegate(this, navController, createAccountNavigations)}
     val verifyIdentityDelegateProvider = lazy {VerifyIdentityDelegate()}
     val termsOfUseDelegateProvider = lazy {TermsOfUseDelegate()}
 
@@ -74,24 +74,6 @@ class EnrollmentViewModel : BaseEngageViewModel() {
         }
 
         // TODO(jhutchins): Implement this.
-    }
-
-    inner class CreateAccountDelegate {
-        init {
-
-        }
-
-        fun onButton1Clicked() {
-            navController.navigate(createAccountNavigations.createAccountToVerifyIdentity)
-        }
-
-        fun onButton2Clicked() {
-            navController.navigate(createAccountNavigations.createAccountToTerms)
-        }
-
-        fun onButton3Clicked() {
-            navController.navigate(createAccountNavigations.createAccountToSending)
-        }
     }
 
     inner class VerifyIdentityDelegate {
