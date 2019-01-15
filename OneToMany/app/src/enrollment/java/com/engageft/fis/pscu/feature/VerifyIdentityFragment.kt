@@ -52,12 +52,13 @@ class VerifyIdentityFragment : BaseEngagePageFragment() {
                     Palette.primaryColor,
                     getString(R.string.ENROLLMENT_VERIFY_IDENTITY_SUBHEADER_SUBSTRING))
 
-           SSNInputWithLabel.addEditTextFocusChangeListener(View.OnFocusChangeListener { v, hasFocus ->
+           SSNInputWithLabel.addEditTextFocusChangeListener(View.OnFocusChangeListener { _, hasFocus ->
                 if (!hasFocus) {
                     verifyIdentityDelegate.validateSSNConditionally(false)
                 }
            })
 
+           SSNInputWithLabel.setImeOptions(EditorInfo.IME_ACTION_DONE)
            SSNInputWithLabel.onImeAction(EditorInfo.IME_ACTION_DONE) {
                 verifyIdentityDelegate.onNextClicked()
            }
