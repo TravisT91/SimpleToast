@@ -125,7 +125,7 @@ open class TransactionsPagedAdapter(private val listener: TransactionListener?, 
     companion object {
         const val VIEW_TYPE_TRANSACTIONS_DATA = 0
         const val VIEW_TYPE_NETWORK_STATE = 1
-        
+
         val TRANSACTION_TYPE_LOAD = TransactionType.LOAD.name
 
         val DIFF_CALLBACK = object : DiffUtil.ItemCallback<Transaction>() {

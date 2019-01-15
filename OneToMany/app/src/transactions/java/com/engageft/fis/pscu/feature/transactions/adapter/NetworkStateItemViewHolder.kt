@@ -24,7 +24,7 @@ import android.widget.ProgressBar
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.engageft.engagekit.repository.util.NetworkState
-import com.engageft.engagekit.repository.util.Status
+import com.engageft.engagekit.repository.util.NetworkTaskStatus
 import com.engageft.fis.pscu.R
 
 /**
@@ -45,8 +45,8 @@ class NetworkStateItemViewHolder(view: View,
         }
     }
     fun bindTo(networkState: NetworkState?) {
-        progressBar.visibility = toVisibility(networkState?.status == Status.RUNNING)
-        retry.visibility = toVisibility(networkState?.status == Status.FAILED)
+        progressBar.visibility = toVisibility(networkState?.status == NetworkTaskStatus.RUNNING)
+        retry.visibility = toVisibility(networkState?.status == NetworkTaskStatus.FAILED)
         errorMsg.visibility = toVisibility(networkState?.msg != null)
         errorMsg.text = networkState?.msg
     }
