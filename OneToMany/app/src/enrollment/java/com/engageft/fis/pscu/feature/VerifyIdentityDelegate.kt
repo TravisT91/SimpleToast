@@ -55,7 +55,9 @@ class VerifyIdentityDelegate(private val viewModel: EnrollmentViewModel,
 
         ssn.addOnPropertyChangedCallback(object: Observable.OnPropertyChangedCallback() {
             override fun onPropertyChanged(sender: Observable?, propertyId: Int) {
+                ssNumber = ssn.get()!!
                 validateSSNConditionally(true)
+                updateButtonState()
             }
         })
     }
@@ -64,14 +66,17 @@ class VerifyIdentityDelegate(private val viewModel: EnrollmentViewModel,
         val currentState = ssnValidationErrorObservable.value
         if ((validateConditionally && currentState != ssnValidationError.NONE && currentState != ssnValidationError.EMPTY)
                 || !validateConditionally) {
-            when {
-                ssn.get()!!.isEmpty() -> ssnValidationErrorObservable.value = ssnValidationError.EMPTY
-                isSsnValid() -> ssnValidationErrorObservable.value = ssnValidationError.NONE
-                else -> ssnValidationErrorObservable.value = ssnValidationError.INVALID
+            val newState: ssnValidationError = when {
+                ssn.get()!!.isEmpty() -> ssnValidationError.EMPTY
+                isSsnValid() -> ssnValidationError.NONE
+                else -> ssnValidationError.INVALID
+            }
+
+            if (currentState != newState) {
+                ssnValidationErrorObservable.value = newState
+                updateButtonState()
             }
         }
-
-        updateButtonState()
     }
 
     fun onNextClicked() {
@@ -81,6 +86,11 @@ class VerifyIdentityDelegate(private val viewModel: EnrollmentViewModel,
             val gateKeeper = VerifyIdentityEnrollmentGateKeeper(viewModel.activationCardInfo, gateKeeperListener)
             gateKeeper.run()
         }
+    }
+
+    fun reset() {
+        ssn.set("")
+        nextButtonObservable.value = NextButtonState.GONE
     }
 
     private fun updateButtonState() {

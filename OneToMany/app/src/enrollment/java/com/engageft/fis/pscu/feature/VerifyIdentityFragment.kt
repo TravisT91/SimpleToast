@@ -7,6 +7,7 @@ import android.view.MenuInflater
 import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
+import android.view.inputmethod.EditorInfo
 import androidx.core.content.res.ResourcesCompat
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
@@ -38,21 +39,28 @@ class VerifyIdentityFragment : BaseEngagePageFragment() {
         setHasOptionsMenu(true)
     }
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        val binding = FragmentVerifyIdentityBinding.inflate(inflater, container, false).apply {
-            viewModelDelegate = verifyIdentityDelegate
-            palette = Palette
+    private lateinit var binding: FragmentVerifyIdentityBinding
 
-            subHeaderTextView.text = getString(R.string.ENROLLMENT_VERIFY_IDENTITY_SUBHEADER).applyTypefaceAndColorToSubString(
+    //TODO(aHashimi): app crashes if password reveal is true and fragment is recreated: https://engageft.atlassian.net/browse/FOTM-730
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+       binding = FragmentVerifyIdentityBinding.inflate(inflater, container, false).apply {
+           viewModelDelegate = verifyIdentityDelegate
+           palette = Palette
+
+           subHeaderTextView.text = getString(R.string.ENROLLMENT_VERIFY_IDENTITY_SUBHEADER).applyTypefaceAndColorToSubString(
                     ResourcesCompat.getFont(context!!, R.font.font_bold)!!,
                     Palette.primaryColor,
                     getString(R.string.ENROLLMENT_VERIFY_IDENTITY_SUBHEADER_SUBSTRING))
 
-            SSNInputWithLabel.addEditTextFocusChangeListener(View.OnFocusChangeListener { v, hasFocus ->
+           SSNInputWithLabel.addEditTextFocusChangeListener(View.OnFocusChangeListener { v, hasFocus ->
                 if (!hasFocus) {
                     verifyIdentityDelegate.validateSSNConditionally(false)
                 }
-            })
+           })
+
+           SSNInputWithLabel.onImeAction(EditorInfo.IME_ACTION_DONE) {
+                verifyIdentityDelegate.onNextClicked()
+           }
 
             verifyIdentityDelegate.apply {
 
@@ -72,9 +80,7 @@ class VerifyIdentityFragment : BaseEngagePageFragment() {
                 ssnValidationErrorObservable.observe(this@VerifyIdentityFragment, Observer {
                     when (it) {
                         VerifyIdentityDelegate.ssnValidationError.INVALID -> {
-                            if (SSNInputWithLabel.isEnabled) {
-                                SSNInputWithLabel.setErrorTexts(listOf(getString(R.string.ENROLLMENT_VERIFY_IDENTITY_ERROR_MESSAGE)))
-                            }
+                            SSNInputWithLabel.setErrorTexts(listOf(getString(R.string.ENROLLMENT_VERIFY_IDENTITY_ERROR_MESSAGE)))
                         }
                         else -> {
                             SSNInputWithLabel.setErrorTexts(null)
@@ -82,9 +88,14 @@ class VerifyIdentityFragment : BaseEngagePageFragment() {
                     }
                 })
             }
-        }
+       }
 
         return binding.root
+    }
+
+    override fun onResume() {
+        super.onResume()
+        verifyIdentityDelegate.reset()
     }
 
     override fun onCreateOptionsMenu(menu: Menu?, inflater: MenuInflater?) {
