@@ -122,24 +122,10 @@ open class TransactionsPagedAdapter(private val listener: TransactionListener?, 
         }
     }
 
-    fun clear() {
-        differ.submitList(null)
-    }
-
-//    private inner class PlaceholderViewHolder(itemView: View) : RecyclerView.TransactionViewHolder(itemView)
-//
-//    private inner class NoViewHolder(itemView: View) : RecyclerView.TransactionViewHolder(itemView) {
-//        val noTransactionsTextView: TextView = itemView.findViewById(R.id.tv_label)
-//    }
-
     companion object {
         const val VIEW_TYPE_TRANSACTIONS_DATA = 0
         const val VIEW_TYPE_NETWORK_STATE = 1
-
-        const val TRANSACTIONS_LIST_MAX_SIZE = 20
-        // based on the layout and devices we could set this to 4 but just to make sure
-        const val TRANSACTIONS_PLACEHOLDER_ITEM_COUNT = 6
-        const val NO_TRANSACTIONS_ITEM_COUNT = 1
+        
         val TRANSACTION_TYPE_LOAD = TransactionType.LOAD.name
 
         val DIFF_CALLBACK = object : DiffUtil.ItemCallback<Transaction>() {
