@@ -35,9 +35,8 @@ class DirectDepositViewModel : BaseEngageViewModel() {
 
     fun getDirectDepositInfo() {
         val engageService = EngageService.getInstance()
-        val token = engageService.authManager.authToken
         val cardId = engageService.storageManager.currentCard.debitCardId
-        val requestFieldMap = CardRequest(token, cardId).fieldMap
+        val requestFieldMap = CardRequest(cardId).fieldMap
         engageApi().postDebitDirectDepositInfo(requestFieldMap)
                 .subscribeWithDefaultProgressAndErrorHandling<DirectDepositInfoResponse>(
                         this, { applyDirectDepositInfo(it) })

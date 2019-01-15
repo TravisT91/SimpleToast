@@ -16,9 +16,8 @@ class ReportLostStolenCardViewModel : BaseEngageViewModel() {
 
     fun onReportLostStolenClicked(){
         progressOverlayShownObservable.value = true
-        val token = EngageService.getInstance().storageManager.loginResponse.token
         val cardId = EngageService.getInstance().storageManager.currentCard.debitCardId
-        engageApi().postLostStolenCard(CardRequest(token,cardId).fieldMap)
+        engageApi().postLostStolenCard(CardRequest(cardId).fieldMap)
                 .subscribeWithDefaultProgressAndErrorHandling<BasicResponse>(
                         this, {
                     lostStolenReportedSuccess.value = true

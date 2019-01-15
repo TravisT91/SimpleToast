@@ -54,7 +54,7 @@ open class BaseEngageViewModel: BaseViewModel() {
                 dialogInfoObservable.postValue(DialogInfo(dialogType = DialogInfo.DialogType.CONNECTION_TIMEOUT))
             }
             is NotLoggedInException -> {
-                dialogInfoObservable.value = DialogInfo(dialogType = DialogInfo.DialogType.NOT_LOGGED_IN)
+                EngageService.getInstance().authManager.logout()
             }
             // Add more specific exceptions here, if needed
             else -> {

@@ -98,7 +98,7 @@ class AccountsAndTransfersListViewModel: BaseEngageViewModel() {
 
     private fun getScheduledLoads(currentCard: DebitCardInfo) {
         compositeDisposable.add(
-                EngageService.getInstance().getScheduledLoadsResponseObservable(EngageService.getInstance().authManager.authToken, currentCard, false)
+                EngageService.getInstance().getScheduledLoadsResponseObservable(currentCard, false)
                         .subscribeOn(Schedulers.io())
                         .observeOn(AndroidSchedulers.mainThread())
                         .subscribe({ response ->
@@ -116,7 +116,7 @@ class AccountsAndTransfersListViewModel: BaseEngageViewModel() {
     }
 
     private fun getHistoricalLoads(currentCard: DebitCardInfo) {
-        val cardRequest = CardRequest(EngageService.getInstance().authManager.authToken, currentCard.debitCardId)
+        val cardRequest = CardRequest(currentCard.debitCardId)
         compositeDisposable.add(
                 EngageService.getInstance().engageApiInterface.postListHistoricalLoads(cardRequest.fieldMap)
                         .subscribeOn(Schedulers.io())
