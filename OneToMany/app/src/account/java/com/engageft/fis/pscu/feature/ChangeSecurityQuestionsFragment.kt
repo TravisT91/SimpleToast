@@ -202,7 +202,7 @@ class ChangeSecurityQuestionsFragment : BaseEngagePageFragment() {
 
     override fun onOptionsItemSelected(item: MenuItem?): Boolean {
         when(item?.itemId){
-            R.id.save -> run {
+            R.id.save -> {
                 changeSecurityQuestionsViewModel.onSaveClicked()
             }
         }

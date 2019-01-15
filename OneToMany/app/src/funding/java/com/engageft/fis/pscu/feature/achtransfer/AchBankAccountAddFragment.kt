@@ -147,7 +147,7 @@ class AchBankAccountAddFragment: BaseEngagePageFragment() {
 
     override fun onOptionsItemSelected(item: MenuItem?): Boolean {
         when(item?.itemId){
-            R.id.submit -> run {
+            R.id.submit -> {
                 achBankAccountViewModel.onAddAccount()
             }
         }

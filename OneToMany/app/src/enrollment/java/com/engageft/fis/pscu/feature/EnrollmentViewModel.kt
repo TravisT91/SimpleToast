@@ -28,8 +28,8 @@ class EnrollmentViewModel : BaseEngageViewModel() {
     }
 
     // These providers are here to later check isInitialized to determine if the delegates are null or not.
-    val cardPinDelegateProvider = lazy {EnrollmentCardPinDelegate()}
-    val createAccountDelegateProvider = lazy {CreateAccountDelegate()}
+    val cardPinDelegateProvider = lazy {EnrollmentCardPinDelegate(this, navController, cardPinNavigations)}
+    val createAccountDelegateProvider = lazy {CreateAccountDelegate(this, navController, createAccountNavigations)}
     val verifyIdentityDelegateProvider = lazy {VerifyIdentityDelegate()}
     val termsOfUseDelegateProvider = lazy {TermsOfUseDelegate()}
 
@@ -76,46 +76,6 @@ class EnrollmentViewModel : BaseEngageViewModel() {
         // TODO(jhutchins): Implement this.
     }
 
-    inner class EnrollmentCardPinDelegate {
-        init {
-
-        }
-
-        fun onButton1Clicked() {
-            navController.navigate(cardPinNavigations.cardPINToCreateAccount)
-        }
-
-        fun onButton2Clicked() {
-            navController.navigate(cardPinNavigations.cardPINToVerifyIdentity)
-        }
-
-        fun onButton3Clicked() {
-            navController.navigate(cardPinNavigations.cardPINToTerms)
-        }
-
-        fun onButton4Clicked() {
-            navController.navigate(cardPinNavigations.cardPINToSending)
-        }
-    }
-
-    inner class CreateAccountDelegate {
-        init {
-
-        }
-
-        fun onButton1Clicked() {
-            navController.navigate(createAccountNavigations.createAccountToVerifyIdentity)
-        }
-
-        fun onButton2Clicked() {
-            navController.navigate(createAccountNavigations.createAccountToTerms)
-        }
-
-        fun onButton3Clicked() {
-            navController.navigate(createAccountNavigations.createAccountToSending)
-        }
-    }
-
     inner class VerifyIdentityDelegate {
         init {
 
@@ -130,12 +90,9 @@ class EnrollmentViewModel : BaseEngageViewModel() {
         }
     }
 
+    //TODO(aHashimi): Not completed, this should be its own class
     inner class TermsOfUseDelegate {
-        init {
-
-        }
-
-        fun onButton1Clicked() {
+        fun onAcceptTermsClicked() {
             navController.navigate(termsNavigations.termsToSending)
         }
     }

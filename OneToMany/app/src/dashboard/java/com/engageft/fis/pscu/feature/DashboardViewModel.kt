@@ -4,12 +4,10 @@ import android.text.TextUtils
 import androidx.lifecycle.MutableLiveData
 import com.engageft.engagekit.EngageService
 import com.engageft.engagekit.event.TransactionsListEvent
-import com.engageft.engagekit.rest.request.CardLockUnlockRequest
 import com.engageft.engagekit.tools.TransactionsFilter
 import com.engageft.engagekit.utils.AlertUtils
 import com.engageft.engagekit.utils.BackendDateTimeUtils
 import com.engageft.engagekit.utils.LoginResponseUtils
-import com.engageft.engagekit.utils.engageApi
 import com.engageft.fis.pscu.feature.gatekeeping.DashboardGateKeeper
 import com.engageft.fis.pscu.feature.gatekeeping.GateKeeperListener
 import com.engageft.fis.pscu.feature.gatekeeping.GatedItem
@@ -353,16 +351,6 @@ class DashboardViewModel : BaseEngageViewModel(), GateKeeperListener {
 
         const val TRANSACTIONS_TAB_POSITION_ALL = 0
         const val TRANSACTIONS_TAB_POSITION_DEPOSITS = 1
-    }
-
-    fun updateCardLockStatus(lock: Boolean){
-        engageApi().postLockCard(
-                CardLockUnlockRequest(
-                        EngageService.getInstance().storageManager.currentCard.debitCardId,
-                        lock).fieldMap)
-                .subscribeWithDefaultProgressAndErrorHandling<BasicResponse>(this, {
-                    EngageService.getInstance().clearLoginAndDashboardResponses()
-                    productCardViewModelDelegate.updateCardView() })
     }
 }
 

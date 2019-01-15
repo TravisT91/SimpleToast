@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <data>
-        <variable name="viewModel" type="com.engageft.fis.pscu.feature.CardPinViewModel"/>
+        <variable name="viewModel" type="com.engageft.fis.pscu.feature.CardPinViewModelDelegate"/>
         <variable
             name="palette"
             type="com.engageft.fis.pscu.feature.branding.Palette"/>

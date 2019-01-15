@@ -148,7 +148,7 @@ class ChangePasswordFragment: BaseEngagePageFragment() {
 
     override fun onOptionsItemSelected(item: MenuItem?): Boolean {
         when(item?.itemId){
-            R.id.update -> run {
+            R.id.update -> {
                 changePasswordViewModel.onUpdateClicked()
             }
         }

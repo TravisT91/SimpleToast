@@ -93,7 +93,7 @@ class AccountSettingsFragment : BaseEngagePageFragment() {
 
     override fun onOptionsItemSelected(item: MenuItem?): Boolean {
         when(item?.itemId){
-            R.id.help -> run {
+            R.id.help -> {
                 //TODO(ttkachuk) Implement help menu item
             }
         }
