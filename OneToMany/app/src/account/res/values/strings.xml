@@ -99,4 +99,7 @@
     <string name="ALERT_SETTINGS_PUSH_DISABLED_SECTION_HEADER">Push disabled</string>
     <string name="ALERT_SETTINGS_PUSH_DISABLED_SECTION_INSTRUCTION">You currently have notifications disabled. Select to view Android Notification settings and unblock My Card Manager notifications.</string>
 
+
+    <string name="secondary_users_add_account">Add account</string>
+
 </resources>

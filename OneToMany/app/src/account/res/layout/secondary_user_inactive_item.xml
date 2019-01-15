@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:tools="http://schemas.android.com/tools"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+    <data>
+        <variable
+            name="palette"
+            type="com.engageft.fis.pscu.feature.branding.Palette"/>
+    </data>
+
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:orientation="vertical"
+        android:layout_height="wrap_content"
+        android:layout_width="match_parent">
+
+        <include
+            layout="@layout/view_horizontal_divider"
+            android:layout_width="match_parent"
+            android:layout_height="1dp" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/cellBackground"
+            android:gravity="center_vertical"
+            android:padding="16dp"
+            android:orientation="vertical">
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/userNameText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textColor="@color/black"
+                style="@style/Body"
+                tools:text="John Smith" />
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/statusText"
+                style="@style/Caption1"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textColor="@{palette.errorColor}"
+                tools:text="Inactive"/>
+
+        </LinearLayout>
+
+        <include
+            layout="@layout/view_horizontal_divider"
+            android:layout_width="match_parent"
+            android:layout_height="1dp" />
+
+    </LinearLayout>
+</layout>
