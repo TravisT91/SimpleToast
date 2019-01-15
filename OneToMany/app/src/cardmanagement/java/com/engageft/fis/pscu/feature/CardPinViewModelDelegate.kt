@@ -2,6 +2,7 @@ package com.engageft.fis.pscu.feature
 
 import androidx.lifecycle.MutableLiveData
 import com.engageft.apptoolbox.util.isDigitsOnly
+import com.ob.domain.lookup.branding.BrandingCard
 
 /**
  * CardPinViewModelDelegate
@@ -31,6 +32,7 @@ class CardPinViewModelDelegate(private val engageViewModel: BaseEngageViewModel,
 
     val cardPinStateObservable = MutableLiveData<CardPinState>()
     val cardPinDigitsState = MutableLiveData<Pair<PinDigits, Int>>()
+    val brandingCardObservable = MutableLiveData<BrandingCard>()
     val productCardViewModelDelegate = ProductCardViewDelegate(engageViewModel)
 
     var pinNumber: String = ""

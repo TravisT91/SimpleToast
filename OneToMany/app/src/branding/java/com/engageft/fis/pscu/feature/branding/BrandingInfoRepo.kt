@@ -1,7 +1,6 @@
 package com.engageft.fis.pscu.feature.branding
 
 import com.ob.domain.lookup.branding.BrandingCard
-import com.ob.domain.lookup.branding.BrandingColorType
 import com.ob.domain.lookup.branding.BrandingFinancialInfo
 import com.ob.domain.lookup.branding.BrandingInfo
 import com.ob.domain.lookup.branding.BrandingTerm
