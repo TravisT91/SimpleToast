@@ -23,6 +23,13 @@
     <string name="ENROLLMENT_TERMS_OF_USE_DECLINE">Decline</string>
     <string name="ENROLLMENT_TERMS_OF_USE_ALERT_TITLE">Decline terms</string>
     <string name="ENROLLMENT_TERMS_OF_USE_ALERT_MESSAGE">Are you sure you want to decline terms? Doing this will not allow you to continue.</string>
+    <string name="ENROLLMENT_VERIFY_IDENTITY_TITLE">Verify identity</string>
+    <string name="ENROLLMENT_VERIFY_IDENTITY_SSN_TEXT">Social security number</string>
+    <string name="ENROLLMENT_VERIFY_IDENTITY_HEADER">Please verify the cardholder\'s identity</string>
+    <string name="ENROLLMENT_VERIFY_IDENTITY_SUBHEADER">For security reasons, we\'ll need a few more things from you. This information is required by the USA PATRIOT Act.</string>
+    <string name="ENROLLMENT_VERIFY_IDENTITY_SUBHEADER_SUBSTRING">USA PATRIOT Act.</string>
+    <string name="ENROLLMENT_VERIFY_IDENTITY_NEXT_BUTTON">Next</string>
+    <string name="ENROLLMENT_VERIFY_IDENTITY_ERROR_MESSAGE">Please enter 9 digits.</string>
     <string name="ENROLLMENT_SUBMISSION_ERROR_MESSAGE">There was a problem with your request. Please contact customer support</string>
     <string name="ENROLLMENT_SUBMISSION_ERROR_CALL_SUPPORT">Call support</string>
     <string name="ENROLLMENT_SUBMISSION_ERROR_TRY_AGAIN">Try again</string>
