@@ -78,6 +78,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="center"
+                android:lineSpacingExtra="11sp"
                 android:text="@string/REPLACE_CARD_DO_NOT_KNOW"
                 android:layout_marginBottom="42dp"/>
 
@@ -88,7 +89,6 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:text="@string/REPLACE_CARD_ORDER_REPLACEMENT"
-                android:onClick="@{() -> ReplaceCardViewModel.onOrderReplacementClicked()}"
                 PillButton.setThemeFilled="@{true}" />
 
         </LinearLayout>

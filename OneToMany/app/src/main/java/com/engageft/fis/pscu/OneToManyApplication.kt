@@ -6,14 +6,14 @@ import com.crashlytics.android.Crashlytics
 import com.engageft.apptoolbox.LotusApplication
 import com.engageft.apptoolbox.R
 import com.engageft.engagekit.EngageService
-import com.engageft.fis.pscu.feature.branding.Palette
 import com.engageft.fis.pscu.config.EngageAppConfig
+import com.engageft.fis.pscu.feature.branding.Palette
 import io.fabric.sdk.android.Fabric
 
 /**
- * TODO(joeyhutchins): ClassName
+ * OneToManyApplication
  * <p>
- * TODO(joeyhutchins): Class description.
+ * Application for My Card Manager.
  * </p>
  * Created by joeyhutchins on 8/21/18.
  * Copyright (c) 2018 Engage FT. All rights reserved.
@@ -28,7 +28,10 @@ class OneToManyApplication : LotusApplication() {
         super.onCreate()
         sInstance = this
 
+        NotificationUtils.createNotificationChannels(this)
+
         HeapUtils.initHeap(this)
+        MoEngageUtils.initMoEngage()
         EngageService.initService(BuildConfig.VERSION_CODE.toString(), this, EngageAppConfig.engageKitConfig)
 
         initPalette()

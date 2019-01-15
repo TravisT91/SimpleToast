@@ -6,7 +6,7 @@
         <import type="android.view.View"/>
         <variable
             name="viewModel"
-            type="com.engageft.fis.pscu.feature.AchBankAccountDetailViewModel"/>
+            type="com.engageft.fis.pscu.feature.achtransfer.AchBankAccountDetailViewModel"/>
         <variable
             name="palette"
             type="com.engageft.fis.pscu.feature.branding.Palette"/>

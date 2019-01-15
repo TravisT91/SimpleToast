@@ -81,7 +81,11 @@ dependencies {
     implementation "androidx.lifecycle:lifecycle-extensions:$rootProject.archLifecycleVersion"
     kapt "androidx.lifecycle:lifecycle-compiler:$rootProject.archLifecycleVersion"
     implementation 'com.google.firebase:firebase-core:16.0.6'
+    implementation 'com.google.firebase:firebase-messaging:17.3.4'
+
     implementation "com.heapanalytics.android:heap-android-client:$rootProject.heapVersion"
+    implementation 'com.moengage:moe-android-sdk:9.2.03'
+
     implementation 'com.eightbitlab:blurview:1.5.0'
     // For styling views programmatically
     implementation 'com.airbnb.android:paris:1.1.0'

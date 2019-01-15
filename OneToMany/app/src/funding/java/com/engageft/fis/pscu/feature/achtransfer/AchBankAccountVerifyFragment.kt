@@ -1,4 +1,4 @@
-package com.engageft.fis.pscu.feature
+package com.engageft.fis.pscu.feature.achtransfer
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -16,8 +16,9 @@ import com.engageft.apptoolbox.util.applyTypefaceToSubstringsList
 import com.engageft.fis.pscu.R
 import com.engageft.fis.pscu.config.EngageAppConfig
 import com.engageft.fis.pscu.databinding.FragmentAchBankAccountVerifyBinding
-import com.engageft.fis.pscu.feature.AchBankAccountAddFragment.Companion.SUCCESS_SCREEN_TYPE_KEY
-import com.engageft.fis.pscu.feature.AchBankAccountAddFragment.Companion.VERIFIED_SUCCESS_TYPE
+import com.engageft.fis.pscu.feature.BaseEngagePageFragment
+import com.engageft.fis.pscu.feature.achtransfer.AchBankAccountAddFragment.Companion.SUCCESS_SCREEN_TYPE_KEY
+import com.engageft.fis.pscu.feature.achtransfer.AchBankAccountAddFragment.Companion.VERIFIED_SUCCESS_TYPE
 import com.engageft.fis.pscu.feature.branding.Palette
 /**
  * AchBankAccountVerifyFragment
@@ -33,6 +34,11 @@ class AchBankAccountVerifyFragment: BaseEngagePageFragment() {
     override fun createViewModel(): BaseViewModel? {
         verifyAchBankAccountViewModel = ViewModelProviders.of(this).get(AchBankAccountVerifyViewModel::class.java)
         return verifyAchBankAccountViewModel
+    }
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setHasOptionsMenu(true)
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -113,11 +119,6 @@ class AchBankAccountVerifyFragment: BaseEngagePageFragment() {
         return binding.root
     }
 
-    override fun onResume() {
-        super.onResume()
-        setHasOptionsMenu(true)
-    }
-
     override fun onCreateOptionsMenu(menu: Menu?, inflater: MenuInflater?) {
         inflater?.inflate(R.menu.menu_ach_bank_account, menu)
         super.onCreateOptionsMenu(menu, inflater)
@@ -132,7 +133,7 @@ class AchBankAccountVerifyFragment: BaseEngagePageFragment() {
 
     override fun onOptionsItemSelected(item: MenuItem?): Boolean {
         when(item?.itemId){
-            R.id.submit -> run {
+            R.id.submit -> {
                 verifyAchBankAccountViewModel.onVerifyAccount()
             }
         }
