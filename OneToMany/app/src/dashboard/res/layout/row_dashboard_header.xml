@@ -32,14 +32,6 @@
         app:cardValidMask="@string/PRODUCTCARDVIEW_CARD_VALID_MASK"
         android:elevation="8dp"/>
 
-    <!--<View-->
-        <!--android:id="@+id/view_shadow_under_button_top_half"-->
-        <!--android:layout_width="match_parent"-->
-        <!--android:layout_height="@dimen/dashboard_shadow_above_transparent_bar_height"-->
-        <!--android:background="@drawable/card_and_actions_bottom_shadow_gradient"-->
-        <!--app:layout_constraintBottom_toTopOf="@id/view_bar_under_button_bottom_half"-->
-        <!--/>-->
-
     <View
         android:id="@+id/view_bar_under_button_bottom_half"
         android:layout_width="match_parent"

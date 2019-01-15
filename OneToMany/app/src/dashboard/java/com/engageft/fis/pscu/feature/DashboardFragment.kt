@@ -119,7 +119,7 @@ class DashboardFragment : BaseEngagePageFragment(),
 
         binding.dashboardExpandableView.listener = this
 
-        transactionsAdapter = DashboardTransactionsAdapter(dashboardViewModel.compositeDisposable, this, this, dashboardViewModel::initTransactions)
+        transactionsAdapter = DashboardTransactionsAdapter(dashboardViewModel.compositeDisposable, this, this, dashboardViewModel::clearAndRefreshAllTransactions)
         binding.transactionsRecyclerView.apply {
             layoutManager = LinearLayoutManager(context)
             adapter = transactionsAdapter
@@ -153,11 +153,11 @@ class DashboardFragment : BaseEngagePageFragment(),
         }
 
         binding.swipeRefreshLayout.setOnRefreshListener {
-            dashboardViewModel.refreshBalancesAndNotifications()
+            dashboardViewModel.clearAndRefreshBalancesAndNotifications()
             if (binding.transactionsRecyclerView.itemAnimator == null) {
                 binding.transactionsRecyclerView.itemAnimator = DefaultItemAnimator()
             }
-            dashboardViewModel.initTransactions()
+            dashboardViewModel.clearAndRefreshAllTransactions()
             // viewModel will trigger showing regular activity indicator. Don't show swipe refresh indicator too.
             binding.swipeRefreshLayout.isRefreshing = false
         }
@@ -333,7 +333,7 @@ class DashboardFragment : BaseEngagePageFragment(),
         binding.dashboardExpandableView.showExpandCollapseButton(true)
     }
 
-    // If the dashboardExpandableView is expanded when the device back button is pressed, collapse it.
+    // If the dashboardExpandableView is expanded when the device back button is pressed, collapseImmediate it.
     fun handleBackPressed(): Boolean {
         return if (binding.dashboardExpandableView.showingActions) {
             binding.dashboardExpandableView.showActions(show = false)
@@ -406,7 +406,7 @@ class DashboardFragment : BaseEngagePageFragment(),
             }
         }
 
-        dashboardViewModel.initTransactions()
+        dashboardViewModel.clearAndRefreshAllTransactions()
 
         dashboardViewModel.notificationsCountObservable.observe(this, notificationsObserver)
 
@@ -432,7 +432,7 @@ class DashboardFragment : BaseEngagePageFragment(),
             }
         })
 
-        dashboardViewModel.initBalancesAndNotifications()
+        dashboardViewModel.refreshBalancesAndNotifications()
     }
 
     private fun expand(animate: Boolean) {
@@ -451,13 +451,9 @@ class DashboardFragment : BaseEngagePageFragment(),
         }
     }
 
-    private fun collapse(animate: Boolean) {
-        if (animate) {
+    private fun collapseImmediate() {
             binding.dashboardExpandableView.showActions(false)
-            // hide view after collapse handled in onCollapseEnd()
-        } else {
-            // TODO(kurt): there is no function to collapseImmediate()
-        }
+            // hide view after collapseImmediate handled in onCollapseEnd()
     }
 
     override fun onResume() {
@@ -470,8 +466,7 @@ class DashboardFragment : BaseEngagePageFragment(),
         dashboardViewModel.expandImmediate()
 
         binding.blurView.setOnClickListener {
-            //binding.dashboardExpandableView.showActions(false)
-            collapse(true)
+            collapseImmediate()
         }
     }
 
@@ -480,8 +475,7 @@ class DashboardFragment : BaseEngagePageFragment(),
         dashboardViewModel.expandStart()
 
         binding.blurView.setOnClickListener {
-            //binding.dashboardExpandableView.showActions(false)
-            collapse(true)
+            collapseImmediate()
         }
     }
 

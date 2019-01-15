@@ -12,7 +12,6 @@ import android.text.Spanned
 import android.text.TextUtils
 import android.text.style.ForegroundColorSpan
 import android.text.style.RelativeSizeSpan
-import androidx.annotation.NonNull
 import androidx.core.content.ContextCompat
 import androidx.core.content.res.ResourcesCompat
 import com.engageft.apptoolbox.util.CurrencyUtils
@@ -295,12 +294,12 @@ object StringUtils {
         return spannableString
     }
 
-    fun formatDateMonthDayForTransactionRow(@NonNull dateString: String): CharSequence? {
+    fun formatDateMonthDayForTransactionRow(dateString: String): CharSequence? {
         val transactionDate = BackendDateTimeUtils.parseDateTimeFromIso8601String(dateString)
         return if (transactionDate != null) formatDateMonthDayForTransactionRow(transactionDate) else null
     }
 
-    fun formatDateMonthDayForTransactionRow(@NonNull transactionDate: DateTime): CharSequence {
+    fun formatDateMonthDayForTransactionRow(transactionDate: DateTime): CharSequence {
         val spannableString = SpannableString(String.format("%s\n%s",
                 DisplayDateTimeUtils.getDayTwoDigits(transactionDate),
                 DisplayDateTimeUtils.getMonthAbbr(transactionDate).toUpperCase()))

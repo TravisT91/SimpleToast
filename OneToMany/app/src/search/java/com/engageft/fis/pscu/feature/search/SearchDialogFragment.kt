@@ -82,12 +82,7 @@ class SearchDialogFragment : BaseEngageDialogFragment(), TransactionListener {
         binding.searchEditText.setOnEditorActionListener { textView, actionId, event ->
             if (actionId == EditorInfo.IME_ACTION_DONE || (actionId == EditorInfo.IME_ACTION_UNSPECIFIED && event.action == KeyEvent.ACTION_DOWN)) {
                 textView?.apply {
-                    if (text.trim().length < TRANSACTION_SEARCH_MINIMUM_CHARS) {
-                        Toast.makeText(context, getString(R.string.TRANSACTIONS_SEARCH_MESSAGE_MINIMUM_CHARS), Toast.LENGTH_LONG).show()
-                    } else {
-                        binding.searchEditText.hideKeyboard()
-                        viewModel.searchTransactions(text.trim().toString())
-                    }
+                    viewModel.searchTransactions(text.trim().toString())
                 }
                 true
             } else false
@@ -98,8 +93,17 @@ class SearchDialogFragment : BaseEngageDialogFragment(), TransactionListener {
             binding.searchEditText.setText("")
         }
 
-        viewModel.searchTransactions.observe(this, Observer<List<Transaction>> {
-            transactionList -> if (transactionList.isEmpty()) searchAdapter.showNoResults(getString(R.string.EMPTY_SEARCH_MESSAGE)) else searchAdapter.updateTransactions(transactionList)
+        viewModel.searchTransactions.observe(this, Observer<List<Transaction>> { transactionList ->
+            if (transactionList.isEmpty()) searchAdapter.showNoResults(getString(R.string.EMPTY_SEARCH_MESSAGE)) else searchAdapter.updateTransactions(transactionList)
+        })
+
+        viewModel.searchErrorObservable.observe(this, Observer { searchStringStatusType ->
+            when (searchStringStatusType) {
+                SearchDialogFragmentViewModel.SearchStringStatus.SEARCH_STRING_NOT_MINIMUM_LENGTH ->
+                    Toast.makeText(context, getString(R.string.TRANSACTIONS_SEARCH_MESSAGE_MINIMUM_CHARS), Toast.LENGTH_LONG).show()
+                else ->
+                    binding.searchEditText.hideKeyboard()
+            }
         })
 
         return binding.root
@@ -107,9 +111,5 @@ class SearchDialogFragment : BaseEngageDialogFragment(), TransactionListener {
 
     override fun onTransactionSelected(transaction: Transaction) {
         Toast.makeText(activity, "Transaction selected: " + transaction.store, Toast.LENGTH_SHORT).show()
-    }
-
-    companion object {
-        private const val TRANSACTION_SEARCH_MINIMUM_CHARS = 2
     }
 }

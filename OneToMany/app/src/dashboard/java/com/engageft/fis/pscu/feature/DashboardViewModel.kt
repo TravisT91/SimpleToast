@@ -6,10 +6,8 @@ import com.engageft.engagekit.EngageService
 import com.engageft.engagekit.repository.transaction.TransactionRepository
 import com.engageft.engagekit.repository.transaction.vo.Transaction
 import com.engageft.engagekit.repository.util.Listing
-import com.engageft.engagekit.rest.request.CardLockUnlockRequest
 import com.engageft.engagekit.utils.AlertUtils
 import com.engageft.engagekit.utils.LoginResponseUtils
-import com.engageft.engagekit.utils.engageApi
 import com.engageft.fis.pscu.feature.gatekeeping.DashboardGateKeeper
 import com.engageft.fis.pscu.feature.gatekeeping.GateKeeperListener
 import com.engageft.fis.pscu.feature.gatekeeping.GatedItem
@@ -70,7 +68,13 @@ class DashboardViewModel : BaseEngageViewModel(), GateKeeperListener {
     }
 
     // Balances
-    fun initBalancesAndNotifications() {
+    fun clearAndRefreshBalancesAndNotifications() {
+        progressOverlayShownObservable.value = true
+        EngageService.getInstance().clearLoginAndDashboardResponses()
+        refreshBalancesAndNotifications()
+    }
+
+    fun refreshBalancesAndNotifications() {
         spendingBalanceStateObservable.value = DashboardBalanceState.LOADING
         // only change savings state if already set. Otherwise it is currently hidden in UI, so don't show loading indicator
         if (savingsBalanceStateObservable.value == DashboardBalanceState.AVAILABLE) {
@@ -127,7 +131,25 @@ class DashboardViewModel : BaseEngageViewModel(), GateKeeperListener {
     }
 
     // Transactions
-    fun initTransactions(transactionTypes: List<TransactionRepository.TransactionRepoType>) {
+    fun clearAndRefreshAllTransactions() {
+        val repoTypes = listOf(TransactionRepository.TransactionRepoType.ALL_ACTIVITY, TransactionRepository.TransactionRepoType.DEPOSITS)
+        clearTransactions(repoTypes) { refreshTransactions(repoTypes) }
+    }
+
+    private fun clearTransactions(repoTypes: List<TransactionRepository.TransactionRepoType>, callBack: (() -> Unit)? = null) {
+        compositeDisposable.add(
+                Observable.fromCallable { TransactionRepository.clearTransactions(repoTypes) }
+                        .subscribeOn(Schedulers.computation())
+                        .observeOn(Schedulers.computation())
+                        .subscribe {
+                            if (callBack != null) {
+                                callBack()
+                            }
+                        }
+        )
+    }
+
+    private fun refreshTransactions(transactionTypes: List<TransactionRepository.TransactionRepoType>) {
         compositeDisposable.add(
                 EngageService.getInstance().loginResponseAsObservable
                         .subscribeOn(Schedulers.io())
@@ -220,40 +242,6 @@ class DashboardViewModel : BaseEngageViewModel(), GateKeeperListener {
                 notificationsCountObservable.value = 0
             }
         }
-    }
-
-    fun refreshBalancesAndNotifications() {
-        progressOverlayShownObservable.value = true
-        EngageService.getInstance().clearLoginAndDashboardResponses()
-        initBalancesAndNotifications()
-    }
-
-    fun refreshTransactions(repoTypes: List<TransactionRepository.TransactionRepoType>) {
-        compositeDisposable.add(
-                Observable.fromCallable { TransactionRepository.clearTransactions(repoTypes) }
-                        .subscribeOn(Schedulers.computation())
-                        .observeOn(Schedulers.computation())
-                        .subscribe()
-        )
-    }
-
-    fun clearTransactions(repoTypes: List<TransactionRepository.TransactionRepoType>, callBack: (() -> Unit)? = null) {
-        compositeDisposable.add(
-                Observable.fromCallable { TransactionRepository.clearTransactions(repoTypes) }
-                        .subscribeOn(Schedulers.computation())
-                        .observeOn(Schedulers.computation())
-                        .subscribe {
-                            if (callBack != null) {
-                                callBack()
-                            }
-                        }
-
-        )
-    }
-
-    fun initTransactions() {
-        val repoTypes = listOf(TransactionRepository.TransactionRepoType.ALL_ACTIVITY, TransactionRepository.TransactionRepoType.DEPOSITS)
-        clearTransactions(repoTypes) { initTransactions(repoTypes) }
     }
 
     // These are called by DashboardFragment in response to user presses in DashboardExpandableView.

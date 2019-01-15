@@ -2,6 +2,7 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
+    <!-- Notifications/alerts will be added in the future -->
     <!--<item-->
         <!--android:id="@+id/action_notifications"-->
         <!--android:icon="@drawable/overview_alert"-->
