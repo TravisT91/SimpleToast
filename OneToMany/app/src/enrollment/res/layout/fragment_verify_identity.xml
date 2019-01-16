@@ -1,32 +1,99 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
     <data>
-        <variable name="viewModel" type="com.engageft.fis.pscu.feature.EnrollmentViewModel.VerifyIdentityDelegate"/>
+        <variable name="viewModelDelegate"
+            type="com.engageft.fis.pscu.feature.VerifyIdentityDelegate"/>
         <variable
             name="palette"
             type="com.engageft.fis.pscu.feature.branding.Palette"/>
     </data>
-    <androidx.constraintlayout.widget.ConstraintLayout
+
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
-        <LinearLayout
-            android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:fillViewport="true">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical">
-            <Button
-                android:id="@+id/button1"
+            android:background="@color/viewBackground">
+
+            <TextView
+                android:id="@+id/headerTextView"
+                style="@style/Title1Quiet"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginEnd="8dp"
+                android:lineSpacingExtra="8sp"
+                android:gravity="center_horizontal"
+                android:text="@string/ENROLLMENT_VERIFY_IDENTITY_HEADER"
+                android:textColor="@color/textPrimary"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                style="@style/Body"
+                android:id="@+id/subHeaderTextView"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginEnd="8dp"
+                android:lineSpacingExtra="11sp"
+                android:paddingStart="16dp"
+                android:paddingEnd="16dp"
+                android:paddingBottom="32dp"
+                android:paddingTop="16dp"
+                android:gravity="center"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/headerTextView"
+                tools:text="@string/ENROLLMENT_VERIFY_IDENTITY_SUBHEADER"/>
+
+            <LinearLayout
+                android:id="@+id/ssnInputLayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/subHeaderTextView"
+                android:background="@color/cellBackground"
+                android:orientation="vertical">
+
+                <include layout="@layout/divider"/>
+
+                <com.engageft.apptoolbox.view.SSNInputWithLabel
+                    style="@style/PasswordInputWithLabelStyle"
+                    android:id="@+id/SSNInputWithLabel"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="16dp"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginTop="16dp"
+                    app:labelText="@string/ENROLLMENT_VERIFY_IDENTITY_SSN_TEXT"
+                    app:inputText="@={viewModelDelegate.ssn}"/>
+
+            </LinearLayout>
+
+            <com.engageft.apptoolbox.view.PillButton
+                style="@style/ButtonPillPrimaryFilledDefault"
+                android:id="@+id/nextButton"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:onClick="@{() -> viewModel.onButton1Clicked()}"
-                android:text="terms of use"/>
-            <Button
-                android:id="@+id/button2"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:onClick="@{() -> viewModel.onButton2Clicked()}"
-                android:text="sending"/>
-        </LinearLayout>
-    </androidx.constraintlayout.widget.ConstraintLayout>
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="@dimen/pillButtonTopSpaceInFormsAndLists"
+                android:layout_marginBottom="16dp"
+                android:layout_marginEnd="16dp"
+                android:onClick="@{() -> viewModelDelegate.onNextClicked()}"
+                android:text="@string/ENROLLMENT_VERIFY_IDENTITY_NEXT_BUTTON"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/ssnInputLayout" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </ScrollView>
 </layout>

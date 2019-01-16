@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="authDialogForgotPasswordTextColor">@color/structure4</color>
+    <color name="authDialogForgotPasswordTextColor">@color/primary_link</color>
     <color name="authDialogTitleAndMessageTextColor">@color/structure6</color>
     <color name="authDialogLogoutTextColor">@color/black</color>
     <color name="textFieldLabelFocus">@color/primary</color>
