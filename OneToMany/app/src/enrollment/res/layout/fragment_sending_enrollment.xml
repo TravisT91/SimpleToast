@@ -3,7 +3,7 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <data>
-        <variable name="viewModel" type="com.engageft.fis.pscu.feature.EnrollmentViewModel"/>
+        <variable name="sendingEnrollmentDelegate" type="com.engageft.fis.pscu.feature.SendingEnrollmentDelegate"/>
         <variable
             name="palette"
             type="com.engageft.fis.pscu.feature.branding.Palette"/>
@@ -22,7 +22,6 @@
             android:layout_marginEnd="20dp"
             android:layout_marginStart="20dp"
             android:layout_marginTop="8dp"
-            app:progress="5"
             app:layout_constraintBottom_toTopOf="@+id/sendingTextView"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.5"

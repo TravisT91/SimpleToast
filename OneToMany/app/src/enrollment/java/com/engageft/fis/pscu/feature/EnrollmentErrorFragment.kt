@@ -9,8 +9,8 @@ import android.view.ViewGroup
 import androidx.lifecycle.ViewModelProviders
 import androidx.navigation.findNavController
 import com.engageft.apptoolbox.BaseViewModel
+import com.engageft.apptoolbox.NavigationOverrideClickListener
 import com.engageft.apptoolbox.ToolbarVisibilityState
-import com.engageft.fis.pscu.R
 import com.engageft.fis.pscu.config.EngageAppConfig
 import com.engageft.fis.pscu.databinding.FragmentEnrollmentErrorBinding
 import com.engageft.fis.pscu.feature.branding.Palette
@@ -27,6 +27,15 @@ class EnrollmentErrorFragment : BaseEngagePageFragment() {
     private lateinit var enrollmentViewModel: EnrollmentViewModel
     private lateinit var binding: FragmentEnrollmentErrorBinding
 
+    private val navigationOverrideClickListener = object : NavigationOverrideClickListener {
+        override fun onClick(): Boolean {
+            // at this point EnrollmentSuccessFragment is popped from the stack.
+            // so, go back to the last step the user completed
+            binding.root.findNavController().popBackStack()
+            return true
+        }
+    }
+
     override fun createViewModel(): BaseViewModel? {
         enrollmentViewModel = ViewModelProviders.of(activity!!).get(EnrollmentViewModel::class.java)
         return enrollmentViewModel
@@ -39,6 +48,7 @@ class EnrollmentErrorFragment : BaseEngagePageFragment() {
             palette = Palette
 
             toolbarController.setToolbarVisibility(ToolbarVisibilityState.INVISIBLE)
+            backButtonOverrideProvider.setBackButtonOverride(navigationOverrideClickListener)
 
             callSupportButton.setOnClickListener {
                 activity?.startActivity(Intent(Intent.ACTION_DIAL).apply {

@@ -105,4 +105,5 @@ class VerifyIdentityDelegate(private val viewModel: EnrollmentViewModel,
     private fun isSsnValid(): Boolean {
         return ssn.get()!!.isDigitsOnly() && ssn.get()!!.length == 9
     }
+
 }

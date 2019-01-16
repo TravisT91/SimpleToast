@@ -127,7 +127,7 @@
     <fragment
         android:id="@+id/sendingEnrollmentFragment"
         android:name="com.engageft.fis.pscu.feature.SendingEnrollmentFragment"
-        android:label="" >
+        android:label="">
         <action
             android:id="@+id/action_sendingEnrollmentFragment_to_enrollmentErrorFragment"
             app:destination="@id/enrollmentErrorFragment"
@@ -135,22 +135,26 @@
             app:exitAnim="@anim/nav_exit_anim"
             app:popEnterAnim="@anim/nav_pop_enter_anim"
             app:popExitAnim="@anim/nav_pop_exit_anim"
-            app:popUpToInclusive="true"
-            app:popUpTo="@id/sendingEnrollmentFragment"/>
+            app:popUpTo="@id/sendingEnrollmentFragment"
+            app:popUpToInclusive="true"/>
         <action
             android:id="@+id/action_sendingEnrollmentFragment_to_cardActiveFragment"
             app:destination="@id/cardActiveFragment"
             app:enterAnim="@anim/nav_enter_anim"
             app:exitAnim="@anim/nav_exit_anim"
             app:popEnterAnim="@anim/nav_pop_enter_anim"
-            app:popExitAnim="@anim/nav_pop_exit_anim" />
+            app:popExitAnim="@anim/nav_pop_exit_anim"
+            app:popUpTo="@id/getStartedFragment"
+            app:popUpToInclusive="true"/>
         <action
             android:id="@+id/action_sendingEnrollmentFragment_to_cardLinkedFragment"
             app:destination="@id/cardLinkedFragment"
             app:enterAnim="@anim/nav_enter_anim"
             app:exitAnim="@anim/nav_exit_anim"
             app:popEnterAnim="@anim/nav_pop_enter_anim"
-            app:popExitAnim="@anim/nav_pop_exit_anim" />
+            app:popExitAnim="@anim/nav_pop_exit_anim"
+            app:popUpTo="@id/getStartedFragment"
+            app:popUpToInclusive="true"/>
     </fragment>
     <fragment
         android:id="@+id/termsOfUseFragment"
