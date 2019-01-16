@@ -31,8 +31,7 @@ import com.engageft.fis.pscu.R
  * A View Holder that can display a loading or have click action.
  * It is used to show the network state of paging.
  */
-class NetworkStateItemViewHolder(view: View,
-                                 private val retryCallback: (() -> Unit)?)
+class NetworkStateItemViewHolder(view: View, retryCallback: (() -> Unit)?)
     : RecyclerView.ViewHolder(view) {
     private val progressBar = view.findViewById<ProgressBar>(R.id.progress_bar)
     private val retry = view.findViewById<Button>(R.id.retry_button)
@@ -46,9 +45,8 @@ class NetworkStateItemViewHolder(view: View,
     }
     fun bindTo(networkState: NetworkState?) {
         progressBar.visibility = toVisibility(networkState?.status == NetworkTaskStatus.RUNNING)
+        errorMsg.visibility = toVisibility(networkState?.status == NetworkTaskStatus.FAILED)
         retry.visibility = toVisibility(networkState?.status == NetworkTaskStatus.FAILED)
-        errorMsg.visibility = toVisibility(networkState?.msg != null)
-        errorMsg.text = networkState?.msg
     }
 
     companion object {

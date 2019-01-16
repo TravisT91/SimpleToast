@@ -16,5 +16,6 @@
     <string name="TRANSACTIONS_NONE">No transactions</string>
     <string name="TRANSACTIONS_PAY">Pay</string>
 
-    <string name="TRANSACTIONS_FETCH_RETRY">Retry</string>
+    <string name="TRANSACTIONS_LOAD_ERROR_MESSAGE">Couldn\'t load transactions</string>
+    <string name="TRANSACTIONS_LOAD_RETRY">Try again</string>
 </resources>

@@ -18,25 +18,26 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    xmlns:tools="http://schemas.android.com/tools"
     android:orientation="vertical"
     android:padding="8dp"
     android:background="@color/cellBackground">
     <TextView
         android:id="@+id/error_msg"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"/>
+        style="@style/TransactionLoadErrorMessage"
+        android:text="@string/TRANSACTIONS_LOAD_ERROR_MESSAGE"
+        android:visibility="gone"
+        tools:visibility="visible" />
     <ProgressBar
         android:id="@+id/progress_bar"
         style="?android:attr/progressBarStyle"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="center"/>
-    <com.engageft.apptoolbox.view.PillButton
+    <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/retry_button"
-        style="@style/ButtonPillPrimaryFilledSmall"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:text="@string/TRANSACTIONS_FETCH_RETRY"/>
+        style="@style/TransactionRetryButton"
+        android:text="@string/TRANSACTIONS_LOAD_RETRY"
+        android:visibility="gone"
+        tools:visibility="visible" />
 </LinearLayout>
