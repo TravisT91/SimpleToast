@@ -1,7 +1,14 @@
 package com.engageft.fis.pscu.feature
 
+import android.util.Log
+import androidx.lifecycle.MutableLiveData
 import androidx.navigation.NavController
+import com.engageft.engagekit.EngageService
+import com.engageft.engagekit.rest.request.AcceptTermsRequest
+import com.engageft.engagekit.rest.request.ActivationRequest
 import com.ob.ws.dom.ActivationCardInfo
+import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.schedulers.Schedulers
 
 /**
  * EnrollmentViewModel
@@ -81,6 +88,59 @@ class EnrollmentViewModel : BaseEngageViewModel() {
         fun onAcceptTermsClicked() {
             navController.navigate(termsNavigations.termsToSending)
         }
+    }
+
+    enum class ActivationStatus {
+        SUCCESS,
+        FAIL,
+    }
+    enum class CardActivationStatus {
+        PENDING,
+        LINKED
+    }
+    val successSubmissionObservable = MutableLiveData<ActivationStatus>()
+    val cardActivationStatusObservable = MutableLiveData<CardActivationStatus>()
+    fun submitAcceptTerms() {
+//        progressObservable.value = PROGRESS_2
+        val request = ActivationRequest(getStartedDelegate.cardNumber,
+                getStartedDelegate.birthDate,
+                cardPinDelegate.pinNumber.toString(),
+                "",
+                "",
+                "")
+        if (createAccountDelegate.userEmail.isNotEmpty()) {
+            request.setEmail(createAccountDelegate.userEmail)
+        }
+
+        if (verifyIdentityDelegate.ssNumber.isNotEmpty()) {
+            request.setSsn(verifyIdentityDelegate.ssNumber)
+        }
+
+        val startTime = System.currentTimeMillis()
+        compositeDisposable.add(
+                EngageService.getInstance().engageApiInterface.postActivation(request.fieldMap)
+                        .subscribeOn(Schedulers.io())
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .subscribe({ response ->
+                            if (!response.isSuccess) {
+                                val endTime = System.currentTimeMillis()
+                                Log.e("enrollmentVM", "timeDiff ${endTime - startTime}")
+                                successSubmissionObservable.value = ActivationStatus.SUCCESS
+                                Log.e("enrollment", "Error submitting accept terms after card creation: " + response.message)
+                                if (activationCardInfo.cardStatus == "ACTIVE") {
+                                    cardActivationStatusObservable.value = CardActivationStatus.PENDING
+                                } else {
+                                    cardActivationStatusObservable.value = CardActivationStatus.LINKED
+                                }
+                            } else {
+                                successSubmissionObservable.value = ActivationStatus.FAIL
+                            }
+                        }) { e ->
+                            Log.e("enrollment", "Error submitting accept terms after card creation: ", e)
+                            successSubmissionObservable.value = ActivationStatus.FAIL
+                            handleThrowable(e)
+                        }
+        )
     }
 
     sealed class EnrollmentNavigations {

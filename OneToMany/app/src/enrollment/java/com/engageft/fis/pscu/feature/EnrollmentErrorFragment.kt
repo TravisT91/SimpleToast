@@ -9,6 +9,7 @@ import android.view.ViewGroup
 import androidx.lifecycle.ViewModelProviders
 import androidx.navigation.findNavController
 import com.engageft.apptoolbox.BaseViewModel
+import com.engageft.apptoolbox.ToolbarVisibilityState
 import com.engageft.fis.pscu.R
 import com.engageft.fis.pscu.config.EngageAppConfig
 import com.engageft.fis.pscu.databinding.FragmentEnrollmentErrorBinding
@@ -37,6 +38,8 @@ class EnrollmentErrorFragment : BaseEngagePageFragment() {
             viewModel = enrollmentViewModel
             palette = Palette
 
+            toolbarController.setToolbarVisibility(ToolbarVisibilityState.INVISIBLE)
+
             callSupportButton.setOnClickListener {
                 activity?.startActivity(Intent(Intent.ACTION_DIAL).apply {
                     data = Uri.parse("tel:${EngageAppConfig.supportPhone}")
@@ -44,7 +47,9 @@ class EnrollmentErrorFragment : BaseEngagePageFragment() {
             }
 
             tryAgainButton.setOnClickListener {
-                binding.root.findNavController().popBackStack(R.id.sendingEnrollmentFragment, true)
+                // at this point EnrollmentSuccessFragment is popped from the stack.
+                // so, go back to the last step the user completed
+                binding.root.findNavController().popBackStack()
             }
         }
 

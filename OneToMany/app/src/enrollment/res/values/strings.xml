@@ -33,4 +33,6 @@
     <string name="ENROLLMENT_SUBMISSION_ERROR_MESSAGE">There was a problem with your request. Please contact customer support</string>
     <string name="ENROLLMENT_SUBMISSION_ERROR_CALL_SUPPORT">Call support</string>
     <string name="ENROLLMENT_SUBMISSION_ERROR_TRY_AGAIN">Try again</string>
+    <string name="ENROLLMENT_SUBMISSION_SENDING">Sending…</string>
+    <string name="ENROLLMENT_SUBMISSION_SENDING_DESCRIPTION">This should only take a few moments.</string>
 </resources>
