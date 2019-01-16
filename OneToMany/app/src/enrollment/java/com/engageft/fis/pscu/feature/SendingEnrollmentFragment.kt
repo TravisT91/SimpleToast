@@ -79,7 +79,6 @@ class SendingEnrollmentFragment : BaseEngagePageFragment() {
             })
 
             sendingDelegate.cardActivationStatusObservable.observe(this@SendingEnrollmentFragment, Observer {
-                //            var id = 0
                 val id = when (it) {
                     SendingEnrollmentDelegate.CardActivationStatus.ACTIVE -> R.id.action_sendingEnrollmentFragment_to_cardActiveFragment
                     SendingEnrollmentDelegate.CardActivationStatus.LINKED -> R.id.action_sendingEnrollmentFragment_to_cardLinkedFragment
