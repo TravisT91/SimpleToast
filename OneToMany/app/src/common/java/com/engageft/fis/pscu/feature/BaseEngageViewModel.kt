@@ -4,7 +4,6 @@ import androidx.lifecycle.MutableLiveData
 import com.crashlytics.android.Crashlytics
 import com.engageft.apptoolbox.BaseViewModel
 import com.engageft.apptoolbox.BuildConfig
-import com.engageft.engagekit.aac.SingleLiveEvent
 import com.engageft.engagekit.rest.exception.NoConnectivityException
 import com.ob.ws.dom.BasicResponse
 import com.ob.ws.dom.ValidationErrors
@@ -26,7 +25,7 @@ import java.net.UnknownHostException
 open class BaseEngageViewModel: BaseViewModel() {
     val compositeDisposable = CompositeDisposable()
 
-    val dialogInfoObservable: MutableLiveData<DialogInfo> = SingleLiveEvent()
+    val dialogInfoObservable: MutableLiveData<DialogInfo> = MutableLiveData()
 
     fun handleUnexpectedErrorResponse(response: BasicResponse) {
         // This is a catch-all utility function to handle all unexpected responses to an API call
