@@ -38,7 +38,7 @@ class SendingEnrollmentFragment : BaseEngagePageFragment() {
     }
 
     override fun createViewModel(): BaseViewModel? {
-        val enrollmentViewModel = ViewModelProviders.of(activity!!).get(EnrollmentViewModel::class.java)
+        val enrollmentViewModel = ViewModelProviders.of(this).get(EnrollmentViewModel::class.java)
         sendingDelegate = enrollmentViewModel.sendingDelegate
         return enrollmentViewModel
     }
@@ -64,7 +64,7 @@ class SendingEnrollmentFragment : BaseEngagePageFragment() {
             }
             Handler().postDelayed(runnable, 100)
 
-            sendingDelegate.successSubmissionObservable.observe(this@SendingEnrollmentFragment, Observer {
+            sendingDelegate.successSubmissionObservable.observe(viewLifecycleOwner, Observer {
                 when (it) {
                     SendingEnrollmentDelegate.ActivationStatus.SUCCESS -> {
                         //ensure progress is set to 100
@@ -78,7 +78,7 @@ class SendingEnrollmentFragment : BaseEngagePageFragment() {
                 }
             })
 
-            sendingDelegate.cardActivationStatusObservable.observe(this@SendingEnrollmentFragment, Observer {
+            sendingDelegate.cardActivationStatusObservable.observe(viewLifecycleOwner, Observer {
                 val id = when (it) {
                     SendingEnrollmentDelegate.CardActivationStatus.ACTIVE -> R.id.action_sendingEnrollmentFragment_to_cardActiveFragment
                     SendingEnrollmentDelegate.CardActivationStatus.LINKED -> R.id.action_sendingEnrollmentFragment_to_cardLinkedFragment
