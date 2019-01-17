@@ -64,7 +64,6 @@ class CardLockUnlockViewModel: BaseEngageViewModel() {
     private fun updateCardLockStatus(lock: Boolean){
         engageApi().postLockCard(
                 CardLockUnlockRequest(
-                        EngageService.getInstance().storageManager.loginResponse.token,
                         EngageService.getInstance().storageManager.currentCard.debitCardId,
                         lock).fieldMap)
                 .subscribeWithDefaultProgressAndErrorHandling<BasicResponse>(this, {

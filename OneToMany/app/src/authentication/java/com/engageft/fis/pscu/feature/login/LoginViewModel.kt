@@ -8,7 +8,6 @@ import com.engageft.engagekit.rest.request.CreateDemoAccountRequest
 import com.engageft.engagekit.utils.LoginResponseUtils
 import com.engageft.fis.pscu.HeapUtils
 import com.engageft.fis.pscu.MoEngageUtils
-import com.engageft.fis.pscu.OneToManyApplication
 import com.engageft.fis.pscu.config.EngageAppConfig
 import com.engageft.fis.pscu.feature.BaseEngageViewModel
 import com.engageft.fis.pscu.feature.DialogInfo
@@ -126,7 +125,7 @@ class LoginViewModel : BaseEngageViewModel(), GateKeeperListener {
 
     override fun onGateOpen() {
         progressOverlayShownObservable.value = false
-        BrandingManager.getBrandingWithToken(EngageService.getInstance().authManager.authToken)
+        BrandingManager.getBrandingAuthenticated()
                 .subscribeWithDefaultProgressAndErrorHandling<BrandingInfoResponse>(
                         this, { navigationObservable.value = LoginNavigationEvent.AUTHENTICATED_ACTIVITY })
     }
@@ -219,7 +218,7 @@ class LoginViewModel : BaseEngageViewModel(), GateKeeperListener {
 
     fun onConfirmEmail() {
         progressOverlayShownObservable.value = true
-        compositeDisposable.add(EngageService.getInstance().verificationEmailObservable(token)
+        compositeDisposable.add(EngageService.getInstance().verificationEmailObservable()
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe({ response ->

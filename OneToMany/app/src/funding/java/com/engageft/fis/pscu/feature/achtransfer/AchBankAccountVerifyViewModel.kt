@@ -66,7 +66,6 @@ class AchBankAccountVerifyViewModel: BaseEngageViewModel() {
             progressOverlayShownObservable.value = true
             //TODO(aHashimi): When ThreatMatrix is setUp pass sessionID
             val request = AchAccountValidateRequest(
-                    EngageService.getInstance().authManager.authToken,
                     achAccountInfoId,
                     amount1.get()!!,
                     amount2.get()!!, "")
