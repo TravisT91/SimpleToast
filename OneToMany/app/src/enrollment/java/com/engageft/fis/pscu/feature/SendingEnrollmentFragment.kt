@@ -54,11 +54,11 @@ class SendingEnrollmentFragment : BaseEngagePageFragment() {
                 progressBar.setProgress(progress)
                 // don't set to 100 yet
                 if (progress < 90) {
-                    Handler().postDelayed(runnable, 100)
+                    Handler().postDelayed(runnable, PROGRESS_UPDATE_DELAY_TIME_MS)
                 }
                 progress += PROGRESS_VALUE_INCREMENT
             }
-            Handler().postDelayed(runnable, 100)
+            Handler().postDelayed(runnable, PROGRESS_UPDATE_DELAY_TIME_MS)
 
             enrollmentViewModel.successSubmissionObservable.observe(viewLifecycleOwner, Observer {
                 when (it) {
@@ -99,6 +99,7 @@ class SendingEnrollmentFragment : BaseEngagePageFragment() {
     }
 
     private companion object {
+        const val PROGRESS_UPDATE_DELAY_TIME_MS = 100L
         const val PROGRESS_VALUE_COMPLETE = 100
         const val PROGRESS_VALUE_INCREMENT = 20
     }
