@@ -47,13 +47,9 @@ class SendingEnrollmentDelegate(private val viewModel: EnrollmentViewModel) {
     }
 
     private fun getActivationRequest(): ActivationRequest {
-//        val request = ActivationRequest(viewModel.getStartedDelegate.cardNumber,
-//                viewModel.getStartedDelegate.birthDate,
-//                viewModel.cardPinDelegate.pinNumber.toString(),
-//                "", "", "")
-        val request = ActivationRequest("",
-                DateTime.now(),
-                "",
+        val request = ActivationRequest(viewModel.getStartedDelegate.cardNumber,
+                viewModel.getStartedDelegate.birthDate,
+                viewModel.cardPinDelegate.pinNumber.toString(),
                 "", "", "")
 
         if (viewModel.createAccountDelegate.userEmail.isNotEmpty()) {
