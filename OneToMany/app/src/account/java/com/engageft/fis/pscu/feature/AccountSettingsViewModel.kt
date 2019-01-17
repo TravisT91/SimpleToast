@@ -1,9 +1,14 @@
 package com.engageft.fis.pscu.feature
 
+import androidx.databinding.ObservableField
 import androidx.lifecycle.MutableLiveData
 import com.engageft.engagekit.EngageService
+import com.engageft.engagekit.utils.LoginResponseUtils
 import com.engageft.fis.pscu.MoEngageUtils
 import com.engageft.fis.pscu.feature.branding.BrandingManager
+import com.ob.ws.dom.LoginResponse
+import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.schedulers.Schedulers
 
 /**
  * AccountSettingsViewModel
@@ -20,6 +25,34 @@ class AccountSettingsViewModel : BaseEngageViewModel() {
     }
 
     val navigationObservable = MutableLiveData<AccountSettingsNavigation>()
+    var cardSecondaryEnable = ObservableField<Boolean>(false)
+    var cardStatementsEnable = ObservableField<Boolean>(false)
+
+    init {
+        progressOverlayShownObservable.value = true
+        compositeDisposable.add(EngageService.getInstance().loginResponseAsObservable
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe({ response ->
+                    progressOverlayShownObservable.value = false
+                    if (response is LoginResponse) {
+                        val debitCardInfo = LoginResponseUtils.getCurrentCard(response)
+                        if (debitCardInfo.cardPermissionsInfo.isEnableCardStatements
+                                && debitCardInfo.cardPermissionsInfo.isAllowCardStatements) {
+                            cardStatementsEnable.set(true)
+                        }
+                        if (debitCardInfo.cardPermissionsInfo.isEnableSecondary) {
+                            cardSecondaryEnable.set(true)
+                        }
+                    } else {
+                        handleUnexpectedErrorResponse(response)
+                    }
+                }, { e ->
+                    progressOverlayShownObservable.value = false
+                    handleThrowable(e)
+                })
+        )
+    }
 
     fun onLogoutClicked() {
         EngageService.getInstance().authManager.logout()

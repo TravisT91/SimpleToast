@@ -45,13 +45,22 @@ open class BaseEngageViewModel: BaseViewModel() {
     fun handleThrowable(e: Throwable)  {
         when (e) {
             is UnknownHostException -> {
-                dialogInfoObservable.postValue(DialogInfo(dialogType = DialogInfo.DialogType.NO_INTERNET_CONNECTION))
+                dialogInfoObservable.postValue(DialogInfo(dialogType = DialogInfo.DialogType.UNKNOWN_HOST))
+                if (BuildConfig.DEBUG) {
+                    e.printStackTrace()
+                }
             }
             is NoConnectivityException -> {
                 dialogInfoObservable.postValue(DialogInfo(dialogType = DialogInfo.DialogType.NO_INTERNET_CONNECTION))
+                if (BuildConfig.DEBUG) {
+                    e.printStackTrace()
+                }
             }
             is SocketTimeoutException -> {
                 dialogInfoObservable.postValue(DialogInfo(dialogType = DialogInfo.DialogType.CONNECTION_TIMEOUT))
+                if (BuildConfig.DEBUG) {
+                    e.printStackTrace()
+                }
             }
             is NotLoggedInException -> {
                 EngageService.getInstance().authManager.logout()
