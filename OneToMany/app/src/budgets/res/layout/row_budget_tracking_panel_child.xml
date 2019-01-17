@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.engageft.apptoolbox.view.TrackingPanel
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/row_budget_tracking_panel"
+    style="@style/TrackingPanelBudgetRowChild" />
