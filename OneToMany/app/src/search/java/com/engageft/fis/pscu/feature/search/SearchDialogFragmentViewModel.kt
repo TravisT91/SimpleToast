@@ -29,10 +29,7 @@ class SearchDialogFragmentViewModel : BaseEngageViewModel() {
         } else {
             searchErrorObservable.value = SearchStringStatus.VALID
             progressOverlayShownObservable.value = true
-            val request = TransactionsSearchRequest(
-                    EngageService.getInstance().authManager.authToken,
-                    searchString
-            )
+            val request = TransactionsSearchRequest(searchString)
             compositeDisposable.add(
                     EngageService.getInstance().engageApiInterface.postSearchTransactions(request.fieldMap)
                             .subscribeOn(Schedulers.io())
