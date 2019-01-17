@@ -28,6 +28,7 @@ import com.engageft.apptoolbox.view.InformationDialogFragment
 import com.engageft.apptoolbox.view.ProductCardModel
 import com.engageft.engagekit.EngageService
 import com.engageft.engagekit.repository.transaction.vo.Transaction
+import com.engageft.engagekit.repository.util.NetworkState
 import com.engageft.fis.pscu.R
 import com.engageft.fis.pscu.databinding.FragmentDashboardBinding
 import com.engageft.fis.pscu.feature.adapter.DashboardTransactionsAdapter
@@ -72,6 +73,7 @@ class DashboardFragment : BaseEngagePageFragment(),
     private val transactionsObserver = Observer<PagedList<Transaction>> {
         pagedList -> transactionsAdapter.submitList(pagedList)
     }
+    private val networkStateObserver = Observer<NetworkState> { transactionsAdapter.setNetworkState(it) }
 
     private val notificationsObserver = Observer<Int> { activity?.invalidateOptionsMenu() }
 
@@ -90,6 +92,8 @@ class DashboardFragment : BaseEngagePageFragment(),
         super.onCreate(savedInstanceState)
 
         setHasOptionsMenu(true)
+
+        transactionsAdapter = DashboardTransactionsAdapter(dashboardViewModel.compositeDisposable, this, this, dashboardViewModel::clearAndRefreshAllTransactions)
     }
 
     override fun createViewModel(): BaseViewModel? {
@@ -110,7 +114,6 @@ class DashboardFragment : BaseEngagePageFragment(),
 
         binding.dashboardExpandableView.listener = this
 
-        transactionsAdapter = DashboardTransactionsAdapter(dashboardViewModel.compositeDisposable, this, this, dashboardViewModel::clearAndRefreshAllTransactions)
         binding.transactionsRecyclerView.apply {
             layoutManager = LinearLayoutManager(context)
             adapter = transactionsAdapter
@@ -395,7 +398,7 @@ class DashboardFragment : BaseEngagePageFragment(),
         dashboardViewModel.savingsBalanceObservable.observe(this, savingsBalanceObserver)
         dashboardViewModel.savingsBalanceStateObservable.observe(this, savingsBalanceStateObserver)
 
-        dashboardViewModel.networkState.observe(this, Observer { transactionsAdapter.setNetworkState(it) })
+        dashboardViewModel.networkState.observe(this, networkStateObserver)
         dashboardViewModel.transactions.observe(this, transactionsObserver)
 
         // make sure correct tab is showing, after return from TransactionDetailFragment, in particular
