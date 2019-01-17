@@ -29,7 +29,7 @@ class EnrollmentErrorFragment : BaseEngagePageFragment() {
 
     private val navigationOverrideClickListener = object : NavigationOverrideClickListener {
         override fun onClick(): Boolean {
-            // at this point EnrollmentSuccessFragment is popped from the stack.
+            // at this point SendingEnrollmentFragment is popped from the stack.
             // so, go back to the last step the user completed
             binding.root.findNavController().popBackStack()
             return true
@@ -57,7 +57,7 @@ class EnrollmentErrorFragment : BaseEngagePageFragment() {
             }
 
             tryAgainButton.setOnClickListener {
-                // at this point EnrollmentSuccessFragment is popped from the stack.
+                // at this point SendingEnrollmentFragment is popped from the stack.
                 // so, go back to the last step the user completed
                 binding.root.findNavController().popBackStack()
             }
