@@ -89,8 +89,7 @@ class ChangeSecurityQuestionsViewModel : BaseEngageViewModel() {
         questionsAndAnswers.add(androidx.core.util.Pair(question2.get()!!, answer2.get()!!.trim { it <= ' ' }))
         compositeDisposable.add(
                 EngageService.getInstance().engageApiInterface.postSetSecurityQuestions(
-                        SetSecurityQuestionsRequest(EngageService.getInstance().authManager.authToken,
-                                questionsAndAnswers.toMutableList()).fieldMap)
+                        SetSecurityQuestionsRequest(questionsAndAnswers.toMutableList()).fieldMap)
                         .subscribeOn(Schedulers.io())
                         .observeOn(AndroidSchedulers.mainThread())
                         .subscribe({ response ->
@@ -124,7 +123,7 @@ class ChangeSecurityQuestionsViewModel : BaseEngageViewModel() {
 
     private fun loadSecurityQuestionState() {
         compositeDisposable.add(
-                EngageService.getInstance().engageApiInterface.postHasSecurityQuestions(AuthenticatedRequest(EngageService.getInstance().authManager.authToken).fieldMap)
+                EngageService.getInstance().engageApiInterface.postHasSecurityQuestions(AuthenticatedRequest().fieldMap)
                         .subscribeOn(Schedulers.io())
                         .observeOn(AndroidSchedulers.mainThread())
                         .subscribe({ response ->
@@ -150,7 +149,7 @@ class ChangeSecurityQuestionsViewModel : BaseEngageViewModel() {
 
     private fun loadStandardSecurityQuestions() {
         compositeDisposable.add(
-                EngageService.getInstance().engageApiInterface.postStandardSecurityQuestions(AuthenticatedRequest(EngageService.getInstance().authManager.authToken).fieldMap)
+                EngageService.getInstance().engageApiInterface.postStandardSecurityQuestions(AuthenticatedRequest().fieldMap)
                         .subscribeOn(Schedulers.io())
                         .observeOn(AndroidSchedulers.mainThread())
                         .subscribe({ response ->

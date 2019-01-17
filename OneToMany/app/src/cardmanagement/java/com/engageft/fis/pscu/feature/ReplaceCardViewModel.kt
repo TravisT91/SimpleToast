@@ -17,9 +17,8 @@ class ReplaceCardViewModel : BaseEngageViewModel() {
 
     fun onOrderReplacementClicked(){
         progressOverlayShownObservable.value = true
-        val token = EngageService.getInstance().storageManager.loginResponse.token
         val cardId = EngageService.getInstance().storageManager.currentCard.debitCardId
-        engageApi().postReplaceCard(CardRequest(token,cardId).fieldMap)
+        engageApi().postReplaceCard(CardRequest(cardId).fieldMap)
                 .subscribeWithDefaultProgressAndErrorHandling<BasicResponse>(
                         this, {
                     replacementRequestIsSuccess.value = true

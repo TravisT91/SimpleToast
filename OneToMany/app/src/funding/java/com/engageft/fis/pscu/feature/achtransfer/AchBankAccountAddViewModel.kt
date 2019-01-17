@@ -117,7 +117,6 @@ class AchBankAccountAddViewModel: BaseEngageViewModel() {
                 progressOverlayShownObservable.value = true
 
                 val request = AchAccountCreateRequest(
-                        EngageService.getInstance().authManager.authToken,
                         isChecking,
                         accountName.get()!!,
                         accountNumber.get()!!,

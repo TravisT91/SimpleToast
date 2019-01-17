@@ -76,8 +76,7 @@ class AchBankAccountDetailViewModel: BaseEngageViewModel() {
 
     fun onDeleteAccount() {
         progressOverlayShownObservable.value = true
-        compositeDisposable.add(engageApi().postDeleteAchAccount(AchAccountRequest(
-                EngageService.getInstance().authManager.authToken, achAccountInfoId).fieldMap)
+        compositeDisposable.add(engageApi().postDeleteAchAccount(AchAccountRequest(achAccountInfoId).fieldMap)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe({ response ->

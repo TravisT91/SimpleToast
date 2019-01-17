@@ -328,7 +328,7 @@ class ProfileViewModel : BaseEngageViewModel() {
                             handleThrowable(e)
                         }
         )
-        compositeDisposable.add(EngageService.getInstance().engageApiInterface.postCheckChangeAddress(AuthenticatedRequest(EngageService.getInstance().authManager.authToken).fieldMap)
+        compositeDisposable.add(EngageService.getInstance().engageApiInterface.postCheckChangeAddress(AuthenticatedRequest().fieldMap)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe({ response ->

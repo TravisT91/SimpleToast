@@ -21,7 +21,7 @@ class SecurityQuestionsGatedItem(private val compositeDisposable: CompositeDispo
     override fun checkItem(resultListener: GatedItemResultListener) {
         if (AuthenticationConfig.requireSecurityQuestions) {
             compositeDisposable.add(
-                        EngageService.getInstance().engageApiInterface.postHasSecurityQuestions(AuthenticatedRequest(EngageService.getInstance().authManager.authToken).fieldMap)
+                        EngageService.getInstance().engageApiInterface.postHasSecurityQuestions(AuthenticatedRequest().fieldMap)
                        .subscribeOn(Schedulers.io())
                        .observeOn(AndroidSchedulers.mainThread())
                        .subscribe({ response ->
