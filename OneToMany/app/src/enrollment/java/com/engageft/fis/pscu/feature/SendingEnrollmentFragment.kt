@@ -68,12 +68,12 @@ class SendingEnrollmentFragment : BaseEngagePageFragment() {
                 when (it) {
                     SendingEnrollmentDelegate.ActivationStatus.SUCCESS -> {
                         //ensure progress is set to 100
-                        progressBar.setProgress(100)
-                        sendingTextView.text = getString(R.string.ENROLLMENT_SUBMISSION_SUCCESS)
-                        descriptionTextView.visibility = View.GONE
+                        binding.progressBar.setProgress(100)
+                        binding.sendingTextView.text = getString(R.string.ENROLLMENT_SUBMISSION_SUCCESS)
+                        binding.descriptionTextView.visibility = View.GONE
                     }
                     SendingEnrollmentDelegate.ActivationStatus.FAIL -> {
-                       navigateAfterDelay(R.id.action_sendingEnrollmentFragment_to_enrollmentErrorFragment)
+                        navigateAfterDelay(R.id.action_sendingEnrollmentFragment_to_enrollmentErrorFragment)
                     }
                 }
             })
