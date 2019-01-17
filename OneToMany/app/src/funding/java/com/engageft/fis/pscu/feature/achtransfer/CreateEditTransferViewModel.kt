@@ -174,7 +174,7 @@ class CreateEditTransferViewModel: BaseEngageViewModel() {
 
     private fun getScheduledLoads(scheduledLoadId: Long, currentCard: DebitCardInfo) {
         compositeDisposable.add(
-                EngageService.getInstance().getScheduledLoadsResponseObservable(EngageService.getInstance().authManager.authToken, currentCard, false)
+                EngageService.getInstance().getScheduledLoadsResponseObservable(currentCard, false)
                         .subscribeOn(Schedulers.io())
                         .observeOn(AndroidSchedulers.mainThread())
                         .subscribe({ response ->
@@ -215,10 +215,10 @@ class CreateEditTransferViewModel: BaseEngageViewModel() {
         progressOverlayShownObservable.value = true
 
         currentScheduledLoad?.let { scheduledLoad ->
-            val request = ScheduledLoadRequest(EngageService.getInstance().authManager.authToken, scheduledLoad.scheduledLoadId)
+            val request = ScheduledLoadRequest(scheduledLoad.scheduledLoadId)
             postCancelScheduledLoad(request.fieldMap) { // first is successful
                 if (scheduledLoad.isHasDuplicate) {
-                    val request2 = ScheduledLoadRequest(EngageService.getInstance().authManager.authToken, scheduledLoad.scheduledLoadIdDup)
+                    val request2 = ScheduledLoadRequest(scheduledLoad.scheduledLoadIdDup)
                     postCancelScheduledLoad(request2.fieldMap) { // successful
 
                         EngageService.getInstance().storageManager.clearForLoginWithDataLoad(false)

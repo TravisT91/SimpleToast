@@ -92,7 +92,7 @@ class ChangePasswordViewModel: BaseEngageViewModel() {
                 progressOverlayShownObservable.value = true
 
                 compositeDisposable.add(
-                        EngageService.getInstance().getUpdatePasswordObservable(EngageService.getInstance().authManager.authToken, newPassword.get()!!, currentPassword.get()!!)
+                        EngageService.getInstance().getUpdatePasswordObservable(newPassword.get()!!, currentPassword.get()!!)
                                 .subscribeOn(Schedulers.io())
                                 .observeOn(AndroidSchedulers.mainThread())
                                 .subscribe({ response ->

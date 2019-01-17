@@ -11,6 +11,7 @@ open class DialogInfo(var title: String? = null,
         NO_INTERNET_CONNECTION,
         UNKNOWN_HOST,
         CONNECTION_TIMEOUT,
+        NOT_LOGGED_IN,
         OTHER
     }
 }

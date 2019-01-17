@@ -61,7 +61,7 @@ class CreateTransferConfirmationViewModel: BaseEngageViewModel() {
     private fun submitScheduleLoad(scheduledLoad: ScheduledLoad, sessionId: String = "") {
         progressOverlayShownObservable.value = true
 
-        val request = ScheduledLoadAchAddRequest(EngageService.getInstance().authManager.authToken,
+        val request = ScheduledLoadAchAddRequest(
                 scheduledLoad,
                 sessionId)
         val observable: Observable<BasicResponse> = when (scheduledLoad.typeString) {
@@ -93,7 +93,6 @@ class CreateTransferConfirmationViewModel: BaseEngageViewModel() {
         progressOverlayShownObservable.value = true
 
         val request = FundingFundAchAccountRequest(
-                EngageService.getInstance().authManager.authToken,
                 achAccountInfoId,
                 amount,
                 cardId,
