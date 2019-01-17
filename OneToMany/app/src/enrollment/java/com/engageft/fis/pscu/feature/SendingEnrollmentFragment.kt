@@ -38,7 +38,7 @@ class SendingEnrollmentFragment : BaseEngagePageFragment() {
     }
 
     override fun createViewModel(): BaseViewModel? {
-        val enrollmentViewModel = ViewModelProviders.of(this).get(EnrollmentViewModel::class.java)
+        val enrollmentViewModel = ViewModelProviders.of(activity!!).get(EnrollmentViewModel::class.java)
         sendingDelegate = enrollmentViewModel.sendingDelegate
         return enrollmentViewModel
     }
