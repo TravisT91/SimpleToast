@@ -4,9 +4,7 @@ import androidx.lifecycle.MutableLiveData
 import com.crashlytics.android.Crashlytics
 import com.engageft.apptoolbox.BaseViewModel
 import com.engageft.apptoolbox.BuildConfig
-import com.engageft.engagekit.EngageService
 import com.engageft.engagekit.rest.exception.NoConnectivityException
-import com.engageft.engagekit.rest.exception.NotLoggedInException
 import com.ob.ws.dom.BasicResponse
 import com.ob.ws.dom.ValidationErrors
 import io.reactivex.Observable
@@ -61,9 +59,6 @@ open class BaseEngageViewModel: BaseViewModel() {
                 if (BuildConfig.DEBUG) {
                     e.printStackTrace()
                 }
-            }
-            is NotLoggedInException -> {
-                EngageService.getInstance().authManager.logout()
             }
             // Add more specific exceptions here, if needed
             else -> {
