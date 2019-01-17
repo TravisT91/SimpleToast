@@ -29,8 +29,7 @@ class EnrollmentErrorFragment : BaseEngagePageFragment() {
 
     private val navigationOverrideClickListener = object : NavigationOverrideClickListener {
         override fun onClick(): Boolean {
-            // at this point SendingEnrollmentFragment is popped from the stack.
-            // so, go back to the last step the user completed
+            // go to getStarted screen
             binding.root.findNavController().popBackStack()
             return true
         }
@@ -50,6 +49,10 @@ class EnrollmentErrorFragment : BaseEngagePageFragment() {
             toolbarController.setToolbarVisibility(ToolbarVisibilityState.INVISIBLE)
             backButtonOverrideProvider.setBackButtonOverride(navigationOverrideClickListener)
 
+            if (enrollmentViewModel.backendError.isNotEmpty()) {
+                messageTextView.text = enrollmentViewModel.backendError
+            }
+
             callSupportButton.setOnClickListener {
                 activity?.startActivity(Intent(Intent.ACTION_DIAL).apply {
                     data = Uri.parse("tel:${EngageAppConfig.supportPhone}")
@@ -57,8 +60,7 @@ class EnrollmentErrorFragment : BaseEngagePageFragment() {
             }
 
             tryAgainButton.setOnClickListener {
-                // at this point SendingEnrollmentFragment is popped from the stack.
-                // so, go back to the last step the user completed
+                // go to getStarted screen
                 binding.root.findNavController().popBackStack()
             }
         }

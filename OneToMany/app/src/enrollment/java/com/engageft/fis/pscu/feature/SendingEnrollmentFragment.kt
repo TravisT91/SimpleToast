@@ -11,8 +11,6 @@ import androidx.navigation.findNavController
 import com.engageft.apptoolbox.BaseViewModel
 import com.engageft.apptoolbox.NavigationOverrideClickListener
 import com.engageft.apptoolbox.ToolbarVisibilityState
-import com.engageft.apptoolbox.ViewUtils.newLotusInstance
-import com.engageft.apptoolbox.view.InformationDialogFragment
 import com.engageft.fis.pscu.R
 import com.engageft.fis.pscu.databinding.FragmentSendingEnrollmentBinding
 import com.engageft.fis.pscu.feature.branding.Palette
@@ -26,26 +24,24 @@ import com.engageft.fis.pscu.feature.branding.Palette
  * Copyright (c) 2018 Engage FT. All rights reserved.
  */
 class SendingEnrollmentFragment : BaseEngagePageFragment() {
-    private lateinit var sendingDelegate: SendingEnrollmentDelegate
+    private lateinit var enrollmentViewModel: EnrollmentViewModel
     private lateinit var binding: FragmentSendingEnrollmentBinding
     var progress = 10
 
     private val navigationOverrideClickListener = object : NavigationOverrideClickListener {
         override fun onClick(): Boolean {
-            fragmentDelegate.showDialog(dialogPromptToStay())
             return true
         }
     }
 
     override fun createViewModel(): BaseViewModel? {
-        val enrollmentViewModel = ViewModelProviders.of(activity!!).get(EnrollmentViewModel::class.java)
-        sendingDelegate = enrollmentViewModel.sendingDelegate
+        enrollmentViewModel = ViewModelProviders.of(activity!!).get(EnrollmentViewModel::class.java)
         return enrollmentViewModel
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         binding = FragmentSendingEnrollmentBinding.inflate(inflater, container, false).apply {
-            sendingEnrollmentDelegate = sendingDelegate
+            sendingEnrollmentDelegate = enrollmentViewModel
             palette = Palette
 
             toolbarController.setToolbarVisibility(ToolbarVisibilityState.INVISIBLE)
@@ -60,62 +56,50 @@ class SendingEnrollmentFragment : BaseEngagePageFragment() {
                 if (progress < 90) {
                     Handler().postDelayed(runnable, 100)
                 }
-                progress += 20
+                progress += PROGRESS_VALUE_INCREMENT
             }
             Handler().postDelayed(runnable, 100)
 
-            sendingDelegate.successSubmissionObservable.observe(viewLifecycleOwner, Observer {
+            enrollmentViewModel.successSubmissionObservable.observe(viewLifecycleOwner, Observer {
                 when (it) {
-                    SendingEnrollmentDelegate.ActivationStatus.SUCCESS -> {
+                    EnrollmentViewModel.ActivationStatus.SUCCESS -> {
                         //ensure progress is set to 100
-                        progressBar.setProgress(100)
+                        progressBar.setProgress(PROGRESS_VALUE_COMPLETE)
                         sendingTextView.text = getString(R.string.ENROLLMENT_SUBMISSION_SUCCESS)
                         descriptionTextView.visibility = View.GONE
                     }
-                    SendingEnrollmentDelegate.ActivationStatus.FAIL -> {
+                    EnrollmentViewModel.ActivationStatus.FAIL -> {
                         navigateAfterDelay(R.id.action_sendingEnrollmentFragment_to_enrollmentErrorFragment)
                     }
                 }
             })
 
-            sendingDelegate.cardActivationStatusObservable.observe(viewLifecycleOwner, Observer {
+            enrollmentViewModel.cardActivationStatusObservable.observe(viewLifecycleOwner, Observer {
                 val id = when (it) {
-                    SendingEnrollmentDelegate.CardActivationStatus.ACTIVE -> R.id.action_sendingEnrollmentFragment_to_cardActiveFragment
-                    SendingEnrollmentDelegate.CardActivationStatus.LINKED -> R.id.action_sendingEnrollmentFragment_to_cardLinkedFragment
+                    EnrollmentViewModel.CardActivationStatus.ACTIVE -> R.id.action_sendingEnrollmentFragment_to_cardActiveFragment
+                    EnrollmentViewModel.CardActivationStatus.LINKED -> R.id.action_sendingEnrollmentFragment_to_cardLinkedFragment
                     else -> -1
                 }
                 navigateAfterDelay(id)
             })
         }
 
-        sendingDelegate.submitAcceptTerms()
+        enrollmentViewModel.finalSubmit()
 
         return binding.root
     }
 
     private fun navigateAfterDelay(id: Int) {
         if (id != -1) {
-            //let the user see the success screen for 2 seconds!
+            //let the user see the success screen for 1 second!
             Handler().postDelayed({
                 binding.root.findNavController().navigate(id)
-            }, 2000)
+            }, 1000)
         }
     }
 
-    private fun dialogPromptToStay(): InformationDialogFragment {
-        return InformationDialogFragment.newLotusInstance(title = getString(R.string.ENROLLMENT_SUBMISSION_PROMPT_TITLE),
-                message = getString(R.string.ENROLLMENT_SUBMISSION_PROMPT_MESSAGE),
-                buttonPositiveText = getString(R.string.dialog_information_ok_button),
-                buttonNegativeText = getString(R.string.ENROLLMENT_SUBMISSION_PROMPT_EXIT),
-                listener = object: InformationDialogFragment.InformationDialogFragmentListener {
-                    override fun onDialogFragmentNegativeButtonClicked() {
-                        binding.root.findNavController().popBackStack()
-                    }
-
-                    override fun onDialogFragmentPositiveButtonClicked() {}
-
-                    override fun onDialogCancelled() {}
-
-                })
+    private companion object {
+        const val PROGRESS_VALUE_COMPLETE = 100
+        const val PROGRESS_VALUE_INCREMENT = 20
     }
 }

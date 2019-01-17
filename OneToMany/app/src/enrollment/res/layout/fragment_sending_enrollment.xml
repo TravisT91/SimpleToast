@@ -3,7 +3,7 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <data>
-        <variable name="sendingEnrollmentDelegate" type="com.engageft.fis.pscu.feature.SendingEnrollmentDelegate"/>
+        <variable name="sendingEnrollmentDelegate" type="com.engageft.fis.pscu.feature.EnrollmentViewModel"/>
         <variable
             name="palette"
             type="com.engageft.fis.pscu.feature.branding.Palette"/>

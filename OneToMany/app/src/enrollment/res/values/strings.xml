@@ -36,7 +36,4 @@
     <string name="ENROLLMENT_SUBMISSION_SENDING">Sending…</string>
     <string name="ENROLLMENT_SUBMISSION_SENDING_DESCRIPTION">This should only take a few moments.</string>
     <string name="ENROLLMENT_SUBMISSION_SUCCESS">Success!</string>
-    <string name="ENROLLMENT_SUBMISSION_PROMPT_TITLE">Submitting application</string>
-    <string name="ENROLLMENT_SUBMISSION_PROMPT_MESSAGE">Please wait while your application is being processed.</string>
-    <string name="ENROLLMENT_SUBMISSION_PROMPT_EXIT">Exit</string>
 </resources>

@@ -51,8 +51,8 @@ class CreateAccountDelegate(private val viewModel: EnrollmentViewModel, private 
     val passwordInput: ObservableField<String> = ObservableField("")
     val passwordConfirmInput: ObservableField<String> = ObservableField("")
 
-    var userEmail: String = ""
-    var userPassword: String = ""
+    lateinit var userEmail: String
+    lateinit var userPassword: String
 
     enum class NextButtonState {
         GONE,

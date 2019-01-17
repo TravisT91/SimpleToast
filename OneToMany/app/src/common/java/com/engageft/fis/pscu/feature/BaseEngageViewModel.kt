@@ -4,6 +4,7 @@ import androidx.lifecycle.MutableLiveData
 import com.crashlytics.android.Crashlytics
 import com.engageft.apptoolbox.BaseViewModel
 import com.engageft.apptoolbox.BuildConfig
+import com.engageft.engagekit.aac.SingleLiveEvent
 import com.engageft.engagekit.rest.exception.NoConnectivityException
 import com.ob.ws.dom.BasicResponse
 import com.ob.ws.dom.ValidationErrors
@@ -25,7 +26,7 @@ import java.net.UnknownHostException
 open class BaseEngageViewModel: BaseViewModel() {
     val compositeDisposable = CompositeDisposable()
 
-    val dialogInfoObservable: MutableLiveData<DialogInfo> = MutableLiveData()
+    val dialogInfoObservable: MutableLiveData<DialogInfo> = SingleLiveEvent()
 
     fun handleUnexpectedErrorResponse(response: BasicResponse) {
         // This is a catch-all utility function to handle all unexpected responses to an API call
@@ -75,16 +76,21 @@ open class BaseEngageViewModel: BaseViewModel() {
     }
 }
 
-fun BaseEngageViewModel.handleBackendErrorForForms(response: BasicResponse, contextualMessage: String) {
+fun BaseEngageViewModel.getBackendErrorForForms(response: BasicResponse): String {
     if (response.message.isNotEmpty()) {
-        dialogInfoObservable.value = DialogInfo(dialogType = DialogInfo.DialogType.SERVER_ERROR, message = response.message)
+        return response.message
     } else if (response is ValidationErrors) {
-        if (response.error.isNotEmpty()) {
-            dialogInfoObservable.value = DialogInfo(dialogType = DialogInfo.DialogType.SERVER_ERROR, message = response.error.elementAt(0).message)
-        } else {
-            response.message = contextualMessage
-            handleUnexpectedErrorResponse(response)
+        if (response.hasErrors()) {
+            return response.error.elementAt(0).message
         }
+    }
+    return ""
+}
+
+fun BaseEngageViewModel.handleBackendErrorForForms(response: BasicResponse, contextualMessage: String) {
+    val message = getBackendErrorForForms(response)
+    if (message.isNotEmpty()) {
+        dialogInfoObservable.value = DialogInfo(dialogType = DialogInfo.DialogType.SERVER_ERROR, message = message)
     } else {
         response.message = contextualMessage
         handleUnexpectedErrorResponse(response)

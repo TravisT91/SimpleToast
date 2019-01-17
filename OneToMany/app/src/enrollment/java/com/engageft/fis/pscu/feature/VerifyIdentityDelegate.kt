@@ -44,7 +44,7 @@ class VerifyIdentityDelegate(private val viewModel: EnrollmentViewModel,
     }
 
     val ssn = ObservableField("")
-    var ssNumber: String = ""
+    lateinit var ssNumber: String
 
     val nextButtonObservable = MutableLiveData<NextButtonState>()
     val ssnValidationErrorObservable = MutableLiveData<ssnValidationError>()

@@ -1,7 +1,13 @@
 package com.engageft.fis.pscu.feature
 
 import androidx.navigation.NavController
+import com.engageft.engagekit.EngageService
+import com.engageft.engagekit.aac.SingleLiveEvent
+import com.engageft.engagekit.rest.request.ActivationRequest
+import com.ob.domain.lookup.DebitCardStatus
 import com.ob.ws.dom.ActivationCardInfo
+import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.schedulers.Schedulers
 
 /**
  * EnrollmentViewModel
@@ -23,6 +29,9 @@ import com.ob.ws.dom.ActivationCardInfo
  * Copyright (c) 2018 Engage FT. All rights reserved.
  */
 class EnrollmentViewModel : BaseEngageViewModel() {
+    private companion object {
+        const val TAG = "EnrollmentViewModel"
+    }
     val getStartedDelegate by lazy {
         GetStartedDelegate(this, navController, getStartedNavigations)
     }
@@ -32,13 +41,11 @@ class EnrollmentViewModel : BaseEngageViewModel() {
     val createAccountDelegateProvider = lazy { CreateAccountDelegate(this, navController, createAccountNavigations) }
     val verifyIdentityDelegateProvider = lazy { VerifyIdentityDelegate(this, navController, verifyIdentityNavigations) }
     val termsOfUseDelegateProvider = lazy { TermsOfUseDelegate() }
-    val sendingDelegateProvider = lazy { SendingEnrollmentDelegate(this) }
 
     val cardPinDelegate by cardPinDelegateProvider
     val createAccountDelegate by createAccountDelegateProvider
     val verifyIdentityDelegate by verifyIdentityDelegateProvider
     val termsOfUseDelegate by termsOfUseDelegateProvider
-    val sendingDelegate by sendingDelegateProvider
 
     private lateinit var navController: NavController
     private lateinit var getStartedNavigations: EnrollmentNavigations.GetStartedNavigations
@@ -60,22 +67,70 @@ class EnrollmentViewModel : BaseEngageViewModel() {
         this.termsNavigations = termsNavigations
     }
 
-    private fun finalSubmit() {
+    fun finalSubmit() {
+        //TODO(aHashimi): when ThreatMetrix is added, pass the session-id!
+        val request = ActivationRequest(getStartedDelegate.cardNumber,
+                getStartedDelegate.birthDate,
+                "", "", "")
+
         // Check which delegates were instantiated:
         if (cardPinDelegateProvider.isInitialized()) {
-            // cardPinDelegate is filled out
+            request.setPin(cardPinDelegate.pinNumber.toString())
+        } else {
+            // prevent NPE
+            request.setPin("")
         }
+
         if (createAccountDelegateProvider.isInitialized()) {
-            // createAccountDelegate is filled out
+            request.setEmail(createAccountDelegate.userEmail)
         }
         if (verifyIdentityDelegateProvider.isInitialized()) {
-            // verifyIdentityDelegate is filled out
+            request.setSsn(verifyIdentityDelegate.ssNumber)
         }
+        //TODO(aHashimi): will we need this later once terms of use is finalized?
         if (termsOfUseDelegateProvider.isInitialized()) {
             // termsOfUseDelegate is filled out
         }
 
-        // TODO(jhutchins): Implement this.
+        submitActivation(request)
+    }
+
+    enum class ActivationStatus {
+        SUCCESS,
+        FAIL
+    }
+    enum class CardActivationStatus {
+        ACTIVE,
+        LINKED
+    }
+
+    val successSubmissionObservable = SingleLiveEvent<ActivationStatus>()
+    val cardActivationStatusObservable = SingleLiveEvent<CardActivationStatus>()
+    var backendError: String = ""
+
+    private fun submitActivation(request: ActivationRequest) {
+        compositeDisposable.add(
+                EngageService.getInstance().engageApiInterface.postActivation(request.fieldMap)
+                        .subscribeOn(Schedulers.io())
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .subscribe({ response ->
+                            if (response.isSuccess) {
+                                successSubmissionObservable.value = ActivationStatus.SUCCESS
+
+                                if (activationCardInfo.cardStatus == DebitCardStatus.PENDING_ACTIVATION.toString()) {
+                                    cardActivationStatusObservable.value = CardActivationStatus.ACTIVE
+                                } else {
+                                    cardActivationStatusObservable.value = CardActivationStatus.LINKED
+                                }
+                            } else {
+                                successSubmissionObservable.value = ActivationStatus.FAIL
+                                backendError = getBackendErrorForForms(response)
+                            }
+                        }) { e ->
+                            successSubmissionObservable.value = ActivationStatus.FAIL
+                            handleThrowable(e)
+                        }
+        )
     }
 
     //TODO(aHashimi): Not completed, this should be its own class
