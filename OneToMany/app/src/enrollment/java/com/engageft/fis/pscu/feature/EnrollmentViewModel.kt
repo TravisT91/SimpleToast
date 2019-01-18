@@ -83,9 +83,14 @@ class EnrollmentViewModel : BaseEngageViewModel() {
 
         if (createAccountDelegateProvider.isInitialized()) {
             request.setEmail(createAccountDelegate.userEmail)
+        } else {
+            request.setEmail("")
         }
+
         if (verifyIdentityDelegateProvider.isInitialized()) {
             request.setSsn(verifyIdentityDelegate.ssNumber)
+        } else {
+            request.setSsn("")
         }
         //TODO(aHashimi): will we need this later once terms of use is finalized?
         if (termsOfUseDelegateProvider.isInitialized()) {

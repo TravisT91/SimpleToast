@@ -46,6 +46,7 @@ class SendingEnrollmentFragment : BaseEngagePageFragment() {
 
             toolbarController.setToolbarVisibility(ToolbarVisibilityState.INVISIBLE)
             backButtonOverrideProvider.setBackButtonOverride(navigationOverrideClickListener)
+            upButtonOverrideProvider.setUpButtonOverride(navigationOverrideClickListener)
 
             progressBar.setProgress(progress)
 
@@ -94,11 +95,12 @@ class SendingEnrollmentFragment : BaseEngagePageFragment() {
             //let the user see the success screen for 1 second!
             Handler().postDelayed({
                 binding.root.findNavController().navigate(id)
-            }, 1000)
+            }, NAV_DELAY_TIME_MS)
         }
     }
 
     private companion object {
+        const val NAV_DELAY_TIME_MS = 1000L
         const val PROGRESS_UPDATE_DELAY_TIME_MS = 100L
         const val PROGRESS_VALUE_COMPLETE = 100
         const val PROGRESS_VALUE_INCREMENT = 20
