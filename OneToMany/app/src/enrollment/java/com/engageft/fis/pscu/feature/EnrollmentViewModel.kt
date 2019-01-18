@@ -69,29 +69,23 @@ class EnrollmentViewModel : BaseEngageViewModel() {
 
     fun finalSubmit() {
         //TODO(aHashimi): when ThreatMetrix is added, pass the session-id!
-        val request = ActivationRequest(getStartedDelegate.cardNumber,
-                getStartedDelegate.birthDate,
-                "", "", "")
+        val request = ActivationRequest(
+                cardNumber = getStartedDelegate.cardNumber,
+                dob = getStartedDelegate.birthDate)
 
         // Check which delegates were instantiated:
         if (cardPinDelegateProvider.isInitialized()) {
-            request.setPin(cardPinDelegate.pinNumber.toString())
-        } else {
-            // prevent NPE
-            request.setPin("")
+            request.pin = cardPinDelegate.pinNumber.toString()
         }
 
         if (createAccountDelegateProvider.isInitialized()) {
-            request.setEmail(createAccountDelegate.userEmail)
-        } else {
-            request.setEmail("")
+            request.email = createAccountDelegate.userEmail
         }
 
         if (verifyIdentityDelegateProvider.isInitialized()) {
-            request.setSsn(verifyIdentityDelegate.ssNumber)
-        } else {
-            request.setSsn("")
+            request.ssn = verifyIdentityDelegate.ssNumber
         }
+
         //TODO(aHashimi): will we need this later once terms of use is finalized?
         if (termsOfUseDelegateProvider.isInitialized()) {
             // termsOfUseDelegate is filled out
