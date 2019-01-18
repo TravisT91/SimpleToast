@@ -22,7 +22,7 @@ package com.engageft.fis.pscu.feature.budgets.extension
  * @param input the String that may represent a Float
  * @return the float created from the String, if possible, or 0.
  */
-fun String.parseFloatDefaultToZero(): Float {
+fun String.getFloatOrZero(): Float {
     var result = 0f
     if (this.isNotEmpty()) {
         try {

@@ -15,7 +15,7 @@ import com.ob.ws.dom.utility.CategorySpending
 
 fun BudgetInfo.getCategoriesForDailyLiving(): List<CategorySpending> {
     return this.categorySpendingList?.filter { categorySpending ->
-        (!categorySpending.isDailyLiving || categorySpending.amountSpentOffBudget.parseFloatDefaultToZero() != 0.0f)
+        (categorySpending.isDailyLiving || categorySpending.amountSpentOffBudget.getFloatOrZero() != 0.0f)
     } ?: run { listOf<CategorySpending>() }
 }
 
@@ -24,15 +24,17 @@ fun BudgetInfo.getCategoriesForDailyLiving(): List<CategorySpending> {
 //
 //    return this.categorySpendingList?.filter { categorySpending ->
 //        categorySpending.isInOtherBudget(showBudgetSetup, isFirst30Days) &&
-//                (categorySpending.isDailyLiving == dailyLiving || (!dailyLiving && categorySpending.amountSpentOffBudget.parseFloatDefaultToZero() != 0.0f))
+//                (categorySpending.isDailyLiving == dailyLiving || (!dailyLiving && categorySpending.amountSpentOffBudget.getFloatOrZero() != 0.0f))
 //    }
 //}
 
-fun BudgetInfo.getOtherCategories(isInFirst30Days: Boolean = false): List<CategorySpending> {
+fun BudgetInfo.getOtherCategoriesForDailyLiving(isInFirst30Days: Boolean = false): List<CategorySpending> {
+    // add otherSpending category
     val otherCategories = mutableListOf(this.otherSpending)
-    val showBudgetSetup = this.showBudgetSetup()
 
-    for (categorySpending in getCategories(true)) {
+    // add other categories
+    val showBudgetSetup = showBudgetSetup()
+    for (categorySpending in getCategoriesForDailyLiving()) {
         if (categorySpending.isInOtherBudget(showBudgetSetup, isInFirst30Days)) {
             otherCategories.add(categorySpending)
         }
@@ -41,11 +43,33 @@ fun BudgetInfo.getOtherCategories(isInFirst30Days: Boolean = false): List<Catego
     return otherCategories
 }
 
+fun BudgetInfo.getCategoriesSortedByBudgetAmountDescending(withOther: Boolean, isInFirst30Days: Boolean): List<CategorySpending> {
+    return filterCategorySpending(withOther, isInFirst30Days).sortedByDescending {
+        it.budgetAmount.getFloatOrZero()
+    }
+}
+
 fun BudgetInfo.hasBudget(): Boolean {
-    return this.budgetAmount.parseFloatDefaultToZero() != 0.0f
+    return this.budgetAmount.getFloatOrZero() != 0.0f
 }
 
 fun BudgetInfo.showBudgetSetup(): Boolean {
-    return this.budgetAmount.parseFloatDefaultToZero() == 0.0f
+    return this.budgetAmount.getFloatOrZero() == 0.0f
+}
+
+private fun BudgetInfo.filterCategorySpending(withOther: Boolean, isInFirst30Days: Boolean): List<CategorySpending> {
+    val categoriesToInclude = mutableListOf<CategorySpending>()
+    val showBudgetSetup = showBudgetSetup()
+    for (categorySpending in categorySpendingList) {
+        if (!withOther) {
+            // ignore those in other categories
+            if (!categorySpending.isInOtherBudget(isSetup = showBudgetSetup, isInFirst30Days = isInFirst30Days)) {
+                categoriesToInclude.add(categorySpending)
+            }
+        } else {
+            categoriesToInclude.add(categorySpending)
+        }
+    }
+    return categoriesToInclude
 }
 

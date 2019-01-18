@@ -3,7 +3,8 @@ package com.engageft.fis.pscu.feature.budgets
 import androidx.lifecycle.MutableLiveData
 import com.engageft.engagekit.EngageService
 import com.engageft.fis.pscu.feature.BaseEngageViewModel
-import com.engageft.fis.pscu.feature.budgets.extension.getCategories
+import com.engageft.fis.pscu.feature.DialogInfo
+import com.engageft.fis.pscu.feature.budgets.extension.getCategoriesSortedByBudgetAmountDescending
 import com.engageft.fis.pscu.feature.budgets.model.BudgetModel
 import com.ob.ws.dom.LoginResponse
 import io.reactivex.schedulers.Schedulers
@@ -23,14 +24,13 @@ class BudgetsListViewModel : BaseEngageViewModel() {
     val budgetsObservable: MutableLiveData<Pair<BudgetModel, List<BudgetModel>>> = MutableLiveData()
 
     fun init() {
-        progressOverlayShownObservable.value = true
+        progressOverlayShownObservable.postValue(true)
         compositeDisposable.add(
                 EngageService.getInstance().loginResponseAsObservable
                         .subscribeOn(Schedulers.io())
                         .observeOn(Schedulers.computation())
                         .subscribe({ response ->
                             if (response.isSuccess && response is LoginResponse) {
-
                                 val fractionTimePeriodPassed = fractionOfCurrentMonthPassed() // TODO this will be different within first 30 days
 
                                 response.budgetInfo?.apply {
@@ -39,18 +39,36 @@ class BudgetsListViewModel : BaseEngageViewModel() {
                                     val isFirst30 = false
 
                                     // total spent
-                                    var totalBudgetModel: BudgetModel? = null
                                     val spent = BigDecimal(budgetAmountSpent)
                                     val total = BigDecimal(budgetAmount)
-                                    totalBudgetModel = BudgetModel(
-                                            // Title is filled in by fragment, which can access Context
+                                    val totalBudgetModel = BudgetModel(
+                                            // categoryName is not set for total
+                                            // title is filled in by fragment, which can access Context
                                             spentAmount = spent,
                                             budgetAmount = total,
                                             fractionTimePeriodPassed = fractionTimePeriodPassed)
 
                                     // categories
-                                    val categorySpendings = getCategories(true)
+                                    val categorySpendings = getCategoriesSortedByBudgetAmountDescending(withOther = false, isInFirst30Days = isFirst30).toMutableList()
+                                    // add other spending
+                                    categorySpendings.add(otherSpending)
+                                    var categoryBudgetModels = mutableListOf<BudgetModel>()
+                                    for (categorySpending in categorySpendings) {
+                                        categoryBudgetModels.add(
+                                                BudgetModel(
+                                                        categoryName = categorySpending.category,
+                                                        spentAmount = BigDecimal(categorySpending.amountSpent),
+                                                        budgetAmount = BigDecimal(categorySpending.budgetAmount),
+                                                        fractionTimePeriodPassed =  fractionTimePeriodPassed
+                                                )
+                                        )
+                                    }
 
+                                    progressOverlayShownObservable.postValue(false)
+                                    budgetsObservable.postValue(Pair(totalBudgetModel, categoryBudgetModels))
+                                } ?: run {
+                                    // LoginResponse had no budgetInfo. Should never happen.
+                                    dialogInfoObservable.postValue(DialogInfo(dialogType = DialogInfo.DialogType.GENERIC_ERROR))
                                 }
 
                             } else {

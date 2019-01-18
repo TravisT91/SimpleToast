@@ -14,13 +14,13 @@ import com.ob.ws.dom.utility.CategorySpending
 fun CategorySpending.isInOtherBudget(isSetup: Boolean, isInFirst30Days: Boolean): Boolean {
     if (isSetup) {
         if (isInFirst30Days) { // if first 30, show some categories by default
-            if (!defaultEditCategories.contains(category)) { // && budgetAmount.parseFloatDefaultToZero() == 0F) { // budgetAmount condition was in gen1, but not currently in iOS
+            if (!defaultEditCategories.contains(category)) { // && budgetAmount.getFloatOrZero() == 0F) { // budgetAmount condition was in gen1, but not currently in iOS
                 return true
             }
-        } else if (amountSpentLast30.parseFloatDefaultToZero() == 0f) { // no budget set yet so look at amount spent
+        } else if (amountSpentLast30.getFloatOrZero() == 0f) { // no budget set yet so look at amount spent
             return true
         }
-    } else if (budgetAmount.parseFloatDefaultToZero() == 0f) {
+    } else if (budgetAmount.getFloatOrZero() == 0f) {
         return true
     }
     return false
