@@ -4,12 +4,11 @@ import android.text.TextUtils
 import androidx.lifecycle.MutableLiveData
 import com.engageft.engagekit.EngageService
 import com.engageft.engagekit.event.TransactionsListEvent
-import com.engageft.engagekit.rest.request.CardLockUnlockRequest
 import com.engageft.engagekit.tools.TransactionsFilter
 import com.engageft.engagekit.utils.AlertUtils
 import com.engageft.engagekit.utils.BackendDateTimeUtils
 import com.engageft.engagekit.utils.LoginResponseUtils
-import com.engageft.engagekit.utils.engageApi
+import com.engageft.fis.pscu.feature.branding.BrandingInfoRepo
 import com.engageft.fis.pscu.feature.gatekeeping.DashboardGateKeeper
 import com.engageft.fis.pscu.feature.gatekeeping.GateKeeperListener
 import com.engageft.fis.pscu.feature.gatekeeping.GatedItem
@@ -17,6 +16,7 @@ import com.engageft.fis.pscu.feature.gatekeeping.items.OnboardingGatedItem
 import com.engageft.fis.pscu.feature.gatekeeping.items.PendingCardActivationGatedItem
 import com.engageft.fis.pscu.feature.gatekeeping.items.Post30DaysGatedItem
 import com.ob.domain.lookup.TransactionStatus
+import com.ob.domain.lookup.branding.BrandingCard
 import com.ob.ws.dom.BasicResponse
 import com.ob.ws.dom.LoginResponse
 import com.ob.ws.dom.utility.DebitCardInfo
@@ -59,6 +59,8 @@ class DashboardViewModel : BaseEngageViewModel(), GateKeeperListener {
 
     val animationObservable: MutableLiveData<DashboardAnimationEvent> = MutableLiveData()
 
+    val brandingCardObservable: MutableLiveData<BrandingCard> = MutableLiveData()
+
     private val dashboardGateKeeper = DashboardGateKeeper(compositeDisposable, this)
 
     private lateinit var debitCardInfo: DebitCardInfo
@@ -91,6 +93,12 @@ class DashboardViewModel : BaseEngageViewModel(), GateKeeperListener {
                                     } catch (e: Throwable) {
                                         spendingBalanceObservable.value = BigDecimal.ZERO
                                         spendingBalanceStateObservable.value = DashboardBalanceState.ERROR
+                                    }
+
+                                    // Find the BrandingCard that matches the current card type. This could be null
+                                    // and null is handled in the view.
+                                    brandingCardObservable.value = BrandingInfoRepo.cards?.find { card ->
+                                        card.type == cardType
                                     }
                                 } ?: run {
                                     // error getting debit card info

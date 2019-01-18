@@ -11,9 +11,8 @@ class CancelCardViewModel : BaseEngageViewModel() {
     val cardCanceledSuccess = MutableLiveData<Boolean>()
 
     fun onCancelClicked(){
-        val token = EngageService.getInstance().storageManager.loginResponse.token
         val cardId = EngageService.getInstance().storageManager.currentCard.debitCardId
-        engageApi().postCancelCard(CardRequest(token,cardId).fieldMap)
+        engageApi().postCancelCard(CardRequest(cardId).fieldMap)
                 .subscribeWithDefaultProgressAndErrorHandling<BasicResponse>(
                         this, {
                     cardCanceledSuccess.value = true

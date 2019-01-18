@@ -3,6 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
+        <import type="android.view.View"/>
         <variable name="viewModel" type="com.engageft.fis.pscu.feature.AccountSettingsViewModel"/>
         <variable
             name="palette"
@@ -146,6 +147,7 @@
                     android:paddingTop="@dimen/listItemPaddingTop"
                     android:paddingBottom="@dimen/listItemPaddingBottom"
                     android:text="@string/SETTINGS_STATEMENTS"
+                    android:visibility="@{viewModel.cardStatementsEnable ? View.VISIBLE : View.GONE}"
                     android:textColor="@color/accountSettingsItemTextColor" />
 
                 <include
@@ -162,6 +164,7 @@
                     android:paddingTop="@dimen/listItemPaddingTop"
                     android:paddingBottom="@dimen/listItemPaddingBottom"
                     android:text="@string/SETTINGS_SECONDARY_ACCOUNT"
+                    android:visibility="@{viewModel.cardSecondaryEnable ? View.VISIBLE : View.GONE}"
                     android:textColor="@color/accountSettingsItemTextColor" />
 
             </LinearLayout>

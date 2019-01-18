@@ -21,9 +21,9 @@ import io.reactivex.schedulers.Schedulers
 
 object BrandingManager {
 
-    fun getBrandingWithToken(token: String): Observable<BasicResponse> {
+    fun getBrandingAuthenticated(): Observable<BasicResponse> {
         return EngageService.getInstance().engageApiInterface.postGetAccountBrandingInfo(
-                AuthenticatedRequest(token).fieldMap)
+                AuthenticatedRequest().fieldMap)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .doOnNext {

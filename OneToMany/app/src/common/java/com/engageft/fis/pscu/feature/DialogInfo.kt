@@ -9,7 +9,9 @@ open class DialogInfo(var title: String? = null,
         GENERIC_ERROR,
         SERVER_ERROR,
         NO_INTERNET_CONNECTION,
+        UNKNOWN_HOST,
         CONNECTION_TIMEOUT,
+        NOT_LOGGED_IN,
         OTHER
     }
 }
