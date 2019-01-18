@@ -10,4 +10,4 @@ import java.math.BigDecimal
  * Created by kurteous on 1/16/19.
  * Copyright (c) 2019 Engage FT. All rights reserved.
  */
-data class BudgetModel(val title: String?, val spentAmount: BigDecimal?, val budgetAmount: BigDecimal?, val fractionTimePeriodPassed: Float?, val isTotalSpent: Boolean = false)
+data class BudgetModel(val title: String? = null, val spentAmount: BigDecimal?, val budgetAmount: BigDecimal?, val fractionTimePeriodPassed: Float?)

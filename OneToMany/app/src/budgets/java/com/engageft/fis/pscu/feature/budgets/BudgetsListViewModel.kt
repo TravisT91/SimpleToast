@@ -3,6 +3,7 @@ package com.engageft.fis.pscu.feature.budgets
 import androidx.lifecycle.MutableLiveData
 import com.engageft.engagekit.EngageService
 import com.engageft.fis.pscu.feature.BaseEngageViewModel
+import com.engageft.fis.pscu.feature.budgets.extension.getCategories
 import com.engageft.fis.pscu.feature.budgets.model.BudgetModel
 import com.ob.ws.dom.LoginResponse
 import io.reactivex.schedulers.Schedulers
@@ -32,22 +33,25 @@ class BudgetsListViewModel : BaseEngageViewModel() {
 
                                 val fractionTimePeriodPassed = fractionOfCurrentMonthPassed() // TODO this will be different within first 30 days
 
-                                // total spent
-                                var totalBudgetModel: BudgetModel? = null
                                 response.budgetInfo?.apply {
+                                    // setup
+                                    val hasBudget = false
+                                    val isFirst30 = false
+
+                                    // total spent
+                                    var totalBudgetModel: BudgetModel? = null
                                     val spent = BigDecimal(budgetAmountSpent)
                                     val total = BigDecimal(budgetAmount)
                                     totalBudgetModel = BudgetModel(
-                                            title = null,           // This is filled in by fragment, which can access Context
+                                            // Title is filled in by fragment, which can access Context
                                             spentAmount = spent,
                                             budgetAmount = total,
-                                            fractionTimePeriodPassed = fractionTimePeriodPassed,
-                                            isTotalSpent = true)
+                                            fractionTimePeriodPassed = fractionTimePeriodPassed)
+
+                                    // categories
+                                    val categorySpendings = getCategories(true)
+
                                 }
-
-                                // categories
-                                var categoryBudgetModels: List<BudgetModel> = mutableListOf()
-
 
                             } else {
                                 handleUnexpectedErrorResponse(response)
