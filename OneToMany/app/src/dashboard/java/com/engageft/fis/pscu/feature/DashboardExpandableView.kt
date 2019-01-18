@@ -83,6 +83,7 @@ class DashboardExpandableView : ConstraintLayout {
 
         val ss = SavedState(superState)
 
+        ss.isVisible = this.visibility == View.VISIBLE
         ss.showingActions = this.showingActions
 
         return ss
@@ -91,6 +92,11 @@ class DashboardExpandableView : ConstraintLayout {
     public override fun onRestoreInstanceState(state: Parcelable) {
         if (state is SavedState) {
             super.onRestoreInstanceState(state.superState)
+            if (state.isVisible) {
+                visibility = View.VISIBLE
+            } else {
+                visibility = View.INVISIBLE
+            }
             this.showingActions = state.showingActions
             if (this.showingActions) {
                 showActionsImmediate()
@@ -101,16 +107,19 @@ class DashboardExpandableView : ConstraintLayout {
     }
 
     internal class SavedState : View.BaseSavedState {
+        var isVisible: Boolean = false
         var showingActions: Boolean = false
 
         constructor(superState: Parcelable) : super(superState)
 
         constructor(source: Parcel) : super(source) {
+            isVisible = source.readByte().toInt() != 0
             showingActions = source.readByte().toInt() != 0
         }
 
         override fun writeToParcel(out: Parcel, flags: Int) {
             super.writeToParcel(out, flags)
+            out.writeByte((if (isVisible) 1 else 0).toByte())
             out.writeByte((if (showingActions) 1 else 0).toByte())
         }
 
@@ -138,8 +147,8 @@ class DashboardExpandableView : ConstraintLayout {
         cardView = findViewById(R.id.cv_dashboard)
         actionsView = findViewById(R.id.layout_card_actions)
         expandCollapseButton = findViewById(R.id.btn_disclose_hide_card_actions)
-        transparentBarBelowCardView = findViewById(R.id.view_transparent_bar_below_card_view)
-        shadowAboveTransparentBar = findViewById(R.id.view_shadow_above_transparent_bar)
+        transparentBarBelowCardView = findViewById(R.id.view_bar_under_button_bottom_half)
+        shadowAboveTransparentBar = findViewById(R.id.view_shadow_under_button_top_half)
         overviewShowHideCardDetailsIcon = findViewById(R.id.overviewShowHideCardDetailsIcon)
         overviewShowHideCardDetailsLabel = findViewById(R.id.overviewShowHideCardDetailsLabel)
         overviewLockUnlockCardIcon = findViewById(R.id.overviewLockUnlockCardIcon)
@@ -225,7 +234,7 @@ class DashboardExpandableView : ConstraintLayout {
     }
 
     // use when restoring state of view to show it expanded immediately
-    private fun showActionsImmediate() {
+    fun showActionsImmediate() {
         showingActions = true
         // card and actions view height
         val layoutParams = cardAndActionsView.layoutParams
