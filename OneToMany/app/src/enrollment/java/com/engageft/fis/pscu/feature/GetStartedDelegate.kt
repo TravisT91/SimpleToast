@@ -158,7 +158,7 @@ class GetStartedDelegate(private val viewModel: EnrollmentViewModel, private val
                                     if (response.isSuccess && response is ActivationCardInfo) {
                                         viewModel.activationCardInfo = response
                                         cardNumber = cardInput.get()!!
-                                        birthDate = DisplayDateTimeUtils.shortDateFormatter.parseDateTime(dateOfBirth.get()!!)
+                                        birthDate = getDateForInput()
 
                                         BrandingManager.getBrandingWithRefCode(response.refCode)
                                                 .subscribeWithDefaultProgressAndErrorHandling<BrandingInfoResponse>(
