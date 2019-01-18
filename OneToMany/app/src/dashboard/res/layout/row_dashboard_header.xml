@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/dashboard_tinted_background"
+    android:descendantFocusability="blocksDescendants">
+
+    <com.engageft.apptoolbox.view.ProductCardView
+        android:id="@+id/productCardView"
+        android:layout_width="wrap_content"
+        android:layout_height="@dimen/dashboard_card_view_height"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginTop="@dimen/dashboard_card_view_top_margin_collapsed"
+        app:condensed="true"
+        app:cardnumberTextAppearance="@style/PrimaryCardTextAppearance"
+        app:cardHolderNameTextAppearance="@style/PrimaryCardTextAppearance"
+        app:cvvTextAppearance="@style/SecondaryCardTextAppearance"
+        app:expirationTextAppearance="@style/SecondaryCardTextAppearance"
+        app:cardMessageTextAppearance="@style/SecondaryCardTextAppearance"
+        app:statusRibbonTextAppearance="@style/CardRibbonTextAppearance"
+        app:statusRibbonColorOk="@color/primary"
+        app:statusRibbonColorNotOk="@color/error"
+        app:providerLogoDrawable="@drawable/cardview_provider_logo_mc"
+        app:cardLockedIcon="@drawable/ic_card_locked"
+        app:productLogoDrawable="@drawable/showcase_logo"
+        app:cvvMask="@string/PRODUCTCARDVIEW_CVV_MASK"
+        app:cardNumberMask="@string/PRODUCTCARDVIEW_CARDNUMBER_MASK"
+        app:cardValidMask="@string/PRODUCTCARDVIEW_CARD_VALID_MASK"
+        android:elevation="8dp"/>
+
+    <View
+        android:id="@+id/view_bar_under_button_bottom_half"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dashboard_transparent_bar_below_card_view_height"
+        app:layout_constraintTop_toTopOf="parent"
+        android:layout_marginTop="@dimen/dashboard_card_and_actions_height_collapsed"
+        android:background="@color/dashboard_tinted_background"
+        android:translationZ="16dp" />
+
+    <androidx.appcompat.widget.AppCompatImageButton
+        android:id="@+id/btn_disclose_hide_card_actions"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:srcCompat="@drawable/ic_dashboard_disclosure_button"
+        android:background="@drawable/round_button_background_for_elevation"
+        android:translationZ="20dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintBottom_toBottomOf="@+id/view_bar_under_button_bottom_half"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginBottom="8dp" />
+
+    <TextView
+        android:id="@+id/spendingBalanceAmount"
+        style="@style/DashboardBalanceAmountTextView"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/btn_disclose_hide_card_actions"
+        app:layout_constraintEnd_toStartOf="@id/savingsBalanceAmount"
+        android:background="@color/dashboard_tinted_background"
+        android:translationZ="16dp"
+        android:text="@string/OVERVIEW_BALANCE_LOADING"
+        tools:text="$1,224.66" />
+
+    <TextView
+        android:id="@+id/spendingBalanceLabel"
+        style="@style/DashboardBalanceLabelTextView"
+        app:layout_constraintStart_toStartOf="@id/spendingBalanceAmount"
+        app:layout_constraintTop_toBottomOf="@id/spendingBalanceAmount"
+        app:layout_constraintEnd_toEndOf="@id/spendingBalanceAmount"
+        android:background="@color/dashboard_tinted_background"
+        android:translationZ="16dp"
+        android:text="@string/OVERVIEW_SPENDING_BALANCE"/>
+
+    <TextView
+        android:id="@+id/savingsBalanceAmount"
+        style="@style/DashboardBalanceAmountTextView"
+        app:layout_constraintStart_toEndOf="@id/spendingBalanceAmount"
+        app:layout_constraintTop_toBottomOf="@id/btn_disclose_hide_card_actions"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:background="@color/dashboard_tinted_background"
+        android:translationZ="16dp"
+        android:text="@string/OVERVIEW_BALANCE_LOADING"
+        tools:text="$620.00"/>
+
+    <TextView
+        android:id="@+id/savingsBalanceLabel"
+        style="@style/DashboardBalanceLabelTextView"
+        app:layout_constraintStart_toStartOf="@id/savingsBalanceAmount"
+        app:layout_constraintTop_toBottomOf="@id/savingsBalanceAmount"
+        app:layout_constraintEnd_toEndOf="@id/savingsBalanceAmount"
+        android:background="@color/dashboard_tinted_background"
+        android:translationZ="16dp"
+        android:text="@string/OVERVIEW_GOALS_BALANCE"/>
+
+    <com.google.android.material.tabs.TabLayout
+        android:id="@+id/transactionsTabLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/spendingBalanceLabel"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:translationZ="16dp"
+        style="@style/DashboardTransactionsTabLayoutStyle">
+
+        <com.google.android.material.tabs.TabItem
+            android:id="@+id/allActivityTabItem"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/OVERVIEW_ALL_ACTIVITY" />
+
+        <com.google.android.material.tabs.TabItem
+            android:id="@+id/depositsTabItem"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/OVERVIEW_DEPOSITS" />
+
+    </com.google.android.material.tabs.TabLayout>
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

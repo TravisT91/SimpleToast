@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <!-- Notifications/alerts will be added in the future -->
+    <!--<item-->
+        <!--android:id="@+id/action_notifications"-->
+        <!--android:icon="@drawable/overview_alert"-->
+        <!--android:title="@string/OPTIONS_MENU_NOTIFICATIONS"-->
+        <!--android:enabled="true"-->
+        <!--android:visible="true"-->
+        <!--app:showAsAction="always" />-->
+
+    <item android:id="@+id/action_search_transactions"
+        android:icon="@drawable/ic_option_dashboard_fragment_search"
+        android:title="@string/OPTIONS_MENU_SEARCH"
+        app:showAsAction="always"/>
+
+</menu>
