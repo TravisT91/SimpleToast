@@ -8,6 +8,7 @@ import androidx.appcompat.widget.AppCompatImageButton
 import androidx.recyclerview.widget.RecyclerView
 import com.engageft.apptoolbox.view.ProductCardModel
 import com.engageft.apptoolbox.view.ProductCardView
+import com.engageft.engagekit.EngageService
 import com.engageft.fis.pscu.R
 import com.engageft.fis.pscu.feature.branding.BrandingInfoRepo
 import com.engageft.fis.pscu.feature.palettebindings.applyBranding
@@ -130,8 +131,13 @@ class DashboardTransactionsAdapter(private val compositeDisposable: CompositeDis
         val transactionsTabLayout: TabLayout = itemView.findViewById(R.id.transactionsTabLayout)
 
         init {
-            BrandingInfoRepo.cards?.get(0)?.let {
-                productCardView.applyBranding(it, compositeDisposable, null)
+            // Find the BrandingCard that matches the current card type.
+            EngageService.getInstance().storageManager.currentCard?.let { currentCard ->
+                    BrandingInfoRepo.cards?.find { card ->
+                        card.type == currentCard.cardType
+                    }?.let { brandingCard ->
+                        productCardView.applyBranding(brandingCard, compositeDisposable, null)
+                    }
             }
 
             expandButton.setOnClickListener { listener.onExpandClicked() }
