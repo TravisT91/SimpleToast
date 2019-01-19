@@ -109,9 +109,9 @@
 
     <fragment
         android:id="@+id/goals_fragment"
-        android:name="com.engageft.fis.pscu.feature.GoalsFragment"
+        android:name="com.engageft.fis.pscu.feature.GoalsListFragment"
         android:label="@string/fragment_title_goals"
-        tools:layout="@layout/fragment_goals">
+        tools:layout="@layout/fragment_goals_list">
         <action
             android:id="@+id/action_goals_fragment_to_goalAdd1Fragment"
             app:destination="@id/goalAdd1Fragment" />
