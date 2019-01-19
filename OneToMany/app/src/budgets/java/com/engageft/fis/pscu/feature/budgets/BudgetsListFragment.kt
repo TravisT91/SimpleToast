@@ -1,12 +1,19 @@
 package com.engageft.fis.pscu.feature.budgets
 
 import android.os.Bundle
+import android.view.LayoutInflater
 import android.view.View
+import android.view.ViewGroup
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.engageft.apptoolbox.BaseViewModel
+import com.engageft.fis.pscu.databinding.FragmentBudgetsListBinding
 import com.engageft.fis.pscu.feature.BaseEngagePageFragment
+import com.engageft.fis.pscu.feature.branding.Palette
+import com.engageft.fis.pscu.feature.budgets.adapter.BudgetModelSection
 import com.engageft.fis.pscu.feature.budgets.model.BudgetModel
+import io.github.luizgrp.sectionedrecyclerviewadapter.SectionedRecyclerViewAdapter
 
 /**
  * BudgetsListFragment
@@ -19,6 +26,8 @@ import com.engageft.fis.pscu.feature.budgets.model.BudgetModel
 class BudgetsListFragment : BaseEngagePageFragment() {
 
     private lateinit var viewModel: BudgetsListViewModel
+    private lateinit var binding: FragmentBudgetsListBinding
+    private var budgetsListAdapter = SectionedRecyclerViewAdapter()
 
     private val budgetsObserver = Observer<Pair<BudgetModel, List<BudgetModel>>> { updateBudgetsList(it)}
 
@@ -27,15 +36,28 @@ class BudgetsListFragment : BaseEngagePageFragment() {
         return viewModel
     }
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
+//    override fun onCreate(savedInstanceState: Bundle?) {
+//        super.onCreate(savedInstanceState)
+//
+//        viewModel.budgetsObservable.observe(viewLifecycleOwner, budgetsObserver)
+//    }
 
-        viewModel.budgetsObservable.observe(viewLifecycleOwner, budgetsObserver)
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+        binding = FragmentBudgetsListBinding.inflate(inflater,container,false)
+        binding.apply {
+            budgetsRecyclerView.apply {
+                layoutManager = LinearLayoutManager(context)
+                adapter = budgetsListAdapter
+            }
+
+        }
+        return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        viewModel.budgetsObservable.observe(viewLifecycleOwner, budgetsObserver)
         viewModel.init()
     }
 
@@ -43,6 +65,14 @@ class BudgetsListFragment : BaseEngagePageFragment() {
         val totalBudgetModel = totalAndCategoryBudgetModels.first
         val categoryBudgetModels = totalAndCategoryBudgetModels.second
 
+        budgetsListAdapter.removeAllSections()
+        budgetsListAdapter.addSection(
+                BudgetModelSection(context!!, listOf(totalBudgetModel), isTotalSection = true)
+        )
 
+        budgetsListAdapter.addSection(
+                BudgetModelSection(context!!, categoryBudgetModels, isTotalSection = false)
+        )
+        budgetsListAdapter.notifyDataSetChanged()
     }
 }

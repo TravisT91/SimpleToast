@@ -39,13 +39,11 @@ class BudgetsListViewModel : BaseEngageViewModel() {
                                     val isFirst30 = false
 
                                     // total spent
-                                    val spent = BigDecimal(budgetAmountSpent)
-                                    val total = BigDecimal(budgetAmount)
                                     val totalBudgetModel = BudgetModel(
                                             // categoryName is not set for total
                                             // title is filled in by fragment, which can access Context
-                                            spentAmount = spent,
-                                            budgetAmount = total,
+                                            spentAmount = BigDecimal(budgetAmountSpent),
+                                            budgetAmount = BigDecimal(budgetAmount),
                                             fractionTimePeriodPassed = fractionTimePeriodPassed)
 
                                     // categories

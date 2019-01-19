@@ -5,7 +5,7 @@ import com.ob.ws.dom.utility.CategorySpending
 /**
  * CategorySpending
  * <p>
- * CategorySpending extension functions
+ * CategorySpending extension and utility functions
  * <p>
  * Created by kurteous on 1/18/19.
  * Copyright (c) 2019 Engage FT. All rights reserved.
@@ -26,4 +26,13 @@ fun CategorySpending.isInOtherBudget(isSetup: Boolean, isInFirst30Days: Boolean)
     return false
 }
 
+fun CategorySpending.isOtherSpending(): Boolean {
+    return isCategoryNameOtherSpending(this.category)
+}
+
+fun isCategoryNameOtherSpending(categoryName: String): Boolean {
+    return categoryName == otherSpendingCategoryName
+}
+
 private val defaultEditCategories: List<String> = listOf("Groceries", "DiningOut", "Shopping", "Entertainment")
+private val otherSpendingCategoryName = "Other Spending"
