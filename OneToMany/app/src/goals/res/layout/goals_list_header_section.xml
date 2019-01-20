@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/ll_total_saved"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:gravity="center"
+    >
+
+    <TextView
+        android:id="@+id/tv_goal_saved_amount"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        tools:text="$24"
+        android:fontFamily="@font/font_light"
+        android:textSize="32sp"
+        android:textColor="@color/black" />
+
+    <TextView
+        android:id="@+id/tv_goal_saved_amount_label"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:fontFamily="@font/font_medium"
+        android:textSize="16sp"
+        android:paddingBottom="32dp"
+        android:text="@string/TOTAL_SPENT_LABEL"/>
+
+</LinearLayout>

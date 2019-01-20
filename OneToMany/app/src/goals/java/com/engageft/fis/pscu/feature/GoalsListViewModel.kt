@@ -18,6 +18,7 @@ class GoalsListViewModel: BaseEngageViewModel() {
 
 //    val canEditGoalsObservable = MutableLiveData<Boolean>()
     var canEditGoal = false
+    var goalsContributed = ""
     val goalsListObservable = MutableLiveData<List<GoalInfo>>()
 
     fun initData() {
@@ -26,6 +27,7 @@ class GoalsListViewModel: BaseEngageViewModel() {
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe({ response ->
                     if (response is LoginResponse) {
+                        goalsContributed = response.goalsContributed
                         canEditGoal = LoginResponseUtils.canEditGoals(response)
                         getGoals(LoginResponseUtils.getCurrentCard(response), true)
                     } else {

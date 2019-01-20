@@ -8,7 +8,7 @@ import com.engageft.fis.pscu.R
 import io.github.luizgrp.sectionedrecyclerviewadapter.SectionParameters
 import io.github.luizgrp.sectionedrecyclerviewadapter.StatelessSection
 
-class GoalAddButtonSection(private val listener: OnButtonSectionListener) : StatelessSection(SectionParameters.builder().itemResourceId(R.layout.goal_add_button_item).build()) {
+class GoalsAddButtonSection(private val listener: OnButtonSectionListener) : StatelessSection(SectionParameters.builder().itemResourceId(R.layout.goals_add_button_item).build()) {
 
     private var button: Button? = null
     private var enabled = true

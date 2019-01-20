@@ -1,4 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="goal_add_button">Add goal</string>
+    <string name="GOALS_ADD_BUTTON">Add goal</string>
+    <string name="GOALS_PAUSED">paused</string>
+    <string name="GOALS_COMPLETE">Completed</string>
+    <string name="GOALS_RECURRENCE_FORMAT">%1$s/%2$s</string>
+    <string name="GOALS_BY_DATE_FORMAT">by %s</string>
+    <string name="GOALS_PROGRESS_FORMAT">%1$s of %2$s</string>
 </resources>

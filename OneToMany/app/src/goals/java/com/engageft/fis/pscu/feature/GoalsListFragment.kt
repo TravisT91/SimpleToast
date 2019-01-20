@@ -8,7 +8,6 @@ import android.widget.Toast
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.engageft.app.feature.goals.adapter.GoalsListSection
 import com.engageft.apptoolbox.BaseViewModel
 import com.engageft.fis.pscu.databinding.FragmentGoalsListBinding
 import com.engageft.fis.pscu.feature.branding.Palette
@@ -57,23 +56,24 @@ class GoalsListFragment : BaseEngagePageFragment() {
         sectionedAdapter.removeAllSections()
 
         if (goalsList.isNotEmpty()) {
+            sectionedAdapter.addSection(GoalsListHeaderSection(context!!, goalsListViewModel.goalsContributed))
+
             sectionedAdapter.addSection(GoalsListSection(context!!, goalsList, object : GoalsListSection.OnGoalListSectionListener {
                 override fun onGoalClicked(goalId: Long) {
                     Toast.makeText(context, "$goalId is clicked!", Toast.LENGTH_SHORT).show()
                 }
             }))
         } else {
-            sectionedAdapter.addSection(GoalEmptyListSection())
+            sectionedAdapter.addSection(GoalsEmptyListSection())
         }
 
         if (canEditGoal) {
             // add button
-            sectionedAdapter.addSection(GoalAddButtonSection(object : GoalAddButtonSection.OnButtonSectionListener {
+            sectionedAdapter.addSection(GoalsAddButtonSection(object : GoalsAddButtonSection.OnButtonSectionListener {
                 override fun onButtonClicked() {
                     //TODO(aHashimi): FOTM- Add a goal.
                     Toast.makeText(context!!, "button clicked!", Toast.LENGTH_SHORT).show()
                 }
-
             }))
         }
 

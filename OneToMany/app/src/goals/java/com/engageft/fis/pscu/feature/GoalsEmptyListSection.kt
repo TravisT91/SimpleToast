@@ -6,7 +6,7 @@ import com.engageft.fis.pscu.R
 import io.github.luizgrp.sectionedrecyclerviewadapter.SectionParameters
 import io.github.luizgrp.sectionedrecyclerviewadapter.StatelessSection
 
-class GoalEmptyListSection : StatelessSection(SectionParameters.builder().itemResourceId(R.layout.goal_empyt_list_item).build()) {
+class GoalsEmptyListSection : StatelessSection(SectionParameters.builder().itemResourceId(R.layout.goals_empyt_list_item).build()) {
 
     override fun getContentItemsTotal(): Int {
         return 1
