@@ -19,11 +19,6 @@ import io.reactivex.schedulers.Schedulers
  *
  * This viewModel also has all possible navigations passed in by the Enrollment activity at create time.
  * This allows the delegates to directly call their navigations.
- *
- * Possible considerations: The Delegates don't have to be inner classes here, and can instead be moved
- * to their own files. This class will likely become very large if not. If that is done, the navController
- * and respecting NavigationDirections objects need to be passed to the delegates at init time so they
- * can do their jobs.
  * </p>
  * Created by joeyhutchins on 12/13/18.
  * Copyright (c) 2018 Engage FT. All rights reserved.
@@ -32,16 +27,20 @@ class EnrollmentViewModel : BaseEngageViewModel() {
     private companion object {
         const val TAG = "EnrollmentViewModel"
     }
+
+    // This ViewModel delegate will always be instantiated. It is part of the logic for the first fragment seen.
     val getStartedDelegate by lazy {
         GetStartedDelegate(this, navController, getStartedNavigations)
     }
 
     // These providers are here to later check isInitialized to determine if the delegates are null or not.
-    val cardPinDelegateProvider = lazy { EnrollmentCardPinDelegate(this, navController, cardPinNavigations) }
-    val createAccountDelegateProvider = lazy { CreateAccountDelegate(this, navController, createAccountNavigations) }
-    val verifyIdentityDelegateProvider = lazy { VerifyIdentityDelegate(this, navController, verifyIdentityNavigations) }
-    val termsOfUseDelegateProvider = lazy { TermsOfUseDelegate() }
+    private val cardPinDelegateProvider = lazy { EnrollmentCardPinDelegate(this, navController, cardPinNavigations) }
+    private val createAccountDelegateProvider = lazy { CreateAccountDelegate(this, navController, createAccountNavigations) }
+    private val verifyIdentityDelegateProvider = lazy { VerifyIdentityDelegate(this, navController, verifyIdentityNavigations) }
+    private val termsOfUseDelegateProvider = lazy { TermsOfUseDelegate() }
 
+    // These delegates may or may not be instantiated. It depends on what the gateKeepers determine
+    // is necessary. The GateKeepers read values from the activationCardInfo to determine which are needed.
     val cardPinDelegate by cardPinDelegateProvider
     val createAccountDelegate by createAccountDelegateProvider
     val verifyIdentityDelegate by verifyIdentityDelegateProvider
@@ -54,8 +53,10 @@ class EnrollmentViewModel : BaseEngageViewModel() {
     private lateinit var verifyIdentityNavigations: EnrollmentNavigations.VerifyIdentityNavigations
     private lateinit var termsNavigations: EnrollmentNavigations.TermsNavigations
 
+    // Intended only to be used by ViewModel delegate objects.
     lateinit var activationCardInfo: ActivationCardInfo
 
+    // Intended to only be used by the EnrollmentActivity during creation time.
     fun initEnrollmentNavigation(navController: NavController, getStartedNavigations: EnrollmentNavigations.GetStartedNavigations,
                                  cardPinNavigations: EnrollmentNavigations.EnrollmentCardPinNavigations, createAccountNavigations: EnrollmentNavigations.CreateAccountNavigations,
                                  verifyIdentityNavigations: EnrollmentNavigations.VerifyIdentityNavigations, termsNavigations: EnrollmentNavigations.TermsNavigations) {
@@ -67,6 +68,12 @@ class EnrollmentViewModel : BaseEngageViewModel() {
         this.termsNavigations = termsNavigations
     }
 
+    /*
+    Check each delegate to determine if it was instantiated. If the delegate is instantiated, that means
+    the navigation gatekeepers determined that information was necessary for the card activation
+    enrollment. Therefore, we need to bundle the information into the activation request to the
+    backend.
+     */
     fun finalSubmit() {
         //TODO(aHashimi): when ThreatMetrix is added, pass the session-id!
         val request = ActivationRequest(
@@ -80,6 +87,7 @@ class EnrollmentViewModel : BaseEngageViewModel() {
 
         if (createAccountDelegateProvider.isInitialized()) {
             request.email = createAccountDelegate.userEmail
+            request.password = createAccountDelegate.userPassword
         }
 
         if (verifyIdentityDelegateProvider.isInitialized()) {
