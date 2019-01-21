@@ -10,6 +10,7 @@ import androidx.core.content.res.ResourcesCompat
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import com.engageft.apptoolbox.BaseViewModel
+import com.engageft.apptoolbox.NavigationOverrideClickListener
 import com.engageft.apptoolbox.util.applyTypefaceAndColorToSubString
 import com.engageft.fis.pscu.R
 import com.engageft.fis.pscu.databinding.FragmentCardActivatedBinding
@@ -33,6 +34,13 @@ class CardActiveFragment : BaseEngagePageFragment() {
 
     private val brandingCardObserver = Observer<BrandingCard> { updateBrandingCard(it) }
 
+    private val navigationOverrideClickListener = object : NavigationOverrideClickListener {
+        override fun onClick(): Boolean {
+            activity!!.finish()
+            return true
+        }
+    }
+
     override fun createViewModel(): BaseViewModel? {
         val enrollmentViewModel = ViewModelProviders.of(activity!!).get(EnrollmentViewModel::class.java)
         viewModel = enrollmentViewModel
@@ -43,6 +51,9 @@ class CardActiveFragment : BaseEngagePageFragment() {
         binding = FragmentCardActivatedBinding.inflate(inflater, container, false)
         binding.viewModel = viewModelDelegate
         binding.palette = Palette
+
+        backButtonOverrideProvider.setBackButtonOverride(navigationOverrideClickListener)
+        upButtonOverrideProvider.setUpButtonOverride(navigationOverrideClickListener)
 
         binding.title.text = getString(R.string.ENROLLMENT_CARD_ACTIVE).applyTypefaceAndColorToSubString(
                 ResourcesCompat.getFont(context!!, R.font.font_bold)!!,

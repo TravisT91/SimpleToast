@@ -13,6 +13,9 @@
         <action
             android:id="@+id/action_cardActiveFragment_to_notAuthenticatedActivity3"
             app:destination="@id/notAuthenticatedActivity3" />
+        <argument
+            android:name="@string/navigation_toolbar_visibility"
+            android:defaultValue="@integer/navigation_toolbar_visibility_gone"/>
     </fragment>
     <fragment
         android:id="@+id/cardLinkedFragment"
@@ -24,6 +27,9 @@
         <action
             android:id="@+id/action_cardLinkedFragment_to_notAuthenticatedActivity3"
             app:destination="@id/notAuthenticatedActivity3" />
+        <argument
+            android:name="@string/navigation_toolbar_visibility"
+            android:defaultValue="@integer/navigation_toolbar_visibility_gone"/>
     </fragment>
     <fragment
         android:id="@+id/createAccountFragment"
