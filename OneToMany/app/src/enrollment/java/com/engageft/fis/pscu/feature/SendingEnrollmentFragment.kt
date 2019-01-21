@@ -7,7 +7,6 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
-import androidx.navigation.findNavController
 import com.engageft.apptoolbox.BaseViewModel
 import com.engageft.apptoolbox.NavigationOverrideClickListener
 import com.engageft.apptoolbox.ToolbarVisibilityState
@@ -70,18 +69,9 @@ class SendingEnrollmentFragment : BaseEngagePageFragment() {
                         descriptionTextView.visibility = View.GONE
                     }
                     EnrollmentViewModel.ActivationStatus.FAIL -> {
-                        navigateAfterDelay(R.id.action_sendingEnrollmentFragment_to_enrollmentErrorFragment)
+                        // Do nothing
                     }
                 }
-            })
-
-            enrollmentViewModel.cardActivationStatusObservable.observe(viewLifecycleOwner, Observer {
-                val id = when (it) {
-                    EnrollmentViewModel.CardActivationStatus.ACTIVE -> R.id.action_sendingEnrollmentFragment_to_cardActiveFragment
-                    EnrollmentViewModel.CardActivationStatus.LINKED -> R.id.action_sendingEnrollmentFragment_to_cardLinkedFragment
-                    else -> -1
-                }
-                navigateAfterDelay(id)
             })
         }
 
@@ -90,17 +80,7 @@ class SendingEnrollmentFragment : BaseEngagePageFragment() {
         return binding.root
     }
 
-    private fun navigateAfterDelay(id: Int) {
-        if (id != -1) {
-            //let the user see the success screen for 1 second!
-            Handler().postDelayed({
-                binding.root.findNavController().navigate(id)
-            }, NAV_DELAY_TIME_MS)
-        }
-    }
-
     private companion object {
-        const val NAV_DELAY_TIME_MS = 1000L
         const val PROGRESS_UPDATE_DELAY_TIME_MS = 100L
         const val PROGRESS_VALUE_COMPLETE = 100
         const val PROGRESS_VALUE_INCREMENT = 20

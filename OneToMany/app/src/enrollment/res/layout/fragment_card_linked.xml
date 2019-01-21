@@ -3,7 +3,7 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <data>
-        <variable name="viewModel" type="com.engageft.fis.pscu.feature.EnrollmentViewModel"/>
+        <variable name="viewModel" type="com.engageft.fis.pscu.feature.CardLinkedDelegate"/>
         <variable
             name="palette"
             type="com.engageft.fis.pscu.feature.branding.Palette"/>
@@ -54,7 +54,7 @@
                 style="@style/Title1Quiet"
                 android:textColor="@color/structure6"
                 android:layout_gravity="center_horizontal"
-                android:text="Hello World"/>
+                android:text="@string/ENROLLMENT_CARD_LINKED"/>
 
             <androidx.appcompat.widget.AppCompatTextView
                 android:layout_width="wrap_content"
@@ -63,7 +63,7 @@
                 android:textColor="@color/structure5"
                 android:layout_gravity="center_horizontal"
                 android:layout_marginTop="14dp"
-                android:text="Hello World"/>
+                android:text="@string/ENROLLMENT_SUCCESS_SUBTITLE"/>
         </LinearLayout>
 
         <com.engageft.apptoolbox.view.PillButton
@@ -74,6 +74,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
             android:layout_marginBottom="16dp"
+            android:onClick="@{() -> viewModel.onDoneClicked()}"
             app:layout_constraintTop_toBottomOf="@id/textForm"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"

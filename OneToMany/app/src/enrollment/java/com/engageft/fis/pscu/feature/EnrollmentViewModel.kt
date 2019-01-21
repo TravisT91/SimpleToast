@@ -1,11 +1,13 @@
 package com.engageft.fis.pscu.feature
 
+import android.os.Handler
 import androidx.navigation.NavController
 import com.engageft.engagekit.EngageService
 import com.engageft.engagekit.aac.SingleLiveEvent
 import com.engageft.engagekit.rest.request.ActivationRequest
 import com.ob.domain.lookup.DebitCardStatus
 import com.ob.ws.dom.ActivationCardInfo
+import com.ob.ws.dom.ActivationResponse
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 
@@ -26,6 +28,7 @@ import io.reactivex.schedulers.Schedulers
 class EnrollmentViewModel : BaseEngageViewModel() {
     private companion object {
         const val TAG = "EnrollmentViewModel"
+        const val NAV_DELAY_TIME_MS = 1000L
     }
 
     // This ViewModel delegate will always be instantiated. It is part of the logic for the first fragment seen.
@@ -45,6 +48,12 @@ class EnrollmentViewModel : BaseEngageViewModel() {
     val createAccountDelegate by createAccountDelegateProvider
     val verifyIdentityDelegate by verifyIdentityDelegateProvider
     val termsOfUseDelegate by termsOfUseDelegateProvider
+    val cardActiveDelegate by lazy {
+        CardActiveDelegate(this, navController, activeNavigations)
+    }
+    val cardLinkedDelegate by lazy {
+        CardLinkedDelegate(this, navController, linkedNavigations)
+    }
 
     private lateinit var navController: NavController
     private lateinit var getStartedNavigations: EnrollmentNavigations.GetStartedNavigations
@@ -52,20 +61,29 @@ class EnrollmentViewModel : BaseEngageViewModel() {
     private lateinit var createAccountNavigations: EnrollmentNavigations.CreateAccountNavigations
     private lateinit var verifyIdentityNavigations: EnrollmentNavigations.VerifyIdentityNavigations
     private lateinit var termsNavigations: EnrollmentNavigations.TermsNavigations
+    private lateinit var sendingNavigations: EnrollmentNavigations.SendingNavigations
+    private lateinit var linkedNavigations: EnrollmentNavigations.LinkedNavigations
+    private lateinit var activeNavigations: EnrollmentNavigations.ActiveNavigations
 
     // Intended only to be used by ViewModel delegate objects.
     lateinit var activationCardInfo: ActivationCardInfo
+    lateinit var activationResponse: ActivationResponse
 
     // Intended to only be used by the EnrollmentActivity during creation time.
     fun initEnrollmentNavigation(navController: NavController, getStartedNavigations: EnrollmentNavigations.GetStartedNavigations,
                                  cardPinNavigations: EnrollmentNavigations.EnrollmentCardPinNavigations, createAccountNavigations: EnrollmentNavigations.CreateAccountNavigations,
-                                 verifyIdentityNavigations: EnrollmentNavigations.VerifyIdentityNavigations, termsNavigations: EnrollmentNavigations.TermsNavigations) {
+                                 verifyIdentityNavigations: EnrollmentNavigations.VerifyIdentityNavigations, termsNavigations: EnrollmentNavigations.TermsNavigations,
+                                 sendingNavigations: EnrollmentNavigations.SendingNavigations, linkedNavigations: EnrollmentNavigations.LinkedNavigations,
+                                 activeNavigations: EnrollmentNavigations.ActiveNavigations) {
         this.navController = navController
         this.getStartedNavigations = getStartedNavigations
         this.cardPinNavigations = cardPinNavigations
         this.createAccountNavigations = createAccountNavigations
         this.verifyIdentityNavigations = verifyIdentityNavigations
         this.termsNavigations = termsNavigations
+        this.sendingNavigations = sendingNavigations
+        this.linkedNavigations = linkedNavigations
+        this.activeNavigations = activeNavigations
     }
 
     /*
@@ -112,7 +130,6 @@ class EnrollmentViewModel : BaseEngageViewModel() {
     }
 
     val successSubmissionObservable = SingleLiveEvent<ActivationStatus>()
-    val cardActivationStatusObservable = SingleLiveEvent<CardActivationStatus>()
     var backendError: String = ""
 
     private fun submitActivation(request: ActivationRequest) {
@@ -121,23 +138,34 @@ class EnrollmentViewModel : BaseEngageViewModel() {
                         .subscribeOn(Schedulers.io())
                         .observeOn(AndroidSchedulers.mainThread())
                         .subscribe({ response ->
-                            if (response.isSuccess) {
+                            if (response.isSuccess && response is ActivationResponse) {
+                                activationResponse = response
                                 successSubmissionObservable.value = ActivationStatus.SUCCESS
 
                                 if (activationCardInfo.cardStatus == DebitCardStatus.PENDING_ACTIVATION.toString()) {
-                                    cardActivationStatusObservable.value = CardActivationStatus.ACTIVE
+                                    navigateAfterDelay(sendingNavigations.sendingToActive)
                                 } else {
-                                    cardActivationStatusObservable.value = CardActivationStatus.LINKED
+                                    navigateAfterDelay(sendingNavigations.sendingToLinked)
                                 }
                             } else {
                                 successSubmissionObservable.value = ActivationStatus.FAIL
                                 backendError = getBackendErrorForForms(response)
+                                navController.navigate(sendingNavigations.sendingToError)
                             }
                         }) { e ->
                             successSubmissionObservable.value = ActivationStatus.FAIL
                             handleThrowable(e)
                         }
         )
+    }
+
+    private fun navigateAfterDelay(id: Int) {
+        if (id != -1) {
+            //let the user see the success screen for 1 second!
+            Handler().postDelayed({
+                navController.navigate(id)
+            }, NAV_DELAY_TIME_MS)
+        }
     }
 
     //TODO(aHashimi): Not completed, this should be its own class
@@ -153,5 +181,8 @@ class EnrollmentViewModel : BaseEngageViewModel() {
         class CreateAccountNavigations(val createAccountToVerifyIdentity: Int, val createAccountToTerms: Int, val createAccountToSending: Int)
         class VerifyIdentityNavigations(val verifyIdentityToTerms: Int, val verifyIdentityToSending: Int)
         class TermsNavigations(val termsToSending: Int)
+        class SendingNavigations(val sendingToError: Int, val sendingToActive: Int, val sendingToLinked: Int)
+        class LinkedNavigations(val linkedToDashboard: Int, val linkedToLogin: Int)
+        class ActiveNavigations(val activeToDashboard: Int, val activeToLogin: Int)
     }
 }
