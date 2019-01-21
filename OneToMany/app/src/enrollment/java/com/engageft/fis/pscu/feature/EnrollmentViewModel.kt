@@ -5,6 +5,7 @@ import androidx.navigation.NavController
 import com.engageft.engagekit.EngageService
 import com.engageft.engagekit.aac.SingleLiveEvent
 import com.engageft.engagekit.rest.request.ActivationRequest
+import com.engageft.fis.pscu.feature.authentication.AuthenticationSharedPreferencesRepo
 import com.ob.domain.lookup.DebitCardStatus
 import com.ob.ws.dom.ActivationCardInfo
 import com.ob.ws.dom.ActivationResponse
@@ -84,6 +85,11 @@ class EnrollmentViewModel : BaseEngageViewModel() {
         this.sendingNavigations = sendingNavigations
         this.linkedNavigations = linkedNavigations
         this.activeNavigations = activeNavigations
+    }
+
+    init {
+        val useDemoServer = AuthenticationSharedPreferencesRepo.isUsingDemoServer()
+        EngageService.getInstance().engageConfig.isUsingProdEnvironment = !useDemoServer
     }
 
     /*
