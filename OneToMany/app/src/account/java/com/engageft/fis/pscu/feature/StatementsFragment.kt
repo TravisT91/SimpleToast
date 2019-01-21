@@ -34,7 +34,6 @@ import utilGen1.DisplayDateTimeUtils
  * Copyright (c) 2018 Engage FT. All rights reserved.
  */
 class StatementsFragment: BaseEngagePageFragment() {
-
     private val sectionAdapter: SectionedRecyclerViewAdapter = SectionedRecyclerViewAdapter()
     private lateinit var statementsViewModel: StatementsViewModel
 
@@ -53,7 +52,7 @@ class StatementsFragment: BaseEngagePageFragment() {
 
         binding.viewModel = statementsViewModel
 
-        statementsViewModel.statementsObservable.observe(this, Observer { statementsList ->
+        statementsViewModel.statementsObservable.observe(viewLifecycleOwner, Observer { statementsList ->
             updateRecyclerView(statementsList)
         })
 
