@@ -8,18 +8,76 @@
             name="palette"
             type="com.engageft.fis.pscu.feature.branding.Palette"/>
     </data>
+
+
     <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/contentBox"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
-        <LinearLayout
+
+        <com.engageft.apptoolbox.view.ProductCardView
+            android:id="@+id/cardView"
             android:layout_width="wrap_content"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintBottom_toTopOf="@id/textForm"
+            app:layout_constraintVertical_chainStyle="packed"
+            android:layout_height="@dimen/dashboard_card_view_height"
+            app:condensed="false"
+            app:cardnumberTextAppearance="@style/EnrollmentPlaceholderCardnumberTextAppearance"
+            app:providerLogoDrawable="@null"
+            app:cardLockedIcon="@null"
+            app:productLogoDrawable="@null"
+            app:cardBackground="@drawable/card_background_placeholder"
+            app:cardNumberText="@string/ENROLLMENT_CARD_NUMBER_HINT"
+            android:elevation="8dp"/>
+
+        <LinearLayout
+            android:id="@+id/textForm"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical">
-            <Button
-                android:id="@+id/button1"
+            app:layout_constraintTop_toBottomOf="@id/cardView"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintBottom_toTopOf="@id/doneButton"
+            android:orientation="vertical"
+            android:layout_marginTop="21dp"
+            android:layout_marginBottom="32dp"
+            android:paddingStart="16dp"
+            android:paddingEnd="16dp">
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/title"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="authenticated"/>
+                style="@style/Title1Quiet"
+                android:textColor="@color/structure6"
+                android:layout_gravity="center_horizontal"
+                android:text="Hello World"/>
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                style="@style/Body"
+                android:textColor="@color/structure5"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="14dp"
+                android:text="Hello World"/>
         </LinearLayout>
+
+        <com.engageft.apptoolbox.view.PillButton
+            android:id="@+id/doneButton"
+            style="@style/ButtonPillPrimaryFilledDefault"
+            PillButton.setThemeFilled="@{true}"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:layout_marginBottom="16dp"
+            app:layout_constraintTop_toBottomOf="@id/textForm"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:text="@string/ENROLLMENT_DONE"/>
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>
