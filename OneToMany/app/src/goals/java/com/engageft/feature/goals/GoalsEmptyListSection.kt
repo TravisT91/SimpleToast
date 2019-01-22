@@ -1,4 +1,4 @@
-package goals
+package com.engageft.feature.goals
 
 import android.content.Context
 import android.view.View

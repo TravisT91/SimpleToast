@@ -1,4 +1,4 @@
-package goals
+package com.engageft.feature.goals
 
 import android.os.Bundle
 import android.view.LayoutInflater

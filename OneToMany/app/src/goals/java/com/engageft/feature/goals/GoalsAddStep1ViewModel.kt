@@ -1,4 +1,4 @@
-package goals
+package com.engageft.feature.goals
 
 import androidx.databinding.ObservableField
 import com.engageft.fis.pscu.feature.BaseEngageViewModel
