@@ -4,10 +4,12 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.widget.AppCompatTextView
+import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.engageft.apptoolbox.view.ProductCardModelCardStatus
 import com.engageft.fis.pscu.R
+import com.engageft.fis.pscu.feature.branding.Palette
 import com.engageft.fis.pscu.feature.utils.CardStatusUtils
 
 /**
@@ -72,9 +74,9 @@ class SecondaryUserListRecyclerViewAdapter(private val selectionListener: Second
                 holder.userNameTextView.text = item.name
                 holder.statusTextView.text = CardStatusUtils.cardStatusStringForProductCardModelCardStatus(holder.itemView.context, item.cardStatus)
                 if (item.cardStatus != ProductCardModelCardStatus.CARD_STATUS_ACTIVE) {
-
+                    holder.statusTextView.setTextColor(Palette.errorColor)
                 } else {
-                    
+                    holder.statusTextView.setTextColor(ContextCompat.getColor(holder.itemView.context!!, R.color.structure5))
                 }
             }
             is SecondaryUserViewHolder.AddUserViewHolder -> {
@@ -86,7 +88,7 @@ class SecondaryUserListRecyclerViewAdapter(private val selectionListener: Second
             }
             is SecondaryUserViewHolder.CardFooterViewHolder -> {
                 val item = items[position] as SecondaryUserListItem.CardFooterType
-                holder.setUserLimit(item.cardUserLimit)
+                holder.userLimitText.text = String.format(holder.itemView.context.getString(R.string.secondary_users_user_limit_footer_format), item.cardUserLimit)
             }
         }
     }
@@ -115,11 +117,7 @@ class SecondaryUserListRecyclerViewAdapter(private val selectionListener: Second
             val cardTitleText: AppCompatTextView = itemView.findViewById(R.id.cardTitleText)
         }
         class CardFooterViewHolder(viewHolderListener: ViewHolderListener, itemView: View) : SecondaryUserViewHolder(viewHolderListener, itemView) {
-            private val userLimitText: AppCompatTextView = itemView.findViewById(R.id.userLimitText)
-
-            fun setUserLimit(numUsers: Int) {
-                userLimitText.text = String.format(itemView.context.getString(R.string.secondary_users_user_limit_footer_format), numUsers)
-            }
+            val userLimitText: AppCompatTextView = itemView.findViewById(R.id.userLimitText)
         }
     }
 
