@@ -5,7 +5,9 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.lifecycle.ViewModelProviders
+import androidx.navigation.findNavController
 import com.engageft.apptoolbox.BaseViewModel
+import com.engageft.fis.pscu.R
 import com.engageft.fis.pscu.databinding.FragmentGoalsAddStep1Binding
 import com.engageft.fis.pscu.feature.BaseEngagePageFragment
 import com.engageft.fis.pscu.feature.branding.Palette
@@ -31,6 +33,10 @@ class GoalsAddStep1Fragment : BaseEngagePageFragment() {
         val binding = FragmentGoalsAddStep1Binding.inflate(inflater, container, false).apply {
             viewModel = addGoalViewModel
             palette = Palette
+
+            nextButton.setOnClickListener {
+                root.findNavController().navigate(R.id.action_goalsAddStep1Fragment_to_goalsAddStep2Fragment)
+            }
         }
 
         return binding.root

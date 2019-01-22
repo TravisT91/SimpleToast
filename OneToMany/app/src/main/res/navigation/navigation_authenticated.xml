@@ -320,9 +320,15 @@
             android:defaultValue="true" />
     </fragment>
     <fragment
+<<<<<<< Updated upstream
         android:id="@+id/goalAdd2Fragment"
         android:name="com.engageft.feature.goals.GoalAdd2Fragment"
         android:label="GoalAdd2Fragment" />
+=======
+        android:id="@+id/goalsAddStep2Fragment"
+        android:name="com.engageft.feature.goals.GoalsAddStep2Fragment"
+        android:label="goalsAddStep2Fragment" />
+>>>>>>> Stashed changes
     <fragment
         android:id="@+id/accountNotificationsFragment"
         android:name="com.engageft.fis.pscu.feature.AccountNotificationsFragment"
@@ -464,7 +470,7 @@
         android:id="@+id/goalsAddStep1Fragment"
         android:name="com.engageft.feature.goals.GoalsAddStep1Fragment">
         <action
-            android:id="@+id/action_goalsAddStep1Fragment_to_goalAdd2Fragment"
-            app:destination="@id/goalAdd2Fragment" />
+            android:id="@+id/action_goalsAddStep1Fragment_to_goalsAddStep2Fragment"
+            app:destination="@id/goalsAddStep2Fragment" />
     </fragment>
 </navigation>

@@ -16,7 +16,7 @@ import com.engageft.fis.pscu.feature.BaseEngagePageFragment
  * Created by joeyhutchins on 8/24/18.
  * Copyright (c) 2018 Engage FT. All rights reserved.
  */
-class GoalAdd2Fragment : BaseEngagePageFragment() {
+class GoalsAddStep2Fragment : BaseEngagePageFragment() {
 
     override fun createViewModel(): BaseViewModel? {
         return null
