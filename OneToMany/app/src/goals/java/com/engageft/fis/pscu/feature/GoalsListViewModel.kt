@@ -11,17 +11,20 @@ import com.ob.ws.dom.utility.DebitCardInfo
 import com.ob.ws.dom.utility.GoalInfo
 
 class GoalsListViewModel: BaseEngageViewModel() {
-
-    init {
-        initData()
-    }
-
-//    val canEditGoalsObservable = MutableLiveData<Boolean>()
     var canEditGoal = false
     var goalsContributed = ""
     val goalsListObservable = MutableLiveData<List<GoalInfo>>()
+    private var goalsList = mutableListOf<GoalInfo>()
 
-    fun initData() {
+    init {
+        initData(true)
+    }
+
+    fun refreshViews(useCache: Boolean) {
+        initData(useCache)
+    }
+
+    private fun initData(useCache: Boolean) {
         compositeDisposable.add(EngageService.getInstance().loginResponseAsObservable
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
@@ -29,7 +32,7 @@ class GoalsListViewModel: BaseEngageViewModel() {
                     if (response is LoginResponse) {
                         goalsContributed = response.goalsContributed
                         canEditGoal = LoginResponseUtils.canEditGoals(response)
-                        getGoals(LoginResponseUtils.getCurrentCard(response), true)
+                        getGoals(LoginResponseUtils.getCurrentCard(response), useCache)
                     } else {
                         dialogInfoObservable.value = DialogInfo()
                     }
@@ -39,7 +42,7 @@ class GoalsListViewModel: BaseEngageViewModel() {
         )
     }
 
-    fun getGoals(debitCardInfo: DebitCardInfo, useCache: Boolean) {
+    private fun getGoals(debitCardInfo: DebitCardInfo, useCache: Boolean) {
         progressOverlayShownObservable.value = true
         compositeDisposable.add(
                 EngageService.getInstance().goalsObservable(debitCardInfo, useCache)
@@ -48,7 +51,11 @@ class GoalsListViewModel: BaseEngageViewModel() {
                         .subscribe({ response ->
                             progressOverlayShownObservable.value = false
                             if (response.isSuccess && response is GoalsResponse) {
-                                goalsListObservable.value = response.goals
+                                if (goalsList != response.goals) {
+                                    // refresh views
+                                    goalsList = response.goals
+                                    goalsListObservable.value = goalsList
+                                }
                             } else {
                                 handleUnexpectedErrorResponse(response)
                             }
@@ -57,9 +64,5 @@ class GoalsListViewModel: BaseEngageViewModel() {
                             handleThrowable(e)
                         })
         )
-    }
-
-    fun refreshViews() {
-
     }
 }

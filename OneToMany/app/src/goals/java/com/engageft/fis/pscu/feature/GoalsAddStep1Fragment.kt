@@ -19,7 +19,7 @@ import com.engageft.fis.pscu.R
  * Created by joeyhutchins on 8/24/18.
  * Copyright (c) 2018 Engage FT. All rights reserved.
  */
-class GoalAdd1Fragment : BaseEngagePageFragment() {
+class GoalsAddStep1Fragment : BaseEngagePageFragment() {
 
     override fun createViewModel(): BaseViewModel? {
         return null
@@ -30,7 +30,7 @@ class GoalAdd1Fragment : BaseEngagePageFragment() {
         val button = view.findViewById<Button>(R.id.button)
         button.setOnClickListener{
             Handler().postDelayed( {
-                view.findNavController().navigate(R.id.action_goalAdd1Fragment_to_goalAdd2Fragment)
+                view.findNavController().navigate(R.id.action_goalsAddStep1Fragment_to_goalAdd2Fragment)
             }, 2000)
             val desiredState = if (toolbarController.toolbarVisibilityState == ToolbarVisibilityState.GONE) ToolbarVisibilityState.VISIBLE else ToolbarVisibilityState.GONE
             toolbarController.animateToolbarVisibility(desiredState, 500L)

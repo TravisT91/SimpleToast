@@ -26,17 +26,22 @@ fun GoalInfo.isCompleted(): Boolean {
     return this.isAchieved || this.payPlan == null
 }
 
-// if paused, "paused", or like "$5.14/Daily"
+// if paused, "Paused", or like "$5/Daily", or if completed, total contributed like "$300"
 fun GoalInfo.getGoalInfoContributionString(context: Context): String? {
+    var result: String? = null
 
-    this.payPlan?.let { // allow null payPlan.amount, which will be handled in getPayPlanInfoContributionString()
-        return it.getPayPlanInfoContributionString(context)
+    if (isCompleted()) {
+        result = StringUtils.formatCurrencyStringWithFractionDigits(amount.toString(), false)
+    } else {
+        payPlan?.let {
+            result = it.getPayPlanInfoContributionString(context)
+        }
     }
 
-    return null
+    return result
 }
 
-// if paused, "paused", or like "$5.14/day"
+// if paused, "paused", or like "$5/day"
 fun PayPlanInfo.getPayPlanInfoContributionString(context: Context): String {
     return if (this.isPaused) {
         context.getString(R.string.GOALS_PAUSED)
@@ -46,7 +51,7 @@ fun PayPlanInfo.getPayPlanInfoContributionString(context: Context): String {
             planAmount = it.toPlainString()
         }
         String.format(context.getString(R.string.GOALS_RECURRENCE_FORMAT),
-                StringUtils.formatCurrencyStringWithFractionDigits(planAmount, true),
+                StringUtils.formatCurrencyStringWithFractionDigits(planAmount, false),
                 PayPlanUtils.getPayPlanFrequencyDisplayStringForRecurrenceType(context, this.recurrenceType))
     }
 

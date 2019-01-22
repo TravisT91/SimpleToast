@@ -2,13 +2,18 @@ package com.engageft.fis.pscu.feature
 
 import android.os.Bundle
 import android.view.LayoutInflater
+import android.view.Menu
+import android.view.MenuInflater
+import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
+import androidx.navigation.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.engageft.apptoolbox.BaseViewModel
+import com.engageft.fis.pscu.R
 import com.engageft.fis.pscu.databinding.FragmentGoalsListBinding
 import com.engageft.fis.pscu.feature.branding.Palette
 import com.ob.ws.dom.utility.GoalInfo
@@ -26,14 +31,20 @@ class GoalsListFragment : BaseEngagePageFragment() {
 
     private lateinit var sectionedAdapter: SectionedRecyclerViewAdapter
     private lateinit var goalsListViewModel: GoalsListViewModel
+    private lateinit var binding: FragmentGoalsListBinding
 
     override fun createViewModel(): BaseViewModel? {
         goalsListViewModel = ViewModelProviders.of(this).get(GoalsListViewModel::class.java)
         return goalsListViewModel
     }
 
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setHasOptionsMenu(true)
+    }
+
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        val binding = FragmentGoalsListBinding.inflate(inflater, container, false).apply {
+        binding = FragmentGoalsListBinding.inflate(inflater, container, false).apply {
             viewModel = goalsListViewModel
             palette = Palette
 
@@ -46,6 +57,11 @@ class GoalsListFragment : BaseEngagePageFragment() {
                 goalsListObservable.observe(viewLifecycleOwner, Observer {
                     updateRecyclerView(it)
                 })
+            }
+
+            swipeToRefreshLayout.setOnRefreshListener {
+                swipeToRefreshLayout.isRefreshing = false
+                goalsListViewModel.refreshViews(false)
             }
         }
 
@@ -64,20 +80,45 @@ class GoalsListFragment : BaseEngagePageFragment() {
                 }
             }))
         } else {
-            sectionedAdapter.addSection(GoalsEmptyListSection())
+            sectionedAdapter.addSection(GoalsEmptyListSection(context!!))
         }
 
         if (canEditGoal) {
             // add button
             sectionedAdapter.addSection(GoalsAddButtonSection(object : GoalsAddButtonSection.OnButtonSectionListener {
                 override fun onButtonClicked() {
-                    //TODO(aHashimi): FOTM- Add a goal.
-                    Toast.makeText(context!!, "button clicked!", Toast.LENGTH_SHORT).show()
+                    binding.root.findNavController().navigate(R.id.action_goalsListFragment_to_goalsAddStep1Fragment)
                 }
             }))
+            activity?.invalidateOptionsMenu()
         }
 
         sectionedAdapter.notifyDataSetChanged()
+    }
+
+    override fun onResume() {
+        super.onResume()
+        goalsListViewModel.refreshViews(false)
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu?, inflater: MenuInflater?) {
+        inflater?.inflate(R.menu.menu_create_transfer, menu)
+        super.onCreateOptionsMenu(menu, inflater)
+    }
+
+    override fun onPrepareOptionsMenu(menu: Menu?) {
+        val menuItem = menu!!.findItem(R.id.createTransfer)
+        menuItem.isVisible = goalsListViewModel.canEditGoal
+        super.onPrepareOptionsMenu(menu)
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem?): Boolean {
+        when(item?.itemId){
+            R.id.createTransfer -> run {
+                binding.root.findNavController().navigate(R.id.action_goalsListFragment_to_goalsAddStep1Fragment)
+            }
+        }
+        return super.onOptionsItemSelected(item)
     }
 
 }

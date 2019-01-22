@@ -1,9 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="GOALS_ADD_BUTTON">Add goal</string>
-    <string name="GOALS_PAUSED">paused</string>
+    <string name="GOALS_PAUSED">Paused</string>
     <string name="GOALS_COMPLETE">Completed</string>
     <string name="GOALS_RECURRENCE_FORMAT">%1$s/%2$s</string>
     <string name="GOALS_BY_DATE_FORMAT">by %s</string>
     <string name="GOALS_PROGRESS_FORMAT">%1$s of %2$s</string>
+    <string name="GOALS_TOTAL_BALANCE">Total balance</string>
+    <string name="GOALS_OF_WORD">of</string>
+    <string name="GOALS_EMPTY_LIST_HEADER">Set money aside toward your goals.</string>
+    <string name="GOALS_EMPTY_LIST_HEADER_SUBSTRING">goals.</string>
+    <string name="GOALS_EMPTY_LIST_SUB_HEADER">Set money aside to cover the unexpected as well as fun things (like trips).</string>
 </resources>

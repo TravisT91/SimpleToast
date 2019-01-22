@@ -5,25 +5,28 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical"
-    android:gravity="center"
-    >
+    android:gravity="center">
 
     <TextView
+        style="@style/LargeTitleQuiet"
         android:id="@+id/tv_goal_saved_amount"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        tools:text="$24"
-        android:fontFamily="@font/font_light"
-        android:textSize="32sp"
-        android:textColor="@color/black" />
+        android:paddingBottom="8dp"
+        android:paddingStart="16dp"
+        android:paddingEnd="16dp"
+        android:textColor="@color/structure6"
+        android:gravity="center_horizontal"
+        tools:text="$530" />
 
     <TextView
+        style="@style/Body"
         android:id="@+id/tv_goal_saved_amount_label"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:fontFamily="@font/font_medium"
-        android:textSize="16sp"
-        android:paddingBottom="32dp"
-        android:text="@string/TOTAL_SPENT_LABEL"/>
+        android:paddingStart="16dp"
+        android:paddingEnd="16dp"
+        android:paddingBottom="24dp"
+        android:text="@string/GOALS_TOTAL_BALANCE"/>
 
 </LinearLayout>
