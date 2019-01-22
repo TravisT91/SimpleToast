@@ -1,4 +1,4 @@
-package com.engageft.fis.pscu.feature
+package com.engageft.feature.goals
 
 import android.content.Context
 import android.view.View
@@ -7,7 +7,6 @@ import androidx.core.content.res.ResourcesCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.engageft.apptoolbox.util.applyTypefaceToSubstring
 import com.engageft.apptoolbox.view.CircularTrackingPanel
-import com.engageft.engagekit.utils.BackendDateTimeUtils
 import com.engageft.fis.pscu.R
 import com.engageft.fis.pscu.feature.utils.getGoalInfoCompletionDateString
 import com.engageft.fis.pscu.feature.utils.getGoalInfoContributionString
@@ -62,13 +61,14 @@ class GoalsListSection(private val context: Context,
                 circularTrackingPanel.setSuccessMode()
                 circularTrackingPanel.setTopRightStyle(R.style.progressBarSuccessTitleStyle)
                 circularTrackingPanel.setPanelElevation(0f)
-            } else if (!goalInfo.isCompleted() && goalInfo.estimatedCompleteDate.isNotBlank()) {
-                val estimatedCompletionDate = BackendDateTimeUtils.getDateTimeForYMDString(goalInfo.estimatedCompleteDate)
-                if (estimatedCompletionDate != null && estimatedCompletionDate.isBeforeNow) {
-                    //todo(aHashimi): waiting on design.
-                    circularTrackingPanel.showDrawableWithinProgressBar(ContextCompat.getDrawable(context, R.drawable.ic_information)!!)
-                }
             }
+            //TODO(aHashimi): Waiting for Design/Jess meeting about goals. The error state hasn't been determined if this even makes sense (after talking to Jess).
+//            else if (!goalInfo.isCompleted() && goalInfo.estimatedCompleteDate.isNotBlank()) {
+//                val estimatedCompletionDate = BackendDateTimeUtils.getDateTimeForYMDString(goalInfo.estimatedCompleteDate)
+//                if (estimatedCompletionDate != null && estimatedCompletionDate.isBeforeNow) {
+//                    circularTrackingPanel.showDrawableWithinProgressBar(ContextCompat.getDrawable(context, R.drawable.ic_information)!!)
+//                }
+//            }
         }
     }
 

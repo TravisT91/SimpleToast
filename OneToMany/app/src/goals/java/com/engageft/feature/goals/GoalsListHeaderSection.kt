@@ -1,6 +1,5 @@
-package com.engageft.fis.pscu.feature
+package com.engageft.feature.goals
 
-import android.content.Context
 import android.view.View
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
@@ -9,9 +8,7 @@ import io.github.luizgrp.sectionedrecyclerviewadapter.SectionParameters
 import io.github.luizgrp.sectionedrecyclerviewadapter.StatelessSection
 import utilGen1.StringUtils
 
-//todo need context?
-class GoalsListHeaderSection(private val context: Context,
-                             private val totalSaved: String)
+class GoalsListHeaderSection(private val totalSaved: String)
     : StatelessSection(SectionParameters.builder().itemResourceId(R.layout.goals_list_header_section).build()) {
 
     override fun getContentItemsTotal(): Int {

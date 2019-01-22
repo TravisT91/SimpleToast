@@ -1,4 +1,4 @@
-package com.engageft.fis.pscu.feature
+package com.engageft.feature.goals
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -15,15 +15,12 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.engageft.apptoolbox.BaseViewModel
 import com.engageft.fis.pscu.R
 import com.engageft.fis.pscu.databinding.FragmentGoalsListBinding
+import com.engageft.fis.pscu.feature.BaseEngagePageFragment
 import com.engageft.fis.pscu.feature.branding.Palette
 import com.ob.ws.dom.utility.GoalInfo
 import io.github.luizgrp.sectionedrecyclerviewadapter.SectionedRecyclerViewAdapter
 
 /**
- * TODO(joeyhutchins): ClassName
- * <p>
- * TODO(joeyhutchins): Class description.
- * </p>
  * Created by joeyhutchins on 8/24/18.
  * Copyright (c) 2018 Engage FT. All rights reserved.
  */
@@ -72,7 +69,7 @@ class GoalsListFragment : BaseEngagePageFragment() {
         sectionedAdapter.removeAllSections()
 
         if (goalsList.isNotEmpty()) {
-            sectionedAdapter.addSection(GoalsListHeaderSection(context!!, goalsListViewModel.goalsContributed))
+            sectionedAdapter.addSection(GoalsListHeaderSection(goalsListViewModel.goalsContributed))
 
             sectionedAdapter.addSection(GoalsListSection(context!!, goalsList, object : GoalsListSection.OnGoalListSectionListener {
                 override fun onGoalClicked(goalId: Long) {
