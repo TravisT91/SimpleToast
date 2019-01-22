@@ -3,7 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
-        <variable name="viewModel" type="com.engageft.fis.pscu.feature.SecondaryUserListViewModel"/>
+        <variable name="viewModel" type="com.engageft.fis.pscu.feature.secondaryusers.SecondaryUserListViewModel"/>
         <variable
             name="palette"
             type="com.engageft.fis.pscu.feature.branding.Palette"/>

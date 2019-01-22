@@ -1,4 +1,4 @@
-package com.engageft.fis.pscu.feature
+package com.engageft.fis.pscu.feature.secondaryusers
 
 import android.view.LayoutInflater
 import android.view.View
@@ -43,7 +43,7 @@ class SecondaryUserListRecyclerViewAdapter(private val selectionListener: Second
         return items[position].viewType
     }
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): SecondaryUserListRecyclerViewAdapter.SecondaryUserViewHolder {
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): SecondaryUserViewHolder {
         return when (viewType) {
             VIEW_TYPE_USER -> {
                 val view = LayoutInflater.from(parent.context).inflate(R.layout.secondary_user_active_item, parent, false)
@@ -63,7 +63,7 @@ class SecondaryUserListRecyclerViewAdapter(private val selectionListener: Second
         }
     }
 
-    override fun onBindViewHolder(holder: SecondaryUserListRecyclerViewAdapter.SecondaryUserViewHolder, position: Int) {
+    override fun onBindViewHolder(holder: SecondaryUserViewHolder, position: Int) {
         holder.itemPosition = position
         when (holder) {
             is SecondaryUserViewHolder.ActiveUserViewHolder -> {

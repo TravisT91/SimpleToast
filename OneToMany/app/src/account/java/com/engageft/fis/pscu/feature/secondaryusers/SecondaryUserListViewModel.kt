@@ -1,4 +1,6 @@
-package com.engageft.fis.pscu.feature
+package com.engageft.fis.pscu.feature.secondaryusers
+
+import com.engageft.fis.pscu.feature.BaseEngageViewModel
 
 /**
  * Created by joeyhutchins on 1/15/19.
