@@ -228,16 +228,4 @@ class CreateAccountDelegate(private val viewModel: EnrollmentViewModel, private 
 
         return emailValid && passwordValid && confirmPasswordValid
     }
-
-    fun onButton1Clicked() {
-        navController.navigate(createAccountNavigations.createAccountToVerifyIdentity)
-    }
-
-    fun onButton2Clicked() {
-        navController.navigate(createAccountNavigations.createAccountToTerms)
-    }
-
-    fun onButton3Clicked() {
-        navController.navigate(createAccountNavigations.createAccountToSending)
-    }
 }

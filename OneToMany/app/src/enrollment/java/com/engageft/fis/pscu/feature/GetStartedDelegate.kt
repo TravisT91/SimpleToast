@@ -1,5 +1,6 @@
 package com.engageft.fis.pscu.feature
 
+import android.util.Log
 import androidx.databinding.Observable
 import androidx.databinding.ObservableField
 import androidx.lifecycle.MutableLiveData
@@ -112,26 +113,6 @@ class GetStartedDelegate(private val viewModel: EnrollmentViewModel, private val
         cardInput.addOnPropertyChangedCallback(cardInputTextWatcher)
         dateOfBirth.addOnPropertyChangedCallback(dateOfBirthInputTextWatcher)
         dialogObservable.value = GetStartedDialog.NONE
-    }
-
-    fun onButton1Clicked() {
-        navController.navigate(getStartedNavigations.getStartedToPin)
-    }
-
-    fun onButton2Clicked() {
-        navController.navigate(getStartedNavigations.getStartedToCreateAccount)
-    }
-
-    fun onButton3Clicked() {
-        navController.navigate(getStartedNavigations.getStartedToVerifyIdentity)
-    }
-
-    fun onButton4Clicked() {
-        navController.navigate(getStartedNavigations.getStartedToTerms)
-    }
-
-    fun onButton5Clicked() {
-        navController.navigate(getStartedNavigations.getStartedToSending)
     }
 
     fun onNextClicked() {
