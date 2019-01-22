@@ -3,23 +3,90 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <data>
-        <variable name="viewModel" type="com.engageft.fis.pscu.feature.EnrollmentViewModel"/>
+        <variable name="viewModel" type="com.engageft.fis.pscu.feature.CardActiveDelegate"/>
         <variable
             name="palette"
             type="com.engageft.fis.pscu.feature.branding.Palette"/>
     </data>
+
+
     <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/contentBox"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
-        <LinearLayout
+
+        <com.engageft.apptoolbox.view.ProductCardView
+            android:id="@+id/cardView"
             android:layout_width="wrap_content"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintBottom_toTopOf="@id/textForm"
+            app:layout_constraintVertical_chainStyle="packed"
+            android:layout_height="@dimen/dashboard_card_view_height"
+            app:condensed="false"
+            app:cardnumberTextAppearance="@style/PrimaryCardTextAppearance"
+            app:cardHolderNameTextAppearance="@style/PrimaryCardTextAppearance"
+            app:cvvTextAppearance="@style/SecondaryCardTextAppearance"
+            app:expirationTextAppearance="@style/SecondaryCardTextAppearance"
+            app:cardMessageTextAppearance="@style/SecondaryCardTextAppearance"
+            app:statusRibbonTextAppearance="@style/CardRibbonTextAppearance"
+            app:statusRibbonColorOk="@color/primary"
+            app:statusRibbonColorNotOk="@color/error"
+            app:providerLogoDrawable="@drawable/cardview_provider_logo_mc"
+            app:cardLockedIcon="@drawable/ic_card_locked"
+            app:productLogoDrawable="@drawable/showcase_logo"
+            app:cvvMask="@string/PRODUCTCARDVIEW_CVV_MASK"
+            app:cardNumberMask="@string/PRODUCTCARDVIEW_CARDNUMBER_MASK"
+            app:cardValidMask="@string/PRODUCTCARDVIEW_CARD_VALID_MASK"
+            android:elevation="8dp"/>
+
+        <LinearLayout
+            android:id="@+id/textForm"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical">
-            <Button
-                android:id="@+id/button1"
+            app:layout_constraintTop_toBottomOf="@id/cardView"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintBottom_toTopOf="@id/doneButton"
+            android:orientation="vertical"
+            android:layout_marginTop="21dp"
+            android:layout_marginBottom="32dp"
+            android:paddingStart="16dp"
+            android:paddingEnd="16dp">
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/title"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="authenticated"/>
+                style="@style/Title1Quiet"
+                android:textColor="@color/structure6"
+                android:layout_gravity="center_horizontal"
+                android:text="@string/ENROLLMENT_CARD_ACTIVE"/>
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                style="@style/Body"
+                android:textColor="@color/structure5"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="14dp"
+                android:text="@string/ENROLLMENT_SUCCESS_SUBTITLE"/>
         </LinearLayout>
+
+        <com.engageft.apptoolbox.view.PillButton
+            android:id="@+id/doneButton"
+            style="@style/ButtonPillPrimaryFilledDefault"
+            PillButton.setThemeFilled="@{true}"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:layout_marginBottom="16dp"
+            android:onClick="@{() -> viewModel.onDoneClicked()}"
+            app:layout_constraintTop_toBottomOf="@id/textForm"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:text="@string/ENROLLMENT_DONE"/>
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

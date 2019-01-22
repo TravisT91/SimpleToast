@@ -32,11 +32,13 @@ class GetStartedFragment : BaseEngagePageFragment() {
     private lateinit var enrollmentViewModel: EnrollmentViewModel
     private lateinit var getStartedViewModel: GetStartedDelegate
     private lateinit var binding: FragmentGetStartedBinding
+
     override fun createViewModel(): BaseViewModel? {
         enrollmentViewModel = ViewModelProviders.of(activity!!).get(EnrollmentViewModel::class.java)
         getStartedViewModel = enrollmentViewModel.getStartedDelegate
         return enrollmentViewModel
     }
+
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         binding = FragmentGetStartedBinding.inflate(inflater, container, false).apply {
             this.viewModel = enrollmentViewModel.getStartedDelegate
