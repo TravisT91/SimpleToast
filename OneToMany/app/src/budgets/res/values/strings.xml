@@ -5,4 +5,6 @@
     <string name="budget_total_spent_title">Total spent</string>
     <string name="budget_spent_of_amount_format">%1$s of %2$s</string>
     <string name="budget_category_name_other_spending">Other Spending</string>
+
+    <string name="budget_categories_header">Categories</string>
 </resources>

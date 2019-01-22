@@ -99,7 +99,7 @@
 
     <fragment
         android:id="@+id/budgets_fragment"
-        android:name="com.engageft.fis.pscu.feature.budgets.BudgetsListFragment"
+        android:name="com.engageft.feature.budgets.BudgetsListFragment"
         android:label="@string/fragment_title_budgets"
         tools:layout="@layout/fragment_budgets_list">
         <argument

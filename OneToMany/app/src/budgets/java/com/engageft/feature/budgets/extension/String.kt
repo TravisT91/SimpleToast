@@ -1,4 +1,4 @@
-package com.engageft.fis.pscu.feature.budgets.extension
+package com.engageft.feature.budgets.extension
 
 /**
  * String

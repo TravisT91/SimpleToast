@@ -1,4 +1,4 @@
-package com.engageft.fis.pscu.feature.budgets.model
+package com.engageft.feature.budgets.model
 
 import java.math.BigDecimal
 

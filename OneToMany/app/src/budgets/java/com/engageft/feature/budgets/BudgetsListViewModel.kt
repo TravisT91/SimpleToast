@@ -1,11 +1,11 @@
-package com.engageft.fis.pscu.feature.budgets
+package com.engageft.feature.budgets
 
 import androidx.lifecycle.MutableLiveData
 import com.engageft.engagekit.EngageService
 import com.engageft.fis.pscu.feature.BaseEngageViewModel
 import com.engageft.fis.pscu.feature.DialogInfo
-import com.engageft.fis.pscu.feature.budgets.extension.getCategoriesSortedByBudgetAmountDescending
-import com.engageft.fis.pscu.feature.budgets.model.BudgetModel
+import com.engageft.feature.budgets.extension.getCategoriesSortedByBudgetAmountDescending
+import com.engageft.feature.budgets.model.BudgetModel
 import com.ob.ws.dom.LoginResponse
 import io.reactivex.schedulers.Schedulers
 import org.joda.time.DateTime

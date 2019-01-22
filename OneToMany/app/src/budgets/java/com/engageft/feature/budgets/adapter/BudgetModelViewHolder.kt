@@ -1,11 +1,11 @@
-package com.engageft.fis.pscu.feature.budgets.adapter
+package com.engageft.feature.budgets.adapter
 
 import android.content.Context
 import android.view.View
 import androidx.recyclerview.widget.RecyclerView
 import com.engageft.apptoolbox.view.TrackingPanel
 import com.engageft.fis.pscu.R
-import com.engageft.fis.pscu.feature.budgets.model.BudgetModel
+import com.engageft.feature.budgets.model.BudgetModel
 import utilGen1.StringUtils
 import java.math.BigDecimal
 
@@ -32,7 +32,7 @@ class BudgetModelViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) 
                         StringUtils.formatCurrencyString(budgetModel.budgetAmount.toFloat())
                 )
         )
-        if (budgetModel.budgetAmount != BigDecimal.ZERO) {
+        if (budgetModel.budgetAmount.compareTo(BigDecimal.ZERO) != 0) {
             trackingPanel.setProgress(budgetModel.spentAmount.divide(budgetModel.budgetAmount).toFloat())
         } else {
             trackingPanel.setProgress(0.0F)

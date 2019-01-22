@@ -1,4 +1,4 @@
-package com.engageft.fis.pscu.feature.budgets
+package com.engageft.feature.budgets
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -10,9 +10,8 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.engageft.apptoolbox.BaseViewModel
 import com.engageft.fis.pscu.databinding.FragmentBudgetsListBinding
 import com.engageft.fis.pscu.feature.BaseEngagePageFragment
-import com.engageft.fis.pscu.feature.branding.Palette
-import com.engageft.fis.pscu.feature.budgets.adapter.BudgetModelSection
-import com.engageft.fis.pscu.feature.budgets.model.BudgetModel
+import com.engageft.feature.budgets.adapter.BudgetModelSection
+import com.engageft.feature.budgets.model.BudgetModel
 import io.github.luizgrp.sectionedrecyclerviewadapter.SectionedRecyclerViewAdapter
 
 /**
@@ -69,6 +68,8 @@ class BudgetsListFragment : BaseEngagePageFragment() {
         budgetsListAdapter.addSection(
                 BudgetModelSection(context!!, listOf(totalBudgetModel), isTotalSection = true)
         )
+
+//        budgetsListAdapter.addSection()
 
         budgetsListAdapter.addSection(
                 BudgetModelSection(context!!, categoryBudgetModels, isTotalSection = false)

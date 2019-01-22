@@ -1,12 +1,12 @@
-package com.engageft.fis.pscu.feature.budgets.adapter
+package com.engageft.feature.budgets.adapter
 
 import android.content.Context
 import android.view.View
 import androidx.recyclerview.widget.RecyclerView
 import com.engageft.engagekit.EngageService
 import com.engageft.fis.pscu.R
-import com.engageft.fis.pscu.feature.budgets.extension.isCategoryNameOtherSpending
-import com.engageft.fis.pscu.feature.budgets.model.BudgetModel
+import com.engageft.feature.budgets.extension.isCategoryNameOtherSpending
+import com.engageft.feature.budgets.model.BudgetModel
 import io.github.luizgrp.sectionedrecyclerviewadapter.SectionParameters
 import io.github.luizgrp.sectionedrecyclerviewadapter.StatelessSection
 import java.util.*
