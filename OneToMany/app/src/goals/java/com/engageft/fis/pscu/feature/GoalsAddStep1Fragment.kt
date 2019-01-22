@@ -1,15 +1,13 @@
 package com.engageft.fis.pscu.feature
 
 import android.os.Bundle
-import android.os.Handler
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
-import androidx.navigation.findNavController
+import androidx.lifecycle.ViewModelProviders
 import com.engageft.apptoolbox.BaseViewModel
-import com.engageft.apptoolbox.ToolbarVisibilityState
-import com.engageft.fis.pscu.R
+import com.engageft.fis.pscu.databinding.FragmentGoalsAddStep1Binding
+import com.engageft.fis.pscu.feature.branding.Palette
 
 /**
  * TODO(joeyhutchins): ClassName
@@ -21,20 +19,19 @@ import com.engageft.fis.pscu.R
  */
 class GoalsAddStep1Fragment : BaseEngagePageFragment() {
 
+    private lateinit var addGoalViewModel: GoalsAddStep1ViewModel
+
     override fun createViewModel(): BaseViewModel? {
-        return null
+        addGoalViewModel = ViewModelProviders.of(this).get(GoalsAddStep1ViewModel::class.java)
+        return addGoalViewModel
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        val view = inflater.inflate(R.layout.fragment_goal_add_1, container, false)
-        val button = view.findViewById<Button>(R.id.button)
-        button.setOnClickListener{
-            Handler().postDelayed( {
-                view.findNavController().navigate(R.id.action_goalsAddStep1Fragment_to_goalAdd2Fragment)
-            }, 2000)
-            val desiredState = if (toolbarController.toolbarVisibilityState == ToolbarVisibilityState.GONE) ToolbarVisibilityState.VISIBLE else ToolbarVisibilityState.GONE
-            toolbarController.animateToolbarVisibility(desiredState, 500L)
+        val binding = FragmentGoalsAddStep1Binding.inflate(inflater, container, false).apply {
+            viewModel = addGoalViewModel
+            palette = Palette
         }
-        return view
+
+        return binding.root
     }
 }

@@ -11,4 +11,12 @@
     <string name="GOALS_EMPTY_LIST_HEADER">Set money aside toward your goals.</string>
     <string name="GOALS_EMPTY_LIST_HEADER_SUBSTRING">goals.</string>
     <string name="GOALS_EMPTY_LIST_SUB_HEADER">Set money aside to cover the unexpected as well as fun things (like trips).</string>
+    <string name="GOALS_CREATE_HEADER_TITLE">What are you saving for?</string>
+    <string name="GOALS_CREATE_HEADER_SUBTITLE">A much needed vacation, emergency fund, or a semi-annual bill…</string>
+    <string name="GOALS_CREATE_FOOTER">* Funds will be deducted from your spending balance and set aside in your Goal.</string>
+    <string name="GOALS_CREATE_GOAL_NAME_LABEL">Goal name</string>
+    <string name="GOALS_CREATE_AMOUNT_LABEL">How much do you need?</string>
+    <string name="GOALS_CREATE_FREQUENCY_LABEL">Savings frequency</string>
+    <string name="GOALS_CREATE_START_SAVING_ON_LABEL">Start saving on</string>
+    <string name="GOALS_CREATE_FREQUENCY_SELECTION_SUBTITLE">How often do you want to set money aside?</string>
 </resources>

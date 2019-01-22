@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+        <import type="android.view.View"/>
+        <variable
+            name="viewModel"
+            type="com.engageft.fis.pscu.feature.GoalsAddStep1ViewModel"/>
+        <variable
+            name="palette"
+            type="com.engageft.fis.pscu.feature.branding.Palette"/>
+    </data>
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:fillViewport="true">
+
+        <androidx.appcompat.widget.LinearLayoutCompat
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/headerTextView"
+                style="@style/CreateTransferTitleTextStyle"
+                android:paddingStart="16dp"
+                android:paddingEnd="16dp"
+                android:text="@string/GOALS_CREATE_HEADER_TITLE"
+                />
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/subHeaderTextView"
+                style="@style/CreateTransferSubtitleTextStyle"
+                android:text="@string/GOALS_CREATE_HEADER_SUBTITLE"/>
+
+            <androidx.appcompat.widget.LinearLayoutCompat
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/cellBackground"
+                android:orientation="vertical">
+
+                <include layout="@layout/view_horizontal_divider" />
+
+                <com.engageft.apptoolbox.view.TextInputWithLabel
+                    style="@style/BottomSheetListInputWithLabelStyle"
+                    InputWithLabel.setThemeWithPalette="@{true}"
+                    android:id="@+id/goalNameInputWithLabel"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingStart="16dp"
+                    android:paddingEnd="16dp"
+                    android:paddingTop="16dp"
+                    app:labelText="@string/GOALS_CREATE_GOAL_NAME_LABEL"
+                    app:inputText="@={viewModel.goalName}"
+                    app:bottomSheetDialogTitle="@string/ach_bank_transfer_create_from_account"
+                    app:bottomSheetDialogStyle="@style/ListOptionBottomSheetDialogFragmentStyle">
+                </com.engageft.apptoolbox.view.TextInputWithLabel>
+
+                <com.engageft.apptoolbox.view.CurrencyInputWithLabel
+                    style="@style/CurrencyInputWithLabelStyle"
+                    InputWithLabel.setThemeWithPalette="@{true}"
+                    android:id="@+id/amountInputWithLabel"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingStart="16dp"
+                    android:paddingEnd="16dp"
+                    android:paddingTop="16dp"
+                    app:labelText="@string/GOALS_CREATE_AMOUNT_LABEL"
+                    app:inputText="@={viewModel.goalAmount}"/>
+
+                <com.engageft.apptoolbox.view.BottomSheetListInputWithLabel
+                    style="@style/BottomSheetListInputWithLabelStyle"
+                    InputWithLabel.setThemeWithPalette="@{true}"
+                    android:id="@+id/frequencyBottomSheet"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingStart="16dp"
+                    android:paddingEnd="16dp"
+                    android:paddingTop="16dp"
+                    app:labelText="@string/GOALS_CREATE_FREQUENCY_LABEL"
+                    app:inputText="@={viewModel.savingsFrequency}"
+                    app:bottomSheetDialogTitle="@string/GOALS_CREATE_FREQUENCY_LABEL"
+                    app:bottomSheetDialogStyle="@style/ListOptionBottomSheetDialogFragmentStyle"/>
+
+                <com.engageft.apptoolbox.view.DatePickerInputWithLabel
+                    style="@style/BottomSheetListInputWithLabelStyle"
+                    InputWithLabel.setThemeWithPalette="@{true}"
+                    android:id="@+id/startDateBottomSheet"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingStart="16dp"
+                    android:paddingEnd="16dp"
+                    android:paddingTop="16dp"
+                    android:visibility="@{viewModel.showStartDate.get() ? View.VISIBLE : View.GONE}"
+                    app:labelText="@string/GOALS_CREATE_START_SAVING_ON_LABEL"
+                    app:inputText="@={viewModel.startDate}"
+                    app:bottomSheetDialogStyle="@style/ListOptionBottomSheetDialogFragmentStyle"/>
+
+                <com.engageft.apptoolbox.view.BottomSheetListInputWithLabel
+                    style="@style/BottomSheetListInputWithLabelStyle"
+                    InputWithLabel.setThemeWithPalette="@{true}"
+                    android:id="@+id/daysOfWeekBottomSheet"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingStart="16dp"
+                    android:paddingEnd="16dp"
+                    android:paddingTop="16dp"
+                    android:visibility="@{viewModel.showDayOfWeek.get() ? View.VISIBLE : View.GONE}"
+                    app:labelText="@string/GOALS_CREATE_START_SAVING_ON_LABEL"
+                    app:inputText="@={viewModel.dayOfWeek}"
+                    app:bottomSheetDialogTitle="@string/GOALS_CREATE_START_SAVING_ON_LABEL"
+                    app:bottomSheetDialogStyle="@style/ListOptionBottomSheetDialogFragmentStyle"/>
+
+            </androidx.appcompat.widget.LinearLayoutCompat>
+
+            <com.engageft.apptoolbox.view.PillButton
+                style="@style/ButtonPillPrimaryFilledDefault"
+                PillButton.setThemeFilled="@{true}"
+                android:id="@+id/nextButton"
+                android:layout_gravity="center"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/pillButtonTopSpaceInFormsAndLists"
+                android:layout_margin="16dp"
+                android:text="@string/next_word"/>
+
+        </androidx.appcompat.widget.LinearLayoutCompat>
+
+    </ScrollView>
+
+</layout>
