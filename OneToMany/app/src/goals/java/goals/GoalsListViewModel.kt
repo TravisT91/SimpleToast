@@ -1,4 +1,4 @@
-package com.engageft.feature.goals
+package goals
 
 import androidx.lifecycle.MutableLiveData
 import com.engageft.engagekit.EngageService

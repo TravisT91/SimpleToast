@@ -109,7 +109,7 @@
 
     <fragment
         android:id="@+id/goalsListFragment"
-        android:name="com.engageft.feature.goals.GoalsListFragment"
+        android:name="goals.GoalsListFragment"
         android:label="@string/nav_drawer_title_goals"
         tools:layout="@layout/fragment_goals_list">
         <argument
@@ -321,7 +321,7 @@
     </fragment>
     <fragment
         android:id="@+id/goalAdd2Fragment"
-        android:name="com.engageft.feature.goals.GoalAdd2Fragment"
+        android:name="goals.GoalAdd2Fragment"
         android:label="GoalAdd2Fragment" />
     <fragment
         android:id="@+id/accountNotificationsFragment"
@@ -462,7 +462,7 @@
         android:label="CardLockUnlockFragment" />
     <fragment
         android:id="@+id/goalsAddStep1Fragment"
-        android:name="com.engageft.feature.goals.GoalsAddStep1Fragment">
+        android:name="goals.GoalsAddStep1Fragment">
         <action
             android:id="@+id/action_goalsAddStep1Fragment_to_goalAdd2Fragment"
             app:destination="@id/goalAdd2Fragment" />

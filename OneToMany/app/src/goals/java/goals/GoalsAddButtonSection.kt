@@ -1,4 +1,4 @@
-package com.engageft.feature.goals
+package goals
 
 import android.view.View
 import android.widget.Button
