@@ -1,8 +1,10 @@
-package com.engageft.fis.pscu.feature
+package com.engageft.feature.goals
 
 import androidx.lifecycle.MutableLiveData
 import com.engageft.engagekit.EngageService
 import com.engageft.engagekit.utils.LoginResponseUtils
+import com.engageft.fis.pscu.feature.BaseEngageViewModel
+import com.engageft.fis.pscu.feature.DialogInfo
 import com.ob.ws.dom.LoginResponse
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
@@ -17,7 +19,7 @@ class GoalsListViewModel: BaseEngageViewModel() {
     private var goalsList = mutableListOf<GoalInfo>()
 
     init {
-        initData(true)
+        initData(false)
     }
 
     fun refreshViews(useCache: Boolean) {

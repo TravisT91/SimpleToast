@@ -1,4 +1,4 @@
-package com.engageft.fis.pscu.feature
+package com.engageft.feature.goals
 
 import android.view.View
 import android.widget.Button
@@ -12,15 +12,6 @@ class GoalsAddButtonSection(private val listener: OnButtonSectionListener) : Sta
 
     private var button: Button? = null
     private var enabled = true
-
-//    fun setEnabled(enabled: Boolean): AddGoalButtonSection {
-//        this.enabled = enabled
-//        if (button != null) {
-//            button!!.isEnabled = enabled
-//        }
-//
-//        return this
-//    }
 
     override fun getContentItemsTotal(): Int {
         return 1

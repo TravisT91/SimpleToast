@@ -1,4 +1,4 @@
-package com.engageft.fis.pscu.feature
+package com.engageft.feature.goals
 
 import android.os.Bundle
 import android.view.LayoutInflater

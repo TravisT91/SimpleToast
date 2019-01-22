@@ -1,4 +1,4 @@
-package com.engageft.fis.pscu.feature
+package com.engageft.feature.goals
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -6,6 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import com.engageft.apptoolbox.BaseViewModel
 import com.engageft.fis.pscu.R
+import com.engageft.fis.pscu.feature.BaseEngagePageFragment
 
 /**
  * TODO(joeyhutchins): ClassName
