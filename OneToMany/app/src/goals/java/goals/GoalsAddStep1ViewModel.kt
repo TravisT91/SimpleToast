@@ -1,6 +1,7 @@
-package com.engageft.fis.pscu.feature
+package goals
 
 import androidx.databinding.ObservableField
+import com.engageft.fis.pscu.feature.BaseEngageViewModel
 
 class GoalsAddStep1ViewModel: BaseEngageViewModel() {
 
