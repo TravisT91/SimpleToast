@@ -17,7 +17,7 @@ class GoalsListViewModel: BaseEngageViewModel() {
     private var goalsList = mutableListOf<GoalInfo>()
 
     init {
-        initData(true)
+        initData(false)
     }
 
     fun refreshViews(useCache: Boolean) {

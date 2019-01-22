@@ -98,7 +98,7 @@ class GoalsListFragment : BaseEngagePageFragment() {
 
     override fun onResume() {
         super.onResume()
-        goalsListViewModel.refreshViews(false)
+        goalsListViewModel.refreshViews(true)
     }
 
     override fun onCreateOptionsMenu(menu: Menu?, inflater: MenuInflater?) {
