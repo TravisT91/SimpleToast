@@ -6,6 +6,7 @@ import com.engageft.engagekit.rest.request.CardRequest
 import com.engageft.engagekit.utils.LoginResponseUtils
 import com.engageft.fis.pscu.feature.BaseEngageViewModel
 import com.engageft.fis.pscu.feature.branding.BrandingInfoRepo
+import com.engageft.fis.pscu.feature.utils.CardStatusUtils
 import com.ob.ws.dom.LoginResponse
 import com.ob.ws.dom.RelatedCardsResponse
 import com.ob.ws.dom.utility.DebitCardInfo
@@ -69,7 +70,8 @@ class SecondaryUserListViewModel: BaseEngageViewModel() {
                             secondaryAccountList.add(SecondaryUserListItem.CardHeaderType(getCardTitleText(debitCardInfo)))
 
                             for (account in response.accountList) {
-                                secondaryAccountList.add(SecondaryUserListItem.ActiveSecondaryUserType("${account.firstName} ${account.lastName}", account.isCurrent))
+                                secondaryAccountList.add(SecondaryUserListItem.ActiveSecondaryUserType("${account.firstName} ${account.lastName}",
+                                        CardStatusUtils.productCardModelStatusFromDebitCardInfo(account.debitCardInfo)))
                                 account.debitCardInfo.status
                             }
                             if (debitCardInfo.cardPermissionsInfo.isAddDependentAllowable) {

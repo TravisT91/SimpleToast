@@ -4,11 +4,11 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.widget.AppCompatTextView
-import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
+import com.engageft.apptoolbox.view.ProductCardModelCardStatus
 import com.engageft.fis.pscu.R
-import com.engageft.fis.pscu.feature.branding.Palette
+import com.engageft.fis.pscu.feature.utils.CardStatusUtils
 
 /**
  * Created by joeyhutchins on 1/15/19.
@@ -70,12 +70,11 @@ class SecondaryUserListRecyclerViewAdapter(private val selectionListener: Second
             is SecondaryUserViewHolder.ActiveUserViewHolder -> {
                 val item = items[position] as SecondaryUserListItem.ActiveSecondaryUserType
                 holder.userNameTextView.text = item.name
-                holder.statusTextView.text = if (item.active) {
-                    holder.statusTextView.setTextColor(ContextCompat.getColor(holder.itemView.context, R.color.structure5))
-                    holder.itemView.context.getString(R.string.secondary_users_user_active)
+                holder.statusTextView.text = CardStatusUtils.cardStatusStringForProductCardModelCardStatus(holder.itemView.context, item.cardStatus)
+                if (item.cardStatus != ProductCardModelCardStatus.CARD_STATUS_ACTIVE) {
+
                 } else {
-                    holder.statusTextView.setTextColor(Palette.errorColor)
-                    holder.itemView.context.getString(R.string.secondary_users_user_inactive)
+                    
                 }
             }
             is SecondaryUserViewHolder.AddUserViewHolder -> {
@@ -136,7 +135,7 @@ class SecondaryUserListRecyclerViewAdapter(private val selectionListener: Second
                 when (oldItem) {
                     is SecondaryUserListItem.ActiveSecondaryUserType -> {
                         newItem as SecondaryUserListItem.ActiveSecondaryUserType
-                        return oldItem.name == newItem.name && oldItem.active == newItem.active
+                        return oldItem.name == newItem.name && oldItem.cardStatus == newItem.cardStatus
                     }
                     is SecondaryUserListItem.AddUserType -> {
                         return true
@@ -173,7 +172,7 @@ class SecondaryUserListRecyclerViewAdapter(private val selectionListener: Second
                 when (oldItem) {
                     is SecondaryUserListItem.ActiveSecondaryUserType -> {
                         newItem as SecondaryUserListItem.ActiveSecondaryUserType
-                        return oldItem.name == newItem.name && oldItem.active == newItem.active
+                        return oldItem.name == newItem.name && oldItem.cardStatus == newItem.cardStatus
                     }
                     is SecondaryUserListItem.AddUserType -> {
                         return true
