@@ -5,6 +5,8 @@ import com.engageft.apptoolbox.view.ProductCardModelCardStatus
 import com.engageft.engagekit.EngageService
 import com.engageft.engagekit.utils.DebitCardInfoUtils
 import com.engageft.fis.pscu.R
+import com.ob.domain.lookup.DebitCardStatus
+import com.ob.ws.dom.ActivationCardInfo
 import com.ob.ws.dom.utility.DebitCardInfo
 
 /**
@@ -63,6 +65,43 @@ object CardStatusUtils {
             ProductCardModelCardStatus.CARD_STATUS_SUSPENDED -> R.string.CARD_STATUS_DISPLAY_SUSPENDED
             ProductCardModelCardStatus.CARD_STATUS_CLOSED -> R.string.CARD_STATUS_DISPLAY_CLOSED
             ProductCardModelCardStatus.CARD_STATUS_ORDERED -> R.string.CARD_STATUS_DISPLAY_ORDERED
+        }
+    }
+
+    /**
+     * I am attempting to resolve differences in DebitCardStatus enums to ProductCardModelCardStatus
+     * enums. Some don't exist in the other.
+     */
+    fun productCardModelStatusFromActivationInfo(activationCardInfo: ActivationCardInfo): ProductCardModelCardStatus {
+        return when (activationCardInfo.cardStatus) {
+            DebitCardStatus.ACTIVE.toString() -> {
+                ProductCardModelCardStatus.CARD_STATUS_ACTIVE
+            }
+            DebitCardStatus.PENDING_ACTIVATION.toString() -> {
+                ProductCardModelCardStatus.CARD_STATUS_PENDING
+            }
+            DebitCardStatus.CANCELED.toString() -> {
+                ProductCardModelCardStatus.CARD_STATUS_CANCELED
+            }
+            DebitCardStatus.REPLACED.toString() -> {
+                ProductCardModelCardStatus.CARD_STATUS_REPLACED
+            }
+            DebitCardStatus.LOCKED_USER.toString() -> {
+                ProductCardModelCardStatus.CARD_STATUS_LOCKED
+            }
+            DebitCardStatus.LOCKED_PARENT.toString() -> {
+                ProductCardModelCardStatus.CARD_STATUS_LOCKED
+            }
+            DebitCardStatus.LOCKED_CSR.toString() -> {
+                ProductCardModelCardStatus.CARD_STATUS_LOCKED
+            }
+            DebitCardStatus.LOCKED_ADMIN.toString() -> {
+                ProductCardModelCardStatus.CARD_STATUS_LOCKED
+            }
+            else -> {
+                // This is bad...
+                throw IllegalStateException("Unknown card status. ")
+            }
         }
     }
 }
