@@ -101,5 +101,6 @@
 
 
     <string name="secondary_users_add_account">Add account</string>
+    <string name="secondary_users_user_limit_footer_format">You may add up to %d accounts on this card.</string>
 
 </resources>

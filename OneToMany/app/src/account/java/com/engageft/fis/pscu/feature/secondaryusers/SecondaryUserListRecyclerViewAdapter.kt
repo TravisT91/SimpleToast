@@ -16,15 +16,19 @@ class SecondaryUserListRecyclerViewAdapter(private val selectionListener: Second
     : RecyclerView.Adapter<SecondaryUserListRecyclerViewAdapter.SecondaryUserViewHolder>() {
     
     private companion object {
-        const val VIEW_TYPE_USER = 0
-        const val VIEW_TYPE_INACTIVE_USER = 1
-        const val VIEW_TYPE_ADD_USER = 2
+        private const val VIEW_TYPE_USER = 0
+        private const val VIEW_TYPE_INACTIVE_USER = 1
+        private const val VIEW_TYPE_ADD_USER = 2
+        private const val VIEW_TYPE_CARD_HEADER = 3
+        private const val VIEW_TYPE_CARD_FOOTER = 4
     }
 
     sealed class SecondaryUserListItem(val viewType: Int) {
         class ActiveSecondaryUserType(val name: CharSequence, val lastFour: CharSequence) : SecondaryUserListItem(VIEW_TYPE_USER)
         class InactiveSecondaryUserType(val name: CharSequence) : SecondaryUserListItem(VIEW_TYPE_INACTIVE_USER)
         class AddUserType : SecondaryUserListItem(VIEW_TYPE_ADD_USER)
+        class CardHeaderType(val cardDisplayName: String): SecondaryUserListItem(VIEW_TYPE_CARD_HEADER)
+        class CardFooterType(val cardUserLimit: Int): SecondaryUserListItem(VIEW_TYPE_CARD_FOOTER)
     }
 
     private var items = listOf<SecondaryUserListItem>()
@@ -57,6 +61,14 @@ class SecondaryUserListRecyclerViewAdapter(private val selectionListener: Second
                 val view = LayoutInflater.from(parent.context).inflate(R.layout.secondary_user_add_item, parent, false)
                 SecondaryUserViewHolder.AddUserViewHolder(viewHolderListener, view)
             }
+            VIEW_TYPE_CARD_HEADER -> {
+                val view = LayoutInflater.from(parent.context).inflate(R.layout.secondary_user_card_header_item, parent, false)
+                SecondaryUserViewHolder.CardHeaderViewHolder(viewHolderListener, view)
+            }
+            VIEW_TYPE_CARD_FOOTER -> {
+                val view = LayoutInflater.from(parent.context).inflate(R.layout.secondary_user_card_footer_item, parent, false)
+                SecondaryUserViewHolder.CardFooterViewHolder(viewHolderListener, view)
+            }
             else -> {
                 throw IllegalStateException("Unknown view type")
             }
@@ -78,13 +90,21 @@ class SecondaryUserListRecyclerViewAdapter(private val selectionListener: Second
             is SecondaryUserViewHolder.AddUserViewHolder -> {
                 // Nothing to do here.
             }
+            is SecondaryUserViewHolder.CardHeaderViewHolder -> {
+                val item = items[position] as SecondaryUserListItem.CardHeaderType
+                holder.cardTitleText.text = item.cardDisplayName
+            }
+            is SecondaryUserViewHolder.CardFooterViewHolder -> {
+                val item = items[position] as SecondaryUserListItem.CardFooterType
+                holder.setUserLimit(item.cardUserLimit)
+            }
         }
     }
 
     fun setSecondaryUserItems(items: List<SecondaryUserListItem>) {
         val oldList = items
         this.items = items
-        DiffUtil.calculateDiff(CustomDiffUtil(oldList, items)).dispatchUpdatesTo(this)
+        DiffUtil.calculateDiff(SecondaryUserDiffUtil(oldList, items)).dispatchUpdatesTo(this)
     }
 
     sealed class SecondaryUserViewHolder(private val viewHolderListener: ViewHolderListener, itemView: View) : RecyclerView.ViewHolder(itemView) {
@@ -104,9 +124,19 @@ class SecondaryUserListRecyclerViewAdapter(private val selectionListener: Second
             val userNameTextView: AppCompatTextView = itemView.findViewById(R.id.userNameText)
         }
         class AddUserViewHolder(viewHolderListener: ViewHolderListener, itemView: View) : SecondaryUserViewHolder(viewHolderListener, itemView)
+        class CardHeaderViewHolder(viewHolderListener: ViewHolderListener, itemView: View) : SecondaryUserViewHolder(viewHolderListener, itemView) {
+            val cardTitleText: AppCompatTextView = itemView.findViewById(R.id.cardTitleText)
+        }
+        class CardFooterViewHolder(viewHolderListener: ViewHolderListener, itemView: View) : SecondaryUserViewHolder(viewHolderListener, itemView) {
+            private val userLimitText: AppCompatTextView = itemView.findViewById(R.id.userLimitText)
+
+            fun setUserLimit(numUsers: Int) {
+                userLimitText.text = String.format(itemView.context.getString(R.string.secondary_users_user_limit_footer_format), numUsers)
+            }
+        }
     }
 
-    class CustomDiffUtil(private val oldList: List<SecondaryUserListItem>, private val newList: List<SecondaryUserListItem>) : DiffUtil.Callback() {
+    private class SecondaryUserDiffUtil(private val oldList: List<SecondaryUserListItem>, private val newList: List<SecondaryUserListItem>) : DiffUtil.Callback() {
         override fun areItemsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
             val oldItem = oldList[oldItemPosition]
             val newItem = newList[newItemPosition]
@@ -125,6 +155,12 @@ class SecondaryUserListRecyclerViewAdapter(private val selectionListener: Second
                         return oldItem.name == newItem.name
                     }
                     is SecondaryUserListItem.AddUserType -> {
+                        return true
+                    }
+                    is SecondaryUserListItem.CardHeaderType -> {
+                        return true
+                    }
+                    is SecondaryUserListItem.CardFooterType -> {
                         return true
                     }
                     else -> {
@@ -160,6 +196,12 @@ class SecondaryUserListRecyclerViewAdapter(private val selectionListener: Second
                         return oldItem.name == newItem.name
                     }
                     is SecondaryUserListItem.AddUserType -> {
+                        return true
+                    }
+                    is SecondaryUserListItem.CardHeaderType -> {
+                        return true
+                    }
+                    is SecondaryUserListItem.CardFooterType -> {
                         return true
                     }
                     else -> {

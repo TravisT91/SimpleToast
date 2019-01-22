@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="vertical"
+    android:layout_height="wrap_content"
+    android:layout_width="match_parent">
+
+    <include
+        layout="@layout/view_horizontal_divider"
+        android:layout_width="match_parent"
+        android:layout_height="1dp" />
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/cardTitleText"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textColor="@color/structure5"
+        android:layout_gravity="center_horizontal"
+        android:gravity="center_horizontal"
+        style="@style/Caption1Loud"
+        android:textAllCaps="true"
+        android:padding="16dp"
+        tools:text="general card" />
+
+    <include
+        layout="@layout/view_horizontal_divider"
+        android:layout_width="match_parent"
+        android:layout_height="1dp" />
+
+</LinearLayout>

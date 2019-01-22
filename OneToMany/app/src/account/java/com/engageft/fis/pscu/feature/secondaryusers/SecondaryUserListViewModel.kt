@@ -7,7 +7,13 @@ import com.engageft.fis.pscu.feature.BaseEngageViewModel
  * Copyright (c) 2019 Engage FT. All rights reserved.
  */
 class SecondaryUserListViewModel: BaseEngageViewModel() {
-
+    //            fun setCardTitle(debitCardInfo: DebitCardInfo) {
+//                val brandingCard = BrandingInfoRepo.cards?.find { card ->
+//                    card.type == debitCardInfo.cardType
+//                }
+//                cardTitleText.text = brandingCard!!.name
+//            }
+    
     private companion object {
 //        private const val HISTORICAL_LOADS_LIST_MAX_COUNT = 5
     }
