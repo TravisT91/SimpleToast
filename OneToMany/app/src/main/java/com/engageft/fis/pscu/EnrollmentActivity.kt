@@ -45,7 +45,14 @@ class EnrollmentActivity : LotusActivity() {
                                                                                 R.id.action_createAccountFragment_to_sendingEnrollmentFragment),
                 EnrollmentViewModel.EnrollmentNavigations.VerifyIdentityNavigations(R.id.action_verifyIdentityFragment_to_termsOfUseFragment,
                                                                                 R.id.action_verifyIdentityFragment_to_sendingEnrollmentFragment),
-                EnrollmentViewModel.EnrollmentNavigations.TermsNavigations(R.id.action_termsOfUseFragment_to_sendingEnrollmentFragment))
+                EnrollmentViewModel.EnrollmentNavigations.TermsNavigations(R.id.action_termsOfUseFragment_to_sendingEnrollmentFragment),
+                EnrollmentViewModel.EnrollmentNavigations.SendingNavigations(R.id.action_sendingEnrollmentFragment_to_enrollmentErrorFragment,
+                                                                                R.id.action_sendingEnrollmentFragment_to_cardActiveFragment,
+                                                                                R.id.action_sendingEnrollmentFragment_to_cardLinkedFragment),
+                EnrollmentViewModel.EnrollmentNavigations.LinkedNavigations(R.id.action_cardLinkedFragment_to_authenticatedActivity2,
+                                                                                R.id.action_cardLinkedFragment_to_notAuthenticatedActivity3),
+                EnrollmentViewModel.EnrollmentNavigations.ActiveNavigations(R.id.action_cardActiveFragment_to_authenticatedActivity2,
+                                                                                R.id.action_cardActiveFragment_to_notAuthenticatedActivity3))
     }
 }
 

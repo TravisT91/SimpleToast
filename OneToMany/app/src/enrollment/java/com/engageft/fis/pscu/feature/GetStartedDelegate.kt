@@ -1,5 +1,6 @@
 package com.engageft.fis.pscu.feature
 
+import android.util.Log
 import androidx.databinding.Observable
 import androidx.databinding.ObservableField
 import androidx.lifecycle.MutableLiveData
@@ -64,6 +65,7 @@ class GetStartedDelegate(private val viewModel: EnrollmentViewModel, private val
     val dialogObservable = MutableLiveData<GetStartedDialog>()
 
     lateinit var cardNumber: String
+    lateinit var birthDate: DateTime
 
     enum class NextButtonState {
         GONE,
@@ -113,26 +115,6 @@ class GetStartedDelegate(private val viewModel: EnrollmentViewModel, private val
         dialogObservable.value = GetStartedDialog.NONE
     }
 
-    fun onButton1Clicked() {
-        navController.navigate(getStartedNavigations.getStartedToPin)
-    }
-
-    fun onButton2Clicked() {
-        navController.navigate(getStartedNavigations.getStartedToCreateAccount)
-    }
-
-    fun onButton3Clicked() {
-        navController.navigate(getStartedNavigations.getStartedToVerifyIdentity)
-    }
-
-    fun onButton4Clicked() {
-        navController.navigate(getStartedNavigations.getStartedToTerms)
-    }
-
-    fun onButton5Clicked() {
-        navController.navigate(getStartedNavigations.getStartedToSending)
-    }
-
     fun onNextClicked() {
         validateCardNumber(false)
         validateDOB(false)
@@ -157,6 +139,7 @@ class GetStartedDelegate(private val viewModel: EnrollmentViewModel, private val
                                     if (response.isSuccess && response is ActivationCardInfo) {
                                         viewModel.activationCardInfo = response
                                         cardNumber = cardInput.get()!!
+                                        birthDate = getDateForInput()
 
                                         BrandingManager.getBrandingWithRefCode(response.refCode)
                                                 .subscribeWithDefaultProgressAndErrorHandling<BrandingInfoResponse>(

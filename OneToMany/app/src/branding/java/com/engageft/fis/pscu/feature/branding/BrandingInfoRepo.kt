@@ -3,7 +3,6 @@ package com.engageft.fis.pscu.feature.branding
 import com.ob.domain.lookup.branding.BrandingCard
 import com.ob.domain.lookup.branding.BrandingFinancialInfo
 import com.ob.domain.lookup.branding.BrandingInfo
-import com.ob.domain.lookup.branding.BrandingTerm
 
 /**
  * BrandingInfoRepo
@@ -15,8 +14,6 @@ import com.ob.domain.lookup.branding.BrandingTerm
  */
 
 object BrandingInfoRepo {
-    var terms: List<BrandingTerm>? = null
-        private set
     var financialInfo: BrandingFinancialInfo? = null
         private set
     var cards: List<BrandingCard>? = null
@@ -25,13 +22,11 @@ object BrandingInfoRepo {
     fun reset(){
         financialInfo = null
         cards = null
-        terms = null
         financialInfo = null
     }
 
     fun setBrandingInfo(brandingInfo: BrandingInfo){
         cards = brandingInfo.cards
-        terms = brandingInfo.terms
         financialInfo = brandingInfo.financialInfo
     }
 }
