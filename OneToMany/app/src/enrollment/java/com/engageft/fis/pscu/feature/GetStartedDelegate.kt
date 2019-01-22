@@ -64,6 +64,7 @@ class GetStartedDelegate(private val viewModel: EnrollmentViewModel, private val
     val dialogObservable = MutableLiveData<GetStartedDialog>()
 
     lateinit var cardNumber: String
+    lateinit var birthDate: DateTime
 
     enum class NextButtonState {
         GONE,
@@ -157,6 +158,7 @@ class GetStartedDelegate(private val viewModel: EnrollmentViewModel, private val
                                     if (response.isSuccess && response is ActivationCardInfo) {
                                         viewModel.activationCardInfo = response
                                         cardNumber = cardInput.get()!!
+                                        birthDate = getDateForInput()
 
                                         BrandingManager.getBrandingWithRefCode(response.refCode)
                                                 .subscribeWithDefaultProgressAndErrorHandling<BrandingInfoResponse>(

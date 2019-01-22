@@ -296,15 +296,15 @@ object StringUtils {
 
     fun formatDateMonthDayForTransactionRow(dateString: String): CharSequence? {
         val transactionDate = BackendDateTimeUtils.parseDateTimeFromIso8601String(dateString)
-        if (transactionDate != null) {
-            val spannableString = SpannableString(String.format("%s\n%s",
-                    DisplayDateTimeUtils.getDayTwoDigits(transactionDate),
-                    DisplayDateTimeUtils.getMonthAbbr(transactionDate).toUpperCase()))
-            spannableString.setSpan(RelativeSizeSpan(0.7f), 2, spannableString.length, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
-            return spannableString
-        }
+        return if (transactionDate != null) formatDateMonthDayForTransactionRow(transactionDate) else null
+    }
 
-        return null
+    fun formatDateMonthDayForTransactionRow(transactionDate: DateTime): CharSequence {
+        val spannableString = SpannableString(String.format("%s\n%s",
+                DisplayDateTimeUtils.getDayTwoDigits(transactionDate),
+                DisplayDateTimeUtils.getMonthAbbr(transactionDate).toUpperCase()))
+        spannableString.setSpan(RelativeSizeSpan(0.7f), 2, spannableString.length, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
+        return spannableString
     }
 
     // My Accounts

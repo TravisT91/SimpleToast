@@ -15,7 +15,9 @@ buildscript {
         appCompatVersion = "1.0.0"
         supportDesignVersion = "1.0.0"
         navigationVersion = '1.0.0-alpha07'
-        
+        pagingVersion = "2.1.0-rc01"
+        roomVersion = "2.1.0-alpha03"
+
         heapVersion = "0.8.1"
 
         rxJavaVersion = '2.2.2'

@@ -5,7 +5,6 @@ import com.engageft.engagekit.EngageService
 import com.engageft.engagekit.utils.BackendDateTimeUtils
 import com.ob.ws.dom.LoginResponse
 import io.reactivex.android.schedulers.AndroidSchedulers
-import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
 import org.joda.time.DateTime
 /**
@@ -29,17 +28,19 @@ class StatementsViewModel: BaseEngageViewModel() {
         val familyInfo = loginResponse.familyInfo
         val dateOptions = mutableListOf<DateTime>()
 
-        val startDate = BackendDateTimeUtils.parseDateTimeFromIso8601String(familyInfo.isoStatementBeginDate)
-        val lastDate = BackendDateTimeUtils.parseDateTimeFromIso8601String(familyInfo.isoStatementEndDate)
+        if (familyInfo.isoStatementBeginDate.isNotEmpty() && familyInfo.isoStatementEndDate.isNotEmpty()) {
+            val startDate = BackendDateTimeUtils.parseDateTimeFromIso8601String(familyInfo.isoStatementBeginDate)
+            val lastDate = BackendDateTimeUtils.parseDateTimeFromIso8601String(familyInfo.isoStatementEndDate)
 
-        dayOfMonthStatementAvailable = familyInfo.dayOfMonthStatementAvailable
+            dayOfMonthStatementAvailable = familyInfo.dayOfMonthStatementAvailable
 
-        // add from latest available months so that it's displayed from recent to oldest
-        dateOptions.add(lastDate)
-        var tempDate = lastDate
-        while (startDate.isBefore(tempDate)) {
-            tempDate = tempDate.minusMonths(1)
-            dateOptions.add(tempDate)
+            // add from latest available months so that it's displayed from recent to oldest
+            dateOptions.add(lastDate)
+            var tempDate = lastDate
+            while (startDate.isBefore(tempDate)) {
+                tempDate = tempDate.minusMonths(1)
+                dateOptions.add(tempDate)
+            }
         }
         statementsObservable.value = dateOptions
     }

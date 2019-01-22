@@ -1,7 +1,13 @@
 package com.engageft.fis.pscu.feature
 
 import androidx.navigation.NavController
+import com.engageft.engagekit.EngageService
+import com.engageft.engagekit.aac.SingleLiveEvent
+import com.engageft.engagekit.rest.request.ActivationRequest
+import com.ob.domain.lookup.DebitCardStatus
 import com.ob.ws.dom.ActivationCardInfo
+import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.schedulers.Schedulers
 
 /**
  * EnrollmentViewModel
@@ -23,15 +29,18 @@ import com.ob.ws.dom.ActivationCardInfo
  * Copyright (c) 2018 Engage FT. All rights reserved.
  */
 class EnrollmentViewModel : BaseEngageViewModel() {
+    private companion object {
+        const val TAG = "EnrollmentViewModel"
+    }
     val getStartedDelegate by lazy {
         GetStartedDelegate(this, navController, getStartedNavigations)
     }
 
     // These providers are here to later check isInitialized to determine if the delegates are null or not.
-    val cardPinDelegateProvider = lazy {EnrollmentCardPinDelegate(this, navController, cardPinNavigations)}
-    val createAccountDelegateProvider = lazy {CreateAccountDelegate(this, navController, createAccountNavigations)}
-    val verifyIdentityDelegateProvider = lazy {VerifyIdentityDelegate()}
-    val termsOfUseDelegateProvider = lazy {TermsOfUseDelegate()}
+    val cardPinDelegateProvider = lazy { EnrollmentCardPinDelegate(this, navController, cardPinNavigations) }
+    val createAccountDelegateProvider = lazy { CreateAccountDelegate(this, navController, createAccountNavigations) }
+    val verifyIdentityDelegateProvider = lazy { VerifyIdentityDelegate(this, navController, verifyIdentityNavigations) }
+    val termsOfUseDelegateProvider = lazy { TermsOfUseDelegate() }
 
     val cardPinDelegate by cardPinDelegateProvider
     val createAccountDelegate by createAccountDelegateProvider
@@ -58,36 +67,69 @@ class EnrollmentViewModel : BaseEngageViewModel() {
         this.termsNavigations = termsNavigations
     }
 
-    private fun finalSubmit() {
+    fun finalSubmit() {
+        //TODO(aHashimi): when ThreatMetrix is added, pass the session-id!
+        val request = ActivationRequest(
+                cardNumber = getStartedDelegate.cardNumber,
+                dob = getStartedDelegate.birthDate)
+
         // Check which delegates were instantiated:
         if (cardPinDelegateProvider.isInitialized()) {
-            // cardPinDelegate is filled out
+            request.pin = cardPinDelegate.pinNumber.toString()
         }
+
         if (createAccountDelegateProvider.isInitialized()) {
-            // createAccountDelegate is filled out
+            request.email = createAccountDelegate.userEmail
         }
+
         if (verifyIdentityDelegateProvider.isInitialized()) {
-            // verifyIdentityDelegate is filled out
+            request.ssn = verifyIdentityDelegate.ssNumber
         }
+
+        //TODO(aHashimi): will we need this later once terms of use is finalized?
         if (termsOfUseDelegateProvider.isInitialized()) {
             // termsOfUseDelegate is filled out
         }
 
-        // TODO(jhutchins): Implement this.
+        submitActivation(request)
     }
 
-    inner class VerifyIdentityDelegate {
-        init {
+    enum class ActivationStatus {
+        SUCCESS,
+        FAIL
+    }
+    enum class CardActivationStatus {
+        ACTIVE,
+        LINKED
+    }
 
-        }
+    val successSubmissionObservable = SingleLiveEvent<ActivationStatus>()
+    val cardActivationStatusObservable = SingleLiveEvent<CardActivationStatus>()
+    var backendError: String = ""
 
-        fun onButton1Clicked() {
-            navController.navigate(verifyIdentityNavigations.verifyIdentityToTerms)
-        }
+    private fun submitActivation(request: ActivationRequest) {
+        compositeDisposable.add(
+                EngageService.getInstance().engageApiInterface.postActivation(request.fieldMap)
+                        .subscribeOn(Schedulers.io())
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .subscribe({ response ->
+                            if (response.isSuccess) {
+                                successSubmissionObservable.value = ActivationStatus.SUCCESS
 
-        fun onButton2Clicked() {
-            navController.navigate(verifyIdentityNavigations.verifyIdentityToSending)
-        }
+                                if (activationCardInfo.cardStatus == DebitCardStatus.PENDING_ACTIVATION.toString()) {
+                                    cardActivationStatusObservable.value = CardActivationStatus.ACTIVE
+                                } else {
+                                    cardActivationStatusObservable.value = CardActivationStatus.LINKED
+                                }
+                            } else {
+                                successSubmissionObservable.value = ActivationStatus.FAIL
+                                backendError = getBackendErrorForForms(response)
+                            }
+                        }) { e ->
+                            successSubmissionObservable.value = ActivationStatus.FAIL
+                            handleThrowable(e)
+                        }
+        )
     }
 
     //TODO(aHashimi): Not completed, this should be its own class

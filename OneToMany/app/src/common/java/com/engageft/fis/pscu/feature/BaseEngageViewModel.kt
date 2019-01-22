@@ -43,13 +43,22 @@ open class BaseEngageViewModel: BaseViewModel() {
     fun handleThrowable(e: Throwable)  {
         when (e) {
             is UnknownHostException -> {
-                dialogInfoObservable.postValue(DialogInfo(dialogType = DialogInfo.DialogType.NO_INTERNET_CONNECTION))
+                dialogInfoObservable.postValue(DialogInfo(dialogType = DialogInfo.DialogType.UNKNOWN_HOST))
+                if (BuildConfig.DEBUG) {
+                    e.printStackTrace()
+                }
             }
             is NoConnectivityException -> {
                 dialogInfoObservable.postValue(DialogInfo(dialogType = DialogInfo.DialogType.NO_INTERNET_CONNECTION))
+                if (BuildConfig.DEBUG) {
+                    e.printStackTrace()
+                }
             }
             is SocketTimeoutException -> {
                 dialogInfoObservable.postValue(DialogInfo(dialogType = DialogInfo.DialogType.CONNECTION_TIMEOUT))
+                if (BuildConfig.DEBUG) {
+                    e.printStackTrace()
+                }
             }
             // Add more specific exceptions here, if needed
             else -> {
@@ -75,16 +84,21 @@ open class BaseEngageViewModel: BaseViewModel() {
     }
 }
 
-fun BaseEngageViewModel.handleBackendErrorForForms(response: BasicResponse, contextualMessage: String) {
+fun BaseEngageViewModel.getBackendErrorForForms(response: BasicResponse): String {
     if (response.message.isNotEmpty()) {
-        dialogInfoObservable.value = DialogInfo(dialogType = DialogInfo.DialogType.SERVER_ERROR, message = response.message)
+        return response.message
     } else if (response is ValidationErrors) {
-        if (response.error.isNotEmpty()) {
-            dialogInfoObservable.value = DialogInfo(dialogType = DialogInfo.DialogType.SERVER_ERROR, message = response.error.elementAt(0).message)
-        } else {
-            response.message = contextualMessage
-            handleUnexpectedErrorResponse(response)
+        if (response.hasErrors()) {
+            return response.error.elementAt(0).message
         }
+    }
+    return ""
+}
+
+fun BaseEngageViewModel.handleBackendErrorForForms(response: BasicResponse, contextualMessage: String) {
+    val message = getBackendErrorForForms(response)
+    if (message.isNotEmpty()) {
+        dialogInfoObservable.value = DialogInfo(dialogType = DialogInfo.DialogType.SERVER_ERROR, message = message)
     } else {
         response.message = contextualMessage
         handleUnexpectedErrorResponse(response)

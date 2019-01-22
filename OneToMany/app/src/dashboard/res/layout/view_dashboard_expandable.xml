@@ -9,18 +9,18 @@
     <include layout="@layout/cl_dashboard_card_view_and_actions" android:id="@+id/cl_card_view_and_actions"/>
 
     <View
-        android:id="@+id/view_transparent_bar_below_card_view"
+        android:id="@+id/view_bar_under_button_bottom_half"
         android:layout_width="match_parent"
         android:layout_height="@dimen/dashboard_transparent_bar_below_card_view_height"
         app:layout_constraintTop_toBottomOf="@id/cl_card_view_and_actions"
         android:background="@android:color/transparent" />
 
     <View
-        android:id="@+id/view_shadow_above_transparent_bar"
+        android:id="@+id/view_shadow_under_button_top_half"
         android:layout_width="match_parent"
         android:layout_height="@dimen/dashboard_shadow_above_transparent_bar_height"
         android:background="@drawable/card_and_actions_bottom_shadow_gradient"
-        app:layout_constraintBottom_toTopOf="@id/view_transparent_bar_below_card_view"
+        app:layout_constraintBottom_toTopOf="@id/view_bar_under_button_bottom_half"
         />
 
     <androidx.appcompat.widget.AppCompatImageButton
@@ -30,7 +30,7 @@
         app:srcCompat="@drawable/ic_dashboard_disclosure_button"
         android:background="@drawable/round_button_background_for_elevation"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintBottom_toBottomOf="@+id/view_transparent_bar_below_card_view"
+        app:layout_constraintBottom_toBottomOf="@+id/view_bar_under_button_bottom_half"
         app:layout_constraintEnd_toEndOf="parent"
         android:layout_marginBottom="8dp"
         android:elevation="8dp" />

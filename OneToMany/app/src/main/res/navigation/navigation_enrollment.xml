@@ -80,27 +80,7 @@
     </fragment>
     <fragment
         android:id="@+id/enrollmentErrorFragment"
-        android:name="com.engageft.fis.pscu.feature.EnrollmentErrorFragment"
-        android:label="" />
-    <fragment
-        android:id="@+id/enrollmentSuccessFragment"
-        android:name="com.engageft.fis.pscu.feature.EnrollmentSuccessFragment"
-        android:label="" >
-        <action
-            android:id="@+id/action_enrollmentSuccessFragment_to_cardActiveFragment"
-            app:destination="@id/cardActiveFragment"
-            app:enterAnim="@anim/nav_enter_anim"
-            app:exitAnim="@anim/nav_exit_anim"
-            app:popEnterAnim="@anim/nav_pop_enter_anim"
-            app:popExitAnim="@anim/nav_pop_exit_anim" />
-        <action
-            android:id="@+id/action_enrollmentSuccessFragment_to_cardLinkedFragment"
-            app:destination="@id/cardLinkedFragment"
-            app:enterAnim="@anim/nav_enter_anim"
-            app:exitAnim="@anim/nav_exit_anim"
-            app:popEnterAnim="@anim/nav_pop_enter_anim"
-            app:popExitAnim="@anim/nav_pop_exit_anim" />
-    </fragment>
+        android:name="com.engageft.fis.pscu.feature.EnrollmentErrorFragment" />
     <fragment
         android:id="@+id/getStartedFragment"
         android:name="com.engageft.fis.pscu.feature.GetStartedFragment"
@@ -147,21 +127,33 @@
     <fragment
         android:id="@+id/sendingEnrollmentFragment"
         android:name="com.engageft.fis.pscu.feature.SendingEnrollmentFragment"
-        android:label="" >
-        <action
-            android:id="@+id/action_sendingEnrollmentFragment_to_enrollmentSuccessFragment"
-            app:destination="@id/enrollmentSuccessFragment"
-            app:enterAnim="@anim/nav_enter_anim"
-            app:exitAnim="@anim/nav_exit_anim"
-            app:popEnterAnim="@anim/nav_pop_enter_anim"
-            app:popExitAnim="@anim/nav_pop_exit_anim" />
+        android:label="">
         <action
             android:id="@+id/action_sendingEnrollmentFragment_to_enrollmentErrorFragment"
             app:destination="@id/enrollmentErrorFragment"
             app:enterAnim="@anim/nav_enter_anim"
             app:exitAnim="@anim/nav_exit_anim"
             app:popEnterAnim="@anim/nav_pop_enter_anim"
-            app:popExitAnim="@anim/nav_pop_exit_anim" />
+            app:popExitAnim="@anim/nav_pop_exit_anim"
+            app:popUpTo="@id/getStartedFragment"/>
+        <action
+            android:id="@+id/action_sendingEnrollmentFragment_to_cardActiveFragment"
+            app:destination="@id/cardActiveFragment"
+            app:enterAnim="@anim/nav_enter_anim"
+            app:exitAnim="@anim/nav_exit_anim"
+            app:popEnterAnim="@anim/nav_pop_enter_anim"
+            app:popExitAnim="@anim/nav_pop_exit_anim"
+            app:popUpTo="@id/getStartedFragment"
+            app:popUpToInclusive="true"/>
+        <action
+            android:id="@+id/action_sendingEnrollmentFragment_to_cardLinkedFragment"
+            app:destination="@id/cardLinkedFragment"
+            app:enterAnim="@anim/nav_enter_anim"
+            app:exitAnim="@anim/nav_exit_anim"
+            app:popEnterAnim="@anim/nav_pop_enter_anim"
+            app:popExitAnim="@anim/nav_pop_exit_anim"
+            app:popUpTo="@id/getStartedFragment"
+            app:popUpToInclusive="true"/>
     </fragment>
     <fragment
         android:id="@+id/termsOfUseFragment"

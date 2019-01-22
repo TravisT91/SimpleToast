@@ -120,8 +120,6 @@ class AuthenticationDialogFragment : BaseEngageDialogFragment() {
             dismiss()
         }
 
-        viewModel = ViewModelProviders.of(this).get(AuthenticationDialogViewModel::class.java)
-
         viewModel.apply {
             authMethodObservable.observe(this@AuthenticationDialogFragment, Observer { authMethod ->
                 when (authMethod) {
