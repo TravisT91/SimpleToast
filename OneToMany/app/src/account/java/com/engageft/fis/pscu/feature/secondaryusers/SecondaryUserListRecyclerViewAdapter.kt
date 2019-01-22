@@ -4,9 +4,11 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.widget.AppCompatTextView
+import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.engageft.fis.pscu.R
+import com.engageft.fis.pscu.feature.branding.Palette
 
 /**
  * Created by joeyhutchins on 1/15/19.
@@ -15,20 +17,11 @@ import com.engageft.fis.pscu.R
 class SecondaryUserListRecyclerViewAdapter(private val selectionListener: SecondaryUserListSelectionListener)
     : RecyclerView.Adapter<SecondaryUserListRecyclerViewAdapter.SecondaryUserViewHolder>() {
     
-    private companion object {
-        private const val VIEW_TYPE_USER = 0
-        private const val VIEW_TYPE_INACTIVE_USER = 1
-        private const val VIEW_TYPE_ADD_USER = 2
-        private const val VIEW_TYPE_CARD_HEADER = 3
-        private const val VIEW_TYPE_CARD_FOOTER = 4
-    }
-
-    sealed class SecondaryUserListItem(val viewType: Int) {
-        class ActiveSecondaryUserType(val name: CharSequence, val lastFour: CharSequence) : SecondaryUserListItem(VIEW_TYPE_USER)
-        class InactiveSecondaryUserType(val name: CharSequence) : SecondaryUserListItem(VIEW_TYPE_INACTIVE_USER)
-        class AddUserType : SecondaryUserListItem(VIEW_TYPE_ADD_USER)
-        class CardHeaderType(val cardDisplayName: String): SecondaryUserListItem(VIEW_TYPE_CARD_HEADER)
-        class CardFooterType(val cardUserLimit: Int): SecondaryUserListItem(VIEW_TYPE_CARD_FOOTER)
+    companion object {
+        const val VIEW_TYPE_USER = 0
+        const val VIEW_TYPE_ADD_USER = 1
+        const val VIEW_TYPE_CARD_HEADER = 2
+        const val VIEW_TYPE_CARD_FOOTER = 3
     }
 
     private var items = listOf<SecondaryUserListItem>()
@@ -50,12 +43,8 @@ class SecondaryUserListRecyclerViewAdapter(private val selectionListener: Second
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): SecondaryUserViewHolder {
         return when (viewType) {
             VIEW_TYPE_USER -> {
-                val view = LayoutInflater.from(parent.context).inflate(R.layout.secondary_user_active_item, parent, false)
+                val view = LayoutInflater.from(parent.context).inflate(R.layout.secondary_user_user_item, parent, false)
                 SecondaryUserViewHolder.ActiveUserViewHolder(viewHolderListener, view)
-            }
-            VIEW_TYPE_INACTIVE_USER -> {
-                val view = LayoutInflater.from(parent.context).inflate(R.layout.secondary_user_inactive_item, parent, false)
-                SecondaryUserViewHolder.InactiveUserViewHolder(viewHolderListener, view)
             }
             VIEW_TYPE_ADD_USER -> {
                 val view = LayoutInflater.from(parent.context).inflate(R.layout.secondary_user_add_item, parent, false)
@@ -81,11 +70,13 @@ class SecondaryUserListRecyclerViewAdapter(private val selectionListener: Second
             is SecondaryUserViewHolder.ActiveUserViewHolder -> {
                 val item = items[position] as SecondaryUserListItem.ActiveSecondaryUserType
                 holder.userNameTextView.text = item.name
-                holder.lastFourTextView.text = item.lastFour
-            }
-            is SecondaryUserViewHolder.InactiveUserViewHolder -> {
-                val item = items[position] as SecondaryUserListItem.InactiveSecondaryUserType
-                holder.userNameTextView.text = item.name
+                holder.statusTextView.text = if (item.active) {
+                    holder.statusTextView.setTextColor(ContextCompat.getColor(holder.itemView.context, R.color.structure5))
+                    holder.itemView.context.getString(R.string.secondary_users_user_active)
+                } else {
+                    holder.statusTextView.setTextColor(Palette.errorColor)
+                    holder.itemView.context.getString(R.string.secondary_users_user_inactive)
+                }
             }
             is SecondaryUserViewHolder.AddUserViewHolder -> {
                 // Nothing to do here.
@@ -118,10 +109,7 @@ class SecondaryUserListRecyclerViewAdapter(private val selectionListener: Second
 
         class ActiveUserViewHolder(viewHolderListener: ViewHolderListener, itemView: View) : SecondaryUserViewHolder(viewHolderListener, itemView) {
             val userNameTextView: AppCompatTextView = itemView.findViewById(R.id.userNameText)
-            val lastFourTextView: AppCompatTextView = itemView.findViewById(R.id.lastFourText)
-        }
-        class InactiveUserViewHolder(viewHolderListener: ViewHolderListener, itemView: View) : SecondaryUserViewHolder(viewHolderListener, itemView) {
-            val userNameTextView: AppCompatTextView = itemView.findViewById(R.id.userNameText)
+            val statusTextView: AppCompatTextView = itemView.findViewById(R.id.statusText)
         }
         class AddUserViewHolder(viewHolderListener: ViewHolderListener, itemView: View) : SecondaryUserViewHolder(viewHolderListener, itemView)
         class CardHeaderViewHolder(viewHolderListener: ViewHolderListener, itemView: View) : SecondaryUserViewHolder(viewHolderListener, itemView) {
@@ -148,11 +136,7 @@ class SecondaryUserListRecyclerViewAdapter(private val selectionListener: Second
                 when (oldItem) {
                     is SecondaryUserListItem.ActiveSecondaryUserType -> {
                         newItem as SecondaryUserListItem.ActiveSecondaryUserType
-                        return oldItem.name == newItem.name && oldItem.lastFour == newItem.lastFour
-                    }
-                    is SecondaryUserListItem.InactiveSecondaryUserType -> {
-                        newItem as SecondaryUserListItem.InactiveSecondaryUserType
-                        return oldItem.name == newItem.name
+                        return oldItem.name == newItem.name && oldItem.active == newItem.active
                     }
                     is SecondaryUserListItem.AddUserType -> {
                         return true
@@ -189,11 +173,7 @@ class SecondaryUserListRecyclerViewAdapter(private val selectionListener: Second
                 when (oldItem) {
                     is SecondaryUserListItem.ActiveSecondaryUserType -> {
                         newItem as SecondaryUserListItem.ActiveSecondaryUserType
-                        return oldItem.name == newItem.name && oldItem.lastFour == newItem.lastFour
-                    }
-                    is SecondaryUserListItem.InactiveSecondaryUserType -> {
-                        newItem as SecondaryUserListItem.InactiveSecondaryUserType
-                        return oldItem.name == newItem.name
+                        return oldItem.name == newItem.name && oldItem.active == newItem.active
                     }
                     is SecondaryUserListItem.AddUserType -> {
                         return true

@@ -1,175 +1,103 @@
 package com.engageft.fis.pscu.feature.secondaryusers
 
+import androidx.lifecycle.MutableLiveData
+import com.engageft.engagekit.EngageService
+import com.engageft.engagekit.rest.request.CardRequest
+import com.engageft.engagekit.utils.LoginResponseUtils
 import com.engageft.fis.pscu.feature.BaseEngageViewModel
+import com.engageft.fis.pscu.feature.branding.BrandingInfoRepo
+import com.ob.ws.dom.LoginResponse
+import com.ob.ws.dom.RelatedCardsResponse
+import com.ob.ws.dom.utility.DebitCardInfo
+import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.schedulers.Schedulers
 
 /**
  * Created by joeyhutchins on 1/15/19.
  * Copyright (c) 2019 Engage FT. All rights reserved.
  */
 class SecondaryUserListViewModel: BaseEngageViewModel() {
-    //            fun setCardTitle(debitCardInfo: DebitCardInfo) {
-//                val brandingCard = BrandingInfoRepo.cards?.find { card ->
-//                    card.type == debitCardInfo.cardType
-//                }
-//                cardTitleText.text = brandingCard!!.name
-//            }
-    
-    private companion object {
-//        private const val HISTORICAL_LOADS_LIST_MAX_COUNT = 5
-    }
+                fun setCardTitle(debitCardInfo: DebitCardInfo) {
 
-//    enum class BankAccountStatus {
-//        NO_BANK_ACCOUNT,
-//        UNVERIFIED_BANK_ACCOUNT,
-//        VERIFIED_BANK_ACCOUNT
-//    }
-//
-//    var achBankAccountId = 0L
-//    var accountInfo: AccountInfo? = null
-//    val achAccountsListAndStatusObservable = MutableLiveData<AchBankAccountListAndStatus>()
-//    val achScheduledLoadListObservable = MutableLiveData<List<ScheduledLoad>>()
-//    val achHistoricalLoadListObservable = MutableLiveData<List<AchLoadInfo>>()
-//
-//    private var loginResponse: LoginResponse? = null
-//    private var shouldHideProgressOverlay = false
+            }
+
+    val secondaryUserListObservable = MutableLiveData<List<SecondaryUserListItem>>()
+    val showSecondarySplashObservable = MutableLiveData<Boolean>()
 
     init {
-        initSecondaryUsersList()
+        refreshViews()
     }
 
     fun refreshViews() {
-        // for this main screen to show the updated to item correctly.
-//        if (this.loginResponse != EngageService.getInstance().storageManager.loginResponse) {
-//            initSecondaryUsersList()
-//        }
+        secondaryUserListObservable.value = ArrayList()
+        showSecondarySplashObservable.value = false
+        progressOverlayShownObservable.value = true
+
+        compositeDisposable.add(EngageService.getInstance().loginResponseAsObservable
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe({ response ->
+                    // don't hide progressOverlay just yet
+                    if (response is LoginResponse) {
+                        val currentCard = LoginResponseUtils.getCurrentCard(response)
+                        // TODO: Eventually we have to pull all the cards secondary info...
+//                        val cards = LoginResponseUtils.getAllCardsSorted(response)
+//                        for (card in cards) {
+//                            getSecondariesForCard(card)
+//                        }
+                        getSecondariesForCard(currentCard)
+                    } else {
+                        progressOverlayShownObservable.value = false
+                        handleUnexpectedErrorResponse(response)
+                    }
+                }, { e ->
+                    progressOverlayShownObservable.value = false
+                    handleThrowable(e)
+                })
+        )
     }
 
-    fun isBankVerified(): Boolean {
-//        achAccountsListAndStatusObservable.value?.let {
-//            if (it.bankStatus == BankAccountStatus.VERIFIED_BANK_ACCOUNT) {
-//                return true
-//            }
-//        }
-        return false
+    private fun getSecondariesForCard(debitCardInfo: DebitCardInfo) {
+        // TODO(jhutchins): Someday we need to support more than just one of these queries to support multiple card types.
+        compositeDisposable.add(EngageService.getInstance().engageApiInterface.postAddSecondaryCard(CardRequest(debitCardInfo.debitCardId).fieldMap)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe({ response ->
+                    if (response.isSuccess && response is RelatedCardsResponse) {
+                        if (response.accountList.isNotEmpty()) {
+                            val secondaryAccountList = ArrayList<SecondaryUserListItem>()
+                            secondaryAccountList.add(SecondaryUserListItem.CardHeaderType(getCardTitleText(debitCardInfo)))
+
+                            for (account in response.accountList) {
+                                secondaryAccountList.add(SecondaryUserListItem.ActiveSecondaryUserType("${account.firstName} ${account.lastName}", account.isCurrent))
+                                account.debitCardInfo.status
+                            }
+                            if (debitCardInfo.cardPermissionsInfo.isAddDependentAllowable) {
+                                secondaryAccountList.add(SecondaryUserListItem.AddUserType())
+                            }
+                            secondaryAccountList.add(SecondaryUserListItem.CardFooterType(debitCardInfo.cardPermissionsInfo.cardSecondaryMaxCount))
+
+                            showSecondarySplashObservable.value = false
+                            secondaryUserListObservable.value = secondaryAccountList
+                        } else {
+                            showSecondarySplashObservable.value = true
+                            secondaryUserListObservable.value = ArrayList()
+                        }
+                    } else {
+                        progressOverlayShownObservable.value = false
+                        handleUnexpectedErrorResponse(response)
+                    }
+                }, { e ->
+                    progressOverlayShownObservable.value = false
+                    handleThrowable(e)
+                })
+        )
     }
 
-    private fun initSecondaryUsersList() {
-//        progressOverlayShownObservable.value = true
-//
-//        compositeDisposable.add(EngageService.getInstance().loginResponseAsObservable
-//                .subscribeOn(Schedulers.io())
-//                .observeOn(AndroidSchedulers.mainThread())
-//                .subscribe({ response ->
-//                    // don't hide progressOverlay just yet
-//                    if (response is LoginResponse) {
-//                        loginResponse = response
-//                        accountInfo = LoginResponseUtils.getCurrentAccountInfo(response)
-//                        val currentCard = LoginResponseUtils.getCurrentCard(response)
-//                        // the order of invoking these methods don't matter
-//                        initBankAccountStatusAndList(response.achAccountList)
-//                        // hide progress when the following two API calls are done.
-//                        shouldHideProgressOverlay = false
-//                        getScheduledLoads(currentCard)
-//                        getHistoricalLoads(currentCard)
-//                    } else {
-//                        progressOverlayShownObservable.value = false
-//                        handleUnexpectedErrorResponse(response)
-//                    }
-//                }, { e ->
-//                    progressOverlayShownObservable.value = false
-//                    handleThrowable(e)
-//                })
-//        )
+    private fun getCardTitleText(debitCardInfo: DebitCardInfo): String {
+        val brandingCard = BrandingInfoRepo.cards?.find { card ->
+            card.type == debitCardInfo.cardType
+        }
+        return brandingCard?.name ?: "unknown card type"
     }
-
-//    private fun getScheduledLoads(currentCard: DebitCardInfo) {
-//        compositeDisposable.add(
-//                EngageService.getInstance().getScheduledLoadsResponseObservable(EngageService.getInstance().authManager.authToken, currentCard, false)
-//                        .subscribeOn(Schedulers.io())
-//                        .observeOn(AndroidSchedulers.mainThread())
-//                        .subscribe({ response ->
-//                            shouldHideProgressOverlay(true)
-//                            if (response.isSuccess && response is ScheduledLoadsResponse) {
-//                                achScheduledLoadListObservable.value = ScheduledLoadUtils.getScheduledLoads(response)
-//                            } else {
-//                                handleUnexpectedErrorResponse(response)
-//                            }
-//                        }, { e ->
-//                            shouldHideProgressOverlay(true)
-//                            handleThrowable(e)
-//                        })
-//        )
-//    }
-//
-//    private fun getHistoricalLoads(currentCard: DebitCardInfo) {
-//        val cardRequest = CardRequest(EngageService.getInstance().authManager.authToken, currentCard.debitCardId)
-//        compositeDisposable.add(
-//                EngageService.getInstance().engageApiInterface.postListHistoricalLoads(cardRequest.fieldMap)
-//                        .subscribeOn(Schedulers.io())
-//                        .observeOn(AndroidSchedulers.mainThread())
-//                        .subscribe({ response ->
-//                            shouldHideProgressOverlay(true)
-//                            if (response.isSuccess && response is AchLoadsResponse) {
-//                                val loads = response.loads
-//                                // sort by date
-//                                loads.sortWith(Comparator { one, two ->
-//                                    val date1 = BackendDateTimeUtils.parseDateTimeFromIso8601String(one.isoLoadDate)
-//                                    val date2 = BackendDateTimeUtils.parseDateTimeFromIso8601String(two.isoLoadDate)
-//                                    date2!!.compareTo(date1)
-//                                })
-//                                val historicalLoadList = loads.subList(0, Math.min(loads.size, HISTORICAL_LOADS_LIST_MAX_COUNT))
-//                                achHistoricalLoadListObservable.value = historicalLoadList
-//                            } else {
-//                                handleUnexpectedErrorResponse(response)
-//                            }
-//                        }, { e ->
-//                            shouldHideProgressOverlay(true)
-//                            handleThrowable(e)
-//                        })
-//        )
-//    }
-
-//    private fun initBankAccountStatusAndList(achAccountInfoList: List<AchAccountInfo>) {
-//        if (achAccountInfoList.isNotEmpty()) {
-//
-//            var verified = false
-//            for (achAccountInfo in achAccountInfoList) {
-//
-//                if (achAccountInfo.achAccountStatus == AchAccountStatus.VERIFIED) {
-//
-//                    achAccountsListAndStatusObservable.value = AchBankAccountListAndStatus(
-//                            bankStatus = BankAccountStatus.VERIFIED_BANK_ACCOUNT,
-//                            achAccountInfoList = achAccountInfoList)
-//                    verified = true
-//                    break
-//                }
-//                achBankAccountId = achAccountInfo.achAccountId
-//            }
-//            if (!verified) {
-//                achAccountsListAndStatusObservable.value = AchBankAccountListAndStatus(
-//                        bankStatus = BankAccountStatus.UNVERIFIED_BANK_ACCOUNT,
-//                        achAccountInfoList = achAccountInfoList)
-//            }
-//        } else {
-//            achAccountsListAndStatusObservable.value = AchBankAccountListAndStatus(
-//                    bankStatus = BankAccountStatus.NO_BANK_ACCOUNT,
-//                    achAccountInfoList = achAccountInfoList)
-//        }
-//    }
-
-//    private fun shouldHideProgressOverlay(apiCallDone: Boolean) {
-//        if (shouldHideProgressOverlay && apiCallDone) {
-//            progressOverlayShownObservable.value = false
-//        }
-//        shouldHideProgressOverlay = true
-//    }
-
-//    fun isAllowedToAddAccount(): Boolean {
-//        accountInfo?.let { currentAccountInfo ->
-//            return currentAccountInfo.accountPermissionsInfo.isAllowAddAchAccount
-//        }
-//        return false
-//    }
-
-//    data class AchBankAccountListAndStatus(val bankStatus: BankAccountStatus, val achAccountInfoList: List<AchAccountInfo>)
 }
