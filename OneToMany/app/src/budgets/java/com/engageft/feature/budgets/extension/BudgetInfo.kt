@@ -1,5 +1,6 @@
 package com.engageft.feature.budgets.extension
 
+import com.engageft.feature.budgets.BudgetConstants
 import com.ob.ws.dom.utility.BudgetInfo
 import com.ob.ws.dom.utility.CategorySpending
 
@@ -55,6 +56,14 @@ fun BudgetInfo.hasBudget(): Boolean {
 
 fun BudgetInfo.showBudgetSetup(): Boolean {
     return this.budgetAmount.getFloatOrZero() == 0.0f
+}
+
+fun BudgetInfo.budgetStatus(): BudgetConstants.BudgetStatus {
+    return when (this.alertType) {
+        BudgetConstants.BUDGET_STATUS_OVER_BUDGET -> BudgetConstants.BudgetStatus.OVER_BUDGET
+        BudgetConstants.BUDGET_STATUS_HIGH_SPENDING_TREND -> BudgetConstants.BudgetStatus.HIGH_SPENDING_TREND
+        else -> BudgetConstants.BudgetStatus.NORMAL
+    }
 }
 
 private fun BudgetInfo.filterCategorySpending(withOther: Boolean, isInFirst30Days: Boolean): List<CategorySpending> {

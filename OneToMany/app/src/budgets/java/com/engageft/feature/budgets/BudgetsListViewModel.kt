@@ -1,15 +1,23 @@
 package com.engageft.feature.budgets
 
+import androidx.annotation.ColorInt
 import androidx.lifecycle.MutableLiveData
 import com.engageft.engagekit.EngageService
+import com.engageft.feature.budgets.extension.budgetStatus
+import com.engageft.feature.budgets.extension.getCategoriesSortedByBudgetAmountDescending
+import com.engageft.feature.budgets.extension.isGreaterThan
+import com.engageft.feature.budgets.extension.isLessThan
+import com.engageft.feature.budgets.extension.isZero
+import com.engageft.feature.budgets.model.BudgetModel
 import com.engageft.fis.pscu.feature.BaseEngageViewModel
 import com.engageft.fis.pscu.feature.DialogInfo
-import com.engageft.feature.budgets.extension.getCategoriesSortedByBudgetAmountDescending
-import com.engageft.feature.budgets.model.BudgetModel
 import com.ob.ws.dom.LoginResponse
 import io.reactivex.schedulers.Schedulers
 import org.joda.time.DateTime
+import utilGen1.StringUtils
 import java.math.BigDecimal
+import java.math.RoundingMode
+import java.util.*
 
 /**
  * BudgetsListViewModel
@@ -23,7 +31,35 @@ class BudgetsListViewModel : BaseEngageViewModel() {
 
     val budgetsObservable: MutableLiveData<Pair<BudgetModel, List<BudgetModel>>> = MutableLiveData()
 
-    fun init() {
+    private lateinit var spentNormalFormat: String
+    private lateinit var spentOverFormat: String
+    @ColorInt private var spentColorNormal: Int = 0
+    @ColorInt private var spentColorOverBudget: Int = 0
+
+    @ColorInt private var progressColorNormal: Int = 0
+    @ColorInt private var progressColorHighSpendingTrend: Int = 0
+    @ColorInt private var progressColorOverBudget: Int = 0
+
+    fun init(
+            totalSpentTitle: String,
+            otherSpendingTitle: String,
+            spentNormalFormat: String,
+            spentOverFormat: String,
+            @ColorInt spentColorNormal: Int,
+            @ColorInt spentColorOverBudget: Int,
+            @ColorInt progressColorNormal: Int,
+            @ColorInt progressColorHighSpendingTrend: Int,
+            @ColorInt progressColorOverBudget: Int) {
+
+        this.spentNormalFormat = spentNormalFormat
+        this.spentOverFormat = spentOverFormat
+        this.spentColorNormal = spentColorNormal
+        this.spentColorOverBudget = spentColorOverBudget
+
+        this.progressColorNormal = progressColorNormal
+        this.progressColorHighSpendingTrend = progressColorHighSpendingTrend
+        this.progressColorOverBudget = progressColorOverBudget
+
         progressOverlayShownObservable.postValue(true)
         compositeDisposable.add(
                 EngageService.getInstance().loginResponseAsObservable
@@ -39,25 +75,52 @@ class BudgetsListViewModel : BaseEngageViewModel() {
                                     val isFirst30 = false
 
                                     // total spent
+                                    var spentAmount = BigDecimal(budgetAmountSpent).abs()   // reused for computing categorySpending values
+                                                                                            // amountSpent is always negative from backend
+                                    var budgetAmount = BigDecimal(budgetAmount)             // reused for computing categorySpending values
+                                    var budgetStatus = budgetStatus()                       // reused for computing categorySpendingValues
                                     val totalBudgetModel = BudgetModel(
-                                            // categoryName is not set for total
-                                            // title is filled in by fragment, which can access Context
-                                            spentAmount = BigDecimal(budgetAmountSpent),
-                                            budgetAmount = BigDecimal(budgetAmount),
+                                            categoryName = BudgetConstants.CATEGORY_NAME_FE_TOTAL_SPENDING,
+                                            title = totalSpentTitle,
+                                            spent = spentString(spentAmount, budgetAmount),
+                                            spentColor = spentColor(budgetStatus),
+                                            progress = progress(spentAmount, budgetAmount),
+                                            progressColor = progressColor(budgetStatus),
                                             fractionTimePeriodPassed = fractionTimePeriodPassed)
 
                                     // categories
                                     val categorySpendings = getCategoriesSortedByBudgetAmountDescending(withOther = false, isInFirst30Days = isFirst30).toMutableList()
-                                    // add other spending
-                                    categorySpendings.add(otherSpending)
                                     var categoryBudgetModels = mutableListOf<BudgetModel>()
                                     for (categorySpending in categorySpendings) {
+                                        spentAmount = BigDecimal(categorySpending.amountSpent).abs()    // amountSpent is always negative from backend
+                                        budgetAmount = BigDecimal(categorySpending.budgetAmount)
+                                        budgetStatus = categorySpending.budgetStatus()
                                         categoryBudgetModels.add(
                                                 BudgetModel(
                                                         categoryName = categorySpending.category,
-                                                        spentAmount = BigDecimal(categorySpending.amountSpent),
-                                                        budgetAmount = BigDecimal(categorySpending.budgetAmount),
+                                                        title = EngageService.getInstance().storageManager.getBudgetCategoryDescription(categorySpending.category, Locale.getDefault().language),
+                                                        spent = spentString(spentAmount, budgetAmount),
+                                                        spentColor = spentColor(budgetStatus),
+                                                        progress = progress(spentAmount, budgetAmount),
+                                                        progressColor = progressColor(budgetStatus),
                                                         fractionTimePeriodPassed =  fractionTimePeriodPassed
+                                                )
+                                        )
+                                    }
+                                    // add other spending
+                                    otherSpending?.let { otherSpendingCategory ->
+                                        spentAmount = BigDecimal(otherSpendingCategory.amountSpent).abs()   // amountSpent is always negative from backend
+                                        budgetAmount = BigDecimal(otherSpendingCategory.budgetAmount)
+                                        budgetStatus = otherSpendingCategory.budgetStatus()
+                                        categoryBudgetModels.add(
+                                                BudgetModel(
+                                                        categoryName = otherSpendingCategory.category,
+                                                        title = otherSpendingTitle,
+                                                        spent = spentString(spentAmount, budgetAmount),
+                                                        spentColor = spentColor(budgetStatus),
+                                                        progress = progress(spentAmount, budgetAmount),
+                                                        progressColor = progressColor(budgetStatus),
+                                                        fractionTimePeriodPassed = fractionTimePeriodPassed
                                                 )
                                         )
                                     }
@@ -74,6 +137,46 @@ class BudgetsListViewModel : BaseEngageViewModel() {
                             }
                         }) { e -> handleThrowable(e) }
         )
+    }
+
+    private fun spentString(spentAmount: BigDecimal, budgetAmount: BigDecimal): String {
+        return if (spentAmount.isGreaterThan(budgetAmount)) {
+            String.format(spentOverFormat, StringUtils.formatCurrencyString(spentAmount.minus(budgetAmount).toFloat()))
+        } else {
+            String.format(spentNormalFormat, StringUtils.formatCurrencyString(spentAmount.toFloat()), StringUtils.formatCurrencyString(budgetAmount.toFloat()))
+        }
+    }
+
+    @ColorInt
+    private fun spentColor(budgetStatus: BudgetConstants.BudgetStatus): Int {
+        return if (budgetStatus == BudgetConstants.BudgetStatus.OVER_BUDGET) {
+            spentColorOverBudget
+        } else {
+            spentColorNormal
+        }
+    }
+
+    private fun progress(spentAmount: BigDecimal, budgetAmount: BigDecimal): Float {
+        return if (!spentAmount.isGreaterThan(BigDecimal.ZERO) || budgetAmount.isZero()) {
+            // Catches cases of spent <= 0, or budget == 0
+            0.0f
+        }
+        else if (spentAmount.isLessThan(budgetAmount)) {
+            spentAmount.divide(budgetAmount, RoundingMode.HALF_UP).toFloat()
+        }
+        else {
+            // spent is at or over budget amount, so cap at 1
+            1.0f
+        }
+    }
+
+    @ColorInt
+    private fun progressColor(budgetStatus: BudgetConstants.BudgetStatus): Int {
+        return when (budgetStatus) {
+            BudgetConstants.BudgetStatus.NORMAL -> progressColorNormal
+            BudgetConstants.BudgetStatus.HIGH_SPENDING_TREND -> progressColorHighSpendingTrend
+            BudgetConstants.BudgetStatus.OVER_BUDGET -> progressColorOverBudget
+        }
     }
 
     private fun fractionOfCurrentMonthPassed(): Float {

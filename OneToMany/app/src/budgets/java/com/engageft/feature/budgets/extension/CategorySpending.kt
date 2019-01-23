@@ -1,5 +1,6 @@
 package com.engageft.feature.budgets.extension
 
+import com.engageft.feature.budgets.BudgetConstants
 import com.ob.ws.dom.utility.CategorySpending
 
 /**
@@ -14,7 +15,7 @@ import com.ob.ws.dom.utility.CategorySpending
 fun CategorySpending.isInOtherBudget(isSetup: Boolean, isInFirst30Days: Boolean): Boolean {
     if (isSetup) {
         if (isInFirst30Days) { // if first 30, show some categories by default
-            if (!defaultEditCategories.contains(category)) { // && budgetAmount.getFloatOrZero() == 0F) { // budgetAmount condition was in gen1, but not currently in iOS
+            if (!BudgetConstants.DEFAULT_EDIT_CATEGORIES.contains(category)) { // && budgetAmount.getFloatOrZero() == 0F) { // budgetAmount condition was in gen1, but not currently in iOS
                 return true
             }
         } else if (amountSpentLast30.getFloatOrZero() == 0f) { // no budget set yet so look at amount spent
@@ -27,12 +28,13 @@ fun CategorySpending.isInOtherBudget(isSetup: Boolean, isInFirst30Days: Boolean)
 }
 
 fun CategorySpending.isOtherSpending(): Boolean {
-    return isCategoryNameOtherSpending(this.category)
+    return BudgetConstants.CATEGORY_NAME_BE_OTHER_SPENDING == this.category
 }
 
-fun isCategoryNameOtherSpending(categoryName: String): Boolean {
-    return categoryName == otherSpendingCategoryName
+fun CategorySpending.budgetStatus(): BudgetConstants.BudgetStatus {
+    return when (this.alertType) {
+        BudgetConstants.BUDGET_STATUS_OVER_BUDGET -> BudgetConstants.BudgetStatus.OVER_BUDGET
+        BudgetConstants.BUDGET_STATUS_HIGH_SPENDING_TREND -> BudgetConstants.BudgetStatus.HIGH_SPENDING_TREND
+        else -> BudgetConstants.BudgetStatus.NORMAL
+    }
 }
-
-private val defaultEditCategories: List<String> = listOf("Groceries", "DiningOut", "Shopping", "Entertainment")
-private val otherSpendingCategoryName = "Other Spending"

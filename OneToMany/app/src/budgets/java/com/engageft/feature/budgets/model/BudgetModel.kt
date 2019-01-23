@@ -1,6 +1,6 @@
 package com.engageft.feature.budgets.model
 
-import java.math.BigDecimal
+import androidx.annotation.ColorInt
 
 /**
  * BudgetModel
@@ -10,4 +10,12 @@ import java.math.BigDecimal
  * Created by kurteous on 1/16/19.
  * Copyright (c) 2019 Engage FT. All rights reserved.
  */
-data class BudgetModel(val categoryName: String? = null, var title: String? = null, val spentAmount: BigDecimal, val budgetAmount: BigDecimal, val fractionTimePeriodPassed: Float)
+data class BudgetModel(
+        val categoryName: String,
+        val title: String,
+        val spent: String,
+        @ColorInt val spentColor: Int,
+        val progress: Float,
+        @ColorInt val progressColor: Int,
+        val fractionTimePeriodPassed: Float
+)
