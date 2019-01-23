@@ -94,7 +94,7 @@ class SecondaryUserListRecyclerViewAdapter(private val selectionListener: Second
     }
 
     fun setSecondaryUserItems(items: List<SecondaryUserListItem>) {
-        val oldList = items
+        val oldList = this.items
         this.items = items
         DiffUtil.calculateDiff(SecondaryUserDiffUtil(oldList, items)).dispatchUpdatesTo(this)
     }

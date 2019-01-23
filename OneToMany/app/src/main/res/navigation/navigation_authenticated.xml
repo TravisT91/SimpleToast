@@ -521,7 +521,7 @@
     <fragment
         android:id="@+id/secondaryUserListFragment"
         android:name="com.engageft.fis.pscu.feature.secondaryusers.SecondaryUserListFragment"
-        android:label="SecondaryUserListFragment">
+        android:label="@string/fragment_title_secondary_users">
         <argument
             android:name="@string/navigation_view_gone"
             android:defaultValue="true" />

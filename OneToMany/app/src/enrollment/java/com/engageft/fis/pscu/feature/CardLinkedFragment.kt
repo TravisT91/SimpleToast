@@ -17,7 +17,6 @@ import com.engageft.fis.pscu.databinding.FragmentCardLinkedBinding
 import com.engageft.fis.pscu.feature.branding.Palette
 import com.engageft.fis.pscu.feature.palettebindings.applyBranding
 import com.engageft.fis.pscu.feature.utils.CardStatusUtils
-import com.engageft.fis.pscu.feature.utils.cardStatusStringRes
 import com.ob.domain.lookup.branding.BrandingCard
 
 /**

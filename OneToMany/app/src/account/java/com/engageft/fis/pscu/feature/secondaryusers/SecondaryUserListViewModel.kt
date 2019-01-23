@@ -60,10 +60,11 @@ class SecondaryUserListViewModel: BaseEngageViewModel() {
 
     private fun getSecondariesForCard(debitCardInfo: DebitCardInfo) {
         // TODO(jhutchins): Someday we need to support more than just one of these queries to support multiple card types.
-        compositeDisposable.add(EngageService.getInstance().engageApiInterface.postAddSecondaryCard(CardRequest(debitCardInfo.debitCardId).fieldMap)
+        compositeDisposable.add(EngageService.getInstance().engageApiInterface.postGetSecondaryCards(CardRequest(debitCardInfo.debitCardId).fieldMap)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe({ response ->
+                    progressOverlayShownObservable.value = false
                     if (response.isSuccess && response is RelatedCardsResponse) {
                         if (response.accountList.isNotEmpty()) {
                             val secondaryAccountList = ArrayList<SecondaryUserListItem>()
@@ -74,7 +75,7 @@ class SecondaryUserListViewModel: BaseEngageViewModel() {
                                         CardStatusUtils.productCardModelStatusFromDebitCardInfo(account.debitCardInfo)))
                                 account.debitCardInfo.status
                             }
-                            if (debitCardInfo.cardPermissionsInfo.isAddDependentAllowable) {
+                            if (debitCardInfo.cardPermissionsInfo.isAllowSecondary) {
                                 secondaryAccountList.add(SecondaryUserListItem.AddUserType())
                             }
                             secondaryAccountList.add(SecondaryUserListItem.CardFooterType(debitCardInfo.cardPermissionsInfo.cardSecondaryMaxCount))
@@ -86,7 +87,6 @@ class SecondaryUserListViewModel: BaseEngageViewModel() {
                             secondaryUserListObservable.value = ArrayList()
                         }
                     } else {
-                        progressOverlayShownObservable.value = false
                         handleUnexpectedErrorResponse(response)
                     }
                 }, { e ->
@@ -94,6 +94,10 @@ class SecondaryUserListViewModel: BaseEngageViewModel() {
                     handleThrowable(e)
                 })
         )
+    }
+
+    fun onAddSecondaryClicked() {
+
     }
 
     private fun getCardTitleText(debitCardInfo: DebitCardInfo): String {

@@ -4,10 +4,13 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.content.res.ResourcesCompat
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.engageft.apptoolbox.BaseViewModel
+import com.engageft.apptoolbox.util.applyTypefaceAndColorToSubString
+import com.engageft.fis.pscu.R
 import com.engageft.fis.pscu.databinding.FragmentSecondaryUsersListBinding
 import com.engageft.fis.pscu.feature.BaseEngagePageFragment
 import com.engageft.fis.pscu.feature.branding.Palette
@@ -24,7 +27,7 @@ class SecondaryUserListFragment: BaseEngagePageFragment() {
 
     private val selectionListener = object : SecondaryUserListRecyclerViewAdapter.SecondaryUserListSelectionListener {
         override fun onItemClicked(secondaryUserListItem: SecondaryUserListItem) {
-            TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+            // TODO
         }
     }
 
@@ -35,12 +38,12 @@ class SecondaryUserListFragment: BaseEngagePageFragment() {
     private val splashObserver = Observer<Boolean> { showSplash ->
         showSplash?.let {
             if (it) {
-                // TODO show splash
+                binding.secondarySplash.visibility = View.VISIBLE
             } else {
-                // TODO hide splash
+                binding.secondarySplash.visibility = View.GONE
             }
         } ?: kotlin.run {
-            // TODO hide splash
+            binding.secondarySplash.visibility = View.GONE
         }
     }
 
@@ -59,6 +62,11 @@ class SecondaryUserListFragment: BaseEngagePageFragment() {
             recyclerView.layoutManager = LinearLayoutManager(context!!)
             recyclerViewAdapter = SecondaryUserListRecyclerViewAdapter(selectionListener)
             recyclerView.adapter = recyclerViewAdapter
+
+            titleTextView.text = getString(R.string.secondary_users_splash_title_format).applyTypefaceAndColorToSubString(
+                    ResourcesCompat.getFont(context!!, R.font.font_bold)!!,
+                    Palette.primaryColor,
+                    getString(R.string.secondary_users_splash_title_substring))
         }
 
         secondaryUserListViewModel.apply {

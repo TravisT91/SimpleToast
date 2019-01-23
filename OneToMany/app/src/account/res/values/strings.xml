@@ -104,5 +104,8 @@
     <string name="secondary_users_user_limit_footer_format">You may add up to %d accounts on this card.</string>
     <string name="secondary_users_user_active">Active</string>
     <string name="secondary_users_user_inactive">Inactive</string>
-
+    <string name="secondary_users_splash_title_format">Adding new secondary accounts</string>
+    <string name="secondary_users_splash_title_substring">secondary</string>
+    <string name="secondary_users_splash_message">The number of accounts you may add is based on your card type.</string>
+    <string name="secondary_users_splash_button_add">Add account</string>
 </resources>

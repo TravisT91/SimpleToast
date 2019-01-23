@@ -5,11 +5,6 @@
     android:layout_height="wrap_content"
     android:layout_width="match_parent">
 
-    <include
-        layout="@layout/view_horizontal_divider"
-        android:layout_width="match_parent"
-        android:layout_height="1dp" />
-
     <androidx.appcompat.widget.AppCompatTextView
         android:id="@+id/cardTitleText"
         android:layout_width="match_parent"
@@ -21,10 +16,5 @@
         android:textAllCaps="true"
         android:padding="16dp"
         tools:text="general card" />
-
-    <include
-        layout="@layout/view_horizontal_divider"
-        android:layout_width="match_parent"
-        android:layout_height="1dp" />
 
 </LinearLayout>
