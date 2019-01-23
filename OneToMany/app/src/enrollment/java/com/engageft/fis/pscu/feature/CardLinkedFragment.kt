@@ -16,6 +16,7 @@ import com.engageft.fis.pscu.R
 import com.engageft.fis.pscu.databinding.FragmentCardLinkedBinding
 import com.engageft.fis.pscu.feature.branding.Palette
 import com.engageft.fis.pscu.feature.palettebindings.applyBranding
+import com.engageft.fis.pscu.feature.utils.CardStatusUtils
 import com.engageft.fis.pscu.feature.utils.cardStatusStringRes
 import com.ob.domain.lookup.branding.BrandingCard
 
@@ -61,7 +62,7 @@ class CardLinkedFragment : BaseEngagePageFragment() {
                 getString(R.string.ENROLLMENT_CARD_LINKED_SUBSTRING))
 
         viewModelDelegate.productCardViewModelDelegate.cardInfoModelObservable.observe(this@CardLinkedFragment, Observer { productCardModel ->
-            productCardModel.cardStatusText = getString(productCardModel.cardStatus.cardStatusStringRes())
+            productCardModel.cardStatusText = CardStatusUtils.cardStatusStringForProductCardModelCardStatus(context!!, productCardModel.cardStatus).toString()
             binding.cardView.updateWithProductCardModel(productCardModel)
         })
         viewModelDelegate.brandingCardObservable.observe(this@CardLinkedFragment, brandingCardObserver)
