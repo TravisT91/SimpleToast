@@ -13,7 +13,7 @@ object BudgetConstants {
     const val BUDGET_STATUS_OVER_BUDGET = "OVER_BUDGET"
 
     // This is used to mark the synthetic Total Spending category as such. FE = front end
-    const val CATEGORY_NAME_FE_TOTAL_SPENDING = "TotalSpending"
+    const val CATEGORY_NAME_FE_TOTAL_SPENDING = "Total Spent"
 
     // These are verbatim from the back end (BE = back end)
     private const val CATEGORY_NAME_BE_GROCERIES = "Groceries"
