@@ -38,12 +38,6 @@ class BudgetsListFragment : BaseEngagePageFragment(), BudgetModelSection.BudgetM
         return viewModel
     }
 
-//    override fun onCreate(savedInstanceState: Bundle?) {
-//        super.onCreate(savedInstanceState)
-//
-//        viewModel.budgetsObservable.observe(viewLifecycleOwner, budgetsObserver)
-//    }
-
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         binding = FragmentBudgetsListBinding.inflate(inflater,container,false)
         binding.apply {

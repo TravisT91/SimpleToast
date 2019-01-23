@@ -24,8 +24,8 @@ class BudgetModelSection(private val budgetModels: List<BudgetModel>, val isTota
     }
 
     override fun onBindItemViewHolder(holder: RecyclerView.ViewHolder?, position: Int) {
-        if (holder is BudgetModelViewHolder) {
-            holder.bindTo(budgetModels[position])
+        (holder as? BudgetModelViewHolder)?.apply {
+            bindTo(budgetModels[position])
         }
     }
 

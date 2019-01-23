@@ -20,15 +20,6 @@ fun BudgetInfo.getCategoriesForDailyLiving(): List<CategorySpending> {
     } ?: run { listOf<CategorySpending>() }
 }
 
-//fun BudgetInfo.getOtherCategories(dailyLiving: Boolean, isFirst30Days: Boolean): List<CategorySpending>? {
-//    val showBudgetSetup = this.showBudgetSetup()
-//
-//    return this.categorySpendingList?.filter { categorySpending ->
-//        categorySpending.isInOtherBudget(showBudgetSetup, isFirst30Days) &&
-//                (categorySpending.isDailyLiving == dailyLiving || (!dailyLiving && categorySpending.amountSpentOffBudget.getFloatOrZero() != 0.0f))
-//    }
-//}
-
 fun BudgetInfo.getOtherCategoriesForDailyLiving(isInFirst30Days: Boolean = false): List<CategorySpending> {
     // add otherSpending category
     val otherCategories = mutableListOf(this.otherSpending)
