@@ -27,16 +27,16 @@ class AuthTimerViewModel : ViewModel() {
     val authNavigationObservable = MutableLiveData<AuthNavigationEvent>()
     private val authManager = EngageService.getInstance().authManager
 
-    private val authenticationObserver = Observer<AuthManager.AuthTimerState> { authTimerState ->
+    private val authenticationObserver = Observer<AuthManager.AuthState> { authTimerState ->
         when (authTimerState) {
-            AuthManager.AuthTimerState.LOGGED_IN_EXPIRED -> {
+            AuthManager.AuthState.LOGGED_IN_EXPIRED -> {
                 // For now, prompt password, but eventually deduce user settings.
                 authNavigationObservable.value = AuthNavigationEvent.PROMPT_PASSWORD
             }
-            AuthManager.AuthTimerState.LOGGED_IN_NOT_EXPIRED -> {
+            AuthManager.AuthState.LOGGED_IN_NOT_EXPIRED -> {
                 authNavigationObservable.value = AuthNavigationEvent.PROMPT_NONE
             }
-            AuthManager.AuthTimerState.NOT_LOGGED_IN -> {
+            AuthManager.AuthState.NOT_LOGGED_IN -> {
                 // Don't handle this case. An explicit call to logout was made, so there's no reason
                 // to show a dialog to user.
             }
@@ -45,12 +45,12 @@ class AuthTimerViewModel : ViewModel() {
 
     init {
         authNavigationObservable.value = AuthNavigationEvent.PROMPT_NONE
-        authManager.authExpirationObservable.observeForever(this.authenticationObserver)
+        authManager.authExpirationUIObservable.observeForever(this.authenticationObserver)
     }
 
     override fun onCleared() {
         super.onCleared()
-        authManager.authExpirationObservable.removeObserver(this.authenticationObserver)
+        authManager.authExpirationUIObservable.removeObserver(this.authenticationObserver)
     }
 
     fun onUserInteraction() {
