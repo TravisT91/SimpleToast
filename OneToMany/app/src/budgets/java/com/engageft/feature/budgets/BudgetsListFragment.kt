@@ -12,6 +12,8 @@ import com.engageft.fis.pscu.databinding.FragmentBudgetsListBinding
 import com.engageft.fis.pscu.feature.BaseEngagePageFragment
 import com.engageft.feature.budgets.adapter.BudgetModelSection
 import com.engageft.feature.budgets.model.BudgetModel
+import com.engageft.fis.pscu.R
+import com.engageft.fis.pscu.feature.recyclerview.section.LabelSection
 import io.github.luizgrp.sectionedrecyclerviewadapter.SectionedRecyclerViewAdapter
 
 /**
@@ -69,7 +71,7 @@ class BudgetsListFragment : BaseEngagePageFragment() {
                 BudgetModelSection(context!!, listOf(totalBudgetModel), isTotalSection = true)
         )
 
-//        budgetsListAdapter.addSection()
+        budgetsListAdapter.addSection(LabelSection.newInstanceGroupTitle(getString(R.string.budget_categories_header)))
 
         budgetsListAdapter.addSection(
                 BudgetModelSection(context!!, categoryBudgetModels, isTotalSection = false)
