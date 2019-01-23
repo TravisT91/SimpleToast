@@ -65,7 +65,7 @@ class GoalsListFragment : BaseEngagePageFragment() {
         return binding.root
     }
 
-    private fun GoalsListViewModel.updateRecyclerView(goalsList: List<GoalInfo>) {
+    private fun updateRecyclerView(goalsList: List<GoalInfo>) {
         sectionedAdapter.removeAllSections()
 
         if (goalsList.isNotEmpty()) {
@@ -80,7 +80,7 @@ class GoalsListFragment : BaseEngagePageFragment() {
             sectionedAdapter.addSection(GoalsEmptyListSection(context!!))
         }
 
-        if (canEditGoal) {
+        if (goalsListViewModel.canEditGoal) {
             // add button
             sectionedAdapter.addSection(GoalsAddButtonSection(object : GoalsAddButtonSection.OnButtonSectionListener {
                 override fun onButtonClicked() {
@@ -93,8 +93,8 @@ class GoalsListFragment : BaseEngagePageFragment() {
         sectionedAdapter.notifyDataSetChanged()
     }
 
-    override fun onResume() {
-        super.onResume()
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
         goalsListViewModel.refreshViews(true)
     }
 
