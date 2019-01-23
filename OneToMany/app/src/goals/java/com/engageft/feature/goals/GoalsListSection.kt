@@ -11,6 +11,7 @@ import com.engageft.fis.pscu.R
 import com.engageft.feature.goals.utils.getGoalInfoCompletionDateString
 import com.engageft.feature.goals.utils.getGoalInfoContributionString
 import com.engageft.feature.goals.utils.getGoalInfoProgressString
+import com.engageft.fis.pscu.feature.branding.Palette
 import com.ob.ws.dom.utility.GoalInfo
 import io.github.luizgrp.sectionedrecyclerviewadapter.SectionParameters
 import io.github.luizgrp.sectionedrecyclerviewadapter.StatelessSection
@@ -47,9 +48,18 @@ class GoalsListSection(private val context: Context,
             if (goalModel.goalInfo.payPlan != null && goalModel.goalInfo.payPlan.isPaused) {
                 circularTrackingPanel.showDrawableWithinProgressBar(ContextCompat.getDrawable(context, R.drawable.ic_pause)!!)
             } else if (goalModel.goalInfo.isAchieved) {
-                circularTrackingPanel.setSuccessMode()
-                circularTrackingPanel.setTopRightStyle(R.style.progressBarSuccessTitleStyle)
-                circularTrackingPanel.setPanelElevation(0f)
+                circularTrackingPanel.apply {
+                    showDrawableWithinProgressBar(ContextCompat.getDrawable(context, R.drawable.ic_success_check_mark)!!)
+                    setProgress(100)
+                    showProgressBar(true)
+                    setProgressColor(ContextCompat.getColor(context, R.color.white))
+                    setTopAndCenteredLeftStyle(R.style.progressBarSuccessTitleStyle)
+                    setBottomRightTextStyle(R.style.progressBarSuccessBottomRightStyle)
+                    setTopRightStyle(R.style.progressBarSuccessTitleStyle)
+                    setCardAndBackgroundColor(Palette.successColor)
+                    setPanelElevation(0f)
+                    showCenteredTitleAndRemoveLeftTextViews()
+                }
             }
             //TODO(aHashimi): Waiting for Design about this state. The error state hasn't been determined if this even makes sense (after talking to Jess).
 //            else if (!goalInfo.isCompleted() && goalInfo.estimatedCompleteDate.isNotBlank()) {
