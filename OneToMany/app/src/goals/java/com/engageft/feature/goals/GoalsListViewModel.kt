@@ -4,7 +4,6 @@ import androidx.lifecycle.MutableLiveData
 import com.engageft.engagekit.EngageService
 import com.engageft.engagekit.utils.LoginResponseUtils
 import com.engageft.fis.pscu.feature.BaseEngageViewModel
-import com.engageft.fis.pscu.feature.DialogInfo
 import com.ob.ws.dom.LoginResponse
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
@@ -15,37 +14,32 @@ import com.ob.ws.dom.utility.GoalInfo
 class GoalsListViewModel: BaseEngageViewModel() {
     var canEditGoal = false
     var goalsContributed = ""
-    val goalsListObservable = MutableLiveData<List<GoalInfo>>()
-    private var goalsList = mutableListOf<GoalInfo>()
+    val goalsListObservable = MutableLiveData<List<GoalModel>>()
+    private var goalsList = listOf<GoalInfo>()
 
-    init {
-        initData(false)
-    }
-
-    fun refreshViews(useCache: Boolean) {
-        initData(useCache)
-    }
-
-    private fun initData(useCache: Boolean) {
+    fun initData(useCache: Boolean) {
+        progressOverlayShownObservable.value = true
         compositeDisposable.add(EngageService.getInstance().loginResponseAsObservable
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe({ response ->
+                    // if response is success hide progressOverlay after getting goal API
                     if (response is LoginResponse) {
                         goalsContributed = response.goalsContributed
                         canEditGoal = LoginResponseUtils.canEditGoals(response)
                         getGoals(LoginResponseUtils.getCurrentCard(response), useCache)
                     } else {
-                        dialogInfoObservable.value = DialogInfo()
+                        progressOverlayShownObservable.value = false
+                        handleUnexpectedErrorResponse(response)
                     }
                 }, { e ->
+                    progressOverlayShownObservable.value = false
                     handleThrowable(e)
                 })
         )
     }
 
     private fun getGoals(debitCardInfo: DebitCardInfo, useCache: Boolean) {
-        progressOverlayShownObservable.value = true
         compositeDisposable.add(
                 EngageService.getInstance().goalsObservable(debitCardInfo, useCache)
                         .subscribeOn(Schedulers.io())
@@ -53,10 +47,19 @@ class GoalsListViewModel: BaseEngageViewModel() {
                         .subscribe({ response ->
                             progressOverlayShownObservable.value = false
                             if (response.isSuccess && response is GoalsResponse) {
+                                // don't trigger observers unless goals list has changed
                                 if (goalsList != response.goals) {
-                                    // refresh views
                                     goalsList = response.goals
-                                    goalsListObservable.value = goalsList
+
+                                    val goalModelList = mutableListOf<GoalModel>()
+                                    for (goalInfo in response.goals) {
+                                        val progress = if (goalInfo.amount != null && goalInfo.amount.toFloat() != 0f && goalInfo.fundAmount != null)
+                                            goalInfo.fundAmount.toFloat() / goalInfo.amount.toFloat()
+                                        else
+                                            0f
+                                        goalModelList.add(GoalModel(goalInfo, progress))
+                                    }
+                                    goalsListObservable.value = goalModelList
                                 }
                             } else {
                                 handleUnexpectedErrorResponse(response)
@@ -67,4 +70,12 @@ class GoalsListViewModel: BaseEngageViewModel() {
                         })
         )
     }
+
+    // an explicit refresh
+    fun refreshData() {
+        EngageService.getInstance().clearLoginAndDashboardResponses()
+        initData(false)
+    }
+
+    data class GoalModel(val goalInfo: GoalInfo, val progress: Float)
 }

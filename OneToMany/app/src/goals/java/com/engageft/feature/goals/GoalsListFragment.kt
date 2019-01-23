@@ -17,7 +17,6 @@ import com.engageft.fis.pscu.R
 import com.engageft.fis.pscu.databinding.FragmentGoalsListBinding
 import com.engageft.fis.pscu.feature.BaseEngagePageFragment
 import com.engageft.fis.pscu.feature.branding.Palette
-import com.ob.ws.dom.utility.GoalInfo
 import io.github.luizgrp.sectionedrecyclerviewadapter.SectionedRecyclerViewAdapter
 
 /**
@@ -45,27 +44,26 @@ class GoalsListFragment : BaseEngagePageFragment() {
             viewModel = goalsListViewModel
             palette = Palette
 
+            goalsListViewModel.initData(true)
+
             sectionedAdapter = SectionedRecyclerViewAdapter()
             recyclerView.adapter = sectionedAdapter
             recyclerView.layoutManager = LinearLayoutManager(context!!)
 
-            goalsListViewModel.apply {
-
-                goalsListObservable.observe(viewLifecycleOwner, Observer {
-                    updateRecyclerView(it)
-                })
-            }
+            goalsListViewModel.goalsListObservable.observe(viewLifecycleOwner, Observer<List<GoalsListViewModel.GoalModel>> {
+                updateRecyclerView(it)
+            })
 
             swipeToRefreshLayout.setOnRefreshListener {
                 swipeToRefreshLayout.isRefreshing = false
-                goalsListViewModel.refreshViews(false)
+                goalsListViewModel.refreshData()
             }
         }
 
         return binding.root
     }
 
-    private fun updateRecyclerView(goalsList: List<GoalInfo>) {
+    private fun updateRecyclerView(goalsList: List<GoalsListViewModel.GoalModel>) {
         sectionedAdapter.removeAllSections()
 
         if (goalsList.isNotEmpty()) {
@@ -91,11 +89,6 @@ class GoalsListFragment : BaseEngagePageFragment() {
         }
 
         sectionedAdapter.notifyDataSetChanged()
-    }
-
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-        goalsListViewModel.refreshViews(true)
     }
 
     override fun onCreateOptionsMenu(menu: Menu?, inflater: MenuInflater?) {

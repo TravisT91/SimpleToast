@@ -1,4 +1,4 @@
-package com.engageft.fis.pscu.feature.utils
+package com.engageft.feature.goals.utils
 
 import android.content.Context
 import com.engageft.engagekit.utils.BackendDateTimeUtils
@@ -22,56 +22,41 @@ fun GoalInfo.getGoalInfoProgressString(context: Context): String {
 
 }
 
-fun GoalInfo.isCompleted(): Boolean {
-    return this.isAchieved || this.payPlan == null
-}
-
 // if paused, "Paused", or like "$5/Daily", or if completed, total contributed like "$300"
-fun GoalInfo.getGoalInfoContributionString(context: Context): String? {
-    var result: String? = null
-
-    if (isCompleted()) {
-        result = StringUtils.formatCurrencyStringWithFractionDigits(amount.toString(), false)
+fun GoalInfo.getGoalInfoContributionString(context: Context): String {
+    return if (isAchieved) {
+        StringUtils.formatCurrencyStringWithFractionDigits(amount.toString(), false)
     } else {
-        payPlan?.let {
-            result = it.getPayPlanInfoContributionString(context)
-        }
+        // technically payPlan shouldn't ever be null
+        payPlan.getPayPlanInfoContributionString(context)
     }
 
-    return result
 }
 
 // if paused, "paused", or like "$5/day"
 fun PayPlanInfo.getPayPlanInfoContributionString(context: Context): String {
-    return if (this.isPaused) {
+    return if (isPaused) {
         context.getString(R.string.GOALS_PAUSED)
     } else {
         var planAmount = "0"
-        this.amount?.let {
+        amount?.let {
             planAmount = it.toPlainString()
         }
         String.format(context.getString(R.string.GOALS_RECURRENCE_FORMAT),
                 StringUtils.formatCurrencyStringWithFractionDigits(planAmount, false),
-                PayPlanUtils.getPayPlanFrequencyDisplayStringForRecurrenceType(context, this.recurrenceType))
+                PayPlanUtils.getPayPlanFrequencyDisplayStringForRecurrenceType(context, recurrenceType))
     }
-
 }
 
 // like "by Feb 29, 2020", or "Completed"
-fun GoalInfo.getGoalInfoCompletionDateString(context: Context): String? {
-    var result: String? = null
-
-    val completeDate = BackendDateTimeUtils.getDateTimeForYMDString(this.estimatedCompleteDate)
-    completeDate?.let { dateComplete ->
+fun GoalInfo.getGoalInfoCompletionDateString(context: Context): String {
+    val completeDate = BackendDateTimeUtils.getDateTimeForYMDString(estimatedCompleteDate)
+    return if (isAchieved) {
+        context.getString(R.string.GOALS_COMPLETE)
+    } else {
         val completeDateString = DisplayDateTimeUtils.getMediumFormatted(completeDate)
-        result = if (this.isCompleted()) {
-            context.getString(R.string.GOALS_COMPLETE)
-        } else {
-            String.format(context.getString(R.string.GOALS_BY_DATE_FORMAT), completeDateString)
-        }
+        String.format(context.getString(R.string.GOALS_BY_DATE_FORMAT), completeDateString)
     }
-
-    return result
 }
 
 fun createGoalInfo(goalName: String, goalAmount: String, recurrenceType: String, startDate: DateTime, dayOfWeek: Int, purseId: Long): GoalInfo {
