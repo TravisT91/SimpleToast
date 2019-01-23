@@ -44,7 +44,7 @@ class CardLinkedDelegate(private val viewModel: EnrollmentViewModel, private val
         if (viewModel.activationCardInfo.isParentActivationRequired) {
             navController.navigate(linkedNavigations.linkedToLogin)
         } else {
-            EngageService.getInstance().authManager.authTokenInternal = viewModel.activationResponse.token
+            EngageService.getInstance().authManager.authToken = viewModel.activationResponse.token
             viewModel.compositeDisposable.add(
                     EngageService.getInstance().refreshLoginObservable()
                             .subscribeOn(Schedulers.io())

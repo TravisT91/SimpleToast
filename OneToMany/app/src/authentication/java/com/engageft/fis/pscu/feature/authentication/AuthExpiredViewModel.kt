@@ -4,7 +4,6 @@ import androidx.databinding.Observable
 import androidx.databinding.ObservableField
 import androidx.lifecycle.MutableLiveData
 import com.engageft.engagekit.EngageService
-import com.engageft.fis.pscu.MoEngageUtils
 import com.engageft.fis.pscu.feature.BaseEngageViewModel
 import com.engageft.fis.pscu.feature.DialogInfo
 import io.reactivex.android.schedulers.AndroidSchedulers
@@ -48,7 +47,6 @@ class AuthExpiredViewModel : BaseEngageViewModel() {
 
     fun onLogoutClicked() {
         EngageService.getInstance().authManager.logout()
-        MoEngageUtils.logout()
         navigationObservable.value = AuthExpiredNavigationEvent.LOGOUT
     }
 
