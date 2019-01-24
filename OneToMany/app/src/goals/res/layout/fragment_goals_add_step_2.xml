@@ -68,7 +68,7 @@
                     android:paddingTop="16dp"
                     app:labelText="@string/GOALS_CREATE_AMOUNT_LABEL"
                     android:visibility="@{viewModel.showSaveWeekly.get() ? View.VISIBLE : View.GONE}"
-                    app:inputText="@={viewModel.amountSaveWeekly}"/>
+                    app:inputText="@={viewModel.amountSetAside}"/>
 
             </androidx.appcompat.widget.LinearLayoutCompat>
 

@@ -18,6 +18,7 @@ import com.engageft.fis.pscu.feature.branding.Palette
 import org.joda.time.DateTime
 import utilGen1.DisplayDateTimeUtils
 import utilGen1.PayPlanUtils
+import java.math.BigDecimal
 
 /**
  * Created by joeyhutchins on 8/24/18.
@@ -53,6 +54,8 @@ class GoalsAddStep1Fragment : BaseEngagePageFragment() {
 
             daysOfWeekBottomSheet.dialogOptions = ArrayList(DisplayDateTimeUtils.daysOfWeekList())
             startDateBottomSheet.minimumDate = DateTime.now()
+
+            goalDateInMindBottomSheet.dialogOptions = ArrayList(listOf("Yes", "No"))
         }
 
         return binding.root
@@ -62,10 +65,11 @@ class GoalsAddStep1Fragment : BaseEngagePageFragment() {
         binding.root.findNavController().navigate(R.id.action_goalsAddStep1Fragment_to_goalsAddStep2Fragment,
                 GoalsAddStep2Fragment.createBundle(
                         goalName = "testing HEH",
-                        goalAmount = "20",
+                        goalAmount = BigDecimal(20),
                         recurrenceType = PayPlanInfoUtils.PAY_PLAN_WEEK,
                         startDate = DateTime.now().plusDays(1),
-                        dayOfWeek = 4))
+                        dayOfWeek = 4,
+                        goalDateInMind = addGoalViewModel.hasGoalDateInMind))
     }
 
     override fun onCreateOptionsMenu(menu: Menu?, inflater: MenuInflater?) {

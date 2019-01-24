@@ -14,6 +14,7 @@ import com.engageft.fis.pscu.databinding.FragmentGoalsAddStep2Binding
 import com.engageft.fis.pscu.feature.BaseEngagePageFragment
 import com.engageft.fis.pscu.feature.branding.Palette
 import org.joda.time.DateTime
+import java.math.BigDecimal
 
 /**
  * </p>
@@ -40,6 +41,20 @@ class GoalsAddStep2Fragment : BaseEngagePageFragment() {
         binding = FragmentGoalsAddStep2Binding.inflate(inflater, container, false).apply {
             viewModel = addGoalViewModel
             palette = Palette
+
+            arguments?.let { bundle ->
+                bundle.apply {
+                    addGoalViewModel.apply {
+                        goalName = getString(GOAL_NAME, "")
+                        goalAmount = getSerializable(GOAL_AMOUNT) as BigDecimal
+                        recurrenceType = getString(RECURRENCE_TYPE, "")
+                        startDate = getSerializable(START_DATE) as DateTime
+                        dayOfWeek = getInt(DAY_OF_WEEK, -1)
+                        goalDateInMind = getBoolean(GOAL_DATE_IN_MIND, false)
+                    }
+                }
+
+            }
 
 //            startDatePicker.minimumDate = DateTime.now()
         }
@@ -75,15 +90,15 @@ class GoalsAddStep2Fragment : BaseEngagePageFragment() {
         const val DAY_OF_WEEK = "DAY_OF_WEEK"
         const val GOAL_DATE_IN_MIND = "GOAL_DATE_IN_MIND"
 
-        fun createBundle(goalName: String, goalAmount: String, recurrenceType: String,
+        fun createBundle(goalName: String, goalAmount: BigDecimal, recurrenceType: String,
                          startDate: DateTime, dayOfWeek: Int, goalDateInMind: Boolean): Bundle {
             return Bundle().apply {
-                putSerializable(GOAL_NAME, goalName)
+                putString(GOAL_NAME, goalName)
                 putSerializable(GOAL_AMOUNT, goalAmount)
-                putSerializable(RECURRENCE_TYPE, recurrenceType)
+                putString(RECURRENCE_TYPE, recurrenceType)
                 putSerializable(START_DATE, startDate)
-                putSerializable(DAY_OF_WEEK, dayOfWeek)
-                putSerializable(GOAL_DATE_IN_MIND, goalDateInMind)
+                putInt(DAY_OF_WEEK, dayOfWeek)
+                putBoolean(GOAL_DATE_IN_MIND, goalDateInMind)
             }
         }
     }

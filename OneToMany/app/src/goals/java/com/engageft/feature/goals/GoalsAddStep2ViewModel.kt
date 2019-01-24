@@ -13,7 +13,6 @@ import com.engageft.engagekit.rest.request.PayPlanAddUpdateRequest
 import com.engageft.engagekit.utils.PayPlanInfoUtils
 import com.engageft.fis.pscu.feature.DialogInfo
 import com.engageft.fis.pscu.feature.handleBackendErrorForForms
-import com.engageft.fis.pscu.feature.utils.createGoalInfo
 import com.ob.ws.dom.BasicResponse
 import com.ob.ws.dom.utility.GoalInfo
 import com.ob.ws.dom.utility.PayPlanInfo
@@ -22,10 +21,12 @@ import com.ob.ws.dom.LoginResponse
 import org.joda.time.DateTime
 import androidx.databinding.Observable
 import androidx.lifecycle.MutableLiveData
+import com.engageft.engagekit.rest.request.GoalInfoRequest
 import com.engageft.engagekit.utils.BackendDateTimeUtils
 import com.engageft.engagekit.utils.engageApi
 import utilGen1.DisplayDateTimeUtils
 import java.math.BigDecimal
+import java.math.BigInteger
 
 
 class GoalsAddStep2ViewModel: BaseEngageViewModel() {
@@ -37,14 +38,15 @@ class GoalsAddStep2ViewModel: BaseEngageViewModel() {
     val nextButtonStateObservable = MutableLiveData<GoalsAddStep1ViewModel.ButtonState>()
 
     var saveByDate = ObservableField("02/28/2019")
-    var amountSaveWeekly = ObservableField("")
-    var showSaveByDate = ObservableField(true)
-    var showSaveWeekly = ObservableField(true)
+    var amountSetAside = ObservableField("")
+    var showSaveByDate = ObservableField(false)
+    var showSaveWeekly = ObservableField(false)
 
-    var goalName: String = ""
-    var goalAmount: String = ""
-    var recurrenceType: String = ""
-    var startDate: DateTime = DateTime.now()
+    lateinit var goalName: String
+    lateinit var goalAmount: BigDecimal
+    lateinit var recurrenceType: String
+    lateinit var startDate: DateTime
+    var goalDateInMind: Boolean = false
     var dayOfWeek: Int = -1
 
     private var isNewGoal = false
@@ -62,9 +64,10 @@ class GoalsAddStep2ViewModel: BaseEngageViewModel() {
             }
         })
 
-        amountSaveWeekly.addOnPropertyChangedCallback(object: Observable.OnPropertyChangedCallback() {
+        amountSetAside.addOnPropertyChangedCallback(object: Observable.OnPropertyChangedCallback() {
             override fun onPropertyChanged(sender: Observable?, propertyId: Int) {
-                if (amountSaveWeekly.get()!!.isNotEmpty()) {
+                if (amountSetAside.get()!!.isNotEmpty()) {
+
                 }
             }
         })
@@ -88,7 +91,8 @@ class GoalsAddStep2ViewModel: BaseEngageViewModel() {
     }
 
     private fun saveNewGoal(purseId: Long) {
-        val goalInfo = createGoalInfo(goalName = goalName,
+        val goalInfo = GoalInfoRequest(
+                goalName = goalName,
                 goalAmount = goalAmount,
                 recurrenceType = recurrenceType,
                 startDate = startDate,
@@ -102,13 +106,13 @@ class GoalsAddStep2ViewModel: BaseEngageViewModel() {
                 goalInfo.completeDate = goalDateString
                 goalInfo.estimatedCompleteDate = goalDateString
                 // let server set payPlan amount based on completion date
-                goalInfo.payPlan.amount = null
+//                goalInfo.payPlan.amount = BigDecimal(BigInteger.ZERO)
             }
-            amountSaveWeekly.get()!!.isNotEmpty() -> {
+            amountSetAside.get()!!.isNotEmpty() -> {
                 goalInfo.completeDate = null
                 goalInfo.estimatedCompleteDate = null
                 // set payPlan amount based on user input
-                goalInfo.payPlan.amount = BigDecimal.valueOf(amountSaveWeekly.get()!!.toLong())
+                goalInfo.payPlan.amount = BigDecimal.valueOf(amountSetAside.get()!!.toLong())
             }
             else -> throw IllegalArgumentException("Must set Complete Goal Date or PayPlan amount")
         }

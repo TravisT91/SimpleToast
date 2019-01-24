@@ -114,6 +114,20 @@
                     app:bottomSheetDialogTitle="@string/GOALS_CREATE_START_SAVING_ON_LABEL"
                     app:bottomSheetDialogStyle="@style/ListOptionBottomSheetDialogFragmentStyle"/>
 
+                <com.engageft.apptoolbox.view.BottomSheetListInputWithLabel
+                    style="@style/BottomSheetListInputWithLabelStyle"
+                    InputWithLabel.setThemeWithPalette="@{true}"
+                    android:id="@+id/goalDateInMindBottomSheet"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingStart="16dp"
+                    android:paddingEnd="16dp"
+                    android:paddingTop="16dp"
+                    app:labelText="Goal date in mind"
+                    app:inputText="@={viewModel.dayOfWeek}"
+                    app:bottomSheetDialogTitle="Goal date in mind?"
+                    app:bottomSheetDialogStyle="@style/ListOptionBottomSheetDialogFragmentStyle"/>
+
             </androidx.appcompat.widget.LinearLayoutCompat>
 
             <com.engageft.apptoolbox.view.PillButton
