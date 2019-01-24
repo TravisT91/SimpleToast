@@ -105,4 +105,5 @@
 
     <!-- generic/common strings -->
     <string name="save">Save</string>
+    <string name="add">Add</string>
 </resources>

@@ -61,7 +61,7 @@ class GoalsListSection(private val context: Context,
                     showCenteredTitleAndRemoveLeftTextViews()
                 }
             }
-            //TODO(aHashimi): Waiting for Design about this state. The error state hasn't been determined if this even makes sense (after talking to Jess).
+            //TODO(aHashimi): Waiting for Design about this state. https://engageft.atlassian.net/browse/FOTM-817
 //            else if (!goalInfo.isCompleted() && goalInfo.estimatedCompleteDate.isNotBlank()) {
 //                val estimatedCompletionDate = BackendDateTimeUtils.getDateTimeForYMDString(goalInfo.estimatedCompleteDate)
 //                if (estimatedCompletionDate != null && estimatedCompletionDate.isBeforeNow) {
