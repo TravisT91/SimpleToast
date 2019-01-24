@@ -12,8 +12,8 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.engageft.apptoolbox.BaseViewModel
 import com.engageft.fis.pscu.databinding.FragmentBudgetsListBinding
 import com.engageft.fis.pscu.feature.BaseEngagePageFragment
-import com.engageft.feature.budgets.adapter.BudgetModelSection
-import com.engageft.feature.budgets.model.BudgetModel
+import com.engageft.feature.budgets.recyclerview.BudgetItemSection
+import com.engageft.feature.budgets.recyclerview.BudgetItem
 import com.engageft.fis.pscu.R
 import com.engageft.fis.pscu.feature.recyclerview.section.LabelSection
 import io.github.luizgrp.sectionedrecyclerviewadapter.SectionedRecyclerViewAdapter
@@ -26,12 +26,12 @@ import io.github.luizgrp.sectionedrecyclerviewadapter.SectionedRecyclerViewAdapt
  * Created by kurteous on 1/16/19.
  * Copyright (c) 2019 Engage FT. All rights reserved.
  */
-class BudgetsListFragment : BaseEngagePageFragment(), BudgetModelSection.BudgetModelSectionListener {
+class BudgetsListFragment : BaseEngagePageFragment(), BudgetItemSection.BudgetItemSectionListener {
     private lateinit var viewModel: BudgetsListViewModel
     private lateinit var binding: FragmentBudgetsListBinding
     private var budgetsListAdapter = SectionedRecyclerViewAdapter()
 
-    private val budgetsObserver = Observer<Pair<BudgetModel, List<BudgetModel>>> { updateBudgetsList(it)}
+    private val budgetsObserver = Observer<Pair<BudgetItem, List<BudgetItem>>> { updateBudgetsList(it)}
 
     override fun createViewModel(): BaseViewModel? {
         viewModel = ViewModelProviders.of(this).get(BudgetsListViewModel::class.java)
@@ -64,24 +64,24 @@ class BudgetsListFragment : BaseEngagePageFragment(), BudgetModelSection.BudgetM
         )
     }
 
-    private fun updateBudgetsList(totalAndCategoryBudgetModels: Pair<BudgetModel, List<BudgetModel>>) {
-        val totalBudgetModel = totalAndCategoryBudgetModels.first
-        val categoryBudgetModels = totalAndCategoryBudgetModels.second
+    private fun updateBudgetsList(totalAndCategoryBudgetItems: Pair<BudgetItem, List<BudgetItem>>) {
+        val totalBudgetItem = totalAndCategoryBudgetItems.first
+        val categoryBudgetItems = totalAndCategoryBudgetItems.second
 
         budgetsListAdapter.removeAllSections()
         budgetsListAdapter.addSection(
-                BudgetModelSection(budgetModels = listOf(totalBudgetModel), isTotalSection = true, listener = this)
+                BudgetItemSection(budgetItems = listOf(totalBudgetItem), isTotalSection = true, listener = this)
         )
 
         budgetsListAdapter.addSection(LabelSection.newInstanceGroupTitle(getString(R.string.budget_categories_header)))
 
         budgetsListAdapter.addSection(
-                BudgetModelSection(budgetModels = categoryBudgetModels, isTotalSection = false, listener = this)
+                BudgetItemSection(budgetItems = categoryBudgetItems, isTotalSection = false, listener = this)
         )
         budgetsListAdapter.notifyDataSetChanged()
     }
 
-    // BudgetModelSection.BudgetModelSectionListener
+    // BudgetItemSection.BudgetItemSectionListener
     override fun onBudgetCategorySelected(categoryName: String) {
         Toast.makeText(context, "Selected category: ${categoryName}", Toast.LENGTH_SHORT).show()
     }

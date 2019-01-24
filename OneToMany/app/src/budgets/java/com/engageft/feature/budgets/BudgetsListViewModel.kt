@@ -8,7 +8,7 @@ import com.engageft.feature.budgets.extension.getCategoriesSortedByBudgetAmountD
 import com.engageft.feature.budgets.extension.isGreaterThan
 import com.engageft.feature.budgets.extension.isLessThan
 import com.engageft.feature.budgets.extension.isZero
-import com.engageft.feature.budgets.model.BudgetModel
+import com.engageft.feature.budgets.recyclerview.BudgetItem
 import com.engageft.fis.pscu.feature.BaseEngageViewModel
 import com.engageft.fis.pscu.feature.DialogInfo
 import com.ob.ws.dom.LoginResponse
@@ -29,7 +29,7 @@ import java.util.*
  */
 class BudgetsListViewModel : BaseEngageViewModel() {
 
-    val budgetsObservable: MutableLiveData<Pair<BudgetModel, List<BudgetModel>>> = MutableLiveData()
+    val budgetsObservable: MutableLiveData<Pair<BudgetItem, List<BudgetItem>>> = MutableLiveData()
 
     private lateinit var spentNormalFormat: String
     private lateinit var spentOverFormat: String
@@ -77,7 +77,7 @@ class BudgetsListViewModel : BaseEngageViewModel() {
                                                                                             // amountSpent is always negative from backend
                                     var budgetAmount = BigDecimal(budgetAmount)             // reused for computing categorySpending values
                                     var budgetStatus = budgetStatus()                       // reused for computing categorySpendingValues
-                                    val totalBudgetModel = BudgetModel(
+                                    val totalBudgetItem = BudgetItem(
                                             categoryName = BudgetConstants.CATEGORY_NAME_FE_TOTAL_SPENDING,
                                             title = totalSpentTitle,
                                             spent = spentString(spentAmount, budgetAmount),
@@ -89,20 +89,20 @@ class BudgetsListViewModel : BaseEngageViewModel() {
 
                                     // categories
                                     val categorySpendings = getCategoriesSortedByBudgetAmountDescending(withOther = false, isInFirst30Days = isFirst30).toMutableList()
-                                    var categoryBudgetModels = mutableListOf<BudgetModel>()
+                                    var categoryBudgetItems = mutableListOf<BudgetItem>()
                                     for (categorySpending in categorySpendings) {
                                         spentAmount = BigDecimal(categorySpending.amountSpent).abs()    // amountSpent is always negative from backend
                                         budgetAmount = BigDecimal(categorySpending.budgetAmount)
                                         budgetStatus = categorySpending.budgetStatus()
-                                        categoryBudgetModels.add(
-                                                BudgetModel(
+                                        categoryBudgetItems.add(
+                                                BudgetItem(
                                                         categoryName = categorySpending.category,
                                                         title = EngageService.getInstance().storageManager.getBudgetCategoryDescription(categorySpending.category, Locale.getDefault().language),
                                                         spent = spentString(spentAmount, budgetAmount),
                                                         spentColor = spentColor(budgetStatus),
                                                         progress = progress(spentAmount, budgetAmount),
                                                         progressColor = progressColor(budgetStatus),
-                                                        fractionTimePeriodPassed =  fractionTimePeriodPassed
+                                                        fractionTimePeriodPassed = fractionTimePeriodPassed
                                                 )
                                         )
                                     }
@@ -111,8 +111,8 @@ class BudgetsListViewModel : BaseEngageViewModel() {
                                         spentAmount = BigDecimal(otherSpendingCategory.amountSpent).abs()   // amountSpent is always negative from backend
                                         budgetAmount = BigDecimal(otherSpendingCategory.budgetAmount)
                                         budgetStatus = otherSpendingCategory.budgetStatus()
-                                        categoryBudgetModels.add(
-                                                BudgetModel(
+                                        categoryBudgetItems.add(
+                                                BudgetItem(
                                                         categoryName = otherSpendingCategory.category,
                                                         title = otherSpendingTitle,
                                                         spent = spentString(spentAmount, budgetAmount),
@@ -125,12 +125,11 @@ class BudgetsListViewModel : BaseEngageViewModel() {
                                     }
 
                                     progressOverlayShownObservable.postValue(false)
-                                    budgetsObservable.postValue(Pair(totalBudgetModel, categoryBudgetModels))
+                                    budgetsObservable.postValue(Pair(totalBudgetItem, categoryBudgetItems))
                                 } ?: run {
                                     // LoginResponse had no budgetInfo. Should never happen.
                                     dialogInfoObservable.postValue(DialogInfo(dialogType = DialogInfo.DialogType.GENERIC_ERROR))
                                 }
-
                             } else {
                                 handleUnexpectedErrorResponse(response)
                             }

@@ -1,36 +1,35 @@
-package com.engageft.feature.budgets.adapter
+package com.engageft.feature.budgets.recyclerview
 
 import android.view.View
 import androidx.recyclerview.widget.RecyclerView
 import com.engageft.apptoolbox.view.TrackingPanel
-import com.engageft.feature.budgets.model.BudgetModel
 import com.engageft.fis.pscu.R
 
 /**
- * BudgetModelViewHolder
+ * BudgetItemViewHolder
  * <p>
  * ViewHolder subclass to show a budget category row in budgets list.
  * <p>
  * Created by kurteous on 1/16/19.
  * Copyright (c) 2019 Engage FT. All rights reserved.
  */
-class BudgetModelViewHolder(itemView: View, listener: BudgetModelSection.BudgetModelSectionListener) : RecyclerView.ViewHolder(itemView) {
+class BudgetItemViewHolder(itemView: View, listener: BudgetItemSection.BudgetItemSectionListener) : RecyclerView.ViewHolder(itemView) {
 
     private val trackingPanel: TrackingPanel = itemView.findViewById(R.id.row_budget_tracking_panel)
-    private var budgetModel: BudgetModel? = null
+    private var budgetItem: BudgetItem? = null
 
     init {
         trackingPanel.setOnClickListener {
-            budgetModel?.apply {
+            budgetItem?.apply {
                 listener.onBudgetCategorySelected(categoryName)
             }
         }
     }
 
-    fun bindTo(budgetModel: BudgetModel) {
-        this.budgetModel = budgetModel
+    fun bindTo(budgetItem: BudgetItem) {
+        this.budgetItem = budgetItem
 
-        budgetModel.apply {
+        budgetItem.apply {
             trackingPanel.setTitleText(title)
             trackingPanel.setRightSubTitle(spent)
             trackingPanel.setRightSubtitleColor(spentColor)
