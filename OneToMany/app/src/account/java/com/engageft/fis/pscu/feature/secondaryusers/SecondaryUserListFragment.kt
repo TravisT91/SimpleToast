@@ -27,7 +27,9 @@ class SecondaryUserListFragment: BaseEngagePageFragment() {
 
     private val selectionListener = object : SecondaryUserListRecyclerViewAdapter.SecondaryUserListSelectionListener {
         override fun onItemClicked(secondaryUserListItem: SecondaryUserListItem) {
-            // TODO
+            // TODO(jhutchins): In the case of add button clicked: FOTM-694
+            // TODO(jhutchins): In the case of user clicked clicked: FOTM-694
+            // In the case of header or footer clicked, do nothing.
         }
     }
 
