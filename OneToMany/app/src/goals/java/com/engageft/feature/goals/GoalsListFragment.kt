@@ -50,7 +50,7 @@ class GoalsListFragment : BaseEngagePageFragment() {
             recyclerView.adapter = sectionedAdapter
             recyclerView.layoutManager = LinearLayoutManager(context!!)
 
-            goalsListViewModel.goalsListObservable.observe(viewLifecycleOwner, Observer<List<GoalsListViewModel.GoalModel>> {
+            goalsListViewModel.goalsListObservable.observe(viewLifecycleOwner, Observer<GoalsListViewModel.GoalModelItem> {
                 updateRecyclerView(it)
             })
 
@@ -63,13 +63,13 @@ class GoalsListFragment : BaseEngagePageFragment() {
         return binding.root
     }
 
-    private fun updateRecyclerView(goalsList: List<GoalsListViewModel.GoalModel>) {
+    private fun updateRecyclerView(goalItemModel: GoalsListViewModel.GoalModelItem) {
         sectionedAdapter.removeAllSections()
 
-        if (goalsList.isNotEmpty()) {
-            sectionedAdapter.addSection(GoalsListHeaderSection(goalsListViewModel.goalsContributed))
+        if (goalItemModel.goalModelList.isNotEmpty()) {
+            sectionedAdapter.addSection(GoalsListHeaderSection(goalItemModel.goalContributions))
 
-            sectionedAdapter.addSection(GoalsListSection(context!!, goalsList, object : GoalsListSection.OnGoalListSectionListener {
+            sectionedAdapter.addSection(GoalsListSection(context!!, goalItemModel.goalModelList, object : GoalsListSection.OnGoalListSectionListener {
                 override fun onGoalClicked(goalId: Long) {
                     Toast.makeText(context, "$goalId is clicked!", Toast.LENGTH_SHORT).show()
                 }
@@ -78,7 +78,7 @@ class GoalsListFragment : BaseEngagePageFragment() {
             sectionedAdapter.addSection(GoalsEmptyListSection(context!!))
         }
 
-        if (goalsListViewModel.canEditGoal) {
+        if (goalItemModel.canEditGoal) {
             // add button
             sectionedAdapter.addSection(GoalsAddButtonSection(object : GoalsAddButtonSection.OnButtonSectionListener {
                 override fun onButtonClicked() {
@@ -98,7 +98,11 @@ class GoalsListFragment : BaseEngagePageFragment() {
 
     override fun onPrepareOptionsMenu(menu: Menu?) {
         val menuItem = menu!!.findItem(R.id.add)
-        menuItem.isVisible = goalsListViewModel.canEditGoal
+        var showMenuIcon = false
+        goalsListViewModel.goalsListObservable.value?.let {
+            showMenuIcon = it.canEditGoal
+        }
+        menuItem.isVisible = showMenuIcon
         super.onPrepareOptionsMenu(menu)
     }
 

@@ -12,9 +12,9 @@ import com.ob.ws.dom.utility.DebitCardInfo
 import com.ob.ws.dom.utility.GoalInfo
 
 class GoalsListViewModel: BaseEngageViewModel() {
-    var canEditGoal = false
-    var goalsContributed = ""
-    val goalsListObservable = MutableLiveData<List<GoalModel>>()
+    private var canEditGoal = false
+    private var goalsContributed = ""
+    val goalsListObservable = MutableLiveData<GoalModelItem>()
     private var goalsList = listOf<GoalInfo>()
 
     fun initData(useCache: Boolean) {
@@ -59,7 +59,7 @@ class GoalsListViewModel: BaseEngageViewModel() {
                                             0f
                                         goalModelList.add(GoalModel(goalInfo, progress))
                                     }
-                                    goalsListObservable.value = goalModelList
+                                    goalsListObservable.value = GoalModelItem(goalModelList, canEditGoal, goalsContributed)
                                 }
                             } else {
                                 handleUnexpectedErrorResponse(response)
@@ -78,4 +78,5 @@ class GoalsListViewModel: BaseEngageViewModel() {
     }
 
     data class GoalModel(val goalInfo: GoalInfo, val progress: Float)
+    data class GoalModelItem(val goalModelList: List<GoalModel>, val canEditGoal: Boolean, val goalContributions: String)
 }
