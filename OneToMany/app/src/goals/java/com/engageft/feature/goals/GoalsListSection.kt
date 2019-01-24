@@ -8,16 +8,16 @@ import androidx.recyclerview.widget.RecyclerView
 import com.engageft.apptoolbox.util.applyTypefaceToSubstring
 import com.engageft.apptoolbox.view.CircularTrackingPanel
 import com.engageft.fis.pscu.R
-import com.engageft.fis.pscu.feature.utils.getGoalInfoCompletionDateString
-import com.engageft.fis.pscu.feature.utils.getGoalInfoContributionString
-import com.engageft.fis.pscu.feature.utils.getGoalInfoProgressString
-import com.engageft.fis.pscu.feature.utils.isCompleted
+import com.engageft.feature.goals.utils.getGoalInfoCompletionDateString
+import com.engageft.feature.goals.utils.getGoalInfoContributionString
+import com.engageft.feature.goals.utils.getGoalInfoProgressString
+import com.engageft.fis.pscu.feature.branding.Palette
 import com.ob.ws.dom.utility.GoalInfo
 import io.github.luizgrp.sectionedrecyclerviewadapter.SectionParameters
 import io.github.luizgrp.sectionedrecyclerviewadapter.StatelessSection
 
 class GoalsListSection(private val context: Context,
-                       private val goalInfoList: List<GoalInfo>,
+                       private val goalInfoList: List<GoalsListViewModel.GoalModel>,
                        private val listener: OnGoalListSectionListener) :
         StatelessSection((SectionParameters.builder().itemResourceId(R.layout.goals_list_item)).build()) {
 
@@ -37,32 +37,31 @@ class GoalsListSection(private val context: Context,
                 listener.onGoalClicked(position.toLong())
             }
 
-            val goalInfo = goalInfoList[position]
+            val goalModel = goalInfoList[position]
 
-            val progress = if (goalInfo.amount != null && goalInfo.amount.toFloat() != 0f && goalInfo.fundAmount != null)
-                goalInfo.fundAmount.toFloat() / goalInfo.amount.toFloat()
-            else
-                0f
+            circularTrackingPanel.setProgress(goalModel.progress)
+            circularTrackingPanel.setTopAndCenterLeftText(goalModel.goalInfo.name)
+            circularTrackingPanel.setBottomLeftText(applyCustomTypefaceToSubStringProgressString(goalModel.goalInfo))
+            circularTrackingPanel.setTopRightText(goalModel.goalInfo.getGoalInfoContributionString(context))
+            circularTrackingPanel.setBottomRightText(goalModel.goalInfo.getGoalInfoCompletionDateString(context))
 
-            circularTrackingPanel.setProgress(progress)
-            circularTrackingPanel.setTopAndCenterLeftText(goalInfo.name)
-            circularTrackingPanel.setBottomLeftText(applyCustomTypefaceToSubStringProgressString(goalInfo))
-
-            goalInfo.getGoalInfoContributionString(context)?.let {
-                circularTrackingPanel.setTopRightText(it)
-            }
-            goalInfo.getGoalInfoCompletionDateString(context)?.let {
-                circularTrackingPanel.setBottomRightText(it)
-            }
-
-            if (goalInfo.payPlan != null && goalInfo.payPlan.isPaused) {
+            if (goalModel.goalInfo.payPlan != null && goalModel.goalInfo.payPlan.isPaused) {
                 circularTrackingPanel.showDrawableWithinProgressBar(ContextCompat.getDrawable(context, R.drawable.ic_pause)!!)
-            } else if (goalInfo.isCompleted()) {
-                circularTrackingPanel.setSuccessMode()
-                circularTrackingPanel.setTopRightStyle(R.style.progressBarSuccessTitleStyle)
-                circularTrackingPanel.setPanelElevation(0f)
+            } else if (goalModel.goalInfo.isAchieved) {
+                circularTrackingPanel.apply {
+                    showDrawableWithinProgressBar(ContextCompat.getDrawable(context, R.drawable.ic_success_check_mark)!!)
+                    setProgress(100)
+                    showProgressBar(true)
+                    setProgressColor(ContextCompat.getColor(context, R.color.white))
+                    setTopAndCenteredLeftStyle(R.style.progressBarSuccessTitleStyle)
+                    setBottomRightTextStyle(R.style.progressBarSuccessBottomRightStyle)
+                    setTopRightStyle(R.style.progressBarSuccessTitleStyle)
+                    setCardAndBackgroundColor(Palette.successColor)
+                    setPanelElevation(0f)
+                    showCenteredTitleAndRemoveLeftTextViews()
+                }
             }
-            //TODO(aHashimi): Waiting for Design/Jess meeting about goals. The error state hasn't been determined if this even makes sense (after talking to Jess).
+            //TODO(aHashimi): Waiting for Design about this state. https://engageft.atlassian.net/browse/FOTM-817
 //            else if (!goalInfo.isCompleted() && goalInfo.estimatedCompleteDate.isNotBlank()) {
 //                val estimatedCompletionDate = BackendDateTimeUtils.getDateTimeForYMDString(goalInfo.estimatedCompleteDate)
 //                if (estimatedCompletionDate != null && estimatedCompletionDate.isBeforeNow) {

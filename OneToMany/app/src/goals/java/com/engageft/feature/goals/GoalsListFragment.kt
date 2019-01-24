@@ -17,7 +17,6 @@ import com.engageft.fis.pscu.R
 import com.engageft.fis.pscu.databinding.FragmentGoalsListBinding
 import com.engageft.fis.pscu.feature.BaseEngagePageFragment
 import com.engageft.fis.pscu.feature.branding.Palette
-import com.ob.ws.dom.utility.GoalInfo
 import io.github.luizgrp.sectionedrecyclerviewadapter.SectionedRecyclerViewAdapter
 
 /**
@@ -45,33 +44,32 @@ class GoalsListFragment : BaseEngagePageFragment() {
             viewModel = goalsListViewModel
             palette = Palette
 
+            goalsListViewModel.initData(true)
+
             sectionedAdapter = SectionedRecyclerViewAdapter()
             recyclerView.adapter = sectionedAdapter
             recyclerView.layoutManager = LinearLayoutManager(context!!)
 
-            goalsListViewModel.apply {
-
-                goalsListObservable.observe(viewLifecycleOwner, Observer {
-                    updateRecyclerView(it)
-                })
-            }
+            goalsListViewModel.goalsListObservable.observe(viewLifecycleOwner, Observer<GoalsListViewModel.GoalModelItem> {
+                updateRecyclerView(it)
+            })
 
             swipeToRefreshLayout.setOnRefreshListener {
                 swipeToRefreshLayout.isRefreshing = false
-                goalsListViewModel.refreshViews(false)
+                goalsListViewModel.refreshData()
             }
         }
 
         return binding.root
     }
 
-    private fun GoalsListViewModel.updateRecyclerView(goalsList: List<GoalInfo>) {
+    private fun updateRecyclerView(goalItemModel: GoalsListViewModel.GoalModelItem) {
         sectionedAdapter.removeAllSections()
 
-        if (goalsList.isNotEmpty()) {
-            sectionedAdapter.addSection(GoalsListHeaderSection(goalsListViewModel.goalsContributed))
+        if (goalItemModel.goalModelList.isNotEmpty()) {
+            sectionedAdapter.addSection(GoalsListHeaderSection(goalItemModel.goalContributions))
 
-            sectionedAdapter.addSection(GoalsListSection(context!!, goalsList, object : GoalsListSection.OnGoalListSectionListener {
+            sectionedAdapter.addSection(GoalsListSection(context!!, goalItemModel.goalModelList, object : GoalsListSection.OnGoalListSectionListener {
                 override fun onGoalClicked(goalId: Long) {
                     Toast.makeText(context, "$goalId is clicked!", Toast.LENGTH_SHORT).show()
                 }
@@ -80,7 +78,7 @@ class GoalsListFragment : BaseEngagePageFragment() {
             sectionedAdapter.addSection(GoalsEmptyListSection(context!!))
         }
 
-        if (canEditGoal) {
+        if (goalItemModel.canEditGoal) {
             // add button
             sectionedAdapter.addSection(GoalsAddButtonSection(object : GoalsAddButtonSection.OnButtonSectionListener {
                 override fun onButtonClicked() {
@@ -93,25 +91,24 @@ class GoalsListFragment : BaseEngagePageFragment() {
         sectionedAdapter.notifyDataSetChanged()
     }
 
-    override fun onResume() {
-        super.onResume()
-        goalsListViewModel.refreshViews(true)
-    }
-
     override fun onCreateOptionsMenu(menu: Menu?, inflater: MenuInflater?) {
-        inflater?.inflate(R.menu.menu_create_transfer, menu)
+        inflater?.inflate(R.menu.general_options_menu_add_icon, menu)
         super.onCreateOptionsMenu(menu, inflater)
     }
 
     override fun onPrepareOptionsMenu(menu: Menu?) {
-        val menuItem = menu!!.findItem(R.id.createTransfer)
-        menuItem.isVisible = goalsListViewModel.canEditGoal
+        val menuItem = menu!!.findItem(R.id.add)
+        var showMenuIcon = false
+        goalsListViewModel.goalsListObservable.value?.let {
+            showMenuIcon = it.canEditGoal
+        }
+        menuItem.isVisible = showMenuIcon
         super.onPrepareOptionsMenu(menu)
     }
 
     override fun onOptionsItemSelected(item: MenuItem?): Boolean {
         when(item?.itemId){
-            R.id.createTransfer -> run {
+            R.id.add -> run {
                 binding.root.findNavController().navigate(R.id.action_goalsListFragment_to_goalsAddStep1Fragment)
             }
         }

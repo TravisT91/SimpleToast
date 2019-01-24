@@ -3,9 +3,9 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <item
-        android:title="@string/ach_bank_account_button_add"
-        android:id="@+id/createTransfer"
-        android:icon="@drawable/ic_create_transfer"
+        android:title="@string/add"
+        android:id="@+id/add"
+        android:icon="@drawable/ic_add"
         android:visible="false"
         app:showAsAction="ifRoom" />
 
