@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools">
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <data>
         <import type="android.view.View"/>
@@ -47,13 +46,13 @@
                 <com.engageft.apptoolbox.view.DatePickerInputWithLabel
                     style="@style/BottomSheetListInputWithLabelStyle"
                     InputWithLabel.setThemeWithPalette="@{true}"
-                    android:id="@+id/startDateBottomSheet"
+                    android:id="@+id/startDatePicker"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:paddingStart="16dp"
                     android:paddingEnd="16dp"
                     android:paddingTop="16dp"
-                    android:visibility="@{viewModel.showsaveByDate.get() ? View.VISIBLE : View.GONE}"
+                    android:visibility="@{viewModel.showSaveByDate.get() ? View.VISIBLE : View.GONE}"
                     app:labelText="@string/GOALS_CREATE_START_SAVING_ON_LABEL"
                     app:inputText="@={viewModel.saveByDate}"
                     app:bottomSheetDialogStyle="@style/ListOptionBottomSheetDialogFragmentStyle"/>
@@ -69,7 +68,7 @@
                     android:paddingTop="16dp"
                     app:labelText="@string/GOALS_CREATE_AMOUNT_LABEL"
                     android:visibility="@{viewModel.showSaveWeekly.get() ? View.VISIBLE : View.GONE}"
-                    app:inputText="@={viewModel.saveWeekly}"/>
+                    app:inputText="@={viewModel.amountSaveWeekly}"/>
 
             </androidx.appcompat.widget.LinearLayoutCompat>
 
@@ -82,6 +81,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/pillButtonTopSpaceInFormsAndLists"
                 android:layout_margin="16dp"
+                android:onClick="@{() -> viewModel.onSaveGoal()}"
                 android:text="@string/next_word"/>
 
         </androidx.appcompat.widget.LinearLayoutCompat>
