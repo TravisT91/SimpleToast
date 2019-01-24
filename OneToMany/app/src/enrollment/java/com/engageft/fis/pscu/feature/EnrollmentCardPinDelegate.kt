@@ -24,8 +24,8 @@ class EnrollmentCardPinDelegate(private val viewModel: EnrollmentViewModel, priv
     : CardPinViewModelListener {
     companion object {
         const val STRING_LENGTH_CREDIT_CARD = 16
-        const val INDEX_LAST_FOUR_DIGITS_START = 11
-        const val INDEX_LAST_FOUR_DIGITS_END = 15
+        const val INDEX_LAST_FOUR_DIGITS_START = 12
+        const val INDEX_LAST_FOUR_DIGITS_END = 16
     }
     val cardPinViewModelDelegate = CardPinViewModelDelegate(viewModel, this)
     private val gateKeeperListener: GateKeeperListener = object : GateKeeperListener {

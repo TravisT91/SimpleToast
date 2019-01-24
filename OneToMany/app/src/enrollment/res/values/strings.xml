@@ -36,4 +36,10 @@
     <string name="ENROLLMENT_SUBMISSION_SENDING">Sending…</string>
     <string name="ENROLLMENT_SUBMISSION_SENDING_DESCRIPTION">This should only take a few moments.</string>
     <string name="ENROLLMENT_SUBMISSION_SUCCESS">Success!</string>
+    <string name="ENROLLMENT_DONE">Done</string>
+    <string name="ENROLLMENT_CARD_LINKED">Your card is linked!</string>
+    <string name="ENROLLMENT_CARD_LINKED_SUBSTRING">linked!</string>
+    <string name="ENROLLMENT_CARD_ACTIVE">Your card is active!</string>
+    <string name="ENROLLMENT_CARD_ACTIVE_SUBSTRING">active!</string>
+    <string name="ENROLLMENT_SUCCESS_SUBTITLE">Find your new card on the dashboard.</string>
 </resources>
