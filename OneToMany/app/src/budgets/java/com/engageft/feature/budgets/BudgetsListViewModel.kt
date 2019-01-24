@@ -40,16 +40,15 @@ class BudgetsListViewModel : BaseEngageViewModel() {
     @ColorInt private var progressColorHighSpendingTrend: Int = 0
     @ColorInt private var progressColorOverBudget: Int = 0
 
-    fun init(
-            totalSpentTitle: String,
-            otherSpendingTitle: String,
-            spentNormalFormat: String,
-            spentOverFormat: String,
-            @ColorInt spentColorNormal: Int,
-            @ColorInt spentColorOverBudget: Int,
-            @ColorInt progressColorNormal: Int,
-            @ColorInt progressColorHighSpendingTrend: Int,
-            @ColorInt progressColorOverBudget: Int) {
+    fun init(totalSpentTitle: String,
+             otherSpendingTitle: String,
+             spentNormalFormat: String,
+             spentOverFormat: String,
+             @ColorInt spentColorNormal: Int,
+             @ColorInt spentColorOverBudget: Int,
+             @ColorInt progressColorNormal: Int,
+             @ColorInt progressColorHighSpendingTrend: Int,
+             @ColorInt progressColorOverBudget: Int) {
 
         this.spentNormalFormat = spentNormalFormat
         this.spentOverFormat = spentOverFormat
@@ -67,12 +66,11 @@ class BudgetsListViewModel : BaseEngageViewModel() {
                         .observeOn(Schedulers.computation())
                         .subscribe({ response ->
                             if (response.isSuccess && response is LoginResponse) {
-                                val fractionTimePeriodPassed = fractionOfCurrentMonthPassed() // TODO this will be different within first 30 days
-
                                 response.budgetInfo?.apply {
                                     // setup
                                     val hasBudget = false
                                     val isFirst30 = false
+                                    val fractionTimePeriodPassed = fractionOfCurrentMonthPassed() // TODO this will be different within first 30 days
 
                                     // total spent
                                     var spentAmount = BigDecimal(budgetAmountSpent).abs()   // reused for computing categorySpending values
@@ -86,7 +84,8 @@ class BudgetsListViewModel : BaseEngageViewModel() {
                                             spentColor = spentColor(budgetStatus),
                                             progress = progress(spentAmount, budgetAmount),
                                             progressColor = progressColor(budgetStatus),
-                                            fractionTimePeriodPassed = fractionTimePeriodPassed)
+                                            fractionTimePeriodPassed = fractionTimePeriodPassed
+                                    )
 
                                     // categories
                                     val categorySpendings = getCategoriesSortedByBudgetAmountDescending(withOther = false, isInFirst30Days = isFirst30).toMutableList()

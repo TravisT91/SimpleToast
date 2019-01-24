@@ -40,12 +40,9 @@ class BudgetsListFragment : BaseEngagePageFragment(), BudgetModelSection.BudgetM
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         binding = FragmentBudgetsListBinding.inflate(inflater,container,false)
-        binding.apply {
-            budgetsRecyclerView.apply {
-                layoutManager = LinearLayoutManager(context)
-                adapter = budgetsListAdapter
-            }
-
+        binding.budgetsRecyclerView.apply {
+            layoutManager = LinearLayoutManager(context)
+            adapter = budgetsListAdapter
         }
         return binding.root
     }

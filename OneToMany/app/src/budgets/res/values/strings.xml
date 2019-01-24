@@ -3,7 +3,7 @@
     <string name="budget_row_today">Today</string>
 
     <string name="budget_category_title_total_spent">Total spent</string>
-    <string name="budget_category_title_other_spending">Other Spending</string>
+    <string name="budget_category_title_other_spending">Other spending</string>
 
     <string name="budget_spent_of_amount_format">%1$s of %2$s</string>
     <string name="budget_spent_over_format">%s over</string>

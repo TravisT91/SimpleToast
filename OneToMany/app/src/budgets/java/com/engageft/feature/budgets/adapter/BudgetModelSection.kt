@@ -16,9 +16,10 @@ import io.github.luizgrp.sectionedrecyclerviewadapter.StatelessSection
  * Copyright (c) 2019 Engage FT. All rights reserved.
  */
 class BudgetModelSection(private val budgetModels: List<BudgetModel>, val isTotalSection: Boolean, val listener: BudgetModelSectionListener)
-    : StatelessSection(SectionParameters.builder().itemResourceId(
-        if (isTotalSection) R.layout.row_budget_tracking_panel_parent else R.layout.row_budget_tracking_panel_child
-).build()) {
+    : StatelessSection(
+        SectionParameters.builder().itemResourceId(
+        if (isTotalSection) R.layout.row_budget_tracking_panel_parent else R.layout.row_budget_tracking_panel_child).build()) {
+
     override fun getContentItemsTotal(): Int {
         return budgetModels.size
     }

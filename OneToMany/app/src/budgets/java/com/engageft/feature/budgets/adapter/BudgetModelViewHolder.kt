@@ -30,11 +30,13 @@ class BudgetModelViewHolder(itemView: View, listener: BudgetModelSection.BudgetM
     fun bindTo(budgetModel: BudgetModel) {
         this.budgetModel = budgetModel
 
-        trackingPanel.setTitleText(budgetModel.title)
-        trackingPanel.setRightSubTitle(budgetModel.spent)
-        trackingPanel.setRightSubtitleColor(budgetModel.spentColor)
-        trackingPanel.setProgress(budgetModel.progress)
-        trackingPanel.setProgressColor(budgetModel.progressColor)
-        trackingPanel.setIndicatorPosition(budgetModel.fractionTimePeriodPassed)
+        budgetModel.apply {
+            trackingPanel.setTitleText(title)
+            trackingPanel.setRightSubTitle(spent)
+            trackingPanel.setRightSubtitleColor(spentColor)
+            trackingPanel.setProgress(progress)
+            trackingPanel.setProgressColor(progressColor)
+            trackingPanel.setIndicatorPosition(fractionTimePeriodPassed)
+        }
     }
 }
