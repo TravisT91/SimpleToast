@@ -25,9 +25,9 @@ fun BudgetInfo.getOtherCategoriesForDailyLiving(isInFirst30Days: Boolean = false
     val otherCategories = mutableListOf(this.otherSpending)
 
     // add other categories
-    val showBudgetSetup = showBudgetSetup()
+    val shouldShowBudgetSetup = shouldShowBudgetSetup()
     for (categorySpending in getCategoriesForDailyLiving()) {
-        if (categorySpending.isInOtherBudget(showBudgetSetup, isInFirst30Days)) {
+        if (categorySpending.isInOtherBudget(shouldShowBudgetSetup, isInFirst30Days)) {
             otherCategories.add(categorySpending)
         }
     }
@@ -45,25 +45,25 @@ fun BudgetInfo.hasBudget(): Boolean {
     return this.budgetAmount.getFloatOrZero() != 0.0f
 }
 
-fun BudgetInfo.showBudgetSetup(): Boolean {
+fun BudgetInfo.shouldShowBudgetSetup(): Boolean {
     return this.budgetAmount.getFloatOrZero() == 0.0f
 }
 
 fun BudgetInfo.budgetStatus(): BudgetConstants.BudgetStatus {
     return when (this.alertType) {
-        BudgetConstants.BUDGET_STATUS_OVER_BUDGET -> BudgetConstants.BudgetStatus.OVER_BUDGET
-        BudgetConstants.BUDGET_STATUS_HIGH_SPENDING_TREND -> BudgetConstants.BudgetStatus.HIGH_SPENDING_TREND
+        BudgetConstants.BUDGET_STATUS_OVER_BUDGET_KEY -> BudgetConstants.BudgetStatus.OVER_BUDGET
+        BudgetConstants.BUDGET_STATUS_HIGH_SPENDING_TREND_KEY -> BudgetConstants.BudgetStatus.HIGH_SPENDING_TREND
         else -> BudgetConstants.BudgetStatus.NORMAL
     }
 }
 
-private fun BudgetInfo.filterCategorySpending(withOther: Boolean, isInFirst30Days: Boolean): List<CategorySpending> {
+private fun BudgetInfo.filterCategorySpending(includeCategoryOtherSpending: Boolean, isInFirst30Days: Boolean): List<CategorySpending> {
     val categoriesToInclude = mutableListOf<CategorySpending>()
-    val showBudgetSetup = showBudgetSetup()
+    val shouldShowBudgetSetup = shouldShowBudgetSetup()
     for (categorySpending in categorySpendingList) {
-        if (!withOther) {
+        if (!includeCategoryOtherSpending) {
             // ignore those in other categories
-            if (!categorySpending.isInOtherBudget(isSetup = showBudgetSetup, isInFirst30Days = isInFirst30Days)) {
+            if (!categorySpending.isInOtherBudget(shouldShowBudgetSetup = shouldShowBudgetSetup, isInFirst30Days = isInFirst30Days)) {
                 categoriesToInclude.add(categorySpending)
             }
         } else {

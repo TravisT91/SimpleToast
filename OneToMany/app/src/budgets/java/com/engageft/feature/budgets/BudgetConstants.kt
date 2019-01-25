@@ -9,8 +9,8 @@ package com.engageft.feature.budgets
  * Copyright (c) 2019 Engage FT. All rights reserved.
  */
 object BudgetConstants {
-    const val BUDGET_STATUS_HIGH_SPENDING_TREND = "HIGH_SPENDING_TREND"
-    const val BUDGET_STATUS_OVER_BUDGET = "OVER_BUDGET"
+    const val BUDGET_STATUS_HIGH_SPENDING_TREND_KEY = "HIGH_SPENDING_TREND"
+    const val BUDGET_STATUS_OVER_BUDGET_KEY = "OVER_BUDGET"
 
     // This is used to mark the synthetic Total Spending category as such. FE = front end
     const val CATEGORY_NAME_FE_TOTAL_SPENDING = "Total Spent"

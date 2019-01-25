@@ -12,8 +12,8 @@ import com.ob.ws.dom.utility.CategorySpending
  * Copyright (c) 2019 Engage FT. All rights reserved.
  */
 
-fun CategorySpending.isInOtherBudget(isSetup: Boolean, isInFirst30Days: Boolean): Boolean {
-    if (isSetup) {
+fun CategorySpending.isInOtherBudget(shouldShowBudgetSetup: Boolean, isInFirst30Days: Boolean): Boolean {
+    if (shouldShowBudgetSetup) {
         if (isInFirst30Days) { // if first 30, show some categories by default
             if (!BudgetConstants.DEFAULT_EDIT_CATEGORIES.contains(category)) { // && budgetAmount.getFloatOrZero() == 0F) { // budgetAmount condition was in gen1, but not currently in iOS
                 return true
@@ -33,8 +33,8 @@ fun CategorySpending.isOtherSpending(): Boolean {
 
 fun CategorySpending.budgetStatus(): BudgetConstants.BudgetStatus {
     return when (this.alertType) {
-        BudgetConstants.BUDGET_STATUS_OVER_BUDGET -> BudgetConstants.BudgetStatus.OVER_BUDGET
-        BudgetConstants.BUDGET_STATUS_HIGH_SPENDING_TREND -> BudgetConstants.BudgetStatus.HIGH_SPENDING_TREND
+        BudgetConstants.BUDGET_STATUS_OVER_BUDGET_KEY -> BudgetConstants.BudgetStatus.OVER_BUDGET
+        BudgetConstants.BUDGET_STATUS_HIGH_SPENDING_TREND_KEY -> BudgetConstants.BudgetStatus.HIGH_SPENDING_TREND
         else -> BudgetConstants.BudgetStatus.NORMAL
     }
 }

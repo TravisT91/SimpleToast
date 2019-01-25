@@ -40,15 +40,15 @@ class BudgetsListViewModel : BaseEngageViewModel() {
     @ColorInt private var progressColorHighSpendingTrend: Int = 0
     @ColorInt private var progressColorOverBudget: Int = 0
 
-    fun init(totalSpentTitle: String,
-             otherSpendingTitle: String,
-             spentNormalFormat: String,
-             spentOverFormat: String,
-             @ColorInt spentColorNormal: Int,
-             @ColorInt spentColorOverBudget: Int,
-             @ColorInt progressColorNormal: Int,
-             @ColorInt progressColorHighSpendingTrend: Int,
-             @ColorInt progressColorOverBudget: Int) {
+    fun initViewModel(totalSpentTitle: String,
+                      otherSpendingTitle: String,
+                      spentNormalFormat: String,
+                      spentOverFormat: String,
+                      @ColorInt spentColorNormal: Int,
+                      @ColorInt spentColorOverBudget: Int,
+                      @ColorInt progressColorNormal: Int,
+                      @ColorInt progressColorHighSpendingTrend: Int,
+                      @ColorInt progressColorOverBudget: Int) {
 
         this.spentNormalFormat = spentNormalFormat
         this.spentOverFormat = spentOverFormat

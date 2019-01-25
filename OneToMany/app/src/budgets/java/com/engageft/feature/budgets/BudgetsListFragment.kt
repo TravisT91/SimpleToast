@@ -51,7 +51,7 @@ class BudgetsListFragment : BaseEngagePageFragment(), BudgetItemSection.BudgetIt
         super.onViewCreated(view, savedInstanceState)
 
         viewModel.budgetsObservable.observe(viewLifecycleOwner, budgetsObserver)
-        viewModel.init(
+        viewModel.initViewModel(
                 totalSpentTitle = getString(R.string.budget_category_title_total_spent),
                 otherSpendingTitle = getString(R.string.budget_category_title_other_spending),
                 spentNormalFormat = getString(R.string.budget_spent_of_amount_format),
