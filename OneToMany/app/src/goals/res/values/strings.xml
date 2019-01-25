@@ -19,4 +19,5 @@
     <string name="GOALS_CREATE_FREQUENCY_LABEL">Savings frequency</string>
     <string name="GOALS_CREATE_START_SAVING_ON_LABEL">Start saving on</string>
     <string name="GOALS_CREATE_FREQUENCY_SELECTION_SUBTITLE">How often do you want to set money aside?</string>
+    <string name="GOALS_SUCCESS">Success!</string>
 </resources>

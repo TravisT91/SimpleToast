@@ -52,9 +52,8 @@
                     android:paddingStart="16dp"
                     android:paddingEnd="16dp"
                     android:paddingTop="16dp"
-                    android:visibility="@{viewModel.showSaveByDate.get() ? View.VISIBLE : View.GONE}"
                     app:labelText="@string/GOALS_CREATE_START_SAVING_ON_LABEL"
-                    app:inputText="@={viewModel.saveByDate}"
+                    app:inputText="@={viewModel.goalSaveByDate}"
                     app:bottomSheetDialogStyle="@style/ListOptionBottomSheetDialogFragmentStyle"/>
 
                 <com.engageft.apptoolbox.view.CurrencyInputWithLabel
@@ -67,8 +66,7 @@
                     android:paddingEnd="16dp"
                     android:paddingTop="16dp"
                     app:labelText="@string/GOALS_CREATE_AMOUNT_LABEL"
-                    android:visibility="@{viewModel.showSaveWeekly.get() ? View.VISIBLE : View.GONE}"
-                    app:inputText="@={viewModel.amountSetAside}"/>
+                    app:inputText="@={viewModel.frequencyAmount}"/>
 
             </androidx.appcompat.widget.LinearLayoutCompat>
 
@@ -81,7 +79,6 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/pillButtonTopSpaceInFormsAndLists"
                 android:layout_margin="16dp"
-                android:onClick="@{() -> viewModel.onSaveGoal()}"
                 android:text="@string/next_word"/>
 
         </androidx.appcompat.widget.LinearLayoutCompat>

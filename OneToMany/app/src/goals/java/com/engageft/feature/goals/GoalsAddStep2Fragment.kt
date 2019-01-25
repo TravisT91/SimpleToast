@@ -9,6 +9,13 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.lifecycle.ViewModelProviders
 import com.engageft.apptoolbox.BaseViewModel
+import com.engageft.feature.goals.GoalsAddEditConfirmationFragment.Companion.DAY_OF_WEEK
+import com.engageft.feature.goals.GoalsAddEditConfirmationFragment.Companion.GOAL_AMOUNT
+import com.engageft.feature.goals.GoalsAddEditConfirmationFragment.Companion.GOAL_NAME
+import com.engageft.feature.goals.GoalsAddEditConfirmationFragment.Companion.RECURRENCE_TYPE
+import com.engageft.feature.goals.GoalsAddEditConfirmationFragment.Companion.START_DATE
+import com.engageft.feature.goals.GoalsAddEditConfirmationFragment.Companion.createBundleWithAmountFrequency
+import com.engageft.feature.goals.GoalsAddEditConfirmationFragment.Companion.createBundleWithGoalCompleteDate
 import com.engageft.fis.pscu.R
 import com.engageft.fis.pscu.databinding.FragmentGoalsAddStep2Binding
 import com.engageft.fis.pscu.feature.BaseEngagePageFragment
@@ -50,16 +57,45 @@ class GoalsAddStep2Fragment : BaseEngagePageFragment() {
                         recurrenceType = getString(RECURRENCE_TYPE, "")
                         startDate = getSerializable(START_DATE) as DateTime
                         dayOfWeek = getInt(DAY_OF_WEEK, -1)
-                        goalDateInMind = getBoolean(GOAL_DATE_IN_MIND, false)
+                        hasGoalDateInMind = getBoolean(HAS_GOAL_DATE_IN_MIND, false)
                     }
                 }
+            }
 
+            nextButton.setOnClickListener {
+                navigateToConfirmation()
             }
 
 //            startDatePicker.minimumDate = DateTime.now()
         }
 
         return binding.root
+    }
+
+    private fun navigateToConfirmation() {
+        var bundle: Bundle
+        addGoalViewModel.apply {
+            if (hasGoalDateInMind) {
+                bundle = createBundleWithGoalCompleteDate(
+                        goalName = goalName,
+                        goalAmount = goalAmount,
+                        recurrenceType = recurrenceType,
+                        dayOfWeek = dayOfWeek,
+                        startDate = startDate,
+                        goalCompleteDate = DateTime(goalSaveByDate)
+                )
+            } else {
+                bundle = createBundleWithAmountFrequency(
+                        goalName = goalName,
+                        goalAmount = goalAmount,
+                        recurrenceType = recurrenceType,
+                        dayOfWeek = dayOfWeek,
+                        startDate = startDate,
+                        frequencyAmount = frequencyAmountBigDecimal
+                )
+            }
+        }
+        // navigate action
     }
 
     override fun onCreateOptionsMenu(menu: Menu?, inflater: MenuInflater?) {
@@ -76,19 +112,14 @@ class GoalsAddStep2Fragment : BaseEngagePageFragment() {
     override fun onOptionsItemSelected(item: MenuItem?): Boolean {
         when(item?.itemId){
             R.id.next -> run {
-                addGoalViewModel.onSaveGoal()
+                navigateToConfirmation()
             }
         }
         return super.onOptionsItemSelected(item)
     }
 
     companion object {
-        const val GOAL_NAME = "GOAL_NAME"
-        const val GOAL_AMOUNT = "GOAL_AMOUNT"
-        const val RECURRENCE_TYPE = "RECURRENCE_TYPE"
-        const val START_DATE = "START_DATE"
-        const val DAY_OF_WEEK = "DAY_OF_WEEK"
-        const val GOAL_DATE_IN_MIND = "GOAL_DATE_IN_MIND"
+        const val HAS_GOAL_DATE_IN_MIND = "HAS_GOAL_DATE_IN_MIND"
 
         fun createBundle(goalName: String, goalAmount: BigDecimal, recurrenceType: String,
                          startDate: DateTime, dayOfWeek: Int, goalDateInMind: Boolean): Bundle {
@@ -98,7 +129,7 @@ class GoalsAddStep2Fragment : BaseEngagePageFragment() {
                 putString(RECURRENCE_TYPE, recurrenceType)
                 putSerializable(START_DATE, startDate)
                 putInt(DAY_OF_WEEK, dayOfWeek)
-                putBoolean(GOAL_DATE_IN_MIND, goalDateInMind)
+                putBoolean(HAS_GOAL_DATE_IN_MIND, goalDateInMind)
             }
         }
     }
