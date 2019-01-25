@@ -190,3 +190,5 @@ object TransactionUtils {
         return getTransactionStatus(transaction) == TransactionStatus.DECLINED
     }
 }
+
+inline class TransactionId(val id: String)
