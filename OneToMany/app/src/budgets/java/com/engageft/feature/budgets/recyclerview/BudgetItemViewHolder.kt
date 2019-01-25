@@ -15,27 +15,14 @@ import com.engageft.fis.pscu.R
  */
 class BudgetItemViewHolder(itemView: View, listener: BudgetItemSection.BudgetItemSectionListener) : RecyclerView.ViewHolder(itemView) {
 
-    private val trackingPanel: TrackingPanel = itemView.findViewById(R.id.row_budget_tracking_panel)
-    private var budgetItem: BudgetItem? = null
+    val trackingPanel: TrackingPanel = itemView.findViewById(R.id.row_budget_tracking_panel)
+    var budgetItem: BudgetItem? = null
 
     init {
         trackingPanel.setOnClickListener {
             budgetItem?.apply {
                 listener.onBudgetCategorySelected(categoryName)
             }
-        }
-    }
-
-    fun bindTo(budgetItem: BudgetItem) {
-        this.budgetItem = budgetItem
-
-        budgetItem.apply {
-            trackingPanel.setTitleText(title)
-            trackingPanel.setRightSubTitle(spent)
-            trackingPanel.setRightSubtitleColor(spentColor)
-            trackingPanel.setProgress(progress)
-            trackingPanel.setProgressColor(progressColor)
-            trackingPanel.setIndicatorPosition(fractionTimePeriodPassed)
         }
     }
 }

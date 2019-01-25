@@ -1,6 +1,5 @@
 package com.engageft.feature.budgets
 
-import androidx.annotation.ColorInt
 import androidx.lifecycle.MutableLiveData
 import com.engageft.engagekit.EngageService
 import com.engageft.feature.budgets.extension.budgetStatus
@@ -14,10 +13,8 @@ import com.engageft.fis.pscu.feature.DialogInfo
 import com.ob.ws.dom.LoginResponse
 import io.reactivex.schedulers.Schedulers
 import org.joda.time.DateTime
-import utilGen1.StringUtils
 import java.math.BigDecimal
 import java.math.RoundingMode
-import java.util.*
 
 /**
  * BudgetsListViewModel
@@ -31,33 +28,7 @@ class BudgetsListViewModel : BaseEngageViewModel() {
 
     val budgetsObservable: MutableLiveData<Pair<BudgetItem, List<BudgetItem>>> = MutableLiveData()
 
-    private lateinit var spentNormalFormat: String
-    private lateinit var spentOverFormat: String
-    @ColorInt private var spentColorNormal: Int = 0
-    @ColorInt private var spentColorOverBudget: Int = 0
-
-    @ColorInt private var progressColorNormal: Int = 0
-    @ColorInt private var progressColorHighSpendingTrend: Int = 0
-    @ColorInt private var progressColorOverBudget: Int = 0
-
-    fun initViewModel(totalSpentTitle: String,
-                      otherSpendingTitle: String,
-                      spentNormalFormat: String,
-                      spentOverFormat: String,
-                      @ColorInt spentColorNormal: Int,
-                      @ColorInt spentColorOverBudget: Int,
-                      @ColorInt progressColorNormal: Int,
-                      @ColorInt progressColorHighSpendingTrend: Int,
-                      @ColorInt progressColorOverBudget: Int) {
-
-        this.spentNormalFormat = spentNormalFormat
-        this.spentOverFormat = spentOverFormat
-        this.spentColorNormal = spentColorNormal
-        this.spentColorOverBudget = spentColorOverBudget
-
-        this.progressColorNormal = progressColorNormal
-        this.progressColorHighSpendingTrend = progressColorHighSpendingTrend
-        this.progressColorOverBudget = progressColorOverBudget
+    fun initViewModel() {
 
         progressOverlayShownObservable.postValue(true)
         compositeDisposable.add(
@@ -79,11 +50,10 @@ class BudgetsListViewModel : BaseEngageViewModel() {
                                     var budgetStatus = budgetStatus()                       // reused for computing categorySpendingValues
                                     val totalBudgetItem = BudgetItem(
                                             categoryName = BudgetConstants.CATEGORY_NAME_FE_TOTAL_SPENDING,
-                                            title = totalSpentTitle,
-                                            spent = spentString(spentAmount, budgetAmount),
-                                            spentColor = spentColor(budgetStatus),
+                                            spentAmount = spentAmount,
+                                            budgetAmount = budgetAmount,
+                                            budgetStatus = budgetStatus,
                                             progress = progress(spentAmount, budgetAmount),
-                                            progressColor = progressColor(budgetStatus),
                                             fractionTimePeriodPassed = fractionTimePeriodPassed
                                     )
 
@@ -97,11 +67,11 @@ class BudgetsListViewModel : BaseEngageViewModel() {
                                         categoryBudgetItems.add(
                                                 BudgetItem(
                                                         categoryName = categorySpending.category,
-                                                        title = EngageService.getInstance().storageManager.getBudgetCategoryDescription(categorySpending.category, Locale.getDefault().language),
-                                                        spent = spentString(spentAmount, budgetAmount),
-                                                        spentColor = spentColor(budgetStatus),
+                                                        //title = EngageService.getInstance().storageManager.getBudgetCategoryDescription(categorySpending.category, Locale.getDefault().language),
+                                                        spentAmount = spentAmount,
+                                                        budgetAmount = budgetAmount,
+                                                        budgetStatus = budgetStatus,
                                                         progress = progress(spentAmount, budgetAmount),
-                                                        progressColor = progressColor(budgetStatus),
                                                         fractionTimePeriodPassed = fractionTimePeriodPassed
                                                 )
                                         )
@@ -113,12 +83,11 @@ class BudgetsListViewModel : BaseEngageViewModel() {
                                         budgetStatus = otherSpendingCategory.budgetStatus()
                                         categoryBudgetItems.add(
                                                 BudgetItem(
-                                                        categoryName = otherSpendingCategory.category,
-                                                        title = otherSpendingTitle,
-                                                        spent = spentString(spentAmount, budgetAmount),
-                                                        spentColor = spentColor(budgetStatus),
+                                                        categoryName = BudgetConstants.CATEGORY_NAME_BE_OTHER_SPENDING,
+                                                        spentAmount = spentAmount,
+                                                        budgetAmount = budgetAmount,
+                                                        budgetStatus = budgetStatus,
                                                         progress = progress(spentAmount, budgetAmount),
-                                                        progressColor = progressColor(budgetStatus),
                                                         fractionTimePeriodPassed = fractionTimePeriodPassed
                                                 )
                                         )
@@ -137,23 +106,6 @@ class BudgetsListViewModel : BaseEngageViewModel() {
         )
     }
 
-    private fun spentString(spentAmount: BigDecimal, budgetAmount: BigDecimal): String {
-        return if (spentAmount.isGreaterThan(budgetAmount)) {
-            String.format(spentOverFormat, StringUtils.formatCurrencyString(spentAmount.minus(budgetAmount).toFloat()))
-        } else {
-            String.format(spentNormalFormat, StringUtils.formatCurrencyString(spentAmount.toFloat()), StringUtils.formatCurrencyString(budgetAmount.toFloat()))
-        }
-    }
-
-    @ColorInt
-    private fun spentColor(budgetStatus: BudgetConstants.BudgetStatus): Int {
-        return if (budgetStatus == BudgetConstants.BudgetStatus.OVER_BUDGET) {
-            spentColorOverBudget
-        } else {
-            spentColorNormal
-        }
-    }
-
     private fun progress(spentAmount: BigDecimal, budgetAmount: BigDecimal): Float {
         return if (!spentAmount.isGreaterThan(BigDecimal.ZERO) || budgetAmount.isZero()) {
             // Catches cases of spent <= 0, or budget == 0
@@ -165,15 +117,6 @@ class BudgetsListViewModel : BaseEngageViewModel() {
         else {
             // spent is at or over budget amount, so cap at 1
             1.0f
-        }
-    }
-
-    @ColorInt
-    private fun progressColor(budgetStatus: BudgetConstants.BudgetStatus): Int {
-        return when (budgetStatus) {
-            BudgetConstants.BudgetStatus.NORMAL -> progressColorNormal
-            BudgetConstants.BudgetStatus.HIGH_SPENDING_TREND -> progressColorHighSpendingTrend
-            BudgetConstants.BudgetStatus.OVER_BUDGET -> progressColorOverBudget
         }
     }
 
