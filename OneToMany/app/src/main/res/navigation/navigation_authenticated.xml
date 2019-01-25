@@ -117,7 +117,11 @@
             android:defaultValue="true" />
         <action
             android:id="@+id/action_goalsListFragment_to_goalsAddStep1Fragment"
-            app:destination="@id/goalsAddStep1Fragment" />
+            app:destination="@id/goalsAddStep1Fragment"
+            app:enterAnim="@anim/nav_enter_anim"
+            app:exitAnim="@anim/nav_exit_anim"
+            app:popEnterAnim="@anim/nav_pop_enter_anim"
+            app:popExitAnim="@anim/nav_pop_exit_anim"/>
     </fragment>
 
     <fragment
@@ -322,7 +326,11 @@
     <fragment
         android:id="@+id/goalsAddStep2Fragment"
         android:name="com.engageft.feature.goals.GoalsAddStep2Fragment"
-        android:label="goalsAddStep2Fragment" />
+        android:label="@string/GOALS_ADD_GOAL" >
+        <action
+            android:id="@+id/action_goalsAddStep2Fragment_to_goalsAddEditConfirmationFragment"
+            app:destination="@id/goalsAddEditConfirmationFragment" />
+    </fragment>
     <fragment
         android:id="@+id/accountNotificationsFragment"
         android:name="com.engageft.fis.pscu.feature.AccountNotificationsFragment"
@@ -462,9 +470,26 @@
         android:label="CardLockUnlockFragment" />
     <fragment
         android:id="@+id/goalsAddStep1Fragment"
-        android:name="com.engageft.feature.goals.GoalsAddStep1Fragment">
+        android:name="com.engageft.feature.goals.GoalsAddStep1Fragment"
+        android:label="@string/GOALS_ADD_GOAL">
         <action
             android:id="@+id/action_goalsAddStep1Fragment_to_goalsAddStep2Fragment"
-            app:destination="@id/goalsAddStep2Fragment" />
+            app:destination="@id/goalsAddStep2Fragment"
+            app:enterAnim="@anim/nav_enter_anim"
+            app:exitAnim="@anim/nav_exit_anim"
+            app:popEnterAnim="@anim/nav_pop_enter_anim"
+            app:popExitAnim="@anim/nav_pop_exit_anim"/>
     </fragment>
+    <fragment
+        android:id="@+id/goalsAddEditConfirmationFragment"
+        android:name="com.engageft.feature.goals.GoalsAddEditConfirmationFragment"
+        android:label="@string/GOALS_ADD_GOAL" >
+        <action
+            android:id="@+id/action_goalsAddEditConfirmationFragment_to_successsFragment"
+            app:destination="@id/successsFragment"
+            app:popUpTo="@id/goalsListFragment"/>
+    </fragment>
+    <fragment
+        android:id="@+id/successsFragment"
+        android:name="com.engageft.feature.goals.SuccesssFragment" />
 </navigation>

@@ -26,14 +26,11 @@
                 android:id="@+id/headerTextView"
                 style="@style/CreateTransferTitleTextStyle"
                 android:paddingStart="16dp"
-                android:paddingEnd="16dp"
-                android:text="@string/GOALS_CREATE_HEADER_TITLE"
-                />
+                android:paddingEnd="16dp" />
 
             <androidx.appcompat.widget.AppCompatTextView
                 android:id="@+id/subHeaderTextView"
-                style="@style/CreateTransferSubtitleTextStyle"
-                android:text="@string/GOALS_CREATE_HEADER_SUBTITLE"/>
+                style="@style/CreateGoalSubHeaderTextStyle"/>
 
             <androidx.appcompat.widget.LinearLayoutCompat
                 android:layout_width="match_parent"
@@ -52,20 +49,20 @@
                     android:paddingStart="16dp"
                     android:paddingEnd="16dp"
                     android:paddingTop="16dp"
-                    app:labelText="@string/GOALS_CREATE_START_SAVING_ON_LABEL"
-                    app:inputText="@={viewModel.goalSaveByDate}"
+                    app:labelText="@string/GOALS_ADD_COMPLETE_DATE_SELECTION_TITLE"
+                    app:inputText="@={viewModel.goalCompleteByDate}"
                     app:bottomSheetDialogStyle="@style/ListOptionBottomSheetDialogFragmentStyle"/>
 
                 <com.engageft.apptoolbox.view.CurrencyInputWithLabel
                     style="@style/CurrencyInputWithLabelStyle"
                     InputWithLabel.setThemeWithPalette="@{true}"
-                    android:id="@+id/amountInputWithLabel"
+                    android:id="@+id/frequencyAmountInputWithLabel"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:paddingStart="16dp"
                     android:paddingEnd="16dp"
                     android:paddingTop="16dp"
-                    app:labelText="@string/GOALS_CREATE_AMOUNT_LABEL"
+                    app:labelText="@string/GOALS_ADD_AMOUNT_LABEL"
                     app:inputText="@={viewModel.frequencyAmount}"/>
 
             </androidx.appcompat.widget.LinearLayoutCompat>
@@ -78,7 +75,6 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/pillButtonTopSpaceInFormsAndLists"
-                android:layout_margin="16dp"
                 android:text="@string/next_word"/>
 
         </androidx.appcompat.widget.LinearLayoutCompat>

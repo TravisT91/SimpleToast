@@ -3,6 +3,7 @@ package com.engageft.feature.goals
 import androidx.databinding.Observable
 import androidx.databinding.ObservableField
 import androidx.lifecycle.MutableLiveData
+import com.engageft.feature.goals.GoalsAddStep2ViewModel.ButtonState.*
 import com.engageft.fis.pscu.feature.BaseEngageViewModel
 import com.ob.domain.lookup.RecurrenceType
 import org.joda.time.DateTime
@@ -16,7 +17,7 @@ class GoalsAddStep2ViewModel: BaseEngageViewModel() {
         HIDE
     }
 
-    val nextButtonStateObservable = MutableLiveData<GoalsAddStep1ViewModel.ButtonState>()
+    val nextButtonStateObservable = MutableLiveData<ButtonState>()
 
 //    var saveByDate = ObservableField("02/28/2019")
 //    var amountSetAside = ObservableField("")
@@ -30,34 +31,43 @@ class GoalsAddStep2ViewModel: BaseEngageViewModel() {
     var dayOfWeek: Int = -1
 
     var hasGoalDateInMind: Boolean = false
-    var goalCompleteDate = DateTime.now()
+    var goalCompleteDate: DateTime = DateTime.now()
     var frequencyAmountBigDecimal = BigDecimal(BigInteger.ZERO)
 
-    var goalSaveByDate: String = ""
+    var goalCompleteByDate: String = ""
     set(value) {
         field = value
-        if (hasGoalDateInMind && field.isNotEmpty()) {
-            goalCompleteDate = DisplayDateTimeUtils.shortDateFormatter.parseDateTime(field)
-            nextButtonStateObservable.value = GoalsAddStep1ViewModel.ButtonState.SHOW
-        } else {
-            nextButtonStateObservable.value = GoalsAddStep1ViewModel.ButtonState.HIDE
-        }
+        updateNextButtonState()
     }
 
     var frequencyAmount: String = ""
     set(value) {
         field = value
-        if (!hasGoalDateInMind && field.isNotEmpty()) {
-            frequencyAmountBigDecimal = BigDecimal(field)
-            nextButtonStateObservable.value = GoalsAddStep1ViewModel.ButtonState.SHOW
-        } else {
-            nextButtonStateObservable.value = GoalsAddStep1ViewModel.ButtonState.HIDE
-        }    }
+        updateNextButtonState()
+    }
 
-//    fun updateButtonState() {
-//        if (hasGoalDateInMind && goalSaveByDate.isNotEmpty())
-//    }
+    private fun updateNextButtonState() {
+        if (isFormValid()) {
+            nextButtonStateObservable.value = SHOW
+        } else {
+            nextButtonStateObservable.value = HIDE
+        }
+    }
+
+    private fun isFormValid(): Boolean {
+        return if (hasGoalDateInMind) {
+            goalCompleteByDate.isNotEmpty()
+        } else {
+            frequencyAmount.isNotEmpty()
+        }
+    }
+
+    fun hasUnsavedChanges(): Boolean {
+       return isFormValid()
+    }
+
     init {
+        nextButtonStateObservable.value = HIDE
 //        saveByDate.addOnPropertyChangedCallback(object: Observable.OnPropertyChangedCallback() {
 //            override fun onPropertyChanged(sender: Observable?, propertyId: Int) {
 //                if (saveByDate.get()!!.isNotEmpty()) {

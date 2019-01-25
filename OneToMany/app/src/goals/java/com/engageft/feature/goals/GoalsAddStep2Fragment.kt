@@ -7,11 +7,17 @@ import android.view.MenuInflater
 import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
+import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
+import androidx.navigation.findNavController
+import androidx.navigation.fragment.findNavController
 import com.engageft.apptoolbox.BaseViewModel
+import com.engageft.apptoolbox.NavigationOverrideClickListener
+import com.engageft.apptoolbox.view.InformationDialogFragment
 import com.engageft.feature.goals.GoalsAddEditConfirmationFragment.Companion.DAY_OF_WEEK
 import com.engageft.feature.goals.GoalsAddEditConfirmationFragment.Companion.GOAL_AMOUNT
 import com.engageft.feature.goals.GoalsAddEditConfirmationFragment.Companion.GOAL_NAME
+import com.engageft.feature.goals.GoalsAddEditConfirmationFragment.Companion.HAS_GOAL_DATE_IN_MIND
 import com.engageft.feature.goals.GoalsAddEditConfirmationFragment.Companion.RECURRENCE_TYPE
 import com.engageft.feature.goals.GoalsAddEditConfirmationFragment.Companion.START_DATE
 import com.engageft.feature.goals.GoalsAddEditConfirmationFragment.Companion.createBundleWithAmountFrequency
@@ -20,7 +26,10 @@ import com.engageft.fis.pscu.R
 import com.engageft.fis.pscu.databinding.FragmentGoalsAddStep2Binding
 import com.engageft.fis.pscu.feature.BaseEngagePageFragment
 import com.engageft.fis.pscu.feature.branding.Palette
+import com.engageft.fis.pscu.feature.infoDialogGenericUnsavedChangesNewInstance
+import kotlinx.android.synthetic.main.fragment_goals_add_step_1.*
 import org.joda.time.DateTime
+import utilGen1.PayPlanUtils
 import java.math.BigDecimal
 
 /**
@@ -31,6 +40,29 @@ import java.math.BigDecimal
 class GoalsAddStep2Fragment : BaseEngagePageFragment() {
 
     private lateinit var addGoalViewModel: GoalsAddStep2ViewModel
+
+    private val unsavedChangesDialogListener = object : InformationDialogFragment.InformationDialogFragmentListener {
+        override fun onDialogFragmentPositiveButtonClicked() {
+            findNavController().navigateUp()
+        }
+        override fun onDialogFragmentNegativeButtonClicked() {
+            // Do nothing.
+        }
+        override fun onDialogCancelled() {
+            // Do nothing.
+        }
+    }
+
+    private val navigationOverrideClickListener = object : NavigationOverrideClickListener {
+        override fun onClick(): Boolean {
+            return if (addGoalViewModel.hasUnsavedChanges()) {
+                fragmentDelegate.showDialog(infoDialogGenericUnsavedChangesNewInstance(context = activity!!, listener = unsavedChangesDialogListener))
+                true
+            } else {
+                false
+            }
+        }
+    }
 
     override fun createViewModel(): BaseViewModel? {
         addGoalViewModel = ViewModelProviders.of(this).get(GoalsAddStep2ViewModel::class.java)
@@ -49,7 +81,10 @@ class GoalsAddStep2Fragment : BaseEngagePageFragment() {
             viewModel = addGoalViewModel
             palette = Palette
 
-            arguments?.let { bundle ->
+            upButtonOverrideProvider.setUpButtonOverride(navigationOverrideClickListener)
+            backButtonOverrideProvider.setBackButtonOverride(navigationOverrideClickListener)
+
+            arguments!!.let { bundle ->
                 bundle.apply {
                     addGoalViewModel.apply {
                         goalName = getString(GOAL_NAME, "")
@@ -66,7 +101,32 @@ class GoalsAddStep2Fragment : BaseEngagePageFragment() {
                 navigateToConfirmation()
             }
 
-//            startDatePicker.minimumDate = DateTime.now()
+            addGoalViewModel.apply {
+                if (hasGoalDateInMind) {
+                    val date = DateTime.now()
+                    startDatePicker.minimumDate = date
+                    // todo do this?
+                    // startDatePicker.maximumDate = date.plusDays(30)
+                    headerTextView.text = getString(R.string.GOALS_ADD_COMPLETE_DATE_HEADER)
+                    subHeaderTextView.text = getString(R.string.GOALS_ADD_COMPLETE_DATE_SUB_HEADER)
+                    frequencyAmountInputWithLabel.visibility = View.GONE
+                } else {
+                    headerTextView.text = getString(R.string.GOALS_ADD_FREQUENCY_AMOUNT_HEADER)
+                    headerTextView.text = String.format(
+                            getString(R.string.GOALS_ADD_FREQUENCY_AMOUNT_SUB_HEADER_FORMAT),
+                            PayPlanUtils.getPayPlanRecurrenceDisplayStringForRecurrenceType(context!!, recurrenceType))
+                    goalCompleteDateBottomSheet.visibility = View.GONE
+                }
+
+                nextButtonStateObservable.observe(viewLifecycleOwner, Observer {
+                    if (it == GoalsAddStep2ViewModel.ButtonState.SHOW) {
+                        nextButton.visibility = View.VISIBLE
+                    } else {
+                        nextButton.visibility = View.GONE
+                    }
+                    activity!!.invalidateOptionsMenu()
+                })
+            }
         }
 
         return binding.root
@@ -82,7 +142,7 @@ class GoalsAddStep2Fragment : BaseEngagePageFragment() {
                         recurrenceType = recurrenceType,
                         dayOfWeek = dayOfWeek,
                         startDate = startDate,
-                        goalCompleteDate = DateTime(goalSaveByDate)
+                        goalCompleteDate = goalCompleteDate
                 )
             } else {
                 bundle = createBundleWithAmountFrequency(
@@ -96,6 +156,7 @@ class GoalsAddStep2Fragment : BaseEngagePageFragment() {
             }
         }
         // navigate action
+        binding.root.findNavController().navigate(R.id.action_goalsAddStep2Fragment_to_goalsAddEditConfirmationFragment)
     }
 
     override fun onCreateOptionsMenu(menu: Menu?, inflater: MenuInflater?) {
@@ -105,7 +166,7 @@ class GoalsAddStep2Fragment : BaseEngagePageFragment() {
 
     override fun onPrepareOptionsMenu(menu: Menu?) {
         val menuItem = menu!!.findItem(R.id.next)
-        menuItem.isVisible = addGoalViewModel.nextButtonStateObservable.value == GoalsAddStep1ViewModel.ButtonState.SHOW
+        menuItem.isVisible = addGoalViewModel.nextButtonStateObservable.value == GoalsAddStep2ViewModel.ButtonState.SHOW
         super.onPrepareOptionsMenu(menu)
     }
 
@@ -119,7 +180,6 @@ class GoalsAddStep2Fragment : BaseEngagePageFragment() {
     }
 
     companion object {
-        const val HAS_GOAL_DATE_IN_MIND = "HAS_GOAL_DATE_IN_MIND"
 
         fun createBundle(goalName: String, goalAmount: BigDecimal, recurrenceType: String,
                          startDate: DateTime, dayOfWeek: Int, goalDateInMind: Boolean): Bundle {

@@ -62,7 +62,7 @@ class GoalsAddEditConfirmationViewModel: BaseEngageViewModel() {
                 purseId = purseId)
 
         if (hasGoalDateInMind) {
-            val goalDate = DisplayDateTimeUtils.shortDateFormatter.parseDateTime(goalCompleteDate.toString())
+            val goalDate = DisplayDateTimeUtils.mediumDateFormatter.parseDateTime(goalCompleteDate.toString())
             val goalDateString = BackendDateTimeUtils.getIso8601String(goalDate)
             goalInfo.completeDate = goalDateString
             goalInfo.estimatedCompleteDate = goalDateString

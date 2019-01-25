@@ -7,14 +7,21 @@ import android.view.MenuInflater
 import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
+import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.navigation.findNavController
+import androidx.navigation.fragment.findNavController
 import com.engageft.apptoolbox.BaseViewModel
+import com.engageft.apptoolbox.NavigationOverrideClickListener
+import com.engageft.apptoolbox.view.InformationDialogFragment
 import com.engageft.engagekit.utils.PayPlanInfoUtils
 import com.engageft.fis.pscu.R
+import com.engageft.fis.pscu.config.EngageAppConfig
 import com.engageft.fis.pscu.databinding.FragmentGoalsAddStep1Binding
 import com.engageft.fis.pscu.feature.BaseEngagePageFragment
 import com.engageft.fis.pscu.feature.branding.Palette
+import com.engageft.fis.pscu.feature.infoDialogGenericUnsavedChangesNewInstance
+import kotlinx.android.synthetic.main.fragment_change_password.*
 import org.joda.time.DateTime
 import utilGen1.DisplayDateTimeUtils
 import utilGen1.PayPlanUtils
@@ -27,6 +34,29 @@ import java.math.BigDecimal
 class GoalsAddStep1Fragment : BaseEngagePageFragment() {
 
     private lateinit var addGoalViewModel: GoalsAddStep1ViewModel
+
+    private val unsavedChangesDialogListener = object : InformationDialogFragment.InformationDialogFragmentListener {
+        override fun onDialogFragmentPositiveButtonClicked() {
+            findNavController().navigateUp()
+        }
+        override fun onDialogFragmentNegativeButtonClicked() {
+            // Do nothing.
+        }
+        override fun onDialogCancelled() {
+            // Do nothing.
+        }
+    }
+
+    private val navigationOverrideClickListener = object : NavigationOverrideClickListener {
+        override fun onClick(): Boolean {
+            return if (addGoalViewModel.hasUnsavedChanges()) {
+                fragmentDelegate.showDialog(infoDialogGenericUnsavedChangesNewInstance(context = activity!!, listener = unsavedChangesDialogListener))
+                true
+            } else {
+                false
+            }
+        }
+    }
 
     override fun createViewModel(): BaseViewModel? {
         addGoalViewModel = ViewModelProviders.of(this).get(GoalsAddStep1ViewModel::class.java)
@@ -45,6 +75,9 @@ class GoalsAddStep1Fragment : BaseEngagePageFragment() {
             viewModel = addGoalViewModel
             palette = Palette
 
+            upButtonOverrideProvider.setUpButtonOverride(navigationOverrideClickListener)
+            backButtonOverrideProvider.setBackButtonOverride(navigationOverrideClickListener)
+
             nextButton.setOnClickListener {
                 navigateToNextStep()
             }
@@ -53,23 +86,41 @@ class GoalsAddStep1Fragment : BaseEngagePageFragment() {
             frequencyBottomSheet.dialogOptions = ArrayList(frequencyOptionsList)
 
             daysOfWeekBottomSheet.dialogOptions = ArrayList(DisplayDateTimeUtils.daysOfWeekList())
-            startDateBottomSheet.minimumDate = DateTime.now()
 
-            goalDateInMindBottomSheet.dialogOptions = ArrayList(listOf("Yes", "No"))
+            goalCompleteDateBottomSheet.dialogOptions = ArrayList(listOf(
+                    getString(R.string.GOALS_ADD_COMPLETE_DATE_YES),
+                    getString(R.string.GOALS_ADD_COMPLETE_DATE_NO)))
+
+            startDateBottomSheet.minimumDate = DateTime.now()
+            // todo test what backend allows 30-days?
+            startDateBottomSheet.maximumDate = DateTime.now().plusDays(30)
+
+            amountInputWithLabel.currencyCode = EngageAppConfig.currencyCode
+
+            addGoalViewModel.nextButtonStateObservable.observe(viewLifecycleOwner, Observer {
+                if (it == GoalsAddStep1ViewModel.ButtonState.SHOW) {
+                    nextButton.visibility = View.VISIBLE
+                } else {
+                    nextButton.visibility = View.GONE
+                }
+                activity!!.invalidateOptionsMenu()
+            })
         }
 
         return binding.root
     }
 
     private fun navigateToNextStep() {
-        binding.root.findNavController().navigate(R.id.action_goalsAddStep1Fragment_to_goalsAddStep2Fragment,
-                GoalsAddStep2Fragment.createBundle(
-                        goalName = "testing HEH",
-                        goalAmount = BigDecimal(20),
-                        recurrenceType = PayPlanInfoUtils.PAY_PLAN_WEEK,
-                        startDate = DateTime.now().plusDays(1),
-                        dayOfWeek = 4,
-                        goalDateInMind = addGoalViewModel.hasGoalDateInMind))
+        if (addGoalViewModel.isDataValidAndFormatted()) {
+            binding.root.findNavController().navigate(R.id.action_goalsAddStep1Fragment_to_goalsAddStep2Fragment,
+                    GoalsAddStep2Fragment.createBundle(
+                            goalName = addGoalViewModel.goalName.get()!!,
+                            goalAmount = addGoalViewModel.amount,
+                            recurrenceType = addGoalViewModel.recurrenceType,
+                            startDate = addGoalViewModel.startOnDate,
+                            dayOfWeek = addGoalViewModel.dayOfWeekInt,
+                            goalDateInMind = addGoalViewModel.hasGoalDateInMind))
+        }
     }
 
     override fun onCreateOptionsMenu(menu: Menu?, inflater: MenuInflater?) {

@@ -28,13 +28,13 @@
                 style="@style/CreateTransferTitleTextStyle"
                 android:paddingStart="16dp"
                 android:paddingEnd="16dp"
-                android:text="@string/GOALS_CREATE_HEADER_TITLE"
+                android:text="@string/GOALS_ADD_HEADER_TITLE"
                 />
 
             <androidx.appcompat.widget.AppCompatTextView
                 android:id="@+id/subHeaderTextView"
-                style="@style/CreateTransferSubtitleTextStyle"
-                android:text="@string/GOALS_CREATE_HEADER_SUBTITLE"/>
+                style="@style/CreateGoalSubHeaderTextStyle"
+                android:text="@string/GOALS_ADD_HEADER_SUBTITLE" />
 
             <androidx.appcompat.widget.LinearLayoutCompat
                 android:layout_width="match_parent"
@@ -53,10 +53,8 @@
                     android:paddingStart="16dp"
                     android:paddingEnd="16dp"
                     android:paddingTop="16dp"
-                    app:labelText="@string/GOALS_CREATE_GOAL_NAME_LABEL"
-                    app:inputText="@={viewModel.goalName}"
-                    app:bottomSheetDialogTitle="@string/ach_bank_transfer_create_from_account"
-                    app:bottomSheetDialogStyle="@style/ListOptionBottomSheetDialogFragmentStyle">
+                    app:labelText="@string/GOALS_ADD_GOAL_NAME_LABEL"
+                    app:inputText="@={viewModel.goalName}">
                 </com.engageft.apptoolbox.view.TextInputWithLabel>
 
                 <com.engageft.apptoolbox.view.CurrencyInputWithLabel
@@ -68,7 +66,7 @@
                     android:paddingStart="16dp"
                     android:paddingEnd="16dp"
                     android:paddingTop="16dp"
-                    app:labelText="@string/GOALS_CREATE_AMOUNT_LABEL"
+                    app:labelText="@string/GOALS_ADD_AMOUNT_LABEL"
                     app:inputText="@={viewModel.goalAmount}"/>
 
                 <com.engageft.apptoolbox.view.BottomSheetListInputWithLabel
@@ -80,9 +78,10 @@
                     android:paddingStart="16dp"
                     android:paddingEnd="16dp"
                     android:paddingTop="16dp"
-                    app:labelText="@string/GOALS_CREATE_FREQUENCY_LABEL"
-                    app:inputText="@={viewModel.savingsFrequency}"
-                    app:bottomSheetDialogTitle="@string/GOALS_CREATE_FREQUENCY_LABEL"
+                    app:labelText="@string/GOALS_ADD_FREQUENCY_LABEL"
+                    app:inputText="@={viewModel.frequency}"
+                    app:bottomSheetDialogTitle="@string/GOALS_ADD_FREQUENCY_SELECTION_TITLE"
+                    app:bottomSheetDialogSubtitle="@string/GOALS_ADD_FREQUENCY_SELECTION_SUBTITLE"
                     app:bottomSheetDialogStyle="@style/ListOptionBottomSheetDialogFragmentStyle"/>
 
                 <com.engageft.apptoolbox.view.DatePickerInputWithLabel
@@ -95,9 +94,8 @@
                     android:paddingEnd="16dp"
                     android:paddingTop="16dp"
                     android:visibility="@{viewModel.showStartDate.get() ? View.VISIBLE : View.GONE}"
-                    app:labelText="@string/GOALS_CREATE_START_SAVING_ON_LABEL"
-                    app:inputText="@={viewModel.startDate}"
-                    app:bottomSheetDialogStyle="@style/ListOptionBottomSheetDialogFragmentStyle"/>
+                    app:labelText="@string/GOALS_ADD_MONTHLY_LABEL"
+                    app:inputText="@={viewModel.startDate}" />
 
                 <com.engageft.apptoolbox.view.BottomSheetListInputWithLabel
                     style="@style/BottomSheetListInputWithLabelStyle"
@@ -109,26 +107,40 @@
                     android:paddingEnd="16dp"
                     android:paddingTop="16dp"
                     android:visibility="@{viewModel.showDayOfWeek.get() ? View.VISIBLE : View.GONE}"
-                    app:labelText="@string/GOALS_CREATE_START_SAVING_ON_LABEL"
+                    app:labelText="@string/GOALS_ADD_WEEKLY_LABEL"
                     app:inputText="@={viewModel.dayOfWeek}"
-                    app:bottomSheetDialogTitle="@string/GOALS_CREATE_START_SAVING_ON_LABEL"
+                    app:bottomSheetDialogTitle="@string/GOALS_ADD_WEEKLY_SELECTION_TITLE"
                     app:bottomSheetDialogStyle="@style/ListOptionBottomSheetDialogFragmentStyle"/>
 
                 <com.engageft.apptoolbox.view.BottomSheetListInputWithLabel
                     style="@style/BottomSheetListInputWithLabelStyle"
                     InputWithLabel.setThemeWithPalette="@{true}"
-                    android:id="@+id/goalDateInMindBottomSheet"
+                    android:id="@+id/goalCompleteDateBottomSheet"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:paddingStart="16dp"
                     android:paddingEnd="16dp"
                     android:paddingTop="16dp"
-                    app:labelText="Goal date in mind"
-                    app:inputText="@={viewModel.dayOfWeek}"
-                    app:bottomSheetDialogTitle="Goal date in mind?"
+                    app:labelText="@string/GOALS_ADD_COMPLETE_DATE_SELECTION_TITLE"
+                    app:inputText="@={viewModel.goalCompleteDate}"
+                    app:bottomSheetDialogTitle="@string/GOALS_ADD_COMPLETE_DATE_SELECTION_TITLE"
+                    app:bottomSheetDialogSubtitle="@string/GOALS_ADD_COMPLETE_DATE_SELECTION_SUBTITLE"
                     app:bottomSheetDialogStyle="@style/ListOptionBottomSheetDialogFragmentStyle"/>
 
             </androidx.appcompat.widget.LinearLayoutCompat>
+
+            <androidx.appcompat.widget.AppCompatTextView
+                style="@style/Footnote"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/footTextView"
+                android:paddingEnd="22dp"
+                android:paddingStart="22dp"
+                android:paddingTop="24dp"
+                android:textColor="@color/textSecondary"
+                android:lineSpacingExtra="9sp"
+                android:gravity="center_horizontal"
+                android:text="@string/GOALS_ADD_FOOTER"/>
 
             <com.engageft.apptoolbox.view.PillButton
                 style="@style/ButtonPillPrimaryFilledDefault"
@@ -138,7 +150,6 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/pillButtonTopSpaceInFormsAndLists"
-                android:layout_margin="16dp"
                 android:text="@string/next_word"/>
 
         </androidx.appcompat.widget.LinearLayoutCompat>
