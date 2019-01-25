@@ -67,7 +67,6 @@ class BudgetsListViewModel : BaseEngageViewModel() {
                                         categoryBudgetItems.add(
                                                 BudgetItem(
                                                         categoryName = categorySpending.category,
-                                                        //title = EngageService.getInstance().storageManager.getBudgetCategoryDescription(categorySpending.category, Locale.getDefault().language),
                                                         spentAmount = spentAmount,
                                                         budgetAmount = budgetAmount,
                                                         budgetStatus = budgetStatus,
