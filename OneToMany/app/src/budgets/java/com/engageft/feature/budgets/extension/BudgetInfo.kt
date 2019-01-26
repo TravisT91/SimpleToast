@@ -16,7 +16,7 @@ import com.ob.ws.dom.utility.CategorySpending
 
 fun BudgetInfo.getCategoriesForDailyLiving(): List<CategorySpending> {
     return this.categorySpendingList?.filter { categorySpending ->
-        (categorySpending.isDailyLiving || categorySpending.amountSpentOffBudget.getFloatOrZero() != 0.0f)
+        (categorySpending.isDailyLiving || categorySpending.amountSpentOffBudget.toFloatOrZeroIfEmpty() != 0.0f)
     } ?: run { listOf<CategorySpending>() }
 }
 
@@ -37,16 +37,16 @@ fun BudgetInfo.getOtherCategoriesForDailyLiving(isInFirst30Days: Boolean = false
 
 fun BudgetInfo.getCategoriesSortedByBudgetAmountDescending(withOther: Boolean, isInFirst30Days: Boolean): List<CategorySpending> {
     return filterCategorySpending(withOther, isInFirst30Days).sortedByDescending {
-        it.budgetAmount.getFloatOrZero()
+        it.budgetAmount.toFloatOrZeroIfEmpty()
     }
 }
 
 fun BudgetInfo.hasBudget(): Boolean {
-    return this.budgetAmount.getFloatOrZero() != 0.0f
+    return this.budgetAmount.toFloatOrZeroIfEmpty() != 0.0f
 }
 
 fun BudgetInfo.shouldShowBudgetSetup(): Boolean {
-    return this.budgetAmount.getFloatOrZero() == 0.0f
+    return this.budgetAmount.toFloatOrZeroIfEmpty() == 0.0f
 }
 
 fun BudgetInfo.budgetStatus(): BudgetConstants.BudgetStatus {

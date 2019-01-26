@@ -86,7 +86,7 @@ class BudgetsListFragment : BaseEngagePageFragment(), BudgetItemSection.BudgetIt
         super.onViewCreated(view, savedInstanceState)
 
         viewModel.budgetsObservable.observe(viewLifecycleOwner, budgetsObserver)
-        viewModel.initViewModel()
+        viewModel.refresh()
     }
 
     private fun updateBudgetsList(totalAndCategoryBudgetItems: Pair<BudgetItem, List<BudgetItem>>) {

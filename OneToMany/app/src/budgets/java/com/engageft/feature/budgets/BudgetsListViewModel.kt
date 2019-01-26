@@ -7,6 +7,7 @@ import com.engageft.feature.budgets.extension.getCategoriesSortedByBudgetAmountD
 import com.engageft.feature.budgets.extension.isGreaterThan
 import com.engageft.feature.budgets.extension.isLessThan
 import com.engageft.feature.budgets.extension.isZero
+import com.engageft.feature.budgets.extension.toBigDecimalOrZeroIfEmpty
 import com.engageft.feature.budgets.recyclerview.BudgetItem
 import com.engageft.fis.pscu.feature.BaseEngageViewModel
 import com.engageft.fis.pscu.feature.DialogInfo
@@ -28,8 +29,7 @@ class BudgetsListViewModel : BaseEngageViewModel() {
 
     val budgetsObservable: MutableLiveData<Pair<BudgetItem, List<BudgetItem>>> = MutableLiveData()
 
-    fun initViewModel() {
-
+    fun refresh() {
         progressOverlayShownObservable.postValue(true)
         compositeDisposable.add(
                 EngageService.getInstance().loginResponseAsObservable
@@ -44,9 +44,9 @@ class BudgetsListViewModel : BaseEngageViewModel() {
                                     val fractionTimePeriodPassed = fractionOfCurrentMonthPassed() // TODO this will be different within first 30 days
 
                                     // total spent
-                                    var spentAmount = BigDecimal(budgetAmountSpent).abs()   // reused for computing categorySpending values
+                                    var spentAmount = budgetAmountSpent.toBigDecimalOrZeroIfEmpty().abs()   // reused for computing categorySpending values
                                                                                             // amountSpent is always negative from backend
-                                    var budgetAmount = BigDecimal(budgetAmount)             // reused for computing categorySpending values
+                                    var budgetAmount = budgetAmount.toBigDecimalOrZeroIfEmpty()             // reused for computing categorySpending values
                                     var budgetStatus = budgetStatus()                       // reused for computing categorySpendingValues
                                     val totalBudgetItem = BudgetItem(
                                             categoryName = BudgetConstants.CATEGORY_NAME_FE_TOTAL_SPENDING,
@@ -61,8 +61,8 @@ class BudgetsListViewModel : BaseEngageViewModel() {
                                     val categorySpendings = getCategoriesSortedByBudgetAmountDescending(withOther = false, isInFirst30Days = isFirst30).toMutableList()
                                     var categoryBudgetItems = mutableListOf<BudgetItem>()
                                     for (categorySpending in categorySpendings) {
-                                        spentAmount = BigDecimal(categorySpending.amountSpent).abs()    // amountSpent is always negative from backend
-                                        budgetAmount = BigDecimal(categorySpending.budgetAmount)
+                                        spentAmount = categorySpending.amountSpent.toBigDecimalOrZeroIfEmpty().abs()    // amountSpent is always negative from backend
+                                        budgetAmount = categorySpending.budgetAmount.toBigDecimalOrZeroIfEmpty()
                                         budgetStatus = categorySpending.budgetStatus()
                                         categoryBudgetItems.add(
                                                 BudgetItem(
@@ -77,8 +77,8 @@ class BudgetsListViewModel : BaseEngageViewModel() {
                                     }
                                     // add other spending
                                     otherSpending?.let { otherSpendingCategory ->
-                                        spentAmount = BigDecimal(otherSpendingCategory.amountSpent).abs()   // amountSpent is always negative from backend
-                                        budgetAmount = BigDecimal(otherSpendingCategory.budgetAmount)
+                                        spentAmount = otherSpendingCategory.amountSpent.toBigDecimalOrZeroIfEmpty().abs()   // amountSpent is always negative from backend
+                                        budgetAmount = otherSpendingCategory.budgetAmount.toBigDecimalOrZeroIfEmpty()
                                         budgetStatus = otherSpendingCategory.budgetStatus()
                                         categoryBudgetItems.add(
                                                 BudgetItem(
