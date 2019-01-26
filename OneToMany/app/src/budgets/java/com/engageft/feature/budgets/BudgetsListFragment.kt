@@ -37,6 +37,8 @@ class BudgetsListFragment : BaseEngagePageFragment(), BudgetItemSection.BudgetIt
     // The delay gives the drawer time to close before updateBudgetLists() is called on the main thread.
     // When I wrote this initially with the ViewModel doing all calculations/processing on a background thread
     // with injected strings, colors, etc. this delay was unnecessary. There was no stuttering.
+    // The Pair consists of a BudgetItem for the "Total spent" category at top, and a list of BudgetItems for
+    // all the individual category budgets.
     private val budgetsObserver = Observer<Pair<BudgetItem, List<BudgetItem>>> { Handler().postDelayed({ updateBudgetsList(it) }, RECYCLERVIEW_UPDATE_DELAY_MS)}
 
     private lateinit var totalSpentTitle: String
