@@ -1,6 +1,5 @@
 package com.engageft.feature.goals
 
-import android.util.Log
 import com.engageft.engagekit.EngageService
 import com.engageft.engagekit.rest.request.GoalInfoRequest
 import com.engageft.engagekit.rest.request.GoalRequest
@@ -28,7 +27,7 @@ class GoalsAddEditConfirmationViewModel: BaseEngageViewModel() {
     lateinit var goalName: String
     lateinit var goalAmount: BigDecimal
     lateinit var recurrenceType: String
-    lateinit var startDate: DateTime
+    var startDate: DateTime? = null
     var dayOfWeek: Int = -1
 
     var hasGoalDateInMind: Boolean = false
@@ -52,13 +51,44 @@ class GoalsAddEditConfirmationViewModel: BaseEngageViewModel() {
         )
     }
 
+    private fun getPayPlanInfo(): PayPlanInfo {
+        val payPlanInfo = PayPlanInfo()
+
+        when (payPlanInfo.recurrenceType) {
+            PayPlanInfoUtils.PAY_PLAN_ANNUAL, PayPlanInfoUtils.PAY_PLAN_QUARTER -> {
+                payPlanInfo.dayOfMonth = startDate!!.dayOfMonth
+                payPlanInfo.monthOfYear = startDate!!.monthOfYear
+                payPlanInfo.dayOfWeek = null
+            }
+            PayPlanInfoUtils.PAY_PLAN_MONTH -> {
+                payPlanInfo.dayOfMonth = startDate!!.dayOfMonth
+                payPlanInfo.monthOfYear = null
+                payPlanInfo.dayOfWeek = null
+            }
+            PayPlanInfoUtils.PAY_PLAN_WEEK -> {
+                payPlanInfo.dayOfMonth = null
+                payPlanInfo.monthOfYear = null
+                payPlanInfo.dayOfWeek = dayOfWeek
+            }
+            PayPlanInfoUtils.PAY_PLAN_DAY, PayPlanInfoUtils.PAY_PLAN_PAYCHECK -> {
+                payPlanInfo.dayOfMonth = null
+                payPlanInfo.monthOfYear = null
+                payPlanInfo.dayOfWeek = null
+            }
+            else -> {
+                throw IllegalArgumentException("Not a valid payPlan")
+            }
+        }
+        payPlanInfo.recurrenceType = recurrenceType
+        return payPlanInfo
+    }
+
     private fun saveNewGoal(purseId: Long) {
+
         val goalInfo = GoalInfoRequest(
                 goalName = goalName,
                 goalAmount = goalAmount,
-                recurrenceType = recurrenceType,
-                startDate = startDate,
-                dayOfWeek = dayOfWeek,
+                payPlan = getPayPlanInfo(),
                 purseId = purseId)
 
         if (hasGoalDateInMind) {

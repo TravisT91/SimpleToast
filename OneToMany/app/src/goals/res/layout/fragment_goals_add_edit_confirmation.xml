@@ -24,12 +24,13 @@
 
             <include
                 layout="@layout/imageview_with_circle_background"
+                android:id="@+id/imageViewLayout"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content" />
 
             <androidx.appcompat.widget.AppCompatTextView
                 style="@style/Title1Quiet"
-                android:id="@+id/titleTextView"
+                android:id="@+id/headerTextView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textColor="@color/textPrimary"
@@ -39,8 +40,8 @@
                 tools:text="Start setting aside" />
 
             <androidx.appcompat.widget.AppCompatTextView
-                style="@style/Title2Medium"
-                android:id="@+id/amountTextView"
+                style="@style/LargeTitleMedium"
+                android:id="@+id/subHeaderTextView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textColor="@color/textPrimary"
@@ -50,6 +51,7 @@
 
             <androidx.appcompat.widget.AppCompatTextView
                 style="@style/Body"
+                android:id="@+id/descriptionTextView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:padding="16dp"

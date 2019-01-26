@@ -43,7 +43,7 @@
                 <com.engageft.apptoolbox.view.DatePickerInputWithLabel
                     style="@style/BottomSheetListInputWithLabelStyle"
                     InputWithLabel.setThemeWithPalette="@{true}"
-                    android:id="@+id/startDatePicker"
+                    android:id="@+id/goalCompleteDatePicker"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:paddingStart="16dp"
@@ -62,7 +62,7 @@
                     android:paddingStart="16dp"
                     android:paddingEnd="16dp"
                     android:paddingTop="16dp"
-                    app:labelText="@string/GOALS_ADD_AMOUNT_LABEL"
+                    app:labelText="@string/GOALS_ADD_FREQUENCY_AMOUNT_LABEL"
                     app:inputText="@={viewModel.frequencyAmount}"/>
 
             </androidx.appcompat.widget.LinearLayoutCompat>

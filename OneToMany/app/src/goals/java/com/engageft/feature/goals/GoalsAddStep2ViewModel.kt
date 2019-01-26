@@ -3,7 +3,9 @@ package com.engageft.feature.goals
 import androidx.databinding.Observable
 import androidx.databinding.ObservableField
 import androidx.lifecycle.MutableLiveData
+import com.engageft.apptoolbox.util.CurrencyUtils
 import com.engageft.feature.goals.GoalsAddStep2ViewModel.ButtonState.*
+import com.engageft.fis.pscu.config.EngageAppConfig
 import com.engageft.fis.pscu.feature.BaseEngageViewModel
 import com.ob.domain.lookup.RecurrenceType
 import org.joda.time.DateTime
@@ -27,7 +29,7 @@ class GoalsAddStep2ViewModel: BaseEngageViewModel() {
     lateinit var goalName: String
     lateinit var goalAmount: BigDecimal
     lateinit var recurrenceType: String
-    lateinit var startDate: DateTime
+    var startDate: DateTime? = null
     var dayOfWeek: Int = -1
 
     var hasGoalDateInMind: Boolean = false
@@ -44,6 +46,18 @@ class GoalsAddStep2ViewModel: BaseEngageViewModel() {
     set(value) {
         field = value
         updateNextButtonState()
+    }
+
+    fun isDataValidAndFormattedCorrectly(): Boolean {
+        return if (hasGoalDateInMind) {
+            goalCompleteByDate.isNotEmpty()
+        } else {
+            frequencyAmount.isNotEmpty()
+            frequencyAmountBigDecimal = BigDecimal(CurrencyUtils.getNonFormattedDecimalAmountString(
+                    currencyCode = EngageAppConfig.currencyCode,
+                    stringWithCurrencySymbol = frequencyAmount))
+            true
+        }
     }
 
     private fun updateNextButtonState() {

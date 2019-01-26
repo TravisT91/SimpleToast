@@ -29,8 +29,8 @@ class GoalsAddStep1ViewModel: BaseEngageViewModel() {
 
     var hasGoalDateInMind = false
     var recurrenceType: String = ""
-    var startOnDate: DateTime = DateTime.now()
-    var dayOfWeekInt: Int = -1
+    var startOnDate: DateTime? = null
+    var dayOfWeekInt: Int = 0
     var amount: BigDecimal = BigDecimal.ZERO
 
     val nextButtonStateObservable = MutableLiveData<ButtonState>()

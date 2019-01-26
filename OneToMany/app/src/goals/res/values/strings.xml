@@ -29,11 +29,10 @@
     <string name="GOALS_ADD_COMPLETE_DATE_HEADER">When do you need it?</string>
     <string name="GOALS_ADD_COMPLETE_DATE_SUB_HEADER">Choose your goal\'s end date.</string>
     <string name="GOALS_ADD_COMPLETE_DATE_CONFIRMATION_HEADER">Meet your goal on</string>
-    <string name="GOALS_ADD_COMPLETE_DATE_CONFIRMATION_SUB_HEADER_FORMAT">Set money aside toward %s?</string>
     <string name="GOALS_ADD_FREQUENCY_AMOUNT_LABEL">Amount</string>
     <string name="GOALS_ADD_FREQUENCY_AMOUNT_HEADER">How much can you set-aside?</string>
     <string name="GOALS_ADD_FREQUENCY_AMOUNT_SUB_HEADER_FORMAT">This amount will be set-aside %s.</string>
     <string name="GOALS_ADD_FREQUENCY_AMOUNT_CONFIRMATION_HEADER">Start setting aside</string>
-    <string name="GOALS_ADD_FREQUENCY_AMOUNT_CONFIRMATION_SUB_HEADER_FORMAT">Set money aside toward %s?</string>
+    <string name="GOALS_ADD_CONFIRMATION_DESCRIPTION_FORMAT">Set money aside toward %s?</string>
     <string name="GOALS_SUCCESS">Success!</string>
 </resources>
