@@ -37,10 +37,13 @@ class GoalsSuccessFragment: BaseEngagePageFragment() {
         imageViewLayout.findViewById<ImageView>(R.id.imageViewIcon).apply {
             setImageResource(R.drawable.ic_check)
         }
+        return view
+    }
 
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
         Handler().postDelayed({
             view.findNavController().popBackStack()
         }, 2000)
-        return view
     }
 }

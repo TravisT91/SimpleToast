@@ -90,10 +90,7 @@ class GoalsAddStep2Fragment : BaseEngagePageFragment() {
 
             addGoalViewModel.apply {
                 if (goalInfoModel.hasCompleteDate) {
-                    val date = DateTime.now()
-                    goalCompleteDatePicker.minimumDate = date
-                    // todo do this?
-                    // startDatePicker.maximumDate = date.plusDays(30)
+                    goalCompleteDatePicker.minimumDate = DateTime.now().plusDays(1)
                     headerTextView.text = getString(R.string.GOALS_ADD_COMPLETE_DATE_HEADER)
                     subHeaderTextView.text = getString(R.string.GOALS_ADD_COMPLETE_DATE_SUB_HEADER)
                     frequencyAmountInputWithLabel.visibility = View.GONE

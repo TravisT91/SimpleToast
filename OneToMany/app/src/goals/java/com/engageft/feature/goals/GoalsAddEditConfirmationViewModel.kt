@@ -14,7 +14,6 @@ import com.engageft.fis.pscu.feature.DialogInfo
 import com.engageft.fis.pscu.feature.handleBackendErrorForForms
 import com.ob.ws.dom.BasicResponse
 import com.ob.ws.dom.GoalResponse
-import com.ob.ws.dom.GoalsResponse
 import com.ob.ws.dom.LoginResponse
 import com.ob.ws.dom.PayPlanResponse
 import com.ob.ws.dom.utility.DebitCardInfo
@@ -83,19 +82,18 @@ class GoalsAddEditConfirmationViewModel: BaseEngageViewModel() {
     }
 
     private fun saveNewGoal(purseId: Long) {
-
-        val goalInfo = GoalInfoRequest(
+        val goalInfoRequest = GoalInfoRequest(
                 goalName = goalInfoModel.goalName,
                 goalAmount = goalInfoModel.goalAmount,
                 payPlan = getPayPlanInfo(goalInfoModel.recurrenceType),
                 purseId = purseId)
 
+        val goalInfo = goalInfoRequest.goalInfo
+
         if (goalInfoModel.hasCompleteDate) {
             val goalDateString = BackendDateTimeUtils.getIso8601String(goalInfoModel.goalCompleteDate!!)
             goalInfo.completeDate = goalDateString
             goalInfo.estimatedCompleteDate = goalDateString
-            // let server set payPlan amount based on completion date
-//                goalInfo.payPlan.amount = BigDecimal(BigInteger.ZERO)
         } else {
             goalInfo.completeDate = null
             goalInfo.estimatedCompleteDate = null
@@ -147,7 +145,6 @@ class GoalsAddEditConfirmationViewModel: BaseEngageViewModel() {
                             if (response.isSuccess && response is PayPlanResponse) {
                                 refreshData()
                             } else {
-                                progressOverlayShownObservable.value = false
                                 if (isNewGoal) {
                                     // remove newly-created goal from the server, since it has no payPlan
                                     cleanupGoalAfterPayPlanSubmissionFailure(goalId)
@@ -203,11 +200,10 @@ class GoalsAddEditConfirmationViewModel: BaseEngageViewModel() {
                 engageApi().postGoalRemove(request.fieldMap)
                         .subscribeOn(Schedulers.io())
                         .observeOn(AndroidSchedulers.mainThread())
-                        .subscribe({ response ->
+                        .subscribe({
                             progressOverlayShownObservable.value = false
-                            if (!response.isSuccess) {
-                                handleBackendErrorForForms(response, "$TAG: Failed to remove just-created goal after unsuccessful save of payplan")
-                            }
+                            // don't show the backend error here since we want the user to see
+                            // the payPlan submission failure backend error
                         }, { e ->
                             progressOverlayShownObservable.value = false
                             handleThrowable(e)
@@ -221,7 +217,7 @@ class GoalsAddEditConfirmationViewModel: BaseEngageViewModel() {
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe({ response ->
-                    // if response is success hide progressOverlay after getting goal API
+                    // if response is success hide progressOverlay after refreshing goals
                     if (response is LoginResponse) {
                         refreshGoals(LoginResponseUtils.getCurrentCard(response))
                     } else {
@@ -242,7 +238,7 @@ class GoalsAddEditConfirmationViewModel: BaseEngageViewModel() {
                 EngageService.getInstance().goalsObservable(debitCardInfo, false)
                         .subscribeOn(Schedulers.io())
                         .observeOn(AndroidSchedulers.mainThread())
-                        .subscribe({ response ->
+                        .subscribe({
                             progressOverlayShownObservable.value = false
                             // take user to Goals Success even if refresh is not successful
                             successStateObservable.value = GoalSuccessState.SUCCESS

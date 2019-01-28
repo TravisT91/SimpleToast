@@ -507,7 +507,12 @@
         <action
             android:id="@+id/action_goalsAddEditConfirmationFragment_to_goalsSuccessFragment"
             app:destination="@id/goalsSuccessFragment"
-            app:popUpTo="@id/goalsListFragment"/>
+            app:enterAnim="@anim/nav_enter_anim"
+            app:exitAnim="@anim/nav_exit_anim"
+            app:popEnterAnim="@anim/nav_pop_enter_anim"
+            app:popExitAnim="@anim/nav_pop_exit_anim"
+            app:popUpTo="@id/goalsAddStep1Fragment"
+            app:popUpToInclusive="true"/>
     </fragment>
     <fragment
         android:id="@+id/goalsSuccessFragment"
