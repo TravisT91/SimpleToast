@@ -19,20 +19,13 @@ import com.ob.ws.dom.utility.GoalInfo
 import com.ob.ws.dom.utility.PayPlanInfo
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
-import org.joda.time.DateTime
-import utilGen1.DisplayDateTimeUtils
-import java.math.BigDecimal
 
 class GoalsAddEditConfirmationViewModel: BaseEngageViewModel() {
-    lateinit var goalName: String
-    lateinit var goalAmount: BigDecimal
-    lateinit var recurrenceType: String
-    var startDate: DateTime? = null
-    var dayOfWeek: Int = -1
 
-    var hasGoalDateInMind: Boolean = false
-    lateinit var goalCompleteDate: DateTime
-    lateinit var goalFrequencyAmount: BigDecimal
+    lateinit var goalInfoModel: GoalInfoModel
+
+    //TODO(aHashimi) change when working on EDIT Goals
+    private val isNewGoal: Boolean = true
 
     fun onSaveGoal() {
         compositeDisposable.add(EngageService.getInstance().loginResponseAsObservable
@@ -51,24 +44,24 @@ class GoalsAddEditConfirmationViewModel: BaseEngageViewModel() {
         )
     }
 
-    private fun getPayPlanInfo(): PayPlanInfo {
+    private fun getPayPlanInfo(recurrenceType: String): PayPlanInfo {
         val payPlanInfo = PayPlanInfo()
 
-        when (payPlanInfo.recurrenceType) {
+        when (recurrenceType) {
             PayPlanInfoUtils.PAY_PLAN_ANNUAL, PayPlanInfoUtils.PAY_PLAN_QUARTER -> {
-                payPlanInfo.dayOfMonth = startDate!!.dayOfMonth
-                payPlanInfo.monthOfYear = startDate!!.monthOfYear
+                payPlanInfo.dayOfMonth = goalInfoModel.startDate!!.dayOfMonth
+                payPlanInfo.monthOfYear = goalInfoModel.startDate!!.monthOfYear
                 payPlanInfo.dayOfWeek = null
             }
             PayPlanInfoUtils.PAY_PLAN_MONTH -> {
-                payPlanInfo.dayOfMonth = startDate!!.dayOfMonth
+                payPlanInfo.dayOfMonth = goalInfoModel.startDate!!.dayOfMonth
                 payPlanInfo.monthOfYear = null
                 payPlanInfo.dayOfWeek = null
             }
             PayPlanInfoUtils.PAY_PLAN_WEEK -> {
                 payPlanInfo.dayOfMonth = null
                 payPlanInfo.monthOfYear = null
-                payPlanInfo.dayOfWeek = dayOfWeek
+                payPlanInfo.dayOfWeek = goalInfoModel.dayOfWeek
             }
             PayPlanInfoUtils.PAY_PLAN_DAY, PayPlanInfoUtils.PAY_PLAN_PAYCHECK -> {
                 payPlanInfo.dayOfMonth = null
@@ -86,14 +79,13 @@ class GoalsAddEditConfirmationViewModel: BaseEngageViewModel() {
     private fun saveNewGoal(purseId: Long) {
 
         val goalInfo = GoalInfoRequest(
-                goalName = goalName,
-                goalAmount = goalAmount,
-                payPlan = getPayPlanInfo(),
+                goalName = goalInfoModel.goalName,
+                goalAmount = goalInfoModel.goalAmount,
+                payPlan = getPayPlanInfo(goalInfoModel.recurrenceType),
                 purseId = purseId)
 
-        if (hasGoalDateInMind) {
-            val goalDate = DisplayDateTimeUtils.mediumDateFormatter.parseDateTime(goalCompleteDate.toString())
-            val goalDateString = BackendDateTimeUtils.getIso8601String(goalDate)
+        if (goalInfoModel.hasCompleteDate) {
+            val goalDateString = BackendDateTimeUtils.getIso8601String(goalInfoModel.goalCompleteDate!!)
             goalInfo.completeDate = goalDateString
             goalInfo.estimatedCompleteDate = goalDateString
             // let server set payPlan amount based on completion date
@@ -102,7 +94,7 @@ class GoalsAddEditConfirmationViewModel: BaseEngageViewModel() {
             goalInfo.completeDate = null
             goalInfo.estimatedCompleteDate = null
             // set payPlan amount based on user input
-            goalInfo.payPlan.amount = goalFrequencyAmount
+            goalInfo.payPlan.amount = goalInfoModel.frequencyAmount
         }
 
         saveGoalInfo(goalInfo)
@@ -119,12 +111,10 @@ class GoalsAddEditConfirmationViewModel: BaseEngageViewModel() {
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe({ response ->
+                    // hide the progressOverlay if payPlanInfo is success
                     if (response.isSuccess && response is GoalResponse) {
-
-                        response.goal?.let { goalInfo ->
-                            // This should always be true.
-                            goalInfo.estimatedCompleteDate = goalInfo.estimatedCompleteDate
-                        }
+                        // set payPlanInfo now
+                        goalInfo.payPlan = payPlanInfo
                         // Now submit payPlanInfo
                         savePayPlan(response.goal.goalId, goalInfo, payPlanInfo)
                     } else {
@@ -139,6 +129,42 @@ class GoalsAddEditConfirmationViewModel: BaseEngageViewModel() {
                     progressOverlayShownObservable.value = false
                     handleThrowable(e)
                 })
+        )
+    }
+
+    private fun savePayPlan(goalId: Long, goalInfo: GoalInfo, payPlanInfo: PayPlanInfo) {
+        compositeDisposable.add(
+                getPayPlanApiObservable(payPlanInfo, goalId, goalInfo)
+                        .subscribeOn(Schedulers.io())
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .subscribe({ response ->
+                            if (response.isSuccess && response is PayPlanResponse) {
+                                progressOverlayShownObservable.value = false
+                                EngageService.getInstance().storageManager.clearGoalsResponse(LoginResponseUtils.getCurrentCard(EngageService.getInstance().storageManager.loginResponse)!!)
+                                EngageService.getInstance().storageManager.removeDashboardResponse()
+                                // onGoalSaved()
+                            } else {
+                                if (isNewGoal) {
+                                    // remove newly-created goal from the server, since it has no payPlan
+                                    cleanupGoalAfterPayPlanSubmissionFailure(goalId)
+                                } else {
+                                    progressOverlayShownObservable.value = false
+                                }
+                                // reset payPlanInfo so user can proceed
+                                goalInfo.payPlan = payPlanInfo
+                                handleBackendErrorForForms(response, "$TAG: failed submission of payPlan")
+                            }
+                        }, { e ->
+                            if (isNewGoal) {
+                                // remove newly-created goal from the server, since it has no payplan
+                                cleanupGoalAfterPayPlanSubmissionFailure(goalId)
+                            } else {
+                                progressOverlayShownObservable.value = false
+                            }
+                            // reset payPlanInfo so user can proceed
+                            goalInfo.payPlan = payPlanInfo
+                            handleThrowable(e)
+                        })
         )
     }
 
@@ -165,50 +191,9 @@ class GoalsAddEditConfirmationViewModel: BaseEngageViewModel() {
         }
 
         return observable
-//        savePayPlan(goalId, goalInfo, payPlanInfo)
-    }
-
-    //TODO(aHashimi) change when working on EDIT Goals
-    private val isNewGoal: Boolean = true
-
-    private fun savePayPlan(goalId: Long, goalInfo: GoalInfo, payPlanInfo: PayPlanInfo) {
-        compositeDisposable.add(
-                getPayPlanApiObservable(payPlanInfo, goalId, goalInfo)
-                        .subscribeOn(Schedulers.io())
-                        .observeOn(AndroidSchedulers.mainThread())
-                        .subscribe({ response ->
-                            if (response.isSuccess && response is PayPlanResponse) {
-                                progressOverlayShownObservable.value = false
-                                EngageService.getInstance().storageManager.clearGoalsResponse(LoginResponseUtils.getCurrentCard(EngageService.getInstance().storageManager.loginResponse)!!)
-                                EngageService.getInstance().storageManager.removeDashboardResponse()
-                                // onGoalSaved()
-                            } else {
-                                if (isNewGoal) {
-                                    // remove newly-created goal from the server, since it has no payplan
-                                    cleanupGoalAfterPayPlanSubmissionFailure(goalId)
-                                } else {
-                                    progressOverlayShownObservable.value = false
-                                }
-                                // reset payPlanInfo so user can proceed
-                                goalInfo.payPlan = payPlanInfo
-                                handleBackendErrorForForms(response, "$TAG: failed submission of payPlan")
-                            }
-                        }, { e ->
-                            if (isNewGoal) {
-                                // remove newly-created goal from the server, since it has no payplan
-                                cleanupGoalAfterPayPlanSubmissionFailure(goalId)
-                            } else {
-                                progressOverlayShownObservable.value = false
-                            }
-                            // reset payPlanInfo so user can proceed
-                            goalInfo.payPlan = payPlanInfo
-                            handleThrowable(e)
-                        })
-        )
     }
 
     private fun cleanupGoalAfterPayPlanSubmissionFailure(goalId: Long) {
-//        Log.e(TAG, "About to remove just-created bill after unsuccessful save of payPlan")
         val request = GoalRequest(goalId)
         compositeDisposable.add(
                 engageApi().postGoalRemove(request.fieldMap)
@@ -216,14 +201,10 @@ class GoalsAddEditConfirmationViewModel: BaseEngageViewModel() {
                         .observeOn(AndroidSchedulers.mainThread())
                         .subscribe({ response ->
                             progressOverlayShownObservable.value = false
-                            if (response.isSuccess) {
-//                                Log.e(TAG, "Removed just-created goal after unsuccessful save of payplan")
-                            } else {
-//                                Log.e(GoalsAddStep2ViewModel.TAG, "Failed to remove just-created goal after unsuccessful save of payplan")
+                            if (!response.isSuccess) {
                                 handleBackendErrorForForms(response, "$TAG: Failed to remove just-created goal after unsuccessful save of payplan")
                             }
                         }, { e ->
-//                            Log.e(GoalsAddStep2ViewModel.TAG, "Failed to remove just-created goal after unsuccessful save of payplan: " + e.message)
                             progressOverlayShownObservable.value = false
                             handleThrowable(e)
                         })

@@ -1,5 +1,6 @@
 package com.engageft.feature.goals
 
+import android.os.Parcelable
 import androidx.databinding.Observable
 import androidx.databinding.ObservableField
 import androidx.lifecycle.MutableLiveData
@@ -7,9 +8,9 @@ import com.engageft.apptoolbox.util.CurrencyUtils
 import com.engageft.engagekit.utils.PayPlanInfoUtils
 import com.engageft.fis.pscu.config.EngageAppConfig
 import com.engageft.fis.pscu.feature.BaseEngageViewModel
+import kotlinx.android.parcel.Parcelize
 import org.joda.time.DateTime
 import utilGen1.DisplayDateTimeUtils
-import java.lang.IllegalStateException
 import java.math.BigDecimal
 
 class GoalsAddStep1ViewModel: BaseEngageViewModel() {
@@ -26,12 +27,6 @@ class GoalsAddStep1ViewModel: BaseEngageViewModel() {
     var goalCompleteDate = ObservableField("")
     var showStartDate = ObservableField(false)
     var showDayOfWeek = ObservableField(false)
-
-    var hasGoalDateInMind = false
-    var recurrenceType: String = ""
-    var startOnDate: DateTime? = null
-    var dayOfWeekInt: Int = 0
-    var amount: BigDecimal = BigDecimal.ZERO
 
     val nextButtonStateObservable = MutableLiveData<ButtonState>()
 
@@ -96,31 +91,37 @@ class GoalsAddStep1ViewModel: BaseEngageViewModel() {
         }
     }
 
-    fun isDataValidAndFormatted(): Boolean {
-        if (isFormValid()) {
-            hasGoalDateInMind = goalCompleteDate.get()!! == YES
-            amount = BigDecimal(CurrencyUtils.getNonFormattedDecimalAmountString(
-                    currencyCode = EngageAppConfig.currencyCode,
-                    stringWithCurrencySymbol = goalAmount.get()!!))
-            when (frequency.get()!!) {
-                FREQUENCY_TYPE_DAILY -> {
-                    recurrenceType = PayPlanInfoUtils.PAY_PLAN_DAY
-                }
-                FREQUENCY_TYPE_WEEKLY -> {
-                    recurrenceType = PayPlanInfoUtils.PAY_PLAN_WEEK
-                    dayOfWeekInt = DisplayDateTimeUtils.getDayOfWeekNumber(dayOfWeek.get()!!)
-                }
-                FREQUENCY_TYPE_MONTHLY -> {
-                    recurrenceType = PayPlanInfoUtils.PAY_PLAN_MONTH
-                    startOnDate = DisplayDateTimeUtils.mediumDateFormatter.parseDateTime(startDate.get()!!)
-                }
-                else -> {
-                    throw IllegalStateException("Wrong frequency type")
-                }
+    fun getGoalInfoModel(): GoalInfoModel {
+        val hasCompleteDate = goalCompleteDate.get()!! == YES
+        val amount = BigDecimal(CurrencyUtils.getNonFormattedDecimalAmountString(
+                currencyCode = EngageAppConfig.currencyCode,
+                stringWithCurrencySymbol = goalAmount.get()!!))
+        val recurrenceType: String
+        var dayOfWeekInt = 0
+        var startOnDate: DateTime? = null
+        when (frequency.get()!!) {
+            FREQUENCY_TYPE_DAILY -> {
+                recurrenceType = PayPlanInfoUtils.PAY_PLAN_DAY
             }
-            return true
+            FREQUENCY_TYPE_WEEKLY -> {
+                recurrenceType = PayPlanInfoUtils.PAY_PLAN_WEEK
+                dayOfWeekInt = DisplayDateTimeUtils.getDayOfWeekNumber(dayOfWeek.get()!!)
+            }
+            FREQUENCY_TYPE_MONTHLY -> {
+                recurrenceType = PayPlanInfoUtils.PAY_PLAN_MONTH
+                startOnDate = DisplayDateTimeUtils.mediumDateFormatter.parseDateTime(startDate.get()!!)
+            }
+            else -> {
+                throw IllegalStateException("Wrong frequency type")
+            }
         }
-        return false
+        return GoalInfoModel(
+                goalName = goalName.get()!!,
+                goalAmount = amount,
+                recurrenceType = recurrenceType,
+                startDate = startOnDate,
+                dayOfWeek = dayOfWeekInt,
+                hasCompleteDate = hasCompleteDate)
     }
 
     private fun hasFrequencyType(): Boolean {
@@ -148,3 +149,8 @@ class GoalsAddStep1ViewModel: BaseEngageViewModel() {
         const val FREQUENCY_TYPE_MONTHLY = "Monthly"
     }
 }
+
+@Parcelize
+data class GoalInfoModel(val goalName: String, val goalAmount: BigDecimal, val recurrenceType: String,
+                         val startDate: DateTime?, val dayOfWeek: Int, val hasCompleteDate: Boolean,
+                         var goalCompleteDate: DateTime? = null, var frequencyAmount: BigDecimal? = null) : Parcelable

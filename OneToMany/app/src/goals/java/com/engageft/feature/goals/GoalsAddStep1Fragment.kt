@@ -14,18 +14,15 @@ import androidx.navigation.fragment.findNavController
 import com.engageft.apptoolbox.BaseViewModel
 import com.engageft.apptoolbox.NavigationOverrideClickListener
 import com.engageft.apptoolbox.view.InformationDialogFragment
-import com.engageft.engagekit.utils.PayPlanInfoUtils
 import com.engageft.fis.pscu.R
 import com.engageft.fis.pscu.config.EngageAppConfig
 import com.engageft.fis.pscu.databinding.FragmentGoalsAddStep1Binding
 import com.engageft.fis.pscu.feature.BaseEngagePageFragment
 import com.engageft.fis.pscu.feature.branding.Palette
 import com.engageft.fis.pscu.feature.infoDialogGenericUnsavedChangesNewInstance
-import kotlinx.android.synthetic.main.fragment_change_password.*
 import org.joda.time.DateTime
 import utilGen1.DisplayDateTimeUtils
 import utilGen1.PayPlanUtils
-import java.math.BigDecimal
 
 /**
  * Created by joeyhutchins on 8/24/18.
@@ -111,16 +108,10 @@ class GoalsAddStep1Fragment : BaseEngagePageFragment() {
     }
 
     private fun navigateToNextStep() {
-        if (addGoalViewModel.isDataValidAndFormatted()) {
-            binding.root.findNavController().navigate(R.id.action_goalsAddStep1Fragment_to_goalsAddStep2Fragment,
-                    GoalsAddStep2Fragment.createBundle(
-                            goalName = addGoalViewModel.goalName.get()!!,
-                            goalAmount = addGoalViewModel.amount,
-                            recurrenceType = addGoalViewModel.recurrenceType,
-                            startDate = addGoalViewModel.startOnDate,
-                            dayOfWeek = addGoalViewModel.dayOfWeekInt,
-                            goalDateInMind = addGoalViewModel.hasGoalDateInMind))
-        }
+        binding.root.findNavController().navigate(R.id.action_goalsAddStep1Fragment_to_goalsAddStep2Fragment,
+                Bundle().apply {
+                    putParcelable(GOAL_DATA_PARCELABLE_KEY, addGoalViewModel.getGoalInfoModel())
+                })
     }
 
     override fun onCreateOptionsMenu(menu: Menu?, inflater: MenuInflater?) {
@@ -141,5 +132,9 @@ class GoalsAddStep1Fragment : BaseEngagePageFragment() {
             }
         }
         return super.onOptionsItemSelected(item)
+    }
+
+    companion object {
+        const val GOAL_DATA_PARCELABLE_KEY = "GOAL_DATA_PARCELABLE_KEY"
     }
 }

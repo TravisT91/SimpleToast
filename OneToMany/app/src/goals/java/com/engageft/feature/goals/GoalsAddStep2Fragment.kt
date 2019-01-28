@@ -16,26 +16,15 @@ import com.engageft.apptoolbox.BaseViewModel
 import com.engageft.apptoolbox.NavigationOverrideClickListener
 import com.engageft.apptoolbox.util.applyTypefaceToSubstring
 import com.engageft.apptoolbox.view.InformationDialogFragment
-import com.engageft.feature.goals.GoalsAddEditConfirmationFragment.Companion.DAY_OF_WEEK
-import com.engageft.feature.goals.GoalsAddEditConfirmationFragment.Companion.GOAL_AMOUNT
-import com.engageft.feature.goals.GoalsAddEditConfirmationFragment.Companion.GOAL_NAME
-import com.engageft.feature.goals.GoalsAddEditConfirmationFragment.Companion.HAS_GOAL_DATE_IN_MIND
-import com.engageft.feature.goals.GoalsAddEditConfirmationFragment.Companion.RECURRENCE_TYPE
-import com.engageft.feature.goals.GoalsAddEditConfirmationFragment.Companion.START_DATE
-import com.engageft.feature.goals.GoalsAddEditConfirmationFragment.Companion.createBundleWithAmountFrequency
-import com.engageft.feature.goals.GoalsAddEditConfirmationFragment.Companion.createBundleWithGoalCompleteDate
+import com.engageft.feature.goals.GoalsAddStep1Fragment.Companion.GOAL_DATA_PARCELABLE_KEY
 import com.engageft.fis.pscu.R
 import com.engageft.fis.pscu.config.EngageAppConfig
 import com.engageft.fis.pscu.databinding.FragmentGoalsAddStep2Binding
 import com.engageft.fis.pscu.feature.BaseEngagePageFragment
 import com.engageft.fis.pscu.feature.branding.Palette
 import com.engageft.fis.pscu.feature.infoDialogGenericUnsavedChangesNewInstance
-import kotlinx.android.synthetic.main.fragment_goals_add_edit_confirmation.*
-import kotlinx.android.synthetic.main.fragment_goals_add_step_1.*
 import org.joda.time.DateTime
 import utilGen1.PayPlanUtils
-import java.lang.IllegalStateException
-import java.math.BigDecimal
 
 /**
  * </p>
@@ -89,20 +78,10 @@ class GoalsAddStep2Fragment : BaseEngagePageFragment() {
             upButtonOverrideProvider.setUpButtonOverride(navigationOverrideClickListener)
             backButtonOverrideProvider.setBackButtonOverride(navigationOverrideClickListener)
 
-            arguments!!.let { bundle ->
-                bundle.apply {
-                    addGoalViewModel.apply {
-                        goalName = getString(GOAL_NAME, "")
-                        goalAmount = getSerializable(GOAL_AMOUNT) as BigDecimal
-                        recurrenceType = getString(RECURRENCE_TYPE, "")
-                        val startDateTime = getSerializable(START_DATE)
-                        startDateTime?.let {
-                            startDate = startDateTime as DateTime
-                        }
-                        dayOfWeek = getInt(DAY_OF_WEEK, 0)
-                        hasGoalDateInMind = getBoolean(HAS_GOAL_DATE_IN_MIND, false)
-                    }
-                }
+            arguments!!.get(GOAL_DATA_PARCELABLE_KEY)?.let {
+                addGoalViewModel.goalInfoModel = it as GoalInfoModel
+            } ?: kotlin.run {
+                throw IllegalArgumentException("Must pass GoalInfoModel data")
             }
 
             nextButton.setOnClickListener {
@@ -110,7 +89,7 @@ class GoalsAddStep2Fragment : BaseEngagePageFragment() {
             }
 
             addGoalViewModel.apply {
-                if (hasGoalDateInMind) {
+                if (goalInfoModel.hasCompleteDate) {
                     val date = DateTime.now()
                     goalCompleteDatePicker.minimumDate = date
                     // todo do this?
@@ -121,7 +100,7 @@ class GoalsAddStep2Fragment : BaseEngagePageFragment() {
                 } else {
                     headerTextView.text = getString(R.string.GOALS_ADD_FREQUENCY_AMOUNT_HEADER)
 
-                    val frequency = PayPlanUtils.getPayPlanRecurrenceDisplayStringForRecurrenceType(context!!, recurrenceType).toLowerCase()
+                    val frequency = PayPlanUtils.getPayPlanRecurrenceDisplayStringForRecurrenceType(context!!, goalInfoModel.recurrenceType).toLowerCase()
                     val subHeaderString = String.format(
                             getString(R.string.GOALS_ADD_FREQUENCY_AMOUNT_SUB_HEADER_FORMAT),
                             frequency)
@@ -149,34 +128,11 @@ class GoalsAddStep2Fragment : BaseEngagePageFragment() {
     }
 
     private fun navigateToConfirmation() {
-        if (addGoalViewModel.isDataValidAndFormattedCorrectly()) {
-            var bundle: Bundle
-            addGoalViewModel.apply {
-                if (hasGoalDateInMind) {
-                    bundle = createBundleWithGoalCompleteDate(
-                            goalName = goalName,
-                            goalAmount = goalAmount,
-                            recurrenceType = recurrenceType,
-                            dayOfWeek = dayOfWeek,
-                            startDate = startDate,
-                            goalCompleteDate = goalCompleteDate
-                    )
-                } else {
-                    bundle = createBundleWithAmountFrequency(
-                            goalName = goalName,
-                            goalAmount = goalAmount,
-                            recurrenceType = recurrenceType,
-                            dayOfWeek = dayOfWeek,
-                            startDate = startDate,
-                            frequencyAmount = frequencyAmountBigDecimal
-                    )
-                }
-            }
-            // navigate action
-            binding.root.findNavController().navigate(R.id.action_goalsAddStep2Fragment_to_goalsAddEditConfirmationFragment, bundle)
-        } else {
-            throw IllegalStateException("Data is not valid")
-        }
+        binding.root.findNavController().navigate(R.id.action_goalsAddStep2Fragment_to_goalsAddEditConfirmationFragment,
+                Bundle().apply {
+                    putParcelable(GOAL_DATA_PARCELABLE_KEY, addGoalViewModel.getGoalData())
+                })
+
     }
 
     override fun onCreateOptionsMenu(menu: Menu?, inflater: MenuInflater?) {
@@ -197,20 +153,5 @@ class GoalsAddStep2Fragment : BaseEngagePageFragment() {
             }
         }
         return super.onOptionsItemSelected(item)
-    }
-
-    companion object {
-
-        fun createBundle(goalName: String, goalAmount: BigDecimal, recurrenceType: String,
-                         startDate: DateTime?, dayOfWeek: Int, goalDateInMind: Boolean): Bundle {
-            return Bundle().apply {
-                putString(GOAL_NAME, goalName)
-                putSerializable(GOAL_AMOUNT, goalAmount)
-                putString(RECURRENCE_TYPE, recurrenceType)
-                putSerializable(START_DATE, startDate)
-                putInt(DAY_OF_WEEK, dayOfWeek)
-                putBoolean(HAS_GOAL_DATE_IN_MIND, goalDateInMind)
-            }
-        }
     }
 }
