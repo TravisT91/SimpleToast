@@ -40,7 +40,7 @@ class GoalsListSection(private val context: Context,
             val goalModel = goalInfoList[position]
 
             circularTrackingPanel.setProgress(goalModel.progress)
-            circularTrackingPanel.setTopAndCenterLeftText(goalModel.goalInfo.name)
+            circularTrackingPanel.setTopAndCenterLeftText(goalModel.goalInfo.name.capitalize())
             circularTrackingPanel.setBottomLeftText(applyCustomTypefaceToSubStringProgressString(goalModel.goalInfo))
             circularTrackingPanel.setTopRightText(goalModel.goalInfo.getGoalInfoContributionString(context))
             circularTrackingPanel.setBottomRightText(goalModel.goalInfo.getGoalInfoCompletionDateString(context))

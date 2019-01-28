@@ -88,8 +88,7 @@ class GoalsAddStep1Fragment : BaseEngagePageFragment() {
                     getString(R.string.GOALS_ADD_COMPLETE_DATE_YES),
                     getString(R.string.GOALS_ADD_COMPLETE_DATE_NO)))
 
-//            startDateBottomSheet.minimumDate = DateTime.now().plusDays(1)
-            startDateBottomSheet.minimumDate = DateTime.now()
+            startDateBottomSheet.minimumDate = DateTime.now().plusDays(1)
             startDateBottomSheet.maximumDate = DateTime.now().plusDays(30)
 
             amountInputWithLabel.currencyCode = EngageAppConfig.currencyCode
