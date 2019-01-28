@@ -48,7 +48,7 @@ class GoalsListViewModel: BaseEngageViewModel() {
                             progressOverlayShownObservable.value = false
                             if (response.isSuccess && response is GoalsResponse) {
                                 // don't trigger observers unless goals list has changed
-                                if (goalsList != response.goals) {
+                                if (goalsList != response.goals || goalsListObservable.value == null) {
                                     goalsList = response.goals
 
                                     val goalModelList = mutableListOf<GoalModel>()
