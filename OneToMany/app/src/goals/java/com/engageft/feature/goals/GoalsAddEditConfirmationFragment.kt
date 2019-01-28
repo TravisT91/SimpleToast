@@ -6,7 +6,9 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import androidx.core.content.res.ResourcesCompat
+import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
+import androidx.navigation.findNavController
 import com.engageft.apptoolbox.BaseViewModel
 import com.engageft.apptoolbox.util.applyRelativeSizeToSubstring
 import com.engageft.apptoolbox.util.setTextSizeAndFont
@@ -38,6 +40,10 @@ class GoalsAddEditConfirmationFragment: BaseEngagePageFragment() {
                 throw IllegalArgumentException("Must pass GoalInfoModel data")
             }
         }
+
+        confirmationViewModel.successStateObservable.observe(viewLifecycleOwner, Observer {
+            binding.root.findNavController().navigate(R.id.action_goalsAddEditConfirmationFragment_to_goalsSuccessFragment)
+        })
 
         return binding.root
     }

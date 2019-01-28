@@ -1,5 +1,6 @@
 package com.engageft.feature.goals
 
+import androidx.lifecycle.MutableLiveData
 import com.engageft.engagekit.EngageService
 import com.engageft.engagekit.rest.request.GoalInfoRequest
 import com.engageft.engagekit.rest.request.GoalRequest
@@ -13,15 +14,20 @@ import com.engageft.fis.pscu.feature.DialogInfo
 import com.engageft.fis.pscu.feature.handleBackendErrorForForms
 import com.ob.ws.dom.BasicResponse
 import com.ob.ws.dom.GoalResponse
+import com.ob.ws.dom.GoalsResponse
 import com.ob.ws.dom.LoginResponse
 import com.ob.ws.dom.PayPlanResponse
+import com.ob.ws.dom.utility.DebitCardInfo
 import com.ob.ws.dom.utility.GoalInfo
 import com.ob.ws.dom.utility.PayPlanInfo
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 
 class GoalsAddEditConfirmationViewModel: BaseEngageViewModel() {
-
+    enum class GoalSuccessState {
+        SUCCESS
+    }
+    val successStateObservable = MutableLiveData<GoalSuccessState>()
     lateinit var goalInfoModel: GoalInfoModel
 
     //TODO(aHashimi) change when working on EDIT Goals
@@ -139,11 +145,9 @@ class GoalsAddEditConfirmationViewModel: BaseEngageViewModel() {
                         .observeOn(AndroidSchedulers.mainThread())
                         .subscribe({ response ->
                             if (response.isSuccess && response is PayPlanResponse) {
-                                progressOverlayShownObservable.value = false
-                                EngageService.getInstance().storageManager.clearGoalsResponse(LoginResponseUtils.getCurrentCard(EngageService.getInstance().storageManager.loginResponse)!!)
-                                EngageService.getInstance().storageManager.removeDashboardResponse()
-                                // onGoalSaved()
+                                refreshData()
                             } else {
+                                progressOverlayShownObservable.value = false
                                 if (isNewGoal) {
                                     // remove newly-created goal from the server, since it has no payPlan
                                     cleanupGoalAfterPayPlanSubmissionFailure(goalId)
@@ -207,6 +211,45 @@ class GoalsAddEditConfirmationViewModel: BaseEngageViewModel() {
                         }, { e ->
                             progressOverlayShownObservable.value = false
                             handleThrowable(e)
+                        })
+        )
+    }
+
+
+    private fun refreshData() {
+        compositeDisposable.add(EngageService.getInstance().refreshLoginObservable()
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe({ response ->
+                    // if response is success hide progressOverlay after getting goal API
+                    if (response is LoginResponse) {
+                        refreshGoals(LoginResponseUtils.getCurrentCard(response))
+                    } else {
+                        progressOverlayShownObservable.value = false
+                        // take user to Goals Success even if refresh is not successful
+                        successStateObservable.value = GoalSuccessState.SUCCESS
+                    }
+                }, { e ->
+                    progressOverlayShownObservable.value = false
+                    // take user to Goals Success even if refresh is not successful
+                    successStateObservable.value = GoalSuccessState.SUCCESS
+                })
+        )
+    }
+
+    private fun refreshGoals(debitCardInfo: DebitCardInfo) {
+        compositeDisposable.add(
+                EngageService.getInstance().goalsObservable(debitCardInfo, false)
+                        .subscribeOn(Schedulers.io())
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .subscribe({ response ->
+                            progressOverlayShownObservable.value = false
+                            // take user to Goals Success even if refresh is not successful
+                            successStateObservable.value = GoalSuccessState.SUCCESS
+                        }, { e ->
+                            progressOverlayShownObservable.value = false
+                            // take user to Goals Success even if refresh is not successful
+                            successStateObservable.value = GoalSuccessState.SUCCESS
                         })
         )
     }

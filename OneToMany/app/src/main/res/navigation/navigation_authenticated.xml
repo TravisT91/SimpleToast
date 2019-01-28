@@ -485,11 +485,11 @@
         android:name="com.engageft.feature.goals.GoalsAddEditConfirmationFragment"
         android:label="@string/GOALS_ADD_GOAL" >
         <action
-            android:id="@+id/action_goalsAddEditConfirmationFragment_to_successsFragment"
-            app:destination="@id/successsFragment"
+            android:id="@+id/action_goalsAddEditConfirmationFragment_to_goalsSuccessFragment"
+            app:destination="@id/goalsSuccessFragment"
             app:popUpTo="@id/goalsListFragment"/>
     </fragment>
     <fragment
-        android:id="@+id/successsFragment"
-        android:name="com.engageft.feature.goals.SuccesssFragment" />
+        android:id="@+id/goalsSuccessFragment"
+        android:name="com.engageft.feature.goals.GoalsSuccessFragment" />
 </navigation>
