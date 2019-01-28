@@ -18,7 +18,7 @@ class GoalsListViewModel: BaseEngageViewModel() {
     private var goalsList = listOf<GoalInfo>()
 
     fun initData(useCache: Boolean) {
-        progressOverlayShownObservable.value = true
+        showProgressOverlayImmediate()
         compositeDisposable.add(EngageService.getInstance().loginResponseAsObservable
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
@@ -29,11 +29,11 @@ class GoalsListViewModel: BaseEngageViewModel() {
                         canEditGoal = LoginResponseUtils.canEditGoals(response)
                         getGoals(LoginResponseUtils.getCurrentCard(response), useCache)
                     } else {
-                        progressOverlayShownObservable.value = false
+                        dismissProgressOverlay()
                         handleUnexpectedErrorResponse(response)
                     }
                 }, { e ->
-                    progressOverlayShownObservable.value = false
+                    dismissProgressOverlay()
                     handleThrowable(e)
                 })
         )
@@ -45,9 +45,9 @@ class GoalsListViewModel: BaseEngageViewModel() {
                         .subscribeOn(Schedulers.io())
                         .observeOn(AndroidSchedulers.mainThread())
                         .subscribe({ response ->
-                            progressOverlayShownObservable.value = false
+                            dismissProgressOverlay()
                             if (response.isSuccess && response is GoalsResponse) {
-                                // don't trigger observers unless goals list has changed
+                                // don't trigger observers unless goals list has changed or first time
                                 if (goalsList != response.goals || goalsListObservable.value == null) {
                                     goalsList = response.goals
 
@@ -65,7 +65,7 @@ class GoalsListViewModel: BaseEngageViewModel() {
                                 handleUnexpectedErrorResponse(response)
                             }
                         }, { e ->
-                            progressOverlayShownObservable.value = false
+                            dismissProgressOverlay()
                             handleThrowable(e)
                         })
         )
