@@ -125,10 +125,13 @@ class CreateEditTransferFragment: BaseEngagePageFragment() {
 
             frequencyBottomSheet.dialogOptions = ArrayList(ScheduledLoadUtils.getFrequencyDisplayStringsForTransfer(context!!))
             daysOfWeekBottomSheet.dialogOptions = ArrayList(DisplayDateTimeUtils.daysOfWeekList())
-            date1BottomSheet.minimumDate = DateTime.now()
-            date1BottomSheet.maximumDate = DateTime.now().plusMonths(2)
-            date2BottomSheet.minimumDate = DateTime.now()
-            date2BottomSheet.maximumDate = DateTime.now().plusMonths(2)
+            // don't allow today's date as a selection
+            val minDate = DateTime.now().plusDays(1)
+            val maxDate = DateTime.now().plusDays(60)
+            date1BottomSheet.minimumDate = minDate
+            date1BottomSheet.maximumDate = maxDate
+            date2BottomSheet.minimumDate = minDate
+            date2BottomSheet.maximumDate = maxDate
             amountInputWithLabel.currencyCode = EngageAppConfig.currencyCode
 
             nextButton.setOnClickListener {
