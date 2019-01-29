@@ -10,7 +10,6 @@ import com.engageft.engagekit.utils.LoginResponseUtils
 import com.engageft.engagekit.utils.PayPlanInfoUtils
 import com.engageft.engagekit.utils.engageApi
 import com.engageft.fis.pscu.feature.BaseEngageViewModel
-import com.engageft.fis.pscu.feature.DialogInfo
 import com.engageft.fis.pscu.feature.handleBackendErrorForForms
 import com.ob.ws.dom.BasicResponse
 import com.ob.ws.dom.GoalResponse
@@ -29,59 +28,31 @@ class GoalsAddEditConfirmationViewModel: BaseEngageViewModel() {
     val successStateObservable = MutableLiveData<GoalSuccessState>()
     lateinit var goalInfoModel: GoalInfoModel
 
-    //TODO(aHashimi) change when working on EDIT Goals
+    //TODO(aHashimi) Handle when working on EDIT Goals
     private val isNewGoal: Boolean = true
 
     fun onSaveGoal() {
+        showProgressOverlayImmediate()
         compositeDisposable.add(EngageService.getInstance().loginResponseAsObservable
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe({ response ->
                     if (response is LoginResponse) {
+                        // don't hide progressOverlay
                         val purseId = LoginResponseUtils.getCurrentCard(response).purseId
-                        saveNewGoal(purseId)
+                        saveGoalInfo(getNewGoalInfo(purseId))
                     } else {
-                        dialogInfoObservable.value = DialogInfo()
+                        dismissProgressOverlayImmediate()
+                        handleUnexpectedErrorResponse(response)
                     }
                 }, { e ->
+                    dismissProgressOverlayImmediate()
                     handleThrowable(e)
                 })
         )
     }
 
-    private fun getPayPlanInfo(recurrenceType: String): PayPlanInfo {
-        val payPlanInfo = PayPlanInfo()
-
-        when (recurrenceType) {
-            PayPlanInfoUtils.PAY_PLAN_ANNUAL, PayPlanInfoUtils.PAY_PLAN_QUARTER -> {
-                payPlanInfo.dayOfMonth = goalInfoModel.startDate!!.dayOfMonth
-                payPlanInfo.monthOfYear = goalInfoModel.startDate!!.monthOfYear
-                payPlanInfo.dayOfWeek = null
-            }
-            PayPlanInfoUtils.PAY_PLAN_MONTH -> {
-                payPlanInfo.dayOfMonth = goalInfoModel.startDate!!.dayOfMonth
-                payPlanInfo.monthOfYear = null
-                payPlanInfo.dayOfWeek = null
-            }
-            PayPlanInfoUtils.PAY_PLAN_WEEK -> {
-                payPlanInfo.dayOfMonth = null
-                payPlanInfo.monthOfYear = null
-                payPlanInfo.dayOfWeek = goalInfoModel.dayOfWeek
-            }
-            PayPlanInfoUtils.PAY_PLAN_DAY, PayPlanInfoUtils.PAY_PLAN_PAYCHECK -> {
-                payPlanInfo.dayOfMonth = null
-                payPlanInfo.monthOfYear = null
-                payPlanInfo.dayOfWeek = null
-            }
-            else -> {
-                throw IllegalArgumentException("Not a valid payPlan")
-            }
-        }
-        payPlanInfo.recurrenceType = recurrenceType
-        return payPlanInfo
-    }
-
-    private fun saveNewGoal(purseId: Long) {
+    private fun getNewGoalInfo(purseId: Long) : GoalInfo {
         val goalInfoRequest = GoalInfoRequest(
                 goalName = goalInfoModel.goalName,
                 goalAmount = goalInfoModel.goalAmount,
@@ -100,13 +71,37 @@ class GoalsAddEditConfirmationViewModel: BaseEngageViewModel() {
             // set payPlan amount based on user input
             goalInfo.payPlan.amount = goalInfoModel.frequencyAmount
         }
+        return goalInfo
+    }
 
-        saveGoalInfo(goalInfo)
+    private fun getPayPlanInfo(recurrenceType: String): PayPlanInfo {
+        val payPlanInfo = PayPlanInfo()
+
+        when (recurrenceType) {
+            PayPlanInfoUtils.PAY_PLAN_MONTH -> {
+                payPlanInfo.dayOfMonth = goalInfoModel.startDate!!.dayOfMonth
+                payPlanInfo.monthOfYear = null
+                payPlanInfo.dayOfWeek = null
+            }
+            PayPlanInfoUtils.PAY_PLAN_WEEK -> {
+                payPlanInfo.dayOfMonth = null
+                payPlanInfo.monthOfYear = null
+                payPlanInfo.dayOfWeek = goalInfoModel.dayOfWeek
+            }
+            PayPlanInfoUtils.PAY_PLAN_DAY -> {
+                payPlanInfo.dayOfMonth = null
+                payPlanInfo.monthOfYear = null
+                payPlanInfo.dayOfWeek = null
+            }
+            else -> {
+                throw IllegalArgumentException("Not a valid payPlan")
+            }
+        }
+        payPlanInfo.recurrenceType = recurrenceType
+        return payPlanInfo
     }
 
     private fun saveGoalInfo(goalInfo: GoalInfo) {
-        progressOverlayShownObservable.value = true
-
         val payPlanInfo = goalInfo.payPlan
         // PayPlanInfo is set by a follow-up API call, so no need to serialize it here.
         goalInfo.payPlan = null
@@ -124,13 +119,13 @@ class GoalsAddEditConfirmationViewModel: BaseEngageViewModel() {
                     } else {
                         // reset payPlanInfo so user can proceed
                         goalInfo.payPlan = payPlanInfo
-                        progressOverlayShownObservable.value = false
+                        dismissProgressOverlayImmediate()
                         handleBackendErrorForForms(response, "$TAG: Failed to create/save a goal")
                     }
                 }, { e ->
                     // reset payPlanInfo so user can proceed
                     goalInfo.payPlan = payPlanInfo
-                    progressOverlayShownObservable.value = false
+                    dismissProgressOverlayImmediate()
                     handleThrowable(e)
                 })
         )
@@ -149,7 +144,7 @@ class GoalsAddEditConfirmationViewModel: BaseEngageViewModel() {
                                     // remove newly-created goal from the server, since it has no payPlan
                                     cleanupGoalAfterPayPlanSubmissionFailure(goalId)
                                 } else {
-                                    progressOverlayShownObservable.value = false
+                                    dismissProgressOverlayImmediate()
                                 }
                                 // reset payPlanInfo so user can proceed
                                 goalInfo.payPlan = payPlanInfo
@@ -160,11 +155,11 @@ class GoalsAddEditConfirmationViewModel: BaseEngageViewModel() {
                                 // remove newly-created goal from the server, since it has no payplan
                                 cleanupGoalAfterPayPlanSubmissionFailure(goalId)
                             } else {
-                                progressOverlayShownObservable.value = false
+                                dismissProgressOverlayImmediate()
+                                // reset payPlanInfo so user can proceed
+                                goalInfo.payPlan = payPlanInfo
+                                handleThrowable(e)
                             }
-                            // reset payPlanInfo so user can proceed
-                            goalInfo.payPlan = payPlanInfo
-                            handleThrowable(e)
                         })
         )
     }
@@ -201,11 +196,11 @@ class GoalsAddEditConfirmationViewModel: BaseEngageViewModel() {
                         .subscribeOn(Schedulers.io())
                         .observeOn(AndroidSchedulers.mainThread())
                         .subscribe({
-                            progressOverlayShownObservable.value = false
+                            dismissProgressOverlayImmediate()
                             // don't show the backend error here since we want the user to see
-                            // the payPlan submission failure backend error
+                            // the payPlan submission failure error
                         }, { e ->
-                            progressOverlayShownObservable.value = false
+                            dismissProgressOverlayImmediate()
                             handleThrowable(e)
                         })
         )
@@ -221,12 +216,12 @@ class GoalsAddEditConfirmationViewModel: BaseEngageViewModel() {
                     if (response is LoginResponse) {
                         refreshGoals(LoginResponseUtils.getCurrentCard(response))
                     } else {
-                        progressOverlayShownObservable.value = false
+                        dismissProgressOverlayImmediate()
                         // take user to Goals Success even if refresh is not successful
                         successStateObservable.value = GoalSuccessState.SUCCESS
                     }
                 }, { e ->
-                    progressOverlayShownObservable.value = false
+                    dismissProgressOverlayImmediate()
                     // take user to Goals Success even if refresh is not successful
                     successStateObservable.value = GoalSuccessState.SUCCESS
                 })
@@ -239,11 +234,11 @@ class GoalsAddEditConfirmationViewModel: BaseEngageViewModel() {
                         .subscribeOn(Schedulers.io())
                         .observeOn(AndroidSchedulers.mainThread())
                         .subscribe({
-                            progressOverlayShownObservable.value = false
+                            dismissProgressOverlayImmediate()
                             // take user to Goals Success even if refresh is not successful
                             successStateObservable.value = GoalSuccessState.SUCCESS
                         }, { e ->
-                            progressOverlayShownObservable.value = false
+                            dismissProgressOverlayImmediate()
                             // take user to Goals Success even if refresh is not successful
                             successStateObservable.value = GoalSuccessState.SUCCESS
                         })
