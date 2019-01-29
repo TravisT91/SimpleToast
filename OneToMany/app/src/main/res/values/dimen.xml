@@ -5,5 +5,5 @@
     <dimen name="listItemPaddingBottom">12dp</dimen>
 
     <!-- pill button top spacings in forms and lists -->
-    <dimen name="pillButtonTopSpaceInFormsAndLists">40dp</dimen>
+    <dimen name="pillButtonTopSpaceInFormsAndLists">16dp</dimen>
 </resources>
