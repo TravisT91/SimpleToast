@@ -1,5 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.engageft.apptoolbox.view.TrackingPanel
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/row_budget_tracking_panel"
-    style="@style/TrackingPanelBudgetRowChild" />
+<layout xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <data>
+        <variable
+            name="palette"
+            type="com.engageft.fis.pscu.feature.branding.Palette"/>
+    </data>
+
+    <com.engageft.apptoolbox.view.TrackingPanel
+        android:id="@+id/row_budget_tracking_panel"
+        style="@style/TrackingPanelBudgetRowChild" />
+
+</layout>

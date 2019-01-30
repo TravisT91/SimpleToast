@@ -8,6 +8,7 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.annotation.ColorInt
 import androidx.core.content.ContextCompat.getColor
+import androidx.databinding.library.baseAdapters.BR.palette
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -17,6 +18,7 @@ import com.engageft.feature.budgets.recyclerview.BudgetItemSection
 import com.engageft.fis.pscu.R
 import com.engageft.fis.pscu.databinding.FragmentBudgetsListBinding
 import com.engageft.fis.pscu.feature.BaseEngagePageFragment
+import com.engageft.fis.pscu.feature.branding.Palette
 import com.engageft.fis.pscu.feature.recyclerview.section.LabelSection
 import io.github.luizgrp.sectionedrecyclerviewadapter.SectionedRecyclerViewAdapter
 
@@ -39,7 +41,9 @@ class BudgetsListFragment : BaseEngagePageFragment(), BudgetItemSection.BudgetIt
     // with injected strings, colors, etc. this delay was unnecessary. There was no stuttering.
     // The Pair consists of a BudgetItem for the "Total spent" category at top, and a list of BudgetItems for
     // all the individual category budgets.
-    private val budgetsObserver = Observer<Pair<BudgetItem, List<BudgetItem>>> { Handler().postDelayed({ updateBudgetsList(it) }, RECYCLERVIEW_UPDATE_DELAY_MS)}
+    private val budgetsObserver = Observer<Pair<BudgetItem, List<BudgetItem>>> {
+        Handler().postDelayed({ updateBudgetsList(totalBudgetItem = it.first, categoryBudgetItems = it.second) }, RECYCLERVIEW_UPDATE_DELAY_MS)
+    }
 
     private lateinit var totalSpentTitle: String
     private lateinit var otherSpendingTitle: String
@@ -77,24 +81,27 @@ class BudgetsListFragment : BaseEngagePageFragment(), BudgetItemSection.BudgetIt
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         binding = FragmentBudgetsListBinding.inflate(inflater,container,false)
-        binding.budgetsRecyclerView.apply {
-            layoutManager = LinearLayoutManager(context)
-            adapter = budgetsListAdapter
+        binding.apply {
+            budgetsRecyclerView.apply {
+                layoutManager = LinearLayoutManager(context)
+                adapter = budgetsListAdapter
+            }
+
+            //palette = Palette
         }
+
+        viewModel.budgetsObservable.observe(viewLifecycleOwner, budgetsObserver)
+
         return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        viewModel.budgetsObservable.observe(viewLifecycleOwner, budgetsObserver)
         viewModel.refresh()
     }
 
-    private fun updateBudgetsList(totalAndCategoryBudgetItems: Pair<BudgetItem, List<BudgetItem>>) {
-        val totalBudgetItem = totalAndCategoryBudgetItems.first
-        val categoryBudgetItems = totalAndCategoryBudgetItems.second
-
+    private fun updateBudgetsList(totalBudgetItem: BudgetItem, categoryBudgetItems: List<BudgetItem>) {
         budgetsListAdapter.removeAllSections()
         budgetsListAdapter.addSection(
                 BudgetItemSection(budgetItems = listOf(totalBudgetItem),

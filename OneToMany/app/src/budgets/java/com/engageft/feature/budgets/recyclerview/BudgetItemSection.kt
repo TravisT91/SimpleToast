@@ -26,11 +26,11 @@ class BudgetItemSection(private val budgetItems: List<BudgetItem>,
                         private val otherSpendingTitle: String,
                         private val spentNormalFormat: String,
                         private val spentOverFormat: String,
-                        @ColorInt private val spentColorNormal: Int = 0,
-                        @ColorInt private val spentColorOverBudget: Int = 0,
-                        @ColorInt private val progressColorNormal: Int = 0,
-                        @ColorInt private val progressColorHighSpendingTrend: Int = 0,
-                        @ColorInt private val progressColorOverBudget: Int = 0,
+                        @ColorInt private val spentColorNormal: Int,
+                        @ColorInt private val spentColorOverBudget: Int,
+                        @ColorInt private val progressColorNormal: Int,
+                        @ColorInt private val progressColorHighSpendingTrend: Int,
+                        @ColorInt private val progressColorOverBudget: Int,
                         val listener: BudgetItemSectionListener)
     : StatelessSection(
         SectionParameters.builder().itemResourceId(
@@ -41,15 +41,17 @@ class BudgetItemSection(private val budgetItems: List<BudgetItem>,
     }
 
     override fun onBindItemViewHolder(holder: RecyclerView.ViewHolder?, position: Int) {
+        val myBudgetItem = budgetItems[position]
         (holder as? BudgetItemViewHolder)?.apply {
-            val budgetItem = budgetItems[position]
-            holder.budgetItem = budgetItem
-            trackingPanel.setTitleText(getTitleFromCategoryName(budgetItem.categoryName))
-            trackingPanel.setRightSubTitle(spentString(budgetItem.spentAmount, budgetItem.budgetAmount, budgetItem.budgetStatus))
-            trackingPanel.setRightSubtitleColor(spentColor(budgetItem.budgetStatus))
-            trackingPanel.setProgress(budgetItem.progress)
-            trackingPanel.setProgressColor(progressColor(budgetItem.budgetStatus))
-            trackingPanel.setIndicatorPosition(budgetItem.fractionTimePeriodPassed)
+            budgetItem = myBudgetItem
+            trackingPanel.apply {
+                setTitleText(getTitleFromCategoryName(myBudgetItem.categoryName))
+                setRightSubTitle(spentString(myBudgetItem.spentAmount, myBudgetItem.budgetAmount, myBudgetItem.budgetStatus))
+                setRightSubtitleColor(spentColor(myBudgetItem.budgetStatus))
+                setProgress(myBudgetItem.progress)
+                setProgressColor(progressColor(myBudgetItem.budgetStatus))
+                setIndicatorPosition(myBudgetItem.fractionTimePeriodPassed)
+            }
         }
     }
 
