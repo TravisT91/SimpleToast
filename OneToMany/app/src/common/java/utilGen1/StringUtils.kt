@@ -23,8 +23,6 @@ import com.engageft.fis.pscu.OneToManyApplication
 import com.engageft.fis.pscu.R
 import com.ob.ws.dom.utility.AddressInfo
 import com.ob.ws.dom.utility.DebitCardInfo
-import com.ob.ws.dom.utility.GoalInfo
-import com.ob.ws.dom.utility.PayPlanInfo
 import org.joda.time.DateTime
 import java.text.DecimalFormatSymbols
 import java.text.NumberFormat
@@ -541,71 +539,6 @@ object StringUtils {
         }
 
         return SpannableString(target)
-    }
-
-    // if paused, "paused", or like "$5.14/Daily"
-    // TODO(travis): This would be nice as a GoalInfo extension
-    fun getGoalInfoContributionString(context: Context, goalInfo: GoalInfo?): String? {
-        var result: String? = null
-
-        if (goalInfo != null && GoalInfoUtils.isCompleted(goalInfo)) {
-            result = context.getString(R.string.GOALS_COMPLETE)
-        } else if (goalInfo != null && goalInfo.payPlan != null) { // allow null payPlan.amount, which will be handled in getPayPlanInfoContributionString()
-            result = getPayPlanInfoContributionString(context, goalInfo.payPlan)
-        }
-
-        return result
-    }
-
-    // if paused, "paused", or like "$5.14/day"
-    // TODO(travis): This would be nice as a PayPlanInfo extension
-    fun getPayPlanInfoContributionString(context: Context, payPlan: PayPlanInfo?): String? {
-        val result: String
-
-        if (payPlan == null) {
-            return null
-        } else if (payPlan.isPaused) {
-            result = context.getString(R.string.GOALS_PAUSED)
-        } else {
-            val planAmount = if (payPlan.amount != null) payPlan.amount.toPlainString() else "0"
-            result = String.format(context.getString(R.string.GOALS_RECURRENCE_FORMAT),
-                    formatCurrencyStringWithFractionDigits(planAmount, true),
-                    PayPlanUtils.getPayPlanFrequencyDisplayStringForRecurrenceType(context, payPlan.recurrenceType))
-        }
-
-        return result
-    }
-
-    // like "by Feb 29, 2020"
-    // TODO(travis): This would be nice as a GoalInfo extension
-    fun getGoalInfoCompletionDateString(context: Context, goalInfo: GoalInfo): String? {
-        var result: String? = null
-
-        val completeDate = BackendDateTimeUtils.getDateTimeForYMDString(goalInfo.estimatedCompleteDate)
-        if (completeDate != null) {
-            val completeDateString = DisplayDateTimeUtils.getMediumFormatted(completeDate)
-            if (GoalInfoUtils.isCompleted(goalInfo)) {
-                result = String.format(context.getString(R.string.GOALS_ON_DATE_FORMAT), completeDateString)
-            } else {
-                result = String.format(context.getString(R.string.GOALS_BY_DATE_FORMAT), completeDateString)
-            }
-        }
-
-        return result
-    }
-
-    // "$6 of $29"
-    // TODO(travis): This would be nice as a GoalInfo extension
-    fun getGoalInfoProgressString(context: Context, goalInfo: GoalInfo?): String? {
-        var result: String? = null
-
-        if (goalInfo != null) {
-            result = String.format(context.getString(R.string.GOALS_PROGRESS_FORMAT),
-                    formatCurrencyString(if (goalInfo.fundAmount != null) goalInfo.fundAmount.toPlainString() else "0"),
-                    formatCurrencyString(if (goalInfo.amount != null) goalInfo.amount.toPlainString() else "0"))
-        }
-
-        return result
     }
 
     // "Last updated 2/7"
