@@ -25,10 +25,6 @@ class SecondaryUserListViewModel: BaseEngageViewModel() {
     val secondaryUserListObservable = MutableLiveData<List<SecondaryUserListItem>>()
     val showSecondarySplashObservable = MutableLiveData<Boolean>()
 
-    init {
-        refreshViews()
-    }
-
     fun refreshViews() {
         secondaryUserListObservable.value = ArrayList()
         showSecondarySplashObservable.value = false

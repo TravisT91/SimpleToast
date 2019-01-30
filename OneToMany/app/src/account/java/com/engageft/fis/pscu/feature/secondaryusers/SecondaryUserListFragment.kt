@@ -82,6 +82,7 @@ class SecondaryUserListFragment: BaseEngagePageFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        // Refresh this view when we navigate forward or backward to/from this screen.
         secondaryUserListViewModel.refreshViews()
     }
 }
