@@ -35,4 +35,8 @@
     <string name="GOALS_ADD_FREQUENCY_AMOUNT_CONFIRMATION_HEADER">Start setting aside</string>
     <string name="GOALS_ADD_CONFIRMATION_DESCRIPTION_FORMAT">Set money aside toward %s?</string>
     <string name="GOALS_SUCCESS">Success!</string>
+    <string name="GOAL_DETAIL_TRANSFER">Transfer in/out</string>
+    <string name="GOAL_DETAIL_RECURRING_TRANSFER">Recurring transfer</string>
+    <string name="GOAL_DETAIL_EDIT">Edit goal</string>
+    <string name="GOAL_DETAIL_DELETE">Delete goal</string>
 </resources>

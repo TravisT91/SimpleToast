@@ -71,7 +71,11 @@ class GoalsListFragment : BaseEngagePageFragment() {
 
             sectionedAdapter.addSection(GoalsListSection(context!!, goalItemModel.goalModelList, object : GoalsListSection.OnGoalListSectionListener {
                 override fun onGoalClicked(goalId: Long) {
-                    Toast.makeText(context, "$goalId is clicked!", Toast.LENGTH_SHORT).show()
+
+                    binding.root.findNavController().navigate(R.id.action_goalsListFragment_to_goalDetailScreenFragment,
+                            Bundle().apply {
+                                putLong(GOAL_ID_KEY, goalId)
+                            })
                 }
             }))
         } else {
@@ -113,6 +117,10 @@ class GoalsListFragment : BaseEngagePageFragment() {
             }
         }
         return super.onOptionsItemSelected(item)
+    }
+
+    companion object {
+        const val GOAL_ID_KEY = "GOAL_ID_KEY"
     }
 
 }
