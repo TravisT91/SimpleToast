@@ -125,13 +125,6 @@
         <action
             android:id="@+id/action_goalsListFragment_to_goalsAddStep1Fragment"
             app:destination="@id/goalsAddStep1Fragment" />
-        <action
-            android:id="@+id/action_goalsListFragmentChild_to_goalDetailScreenFragment"
-            app:destination="@id/goalDetailScreenFragment"
-            app:enterAnim="@anim/nav_enter_anim"
-            app:exitAnim="@anim/nav_exit_anim"
-            app:popEnterAnim="@anim/nav_pop_enter_anim"
-            app:popExitAnim="@anim/nav_pop_exit_anim" />
     </fragment>
 
     <fragment
@@ -533,6 +526,5 @@
         android:name="com.engageft.feature.goals.GoalsSuccessFragment" />
     <fragment
         android:id="@+id/goalDetailScreenFragment"
-        android:name="com.engageft.feature.goals.GoalDetailScreenFragment"
-        android:label="GoalDetailScreenFragment" />
+        android:name="com.engageft.feature.goals.GoalDetailScreenFragment" />
 </navigation>

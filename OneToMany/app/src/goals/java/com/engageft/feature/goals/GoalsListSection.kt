@@ -33,11 +33,11 @@ class GoalsListSection(private val context: Context,
         val holder = viewHolder as ViewHolder
         holder.apply {
 
-            itemView.setOnClickListener {
-                listener.onGoalClicked(position.toLong())
-            }
-
             val goalModel = goalInfoList[position]
+
+            itemView.setOnClickListener {
+                listener.onGoalClicked(goalModel.goalInfo.goalId)
+            }
 
             circularTrackingPanel.setProgress(goalModel.progress)
             circularTrackingPanel.setTopAndCenterLeftText(goalModel.goalInfo.name.capitalize())

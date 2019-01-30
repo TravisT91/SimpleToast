@@ -63,12 +63,18 @@ class GoalDetailScreenFragment: BaseEngagePageFragment(), SelectableLabelsSectio
     private fun updateRecyclerView(goalDetailModel: GoalDetailScreenViewModel.GoalDetailModel) {
         sectionedAdapter.removeAllSections()
 
+        sectionedAdapter.addSection(GoalDetailHeaderSection(context!!, goalDetailModel, object: GoalDetailHeaderSection.OnButtonClickListener {
+            override fun onTransferButtonClicked() {
+                // TODO(aHashimi): FOTM-575 single transfer
+            }
+        }))
+
         sectionedAdapter.addSection(SelectableLabelsSection(context!!).addLabel(TRANSFER_LABEL_ID, getString(R.string.GOAL_DETAIL_TRANSFER)))
 
         sectionedAdapter.addSection(ToggleableLabelSection(context!!, listOf(ToggleableLabelSection.LabelItem(
                 labelText = getString(R.string.GOAL_DETAIL_RECURRING_TRANSFER),
                 isChecked = !goalDetailModel.goalInfo.payPlan.isPaused)),
-                object : ToggleableLabelSection.OnToggleInteractionListener {
+                listener = object : ToggleableLabelSection.OnToggleInteractionListener {
                     override fun onChecked(labelId: Int, isChecked: Boolean) {
                         // TODO(aHashimi): FOTM-573
                     }

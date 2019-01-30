@@ -39,4 +39,5 @@
     <string name="GOAL_DETAIL_RECURRING_TRANSFER">Recurring transfer</string>
     <string name="GOAL_DETAIL_EDIT">Edit goal</string>
     <string name="GOAL_DETAIL_DELETE">Delete goal</string>
+    <string name="GOAL_DETAIL_TRANSFER_BALANCE">Transfer balance</string>
 </resources>

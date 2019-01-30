@@ -42,15 +42,19 @@ class GoalDetailScreenViewModel: BaseEngageViewModel() {
                         .subscribe({ response ->
                             dismissProgressOverlayImmediate()
                             if (response.isSuccess && response is GoalsResponse) {
+                                var goalDetailMode: GoalDetailModel? = null
                                 for (goalInfo in response.goals) {
                                     if (goalInfo.goalId == goalId) {
                                         val progress = if (goalInfo.amount != null && goalInfo.amount.toFloat() != 0f && goalInfo.fundAmount != null)
                                             goalInfo.fundAmount.toFloat() / goalInfo.amount.toFloat()
                                         else
                                             0f
-
-                                        goalDetailModelObservable.value = GoalDetailModel(goalInfo = goalInfo, progress = progress)
+                                        goalDetailMode = GoalDetailModel(goalInfo, progress)
+                                        break
                                     }
+                                }
+                                goalDetailMode?.let {
+                                    goalDetailModelObservable.value = it
                                 }
                             } else {
                                 handleUnexpectedErrorResponse(response)
