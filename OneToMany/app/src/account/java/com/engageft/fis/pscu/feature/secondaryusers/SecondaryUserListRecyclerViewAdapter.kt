@@ -88,7 +88,12 @@ class SecondaryUserListRecyclerViewAdapter(private val selectionListener: Second
             }
             is SecondaryUserViewHolder.CardFooterViewHolder -> {
                 val item = items[position] as SecondaryUserListItem.CardFooterType
-                holder.userLimitText.text = String.format(holder.itemView.context.getString(R.string.secondary_users_user_limit_footer_format), item.cardUserLimit)
+                val pluralString = if (item.cardUserLimit == 0) {
+                    holder.itemView.context.getString(R.string.secondary_users_user_limit_footer_zero)
+                } else {
+                    holder.itemView.context.resources.getQuantityString(R.plurals.secondary_users_user_limit_footer_plural, item.cardUserLimit, item.cardUserLimit)
+                }
+                holder.userLimitText.text = String.format(holder.itemView.context.getString(R.string.secondary_users_user_limit_footer_format), pluralString)
             }
         }
     }

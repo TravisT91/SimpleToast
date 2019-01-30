@@ -101,7 +101,15 @@
 
 
     <string name="secondary_users_add_account">Add account</string>
-    <string name="secondary_users_user_limit_footer_format">You may add up to %d accounts on this card.</string>
+    <string name="secondary_users_user_limit_footer_format">%s on this card.</string>
+    <string name="secondary_users_user_limit_footer_zero">You may not add accounts</string>
+    <plurals
+        name="secondary_users_user_limit_footer_plural">
+        <item quantity="one">You may add up to %d account</item>
+        <item quantity="other">You may add up to %d accounts</item>
+    </plurals>
+
+
     <string name="secondary_users_user_active">Active</string>
     <string name="secondary_users_user_inactive">Inactive</string>
     <string name="secondary_users_splash_title_format">Adding new secondary accounts</string>
