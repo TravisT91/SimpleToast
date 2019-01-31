@@ -102,6 +102,8 @@ dependencies {
         transitive = true
     }
 
+    implementation 'com.android.support:customtabs:28.0.0'
+
     // for printing webview contents
     implementation 'org.jsoup:jsoup:1.10.3'
 }

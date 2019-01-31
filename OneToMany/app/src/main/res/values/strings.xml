@@ -12,7 +12,6 @@
     <!-- Navigation Fragment Titles -->
     <string name="fragment_title_dashboard">Overview</string>
     <string name="fragment_title_budgets">Budgets</string>
-    <string name="fragment_title_goals">Goals</string>
     <string name="fragment_title_cardmanagement">Card management</string>
     <string name="fragment_title_account">Settings</string>
     <string name="fragment_title_help">Help center</string>
