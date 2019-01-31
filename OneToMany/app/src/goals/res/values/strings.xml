@@ -40,4 +40,6 @@
     <string name="GOAL_DETAIL_EDIT">Edit goal</string>
     <string name="GOAL_DETAIL_DELETE">Delete goal</string>
     <string name="GOAL_DETAIL_TRANSFER_BALANCE">Transfer balance</string>
+    <string name="GOAL_DETAIL_FREQUENCY_AMOUNT_COMPLETE_DATE_FORMAT">%s %s</string>
+    <string name="GOAL_DETAIL_GOAL_AMOUNT_FORMAT">of %s</string>
 </resources>

@@ -2,16 +2,17 @@ package com.engageft.feature.goals
 
 import android.content.Context
 import android.view.View
-import android.widget.TextView
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.engageft.apptoolbox.view.CircularProgressBarWithTexts
 import com.engageft.apptoolbox.view.PillButton
+import com.engageft.feature.goals.utils.getGoalInfoCompletionDateString
+import com.engageft.feature.goals.utils.getPayPlanInfoContribution
 import com.engageft.fis.pscu.R
-import com.engageft.fis.pscu.feature.branding.Palette
 import io.github.luizgrp.sectionedrecyclerviewadapter.SectionParameters
 import io.github.luizgrp.sectionedrecyclerviewadapter.StatelessSection
 import utilGen1.StringUtils
+import java.math.BigDecimal
 
 class GoalDetailHeaderSection(private val context: Context,
                               private val goalDetailModel: GoalDetailScreenViewModel.GoalDetailModel,
@@ -25,20 +26,31 @@ class GoalDetailHeaderSection(private val context: Context,
     override fun onBindItemViewHolder(p0: RecyclerView.ViewHolder, p1: Int) {
         (p0 as ViewHolder).apply {
 
+            val showZeros = goalDetailModel.goalInfo.fundAmount.compareTo(BigDecimal.ZERO) != 0
             circularProgressBarWithTexts.setInnerTopText(StringUtils.formatCurrencyStringFractionDigitsReducedHeight(
-                    amount = goalDetailModel.goalInfo.amount.toFloat(),
+                    amount = goalDetailModel.goalInfo.fundAmount.toFloat(),
                     fractionDigitsPercentHeight = .5f,
-                    showZeroDigits = true
+                    showZeroDigits = showZeros
             ))
 
             if (goalDetailModel.goalInfo.isAchieved) {
                 circularProgressBarWithTexts.setProgress(goalDetailModel.progress)
                 circularProgressBarWithTexts.showInnerBottomText(false)
-                circularProgressBarWithTexts.setInnerBottomTextColor(ContextCompat.getColor(context, R.color.structure6))
+                circularProgressBarWithTexts.setOuterBottomText(context.getString(R.string.GOALS_COMPLETE))
+                circularProgressBarWithTexts.setOuterBottomTextColor(ContextCompat.getColor(context, R.color.structure6))
                 transferBalanceButton.visibility = View.VISIBLE
             } else {
                 circularProgressBarWithTexts.setProgress(goalDetailModel.progress)
-                circularProgressBarWithTexts.setInnerBottomText(goalDetailModel.goalInfo.fundAmount.toString())
+
+                val goalAmountFormatted = String.format(context.getString(R.string.GOAL_DETAIL_GOAL_AMOUNT_FORMAT),
+                        StringUtils.formatCurrencyString(goalDetailModel.goalInfo.amount.toFloat(), true))
+                circularProgressBarWithTexts.setInnerBottomText(goalAmountFormatted)
+
+                val frequencyAmountAndCompleteDate = String.format(context.getString(R.string.GOAL_DETAIL_FREQUENCY_AMOUNT_COMPLETE_DATE_FORMAT),
+                        goalDetailModel.goalInfo.payPlan.getPayPlanInfoContribution(context),
+                        goalDetailModel.goalInfo.getGoalInfoCompletionDateString(context))
+                circularProgressBarWithTexts.setOuterBottomText(frequencyAmountAndCompleteDate)
+
                 transferBalanceButton.visibility = View.GONE
             }
 
@@ -60,5 +72,9 @@ class GoalDetailHeaderSection(private val context: Context,
 
     interface OnButtonClickListener {
         fun onTransferButtonClicked()
+    }
+
+    private companion object {
+        const val NOT_SET = -1
     }
 }

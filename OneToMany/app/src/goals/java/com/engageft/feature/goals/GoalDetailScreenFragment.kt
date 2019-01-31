@@ -8,6 +8,8 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.engageft.apptoolbox.BaseViewModel
+import com.engageft.apptoolbox.adapter.HorizontalRuleSection
+import com.engageft.apptoolbox.adapter.HorizontalRuleSectionIndentStart
 import com.engageft.apptoolbox.adapter.SelectableLabelsSection
 import com.engageft.feature.goals.GoalsListFragment.Companion.GOAL_ID_KEY
 import com.engageft.fis.pscu.R
@@ -63,25 +65,41 @@ class GoalDetailScreenFragment: BaseEngagePageFragment(), SelectableLabelsSectio
     private fun updateRecyclerView(goalDetailModel: GoalDetailScreenViewModel.GoalDetailModel) {
         sectionedAdapter.removeAllSections()
 
+        toolbarController.setToolbarTitle(goalDetailModel.goalInfo.name.capitalize())
+
         sectionedAdapter.addSection(GoalDetailHeaderSection(context!!, goalDetailModel, object: GoalDetailHeaderSection.OnButtonClickListener {
             override fun onTransferButtonClicked() {
                 // TODO(aHashimi): FOTM-575 single transfer
             }
         }))
 
-        sectionedAdapter.addSection(SelectableLabelsSection(context!!).addLabel(TRANSFER_LABEL_ID, getString(R.string.GOAL_DETAIL_TRANSFER)))
+        sectionedAdapter.addSection(HorizontalRuleSection())
 
-        sectionedAdapter.addSection(ToggleableLabelSection(context!!, listOf(ToggleableLabelSection.LabelItem(
-                labelText = getString(R.string.GOAL_DETAIL_RECURRING_TRANSFER),
-                isChecked = !goalDetailModel.goalInfo.payPlan.isPaused)),
-                listener = object : ToggleableLabelSection.OnToggleInteractionListener {
-                    override fun onChecked(labelId: Int, isChecked: Boolean) {
-                        // TODO(aHashimi): FOTM-573
-                    }
-                }))
+        sectionedAdapter.addSection(SelectableLabelsSection(context!!, R.style.GoalDetailItemTextStyle).addLabel(TRANSFER_LABEL_ID, getString(R.string.GOAL_DETAIL_TRANSFER)))
 
-        sectionedAdapter.addSection(SelectableLabelsSection(context!!).addLabel(EDIT_LABEL_ID, getString(R.string.GOAL_DETAIL_EDIT)))
-        sectionedAdapter.addSection(SelectableLabelsSection(context!!).addLabel(DELETE_LABEL_ID, getString(R.string.GOAL_DETAIL_DELETE)))
+        sectionedAdapter.addSection(HorizontalRuleSectionIndentStart())
+
+        if (!goalDetailModel.goalInfo.isAchieved) {
+            sectionedAdapter.addSection(ToggleableLabelSection(context!!, listOf(ToggleableLabelSection.LabelItem(
+                    labelText = getString(R.string.GOAL_DETAIL_RECURRING_TRANSFER),
+                    isChecked = goalDetailModel.goalInfo.payPlan.isPaused)),
+                    styleId = R.style.GoalDetailItemTextStyle,
+                    listener = object : ToggleableLabelSection.OnToggleInteractionListener {
+                        override fun onChecked(labelId: Int, isChecked: Boolean) {
+                            // TODO(aHashimi): FOTM-573
+                        }
+                    }))
+
+            sectionedAdapter.addSection(HorizontalRuleSectionIndentStart())
+
+            sectionedAdapter.addSection(SelectableLabelsSection(context!!, R.style.GoalDetailItemTextStyle)
+                    .addLabel(EDIT_LABEL_ID, getString(R.string.GOAL_DETAIL_EDIT)))
+            sectionedAdapter.addSection(HorizontalRuleSectionIndentStart())
+        }
+
+        sectionedAdapter.addSection(SelectableLabelsSection(context!!, R.style.GoalDetailItemTextStyle)
+                .addLabel(DELETE_LABEL_ID, getString(R.string.GOAL_DETAIL_DELETE)))
+        sectionedAdapter.addSection(HorizontalRuleSection())
 
         sectionedAdapter.notifyDataSetChanged()
     }

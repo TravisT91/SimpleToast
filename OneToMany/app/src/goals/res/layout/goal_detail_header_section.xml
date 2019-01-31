@@ -2,10 +2,13 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical"
     android:gravity="center"
+    android:background="@color/viewBackground"
+    android:paddingBottom="24dp"
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
     <com.engageft.apptoolbox.view.CircularProgressBarWithTexts
+        style="@style/LotusCircularProgressBarWithTexts"
         android:id="@+id/circularProgressBarWithTexts"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content">
@@ -16,10 +19,7 @@
         android:id="@+id/transferBalanceButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginEnd="16dp"
         android:layout_marginTop="8dp"
-        android:layout_marginBottom="24dp"
         android:text="@string/GOAL_DETAIL_TRANSFER_BALANCE"/>
 
 </LinearLayout>

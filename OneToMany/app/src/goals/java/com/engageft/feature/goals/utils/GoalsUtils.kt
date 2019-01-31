@@ -35,6 +35,7 @@ fun GoalInfo.getGoalInfoContributionString(context: Context): String {
 
 }
 
+//todo rename to getPayPlanContributionOrPausedString
 // if paused, "paused", or like "$5/day"
 fun PayPlanInfo.getPayPlanInfoContributionString(context: Context): String {
     return if (isPaused) {
@@ -48,6 +49,16 @@ fun PayPlanInfo.getPayPlanInfoContributionString(context: Context): String {
                 StringUtils.formatCurrencyStringWithFractionDigits(planAmount, false),
                 PayPlanUtils.getPayPlanFrequencyDisplayStringForRecurrenceType(context, recurrenceType))
     }
+}
+
+fun PayPlanInfo.getPayPlanInfoContribution(context: Context): String {
+    var planAmount = "0"
+    amount?.let {
+        planAmount = it.toPlainString()
+    }
+    return String.format(context.getString(R.string.GOALS_RECURRENCE_FORMAT),
+            StringUtils.formatCurrencyStringWithFractionDigits(planAmount, false),
+            PayPlanUtils.getPayPlanFrequencyDisplayStringForRecurrenceType(context, recurrenceType))
 }
 
 // like "by Feb 29, 2020", or "Completed"

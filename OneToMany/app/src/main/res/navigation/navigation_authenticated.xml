@@ -125,6 +125,9 @@
         <action
             android:id="@+id/action_goalsListFragment_to_goalsAddStep1Fragment"
             app:destination="@id/goalsAddStep1Fragment" />
+        <action
+            android:id="@+id/action_goalsListFragment_to_goalDetailScreenFragment"
+            app:destination="@id/goalDetailScreenFragment" />
     </fragment>
 
     <fragment

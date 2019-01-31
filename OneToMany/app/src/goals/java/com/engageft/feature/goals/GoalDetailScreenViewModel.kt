@@ -4,7 +4,6 @@ import androidx.lifecycle.MutableLiveData
 import com.engageft.engagekit.EngageService
 import com.engageft.engagekit.utils.LoginResponseUtils
 import com.engageft.fis.pscu.feature.BaseEngageViewModel
-import com.engageft.fis.pscu.feature.DialogInfo
 import com.ob.ws.dom.GoalsResponse
 import com.ob.ws.dom.LoginResponse
 import com.ob.ws.dom.utility.DebitCardInfo
