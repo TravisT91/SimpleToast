@@ -59,6 +59,13 @@
             app:exitAnim="@anim/nav_exit_anim"
             app:popEnterAnim="@anim/nav_pop_enter_anim"
             app:popExitAnim="@anim/nav_pop_exit_anim"/>
+        <action
+            android:id="@+id/action_dashboard_fragment_to_goalsListFragment"
+            app:destination="@id/goalsListFragmentChild"
+            app:enterAnim="@anim/nav_enter_anim"
+            app:exitAnim="@anim/nav_exit_anim"
+            app:popEnterAnim="@anim/nav_pop_enter_anim"
+            app:popExitAnim="@anim/nav_pop_exit_anim"/>
     </fragment>
 
     <fragment
@@ -108,19 +115,29 @@
     </fragment>
 
     <fragment
-        android:id="@+id/goals_fragment"
-        android:name="com.engageft.fis.pscu.feature.GoalsFragment"
-        android:label="@string/fragment_title_goals"
-        tools:layout="@layout/fragment_goals">
-        <action
-            android:id="@+id/action_goals_fragment_to_goalAdd1Fragment"
-            app:destination="@id/goalAdd1Fragment" />
+        android:id="@+id/goalsListFragmentChild"
+        android:name="com.engageft.feature.goals.GoalsListFragment"
+        android:label="@string/nav_drawer_title_goals"
+        tools:layout="@layout/fragment_goals_list">
         <argument
             android:name="@string/navigation_view_gone"
             android:defaultValue="true" />
+        <action
+            android:id="@+id/action_goalsListFragment_to_goalsAddStep1Fragment"
+            app:destination="@id/goalsAddStep1Fragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/goalsListFragment"
+        android:name="com.engageft.feature.goals.GoalsListFragment"
+        android:label="@string/nav_drawer_title_goals"
+        tools:layout="@layout/fragment_goals_list">
         <argument
             android:name="@string/navigation_override_up"
             android:defaultValue="true" />
+        <action
+            android:id="@+id/action_goalsListFragment_to_goalsAddStep1Fragment"
+            app:destination="@id/goalsAddStep1Fragment" />
     </fragment>
 
     <fragment
@@ -149,19 +166,6 @@
         <action
             android:id="@+id/action_account_fragment_to_accountNotificationsFragment"
             app:destination="@id/accountNotificationsFragment" />
-    </fragment>
-
-    <fragment
-        android:id="@+id/goalAdd1Fragment"
-        android:name="com.engageft.fis.pscu.feature.GoalAdd1Fragment"
-        android:label="@string/fragment_title_goals_add_step_1"
-        tools:layout="@layout/fragment_goal_add_1" >
-        <argument
-            android:name="@string/navigation_view_gone"
-            android:defaultValue="true" />
-        <action
-            android:id="@+id/action_goalAdd1Fragment_to_goalAdd2Fragment"
-            app:destination="@id/goalAdd2Fragment" />
     </fragment>
 
     <fragment
@@ -337,7 +341,7 @@
     </fragment>
     <fragment
         android:id="@+id/goalAdd2Fragment"
-        android:name="com.engageft.fis.pscu.feature.GoalAdd2Fragment"
+        android:name="com.engageft.feature.goals.GoalAdd2Fragment"
         android:label="GoalAdd2Fragment" />
     <fragment
         android:id="@+id/accountNotificationsFragment"
@@ -476,4 +480,11 @@
         android:id="@+id/cardLockUnlockFragment"
         android:name="com.engageft.fis.pscu.feature.CardLockUnlockFragment"
         android:label="CardLockUnlockFragment" />
+    <fragment
+        android:id="@+id/goalsAddStep1Fragment"
+        android:name="com.engageft.feature.goals.GoalsAddStep1Fragment">
+        <action
+            android:id="@+id/action_goalsAddStep1Fragment_to_goalAdd2Fragment"
+            app:destination="@id/goalAdd2Fragment" />
+    </fragment>
 </navigation>

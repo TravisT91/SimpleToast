@@ -14,12 +14,7 @@
     <string name="CARD_STATUS_DISPLAY_SUSPENDED">Suspended</string>
     <string name="CARD_STATUS_DISPLAY_CLOSED">Closed</string>
     <string name="CARD_STATUS_DISPLAY_ORDERED">Ordered</string>
-    <string name="GOALS_PAUSED">paused</string>
-    <string name="GOALS_COMPLETE">Completed</string>
-    <string name="GOALS_RECURRENCE_FORMAT">%1$s/%2$s</string>
-    <string name="GOALS_BY_DATE_FORMAT">by %s</string>
     <string name="GOALS_ON_DATE_FORMAT">on %s</string>
-    <string name="GOALS_PROGRESS_FORMAT">%1$s of %2$s</string>
     <string name="LAST_UPDATED_FORMAT">Last updated %s</string> <!-- insert date -->
 
     <!-- ProductCardView -->
@@ -110,4 +105,5 @@
 
     <!-- generic/common strings -->
     <string name="save">Save</string>
+    <string name="add">Add</string>
 </resources>

@@ -47,7 +47,7 @@
         android:title="@string/nav_drawer_title_budgets"
         />
     <item
-        android:id="@+id/goals_fragment"
+        android:id="@+id/goalsListFragment"
         android:title="@string/nav_drawer_title_goals"
         />
 
