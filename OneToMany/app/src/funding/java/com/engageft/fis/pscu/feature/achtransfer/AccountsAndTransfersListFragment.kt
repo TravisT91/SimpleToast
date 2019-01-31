@@ -140,20 +140,19 @@ class AccountsAndTransfersListFragment: BaseEngagePageFragment() {
     }
 
     override fun onCreateOptionsMenu(menu: Menu?, inflater: MenuInflater?) {
-        inflater?.inflate(R.menu.menu_create_transfer, menu)
+        inflater?.inflate(R.menu.general_options_menu_add_icon, menu)
         super.onCreateOptionsMenu(menu, inflater)
     }
 
     override fun onPrepareOptionsMenu(menu: Menu?) {
-        val menuItem = menu!!.findItem(R.id.createTransfer)
-        menuItem.title = getString(R.string.ach_bank_transfer_create_next_button)
+        val menuItem = menu!!.findItem(R.id.add)
         menuItem.isVisible = accountsAndTransfersListViewModel.isBankVerified()
         super.onPrepareOptionsMenu(menu)
     }
 
     override fun onOptionsItemSelected(item: MenuItem?): Boolean {
         when(item?.itemId){
-            R.id.createTransfer -> run {
+            R.id.add -> run {
                 binding.root.findNavController().navigate(R.id.action_accountsAndTransfersListFragment_to_createEditTransferFragment)
             }
         }
