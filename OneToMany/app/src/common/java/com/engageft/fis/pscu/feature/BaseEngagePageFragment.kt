@@ -23,6 +23,7 @@ abstract class BaseEngagePageFragment : LotusPageFragment(), BaseEngageFragmentI
     protected val engageFragmentDelegate by lazy {
         BaseEngageFragmentDelegate(this)
     }
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         engageFragmentDelegate
@@ -42,5 +43,9 @@ abstract class BaseEngagePageFragment : LotusPageFragment(), BaseEngageFragmentI
 
     override fun getAndroidLifecycle(): Lifecycle {
         return lifecycle
+    }
+
+    open fun handleBackPressed(): Boolean {
+        return false
     }
 }

@@ -8,7 +8,7 @@
     <string name="TRANSACTION_TYPE_ATM">ATM Withdrawal</string>
     <string name="TRANSACTION_TYPE_RETURN">Purchase Return</string>
 
-    <string name="TRANSACTION_LIST_OFFBUDGET_LABEL">Off-Budget</string>
+    <string name="TRANSACTION_LIST_OFF_BUDGET_LABEL">Off-Budget</string>
 
     <string name="TRANSACTION_STATUS_PENDING_TEXT">Pending</string>
     <string name="TRANSACTION_STATUS_DECLINED_TEXT">Declined</string>
@@ -18,4 +18,9 @@
 
     <string name="TRANSACTIONS_LOAD_ERROR_MESSAGE">Couldn\'t load transactions</string>
     <string name="TRANSACTIONS_LOAD_RETRY">Try again</string>
+
+    <string name="TRANSACTIONS_INCLUDE_IN_BUDGET">Include in Budget</string>
+
+    <string name="TRANSACTION_DETAILS_TITLE">Transaction details</string>
+    <string name="TRANSACTIONS_CATEGORIES_TITLE">Select category</string>
 </resources>

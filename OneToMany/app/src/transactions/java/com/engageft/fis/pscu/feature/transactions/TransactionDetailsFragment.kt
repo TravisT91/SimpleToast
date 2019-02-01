@@ -4,16 +4,17 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.animation.AlphaAnimation
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
-import androidx.navigation.findNavController
 import com.engageft.apptoolbox.BaseViewModel
+import com.engageft.engagekit.EngageService
 import com.engageft.fis.pscu.R
 import com.engageft.fis.pscu.databinding.TransactionDetailsFragmentBinding
-import com.engageft.fis.pscu.feature.BaseEngagePageFragment
+import com.engageft.fis.pscu.feature.BaseEngageSubFragment
 import com.engageft.fis.pscu.feature.branding.Palette
-import com.engageft.fis.pscu.feature.transactions.CategoryFragment.Companion.ARG_NEW_CATEGORY
 import com.engageft.fis.pscu.feature.transactions.utils.TransactionId
+import java.util.Locale
 
 /**
  * TransactionDetailsFragment
@@ -24,16 +25,18 @@ import com.engageft.fis.pscu.feature.transactions.utils.TransactionId
  * Created by Travis Tkachuk 1/23/19
  * Copyright (c) 2019 Engage FT. All rights reserved.
  */
-class TransactionDetailsFragment : BaseEngagePageFragment() {
+class TransactionDetailsFragment : BaseEngageSubFragment() {
 
     companion object {
         const val ARG_TRANSACTION_ID = "ARG_TRANSACTION_ID"
     }
 
     private val checkChangeObserver = Observer<Any?> { detailsViewModel.checkForChanges() }
+    private val onChangeObserver = Observer<Boolean> { onHasChanges(it) }
 
     lateinit var detailsViewModel: TransactionDetailsViewModel
-    private lateinit var binding: TransactionDetailsFragmentBinding
+    lateinit var binding: TransactionDetailsFragmentBinding
+
 
     override fun createViewModel(): BaseViewModel? {
         arguments?.getString(ARG_TRANSACTION_ID)?.let {
@@ -51,45 +54,94 @@ class TransactionDetailsFragment : BaseEngagePageFragment() {
         super.onCreate(savedInstanceState)
         detailsViewModel.apply {
 
-            transaction.observe(this@TransactionDetailsFragment, Observer {
-                isOffBudget.observe(this@TransactionDetailsFragment, checkChangeObserver)
-                txNotes.observe(this@TransactionDetailsFragment, checkChangeObserver)
-                txCategory.observe(this@TransactionDetailsFragment, checkChangeObserver)
+            val tdf = this@TransactionDetailsFragment
+            transaction.observe(tdf, Observer {
+                isOffBudget.observe(tdf, checkChangeObserver)
+                txNotes.observe(tdf, checkChangeObserver)
+                txCategory.observe(tdf, checkChangeObserver)
+                hasChanges.observe(tdf, onChangeObserver)
             })
 
-            repoLiveData.observe(this@TransactionDetailsFragment, Observer {
+            repoLiveData.observe(tdf, Observer {
                 setTransaction(it)
-                arguments?.getString(ARG_NEW_CATEGORY)?.let{ newCategory ->
-                    detailsViewModel.txCategory.postValue(newCategory)
-                    arguments = null
-                }
+            })
+
+            txCategory.observe(tdf, Observer {
+                val lang = Locale.getDefault().language
+                val sm = EngageService.getInstance().storageManager
+                val onBudgetText = isOffBudget.value?.let { isOffBudget ->
+                    if (isOffBudget) "(" + getString(R.string.TRANSACTION_LIST_OFF_BUDGET_LABEL) + ") "
+                    else ""
+                } ?: ""
+                txCategoryDisplayString.postValue(
+                        onBudgetText + sm.getBudgetCategoryDescription(it.toString(), lang))
+            })
+
+            isOffBudget.observe(tdf, Observer {
+                //this post is to refresh the display string when the budget is changed
+                txCategory.value = txCategory.value
             })
 
         }
     }
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        binding = TransactionDetailsFragmentBinding.inflate(inflater, container, false).apply {
+    override fun onCreateView(
+            inflater: LayoutInflater,
+            container: ViewGroup?,
+            savedInstanceState: Bundle?): View? {
+
+        binding = TransactionDetailsFragmentBinding.inflate(
+                inflater,
+                container,
+                false).apply {
             palette = Palette
             viewModel = detailsViewModel
             setLifecycleOwner(this@TransactionDetailsFragment)
 
             category.apply {
                 isEnabled = true
+                setMaxLines(Int.MAX_VALUE)
                 setEditTextOnClickListener {
                     categoryFrame.performClick()
                 }
             }
 
+            notes.setMaxLines(Int.MAX_VALUE)
+
             categoryFrame.apply {
-                setOnClickListener {
-                    root.findNavController().navigate(R.id.action_transaction_details_to_categories)
+                setOnClickListener { _ ->
+                    val parent = this@TransactionDetailsFragment.parentFragment
+                    (parent as TransactionDetailsMediatorFragment).apply {
+                        goToCategoryFragment()
+                    }
                 }
             }
+
+            saveButton.setOnClickListener {
+                detailsViewModel.saveChanges()
+            }
         }
+
         return binding.root
     }
 
 
+    private val alphaAnimation= AlphaAnimation(0f, 1f).apply {
+        duration = 500
+        startOffset = 50
+    }
+
+    private fun onHasChanges(hasChanges: Boolean){
+        binding.saveButton.apply{
+            if (hasChanges) {
+                if (visibility != View.VISIBLE) {
+                    visibility = View.VISIBLE
+                    startAnimation(alphaAnimation)
+                }
+            } else {
+                visibility = View.GONE
+            }
+        }
+    }
 
 }

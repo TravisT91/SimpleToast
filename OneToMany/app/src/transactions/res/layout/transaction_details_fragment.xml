@@ -5,7 +5,6 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <data>
-        <import type="android.view.View"/>
         <variable
             name="viewModel"
             type="com.engageft.fis.pscu.feature.transactions.TransactionDetailsViewModel"/>
@@ -14,126 +13,136 @@
             type="com.engageft.fis.pscu.feature.branding.Palette"/>
     </data>
 
-    <ScrollView
+    <FrameLayout
+        android:id="@+id/frame"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:focusable="true">
+        android:layout_height="match_parent">
 
-        <LinearLayout
-            android:orientation="vertical"
+        <ScrollView
+            android:id="@+id/detailsContainer"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                tools:text="$19.64"
-                android:text="@{viewModel.amount}"
-                android:textColor="@color/structure6"
-                tools:style="@style/Title1Quiet"
-                parisStyle="@{palette.title1Quiet}"
-                android:gravity="center_horizontal"
-                android:layout_marginTop="30dp"/>
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                tools:text="June 28, 2018"
-                android:text="@{viewModel.txDate}"
-                android:gravity="center_horizontal"
-                tools:style="@style/FootnoteQuiet"
-                parisStyle="@{palette.footnoteQuiet}"
-                android:textColor="@color/structure5"
-                android:layout_marginBottom="20dp"/>
-
-            <include layout="@layout/divider"/>
+            android:layout_height="wrap_content"
+            android:focusable="true"
+            tools:ignore="UselessParent">
 
             <LinearLayout
                 android:orientation="vertical"
-                android:paddingStart="16dp"
-                android:paddingEnd="0dp"
-                android:background="@color/white"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
 
-                <com.engageft.apptoolbox.view.TextWithLabel
-                    android:paddingTop="8dp"
+                <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    InputWithLabel.setThemeWithPalette="@{true}"
-                    app:labelText="Merchant"
-                    app:inputText="@{viewModel.txStore}"/>
+                    tools:text="$19.64"
+                    android:text="@{viewModel.amount}"
+                    android:textColor="@color/structure6"
+                    tools:style="@style/Title1Quiet"
+                    parisStyle="@{palette.title1Quiet}"
+                    android:gravity="center_horizontal"
+                    android:layout_marginTop="30dp"/>
 
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    tools:text="June 28, 2018"
+                    android:text="@{viewModel.txDate}"
+                    android:gravity="center_horizontal"
+                    tools:style="@style/FootnoteQuiet"
+                    parisStyle="@{palette.footnoteQuiet}"
+                    android:textColor="@color/structure5"
+                    android:layout_marginBottom="20dp"/>
 
-                <FrameLayout
-                    android:id="@+id/categoryFrame"
+                <include layout="@layout/divider"/>
+
+                <LinearLayout
+                    android:orientation="vertical"
+                    android:paddingStart="16dp"
+                    android:paddingEnd="0dp"
+                    android:background="@color/white"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content">
 
                     <com.engageft.apptoolbox.view.TextWithLabel
-                        android:id="@+id/category"
                         android:paddingTop="8dp"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         InputWithLabel.setThemeWithPalette="@{true}"
-                        app:labelText="Category"
-                        app:inputText="@{viewModel.txCategory}"/>
+                        app:labelText="Merchant"
+                        app:inputText="@{viewModel.txStore}"/>
 
-                </FrameLayout>
 
-                <androidx.appcompat.widget.ContentFrameLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:paddingTop="16dp"
-                    android:paddingBottom="16dp">
+                    <FrameLayout
+                        android:id="@+id/categoryFrame"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
 
-                    <TextView
-                        android:layout_width="wrap_content"
+                        <com.engageft.apptoolbox.view.TextWithLabel
+                            android:id="@+id/category"
+                            android:paddingTop="8dp"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            InputWithLabel.setThemeWithPalette="@{true}"
+                            app:labelText="Category"
+                            app:inputText="@{viewModel.txCategoryDisplayString}"/>
+
+                    </FrameLayout>
+
+                    <androidx.appcompat.widget.ContentFrameLayout
+                        android:id="@+id/offBudgetFrame"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:gravity="center_vertical"
-                        android:text="Include in Budget"
-                        tools:style="@style/Body"
-                        parisStyle="@{palette.body}"/>
+                        android:paddingTop="16dp"
+                        android:paddingBottom="16dp">
 
-                    <androidx.appcompat.widget.SwitchCompat
-                        android:layout_width="wrap_content"
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:gravity="center_vertical"
+                            android:text="@string/TRANSACTIONS_INCLUDE_IN_BUDGET"
+                            tools:style="@style/Body"
+                            parisStyle="@{palette.body}"/>
+
+                        <androidx.appcompat.widget.SwitchCompat
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="end"
+                            android:checked="@={!viewModel.isOffBudget}"
+                            SwitchCompat.applyPaletteColors="@{true}"
+                            android:paddingEnd="16dp"
+                            android:paddingStart="0dp"/>
+
+                    </androidx.appcompat.widget.ContentFrameLayout>
+
+                    <include android:id="@+id/offBudgetDivider" layout="@layout/divider"/>
+
+                    <com.engageft.apptoolbox.view.TextInputWithLabel
+                        app:maxLines="10"
+                        android:id="@+id/notes"
+                        android:paddingTop="8dp"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_gravity="end"
-                        android:checked="@={viewModel.isOffBudget()}"
-                        SwitchCompat.applyPaletteColors="@{true}"
-                        android:paddingEnd="16dp"
-                        android:paddingStart="0dp"/>
+                        InputWithLabel.setThemeWithPalette="@{true}"
+                        app:labelText="Notes (optional)"
+                        app:inputText="@={viewModel.txNotes}"/>
 
-                </androidx.appcompat.widget.ContentFrameLayout>
+                </LinearLayout>
 
                 <include layout="@layout/divider"/>
 
-                <com.engageft.apptoolbox.view.TextInputWithLabel
-                    android:paddingTop="8dp"
-                    android:layout_width="match_parent"
+                <com.engageft.apptoolbox.view.PillButton
+                    android:id="@+id/saveButton"
+                    PillButton.setThemeFilled="@{true}"
+                    tools:style="@style/ButtonPillPrimaryFilledDefault"
+                    android:textAllCaps="false"
+                    android:text="@string/save"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    InputWithLabel.setThemeWithPalette="@{true}"
-                    app:labelText="Notes (optional)"
-                    app:inputText="@={viewModel.txNotes}"/>
+                    android:layout_gravity="center"
+                    android:layout_marginTop="42dp"
+                    android:layout_marginBottom="42dp"/>
 
             </LinearLayout>
 
-            <include layout="@layout/divider"/>
-
-            <com.engageft.apptoolbox.view.PillButton
-                android:visibility="@{viewModel.hasChanges ? View.VISIBLE : View.GONE}"
-                PillButton.setThemeFilled="@{true}"
-                tools:style="@style/ButtonPillPrimaryFilledDefault"
-                android:textAllCaps="false"
-                android:text="@string/save"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:layout_marginTop="42dp"
-                android:layout_marginBottom="42dp"/>
-
-        </LinearLayout>
-
-    </ScrollView>
-
+        </ScrollView>
+    </FrameLayout>
 </layout>

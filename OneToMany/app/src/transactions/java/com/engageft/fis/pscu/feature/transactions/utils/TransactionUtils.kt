@@ -61,8 +61,8 @@ object TransactionUtils {
             TransactionType.PURCHASE, TransactionType.RETURN -> return EngageService.getInstance().storageManager.getBudgetCategoryDescription(
                     transactionInfo.subCategory,
                     Locale.getDefault().language,
-                    if (transactionInfo.isOffBudget) context.getString(R.string.TRANSACTION_LIST_OFFBUDGET_LABEL) else null)
-            else -> return EngageService.getInstance().storageManager.getBudgetCategoryDescription(transactionInfo.subCategory, Locale.getDefault().language, if (transactionInfo.isOffBudget) context.getString(R.string.TRANSACTION_LIST_OFFBUDGET_LABEL) else null)
+                    if (transactionInfo.isOffBudget) context.getString(R.string.TRANSACTION_LIST_OFF_BUDGET_LABEL) else null)
+            else -> return EngageService.getInstance().storageManager.getBudgetCategoryDescription(transactionInfo.subCategory, Locale.getDefault().language, if (transactionInfo.isOffBudget) context.getString(R.string.TRANSACTION_LIST_OFF_BUDGET_LABEL) else null)
         }
     }
 
@@ -80,8 +80,8 @@ object TransactionUtils {
             TransactionType.PURCHASE, TransactionType.RETURN -> return EngageService.getInstance().storageManager.getBudgetCategoryDescription(
                     transaction.subCategory,
                     Locale.getDefault().language,
-                    if (transaction.offBudget) context.getString(R.string.TRANSACTION_LIST_OFFBUDGET_LABEL) else null)
-            else -> return EngageService.getInstance().storageManager.getBudgetCategoryDescription(transaction.subCategory, Locale.getDefault().language, if (transaction.offBudget) context.getString(R.string.TRANSACTION_LIST_OFFBUDGET_LABEL) else null)
+                    if (transaction.offBudget) context.getString(R.string.TRANSACTION_LIST_OFF_BUDGET_LABEL) else null)
+            else -> return EngageService.getInstance().storageManager.getBudgetCategoryDescription(transaction.subCategory, Locale.getDefault().language, if (transaction.offBudget) context.getString(R.string.TRANSACTION_LIST_OFF_BUDGET_LABEL) else null)
         }
     }
 
