@@ -3,12 +3,12 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:orientation="vertical"
     android:layout_height="wrap_content"
-    android:layout_width="match_parent">
+    android:layout_width="match_parent"
+    android:background="@color/cellBackground">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/cellBackground"
         android:gravity="center_vertical"
         android:paddingTop="16dp"
         android:paddingBottom="15dp"
@@ -33,11 +33,6 @@
             tools:text="Active"/>
     </LinearLayout>
 
-    <View
-        android:background="@color/themeDivider"
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:layout_marginStart="16dp"/>
-
+    <include layout="@layout/view_horizontal_divider_indent_start"/>
 
 </LinearLayout>
