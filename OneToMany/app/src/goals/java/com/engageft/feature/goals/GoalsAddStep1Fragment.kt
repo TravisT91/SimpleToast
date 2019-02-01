@@ -1,4 +1,4 @@
-package com.engageft.fis.pscu.feature
+package com.engageft.feature.goals
 
 import android.os.Bundle
 import android.os.Handler
@@ -10,6 +10,7 @@ import androidx.navigation.findNavController
 import com.engageft.apptoolbox.BaseViewModel
 import com.engageft.apptoolbox.ToolbarVisibilityState
 import com.engageft.fis.pscu.R
+import com.engageft.fis.pscu.feature.BaseEngagePageFragment
 
 /**
  * TODO(joeyhutchins): ClassName
@@ -19,20 +20,21 @@ import com.engageft.fis.pscu.R
  * Created by joeyhutchins on 8/24/18.
  * Copyright (c) 2018 Engage FT. All rights reserved.
  */
-class GoalsFragment : BaseEngagePageFragment() {
+class GoalsAddStep1Fragment : BaseEngagePageFragment() {
 
     override fun createViewModel(): BaseViewModel? {
         return null
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        val view = inflater.inflate(R.layout.fragment_goals, container, false)
+        val view = inflater.inflate(R.layout.fragment_goal_add_1, container, false)
         val button = view.findViewById<Button>(R.id.button)
         button.setOnClickListener{
-            toolbarController.setToolbarVisibility(ToolbarVisibilityState.GONE)
-            Handler().postDelayed({
-                view.findNavController().navigate(R.id.action_goals_fragment_to_goalAdd1Fragment)
-            }, 2000L)
+            Handler().postDelayed( {
+                view.findNavController().navigate(R.id.action_goalsAddStep1Fragment_to_goalAdd2Fragment)
+            }, 2000)
+            val desiredState = if (toolbarController.toolbarVisibilityState == ToolbarVisibilityState.GONE) ToolbarVisibilityState.VISIBLE else ToolbarVisibilityState.GONE
+            toolbarController.animateToolbarVisibility(desiredState, 500L)
         }
         return view
     }

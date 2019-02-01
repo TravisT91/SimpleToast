@@ -585,7 +585,7 @@ class DashboardFragment : BaseEngagePageFragment(),
     // DashboardTransactionsAdapter.DashboardTransactionsAdapterListener
     override fun onSavingsBalanceClicked() {
         if (!binding.dashboardExpandableView.showingActions) {
-            Toast.makeText(activity, "Set aside balance selected", Toast.LENGTH_SHORT).show()
+            binding.root.findNavController().navigate(R.id.action_dashboard_fragment_to_goalsListFragment)
         }
     }
 
