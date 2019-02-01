@@ -15,7 +15,7 @@
     <com.engageft.apptoolbox.view.TrackingPanel
         android:id="@+id/row_budget_tracking_panel"
         style="@style/TrackingPanelBudgetRow"
-        app:progresss="@{budgetItem.progress}"
+        app:progress="@{budgetItem.progress}"
         app:progressColor="@{budgetItem.progressColor}"/>
 
 </layout>
