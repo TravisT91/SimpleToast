@@ -44,8 +44,4 @@ abstract class BaseEngagePageFragment : LotusPageFragment(), BaseEngageFragmentI
     override fun getAndroidLifecycle(): Lifecycle {
         return lifecycle
     }
-
-    open fun handleBackPressed(): Boolean {
-        return false
-    }
 }
