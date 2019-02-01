@@ -6,28 +6,31 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
+import androidx.navigation.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.engageft.apptoolbox.BaseViewModel
 import com.engageft.apptoolbox.adapter.HorizontalRuleSection
 import com.engageft.apptoolbox.adapter.HorizontalRuleSectionIndentStart
 import com.engageft.apptoolbox.adapter.SelectableLabelsSection
-import com.engageft.feature.goals.GoalsListFragment.Companion.GOAL_ID_KEY
+import com.engageft.apptoolbox.view.InformationDialogFragment
 import com.engageft.fis.pscu.R
 import com.engageft.fis.pscu.databinding.FragmentGoalsListBinding
 import com.engageft.fis.pscu.feature.BaseEngagePageFragment
 import com.engageft.fis.pscu.feature.ToggleableLabelSection
 import com.engageft.fis.pscu.feature.branding.Palette
+import com.engageft.fis.pscu.feature.infoDialogYesNoNewInstance
 import io.github.luizgrp.sectionedrecyclerviewadapter.SectionedRecyclerViewAdapter
 import java.lang.IllegalArgumentException
+import java.math.BigDecimal
 
-class GoalDetailScreenFragment: BaseEngagePageFragment(), SelectableLabelsSection.OnSelectableLabelInteractionListener {
+class GoalDetailFragment: BaseEngagePageFragment() {
 
     private lateinit var sectionedAdapter: SectionedRecyclerViewAdapter
-    private lateinit var viewModelGoalDetail: GoalDetailScreenViewModel
+    private lateinit var viewModelGoalDetail: GoalDetailViewModel
     private lateinit var binding: FragmentGoalsListBinding
 
     override fun createViewModel(): BaseViewModel? {
-        viewModelGoalDetail = ViewModelProviders.of(this).get(GoalDetailScreenViewModel::class.java)
+        viewModelGoalDetail = ViewModelProviders.of(this).get(GoalDetailViewModel::class.java)
         return viewModelGoalDetail
     }
 
@@ -54,15 +57,19 @@ class GoalDetailScreenFragment: BaseEngagePageFragment(), SelectableLabelsSectio
             recyclerView.adapter = sectionedAdapter
             recyclerView.layoutManager = LinearLayoutManager(context!!)
 
-            viewModelGoalDetail.goalDetailModelObservable.observe(viewLifecycleOwner, Observer<GoalDetailScreenViewModel.GoalDetailModel> {
+            viewModelGoalDetail.goalDetailModelObservable.observe(viewLifecycleOwner, Observer<GoalDetailViewModel.GoalDetailModel> {
                 updateRecyclerView(it)
+            })
+
+            viewModelGoalDetail.deleteStatusObservable.observe(viewLifecycleOwner, Observer {
+                binding.root.findNavController().popBackStack()
             })
         }
 
         return binding.root
     }
 
-    private fun updateRecyclerView(goalDetailModel: GoalDetailScreenViewModel.GoalDetailModel) {
+    private fun updateRecyclerView(goalDetailModel: GoalDetailViewModel.GoalDetailModel) {
         sectionedAdapter.removeAllSections()
 
         toolbarController.setToolbarTitle(goalDetailModel.goalInfo.name.capitalize())
@@ -75,7 +82,14 @@ class GoalDetailScreenFragment: BaseEngagePageFragment(), SelectableLabelsSectio
 
         sectionedAdapter.addSection(HorizontalRuleSection())
 
-        sectionedAdapter.addSection(SelectableLabelsSection(context!!, R.style.GoalDetailItemTextStyle).addLabel(TRANSFER_LABEL_ID, getString(R.string.GOAL_DETAIL_TRANSFER)))
+        sectionedAdapter.addSection(SelectableLabelsSection(
+                context!!,
+                R.style.GoalDetailItemTextStyle,
+                object: SelectableLabelsSection.OnSelectableLabelInteractionListener {
+                    override fun onLabelClicked(labelId: Int) {
+                        // TODO(aHashimi): FOTM-575 single transfer
+                    }
+                }).addLabel(TRANSFER_LABEL_ID, getString(R.string.GOAL_DETAIL_TRANSFER)))
 
         sectionedAdapter.addSection(HorizontalRuleSectionIndentStart())
 
@@ -92,29 +106,60 @@ class GoalDetailScreenFragment: BaseEngagePageFragment(), SelectableLabelsSectio
 
             sectionedAdapter.addSection(HorizontalRuleSectionIndentStart())
 
-            sectionedAdapter.addSection(SelectableLabelsSection(context!!, R.style.GoalDetailItemTextStyle)
+            sectionedAdapter.addSection(SelectableLabelsSection(
+                    context!!,
+                    R.style.GoalDetailItemTextStyle,
+                    object : SelectableLabelsSection.OnSelectableLabelInteractionListener {
+                        override fun onLabelClicked(labelId: Int) {
+                            // TODO(aHashimi): FOTM-837
+                        }
+
+                    })
                     .addLabel(EDIT_LABEL_ID, getString(R.string.GOAL_DETAIL_EDIT)))
             sectionedAdapter.addSection(HorizontalRuleSectionIndentStart())
         }
 
-        sectionedAdapter.addSection(SelectableLabelsSection(context!!, R.style.GoalDetailItemTextStyle)
+        sectionedAdapter.addSection(SelectableLabelsSection(
+                context!!,
+                R.style.GoalDetailItemTextStyle,
+                object: SelectableLabelsSection.OnSelectableLabelInteractionListener {
+                    override fun onLabelClicked(labelId: Int) {
+                        onDeleteGoal()
+                    }
+                })
                 .addLabel(DELETE_LABEL_ID, getString(R.string.GOAL_DETAIL_DELETE)))
         sectionedAdapter.addSection(HorizontalRuleSection())
 
         sectionedAdapter.notifyDataSetChanged()
     }
 
-    override fun onLabelClicked(labelId: Int) {
-        when (labelId) {
-            TRANSFER_LABEL_ID -> {
-                // TODO(aHashimi): FOTM-575 single transfer
-            }
-            EDIT_LABEL_ID -> {
-               // TODO(aHashimi): FOTM-837
-            }
-            DELETE_LABEL_ID -> {
-                // TODO(aHashimi): FOTM-573
-            }
+    private fun onDeleteGoal() {
+        if (viewModelGoalDetail.goalDetailModelObservable.value!!.goalInfo.fundAmount.compareTo(BigDecimal.ZERO) == 0) {
+            val title = String.format(getString(R.string.GOAL_DELETE_ALERT_TITLE_FORMAT),
+                    viewModelGoalDetail.goalDetailModelObservable.value!!.goalInfo.name.capitalize())
+            fragmentDelegate.showDialog(infoDialogYesNoNewInstance(
+                    context = context!!,
+                    title = title,
+                    message = getString(R.string.GOAL_DELETE_ALERT_MESSAGE_FORMAT),
+                    listener = object: InformationDialogFragment.InformationDialogFragmentListener {
+                        override fun onDialogFragmentNegativeButtonClicked() {
+
+                        }
+
+                        override fun onDialogFragmentPositiveButtonClicked() {
+                            viewModelGoalDetail.onDelete()
+                        }
+
+                        override fun onDialogCancelled() {
+                        }
+
+                    }))
+        } else {
+            binding.root.findNavController().navigate(R.id.action_goalDetailScreenFragment_to_goalDeleteFragment,
+                    Bundle().apply {
+                        putLong(GOAL_ID_KEY, viewModelGoalDetail.goalDetailModelObservable.value!!.goalInfo.goalId)
+                        putSerializable(GOAL_FUND_AMOUNT_KEY, viewModelGoalDetail.goalDetailModelObservable.value!!.goalInfo.fundAmount)
+                    })
         }
     }
 
@@ -124,5 +169,8 @@ class GoalDetailScreenFragment: BaseEngagePageFragment(), SelectableLabelsSectio
         const val DELETE_LABEL_ID = 3
 
         const val GOAL_ID_DEFAULT = -1L
+
+        const val GOAL_ID_KEY = "GOAL_ID_KEY"
+        const val GOAL_FUND_AMOUNT_KEY = "GOAL_FUND_AMOUNT_KEY"
     }
 }

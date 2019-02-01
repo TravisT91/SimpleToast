@@ -15,7 +15,7 @@ import utilGen1.StringUtils
 import java.math.BigDecimal
 
 class GoalDetailHeaderSection(private val context: Context,
-                              private val goalDetailModel: GoalDetailScreenViewModel.GoalDetailModel,
+                              private val goalDetailModel: GoalDetailViewModel.GoalDetailModel,
                               private val listener: OnButtonClickListener)
     : StatelessSection((SectionParameters.builder().itemResourceId(R.layout.goal_detail_header_section)).build()) {
 

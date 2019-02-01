@@ -3,7 +3,6 @@ package com.engageft.feature.goals
 import androidx.lifecycle.MutableLiveData
 import com.engageft.engagekit.EngageService
 import com.engageft.engagekit.utils.LoginResponseUtils
-import com.engageft.fis.pscu.feature.BaseEngageViewModel
 import com.ob.ws.dom.GoalsResponse
 import com.ob.ws.dom.LoginResponse
 import com.ob.ws.dom.utility.DebitCardInfo
@@ -11,8 +10,12 @@ import com.ob.ws.dom.utility.GoalInfo
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 
-class GoalDetailScreenViewModel: BaseEngageViewModel() {
+class GoalDetailViewModel: GoalDeleteViewModel() {
     val goalDetailModelObservable = MutableLiveData<GoalDetailModel>()
+
+    fun onDelete() {
+        onTransferAndDelete(goalDetailModelObservable.value!!.goalInfo.goalId)
+    }
 
     fun initGoalDetail(goalId: Long) {
         showProgressOverlayDelayed()
@@ -21,7 +24,7 @@ class GoalDetailScreenViewModel: BaseEngageViewModel() {
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe({ response ->
                     if (response is LoginResponse) {
-                        initGoal(goalId, LoginResponseUtils.getCurrentCard(response), false)
+                        initGoal(goalId, LoginResponseUtils.getCurrentCard(response), true)
                     } else {
                         dismissProgressOverlayImmediate()
                         handleUnexpectedErrorResponse(response)
