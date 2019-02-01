@@ -46,12 +46,12 @@ class AuthTimerViewModel : ViewModel() {
 
     init {
         expiredAuthNavigationObservable.value = AuthNavigationEvent.PROMPT_NONE
-        authManager.authExpirationUIObservable.observeForever(this.authenticationObserver)
+        authManager.addAuthTimerObserver(this.authenticationObserver)
     }
 
     override fun onCleared() {
         super.onCleared()
-        authManager.authExpirationUIObservable.removeObserver(this.authenticationObserver)
+        authManager.removeAuthTimerObserver(this.authenticationObserver)
     }
 
     fun onUserInteraction() {

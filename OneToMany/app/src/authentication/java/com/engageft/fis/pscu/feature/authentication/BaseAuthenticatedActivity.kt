@@ -49,7 +49,7 @@ abstract class BaseAuthenticatedActivity : LotusActivity() {
             }
             override fun onEasterEggDeactivated() {
                 // To simulate auth expiration.
-                EngageService.getInstance().authManager.setAuthExpired()
+                EngageService.getInstance().authManager.debugOnlySetAuthExpired()
             }
         })
     }
