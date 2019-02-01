@@ -42,7 +42,7 @@ class GoalsAddEditConfirmationFragment: BaseEngagePageFragment() {
         }
 
         confirmationViewModel.successStateObservable.observe(viewLifecycleOwner, Observer {
-            binding.root.findNavController().navigate(R.id.action_goalsAddEditConfirmationFragment_to_goalsSuccessFragment)
+            binding.root.findNavController().popBackStack(R.id.goalsAddStep1Fragment, true)
         })
 
         return binding.root
