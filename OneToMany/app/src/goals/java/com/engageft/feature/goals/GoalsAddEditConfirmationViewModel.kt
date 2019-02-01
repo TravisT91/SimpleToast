@@ -42,11 +42,11 @@ class GoalsAddEditConfirmationViewModel: BaseEngageViewModel() {
                         val purseId = LoginResponseUtils.getCurrentCard(response).purseId
                         saveGoalInfo(getNewGoalInfo(purseId))
                     } else {
-                        dismissProgressOverlayImmediate()
+                        dismissProgressOverlay()
                         handleUnexpectedErrorResponse(response)
                     }
                 }, { e ->
-                    dismissProgressOverlayImmediate()
+                    dismissProgressOverlay()
                     handleThrowable(e)
                 })
         )
@@ -119,13 +119,13 @@ class GoalsAddEditConfirmationViewModel: BaseEngageViewModel() {
                     } else {
                         // reset payPlanInfo so user can proceed
                         goalInfo.payPlan = payPlanInfo
-                        dismissProgressOverlayImmediate()
+                        dismissProgressOverlay()
                         handleBackendErrorForForms(response, "$TAG: Failed to create/save a goal")
                     }
                 }, { e ->
                     // reset payPlanInfo so user can proceed
                     goalInfo.payPlan = payPlanInfo
-                    dismissProgressOverlayImmediate()
+                    dismissProgressOverlay()
                     handleThrowable(e)
                 })
         )
@@ -144,7 +144,7 @@ class GoalsAddEditConfirmationViewModel: BaseEngageViewModel() {
                                     // remove newly-created goal from the server, since it has no payPlan
                                     cleanupGoalAfterPayPlanSubmissionFailure(goalId)
                                 } else {
-                                    dismissProgressOverlayImmediate()
+                                    dismissProgressOverlay()
                                 }
                                 // reset payPlanInfo so user can proceed
                                 goalInfo.payPlan = payPlanInfo
@@ -155,7 +155,7 @@ class GoalsAddEditConfirmationViewModel: BaseEngageViewModel() {
                                 // remove newly-created goal from the server, since it has no payplan
                                 cleanupGoalAfterPayPlanSubmissionFailure(goalId)
                             } else {
-                                dismissProgressOverlayImmediate()
+                                dismissProgressOverlay()
                                 // reset payPlanInfo so user can proceed
                                 goalInfo.payPlan = payPlanInfo
                                 handleThrowable(e)
@@ -196,11 +196,11 @@ class GoalsAddEditConfirmationViewModel: BaseEngageViewModel() {
                         .subscribeOn(Schedulers.io())
                         .observeOn(AndroidSchedulers.mainThread())
                         .subscribe({
-                            dismissProgressOverlayImmediate()
+                            dismissProgressOverlay()
                             // don't show the backend error here since we want the user to see
                             // the payPlan submission failure error
                         }, { e ->
-                            dismissProgressOverlayImmediate()
+                            dismissProgressOverlay()
                             handleThrowable(e)
                         })
         )
@@ -216,12 +216,12 @@ class GoalsAddEditConfirmationViewModel: BaseEngageViewModel() {
                     if (response is LoginResponse) {
                         refreshGoals(LoginResponseUtils.getCurrentCard(response))
                     } else {
-                        dismissProgressOverlayImmediate()
+                        dismissProgressOverlay()
                         // take user to Goals Success even if refresh is not successful
                         successStateObservable.value = GoalSuccessState.SUCCESS
                     }
                 }, { e ->
-                    dismissProgressOverlayImmediate()
+                    dismissProgressOverlay()
                     // take user to Goals Success even if refresh is not successful
                     successStateObservable.value = GoalSuccessState.SUCCESS
                 })
@@ -234,11 +234,11 @@ class GoalsAddEditConfirmationViewModel: BaseEngageViewModel() {
                         .subscribeOn(Schedulers.io())
                         .observeOn(AndroidSchedulers.mainThread())
                         .subscribe({
-                            dismissProgressOverlayImmediate()
+                            dismissProgressOverlay()
                             // take user to Goals Success even if refresh is not successful
                             successStateObservable.value = GoalSuccessState.SUCCESS
                         }, { e ->
-                            dismissProgressOverlayImmediate()
+                            dismissProgressOverlay()
                             // take user to Goals Success even if refresh is not successful
                             successStateObservable.value = GoalSuccessState.SUCCESS
                         })
