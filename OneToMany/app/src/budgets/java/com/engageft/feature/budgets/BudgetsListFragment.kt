@@ -6,21 +6,16 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
-import androidx.annotation.ColorInt
-import androidx.core.content.ContextCompat.getColor
-import androidx.databinding.library.baseAdapters.BR.palette
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.engageft.apptoolbox.BaseViewModel
 import com.engageft.feature.budgets.recyclerview.BudgetItem
-import com.engageft.feature.budgets.recyclerview.BudgetItemSection
-import com.engageft.fis.pscu.R
+import com.engageft.feature.budgets.recyclerview.BudgetsListAdapter
 import com.engageft.fis.pscu.databinding.FragmentBudgetsListBinding
 import com.engageft.fis.pscu.feature.BaseEngagePageFragment
 import com.engageft.fis.pscu.feature.branding.Palette
-import com.engageft.fis.pscu.feature.recyclerview.section.LabelSection
-import io.github.luizgrp.sectionedrecyclerviewadapter.SectionedRecyclerViewAdapter
+import kotlinx.android.synthetic.main.fragment_budgets_list.*
 
 /**
  * BudgetsListFragment
@@ -30,10 +25,10 @@ import io.github.luizgrp.sectionedrecyclerviewadapter.SectionedRecyclerViewAdapt
  * Created by kurteous on 1/16/19.
  * Copyright (c) 2019 Engage FT. All rights reserved.
  */
-class BudgetsListFragment : BaseEngagePageFragment(), BudgetItemSection.BudgetItemSectionListener {
+class BudgetsListFragment : BaseEngagePageFragment(), BudgetsListAdapter.BudgetListAdapterListener {
     private lateinit var viewModel: BudgetsListViewModel
     private lateinit var binding: FragmentBudgetsListBinding
-    private var budgetsListAdapter = SectionedRecyclerViewAdapter()
+    private var budgetsListAdapter: BudgetsListAdapter? = null
 
     // Without a slight delay, updating the recyclerview causes the close drawer animation to stutter.
     // The delay gives the drawer time to close before updateBudgetLists() is called on the main thread.
@@ -43,35 +38,6 @@ class BudgetsListFragment : BaseEngagePageFragment(), BudgetItemSection.BudgetIt
     // all the individual category budgets.
     private val budgetsObserver = Observer<Pair<BudgetItem, List<BudgetItem>>> {
         Handler().postDelayed({ updateBudgetsList(totalBudgetItem = it.first, categoryBudgetItems = it.second) }, RECYCLERVIEW_UPDATE_DELAY_MS)
-    }
-
-    private lateinit var totalSpentTitle: String
-    private lateinit var otherSpendingTitle: String
-    private lateinit var spentNormalFormat: String
-    private lateinit var spentOverFormat: String
-    @ColorInt
-    private var spentColorNormal: Int = 0
-    @ColorInt
-    private var spentColorOverBudget: Int = 0
-    @ColorInt
-    private var progressColorNormal: Int = 0
-    @ColorInt
-    private var progressColorHighSpendingTrend: Int = 0
-    @ColorInt
-    private var progressColorOverBudget: Int = 0
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-
-        totalSpentTitle = getString(R.string.budget_category_title_total_spent)
-        otherSpendingTitle = getString(R.string.budget_category_title_other_spending)
-        spentNormalFormat = getString(R.string.budget_spent_of_amount_format)
-        spentOverFormat = getString(R.string.budget_spent_over_format)
-        spentColorNormal = getColor(context!!, R.color.budget_spent_text_normal)
-        spentColorOverBudget = getColor(context!!, R.color.budget_spent_text_over)
-        progressColorNormal = getColor(context!!, R.color.budget_bar_normal)
-        progressColorHighSpendingTrend = getColor(context!!, R.color.budget_bar_warning)
-        progressColorOverBudget = getColor(context!!, R.color.budget_bar_over)
     }
 
     override fun createViewModel(): BaseViewModel? {
@@ -84,10 +50,11 @@ class BudgetsListFragment : BaseEngagePageFragment(), BudgetItemSection.BudgetIt
         binding.apply {
             budgetsRecyclerView.apply {
                 layoutManager = LinearLayoutManager(context)
+                budgetsListAdapter = BudgetsListAdapter(context!!, this@BudgetsListFragment)
                 adapter = budgetsListAdapter
             }
 
-            //palette = Palette
+            palette = Palette
         }
 
         viewModel.budgetsObservable.observe(viewLifecycleOwner, budgetsObserver)
@@ -102,39 +69,7 @@ class BudgetsListFragment : BaseEngagePageFragment(), BudgetItemSection.BudgetIt
     }
 
     private fun updateBudgetsList(totalBudgetItem: BudgetItem, categoryBudgetItems: List<BudgetItem>) {
-        budgetsListAdapter.removeAllSections()
-        budgetsListAdapter.addSection(
-                BudgetItemSection(budgetItems = listOf(totalBudgetItem),
-                        isTotalSection = true,
-                        totalSpentTitle = totalSpentTitle,
-                        otherSpendingTitle = otherSpendingTitle,
-                        spentNormalFormat = spentNormalFormat,
-                        spentOverFormat = spentOverFormat,
-                        spentColorNormal = spentColorNormal,
-                        spentColorOverBudget = spentColorOverBudget,
-                        progressColorNormal = progressColorNormal,
-                        progressColorHighSpendingTrend = progressColorHighSpendingTrend,
-                        progressColorOverBudget = progressColorOverBudget,
-                        listener = this)
-        )
-
-        budgetsListAdapter.addSection(LabelSection.newInstanceGroupTitle(getString(R.string.budget_categories_header)))
-
-        budgetsListAdapter.addSection(
-                BudgetItemSection(budgetItems = categoryBudgetItems,
-                        isTotalSection = false,
-                        totalSpentTitle = totalSpentTitle,
-                        otherSpendingTitle = otherSpendingTitle,
-                        spentNormalFormat = spentNormalFormat,
-                        spentOverFormat = spentOverFormat,
-                        spentColorNormal = spentColorNormal,
-                        spentColorOverBudget = spentColorOverBudget,
-                        progressColorNormal = progressColorNormal,
-                        progressColorHighSpendingTrend = progressColorHighSpendingTrend,
-                        progressColorOverBudget = progressColorOverBudget,
-                        listener = this)
-        )
-        budgetsListAdapter.notifyDataSetChanged()
+        budgetsListAdapter?.updateBudgetItems(totalBudgetItem, categoryBudgetItems)
     }
 
     companion object {

@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+        <variable
+            name="palette"
+            type="com.engageft.fis.pscu.feature.branding.Palette"/>
+
+        <variable
+            name="budgetItem"
+            type="com.engageft.feature.budgets.recyclerview.BudgetItem"/>
+    </data>
+
+    <com.engageft.apptoolbox.view.TrackingPanel
+        android:id="@+id/row_budget_tracking_panel"
+        style="@style/TrackingPanelBudgetRow"
+        app:progresss="@{budgetItem.progress}"
+        app:progressColor="@{budgetItem.progressColor}"/>
+
+</layout>

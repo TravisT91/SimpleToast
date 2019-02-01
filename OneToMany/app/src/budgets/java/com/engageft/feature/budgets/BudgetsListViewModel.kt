@@ -30,7 +30,7 @@ class BudgetsListViewModel : BaseEngageViewModel() {
     val budgetsObservable: MutableLiveData<Pair<BudgetItem, List<BudgetItem>>> = MutableLiveData()
 
     fun refresh() {
-        progressOverlayShownObservable.postValue(true)
+        showProgressOverlayDelayed()
         compositeDisposable.add(
                 EngageService.getInstance().loginResponseAsObservable
                         .subscribeOn(Schedulers.io())
@@ -50,10 +50,15 @@ class BudgetsListViewModel : BaseEngageViewModel() {
                                     var budgetStatus = budgetStatus()                       // reused for computing categorySpendingValues
                                     val totalBudgetItem = BudgetItem(
                                             categoryName = BudgetConstants.CATEGORY_NAME_FE_TOTAL_SPENDING,
+                                            title = null,
                                             spentAmount = spentAmount,
+                                            spentString = null,
+                                            spentStringColor = BudgetConstants.INT_NOT_SET,
                                             budgetAmount = budgetAmount,
                                             budgetStatus = budgetStatus,
                                             progress = progress(spentAmount, budgetAmount),
+                                            progressColor = BudgetConstants.INT_NOT_SET,
+                                            progressBarHeight = BudgetConstants.INT_NOT_SET,
                                             fractionTimePeriodPassed = fractionTimePeriodPassed
                                     )
 
@@ -68,9 +73,13 @@ class BudgetsListViewModel : BaseEngageViewModel() {
                                                 BudgetItem(
                                                         categoryName = categorySpending.category,
                                                         spentAmount = spentAmount,
+                                                        spentString = null,
+                                                        spentStringColor = BudgetConstants.INT_NOT_SET,
                                                         budgetAmount = budgetAmount,
                                                         budgetStatus = budgetStatus,
                                                         progress = progress(spentAmount, budgetAmount),
+                                                        progressColor = BudgetConstants.INT_NOT_SET,
+                                                        progressBarHeight = BudgetConstants.INT_NOT_SET,
                                                         fractionTimePeriodPassed = fractionTimePeriodPassed
                                                 )
                                         )
@@ -84,15 +93,19 @@ class BudgetsListViewModel : BaseEngageViewModel() {
                                                 BudgetItem(
                                                         categoryName = BudgetConstants.CATEGORY_NAME_BE_OTHER_SPENDING,
                                                         spentAmount = spentAmount,
+                                                        spentString = null,
+                                                        spentStringColor = BudgetConstants.INT_NOT_SET,
                                                         budgetAmount = budgetAmount,
                                                         budgetStatus = budgetStatus,
                                                         progress = progress(spentAmount, budgetAmount),
+                                                        progressColor = BudgetConstants.INT_NOT_SET,
+                                                        progressBarHeight = BudgetConstants.INT_NOT_SET,
                                                         fractionTimePeriodPassed = fractionTimePeriodPassed
                                                 )
                                         )
                                     }
 
-                                    progressOverlayShownObservable.postValue(false)
+                                    dismissProgressOverlay()
                                     budgetsObservable.postValue(Pair(totalBudgetItem, categoryBudgetItems))
                                 } ?: run {
                                     // LoginResponse had no budgetInfo. Should never happen.

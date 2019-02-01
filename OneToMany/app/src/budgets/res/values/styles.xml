@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <style name="TrackingPanelBudgetRowParent" parent="@style/LotusTrackingPanel_Parent">
+    <style name="TrackingPanelBudgetRow" parent="@style/LotusTrackingPanel_Parent">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:layout_marginStart">16dp</item>
@@ -8,17 +8,6 @@
         <item name="android:layout_marginEnd">16dp</item>
         <item name="android:layout_marginBottom">10dp</item>
         <item name="indicatorText">@string/budget_row_today</item>
-        <item name="progressBarProgressColor">@color/secondary</item>
-        <item name="contentPadding">@dimen/trackingPanelPadding</item>
-    </style>
-    <style name="TrackingPanelBudgetRowChild" parent="@style/LotusTrackingPanel_Child">
-        <item name="android:layout_width">match_parent</item>
-        <item name="android:layout_height">wrap_content</item>
-        <item name="android:layout_marginStart">16dp</item>
-        <item name="android:layout_marginTop">10dp</item>
-        <item name="android:layout_marginEnd">16dp</item>
-        <item name="android:layout_marginBottom">10dp</item>
-        <item name="progressBarProgressColor">@color/secondary</item>
         <item name="contentPadding">@dimen/trackingPanelPadding</item>
     </style>
 </resources>

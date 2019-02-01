@@ -22,6 +22,8 @@ object BudgetConstants {
     private const val CATEGORY_NAME_BE_ENTERTAINMENT = "Entertainment"
     const val CATEGORY_NAME_BE_OTHER_SPENDING = "Other Spending"
 
+    const val INT_NOT_SET = 0
+
     val DEFAULT_EDIT_CATEGORIES = listOf(
             CATEGORY_NAME_BE_DINING_OUT,
             CATEGORY_NAME_BE_ENTERTAINMENT,

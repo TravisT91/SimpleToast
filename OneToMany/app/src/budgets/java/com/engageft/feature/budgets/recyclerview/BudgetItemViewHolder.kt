@@ -1,9 +1,10 @@
 package com.engageft.feature.budgets.recyclerview
 
-import android.view.View
 import androidx.recyclerview.widget.RecyclerView
-import com.engageft.apptoolbox.view.TrackingPanel
+import com.engageft.feature.budgets.BudgetConstants
 import com.engageft.fis.pscu.R
+import com.engageft.fis.pscu.databinding.RowBudgetTrackingPanelBinding
+import com.engageft.fis.pscu.feature.branding.Palette
 
 /**
  * BudgetItemViewHolder
@@ -13,16 +14,37 @@ import com.engageft.fis.pscu.R
  * Created by kurteous on 1/16/19.
  * Copyright (c) 2019 Engage FT. All rights reserved.
  */
-class BudgetItemViewHolder(itemView: View, listener: BudgetItemSection.BudgetItemSectionListener) : RecyclerView.ViewHolder(itemView) {
-
-    val trackingPanel: TrackingPanel = itemView.findViewById(R.id.row_budget_tracking_panel)
-    var budgetItem: BudgetItem? = null
+class BudgetItemViewHolder(val binding: RowBudgetTrackingPanelBinding, listener: BudgetsListAdapter.BudgetListAdapterListener) : RecyclerView.ViewHolder(binding.root) {
 
     init {
-        trackingPanel.setOnClickListener {
-            budgetItem?.apply {
+        binding.rowBudgetTrackingPanel.setOnClickListener {
+            binding.budgetItem?.apply {
                 listener.onBudgetCategorySelected(categoryName)
             }
         }
+
+        binding.palette = Palette
+    }
+
+    fun bind(budgetItem: BudgetItem) {
+        binding.budgetItem = budgetItem
+        binding.rowBudgetTrackingPanel.apply {
+            setTitleText(budgetItem.title!!)
+            setRightSubTitle(budgetItem.spentString!!)
+            setRightSubtitleColor(budgetItem.spentStringColor)
+//            setProgress(budgetItem.progress)
+//            setProgressColor(budgetItem.progressColor)
+            setProgressBarHeight(budgetItem.progressBarHeight)
+            setIndicatorPosition(budgetItem.fractionTimePeriodPassed)
+
+            if (budgetItem.categoryName == BudgetConstants.CATEGORY_NAME_FE_TOTAL_SPENDING) {
+                showIndicatorText(true)
+                setIndicatorText(context.getString(R.string.budget_row_today))
+            } else {
+                showIndicatorText(false)
+            }
+        }
+
+        binding.executePendingBindings()
     }
 }
