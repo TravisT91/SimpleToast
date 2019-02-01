@@ -235,20 +235,27 @@
 
             <include layout="@layout/divider" />
 
-            <TextView
-                android:id="@+id/logout"
-                tools:style="@style/Body"
-                parisStyle="@{palette.body}"
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@drawable/selectable_item_background_structure2"
-                android:gravity="center_horizontal"
-                android:paddingTop="@dimen/listItemPaddingTop"
-                android:paddingBottom="@dimen/listItemPaddingBottom"
-                android:text="@string/SETTINGS_LOG_OUT"
-                android:textColor="@{palette.errorColor}"
-                android:onClick="@{() -> viewModel.onLogoutClicked()}"
-                tools:textColor="@color/error"/>
+                android:background="@color/accountSettingsItemBackgroundColor"
+                android:orientation="vertical"
+                tools:ignore="RtlSymmetry">
+                <TextView
+                    android:id="@+id/logout"
+                    tools:style="@style/Body"
+                    parisStyle="@{palette.body}"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/selectable_item_background_structure2"
+                    android:gravity="center_horizontal"
+                    android:paddingTop="@dimen/listItemPaddingTop"
+                    android:paddingBottom="@dimen/listItemPaddingBottom"
+                    android:text="@string/SETTINGS_LOG_OUT"
+                    android:textColor="@{palette.errorColor}"
+                    android:onClick="@{() -> viewModel.onLogoutClicked()}"
+                    tools:textColor="@color/error"/>
+            </LinearLayout>
 
             <include layout="@layout/divider" />
 
