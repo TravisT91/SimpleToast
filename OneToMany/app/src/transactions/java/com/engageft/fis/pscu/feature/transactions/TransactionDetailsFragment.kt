@@ -32,7 +32,7 @@ class TransactionDetailsFragment : BaseEngageSubFragment() {
     }
 
     private val checkChangeObserver = Observer<Any?> { detailsViewModel.checkForChanges() }
-    private val onChangeObserver = Observer<Boolean> { onHasChanges(it) }
+    private val onChangeObserver = Observer<Boolean> { onChangeChecked(it) }
 
     lateinit var detailsViewModel: TransactionDetailsViewModel
     lateinit var binding: TransactionDetailsFragmentBinding
@@ -131,7 +131,7 @@ class TransactionDetailsFragment : BaseEngageSubFragment() {
         startOffset = 50
     }
 
-    private fun onHasChanges(hasChanges: Boolean){
+    private fun onChangeChecked(hasChanges: Boolean){
         binding.saveButton.apply{
             if (hasChanges) {
                 if (visibility != View.VISIBLE) {
