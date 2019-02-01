@@ -75,7 +75,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/pillButtonTopSpaceInFormsAndLists"
-                android:text="@string/next_word"/>
+                android:text="@string/GOALS_NEXT_BUTTON"/>
 
         </androidx.appcompat.widget.LinearLayoutCompat>
 
