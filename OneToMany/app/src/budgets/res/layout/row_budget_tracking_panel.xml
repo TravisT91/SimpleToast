@@ -10,12 +10,23 @@
         <variable
             name="budgetItem"
             type="com.engageft.feature.budgets.recyclerview.BudgetItem"/>
+
+        <variable
+            name="budgetConstants"
+            type="com.engageft.feature.budgets.BudgetConstants"/>
     </data>
 
     <com.engageft.apptoolbox.view.TrackingPanel
         android:id="@+id/row_budget_tracking_panel"
         style="@style/TrackingPanelBudgetRow"
+        app:titleText="@{budgetItem.title}"
+        app:rightSubtitle="@{budgetItem.spentString}"
+        app:rightSubtitleColor="@{budgetItem.spentStringColor}"
         app:progress="@{budgetItem.progress}"
-        app:progressColor="@{budgetItem.progressColor}"/>
+        app:progressColor="@{budgetItem.progressColor}"
+        app:progressBarHeight="@{budgetItem.progressBarHeight}"
+        app:indicatorPosition="@{budgetItem.fractionTimePeriodPassed}"
+        app:indicatorText="@string/budget_row_today"
+        app:showIndicatorText="@{budgetItem.categoryName == budgetConstants.CATEGORY_NAME_FE_TOTAL_SPENDING}"/>
 
 </layout>
