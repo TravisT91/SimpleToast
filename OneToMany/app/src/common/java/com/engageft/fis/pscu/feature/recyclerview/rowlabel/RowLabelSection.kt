@@ -1,4 +1,4 @@
-package com.engageft.fis.pscu.feature.recyclerview.section
+package com.engageft.fis.pscu.feature.recyclerview.rowlabel
 
 import android.view.View
 import android.widget.TextView
@@ -10,14 +10,14 @@ import io.github.luizgrp.sectionedrecyclerviewadapter.SectionParameters
 import io.github.luizgrp.sectionedrecyclerviewadapter.StatelessSection
 
 /**
- * LabelSection
+ * RowLabelSection
  * <p>
  * Reusable Stateless section for displaying text labels in RecyclerViews
  * <p>
  * Created by kurteous on 1/22/19.
  * Copyright (c) 2019 Engage FT. All rights reserved.
  */
-class LabelSection(parameters: SectionParameters) : StatelessSection(parameters) {
+class RowLabelSection(parameters: SectionParameters) : StatelessSection(parameters) {
     private lateinit var label: CharSequence
     @StyleRes
     private var styleRes: Int = 0
@@ -44,8 +44,8 @@ class LabelSection(parameters: SectionParameters) : StatelessSection(parameters)
     }
 
     companion object {
-        fun newInstanceGroupTitle(label: CharSequence): LabelSection {
-            val labelSection = LabelSection(SectionParameters.builder().itemResourceId(R.layout.label_section).build())
+        fun newInstanceGroupTitle(label: CharSequence): RowLabelSection {
+            val labelSection = RowLabelSection(SectionParameters.builder().itemResourceId(R.layout.row_label).build())
             labelSection.label = label
             labelSection.styleRes = R.style.LabelSectionGroupTitle
             return labelSection

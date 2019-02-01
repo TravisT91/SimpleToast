@@ -10,6 +10,8 @@ import com.engageft.engagekit.EngageService
 import com.engageft.feature.budgets.BudgetConstants
 import com.engageft.fis.pscu.R
 import com.engageft.fis.pscu.databinding.RowBudgetTrackingPanelBinding
+import com.engageft.fis.pscu.databinding.RowLabelBinding
+import com.engageft.fis.pscu.feature.recyclerview.rowlabel.RowLabelViewHolder
 import utilGen1.StringUtils
 import java.math.BigDecimal
 import java.util.*
@@ -46,36 +48,39 @@ class BudgetsListAdapter(context: Context,
     private val progressBarHeightTotal = context.resources.getDimensionPixelSize(R.dimen.trackingPanelProgressBarHeightParentGrandparent)
     private val progressBarHeightCategory = context.resources.getDimensionPixelSize(R.dimen.trackingPanelProgressBarHeightChild)
 
+    private val categoryLabel = context.getString(R.string.budget_categories_header)
+
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         val inflater = LayoutInflater.from(parent.context)
-//        if (viewType == VIEW_TYPE_CATEGORIES_LABEL) {
-//
-//        } else {
+        if (viewType == VIEW_TYPE_CATEGORIES_LABEL) {
+            val binding = RowLabelBinding.inflate(inflater, parent, false)
+            return RowLabelViewHolder(binding)
+        } else {
             val binding = RowBudgetTrackingPanelBinding.inflate(inflater, parent, false)
             return BudgetItemViewHolder(binding, listener)
-//        }
+        }
     }
 
     override fun getItemCount(): Int {
         return if (totalBudgetItem == null && categoryBudgetItems == null) {
             0
         } else {
-            1 + categoryBudgetItems!!.size
-        } // 2 because 1 for totalBudgetItem, 1 for categories label
+            2 + categoryBudgetItems!!.size // 2 because 1 for totalBudgetItem, 1 for categories label
+        }
     }
 
     override fun getItemViewType(position: Int): Int {
         return when(position) {
             POSITION_TOTAL_BUDGET_ITEM -> VIEW_TYPE_TOTAL_BUDGET_ITEM
-            //POSITION_CATEGORIES_LABEL -> VIEW_TYPE_CATEGORIES_LABEL
+            POSITION_CATEGORIES_LABEL -> VIEW_TYPE_CATEGORIES_LABEL
             else -> VIEW_TYPE_CATEGORY_BUDGET_ITEMS
         }
     }
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
-//        if (position == POSITION_CATEGORIES_LABEL) {
-//            // TODO
-//        } else {
+        if (position == POSITION_CATEGORIES_LABEL) {
+            (holder as? RowLabelViewHolder)?.bind(categoryLabel, R.style.LabelSectionGroupTitle)
+        } else {
         val viewType = getItemViewType(position)
             val budgetItem =
                     if (viewType == VIEW_TYPE_TOTAL_BUDGET_ITEM) {
@@ -90,7 +95,7 @@ class BudgetsListAdapter(context: Context,
             budgetItem.progressBarHeight = if (viewType == VIEW_TYPE_TOTAL_BUDGET_ITEM) progressBarHeightTotal else progressBarHeightCategory
 
             (holder as? BudgetItemViewHolder)?.bind(budgetItem)
-//        }
+        }
     }
 
     fun updateBudgetItems(totalBudgetItem: BudgetItem, categoryBudgetItems: List<BudgetItem>) {
@@ -101,7 +106,7 @@ class BudgetsListAdapter(context: Context,
     }
 
     private fun categoryBudgetItemIndexFromPosition(position: Int): Int {
-        return max(0, position - 1)  // TODO: change this to - 2 when label is added
+        return max(0, position - 2)
     }
 
     private fun getTitleFromCategoryName(categoryName: String): String {
