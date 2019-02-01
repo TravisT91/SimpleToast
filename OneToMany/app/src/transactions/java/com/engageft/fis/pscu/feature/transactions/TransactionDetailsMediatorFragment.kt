@@ -6,10 +6,13 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.FrameLayout
+import androidx.navigation.fragment.findNavController
 import com.engageft.apptoolbox.BaseViewModel
 import com.engageft.apptoolbox.NavigationOverrideClickListener
+import com.engageft.apptoolbox.view.InformationDialogFragment
 import com.engageft.fis.pscu.R
 import com.engageft.fis.pscu.feature.BaseEngagePageFragment
+import com.engageft.fis.pscu.feature.infoDialogGenericUnsavedChangesNewInstance
 
 /**
  * TransactionDetailsMediatorFragment
@@ -19,6 +22,7 @@ import com.engageft.fis.pscu.feature.BaseEngagePageFragment
  * Created by Travis Tkachuk 1/31/19
  * Copyright (c) 2019 Engage FT. All rights reserved.
  */
+
 class TransactionDetailsMediatorFragment : BaseEngagePageFragment() {
     override fun createViewModel(): BaseViewModel? {
         return null
@@ -34,6 +38,28 @@ class TransactionDetailsMediatorFragment : BaseEngagePageFragment() {
                 removeCategoryFragment()
                 return true
             } ?: run {
+                if (transactionDetailsFragment.detailsViewModel.checkForChanges()){
+                    infoDialogGenericUnsavedChangesNewInstance(
+                            context = context!!,
+                            listener = object: InformationDialogFragment.InformationDialogFragmentListener{
+                                override fun onDialogFragmentNegativeButtonClicked() {
+                                    //doNothing
+                                }
+
+                                override fun onDialogFragmentPositiveButtonClicked() {
+                                    findNavController().navigateUp()
+                                }
+
+                                override fun onDialogCancelled() {
+                                    //doNothing
+                                }
+
+                            }
+                    ).show(
+                            this@TransactionDetailsMediatorFragment.childFragmentManager,
+                            "unsavedDialog")
+                    return true
+                }
                 return false
             }
         }
