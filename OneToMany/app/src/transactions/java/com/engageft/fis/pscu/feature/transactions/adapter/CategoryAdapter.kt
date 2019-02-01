@@ -73,15 +73,15 @@ class CategoryAdapter(
             title.text = parentName
             categoryContainer.removeAllViews()
 
-            subCategories.forEach { category ->
+            subCategories.forEach { subCategory ->
 
                 categoryContainer.addView(
                         TextView(context).apply {
-                            text = sm.getBudgetCategoryDescription(category.name, lang)
+                            text = sm.getBudgetCategoryDescription(subCategory.name, lang)
                                     .removePrefix("$parentName: ")
                             setParisStyle(Palette.Title4)
                             setSingleLine(true)
-                            if (currentSubCategory == category.name) {
+                            if (currentSubCategory == subCategory.name) {
                                 val successCheck = ContextCompat.getDrawable(
                                         context, R.drawable.ic_success_check_mark)?.apply {
                                     DrawableCompat.setTint(this, Palette.successColor)
@@ -99,11 +99,11 @@ class CategoryAdapter(
                             }
                             setPadding(horizontalPadding, itemTextPadding, horizontalPadding, itemTextPadding)
                             setOnClickListener { _ ->
-                                onCategorySelectedListener.invoke(category.name)
+                                onCategorySelectedListener.invoke(subCategory.name)
                             }
                         })
 
-                if (parentCategory.subCategories.last() != category) {
+                if (parentCategory.subCategories.last() != subCategory) {
                     categoryContainer.addView(
                             LayoutInflater.from(context).inflate(
                                     R.layout.divider,
