@@ -35,7 +35,10 @@
                 android:layout_height="wrap_content"
                 android:textColor="@color/textPrimary"
                 android:lineSpacingExtra="6sp"
-                android:padding="16dp"
+                android:paddingStart="16dp"
+                android:paddingEnd="16dp"
+                android:paddingTop="16dp"
+                android:paddingBottom="8dp"
                 android:gravity="center_horizontal"
                 tools:text="Start setting aside" />
 
