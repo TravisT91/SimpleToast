@@ -1,6 +1,5 @@
-package com.engageft.feature.budgets.recyclerview
+package com.engageft.feature.budgets.model
 
-import androidx.annotation.ColorInt
 import com.engageft.feature.budgets.BudgetConstants
 import java.math.BigDecimal
 
@@ -15,14 +14,9 @@ import java.math.BigDecimal
  */
 data class BudgetItem(
         val categoryName: String,
-        var title: String? = null,          // filled in by BudgetItemSection
         val spentAmount: BigDecimal,
         val budgetAmount: BigDecimal,
-        var spentString: String? = null,    // filled in by BudgetItemSection
-        @ColorInt var spentStringColor: Int,
         val budgetStatus: BudgetConstants.BudgetStatus,
         val progress: Float,
-        @ColorInt var progressColor: Int,   // filled in by BudgetItemSection
-        var progressBarHeight: Int,
         val fractionTimePeriodPassed: Float
 )

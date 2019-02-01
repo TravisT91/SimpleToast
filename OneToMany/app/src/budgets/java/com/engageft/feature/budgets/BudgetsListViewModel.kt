@@ -8,7 +8,7 @@ import com.engageft.feature.budgets.extension.isGreaterThan
 import com.engageft.feature.budgets.extension.isLessThan
 import com.engageft.feature.budgets.extension.isZero
 import com.engageft.feature.budgets.extension.toBigDecimalOrZeroIfEmpty
-import com.engageft.feature.budgets.recyclerview.BudgetItem
+import com.engageft.feature.budgets.model.BudgetItem
 import com.engageft.fis.pscu.feature.BaseEngageViewModel
 import com.engageft.fis.pscu.feature.DialogInfo
 import com.ob.ws.dom.LoginResponse
@@ -45,20 +45,15 @@ class BudgetsListViewModel : BaseEngageViewModel() {
 
                                     // total spent
                                     var spentAmount = budgetAmountSpent.toBigDecimalOrZeroIfEmpty().abs()   // reused for computing categorySpending values
-                                                                                            // amountSpent is always negative from backend
+                                    // amountSpent is always negative from backend
                                     var budgetAmount = budgetAmount.toBigDecimalOrZeroIfEmpty()             // reused for computing categorySpending values
                                     var budgetStatus = budgetStatus()                       // reused for computing categorySpendingValues
                                     val totalBudgetItem = BudgetItem(
                                             categoryName = BudgetConstants.CATEGORY_NAME_FE_TOTAL_SPENDING,
-                                            title = null,
                                             spentAmount = spentAmount,
-                                            spentString = null,
-                                            spentStringColor = BudgetConstants.INT_NOT_SET,
                                             budgetAmount = budgetAmount,
                                             budgetStatus = budgetStatus,
                                             progress = progress(spentAmount, budgetAmount),
-                                            progressColor = BudgetConstants.INT_NOT_SET,
-                                            progressBarHeight = BudgetConstants.INT_NOT_SET,
                                             fractionTimePeriodPassed = fractionTimePeriodPassed
                                     )
 
@@ -73,13 +68,9 @@ class BudgetsListViewModel : BaseEngageViewModel() {
                                                 BudgetItem(
                                                         categoryName = categorySpending.category,
                                                         spentAmount = spentAmount,
-                                                        spentString = null,
-                                                        spentStringColor = BudgetConstants.INT_NOT_SET,
                                                         budgetAmount = budgetAmount,
                                                         budgetStatus = budgetStatus,
                                                         progress = progress(spentAmount, budgetAmount),
-                                                        progressColor = BudgetConstants.INT_NOT_SET,
-                                                        progressBarHeight = BudgetConstants.INT_NOT_SET,
                                                         fractionTimePeriodPassed = fractionTimePeriodPassed
                                                 )
                                         )
@@ -93,13 +84,9 @@ class BudgetsListViewModel : BaseEngageViewModel() {
                                                 BudgetItem(
                                                         categoryName = BudgetConstants.CATEGORY_NAME_BE_OTHER_SPENDING,
                                                         spentAmount = spentAmount,
-                                                        spentString = null,
-                                                        spentStringColor = BudgetConstants.INT_NOT_SET,
                                                         budgetAmount = budgetAmount,
                                                         budgetStatus = budgetStatus,
                                                         progress = progress(spentAmount, budgetAmount),
-                                                        progressColor = BudgetConstants.INT_NOT_SET,
-                                                        progressBarHeight = BudgetConstants.INT_NOT_SET,
                                                         fractionTimePeriodPassed = fractionTimePeriodPassed
                                                 )
                                         )

@@ -9,24 +9,28 @@
 
         <variable
             name="budgetItem"
-            type="com.engageft.feature.budgets.recyclerview.BudgetItem"/>
+            type="com.engageft.feature.budgets.model.BudgetItem"/>
 
         <variable
             name="budgetConstants"
             type="com.engageft.feature.budgets.BudgetConstants"/>
+
+        <variable
+            name="displayHelper"
+            type="com.engageft.feature.budgets.model.BudgetItemDisplayHelper"/>
     </data>
 
     <com.engageft.apptoolbox.view.TrackingPanel
         android:id="@+id/row_budget_tracking_panel"
         style="@style/TrackingPanelBudgetRow"
-        app:titleText="@{budgetItem.title}"
-        app:rightSubtitle="@{budgetItem.spentString}"
-        app:rightSubtitleColor="@{budgetItem.spentStringColor}"
+        app:titleText="@{displayHelper.title(budgetItem)}"
+        app:rightSubtitle="@{displayHelper.spentString(budgetItem)}"
+        app:rightSubtitleColor="@{displayHelper.spentColor(budgetItem)}"
         app:progress="@{budgetItem.progress}"
-        app:progressColor="@{budgetItem.progressColor}"
-        app:progressBarHeight="@{budgetItem.progressBarHeight}"
+        app:progressColor="@{displayHelper.progressColor(budgetItem)}"
+        app:progressBarHeight="@{displayHelper.progressBarHeight(budgetItem)}"
         app:indicatorPosition="@{budgetItem.fractionTimePeriodPassed}"
         app:indicatorText="@string/budget_row_today"
-        app:showIndicatorText="@{budgetItem.categoryName == budgetConstants.CATEGORY_NAME_FE_TOTAL_SPENDING}"/>
+        app:showIndicatorText="@{displayHelper.showIndicatorText(budgetItem)}"/>
 
 </layout>

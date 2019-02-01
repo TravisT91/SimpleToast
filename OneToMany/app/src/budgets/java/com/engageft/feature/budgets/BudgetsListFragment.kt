@@ -10,12 +10,11 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.engageft.apptoolbox.BaseViewModel
-import com.engageft.feature.budgets.recyclerview.BudgetItem
+import com.engageft.feature.budgets.model.BudgetItem
 import com.engageft.feature.budgets.recyclerview.BudgetsListAdapter
 import com.engageft.fis.pscu.databinding.FragmentBudgetsListBinding
 import com.engageft.fis.pscu.feature.BaseEngagePageFragment
 import com.engageft.fis.pscu.feature.branding.Palette
-import kotlinx.android.synthetic.main.fragment_budgets_list.*
 
 /**
  * BudgetsListFragment

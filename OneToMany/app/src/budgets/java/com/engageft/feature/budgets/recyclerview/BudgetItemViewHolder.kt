@@ -1,6 +1,8 @@
 package com.engageft.feature.budgets.recyclerview
 
 import androidx.recyclerview.widget.RecyclerView
+import com.engageft.feature.budgets.model.BudgetItem
+import com.engageft.feature.budgets.model.BudgetItemDisplayHelper
 import com.engageft.fis.pscu.databinding.RowBudgetTrackingPanelBinding
 import com.engageft.fis.pscu.feature.branding.Palette
 
@@ -24,8 +26,9 @@ class BudgetItemViewHolder(val binding: RowBudgetTrackingPanelBinding, listener:
         binding.palette = Palette
     }
 
-    fun bind(budgetItem: BudgetItem) {
+    fun bind(budgetItem: BudgetItem, displayHelper: BudgetItemDisplayHelper) {
         binding.budgetItem = budgetItem
+        binding.displayHelper = displayHelper
         binding.executePendingBindings()
     }
 }
