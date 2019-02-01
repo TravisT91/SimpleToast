@@ -15,5 +15,4 @@ import com.engageft.fis.pscu.R
 class CategoryViewHolder(val view : View) : RecyclerView.ViewHolder(view){
     val title = view.findViewById<TextView>(R.id.title)!!
     val categoryContainer = view.findViewById<LinearLayout>(R.id.itemContainer)!!
-    var containsCurrentlySelected: Boolean = false
 }

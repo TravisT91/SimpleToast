@@ -94,9 +94,7 @@ class CategoryAdapter(
                                         successCheck, //end
                                         null //bottom
                                 )
-                                holder.containsCurrentlySelected = true
                             } else {
-                                holder.containsCurrentlySelected = false
                                 setTextColor(ContextCompat.getColor(context, R.color.structure6))
                             }
                             setPadding(horizontalPadding, itemTextPadding, horizontalPadding, itemTextPadding)
