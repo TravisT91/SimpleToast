@@ -28,6 +28,7 @@
     <string name="fragment_title_enrollment_create_account">Create account</string>
     <string name="fragment_title_enrollment_verify_identity">Verify identity</string>
     <string name="fragment_title_enrollment_terms">Terms of use</string>
+    <string name="fragment_title_secondary_users">Secondary accounts</string>
 
     <!-- Notifications -->
     <string name="channel_id">app_general_channel</string>

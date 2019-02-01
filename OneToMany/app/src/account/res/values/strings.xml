@@ -99,4 +99,21 @@
     <string name="ALERT_SETTINGS_PUSH_DISABLED_SECTION_HEADER">Push disabled</string>
     <string name="ALERT_SETTINGS_PUSH_DISABLED_SECTION_INSTRUCTION">You currently have notifications disabled. Select to view Android Notification settings and unblock My Card Manager notifications.</string>
 
+
+    <string name="secondary_users_add_account">Add account</string>
+    <string name="secondary_users_user_limit_footer_format">%s on this card.</string>
+    <string name="secondary_users_user_limit_footer_zero">You may not add accounts</string>
+    <plurals
+        name="secondary_users_user_limit_footer_plural">
+        <item quantity="one">You may add up to %d account</item>
+        <item quantity="other">You may add up to %d accounts</item>
+    </plurals>
+
+
+    <string name="secondary_users_user_active">Active</string>
+    <string name="secondary_users_user_inactive">Inactive</string>
+    <string name="secondary_users_splash_title_format">Adding new secondary accounts</string>
+    <string name="secondary_users_splash_title_substring">secondary</string>
+    <string name="secondary_users_splash_message">The number of accounts you may add is based on your card type.</string>
+    <string name="secondary_users_splash_button_add">Add account</string>
 </resources>
