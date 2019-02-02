@@ -62,9 +62,25 @@ class DashboardViewModel : BaseEngageViewModel(), GateKeeperListener {
 
     val brandingCardObservable: MutableLiveData<BrandingCard> = MutableLiveData()
 
+    val showShowCardDetailsObservable = MutableLiveData<Boolean>()
+    val showLockCardObservable = MutableLiveData<Boolean>()
+    val showChangeCardPinObservable = MutableLiveData<Boolean>()
+    val showReplaceCardObservable = MutableLiveData<Boolean>()
+    val showReportLostStolenObservable = MutableLiveData<Boolean>()
+    val showCancelCardObservable = MutableLiveData<Boolean>()
+
     private val dashboardGateKeeper = DashboardGateKeeper(compositeDisposable, this)
 
     private lateinit var debitCardInfo: DebitCardInfo
+
+    init {
+        showShowCardDetailsObservable.value = false
+        showLockCardObservable.value = false
+        showChangeCardPinObservable.value = false
+        showReplaceCardObservable.value = false
+        showReportLostStolenObservable.value = false
+        showCancelCardObservable.value = false
+    }
 
     // ProductCardView
     fun initCardView() {
@@ -122,6 +138,7 @@ class DashboardViewModel : BaseEngageViewModel(), GateKeeperListener {
                                 }
 
                                 updateNotifications(response)
+                                updateExpandableViewOptions(response)
                             } else {
                                 spendingBalanceObservable.value = BigDecimal.ZERO
                                 spendingBalanceStateObservable.value = DashboardBalanceState.ERROR
@@ -252,6 +269,16 @@ class DashboardViewModel : BaseEngageViewModel(), GateKeeperListener {
                 notificationsCountObservable.value = 0
             }
         }
+    }
+
+    private fun updateExpandableViewOptions(loginResponse: LoginResponse) {
+        val cardPermissionsInfo = LoginResponseUtils.getCurrentCard(loginResponse).cardPermissionsInfo
+        showShowCardDetailsObservable.value = cardPermissionsInfo.isEnableCardPAN && cardPermissionsInfo.isAllowCardPAN
+//        showLockCardObservable.value = cardPermissionsInfo.isEnableLockCard && (cardPermissionsInfo.isAllowLockUnLockCard ) // TODO change string stuff
+        showChangeCardPinObservable.value = cardPermissionsInfo.isEnableChangePIN && cardPermissionsInfo.isAllowChangePIN
+//        showReplaceCardObservable.value = cardPermissionsInfo.isEnableReplaceCard && cardPermissionsInfo.isAllowReplaceCard // TODO change navigation
+//        showReportLostStolenObservable.value = cardPermissionsInfo.isEnableLostStolenCard && cardPermissionsInfo.isAllowLostStolenCard // TODO change navigation
+//        showCancelCardObservable.value = cardPermissionsInfo.isEnableCancelCard && cardPermissionsInfo.isAllowCancelCard // TODO change navigation
     }
 
     // These are called by DashboardFragment in response to user presses in DashboardExpandableView.

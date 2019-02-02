@@ -11,7 +11,6 @@ package com.engageft.fis.pscu.feature
 object DashboardConfig {
     const val CARD_MANAGEMENT_SHOW_CARD_DETAILS_ENABLED = true
     const val CARD_MANAGEMENT_MOVE_MONEY_ENABLED = true
-    const val CARD_MANAGEMENT_LOCK_MY_CARD_ENABLED = true
     const val CARD_MANAGEMENT_CHANGE_PIN_ENABLED = true
 
     const val FEATURE_ACH_OUTBOUND_TRANSFER_ENABLED = true

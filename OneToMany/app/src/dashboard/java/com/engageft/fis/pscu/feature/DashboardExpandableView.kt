@@ -58,6 +58,27 @@ class DashboardExpandableView : ConstraintLayout {
 
     var listener: DashboardExpandableViewListener? = null
 
+    var showChangeCardPin = false
+        set(value) {
+            field = value
+            invalidateMoreOptionsItem()
+        }
+    var showReplaceCard = false
+        set(value) {
+            field = value
+            invalidateMoreOptionsItem()
+        }
+    var showReportLostStolen = false
+        set(value) {
+            field = value
+            invalidateMoreOptionsItem()
+        }
+    var showCancelCard = false
+        set(value) {
+            field = value
+            invalidateMoreOptionsItem()
+        }
+
     constructor(context: Context) : super(context) {
         initializeViews()
     }
@@ -139,6 +160,55 @@ class DashboardExpandableView : ConstraintLayout {
         }
     }
 
+    private fun invalidateMoreOptionsItem() {
+        val enabledItems = ArrayList<String>()
+        if (showChangeCardPin) {
+            enabledItems.add(context.getString(R.string.OVERVIEW_CHANGE_CARD_PIN))
+        }
+        if (showReplaceCard) {
+            enabledItems.add(context.getString(R.string.OVERVIEW_REPLACE_CARD))
+        }
+        if (showReportLostStolen) {
+            enabledItems.add(context.getString(R.string.OVERVIEW_REPORT_LOST_STOLEN))
+        }
+        if (showCancelCard) {
+            enabledItems.add(context.getString(R.string.OVERVIEW_CANCEL_CARD))
+        }
+        val layout = findViewById<ViewGroup>(R.id.overviewMoreOptionsLayout)
+        if (enabledItems.isEmpty()) {
+            layout.visibility = View.GONE
+        } else if (enabledItems.size == 1) {
+            layout.visibility = View.VISIBLE
+            val textView = findViewById<TextView>(R.id.overviewMoreOptionsLabel)
+            val label = enabledItems[0]
+            textView.text = label
+            layout.setOnClickListener {
+                when (label) {
+                    context.getString(R.string.OVERVIEW_CHANGE_CARD_PIN) -> {
+                        listener?.onChangePin()
+                    }
+                    context.getString(R.string.OVERVIEW_REPLACE_CARD) -> {
+                        listener?.onReplaceCard()
+                    }
+                    context.getString(R.string.OVERVIEW_REPORT_LOST_STOLEN) -> {
+                        listener?.onReportCardLostStolen()
+                    }
+                    context.getString(R.string.OVERVIEW_CANCEL_CARD) -> {
+                        listener?.onCancelCard()
+                    }
+                }
+            }
+        } else {
+            layout.visibility = View.VISIBLE
+            val textView = findViewById<TextView>(R.id.overviewMoreOptionsLabel)
+            val label = context.getString(R.string.OVERVIEW_MORE_OPTIONS)
+            textView.text = label
+            setOnClickListener {
+                showMoreOptionsBottomNav()
+            }
+        }
+    }
+
     private fun initializeViews() {
         val inflater = context.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
         inflater.inflate(R.layout.view_dashboard_expandable, this)
@@ -155,13 +225,8 @@ class DashboardExpandableView : ConstraintLayout {
         overviewLockUnlockCardLabel = findViewById(R.id.overviewLockUnlockCardLabel)
 
         findViewById<ViewGroup>(R.id.overviewShowHideCardDetailsLayout).apply {
-            if (DashboardConfig.CARD_MANAGEMENT_SHOW_CARD_DETAILS_ENABLED) {
-                setOnClickListener {
-                    listener?.onShowHideCardDetails()
-                }
-            } else {
-                visibility = View.GONE
-            }
+            // This view is conditionally set to visible once the dashboard viewmodel loads settings.
+            visibility = View.GONE
         }
 
         findViewById<ViewGroup>(R.id.overviewMoveMoneyLayout).apply {
@@ -175,19 +240,13 @@ class DashboardExpandableView : ConstraintLayout {
         }
 
         findViewById<ViewGroup>(R.id.overviewLockUnlockCardLayout).apply {
-            if (DashboardConfig.CARD_MANAGEMENT_LOCK_MY_CARD_ENABLED) {
-                setOnClickListener {
-                    listener?.onLockUnlockCard()
-                }
-            } else {
-                visibility = View.GONE
-            }
+            // This view is conditionally set to visible once the dashboard viewmodel loads settings.
+            visibility = View.GONE
         }
 
         findViewById<ViewGroup>(R.id.overviewMoreOptionsLayout).apply {
-            setOnClickListener {
-                showMoreOptionsBottomNav()
-            }
+            // This view is conditionally set to visible once the dashboard viewmodel loads settings.
+            visibility = View.GONE
         }
 
         expandCollapseButton.setOnClickListener {
@@ -209,11 +268,18 @@ class DashboardExpandableView : ConstraintLayout {
         val replaceCardOption = context.getString(R.string.OVERVIEW_REPLACE_CARD)
         val reportLostStolenOption = context.getString(R.string.OVERVIEW_REPORT_LOST_STOLEN)
         val cancelCardOption = context.getString(R.string.OVERVIEW_CANCEL_CARD)
-        val stringOptions = ArrayList<String>().apply {
-            add(changeCardPinOption)
-            add(replaceCardOption)
-            add(reportLostStolenOption)
-            add(cancelCardOption)
+        val stringOptions = ArrayList<String>()
+        if (showChangeCardPin) {
+            stringOptions.add(changeCardPinOption)
+        }
+        if (showReplaceCard) {
+            stringOptions.add(replaceCardOption)
+        }
+        if (showReportLostStolen) {
+            stringOptions.add(reportLostStolenOption)
+        }
+        if (showCancelCard) {
+            stringOptions.add(cancelCardOption)
         }
         val dialog = ListBottomSheetDialogFragment.newInstance(
                 object : ListBottomSheetDialogFragment.ListBottomSheetDialogListener{
@@ -428,6 +494,32 @@ class DashboardExpandableView : ConstraintLayout {
 
     fun hideCardMessageString() {
         cardView.hideMessage()
+    }
+
+    fun showLockCard(show: Boolean) {
+        val view = findViewById<ViewGroup>(R.id.overviewLockUnlockCardLayout)
+        if (show) {
+            view.setOnClickListener {
+                listener?.onLockUnlockCard()
+            }
+            view.visibility = View.VISIBLE
+        } else {
+            view.setOnClickListener(null)
+            view.visibility = View.GONE
+        }
+    }
+
+    fun showShowCardDetails(show: Boolean) {
+        val view = findViewById<ViewGroup>(R.id.overviewShowHideCardDetailsLayout)
+        if (show) {
+            view.setOnClickListener {
+                listener?.onShowHideCardDetails()
+            }
+            view.visibility = View.VISIBLE
+        } else {
+            view.setOnClickListener(null)
+            view.visibility = View.GONE
+        }
     }
 
     interface DashboardExpandableViewListener {
