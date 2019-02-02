@@ -2,14 +2,13 @@ package com.engageft.fis.pscu.feature
 
 import androidx.lifecycle.MutableLiveData
 import com.engageft.apptoolbox.view.ProductCardModel
-import com.engageft.apptoolbox.view.ProductCardModelCardStatus
 import com.engageft.engagekit.EngageService
 import com.engageft.engagekit.utils.BackendDateTimeUtils
 import com.engageft.engagekit.utils.DebitCardInfoUtils
 import com.engageft.engagekit.utils.LoginResponseUtils
+import com.engageft.fis.pscu.feature.utils.CardStatusUtils
 import com.ob.ws.dom.LoginResponse
 import com.ob.ws.dom.SecureCardInfoResponse
-import com.ob.ws.dom.utility.DebitCardInfo
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 
@@ -121,7 +120,7 @@ private fun productCardModelFromLoginResponse(loginResponse: LoginResponse): Pro
     val productCardModel = ProductCardModel()
     productCardModel.cardholderName = LoginResponseUtils.getUserFullname(loginResponse)
     LoginResponseUtils.getCurrentCard(loginResponse)?.let { cardInfo ->
-        productCardModel.cardStatus = productCardModelStatusFromDebitCardInfo(cardInfo)
+        productCardModel.cardStatus = CardStatusUtils.productCardModelStatusFromDebitCardInfo(cardInfo)
         productCardModel.cardStatusOkay = DebitCardInfoUtils.displayCardStatusAsOkay(cardInfo)
         productCardModel.cardLocked = DebitCardInfoUtils.isLocked(cardInfo)
         productCardModel.cardPendingActivation = DebitCardInfoUtils.isPendingActivation(cardInfo)
@@ -129,25 +128,4 @@ private fun productCardModelFromLoginResponse(loginResponse: LoginResponse): Pro
     }
 
     return productCardModel
-}
-
-private fun productCardModelStatusFromDebitCardInfo(debitCardInfo: DebitCardInfo): ProductCardModelCardStatus {
-    return if (DebitCardInfoUtils.hasVirtualCard(debitCardInfo) && EngageService.getInstance().engageConfig.virtualCardEnabled)
-        ProductCardModelCardStatus.CARD_STATUS_VIRTUAL
-    else if (DebitCardInfoUtils.isLocked(debitCardInfo))
-        ProductCardModelCardStatus.CARD_STATUS_LOCKED
-    else if (DebitCardInfoUtils.isPendingActivation(debitCardInfo))
-        ProductCardModelCardStatus.CARD_STATUS_PENDING
-    else if (DebitCardInfoUtils.isLostStolen(debitCardInfo))
-        ProductCardModelCardStatus.CARD_STATUS_REPLACED
-    else if (DebitCardInfoUtils.isCancelled(debitCardInfo))
-        ProductCardModelCardStatus.CARD_STATUS_CANCELED
-    else if (DebitCardInfoUtils.isSuspended(debitCardInfo))
-        ProductCardModelCardStatus.CARD_STATUS_SUSPENDED
-    else if (DebitCardInfoUtils.isFraudStatus(debitCardInfo))
-        ProductCardModelCardStatus.CARD_STATUS_CLOSED
-    else if (DebitCardInfoUtils.isOrdered(debitCardInfo))
-        ProductCardModelCardStatus.CARD_STATUS_ORDERED
-    else
-        ProductCardModelCardStatus.CARD_STATUS_ACTIVE
 }

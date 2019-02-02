@@ -37,7 +37,7 @@ import com.engageft.fis.pscu.feature.palettebindings.applyBranding
 import com.engageft.fis.pscu.feature.search.SearchDialogFragment
 import com.engageft.fis.pscu.feature.transactions.TransactionDetailsFragment.Companion.ARG_TRANSACTION_ID
 import com.engageft.fis.pscu.feature.transactions.adapter.TransactionListener
-import com.engageft.fis.pscu.feature.utils.cardStatusStringRes
+import com.engageft.fis.pscu.feature.utils.CardStatusUtils
 import com.ob.domain.lookup.DebitCardStatus
 import com.ob.domain.lookup.branding.BrandingCard
 import eightbitlab.com.blurview.RenderScriptBlur
@@ -203,7 +203,7 @@ class DashboardFragment : BaseEngagePageFragment(),
     }
 
     private fun updateForCardModel(productCardModel: ProductCardModel) {
-        productCardModel.cardStatusText = getString(productCardModel.cardStatus.cardStatusStringRes())
+        productCardModel.cardStatusText = CardStatusUtils.cardStatusStringForProductCardModelCardStatus(context!!, productCardModel.cardStatus).toString()
 
         // update ProductCardView in recyclerview, initially visible
         transactionsAdapter.productCardModel = productCardModel
