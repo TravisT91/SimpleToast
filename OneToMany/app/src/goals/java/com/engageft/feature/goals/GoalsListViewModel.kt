@@ -29,11 +29,11 @@ class GoalsListViewModel: BaseEngageViewModel() {
                         canEditGoal = LoginResponseUtils.canEditGoals(response)
                         getGoals(LoginResponseUtils.getCurrentCard(response), useCache)
                     } else {
-                        dismissProgressOverlayImmediate()
+                        dismissProgressOverlay()
                         handleUnexpectedErrorResponse(response)
                     }
                 }, { e ->
-                    dismissProgressOverlayImmediate()
+                    dismissProgressOverlay()
                     handleThrowable(e)
                 })
         )
@@ -45,7 +45,7 @@ class GoalsListViewModel: BaseEngageViewModel() {
                         .subscribeOn(Schedulers.io())
                         .observeOn(AndroidSchedulers.mainThread())
                         .subscribe({ response ->
-                            dismissProgressOverlayImmediate()
+                            dismissProgressOverlay()
                             if (response.isSuccess && response is GoalsResponse) {
                                 // don't trigger observers unless goals list has changed or first time
                                 if (goalsList != response.goals || goalsListObservable.value == null) {
@@ -65,7 +65,7 @@ class GoalsListViewModel: BaseEngageViewModel() {
                                 handleUnexpectedErrorResponse(response)
                             }
                         }, { e ->
-                            dismissProgressOverlayImmediate()
+                            dismissProgressOverlay()
                             handleThrowable(e)
                         })
         )

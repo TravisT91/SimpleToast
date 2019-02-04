@@ -133,19 +133,19 @@ class GoalsAddStep2Fragment : BaseEngagePageFragment() {
     }
 
     override fun onCreateOptionsMenu(menu: Menu?, inflater: MenuInflater?) {
-        inflater?.inflate(R.menu.menu_next, menu)
+        inflater?.inflate(R.menu.menu_goal_next, menu)
         super.onCreateOptionsMenu(menu, inflater)
     }
 
     override fun onPrepareOptionsMenu(menu: Menu?) {
-        val menuItem = menu!!.findItem(R.id.next)
+        val menuItem = menu!!.findItem(R.id.menu_item_next)
         menuItem.isVisible = addGoalViewModel.nextButtonStateObservable.value == GoalsAddStep2ViewModel.ButtonState.SHOW
         super.onPrepareOptionsMenu(menu)
     }
 
     override fun onOptionsItemSelected(item: MenuItem?): Boolean {
         when(item?.itemId){
-            R.id.next -> run {
+            R.id.menu_item_next -> run {
                 navigateToConfirmation()
             }
         }
