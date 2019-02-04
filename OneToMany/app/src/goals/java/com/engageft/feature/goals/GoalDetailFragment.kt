@@ -51,7 +51,7 @@ class GoalDetailFragment: BaseEngagePageFragment() {
             viewModel = viewModel
             palette = Palette
 
-            viewModelGoalDetail.initGoalDetail()
+            viewModelGoalDetail.refreshGoalDetail(true)
 
             sectionedAdapter = SectionedRecyclerViewAdapter()
             recyclerView.adapter = sectionedAdapter
@@ -106,13 +106,13 @@ class GoalDetailFragment: BaseEngagePageFragment() {
                     sectionedAdapter.addSection(HorizontalRuleSectionIndentStart())
                 }
                 is GoalDetailState.GoalPauseState -> {
-                    sectionedAdapter.addSection(ToggleableLabelSection(context!!, listOf(ToggleableLabelSection.LabelItem(
+                    sectionedAdapter.addSection(GOAL_PAUSE_RESUME_SECTION, ToggleableLabelSection(context!!, listOf(ToggleableLabelSection.LabelItem(
                             labelText = getString(R.string.GOAL_DETAIL_RECURRING_TRANSFER),
                             isChecked = goalDetailState.isGoalPaused)),
                             styleId = R.style.GoalDetailItemTextStyle,
                             listener = object : ToggleableLabelSection.OnToggleInteractionListener {
                                 override fun onChecked(labelId: Int, isChecked: Boolean) {
-                                    // TODO(aHashimi): FOTM-573
+                                    promptPauseConfirmation(isChecked)
                                 }
                             }))
 
@@ -149,6 +149,32 @@ class GoalDetailFragment: BaseEngagePageFragment() {
         sectionedAdapter.notifyDataSetChanged()
     }
 
+    private fun promptPauseConfirmation(pauseGoal: Boolean) {
+        val message = if (pauseGoal) {
+            String.format(getString(R.string.GOAL_PAUSE_ALERT_MESSAGE_FORMAT), getString(R.string.GOAL_PAUSE))
+        } else {
+            String.format(getString(R.string.GOAL_PAUSE_ALERT_MESSAGE_FORMAT), getString(R.string.GOAL_RESUME))
+        }
+        fragmentDelegate.showDialog(infoDialogYesNoNewInstance(
+                context = context!!,
+                title = getString(R.string.GOAL_PAUSE_ALERT_TITLE),
+                message = message,
+                listener = object: InformationDialogFragment.InformationDialogFragmentListener {
+                    override fun onDialogFragmentNegativeButtonClicked() {
+                        updateRecyclerView(viewModelGoalDetail.goalDetailStatesListObservable.value!!)
+                    }
+
+                    override fun onDialogFragmentPositiveButtonClicked() {
+                        viewModelGoalDetail.onPauseResumeGoal()
+                    }
+
+                    override fun onDialogCancelled() {
+                        updateRecyclerView(viewModelGoalDetail.goalDetailStatesListObservable.value!!)
+                    }
+
+                }))
+    }
+
     private fun onDeleteGoal() {
         if (viewModelGoalDetail.fundAmount.compareTo(BigDecimal.ZERO) == 0) {
             val title = String.format(getString(R.string.GOAL_DELETE_ALERT_TITLE_FORMAT),
@@ -158,16 +184,13 @@ class GoalDetailFragment: BaseEngagePageFragment() {
                     title = title,
                     message = getString(R.string.GOAL_DELETE_ALERT_MESSAGE_FORMAT),
                     listener = object: InformationDialogFragment.InformationDialogFragmentListener {
-                        override fun onDialogFragmentNegativeButtonClicked() {
-
-                        }
+                        override fun onDialogFragmentNegativeButtonClicked() {}
 
                         override fun onDialogFragmentPositiveButtonClicked() {
                             viewModelGoalDetail.onDelete()
                         }
 
-                        override fun onDialogCancelled() {
-                        }
+                        override fun onDialogCancelled() {}
 
                     }))
         } else {
@@ -188,5 +211,7 @@ class GoalDetailFragment: BaseEngagePageFragment() {
 
         const val GOAL_ID_KEY = "GOAL_ID_KEY"
         const val GOAL_FUND_AMOUNT_KEY = "GOAL_FUND_AMOUNT_KEY"
+
+        const val GOAL_PAUSE_RESUME_SECTION = "GOAL_PAUSE_RESUME_SECTION"
     }
 }

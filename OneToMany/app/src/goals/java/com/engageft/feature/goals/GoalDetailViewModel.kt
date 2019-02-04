@@ -4,8 +4,10 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.engageft.engagekit.EngageService
+import com.engageft.engagekit.rest.request.PayPlanPauseResumeRequest
 import com.engageft.engagekit.utils.BackendDateTimeUtils
 import com.engageft.engagekit.utils.LoginResponseUtils
+import com.engageft.engagekit.utils.engageApi
 import com.ob.ws.dom.GoalsResponse
 import com.ob.ws.dom.LoginResponse
 import com.ob.ws.dom.utility.DebitCardInfo
@@ -23,24 +25,26 @@ class GoalDetailViewModel(var goalId: Long): GoalDeleteViewModel() {
     var fundAmount: BigDecimal = BigDecimal.ZERO
     var goalName: String = ""
 
+    private lateinit var goalInfo : GoalInfo
+
     fun onDelete() {
         onTransferAndDelete(goalId)
     }
 
-    fun initGoalDetail() {
+    fun refreshGoalDetail(useCache: Boolean) {
         showProgressOverlayDelayed()
         compositeDisposable.add(EngageService.getInstance().loginResponseAsObservable
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe({ response ->
                     if (response is LoginResponse) {
-                        initGoal(LoginResponseUtils.getCurrentCard(response), true)
+                        initGoal(LoginResponseUtils.getCurrentCard(response), useCache)
                     } else {
-                        dismissProgressOverlayImmediate()
+                        dismissProgressOverlay()
                         handleUnexpectedErrorResponse(response)
                     }
                 }, { e ->
-                    dismissProgressOverlayImmediate()
+                    dismissProgressOverlay()
                     handleThrowable(e)
                 })
         )
@@ -52,13 +56,14 @@ class GoalDetailViewModel(var goalId: Long): GoalDeleteViewModel() {
                         .subscribeOn(Schedulers.io())
                         .observeOn(AndroidSchedulers.mainThread())
                         .subscribe({ response ->
-                            dismissProgressOverlayImmediate()
+                            dismissProgressOverlay()
                             if (response.isSuccess && response is GoalsResponse) {
                                 var goalDetailStateList : List<GoalDetailState> = listOf()
                                 for (goalInfo in response.goals) {
                                     if (goalInfo.goalId == goalId) {
                                         fundAmount = goalInfo.fundAmount
                                         goalName = goalInfo.name
+                                        this.goalInfo = goalInfo
                                         goalDetailStateList = getGoalDetailStateList(goalInfo)
                                         break
                                     }
@@ -69,7 +74,29 @@ class GoalDetailViewModel(var goalId: Long): GoalDeleteViewModel() {
                                 handleUnexpectedErrorResponse(response)
                             }
                         }, { e ->
-                            dismissProgressOverlayImmediate()
+                            dismissProgressOverlay()
+                            handleThrowable(e)
+                        })
+        )
+    }
+
+    fun onPauseResumeGoal() {
+        showProgressOverlayImmediate()
+        val newPauseValue = !goalInfo.payPlan.isPaused
+        val request = PayPlanPauseResumeRequest.newInstanceForGoal(goalInfo.payPlan.payPlanId, newPauseValue)
+
+        compositeDisposable.add(engageApi().postPayPlanPause(request.fieldMap)
+                        .subscribeOn(Schedulers.io())
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .subscribe({ response ->
+                            if (response.isSuccess) {
+                                refreshGoalDetail(false)
+                            } else {
+                                dismissProgressOverlay()
+                                handleUnexpectedErrorResponse(response)
+                            }
+                        }, { e ->
+                            dismissProgressOverlay()
                             handleThrowable(e)
                         })
         )

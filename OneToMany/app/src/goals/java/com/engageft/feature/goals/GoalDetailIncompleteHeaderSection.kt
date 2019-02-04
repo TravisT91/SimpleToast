@@ -32,13 +32,13 @@ class GoalDetailIncompleteHeaderSection(private val context: Context,
 
             circularProgressBarWithTexts.setProgress(goalIncompleteHeaderModel.progress)
 
+            val goalAmountFormatted = String.format(context.getString(R.string.GOAL_DETAIL_GOAL_AMOUNT_FORMAT),
+                    StringUtils.formatCurrencyString(goalIncompleteHeaderModel.goalAmount.toFloat(), true))
+            circularProgressBarWithTexts.setInnerBottomText(goalAmountFormatted)
+
             if (goalIncompleteHeaderModel.isPaused) {
                 circularProgressBarWithTexts.setOuterBottomText(context.getString(R.string.GOALS_PAUSED))
             } else {
-                val goalAmountFormatted = String.format(context.getString(R.string.GOAL_DETAIL_GOAL_AMOUNT_FORMAT),
-                        StringUtils.formatCurrencyString(goalIncompleteHeaderModel.goalAmount.toFloat(), true))
-                circularProgressBarWithTexts.setInnerBottomText(goalAmountFormatted)
-
                 val frequencyAmountAndCompleteDate = String.format(context.getString(R.string.GOAL_DETAIL_FREQUENCY_AMOUNT_COMPLETE_DATE_FORMAT),
                         StringUtils.formatCurrencyStringWithFractionDigits(goalIncompleteHeaderModel.frequencyAmount.toFloat(), true),
                         goalIncompleteHeaderModel.payPlanType.toString().toLowerCase(),
