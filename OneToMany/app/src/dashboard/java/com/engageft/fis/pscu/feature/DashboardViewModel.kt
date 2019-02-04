@@ -62,29 +62,38 @@ class DashboardViewModel : BaseEngageViewModel(), GateKeeperListener {
 
     val brandingCardObservable: MutableLiveData<BrandingCard> = MutableLiveData()
 
-    val showShowCardDetailsObservable = MutableLiveData<Boolean>()
-    val showLockCardObservable = MutableLiveData<Boolean>()
-    val showChangeCardPinObservable = MutableLiveData<Boolean>()
-    val showReplaceCardObservable = MutableLiveData<Boolean>()
-    val showReportLostStolenObservable = MutableLiveData<Boolean>()
-    val showCancelCardObservable = MutableLiveData<Boolean>()
+    val expandableOptionsItems = MutableLiveData<List<ExpandableViewListItem>>()
 
     private val dashboardGateKeeper = DashboardGateKeeper(compositeDisposable, this)
 
     private lateinit var debitCardInfo: DebitCardInfo
 
     init {
-        showShowCardDetailsObservable.value = false
-        showLockCardObservable.value = false
-        showChangeCardPinObservable.value = false
-        showReplaceCardObservable.value = false
-        showReportLostStolenObservable.value = false
-        showCancelCardObservable.value = false
+        expandableOptionsItems.value = ArrayList()
     }
 
     // ProductCardView
     fun initCardView() {
         productCardViewModelDelegate.updateCardView()
+        refreshExpandableListItems()
+    }
+
+    fun refreshExpandableListItems() {
+        compositeDisposable.add(
+                EngageService.getInstance().loginResponseAsObservable
+                        .subscribeOn(Schedulers.io())
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .subscribe({ response ->
+                            if (response.isSuccess && response is LoginResponse) {
+                                updateExpandableViewOptions(response)
+                            } else {
+                                handleUnexpectedErrorResponse(response)
+                            }
+                        })
+                        { e ->
+                            handleThrowable(e)
+                        }
+        )
     }
 
     // Balances
@@ -138,7 +147,6 @@ class DashboardViewModel : BaseEngageViewModel(), GateKeeperListener {
                                 }
 
                                 updateNotifications(response)
-                                updateExpandableViewOptions(response)
                             } else {
                                 spendingBalanceObservable.value = BigDecimal.ZERO
                                 spendingBalanceStateObservable.value = DashboardBalanceState.ERROR
@@ -271,14 +279,70 @@ class DashboardViewModel : BaseEngageViewModel(), GateKeeperListener {
         }
     }
 
-    private fun updateExpandableViewOptions(loginResponse: LoginResponse) {
-        val cardPermissionsInfo = LoginResponseUtils.getCurrentCard(loginResponse).cardPermissionsInfo
-        showShowCardDetailsObservable.value = cardPermissionsInfo.isEnableCardPAN && cardPermissionsInfo.isAllowCardPAN
-//        showLockCardObservable.value = cardPermissionsInfo.isEnableLockCard && (cardPermissionsInfo.isAllowLockUnLockCard ) // TODO change string stuff
-        showChangeCardPinObservable.value = cardPermissionsInfo.isEnableChangePIN && cardPermissionsInfo.isAllowChangePIN
-//        showReplaceCardObservable.value = cardPermissionsInfo.isEnableReplaceCard && cardPermissionsInfo.isAllowReplaceCard // TODO change navigation
-//        showReportLostStolenObservable.value = cardPermissionsInfo.isEnableLostStolenCard && cardPermissionsInfo.isAllowLostStolenCard // TODO change navigation
-//        showCancelCardObservable.value = cardPermissionsInfo.isEnableCancelCard && cardPermissionsInfo.isAllowCancelCard // TODO change navigation
+    fun updateExpandableViewOptions(response: LoginResponse?) {
+        response?.let { loginResponse ->
+            val cardPermissionsInfo = LoginResponseUtils.getCurrentCard(loginResponse).cardPermissionsInfo
+            val accountPermissionsInfo = LoginResponseUtils.getCurrentAccountInfo(loginResponse).accountPermissionsInfo
+            val options = ArrayList<ExpandableViewListItem>()
+
+            // The order of this logic matters as items are displayed in the order they're added to the list.
+            if (cardPermissionsInfo.isEnableCardPAN && cardPermissionsInfo.isAllowCardPAN) {
+                if (productCardViewModelDelegate.isShowingCardDetails()) {
+                    options.add(ExpandableViewListItem.HideCardDetailsItem)
+                } else {
+                    options.add(ExpandableViewListItem.ShowCardDetailsItem)
+                }
+            }
+            if (accountPermissionsInfo.isFundingEnabled) {
+                options.add(ExpandableViewListItem.MoveMoneyItem)
+            }
+            if (cardPermissionsInfo.isEnableLockCard) {
+                val cardLocked = productCardViewModelDelegate.isLocked()
+                if (cardLocked) {
+                    options.add(ExpandableViewListItem.UnlockCardItem)
+                } else {
+                    options.add(ExpandableViewListItem.LockCardItem)
+                }
+            }
+            if (cardPermissionsInfo.isEnableChangePIN && cardPermissionsInfo.isAllowChangePIN) {
+                options.add(ExpandableViewListItem.ChangeCardPinItem)
+            }
+            if (cardPermissionsInfo.isEnableReplaceCard) {
+                options.add(ExpandableViewListItem.ReplaceCardItem(cardPermissionsInfo.isAllowReplaceCard))
+            }
+            if (cardPermissionsInfo.isEnableLostStolenCard) {
+                options.add(ExpandableViewListItem.ReportLostStolenItem(cardPermissionsInfo.isAllowLostStolenCard))
+            }
+            if (cardPermissionsInfo.isEnableCancelCard) {
+                options.add(ExpandableViewListItem.CancelCardItem(cardPermissionsInfo.isAllowCancelCard))
+            }
+
+            // Now we alter the list based on its size. If the size is four or less, we keep the list as-is.
+            // If the size is exactly five, we remove the last two items and add them to a MoreOptionsItem.
+            // If the size is larger, we insert all items after four to the list.
+            if (options.size > 4) {
+                if (options.size == 5) {
+                    val itemFour = options.removeAt(3)
+                    val itemFive = options.removeAt(4)
+
+                    val moreOptionsList = ArrayList<ExpandableViewListItem>().apply {
+                        add(itemFour)
+                        add(itemFive)
+                    }
+                    options.add(ExpandableViewListItem.MoreOptionsItem(moreOptionsList))
+                } else {
+                    val moreOptionsList = ArrayList<ExpandableViewListItem>().apply {
+                        while (options.size > 3) {
+                            add(options.removeAt(3))
+                        }
+                    }
+                    options.add(ExpandableViewListItem.MoreOptionsItem(moreOptionsList))
+                }
+            }
+            expandableOptionsItems.value = options
+        } ?: kotlin.run {
+            expandableOptionsItems.value = ArrayList()
+        }
     }
 
     // These are called by DashboardFragment in response to user presses in DashboardExpandableView.

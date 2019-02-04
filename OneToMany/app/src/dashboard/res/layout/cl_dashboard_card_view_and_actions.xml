@@ -48,13 +48,14 @@
             app:layout_constraintEnd_toEndOf="parent">
 
             <LinearLayout
-                android:id="@+id/overviewShowHideCardDetailsLayout"
+                android:id="@+id/item1Layout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal">
+                android:orientation="horizontal"
+                android:visibility="gone">
 
                 <androidx.appcompat.widget.AppCompatImageView
-                    android:id="@+id/overviewShowHideCardDetailsIcon"
+                    android:id="@+id/item1Icon"
                     android:layout_width="@dimen/dashboard_action_item_icon_width"
                     android:layout_height="@dimen/dashboard_action_item_icon_height"
                     android:scaleType="center"
@@ -62,7 +63,7 @@
                     app:srcCompat="@drawable/ic_dashboard_card_details_show"/>
 
                 <TextView
-                    android:id="@+id/overviewShowHideCardDetailsLabel"
+                    android:id="@+id/item1Label"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
                     style="@style/DashboardCardItemTextView"
@@ -72,13 +73,15 @@
             </LinearLayout>
 
             <LinearLayout
-                android:id="@+id/overviewMoveMoneyLayout"
+                android:id="@+id/item2Layout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
-                android:layout_marginTop="16dp">
+                android:layout_marginTop="16dp"
+                android:visibility="gone">
 
                 <androidx.appcompat.widget.AppCompatImageView
+                    android:id="@+id/item2Icon"
                     android:layout_width="@dimen/dashboard_action_item_icon_width"
                     android:layout_height="@dimen/dashboard_action_item_icon_height"
                     android:scaleType="center"
@@ -86,7 +89,7 @@
                     app:srcCompat="@drawable/ic_dashboard_move_money"/>
 
                 <TextView
-                    android:id="@+id/overviewMoveMoneyLabel"
+                    android:id="@+id/item2Label"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
                     style="@style/DashboardCardItemTextView"
@@ -96,14 +99,15 @@
             </LinearLayout>
 
             <LinearLayout
-                android:id="@+id/overviewLockUnlockCardLayout"
+                android:id="@+id/item3Layout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
-                android:layout_marginTop="16dp">
+                android:layout_marginTop="16dp"
+                android:visibility="gone">
 
                 <androidx.appcompat.widget.AppCompatImageView
-                    android:id="@+id/overviewLockUnlockCardIcon"
+                    android:id="@+id/item3Icon"
                     android:layout_width="@dimen/dashboard_action_item_icon_width"
                     android:layout_height="@dimen/dashboard_action_item_icon_height"
                     android:scaleType="center"
@@ -111,7 +115,7 @@
                     app:srcCompat="@drawable/ic_dashboard_card_lock"/>
 
                 <TextView
-                    android:id="@+id/overviewLockUnlockCardLabel"
+                    android:id="@+id/item3Label"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
                     style="@style/DashboardCardItemTextView"
@@ -121,21 +125,23 @@
             </LinearLayout>
 
             <LinearLayout
-                android:id="@+id/overviewMoreOptionsLayout"
+                android:id="@+id/item4Layout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
-                android:layout_marginTop="16dp">
+                android:layout_marginTop="16dp"
+                android:visibility="gone">
 
                 <androidx.appcompat.widget.AppCompatImageView
                     android:layout_width="@dimen/dashboard_action_item_icon_width"
                     android:layout_height="@dimen/dashboard_action_item_icon_height"
                     android:scaleType="center"
+                    android:id="@+id/item4Icon"
                     android:layout_marginEnd="8dp"
                     app:srcCompat="@drawable/ic_dashboard_more_options"/>
 
                 <TextView
-                    android:id="@+id/overviewMoreOptionsLabel"
+                    android:id="@+id/item4Label"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
                     style="@style/DashboardCardItemTextView"

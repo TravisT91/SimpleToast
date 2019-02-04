@@ -12,7 +12,6 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.WindowManager
 import android.widget.Toast
-import androidx.core.content.ContextCompat
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
@@ -80,6 +79,7 @@ class DashboardFragment : BaseEngagePageFragment(),
     private val animationObserver = Observer<DashboardAnimationEvent> { updateAnimation(it!!) }
 
     private val brandingCardObserver = Observer<BrandingCard> { updateBrandingCard(it) }
+    private val cardOptionsObserver = Observer<List<ExpandableViewListItem>> { updateExpandableListItems(it) }
 
     private var toolbarShadowAnimationScrollRange: Int = 0
     private var toolbarShadowAnimationScrollRangeFloat: Float = 0F
@@ -210,32 +210,22 @@ class DashboardFragment : BaseEngagePageFragment(),
         // update ProductCardView in expandable overlay, initially invisible
         binding.dashboardExpandableView.cardView.updateWithProductCardModel(productCardModel)
 
-        binding.dashboardExpandableView.overviewLockUnlockCardIcon.setImageDrawable(
-                ContextCompat.getDrawable(context!!, if (productCardModel.cardLocked) R.drawable.ic_dashboard_card_unlock else R.drawable.ic_dashboard_card_lock)
-        )
-        binding.dashboardExpandableView.overviewLockUnlockCardLabel.text = getString(
-                if (productCardModel.cardLocked) R.string.OVERVIEW_UNLOCK_MY_CARD else R.string.OVERVIEW_LOCK_MY_CARD
-        )
+        dashboardViewModel.refreshExpandableListItems()
     }
 
     private fun updateForCardState(cardState: ProductCardViewCardState) {
+        dashboardViewModel.refreshExpandableListItems()
         when (cardState) {
             ProductCardViewCardState.LOADING -> {
-                binding.dashboardExpandableView.overviewShowHideCardDetailsLabel.text = getString(R.string.OVERVIEW_LOADING_CARD_DETAILS)
+                // Do nothing
             }
             ProductCardViewCardState.DETAILS_HIDDEN -> {
-                binding.dashboardExpandableView.overviewShowHideCardDetailsIcon.setImageDrawable(ContextCompat.getDrawable(context!!, R.drawable.ic_dashboard_card_details_show))
-                binding.dashboardExpandableView.overviewShowHideCardDetailsLabel.text = getString(R.string.OVERVIEW_SHOW_CARD_DETAILS)
+                // Do nothing
             }
             ProductCardViewCardState.DETAILS_SHOWN -> {
-                binding.dashboardExpandableView.overviewShowHideCardDetailsIcon.setImageDrawable(ContextCompat.getDrawable(context!!, R.drawable.ic_dashboard_card_details_hide))
-                binding.dashboardExpandableView.overviewShowHideCardDetailsLabel.text = getString(R.string.OVERVIEW_HIDE_CARD_DETAILS)
+                // Do nothing
             }
             ProductCardViewCardState.ERROR -> {
-                binding.dashboardExpandableView.overviewShowHideCardDetailsLabel.text = getString(
-                        if (dashboardViewModel.productCardViewModelDelegate.isShowingCardDetails()) R.string.OVERVIEW_HIDE_CARD_DETAILS else R.string.OVERVIEW_SHOW_CARD_DETAILS
-                )
-
                 fragmentDelegate.showDialog(
                         InformationDialogFragment.newLotusInstance(
                                 message = getString(R.string.OVERVIEW_CARD_ERROR_DIALOG_MESSAGE),
@@ -326,6 +316,10 @@ class DashboardFragment : BaseEngagePageFragment(),
         }
     }
 
+    fun updateExpandableListItems(items : List<ExpandableViewListItem>) {
+        binding.dashboardExpandableView.setExpandableListItems(items)
+    }
+
     fun showMessageContainerWithView(messageView: View) {
         binding.messageContainer.addView(messageView)
         binding.messageContainer.visibility = View.VISIBLE
@@ -390,6 +384,7 @@ class DashboardFragment : BaseEngagePageFragment(),
         dashboardViewModel.expirationDateFormatString = getString(R.string.MONTH_YEAR_FORMAT)
         dashboardViewModel.productCardViewModelDelegate.cardInfoModelObservable.observe(this, cardModelObserver)
         dashboardViewModel.productCardViewModelDelegate.cardStateObservable.observe(this, cardStateObserver)
+        dashboardViewModel.expandableOptionsItems.observe(this, cardOptionsObserver)
         dashboardViewModel.initCardView()
 
         dashboardViewModel.spendingBalanceObservable.observe(this, spendingBalanceObserver)
@@ -506,15 +501,21 @@ class DashboardFragment : BaseEngagePageFragment(),
         dashboardViewModel.collapseEnd()
     }
 
-    override fun onShowHideCardDetails() {
-        if (dashboardViewModel.productCardViewModelDelegate.isShowingCardDetails()) {
-            dashboardViewModel.productCardViewModelDelegate.hideCardDetails()
-        } else {
+    override fun onShowCardDetails() {
+        if (!dashboardViewModel.productCardViewModelDelegate.isShowingCardDetails()) {
             val authDialogFragment = AuthenticationDialogFragment.newInstance(
                     getString(R.string.OVERVIEW_SHOW_CARD_DETAILS_AUTHENTICATION_MESSAGE)
-            ) { dashboardViewModel.productCardViewModelDelegate.showCardDetails() }
+            ) {
+                dashboardViewModel.productCardViewModelDelegate.showCardDetails()
+            }
 
             authDialogFragment.show(childFragmentManager, AuthenticationDialogFragment.TAG)
+        }
+    }
+
+    override fun onHideCardDetails() {
+        if (dashboardViewModel.productCardViewModelDelegate.isShowingCardDetails()) {
+            dashboardViewModel.productCardViewModelDelegate.hideCardDetails()
         }
     }
 
@@ -522,7 +523,11 @@ class DashboardFragment : BaseEngagePageFragment(),
         binding.root.findNavController().navigate(R.id.action_dashboard_fragment_to_moveMoneyFragment)
     }
 
-    override fun onLockUnlockCard() {
+    override fun onLockCard() {
+        binding.root.findNavController().navigate(R.id.action_dashboard_fragment_to_cardLockUnlockFragment)
+    }
+
+    override fun onUnlockCard() {
         binding.root.findNavController().navigate(R.id.action_dashboard_fragment_to_cardLockUnlockFragment)
     }
 
