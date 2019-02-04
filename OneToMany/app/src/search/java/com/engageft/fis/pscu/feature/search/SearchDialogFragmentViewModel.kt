@@ -3,6 +3,7 @@ package com.engageft.fis.pscu.feature.search
 import androidx.lifecycle.MutableLiveData
 import com.engageft.engagekit.EngageService
 import com.engageft.engagekit.aac.SingleLiveEvent
+import com.engageft.engagekit.repository.transaction.TransactionRepository
 import com.engageft.engagekit.repository.transaction.toTransaction
 import com.engageft.engagekit.repository.transaction.vo.Transaction
 import com.engageft.engagekit.rest.request.TransactionsSearchRequest
@@ -28,7 +29,7 @@ class SearchDialogFragmentViewModel : BaseEngageViewModel() {
             searchErrorObservable.value = SearchStringStatus.SEARCH_STRING_NOT_MINIMUM_LENGTH
         } else {
             searchErrorObservable.value = SearchStringStatus.VALID
-            progressOverlayShownObservable.value = true
+            showProgressOverlayDelayed()
             val request = TransactionsSearchRequest(searchString)
             compositeDisposable.add(
                     EngageService.getInstance().engageApiInterface.postSearchTransactions(request.fieldMap)
@@ -39,22 +40,22 @@ class SearchDialogFragmentViewModel : BaseEngageViewModel() {
                                     if (response.transactionList != null && !response.transactionList.isEmpty()) {
                                         val transactionList = mutableListOf<Transaction>()
                                         for (transactionInfo in response.transactionList) {
-                                            transactionList.add(transactionInfo.toTransaction())
+                                            transactionList.add(transactionInfo.toTransaction(TransactionRepository.TransactionRepoType.ALL_ACTIVITY))
                                         }
                                         searchTransactions.postValue(transactionList)
-                                        progressOverlayShownObservable.postValue(false)
+                                        dismissProgressOverlay()
                                     } else {
                                         // transactions list was null or empty
                                         searchTransactions.postValue(listOf())
-                                        progressOverlayShownObservable.postValue(false)
+                                        dismissProgressOverlay()
                                     }
                                 } else {
                                     handleUnexpectedErrorResponse(response)
-                                    progressOverlayShownObservable.postValue(false)
+                                    dismissProgressOverlay()
                                 }
                             }) { e ->
                                 handleThrowable(e)
-                                progressOverlayShownObservable.postValue(false)
+                                dismissProgressOverlay()
                             }
             )
         }

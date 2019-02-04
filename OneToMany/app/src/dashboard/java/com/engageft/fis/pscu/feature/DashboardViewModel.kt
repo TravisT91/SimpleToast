@@ -73,7 +73,7 @@ class DashboardViewModel : BaseEngageViewModel(), GateKeeperListener {
 
     // Balances
     fun clearAndRefreshBalancesAndNotifications() {
-        progressOverlayShownObservable.value = true
+        showProgressOverlayDelayed()
         EngageService.getInstance().clearLoginAndDashboardResponses()
         refreshBalancesAndNotifications()
     }
@@ -142,13 +142,12 @@ class DashboardViewModel : BaseEngageViewModel(), GateKeeperListener {
 
     // Transactions
     fun clearAndRefreshAllTransactions() {
-        val repoTypes = listOf(TransactionRepository.TransactionRepoType.ALL_ACTIVITY, TransactionRepository.TransactionRepoType.DEPOSITS)
-        clearTransactions(repoTypes) { refreshTransactions(repoTypes) }
+        clearTransactions { refreshTransactions() }
     }
 
-    private fun clearTransactions(repoTypes: List<TransactionRepository.TransactionRepoType>, callBack: (() -> Unit)? = null) {
+    private fun clearTransactions(callBack: (() -> Unit)? = null) {
         compositeDisposable.add(
-                Observable.fromCallable { TransactionRepository.clearTransactions(repoTypes) }
+                Observable.fromCallable { TransactionRepository.clearAllTransactions() }
                         .subscribeOn(Schedulers.computation())
                         .observeOn(Schedulers.computation())
                         .subscribe {
@@ -159,7 +158,7 @@ class DashboardViewModel : BaseEngageViewModel(), GateKeeperListener {
         )
     }
 
-    private fun refreshTransactions(transactionTypes: List<TransactionRepository.TransactionRepoType>) {
+    private fun refreshTransactions() {
         compositeDisposable.add(
                 EngageService.getInstance().loginResponseAsObservable
                         .subscribeOn(Schedulers.io())
@@ -168,12 +167,8 @@ class DashboardViewModel : BaseEngageViewModel(), GateKeeperListener {
                             if (response.isSuccess && response is LoginResponse) {
                                 debitCardInfo = LoginResponseUtils.getCurrentCard(response)
                                 debitCardInfo.let {
-                                    if (transactionTypes.contains(TransactionRepository.TransactionRepoType.ALL_ACTIVITY)) {
-                                        allTransactionsListing = TransactionRepository.pagedTransactions(TransactionRepository.TransactionRepoType.ALL_ACTIVITY, debitCardInfo.debitCardId, null)
-                                    }
-                                    if (transactionTypes.contains(TransactionRepository.TransactionRepoType.DEPOSITS)) {
-                                        depositTransactionsListing = TransactionRepository.pagedTransactions(TransactionRepository.TransactionRepoType.DEPOSITS, debitCardInfo.debitCardId, TransactionType.LOAD.name)
-                                    }
+                                    allTransactionsListing = TransactionRepository.pagedTransactions(TransactionRepository.TransactionRepoType.ALL_ACTIVITY, debitCardInfo.debitCardId, null)
+                                    depositTransactionsListing = TransactionRepository.pagedTransactions(TransactionRepository.TransactionRepoType.DEPOSITS, debitCardInfo.debitCardId, TransactionType.LOAD.name)
 
                                     if (transactionsTabPosition == TRANSACTIONS_TAB_POSITION_ALL) {
                                         showAllActivity(reselect = true)
