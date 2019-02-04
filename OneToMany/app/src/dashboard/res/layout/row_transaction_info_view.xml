@@ -52,7 +52,7 @@
         android:id="@+id/cl_transactions"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="?android:selectableItemBackground">
+        android:background="@drawable/selectable_item_background_structure2">
 
         <TextView
             android:id="@+id/tv_transaction_day_month"

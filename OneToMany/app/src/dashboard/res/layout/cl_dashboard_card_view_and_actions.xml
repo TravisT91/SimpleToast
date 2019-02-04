@@ -27,7 +27,7 @@
             app:statusRibbonColorNotOk="@color/error"
             app:providerLogoDrawable="@drawable/cardview_provider_logo_mc"
             app:cardLockedIcon="@drawable/ic_card_locked"
-            app:productLogoDrawable="@drawable/showcase_logo"
+            app:productLogoDrawable="@null"
             app:cvvMask="@string/PRODUCTCARDVIEW_CVV_MASK"
             app:cardNumberMask="@string/PRODUCTCARDVIEW_CARDNUMBER_MASK"
             app:cardValidMask="@string/PRODUCTCARDVIEW_CARD_VALID_MASK"

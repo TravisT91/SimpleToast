@@ -10,25 +10,21 @@
         android:orientation="vertical"
         android:layout_width="wrap_content"
         android:layout_height="match_parent">
-
-        <include
-            layout="@layout/view_horizontal_divider"
-            android:layout_width="match_parent"
-            android:layout_height="1dp" />
-
         <LinearLayout
-            style="@style/AchBankTransferAccountsLayoutStyle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/cellBackground"
+            android:gravity="center_vertical"
+            android:padding="16dp"
             android:orientation="vertical">
 
-            <TextView
-                android:id="@+id/bankNameTextView"
-                style="@style/AchBankTransferBankNameStyle"
-                tools:text="Bank of America" />
-
-            <TextView
-                android:id="@+id/bankStatusTextView"
-                style="@style/AchBankTransferBankStatusStyle"
-                tools:text="Verified"/>
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/addUserText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textColor="@color/black"
+                style="@style/Body"
+                android:text="@string/secondary_users_add_account" />
 
         </LinearLayout>
 
@@ -36,7 +32,6 @@
             layout="@layout/view_horizontal_divider"
             android:layout_width="match_parent"
             android:layout_height="1dp" />
-
     </LinearLayout>
 
 </FrameLayout>

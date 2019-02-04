@@ -9,6 +9,7 @@ import com.engageft.fis.pscu.feature.gatekeeping.GatedItem
 import com.engageft.fis.pscu.feature.gatekeeping.items.AccountRequiredGatedItem
 import com.engageft.fis.pscu.feature.gatekeeping.items.CIPRequiredGatedItem
 import com.engageft.fis.pscu.feature.gatekeeping.items.TermsRequiredGatedItem
+import com.engageft.fis.pscu.feature.utils.CardStatusUtils
 import com.ob.domain.lookup.DebitCardStatus
 import com.ob.ws.dom.ActivationCardInfo
 
@@ -59,49 +60,12 @@ class EnrollmentCardPinDelegate(private val viewModel: EnrollmentViewModel, priv
         val productCardModel = ProductCardModel()
         productCardModel.cardholderName = String.format("%s %s", viewModel.activationCardInfo.firstName, viewModel.activationCardInfo.lastName)
         productCardModel.cardStatusText = viewModel.activationCardInfo.cardStatus
-        productCardModel.cardStatus = productCardModelStatusFromActivationInfo(viewModel.activationCardInfo)
+        productCardModel.cardStatus = CardStatusUtils.productCardModelStatusFromActivationInfo(viewModel.activationCardInfo)
         productCardModel.cardStatusOkay = true
         productCardModel.cardLocked = productCardModel.cardStatus == ProductCardModelCardStatus.CARD_STATUS_LOCKED
         productCardModel.cardNumberPartial = getLastFourFromCreditCard(viewModel.getStartedDelegate.cardNumber)
 
         cardPinViewModelDelegate.productCardViewModelDelegate.cardInfoModelObservable.value = productCardModel
-    }
-
-    /**
-     * I am attempting to resolve differences in DebitCardStatus enums to ProductCardModelCardStatus
-     * enums. Some don't exist in the other. 
-     */
-    private fun productCardModelStatusFromActivationInfo(activationCardInfo: ActivationCardInfo): ProductCardModelCardStatus {
-        return when (activationCardInfo.cardStatus) {
-            DebitCardStatus.ACTIVE.toString() -> {
-                ProductCardModelCardStatus.CARD_STATUS_ACTIVE
-            }
-            DebitCardStatus.PENDING_ACTIVATION.toString() -> {
-                ProductCardModelCardStatus.CARD_STATUS_PENDING
-            }
-            DebitCardStatus.CANCELED.toString() -> {
-                ProductCardModelCardStatus.CARD_STATUS_CANCELED
-            }
-            DebitCardStatus.REPLACED.toString() -> {
-                ProductCardModelCardStatus.CARD_STATUS_REPLACED
-            }
-            DebitCardStatus.LOCKED_USER.toString() -> {
-                ProductCardModelCardStatus.CARD_STATUS_LOCKED
-            }
-            DebitCardStatus.LOCKED_PARENT.toString() -> {
-                ProductCardModelCardStatus.CARD_STATUS_LOCKED
-            }
-            DebitCardStatus.LOCKED_CSR.toString() -> {
-                ProductCardModelCardStatus.CARD_STATUS_LOCKED
-            }
-            DebitCardStatus.LOCKED_ADMIN.toString() -> {
-                ProductCardModelCardStatus.CARD_STATUS_LOCKED
-            }
-            else -> {
-                // This is bad...
-                throw IllegalStateException("Unknown card status. ")
-            }
-        }
     }
 
     private fun getLastFourFromCreditCard(cardNumber: String): String {
