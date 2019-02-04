@@ -1,6 +1,8 @@
 package com.engageft.feature.goals
 
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProvider
 import com.engageft.engagekit.EngageService
 import com.engageft.engagekit.utils.BackendDateTimeUtils
 import com.engageft.engagekit.utils.LoginResponseUtils
@@ -11,15 +13,13 @@ import com.ob.ws.dom.utility.GoalInfo
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 import org.joda.time.DateTime
-import utilGen1.DisplayDateTimeUtils
 import java.lang.IllegalArgumentException
 import java.math.BigDecimal
 
-class GoalDetailViewModel: GoalDeleteViewModel() {
+class GoalDetailViewModel(var goalId: Long): GoalDeleteViewModel() {
     val goalDetailStatesListObservable = MutableLiveData<List<GoalDetailState>>()
     val goalScreenTitleObservable = MutableLiveData<String>()
 
-    var goalId: Long = 0L
     var fundAmount: BigDecimal = BigDecimal.ZERO
     var goalName: String = ""
 
@@ -27,14 +27,14 @@ class GoalDetailViewModel: GoalDeleteViewModel() {
         onTransferAndDelete(goalId)
     }
 
-    fun initGoalDetail(goalId: Long) {
+    fun initGoalDetail() {
         showProgressOverlayDelayed()
         compositeDisposable.add(EngageService.getInstance().loginResponseAsObservable
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe({ response ->
                     if (response is LoginResponse) {
-                        initGoal(goalId, LoginResponseUtils.getCurrentCard(response), true)
+                        initGoal(LoginResponseUtils.getCurrentCard(response), true)
                     } else {
                         dismissProgressOverlayImmediate()
                         handleUnexpectedErrorResponse(response)
@@ -46,7 +46,7 @@ class GoalDetailViewModel: GoalDeleteViewModel() {
         )
     }
 
-    private fun initGoal(goalId: Long, debitCardInfo: DebitCardInfo, useCache: Boolean) {
+    private fun initGoal(debitCardInfo: DebitCardInfo, useCache: Boolean) {
         compositeDisposable.add(
                 EngageService.getInstance().goalsObservable(debitCardInfo, useCache)
                         .subscribeOn(Schedulers.io())
@@ -59,11 +59,11 @@ class GoalDetailViewModel: GoalDeleteViewModel() {
                                     if (goalInfo.goalId == goalId) {
                                         fundAmount = goalInfo.fundAmount
                                         goalName = goalInfo.name
-                                        this.goalId = goalInfo.goalId
                                         goalDetailStateList = getGoalDetailStateList(goalInfo)
                                         break
                                     }
                                 }
+                                goalScreenTitleObservable.value = goalName
                                 goalDetailStatesListObservable.value = goalDetailStateList
                             } else {
                                 handleUnexpectedErrorResponse(response)
@@ -101,6 +101,7 @@ class GoalDetailViewModel: GoalDeleteViewModel() {
                     frequencyAmount = goalInfo.payPlan.amount,
                     progress = progress,
                     payPlanType = recurrenceType,
+                    isPaused = goalInfo.payPlan.isPaused,
                     goalCompleteDate = BackendDateTimeUtils.getDateTimeForYMDString(goalInfo.estimatedCompleteDate))
             goalDetailStateList.add(GoalDetailState.GoalIncompleteHeader(goalIncompleteHeaderModel))
 
@@ -118,9 +119,8 @@ class GoalDetailViewModel: GoalDeleteViewModel() {
         private const val PAYPLAN_TYPE_WEEK = "WEEK"
         private const val PAYPLAN_TYPE_MONTH = "MONTH"
     }
-
-
 }
+
 sealed class GoalDetailState {
     class GoalCompleteHeader(val fundAmount: BigDecimal) : GoalDetailState()
     class GoalIncompleteHeader(val goalIncompleteHeaderModel: GoalIncompleteHeaderModel) : GoalDetailState() {
@@ -131,6 +131,7 @@ sealed class GoalDetailState {
         }
         data class GoalIncompleteHeaderModel(val fundAmount: BigDecimal, val goalAmount: BigDecimal,
                                              val progress: Float, val frequencyAmount: BigDecimal,
+                                             val isPaused: Boolean,
                                              val payPlanType: GoalDetailState.GoalIncompleteHeader.PayPlanType,
                                              val goalCompleteDate: DateTime)
     }
@@ -138,5 +139,12 @@ sealed class GoalDetailState {
     object SingleTransfer : GoalDetailState()
     object Edit : GoalDetailState()
     object Delete : GoalDetailState()
+}
+
+class GoalDetailViewModelFactory(private val goalId: Long) : ViewModelProvider.NewInstanceFactory() {
+    override fun <T : ViewModel?> create(modelClass: Class<T>): T {
+        @Suppress("UNCHECKED_CAST")
+        return GoalDetailViewModel(goalId) as T
+    }
 }
 

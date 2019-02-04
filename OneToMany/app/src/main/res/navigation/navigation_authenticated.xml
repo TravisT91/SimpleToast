@@ -395,14 +395,6 @@
             android:defaultValue="true" />
     </fragment>
     <fragment
-        android:id="@+id/goalsAddStep2Fragment"
-        android:name="com.engageft.feature.goals.GoalsAddStep2Fragment"
-        android:label="@string/GOALS_ADD_GOAL" >
-        <action
-            android:id="@+id/action_goalsAddStep2Fragment_to_goalsAddEditConfirmationFragment"
-            app:destination="@id/goalsAddEditConfirmationFragment" />
-    </fragment>
-    <fragment
         android:id="@+id/accountNotificationsFragment"
         android:name="com.engageft.fis.pscu.feature.AccountNotificationsFragment"
         android:label="@string/account_notifications_screen_title">
@@ -546,10 +538,8 @@
     <fragment
         android:id="@+id/cardLockUnlockFragment"
         android:name="com.engageft.fis.pscu.feature.CardLockUnlockFragment"
-        android:label="CardLockUnlockFragment" />
-
-        android:label="CardLockUnlockFragment">
-        <argument
+        android:label="CardLockUnlockFragment" >
+     <argument
             android:name="@string/navigation_view_gone"
             android:defaultValue="true" />
     </fragment>
@@ -603,8 +593,6 @@
             android:name="@string/navigation_view_gone"
             android:defaultValue="true" />
     </fragment>
-        android:id="@+id/goalsSuccessFragment"
-        android:name="com.engageft.feature.goals.GoalsSuccessFragment" />
     <fragment
         android:id="@+id/goalDetailFragment"
         android:name="com.engageft.feature.goals.GoalDetailFragment" >

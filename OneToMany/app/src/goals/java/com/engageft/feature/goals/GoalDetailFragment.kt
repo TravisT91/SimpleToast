@@ -30,7 +30,14 @@ class GoalDetailFragment: BaseEngagePageFragment() {
     private lateinit var binding: FragmentGoalsListBinding
 
     override fun createViewModel(): BaseViewModel? {
-        viewModelGoalDetail = ViewModelProviders.of(this).get(GoalDetailViewModel::class.java)
+        arguments!!.let {
+            val goalId = it.getLong(GOAL_ID_KEY, GOAL_ID_DEFAULT)
+            if (goalId == GOAL_ID_DEFAULT) {
+                throw IllegalArgumentException("Goal Id is not valid")
+            } else {
+                viewModelGoalDetail = ViewModelProviders.of(this, GoalDetailViewModelFactory(goalId)).get(GoalDetailViewModel::class.java)
+            }
+        }
         return viewModelGoalDetail
     }
 
@@ -44,15 +51,7 @@ class GoalDetailFragment: BaseEngagePageFragment() {
             viewModel = viewModel
             palette = Palette
 
-            arguments!!.let {
-                val goalId = it.getLong(GOAL_ID_KEY, GOAL_ID_DEFAULT)
-                if (goalId == GOAL_ID_DEFAULT) {
-                    throw IllegalArgumentException("Goal Id is not valid")
-                } else {
-                    viewModelGoalDetail.goalId = goalId
-                    viewModelGoalDetail.initGoalDetail(goalId)
-                }
-            }
+            viewModelGoalDetail.initGoalDetail()
 
             sectionedAdapter = SectionedRecyclerViewAdapter()
             recyclerView.adapter = sectionedAdapter
