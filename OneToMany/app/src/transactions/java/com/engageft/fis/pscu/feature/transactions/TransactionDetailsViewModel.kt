@@ -18,6 +18,7 @@ import io.reactivex.schedulers.Schedulers
 import utilGen1.DisplayDateTimeUtils
 import utilGen1.StringUtils
 import utilGen1.StringUtils.formatCurrencyStringWithFractionDigits
+import java.util.*
 import kotlin.math.absoluteValue
 
 class TransactionDetailsViewModel(transactionId: TransactionId) : BaseEngageViewModel() {
@@ -99,7 +100,7 @@ class TransactionDetailsViewModel(transactionId: TransactionId) : BaseEngageView
             val changesIterable = ArrayList<ObservableSource<BasicResponse>>()
 
             addCategoryUpdateIfChanged(changesIterable, transaction)
-            addEmailUpdateIfChanged(changesIterable, transaction)
+            addNoteUpdateIfChanged(changesIterable, transaction)
             addBudgetUpdateIfChanged(changesIterable, transaction)
 
             showProgressOverlayDelayed()
@@ -145,8 +146,17 @@ class TransactionDetailsViewModel(transactionId: TransactionId) : BaseEngageView
                                 true)
                                 .doOnNext { response ->
                                     if (response.isSuccess) {
+                                        // must update originalCategory here, even though we update the repo version,
+                                        // because checkChanges() happens in onComplete for the transaction, before
+                                        // the repo is updated and the transaction here is updated.
                                         originalCategory = txCategory.value
-                                        TransactionRepository.updateTransactionCategory(transaction, budgetCategory.parentCategory.name, budgetCategory.name)
+                                        // Update in repo
+                                        val localeLanguage = Locale.getDefault().language
+                                        transaction.category = budgetCategory.parentCategory.name
+                                        transaction.categoryDescription = budgetCategory.parentCategory.getDescriptionForLocaleLanguage(localeLanguage)
+                                        transaction.subCategory = budgetCategory.name
+                                        transaction.subCategoryDescription = budgetCategory.getDescriptionForLocaleLanguage(localeLanguage)
+                                        TransactionRepository.updateTransaction(transaction)
                                     }
                                 }
                 )
@@ -154,7 +164,7 @@ class TransactionDetailsViewModel(transactionId: TransactionId) : BaseEngageView
         }
     }
 
-    private fun addEmailUpdateIfChanged(
+    private fun addNoteUpdateIfChanged(
             changesIterable: ArrayList<ObservableSource<BasicResponse>>,
             transaction: Transaction) {
         if (txNotes.value != originalNotes) {
@@ -166,7 +176,9 @@ class TransactionDetailsViewModel(transactionId: TransactionId) : BaseEngageView
                                 .doOnNext { response ->
                                     if (response.isSuccess) {
                                         originalNotes = txNotes.value
-                                        TransactionRepository.updateTransactionNote(transaction, txNotes.value)
+                                        // Update in repo
+                                        transaction.note = txNotes.value
+                                        TransactionRepository.updateTransaction(transaction)
                                     }
                                 }
                 )
@@ -192,14 +204,15 @@ class TransactionDetailsViewModel(transactionId: TransactionId) : BaseEngageView
                                 .doOnNext { response ->
                                     if (response.isSuccess) {
                                         originalIsOffBudget = isOffBudget.value
+                                        // Update in repo
+                                        transaction.offBudget = isOffBudget.value!!
+                                        TransactionRepository.updateTransaction(transaction)
                                     }
                                 }
                 )
             }
         }
     }
-
-
 }
 
 class TransactionViewModelFactory(private val transactionId: TransactionId)

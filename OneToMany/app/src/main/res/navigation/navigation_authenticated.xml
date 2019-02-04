@@ -542,10 +542,8 @@
     <fragment
         android:id="@+id/cardLockUnlockFragment"
         android:name="com.engageft.fis.pscu.feature.CardLockUnlockFragment"
-        android:label="CardLockUnlockFragment" />
-
-        android:label="CardLockUnlockFragment">
-        <argument
+        android:label="CardLockUnlockFragment" >
+     <argument
             android:name="@string/navigation_view_gone"
             android:defaultValue="true" />
     </fragment>
