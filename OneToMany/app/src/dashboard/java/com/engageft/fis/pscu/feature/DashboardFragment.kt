@@ -340,7 +340,7 @@ class DashboardFragment : BaseEngagePageFragment(),
     }
 
     // If the dashboardExpandableView is expanded when the device back button is pressed, collapseImmediate it.
-    override fun handleBackPressed(): Boolean {
+    fun handleBackPressed(): Boolean {
         return if (binding.dashboardExpandableView.showingActions) {
             binding.dashboardExpandableView.showActions(show = false)
             true
@@ -412,7 +412,9 @@ class DashboardFragment : BaseEngagePageFragment(),
             }
         }
 
-        dashboardViewModel.clearAndRefreshAllTransactions()
+        if (dashboardViewModel.transactions.value == null) {
+            dashboardViewModel.clearAndRefreshAllTransactions()
+        }
 
         dashboardViewModel.notificationsCountObservable.observe(this, notificationsObserver)
 

@@ -31,7 +31,6 @@ class TransactionDetailsViewModel(transactionId: TransactionId) : BaseEngageView
     private var originalIsOffBudget: Boolean? = null
 
     val repoLiveData: LiveData<Transaction> = TransactionRepository.getTransaction(
-            repoType = TransactionRepository.TransactionRepoType.ALL_ACTIVITY,
             accountId = accountId.toString(),
             cardId = cardId.toString(),
             transactionId = transactionId.id)
@@ -147,6 +146,7 @@ class TransactionDetailsViewModel(transactionId: TransactionId) : BaseEngageView
                                 .doOnNext { response ->
                                     if (response.isSuccess) {
                                         originalCategory = txCategory.value
+                                        TransactionRepository.updateTransactionCategory(transaction, budgetCategory.parentCategory.name, budgetCategory.name)
                                     }
                                 }
                 )
@@ -166,6 +166,7 @@ class TransactionDetailsViewModel(transactionId: TransactionId) : BaseEngageView
                                 .doOnNext { response ->
                                     if (response.isSuccess) {
                                         originalNotes = txNotes.value
+                                        TransactionRepository.updateTransactionNote(transaction, txNotes.value)
                                     }
                                 }
                 )
