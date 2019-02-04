@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+        <variable
+            name="palette"
+            type="com.engageft.fis.pscu.feature.branding.Palette"/>
+
+        <variable
+            name="budgetItem"
+            type="com.engageft.feature.budgets.model.BudgetItem"/>
+
+        <variable
+            name="budgetConstants"
+            type="com.engageft.feature.budgets.BudgetConstants"/>
+
+        <variable
+            name="displayHelper"
+            type="com.engageft.feature.budgets.model.BudgetItemDisplayHelper"/>
+    </data>
+
+    <com.engageft.apptoolbox.view.TrackingPanel
+        android:id="@+id/row_budget_tracking_panel"
+        style="@style/TrackingPanelBudgetRow"
+        app:titleText="@{displayHelper.title(budgetItem)}"
+        app:rightSubtitle="@{displayHelper.spentString(budgetItem)}"
+        app:rightSubtitleColor="@{displayHelper.spentColor(budgetItem)}"
+        app:progress="@{budgetItem.progress}"
+        app:progressColor="@{displayHelper.progressColor(budgetItem)}"
+        app:progressBarHeight="@{displayHelper.progressBarHeight(budgetItem)}"
+        app:indicatorPosition="@{budgetItem.fractionTimePeriodPassed}"
+        app:indicatorText="@string/budget_row_today"
+        app:showIndicatorText="@{displayHelper.showIndicatorText(budgetItem)}"/>
+
+</layout>
