@@ -50,7 +50,7 @@
         <item name="listOptionItemTextAppearance">@style/ListOptionsBottomSheetDialogFragmentOptionStyle</item>
         <item name="listOptionTitleTextAppearance">@style/DashboardMoreOptionsBottomSheetDialogFragmentTitleStyle</item>
         <item name="listOptionSubtitleTextAppearance">@style/ListOptionsBottomSheetDialogFragmentSubtitleStyle</item>
-        <item name="listOptionBackground">@drawable/dialog_bottom_sheet_option_selector</item>
+        <item name="listOptionForeground">@drawable/selectable_item_background_structure2</item>
         <item name="listOptionHeaderMarginTop">20dp</item>
         <item name="listOptionHeaderMarginBottom">12dp</item>
         <item name="listOptionHeaderMarginStart">16dp</item>
