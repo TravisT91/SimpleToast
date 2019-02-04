@@ -12,6 +12,6 @@
         android:id="@+id/addGoalButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/GOALS_ADD_BUTTON"/>
+        android:text="@string/GOALS_ADD_GOAL"/>
 
 </androidx.appcompat.widget.LinearLayoutCompat>

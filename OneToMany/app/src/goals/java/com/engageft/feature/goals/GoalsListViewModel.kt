@@ -18,7 +18,7 @@ class GoalsListViewModel: BaseEngageViewModel() {
     private var goalsList = listOf<GoalInfo>()
 
     fun initData(useCache: Boolean) {
-        showProgressOverlayImmediate()
+        showProgressOverlayDelayed()
         compositeDisposable.add(EngageService.getInstance().loginResponseAsObservable
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())

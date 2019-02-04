@@ -1,6 +1,8 @@
 package com.engageft.feature.goals.utils
 
 import android.content.Context
+import com.engageft.engagekit.EngageService
+import com.engageft.engagekit.tools.AuthManager
 import com.engageft.engagekit.utils.BackendDateTimeUtils
 import com.engageft.engagekit.utils.PayPlanInfoUtils
 import com.engageft.fis.pscu.R
@@ -57,54 +59,6 @@ fun GoalInfo.getGoalInfoCompletionDateString(context: Context): String {
         val completeDateString = DisplayDateTimeUtils.getMediumFormatted(completeDate)
         String.format(context.getString(R.string.GOALS_BY_DATE_FORMAT), completeDateString)
     }
-}
-
-fun createGoalInfo(goalName: String, goalAmount: String, recurrenceType: String, startDate: DateTime, dayOfWeek: Int, purseId: Long): GoalInfo {
-    val goalInfo = GoalInfo()
-    goalInfo.isAchieved = false
-    goalInfo.isActive = true
-    goalInfo.amount = BigDecimal.valueOf(StringUtils.getFloatFromString(goalAmount).toDouble())
-    goalInfo.fundAmount = BigDecimal.valueOf(0.0)
-    goalInfo.name = StringUtils.removeRedundantWhitespace(goalName)
-    goalInfo.purseId = purseId
-
-    val goalTargetInfo = GoalTargetInfo()
-    goalTargetInfo.name = goalInfo.name
-    goalTargetInfo.amount = goalInfo.amount
-
-    val goalTargetInfoList = ArrayList<GoalTargetInfo>()
-    goalTargetInfoList.add(goalTargetInfo)
-    goalInfo.goalTargets = goalTargetInfoList
-
-    val payPlanInfo = PayPlanInfo()
-    payPlanInfo.recurrenceType = recurrenceType
-
-    when (payPlanInfo.recurrenceType) {
-        PayPlanInfoUtils.PAY_PLAN_ANNUAL, PayPlanInfoUtils.PAY_PLAN_QUARTER -> {
-            payPlanInfo.dayOfMonth = startDate.dayOfMonth
-            payPlanInfo.monthOfYear = startDate.monthOfYear
-            payPlanInfo.dayOfWeek = null
-        }
-        PayPlanInfoUtils.PAY_PLAN_MONTH -> {
-            payPlanInfo.dayOfMonth = startDate.dayOfMonth
-            payPlanInfo.monthOfYear = null
-            payPlanInfo.dayOfWeek = null
-        }
-        PayPlanInfoUtils.PAY_PLAN_WEEK -> {
-            payPlanInfo.dayOfMonth = null
-            payPlanInfo.monthOfYear = null
-            payPlanInfo.dayOfWeek = dayOfWeek
-        }
-        PayPlanInfoUtils.PAY_PLAN_DAY, PayPlanInfoUtils.PAY_PLAN_PAYCHECK -> {
-            payPlanInfo.dayOfMonth = null
-            payPlanInfo.monthOfYear = null
-            payPlanInfo.dayOfWeek = null
-        }
-    }
-
-    goalInfo.payPlan = payPlanInfo
-
-    return goalInfo
 }
 
 fun sumNonCompleteGoalTotals(goalInfoList: List<GoalInfo>): Float {
