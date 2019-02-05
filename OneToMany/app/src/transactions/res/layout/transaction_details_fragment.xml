@@ -66,10 +66,10 @@
                         android:paddingTop="8dp"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        style="@style/TextInputWithLabelStyle"
                         InputWithLabel.setThemeWithPalette="@{true}"
                         app:labelText="Merchant"
                         app:inputText="@{viewModel.txStore}"/>
-
 
                     <FrameLayout
                         android:id="@+id/categoryFrame"
@@ -81,6 +81,7 @@
                             android:paddingTop="8dp"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
+                            style="@style/TextInputWithLabelStyle"
                             InputWithLabel.setThemeWithPalette="@{true}"
                             app:labelText="Category"
                             app:inputText="@{viewModel.txCategoryDisplayString}"/>
@@ -98,7 +99,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:gravity="center_vertical"
-                            android:text="@string/TRANSACTIONS_INCLUDE_IN_BUDGET"
+                            android:text="@string/TRANSACTION_DETAILS_INCLUDE_IN_BUDGET"
                             tools:style="@style/Body"
                             parisStyle="@{palette.body}"/>
 
@@ -121,6 +122,7 @@
                         android:paddingTop="8dp"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        style="@style/TextInputWithLabelStyle"
                         InputWithLabel.setThemeWithPalette="@{true}"
                         app:labelText="Notes (optional)"
                         app:inputText="@={viewModel.txNotes}"/>
@@ -131,10 +133,10 @@
 
                 <com.engageft.apptoolbox.view.PillButton
                     android:id="@+id/saveButton"
+                    style="@style/ButtonPillPrimaryFilledDefault"
                     PillButton.setThemeFilled="@{true}"
-                    tools:style="@style/ButtonPillPrimaryFilledDefault"
                     android:textAllCaps="false"
-                    android:text="@string/save"
+                    android:text="@string/TRANSACTION_DETAILS_SAVE"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"

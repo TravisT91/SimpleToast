@@ -38,10 +38,10 @@ class TransactionDetailsMediatorFragment : BaseEngagePageFragment() {
                 removeCategoryFragment()
                 return true
             } ?: run {
-                if (transactionDetailsFragment.detailsViewModel.checkForChanges()){
+                if (transactionDetailsFragment.detailsViewModel.checkForChanges()) {
                     infoDialogGenericUnsavedChangesNewInstance(
                             context = context!!,
-                            listener = object: InformationDialogFragment.InformationDialogFragmentListener{
+                            listener = object: InformationDialogFragment.InformationDialogFragmentListener {
                                 override fun onDialogFragmentNegativeButtonClicked() {
                                     //doNothing
                                 }
@@ -101,7 +101,7 @@ class TransactionDetailsMediatorFragment : BaseEngagePageFragment() {
     }
 
     fun goToCategoryFragment() {
-        categoryFragment = CategoryFragment().apply{
+        categoryFragment = CategoryFragment().apply {
             onCategorySelectedListener = { category ->
                 transactionDetailsFragment.detailsViewModel.txCategory.postValue(category)
                 removeCategoryFragment()
@@ -114,7 +114,7 @@ class TransactionDetailsMediatorFragment : BaseEngagePageFragment() {
             }
         }
 
-        childFragmentManager.beginTransaction().apply{
+        childFragmentManager.beginTransaction().apply {
             setCustomAnimations(
                     R.anim.nav_enter_anim,
                     R.anim.nav_exit_anim,
@@ -128,7 +128,7 @@ class TransactionDetailsMediatorFragment : BaseEngagePageFragment() {
     }
 
     private fun removeCategoryFragment(){
-        categoryFragment?.let{
+        categoryFragment?.let {
             childFragmentManager.popBackStack()
             toolbarController.setToolbarTitle(getString(R.string.TRANSACTION_DETAILS_TITLE))
             categoryFragment = null

@@ -7,8 +7,10 @@ import android.view.ViewGroup
 import android.view.animation.AlphaAnimation
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
+import androidx.navigation.findNavController
 import com.engageft.apptoolbox.BaseViewModel
 import com.engageft.engagekit.EngageService
+import com.engageft.engagekit.aac.SingleLiveEvent
 import com.engageft.fis.pscu.R
 import com.engageft.fis.pscu.databinding.TransactionDetailsFragmentBinding
 import com.engageft.fis.pscu.feature.BaseEngageSubFragment
@@ -33,10 +35,10 @@ class TransactionDetailsFragment : BaseEngageSubFragment() {
 
     private val checkChangeObserver = Observer<Any?> { detailsViewModel.checkForChanges() }
     private val onChangeObserver = Observer<Boolean> { onChangeChecked(it) }
+    private val onChangeSuccessObserver = Observer<Unit> { onChangeSuccess() }
 
     lateinit var detailsViewModel: TransactionDetailsViewModel
     lateinit var binding: TransactionDetailsFragmentBinding
-
 
     override fun createViewModel(): BaseViewModel? {
         arguments?.getString(ARG_TRANSACTION_ID)?.let {
@@ -44,7 +46,7 @@ class TransactionDetailsFragment : BaseEngageSubFragment() {
             detailsViewModel = ViewModelProviders
                     .of(this, TransactionViewModelFactory(transactionId))
                     .get(TransactionDetailsViewModel::class.java)
-        } ?: run{
+        } ?: run {
             throw IllegalArgumentException("TRANSACTION ID ARGUMENT NOT FOUND IN ${this::class.java}")
         }
         return detailsViewModel
@@ -82,6 +84,8 @@ class TransactionDetailsFragment : BaseEngageSubFragment() {
                 txCategory.value = txCategory.value
             })
 
+            // To pop this fragment when changes are successfully made
+            changeSuccess.observe(tdf, onChangeSuccessObserver)
         }
     }
 
@@ -109,7 +113,7 @@ class TransactionDetailsFragment : BaseEngageSubFragment() {
             notes.setMaxLines(Int.MAX_VALUE)
 
             categoryFrame.apply {
-                setOnClickListener { _ ->
+                setOnClickListener {
                     val parent = this@TransactionDetailsFragment.parentFragment
                     (parent as TransactionDetailsMediatorFragment).apply {
                         goToCategoryFragment()
@@ -132,7 +136,7 @@ class TransactionDetailsFragment : BaseEngageSubFragment() {
     }
 
     private fun onChangeChecked(hasChanges: Boolean){
-        binding.saveButton.apply{
+        binding.saveButton.apply {
             if (hasChanges) {
                 if (visibility != View.VISIBLE) {
                     visibility = View.VISIBLE
@@ -144,4 +148,7 @@ class TransactionDetailsFragment : BaseEngageSubFragment() {
         }
     }
 
+    private fun onChangeSuccess() {
+        binding.root.findNavController().popBackStack(R.id.transactionDetailsFragment, true)
+    }
 }

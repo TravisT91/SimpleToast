@@ -13,7 +13,7 @@ import com.engageft.engagekit.EngageService
 import com.engageft.fis.pscu.R
 import com.engageft.fis.pscu.feature.branding.Palette
 import com.engageft.fis.pscu.feature.palettebindings.setParisStyle
-import java.util.Locale
+import java.util.*
 
 /**
  * CategoryAdapter
@@ -36,7 +36,7 @@ class CategoryAdapter(
 
     private val itemTextPadding = Math.round(TypedValue.applyDimension(
             TypedValue.COMPLEX_UNIT_DIP,
-            8f,
+            12f,
             context.resources.displayMetrics))
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CategoryViewHolder {
@@ -70,7 +70,7 @@ class CategoryAdapter(
             val sm = EngageService.getInstance().storageManager
             val lang = Locale.getDefault().language
             val parentName = sm.getBudgetCategoryDescription(parentCategory.name, lang)
-            title.text = parentName
+            title.text = parentName.toUpperCase()
             categoryContainer.removeAllViews()
 
             subCategories.forEach { subCategory ->
@@ -79,15 +79,14 @@ class CategoryAdapter(
                         TextView(context).apply {
                             text = sm.getBudgetCategoryDescription(subCategory.name, lang)
                                     .removePrefix("$parentName: ")
-                            setParisStyle(Palette.Title4)
+                            setParisStyle(Palette.Body)
                             setSingleLine(true)
                             if (currentSubCategory == subCategory.name) {
                                 val successCheck = ContextCompat.getDrawable(
-                                        context, R.drawable.ic_success_check_mark)?.apply {
-                                    DrawableCompat.setTint(this, Palette.successColor)
+                                        context, R.drawable.ic_category_checkmark)?.apply {
                                 }
                                 compoundDrawablePadding = itemTextPadding
-                                setTextColor(Palette.successColor)
+                                setTextColor(Palette.primaryColor)
                                 setCompoundDrawablesRelativeWithIntrinsicBounds(
                                         null, //start
                                         null, //top

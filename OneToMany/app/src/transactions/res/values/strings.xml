@@ -19,8 +19,9 @@
     <string name="TRANSACTIONS_LOAD_ERROR_MESSAGE">Couldn\'t load transactions</string>
     <string name="TRANSACTIONS_LOAD_RETRY">Try again</string>
 
-    <string name="TRANSACTIONS_INCLUDE_IN_BUDGET">Include in Budget</string>
-
     <string name="TRANSACTION_DETAILS_TITLE">Transaction details</string>
+    <string name="TRANSACTION_DETAILS_INCLUDE_IN_BUDGET">Include in Budget</string>
+    <string name="TRANSACTION_DETAILS_SAVE">Save</string>
+
     <string name="TRANSACTIONS_CATEGORIES_TITLE">Select category</string>
 </resources>

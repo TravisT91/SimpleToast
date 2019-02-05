@@ -5,6 +5,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.engageft.engagekit.EngageService
+import com.engageft.engagekit.aac.SingleLiveEvent
 import com.engageft.engagekit.repository.transaction.TransactionRepository
 import com.engageft.engagekit.repository.transaction.vo.Transaction
 import com.engageft.engagekit.rest.request.TransactionSetOffBudgetRequest
@@ -50,6 +51,8 @@ class TransactionDetailsViewModel(transactionId: TransactionId) : BaseEngageView
     val isOffBudget = MutableLiveData<Boolean>().apply { value = false }
 
     val hasChanges = MutableLiveData<Boolean>().apply { value = false }
+
+    val changeSuccess = SingleLiveEvent<Unit>()
 
     fun setTransaction(transaction: Transaction) {
         transaction.let {
@@ -121,10 +124,15 @@ class TransactionDetailsViewModel(transactionId: TransactionId) : BaseEngageView
                                 //default values should have changed if not this means something
                                 //was unsuccessful
                                 if (checkForChanges()) {
+                                    dismissProgressOverlayImmediate()
                                     handleUnexpectedErrorResponse(
                                             BasicResponse(false, ""))
+                                } else {
+                                    // This causes navController to pop back to fragment before TransactionDetailsMediatorFragment.
+                                    // progress overlay is dismissed automatically in BaseFragmentDelegate when pop occurs, so no
+                                    // need to manually call it here.
+                                    changeSuccess.call()
                                 }
-                                dismissProgressOverlay()
                             }
                     )
         }
