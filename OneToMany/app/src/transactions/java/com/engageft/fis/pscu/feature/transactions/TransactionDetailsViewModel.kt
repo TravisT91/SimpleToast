@@ -213,8 +213,11 @@ class TransactionDetailsViewModel(transactionId: TransactionId) : BaseEngageView
                                     if (response.isSuccess) {
                                         originalIsOffBudget = isOffBudget.value
                                         // Update in repo
+                                        // To just update this transaction:
                                         transaction.offBudget = isOffBudget.value!!
                                         TransactionRepository.updateTransaction(transaction)
+                                        // To update all transactions for this transaction's store:
+                                        // TransactionRepository.updateStoreTransactionsOffBudget(transaction.store, isOffBudget.value!!)
                                     }
                                 }
                 )
