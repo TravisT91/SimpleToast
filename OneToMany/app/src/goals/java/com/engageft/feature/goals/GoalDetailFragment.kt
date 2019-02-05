@@ -17,6 +17,7 @@ import com.engageft.fis.pscu.R
 import com.engageft.fis.pscu.databinding.FragmentGoalsListBinding
 import com.engageft.fis.pscu.feature.BaseEngagePageFragment
 import com.engageft.fis.pscu.feature.ToggleableLabelSection
+import com.engageft.fis.pscu.feature.adapter.ErrorStateSection
 import com.engageft.fis.pscu.feature.branding.Palette
 import com.engageft.fis.pscu.feature.infoDialogYesNoNewInstance
 import io.github.luizgrp.sectionedrecyclerviewadapter.SectionedRecyclerViewAdapter
@@ -78,13 +79,20 @@ class GoalDetailFragment: BaseEngagePageFragment() {
 
         for (goalDetailState in goalDetailStateList) {
             when (goalDetailState) {
-                is GoalDetailState.GoalIncompleteHeader -> {
+                is GoalDetailState.ErrorItem -> {
+                    sectionedAdapter.addSection(ErrorStateSection(getString(R.string.GOAL_ERROR_TITLE), getString(R.string.GOAL_ERROR_DESCRIPTION), object : ErrorStateSection.OnErrorSectionInteractionListener {
+                        override fun onErrorSectionClicked() {
+                            // TODO: EDIT GOAL task
+                        }
+                    }))
+                }
+                is GoalDetailState.GoalIncompleteHeaderItem -> {
                     // header section
                     sectionedAdapter.addSection(GoalDetailIncompleteHeaderSection(context!!, goalDetailState.goalIncompleteHeaderModel))
 
                     sectionedAdapter.addSection(HorizontalRuleSection())
                 }
-                is GoalDetailState.GoalCompleteHeader -> {
+                is GoalDetailState.GoalCompleteHeaderItem -> {
                     sectionedAdapter.addSection(GoalDetailCompleteHeaderSection(context!!, goalDetailState.fundAmount, object:  GoalDetailCompleteHeaderSection.OnButtonClickListener {
                         override fun onTransferButtonClicked() {
                             // TODO(aHashimi): FOTM-575 single transfer
@@ -93,7 +101,7 @@ class GoalDetailFragment: BaseEngagePageFragment() {
 
                     sectionedAdapter.addSection(HorizontalRuleSection())
                 }
-                is GoalDetailState.SingleTransfer -> {
+                is GoalDetailState.SingleTransferItem -> {
                     sectionedAdapter.addSection(SelectableLabelsSection(
                             context!!,
                             R.style.GoalDetailItemTextStyle,
@@ -105,10 +113,12 @@ class GoalDetailFragment: BaseEngagePageFragment() {
 
                     sectionedAdapter.addSection(HorizontalRuleSectionIndentStart())
                 }
-                is GoalDetailState.GoalPauseState -> {
+                is GoalDetailState.GoalPauseItem -> {
+                    val goalPaused = if (goalDetailState.errorState == GoalDetailState.ErrorState.ERROR) false else goalDetailState.isGoalPaused
                     sectionedAdapter.addSection(GOAL_PAUSE_RESUME_SECTION, ToggleableLabelSection(context!!, listOf(ToggleableLabelSection.LabelItem(
                             labelText = getString(R.string.GOAL_DETAIL_RECURRING_TRANSFER),
-                            isChecked = goalDetailState.isGoalPaused)),
+                            isChecked = goalPaused,
+                            disableSection = goalDetailState.errorState == GoalDetailState.ErrorState.ERROR)),
                             styleId = R.style.GoalDetailItemTextStyle,
                             listener = object : ToggleableLabelSection.OnToggleInteractionListener {
                                 override fun onChecked(labelId: Int, isChecked: Boolean) {
@@ -118,7 +128,7 @@ class GoalDetailFragment: BaseEngagePageFragment() {
 
                     sectionedAdapter.addSection(HorizontalRuleSectionIndentStart())
                 }
-                is GoalDetailState.Edit -> {
+                is GoalDetailState.EditItem -> {
                     sectionedAdapter.addSection(SelectableLabelsSection(
                             context!!,
                             R.style.GoalDetailItemTextStyle,
@@ -131,7 +141,7 @@ class GoalDetailFragment: BaseEngagePageFragment() {
                             .addLabel(EDIT_LABEL_ID, getString(R.string.GOAL_DETAIL_EDIT)))
                     sectionedAdapter.addSection(HorizontalRuleSectionIndentStart())
                 }
-                is GoalDetailState.Delete -> {
+                is GoalDetailState.DeleteItem -> {
                     sectionedAdapter.addSection(SelectableLabelsSection(
                             context!!,
                             R.style.GoalDetailItemTextStyle,

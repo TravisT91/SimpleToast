@@ -106,14 +106,24 @@ class GoalDetailViewModel(var goalId: Long): GoalDeleteViewModel() {
         val goalDetailStateList = mutableListOf<GoalDetailState>()
 
         if (goalInfo.isAchieved) {
-            goalDetailStateList.add(GoalDetailState.GoalCompleteHeader(goalInfo.fundAmount))
-            goalDetailStateList.add(GoalDetailState.SingleTransfer)
-            goalDetailStateList.add(GoalDetailState.Delete)
+            goalDetailStateList.add(GoalDetailState.GoalCompleteHeaderItem(goalInfo.fundAmount))
+            goalDetailStateList.add(GoalDetailState.SingleTransferItem)
+            goalDetailStateList.add(GoalDetailState.DeleteItem)
         } else {
-            val recurrenceType : GoalDetailState.GoalIncompleteHeader.PayPlanType = when (goalInfo.payPlan.recurrenceType) {
-                PAYPLAN_TYPE_DAY -> GoalDetailState.GoalIncompleteHeader.PayPlanType.DAY
-                PAYPLAN_TYPE_WEEK -> GoalDetailState.GoalIncompleteHeader.PayPlanType.WEEK
-                PAYPLAN_TYPE_MONTH -> GoalDetailState.GoalIncompleteHeader.PayPlanType.MONTH
+            var errorState = GoalDetailState.ErrorState.NONE
+
+            // check if goal is in Error state
+            if (goalInfo.payPlan.isPaused && goalInfo.estimatedCompleteDate.isNotBlank()) {
+                val estimatedCompletionDate = BackendDateTimeUtils.getDateTimeForYMDString(goalInfo.estimatedCompleteDate)
+                if (estimatedCompletionDate.isBeforeNow) {
+                    errorState = GoalDetailState.ErrorState.ERROR
+                }
+            }
+
+            val recurrenceType : GoalDetailState.GoalIncompleteHeaderItem.PayPlanType = when (goalInfo.payPlan.recurrenceType) {
+                PAYPLAN_TYPE_DAY -> GoalDetailState.GoalIncompleteHeaderItem.PayPlanType.DAY
+                PAYPLAN_TYPE_WEEK -> GoalDetailState.GoalIncompleteHeaderItem.PayPlanType.WEEK
+                PAYPLAN_TYPE_MONTH -> GoalDetailState.GoalIncompleteHeaderItem.PayPlanType.MONTH
                 else -> {
                     throw IllegalArgumentException("payPlan is of wrong type")
                 }
@@ -122,20 +132,26 @@ class GoalDetailViewModel(var goalId: Long): GoalDeleteViewModel() {
                 goalInfo.fundAmount.toFloat() / goalInfo.amount.toFloat()
             else
                 0f
-            val goalIncompleteHeaderModel = GoalDetailState.GoalIncompleteHeader.GoalIncompleteHeaderModel(
+            val goalIncompleteHeaderModel = GoalDetailState.GoalIncompleteHeaderItem.GoalIncompleteHeaderModel(
                     fundAmount = goalInfo.fundAmount,
                     goalAmount = goalInfo.amount,
                     frequencyAmount = goalInfo.payPlan.amount,
                     progress = progress,
                     payPlanType = recurrenceType,
                     isPaused = goalInfo.payPlan.isPaused,
+                    errorState = errorState,
                     goalCompleteDate = BackendDateTimeUtils.getDateTimeForYMDString(goalInfo.estimatedCompleteDate))
-            goalDetailStateList.add(GoalDetailState.GoalIncompleteHeader(goalIncompleteHeaderModel))
 
-            goalDetailStateList.add(GoalDetailState.SingleTransfer)
-            goalDetailStateList.add(GoalDetailState.GoalPauseState(goalInfo.payPlan.isPaused))
-            goalDetailStateList.add(GoalDetailState.Edit)
-            goalDetailStateList.add(GoalDetailState.Delete)
+            if (errorState == GoalDetailState.ErrorState.ERROR) {
+                goalDetailStateList.add(GoalDetailState.ErrorItem)
+            }
+
+            goalDetailStateList.add(GoalDetailState.GoalIncompleteHeaderItem(goalIncompleteHeaderModel))
+
+            goalDetailStateList.add(GoalDetailState.SingleTransferItem)
+            goalDetailStateList.add(GoalDetailState.GoalPauseItem(goalInfo.payPlan.isPaused, errorState))
+            goalDetailStateList.add(GoalDetailState.EditItem)
+            goalDetailStateList.add(GoalDetailState.DeleteItem)
         }
 
         return goalDetailStateList
@@ -149,23 +165,30 @@ class GoalDetailViewModel(var goalId: Long): GoalDeleteViewModel() {
 }
 
 sealed class GoalDetailState {
-    class GoalCompleteHeader(val fundAmount: BigDecimal) : GoalDetailState()
-    class GoalIncompleteHeader(val goalIncompleteHeaderModel: GoalIncompleteHeaderModel) : GoalDetailState() {
+    enum class ErrorState {
+        ERROR,
+        NONE
+    }
+    class GoalCompleteHeaderItem(val fundAmount: BigDecimal) : GoalDetailState()
+    class GoalIncompleteHeaderItem(val goalIncompleteHeaderModel: GoalIncompleteHeaderModel) : GoalDetailState() {
         enum class PayPlanType {
             DAY,
             WEEK,
             MONTH
         }
+
         data class GoalIncompleteHeaderModel(val fundAmount: BigDecimal, val goalAmount: BigDecimal,
                                              val progress: Float, val frequencyAmount: BigDecimal,
                                              val isPaused: Boolean,
-                                             val payPlanType: GoalDetailState.GoalIncompleteHeader.PayPlanType,
-                                             val goalCompleteDate: DateTime)
+                                             val payPlanType: GoalDetailState.GoalIncompleteHeaderItem.PayPlanType,
+                                             val goalCompleteDate: DateTime,
+                                             val errorState: ErrorState = ErrorState.NONE)
     }
-    class GoalPauseState(val isGoalPaused: Boolean) : GoalDetailState()
-    object SingleTransfer : GoalDetailState()
-    object Edit : GoalDetailState()
-    object Delete : GoalDetailState()
+    class GoalPauseItem(val isGoalPaused: Boolean, val errorState: ErrorState) : GoalDetailState()
+    object SingleTransferItem : GoalDetailState()
+    object EditItem : GoalDetailState()
+    object DeleteItem : GoalDetailState()
+    object ErrorItem : GoalDetailState()
 }
 
 class GoalDetailViewModelFactory(private val goalId: Long) : ViewModelProvider.NewInstanceFactory() {

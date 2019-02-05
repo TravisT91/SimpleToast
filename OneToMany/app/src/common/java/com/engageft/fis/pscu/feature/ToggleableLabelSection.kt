@@ -29,13 +29,17 @@ class ToggleableLabelSection(val context: Context,
     override fun onBindItemViewHolder(viewHolder: RecyclerView.ViewHolder, position: Int) {
         (viewHolder as ViewHolder).apply {
             labelTextView.text = labelItemList[position].labelText
+
+            if (labelItemList[position].disableSection) {
+                labelTextView.isEnabled = false
+                switch.isEnabled = false
+            }
             switch.isChecked = labelItemList[position].isChecked
 
             switch.setOnCheckedChangeListener { _, isChecked ->
                 listener.onChecked(labelItemList[position].labelId, isChecked)
             }
         }
-
     }
 
     private inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
@@ -48,7 +52,7 @@ class ToggleableLabelSection(val context: Context,
         }
     }
 
-    data class LabelItem(var labelId: Int = 0, val labelText: String, var isChecked: Boolean = false)
+    data class LabelItem(var labelId: Int = 0, val labelText: String, var isChecked: Boolean = false, var disableSection: Boolean)
 
     interface OnToggleInteractionListener {
         fun onChecked(labelId: Int, isChecked: Boolean)

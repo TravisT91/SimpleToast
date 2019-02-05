@@ -13,7 +13,7 @@ import utilGen1.StringUtils
 import java.math.BigDecimal
 
 class GoalDetailIncompleteHeaderSection(private val context: Context,
-                                        private val goalIncompleteHeaderModel: GoalDetailState.GoalIncompleteHeader.GoalIncompleteHeaderModel)
+                                        private val goalIncompleteHeaderModel: GoalDetailState.GoalIncompleteHeaderItem.GoalIncompleteHeaderModel)
     : StatelessSection((SectionParameters.builder().itemResourceId(R.layout.goal_detail_header_section)).build()) {
 
     override fun getContentItemsTotal(): Int {

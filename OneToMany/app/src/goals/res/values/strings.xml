@@ -53,4 +53,6 @@
     <string name="GOAL_PAUSE_ALERT_MESSAGE_FORMAT">Are you sure you want to %s contributions to this goal?</string>
     <string name="GOAL_PAUSE">pause</string>
     <string name="GOAL_RESUME">resume</string>
+    <string name="GOAL_ERROR_TITLE">This goal is past it\'s end date</string>
+    <string name="GOAL_ERROR_DESCRIPTION">To continue setting aside money in this goal, you must edit when you need it by. Tap to edit.</string>
 </resources>
