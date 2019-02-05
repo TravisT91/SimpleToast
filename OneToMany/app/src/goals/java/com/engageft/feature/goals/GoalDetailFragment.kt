@@ -129,7 +129,7 @@ class GoalDetailFragment: BaseEngagePageFragment() {
                     }
                     is GoalDetailState.GoalPauseItem -> {
                         val goalPaused = if (goalDetailState.errorState == GoalDetailState.ErrorState.ERROR) false else goalDetailState.isGoalPaused
-                        addSection(GOAL_PAUSE_RESUME_SECTION, ToggleableLabelSection(context!!, listOf(ToggleableLabelSection.LabelItem(
+                        addSection(ToggleableLabelSection(context!!, listOf(ToggleableLabelSection.LabelItem(
                                 labelText = getString(R.string.GOAL_DETAIL_RECURRING_TRANSFER),
                                 isChecked = !goalPaused,
                                 disableSection = goalDetailState.errorState == GoalDetailState.ErrorState.ERROR)),
@@ -237,7 +237,5 @@ class GoalDetailFragment: BaseEngagePageFragment() {
 
         const val GOAL_ID_KEY = "GOAL_ID_KEY"
         const val GOAL_FUND_AMOUNT_KEY = "GOAL_FUND_AMOUNT_KEY"
-
-        const val GOAL_PAUSE_RESUME_SECTION = "GOAL_PAUSE_RESUME_SECTION"
     }
 }
