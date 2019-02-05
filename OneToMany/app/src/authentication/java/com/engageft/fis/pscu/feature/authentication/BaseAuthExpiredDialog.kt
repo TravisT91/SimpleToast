@@ -30,7 +30,6 @@ abstract class BaseAuthExpiredDialog : BaseEngageDialogFragment() {
         super.onDestroyView()
         if (!reauthenticationSucceeded) {
             EngageService.getInstance().authManager.logout()
-            MoEngageUtils.logout()
         }
     }
 

@@ -3,8 +3,8 @@ package com.engageft.fis.pscu.feature
 import androidx.lifecycle.MutableLiveData
 import com.crashlytics.android.Crashlytics
 import com.engageft.apptoolbox.BaseViewModel
-import com.engageft.apptoolbox.BuildConfig
 import com.engageft.engagekit.rest.exception.NoConnectivityException
+import com.engageft.fis.pscu.BuildConfig
 import com.ob.ws.dom.BasicResponse
 import com.ob.ws.dom.ValidationErrors
 import io.reactivex.Observable

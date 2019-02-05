@@ -4,7 +4,6 @@ import androidx.databinding.Observable
 import androidx.databinding.ObservableField
 import androidx.lifecycle.MutableLiveData
 import com.engageft.engagekit.EngageService
-import com.engageft.fis.pscu.MoEngageUtils
 import com.engageft.fis.pscu.feature.BaseEngageViewModel
 import com.engageft.fis.pscu.feature.DialogInfo
 import io.reactivex.android.schedulers.AndroidSchedulers
@@ -48,13 +47,12 @@ class AuthExpiredViewModel : BaseEngageViewModel() {
 
     fun onLogoutClicked() {
         EngageService.getInstance().authManager.logout()
-        MoEngageUtils.logout()
         navigationObservable.value = AuthExpiredNavigationEvent.LOGOUT
     }
 
     fun onSignInClicked() {
         // NOTE: This will only happen if signInEnabled was set to true.
-        progressOverlayShownObservable.value = true
+        showProgressOverlayDelayed()
         val passwordText = password.get()!!
         compositeDisposable.add(
                 EngageService.getInstance().validateLoginObservable(EngageService.getInstance().storageManager.username, passwordText)
@@ -62,14 +60,14 @@ class AuthExpiredViewModel : BaseEngageViewModel() {
                         .observeOn(AndroidSchedulers.mainThread())
                         .subscribe(
                                 { response ->
-                                    progressOverlayShownObservable.value = false
+                                    dismissProgressOverlay()
                                     if (response.isSuccess) {
                                         navigationObservable.value = AuthExpiredNavigationEvent.LOGIN_SUCCESS
                                     } else {
                                         dialogInfoObservable.value = DialogInfo(dialogType = DialogInfo.DialogType.SERVER_ERROR, message = response.message)
                                     }
                                 }, { e ->
-                            progressOverlayShownObservable.value = false
+                            dismissProgressOverlay()
                             handleThrowable(e)
                         }))
     }

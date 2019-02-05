@@ -88,7 +88,7 @@ class ChangePasswordViewModel: BaseEngageViewModel() {
 
     fun onUpdateClicked() {
         if (isFormValid()) {
-            if (EngageService.getInstance().authManager.isLoggedIn && !EngageService.getInstance().authManager.checkSecuritySession()) {
+            if (EngageService.getInstance().authManager.isLoggedIn) {
                 progressOverlayShownObservable.value = true
 
                 compositeDisposable.add(
@@ -109,7 +109,6 @@ class ChangePasswordViewModel: BaseEngageViewModel() {
                 )
             } else {
                 EngageService.getInstance().authManager.logout()
-                MoEngageUtils.logout()
             }
         }
     }
