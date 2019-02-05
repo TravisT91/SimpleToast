@@ -28,7 +28,7 @@ abstract class BaseAuthenticatedActivity : LotusActivity() {
         super.onCreate(savedInstanceState)
         authViewModel = ViewModelProviders.of(this).get(AuthTimerViewModel::class.java)
 
-        authViewModel.authNavigationObservable.observe(this, Observer { authNavigationEvent : AuthTimerViewModel.AuthNavigationEvent ->
+        authViewModel.expiredAuthNavigationObservable.observe(this, Observer { authNavigationEvent : AuthTimerViewModel.AuthNavigationEvent ->
             when(authNavigationEvent) {
                 AuthTimerViewModel.AuthNavigationEvent.PROMPT_PASSWORD -> {
                     val dialog = AuthExpiredPasswordDialog()
@@ -39,6 +39,9 @@ abstract class BaseAuthenticatedActivity : LotusActivity() {
                 }
             }
         })
+        authViewModel.finishObservable.observe(this, Observer {
+            finish()
+        })
 
         // Add a DEBUG ONLY gesture detector to simular authentication expiration.
         gestureDetector = EasterEggGestureDetector(this, findViewById(R.id.activityContainer), object : EasterEggGestureListener {
@@ -46,7 +49,7 @@ abstract class BaseAuthenticatedActivity : LotusActivity() {
             }
             override fun onEasterEggDeactivated() {
                 // To simulate auth expiration.
-                EngageService.getInstance().authManager.setAuthExpired()
+                EngageService.getInstance().authManager.debugOnlySetAuthExpired()
             }
         })
     }

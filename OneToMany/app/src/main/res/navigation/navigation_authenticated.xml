@@ -106,9 +106,9 @@
 
     <fragment
         android:id="@+id/budgets_fragment"
-        android:name="com.engageft.fis.pscu.feature.BudgetsFragment"
+        android:name="com.engageft.feature.budgets.BudgetsListFragment"
         android:label="@string/fragment_title_budgets"
-        tools:layout="@layout/fragment_budgets">
+        tools:layout="@layout/fragment_budgets_list">
         <argument
             android:name="@string/navigation_override_up"
             android:defaultValue="true" />
@@ -538,8 +538,8 @@
     <fragment
         android:id="@+id/cardLockUnlockFragment"
         android:name="com.engageft.fis.pscu.feature.CardLockUnlockFragment"
-        android:label="CardLockUnlockFragment" >
-     <argument
+        android:label="CardLockUnlockFragment">
+        <argument
             android:name="@string/navigation_view_gone"
             android:defaultValue="true" />
     </fragment>

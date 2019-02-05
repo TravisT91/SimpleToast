@@ -4,8 +4,6 @@ import androidx.databinding.ObservableField
 import androidx.lifecycle.MutableLiveData
 import com.engageft.engagekit.EngageService
 import com.engageft.engagekit.utils.LoginResponseUtils
-import com.engageft.fis.pscu.MoEngageUtils
-import com.engageft.fis.pscu.feature.branding.BrandingManager
 import com.ob.ws.dom.LoginResponse
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
@@ -56,8 +54,6 @@ class AccountSettingsViewModel : BaseEngageViewModel() {
 
     fun onLogoutClicked() {
         EngageService.getInstance().authManager.logout()
-        MoEngageUtils.logout()
-        BrandingManager.clearBranding()
         navigationObservable.value = AccountSettingsNavigation.LOGOUT
     }
 }
