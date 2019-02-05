@@ -36,8 +36,8 @@ class GoalDetailCompleteHeaderSection(private val context: Context,
 
                 setProgress(100)
                 showInnerBottomText(false)
-                setOuterBottomText(context.getString(R.string.GOALS_COMPLETE))
-                setOuterBottomTextColor(ContextCompat.getColor(context, R.color.structure6))
+                setOuterBottomText(this@GoalDetailCompleteHeaderSection.context.getString(R.string.GOALS_COMPLETE))
+                setOuterBottomTextColor(ContextCompat.getColor(this@GoalDetailCompleteHeaderSection.context, R.color.structure6))
             }
 
             transferBalanceButton.setOnClickListener {

@@ -15,7 +15,7 @@ import com.engageft.apptoolbox.adapter.HorizontalRuleSectionIndentStart
 import com.engageft.apptoolbox.adapter.SelectableLabelsSection
 import com.engageft.apptoolbox.view.InformationDialogFragment
 import com.engageft.fis.pscu.R
-import com.engageft.fis.pscu.databinding.FragmentGoalsListBinding
+import com.engageft.fis.pscu.databinding.FragmentGoalDetailBinding
 import com.engageft.fis.pscu.feature.BaseEngagePageFragment
 import com.engageft.fis.pscu.feature.ToggleableLabelSection
 import com.engageft.fis.pscu.feature.adapter.ErrorStateSection
@@ -29,7 +29,7 @@ class GoalDetailFragment: BaseEngagePageFragment() {
 
     private lateinit var sectionedAdapter: SectionedRecyclerViewAdapter
     private lateinit var viewModelGoalDetail: GoalDetailViewModel
-    private lateinit var binding: FragmentGoalsListBinding
+    private lateinit var binding: FragmentGoalDetailBinding
 
     override fun createViewModel(): BaseViewModel? {
         arguments!!.let {
@@ -49,7 +49,7 @@ class GoalDetailFragment: BaseEngagePageFragment() {
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        binding = FragmentGoalsListBinding.inflate(inflater, container, false).apply {
+        binding = FragmentGoalDetailBinding.inflate(inflater, container, false).apply {
             viewModel = viewModel
             palette = Palette
 
@@ -93,7 +93,7 @@ class GoalDetailFragment: BaseEngagePageFragment() {
                     is GoalDetailState.ErrorItem -> {
                         addSection(ErrorStateSection(getString(R.string.GOAL_ERROR_TITLE), getString(R.string.GOAL_ERROR_DESCRIPTION), object : ErrorStateSection.OnErrorSectionInteractionListener {
                             override fun onErrorSectionClicked() {
-                                // TODO: EDIT GOAL task
+                                // TODO: EDIT GOAL task FOTM-837
                                 Toast.makeText(context!!, "On Error section clicked!", Toast.LENGTH_SHORT).show()
                             }
                         }))
