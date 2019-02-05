@@ -6,6 +6,10 @@
         <variable
             name="viewModel"
             type="com.engageft.fis.pscu.feature.secondaryusers.AddSecondaryUserViewModel"/>
+
+        <variable
+            name="palette"
+            type="com.engageft.fis.pscu.feature.branding.Palette"/>
     </data>
 
     <androidx.core.widget.NestedScrollView
@@ -30,6 +34,7 @@
                 android:layout_marginStart="16dp"
                 android:layout_marginEnd="16dp"
                 android:lineSpacingExtra="11sp"
+                android:gravity="center"
                 android:text="@string/secondary_users_add_header"/>
 
             <LinearLayout
@@ -80,6 +85,16 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="20dp"
                     app:labelText="@string/secondary_users_add_dob_label"/>
+
+                <com.engageft.apptoolbox.view.SSNInputWithLabel
+                    style="@style/PasswordInputWithLabelStyle"
+                    android:id="@+id/ssnInput"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="20dp"
+                    android:visibility="gone"
+                    app:labelText="@string/secondary_users_add_ssn_label"
+                    app:inputText="@={viewModel.ssn}"/>
             </LinearLayout>
 
             <com.engageft.apptoolbox.view.PillButton
@@ -92,6 +107,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
                 android:layout_marginBottom="16dp"
+                android:visibility="gone"
                 android:onClick="@{() -> viewModel.onAddClicked()}"
                 android:text="@string/secondary_users_add_button_text"/>
         </LinearLayout>
