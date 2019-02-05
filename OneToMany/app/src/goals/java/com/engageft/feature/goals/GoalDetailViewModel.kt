@@ -19,8 +19,13 @@ import java.lang.IllegalArgumentException
 import java.math.BigDecimal
 
 class GoalDetailViewModel(var goalId: Long): GoalDeleteViewModel() {
+    enum class RecurringTransferStatus {
+        PAUSE_RESUME_FAILURE
+    }
+
     val goalDetailStatesListObservable = MutableLiveData<List<GoalDetailState>>()
     val goalScreenTitleObservable = MutableLiveData<String>()
+    val goalRecurringTransferObservable = MutableLiveData<RecurringTransferStatus>()
 
     var fundAmount: BigDecimal = BigDecimal.ZERO
     var goalName: String = ""
@@ -93,10 +98,12 @@ class GoalDetailViewModel(var goalId: Long): GoalDeleteViewModel() {
                                 refreshGoalDetail(false)
                             } else {
                                 dismissProgressOverlay()
+                                goalRecurringTransferObservable.value = RecurringTransferStatus.PAUSE_RESUME_FAILURE
                                 handleUnexpectedErrorResponse(response)
                             }
                         }, { e ->
                             dismissProgressOverlay()
+                            goalRecurringTransferObservable.value = RecurringTransferStatus.PAUSE_RESUME_FAILURE
                             handleThrowable(e)
                         })
         )

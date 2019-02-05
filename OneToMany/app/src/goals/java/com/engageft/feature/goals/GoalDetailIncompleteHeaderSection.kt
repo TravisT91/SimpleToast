@@ -2,6 +2,7 @@ package com.engageft.feature.goals
 
 import android.content.Context
 import android.view.View
+import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.engageft.apptoolbox.view.CircularProgressBarWithTexts
 import com.engageft.apptoolbox.view.PillButton
@@ -38,6 +39,10 @@ class GoalDetailIncompleteHeaderSection(private val context: Context,
 
             if (goalIncompleteHeaderModel.isPaused) {
                 circularProgressBarWithTexts.setOuterBottomText(context.getString(R.string.GOALS_PAUSED))
+
+                if (goalIncompleteHeaderModel.errorState == GoalDetailState.ErrorState.ERROR) {
+                    circularProgressBarWithTexts.setProgressColor(ContextCompat.getColor(context, R.color.goalErrorProgressColor))
+                }
             } else {
                 val frequencyAmountAndCompleteDate = String.format(context.getString(R.string.GOAL_DETAIL_FREQUENCY_AMOUNT_COMPLETE_DATE_FORMAT),
                         StringUtils.formatCurrencyStringWithFractionDigits(goalIncompleteHeaderModel.frequencyAmount.toFloat(), true),
@@ -56,9 +61,9 @@ class GoalDetailIncompleteHeaderSection(private val context: Context,
     inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
 
         var circularProgressBarWithTexts: CircularProgressBarWithTexts = itemView.findViewById(R.id.circularProgressBarWithTexts)
-        var transferBalanceButton: PillButton = itemView.findViewById(R.id.transferBalanceButton)
 
         init {
+            val transferBalanceButton: PillButton = itemView.findViewById(R.id.transferBalanceButton)
             transferBalanceButton.visibility = View.GONE
         }
     }

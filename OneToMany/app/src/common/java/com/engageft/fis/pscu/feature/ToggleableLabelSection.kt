@@ -30,14 +30,15 @@ class ToggleableLabelSection(val context: Context,
         (viewHolder as ViewHolder).apply {
             labelTextView.text = labelItemList[position].labelText
 
-            if (labelItemList[position].disableSection) {
-                labelTextView.isEnabled = false
-                switch.isEnabled = false
-            }
             switch.isChecked = labelItemList[position].isChecked
 
             switch.setOnCheckedChangeListener { _, isChecked ->
                 listener.onChecked(labelItemList[position].labelId, isChecked)
+            }
+
+            if (labelItemList[position].disableSection) {
+                labelTextView.isEnabled = false
+                switch.isEnabled = false
             }
         }
     }

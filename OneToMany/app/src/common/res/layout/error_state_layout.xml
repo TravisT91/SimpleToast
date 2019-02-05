@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="vertical"
+    android:id="@+id/errorStateLayout"
+    android:background="@color/error"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <TextView
+        style="@style/FootnoteLoud"
+        android:id="@+id/titleTextView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textColor="@color/white"
+        android:lineSpacingExtra="6sp"
+        android:paddingTop="16dp"
+        android:paddingBottom="8dp"
+        android:paddingEnd="32dp"
+        android:paddingStart="32dp"
+        android:gravity="center_horizontal"
+        tools:text="This goal is past it’s end date" />
+
+    <TextView
+        style="@style/Caption1Medium"
+        android:id="@+id/descriptionTextView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textColor="@color/white"
+        android:lineSpacingExtra="6sp"
+        android:paddingBottom="16dp"
+        android:paddingEnd="32dp"
+        android:paddingStart="32dp"
+        android:gravity="center_horizontal"
+        tools:text="To continue setting aside money in this goal, you must edit when you need it by. Tap to edit." />
+</LinearLayout>

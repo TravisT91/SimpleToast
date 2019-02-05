@@ -67,7 +67,7 @@ class GoalsListSection(private val context: Context,
                     val estimatedCompletionDate = BackendDateTimeUtils.getDateTimeForYMDString(goalModel.goalInfo.estimatedCompleteDate)
                     if (estimatedCompletionDate.isBeforeNow) {
                         circularTrackingPanel.setTopRightTextColor(Palette.errorColor)
-                        circularTrackingPanel.setProgressColor(ContextCompat.getColor(context, R.color.goalErrorColor))
+                        circularTrackingPanel.setProgressColor(ContextCompat.getColor(context, R.color.goalErrorProgressColor))
                         circularTrackingPanel.showDrawableWithinProgressBar(ContextCompat.getDrawable(context, R.drawable.ic_goal_error)!!)
                     }
                 }

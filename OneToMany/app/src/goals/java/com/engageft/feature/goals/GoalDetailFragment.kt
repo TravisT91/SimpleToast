@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.navigation.findNavController
@@ -66,6 +67,13 @@ class GoalDetailFragment: BaseEngagePageFragment() {
                 toolbarController.setToolbarTitle(it.capitalize())
             })
 
+            viewModelGoalDetail.goalRecurringTransferObservable.observe(viewLifecycleOwner, Observer {
+                if (it == GoalDetailViewModel.RecurringTransferStatus.PAUSE_RESUME_FAILURE) {
+                    // revert toggle switch state
+                    updateRecyclerView(viewModelGoalDetail.goalDetailStatesListObservable.value!!)
+                }
+            })
+
             viewModelGoalDetail.deleteStatusObservable.observe(viewLifecycleOwner, Observer {
                 binding.root.findNavController().popBackStack()
             })
@@ -83,6 +91,7 @@ class GoalDetailFragment: BaseEngagePageFragment() {
                     sectionedAdapter.addSection(ErrorStateSection(getString(R.string.GOAL_ERROR_TITLE), getString(R.string.GOAL_ERROR_DESCRIPTION), object : ErrorStateSection.OnErrorSectionInteractionListener {
                         override fun onErrorSectionClicked() {
                             // TODO: EDIT GOAL task
+                            Toast.makeText(context!!, "On Error section clicked!", Toast.LENGTH_SHORT).show()
                         }
                     }))
                 }
@@ -96,6 +105,7 @@ class GoalDetailFragment: BaseEngagePageFragment() {
                     sectionedAdapter.addSection(GoalDetailCompleteHeaderSection(context!!, goalDetailState.fundAmount, object:  GoalDetailCompleteHeaderSection.OnButtonClickListener {
                         override fun onTransferButtonClicked() {
                             // TODO(aHashimi): FOTM-575 single transfer
+                            Toast.makeText(context!!, "onTransferButtonClicked!", Toast.LENGTH_SHORT).show()
                         }
                     }))
 
@@ -108,6 +118,7 @@ class GoalDetailFragment: BaseEngagePageFragment() {
                             object: SelectableLabelsSection.OnSelectableLabelInteractionListener {
                                 override fun onLabelClicked(labelId: Int) {
                                     // TODO(aHashimi): FOTM-575 single transfer
+                                    Toast.makeText(context!!, "on transfer item clicked!", Toast.LENGTH_SHORT).show()
                                 }
                             }).addLabel(TRANSFER_LABEL_ID, getString(R.string.GOAL_DETAIL_TRANSFER)))
 
@@ -117,12 +128,12 @@ class GoalDetailFragment: BaseEngagePageFragment() {
                     val goalPaused = if (goalDetailState.errorState == GoalDetailState.ErrorState.ERROR) false else goalDetailState.isGoalPaused
                     sectionedAdapter.addSection(GOAL_PAUSE_RESUME_SECTION, ToggleableLabelSection(context!!, listOf(ToggleableLabelSection.LabelItem(
                             labelText = getString(R.string.GOAL_DETAIL_RECURRING_TRANSFER),
-                            isChecked = goalPaused,
+                            isChecked = !goalPaused,
                             disableSection = goalDetailState.errorState == GoalDetailState.ErrorState.ERROR)),
                             styleId = R.style.GoalDetailItemTextStyle,
                             listener = object : ToggleableLabelSection.OnToggleInteractionListener {
                                 override fun onChecked(labelId: Int, isChecked: Boolean) {
-                                    promptPauseConfirmation(isChecked)
+                                    promptPauseConfirmation(!isChecked)
                                 }
                             }))
 
@@ -135,6 +146,7 @@ class GoalDetailFragment: BaseEngagePageFragment() {
                             object : SelectableLabelsSection.OnSelectableLabelInteractionListener {
                                 override fun onLabelClicked(labelId: Int) {
                                     // TODO(aHashimi): FOTM-837
+                                    Toast.makeText(context!!, "on edit item clicked!", Toast.LENGTH_SHORT).show()
                                 }
 
                             })
