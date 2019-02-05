@@ -106,9 +106,9 @@
 
     <fragment
         android:id="@+id/budgets_fragment"
-        android:name="com.engageft.fis.pscu.feature.BudgetsFragment"
+        android:name="com.engageft.feature.budgets.BudgetsListFragment"
         android:label="@string/fragment_title_budgets"
-        tools:layout="@layout/fragment_budgets">
+        tools:layout="@layout/fragment_budgets_list">
         <argument
             android:name="@string/navigation_override_up"
             android:defaultValue="true" />
@@ -124,7 +124,11 @@
             android:defaultValue="true" />
         <action
             android:id="@+id/action_goalsListFragment_to_goalsAddStep1Fragment"
-            app:destination="@id/goalsAddStep1Fragment" />
+            app:destination="@id/goalsAddStep1Fragment"
+            app:enterAnim="@anim/nav_enter_anim"
+            app:exitAnim="@anim/nav_exit_anim"
+            app:popEnterAnim="@anim/nav_pop_enter_anim"
+            app:popExitAnim="@anim/nav_pop_exit_anim"/>
     </fragment>
 
     <fragment
@@ -137,7 +141,11 @@
             android:defaultValue="true" />
         <action
             android:id="@+id/action_goalsListFragment_to_goalsAddStep1Fragment"
-            app:destination="@id/goalsAddStep1Fragment" />
+            app:destination="@id/goalsAddStep1Fragment"
+            app:enterAnim="@anim/nav_enter_anim"
+            app:exitAnim="@anim/nav_exit_anim"
+            app:popEnterAnim="@anim/nav_pop_enter_anim"
+            app:popExitAnim="@anim/nav_pop_exit_anim"/>
     </fragment>
 
     <fragment
@@ -150,22 +158,53 @@
             android:defaultValue="true" />
         <action
             android:id="@+id/action_account_fragment_to_copyrightFragment"
-            app:destination="@id/copyrightFragment" />
+            app:destination="@id/copyrightFragment"
+            app:enterAnim="@anim/nav_enter_anim"
+            app:exitAnim="@anim/nav_exit_anim"
+            app:popEnterAnim="@anim/nav_pop_enter_anim"
+            app:popExitAnim="@anim/nav_pop_exit_anim"  />
         <action
             android:id="@+id/action_account_fragment_to_changeSecurityQuestionsFragment"
-            app:destination="@id/changeSecurityQuestionsFragment" />
+            app:destination="@id/changeSecurityQuestionsFragment"
+            app:enterAnim="@anim/nav_enter_anim"
+            app:exitAnim="@anim/nav_exit_anim"
+            app:popEnterAnim="@anim/nav_pop_enter_anim"
+            app:popExitAnim="@anim/nav_pop_exit_anim"  />
         <action
             android:id="@+id/action_account_fragment_to_profileFragment"
-            app:destination="@id/profileFragment" />
+            app:destination="@id/profileFragment"
+            app:enterAnim="@anim/nav_enter_anim"
+            app:exitAnim="@anim/nav_exit_anim"
+            app:popEnterAnim="@anim/nav_pop_enter_anim"
+            app:popExitAnim="@anim/nav_pop_exit_anim"  />
         <action
             android:id="@+id/action_account_fragment_to_statementsFragment"
-            app:destination="@id/statementsFragment" />
+            app:destination="@id/statementsFragment"
+            app:enterAnim="@anim/nav_enter_anim"
+            app:exitAnim="@anim/nav_exit_anim"
+            app:popEnterAnim="@anim/nav_pop_enter_anim"
+            app:popExitAnim="@anim/nav_pop_exit_anim"  />
         <action
             android:id="@+id/action_account_fragment_to_changePasswordFragment"
-            app:destination="@id/changePasswordFragment" />
+            app:destination="@id/changePasswordFragment"
+            app:enterAnim="@anim/nav_enter_anim"
+            app:exitAnim="@anim/nav_exit_anim"
+            app:popEnterAnim="@anim/nav_pop_enter_anim"
+            app:popExitAnim="@anim/nav_pop_exit_anim"  />
         <action
             android:id="@+id/action_account_fragment_to_accountNotificationsFragment"
-            app:destination="@id/accountNotificationsFragment" />
+            app:destination="@id/accountNotificationsFragment"
+            app:enterAnim="@anim/nav_enter_anim"
+            app:exitAnim="@anim/nav_exit_anim"
+            app:popEnterAnim="@anim/nav_pop_enter_anim"
+            app:popExitAnim="@anim/nav_pop_exit_anim"  />
+        <action
+            android:id="@+id/action_account_fragment_to_secondaryUserListFragment"
+            app:destination="@id/secondaryUserListFragment"
+            app:enterAnim="@anim/nav_enter_anim"
+            app:exitAnim="@anim/nav_exit_anim"
+            app:popEnterAnim="@anim/nav_pop_enter_anim"
+            app:popExitAnim="@anim/nav_pop_exit_anim"  />
     </fragment>
 
     <fragment
@@ -340,10 +379,6 @@
             android:defaultValue="true" />
     </fragment>
     <fragment
-        android:id="@+id/goalAdd2Fragment"
-        android:name="com.engageft.feature.goals.GoalAdd2Fragment"
-        android:label="GoalAdd2Fragment" />
-    <fragment
         android:id="@+id/accountNotificationsFragment"
         android:name="com.engageft.fis.pscu.feature.AccountNotificationsFragment"
         android:label="@string/account_notifications_screen_title">
@@ -470,21 +505,78 @@
             app:exitAnim="@anim/nav_exit_anim"
             app:popEnterAnim="@anim/nav_pop_enter_anim"
             app:popExitAnim="@anim/nav_pop_exit_anim"/>
+        <argument
+            android:name="@string/navigation_view_gone"
+            android:defaultValue="true" />
     </fragment>
+
     <fragment
         android:id="@+id/createTransferConfirmationFragment"
         android:name="com.engageft.fis.pscu.feature.achtransfer.CreateTransferConfirmationFragment"
-        android:label="@string/ach_bank_transfer_create_transfer" />
+        android:label="@string/ach_bank_transfer_create_transfer">
+        <argument
+            android:name="@string/navigation_view_gone"
+            android:defaultValue="true" />
+    </fragment>
 
     <fragment
         android:id="@+id/cardLockUnlockFragment"
         android:name="com.engageft.fis.pscu.feature.CardLockUnlockFragment"
         android:label="CardLockUnlockFragment" />
+
+        android:label="CardLockUnlockFragment">
+        <argument
+            android:name="@string/navigation_view_gone"
+            android:defaultValue="true" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/secondaryUserListFragment"
+        android:name="com.engageft.fis.pscu.feature.secondaryusers.SecondaryUserListFragment"
+        android:label="@string/fragment_title_secondary_users">
+        <argument
+            android:name="@string/navigation_view_gone"
+            android:defaultValue="true" />
+    </fragment>
+
     <fragment
         android:id="@+id/goalsAddStep1Fragment"
-        android:name="com.engageft.feature.goals.GoalsAddStep1Fragment">
+        android:name="com.engageft.feature.goals.GoalsAddStep1Fragment"
+        android:label="@string/GOALS_ADD_GOAL">
+        <argument
+            android:name="@string/navigation_view_gone"
+            android:defaultValue="true" />
         <action
-            android:id="@+id/action_goalsAddStep1Fragment_to_goalAdd2Fragment"
-            app:destination="@id/goalAdd2Fragment" />
+            android:id="@+id/action_goalsAddStep1Fragment_to_goalsAddStep2Fragment"
+            app:destination="@id/goalsAddStep2Fragment"
+            app:enterAnim="@anim/nav_enter_anim"
+            app:exitAnim="@anim/nav_exit_anim"
+            app:popEnterAnim="@anim/nav_pop_enter_anim"
+            app:popExitAnim="@anim/nav_pop_exit_anim"/>
+    </fragment>
+
+    <fragment
+        android:id="@+id/goalsAddStep2Fragment"
+        android:name="com.engageft.feature.goals.GoalsAddStep2Fragment"
+        android:label="@string/GOALS_ADD_GOAL" >
+        <argument
+            android:name="@string/navigation_view_gone"
+            android:defaultValue="true" />
+        <action
+            android:id="@+id/action_goalsAddStep2Fragment_to_goalsAddEditConfirmationFragment"
+            app:destination="@id/goalsAddEditConfirmationFragment"
+            app:enterAnim="@anim/nav_enter_anim"
+            app:exitAnim="@anim/nav_exit_anim"
+            app:popEnterAnim="@anim/nav_pop_enter_anim"
+            app:popExitAnim="@anim/nav_pop_exit_anim"/>
+    </fragment>
+
+    <fragment
+        android:id="@+id/goalsAddEditConfirmationFragment"
+        android:name="com.engageft.feature.goals.GoalsAddEditConfirmationFragment"
+        android:label="@string/GOALS_ADD_GOAL" >
+        <argument
+            android:name="@string/navigation_view_gone"
+            android:defaultValue="true" />
     </fragment>
 </navigation>
