@@ -6,6 +6,7 @@ import androidx.databinding.ObservableField
 import androidx.lifecycle.MutableLiveData
 import com.engageft.apptoolbox.util.isDigitsOnly
 import com.engageft.engagekit.EngageService
+import com.engageft.engagekit.rest.request.SecondaryUserRequest
 import com.engageft.engagekit.utils.LoginResponseUtils
 import com.engageft.fis.pscu.feature.BaseEngageViewModel
 import com.ob.ws.dom.LoginResponse
@@ -124,7 +125,32 @@ class AddSecondaryUserViewModel : BaseEngageViewModel() {
             validateSSN(false)
         }
         if (checkAllFieldsValid()) {
+            showProgressOverlayDelayed()
+            val request = SecondaryUserRequest()
+            request.setFirstName(firstName.get()!!)
+            request.setLastName(lastName.get()!!)
+            request.setDob(getDateForInput())
+            request.setPhone(phoneNumber.get()!!)
+            if (ssnVisibilityObservable.value!!) {
+                request.setSsn(ssn.get()!!)
+            }
+            compositeDisposable.add(EngageService.getInstance().addSecondaryCardObservable(request)
+                    .subscribeOn(Schedulers.io())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe({ response ->
+                        dismissProgressOverlay()
+                        if (response.isSuccess) {
+                            // TODO(jhutchins): navigate success
+                        } else {
+                            // TODO(jhutchins): navigate failure
+                        }
 
+                    }) { e ->
+                        // TODO(jhutchins): navigate failure
+                        dismissProgressOverlay()
+                        handleThrowable(e)
+                    }
+            )
         }
     }
 
@@ -285,5 +311,13 @@ class AddSecondaryUserViewModel : BaseEngageViewModel() {
 
     private fun getDateForInput(): DateTime {
         return DisplayDateTimeUtils.shortDateFormatter.parseDateTime(dob.get()!!)
+    }
+
+    fun hasUnsavedChanges(): Boolean {
+        if (firstName.get()!!.isNotEmpty() || lastName.get()!!.isNotEmpty()
+                || phoneNumber.get()!!.isNotEmpty() || dob.get()!!.isNotEmpty() || ssn.get()!!.isNotEmpty()) {
+            return true
+        }
+        return false
     }
 }
