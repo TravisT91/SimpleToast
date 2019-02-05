@@ -24,17 +24,21 @@ class GoalDetailCompleteHeaderSection(private val context: Context,
     override fun onBindItemViewHolder(p0: RecyclerView.ViewHolder, p1: Int) {
         (p0 as ViewHolder).apply {
 
-            val showZeros = fundAmount.compareTo(BigDecimal.ZERO) != 0
-            circularProgressBarWithTexts.setInnerTopText(StringUtils.formatCurrencyStringFractionDigitsReducedHeight(
-                    amount = fundAmount.toFloat(),
-                    fractionDigitsPercentHeight = .5f,
-                    showZeroDigits = showZeros
-            ))
 
-            circularProgressBarWithTexts.setProgress(100)
-            circularProgressBarWithTexts.showInnerBottomText(false)
-            circularProgressBarWithTexts.setOuterBottomText(context.getString(R.string.GOALS_COMPLETE))
-            circularProgressBarWithTexts.setOuterBottomTextColor(ContextCompat.getColor(context, R.color.structure6))
+            circularProgressBarWithTexts.apply {
+
+                val showZeros = fundAmount.compareTo(BigDecimal.ZERO) != 0
+                setInnerTopText(StringUtils.formatCurrencyStringFractionDigitsReducedHeight(
+                        amount = fundAmount.toFloat(),
+                        fractionDigitsPercentHeight = .5f,
+                        showZeroDigits = showZeros
+                ))
+
+                setProgress(100)
+                showInnerBottomText(false)
+                setOuterBottomText(context.getString(R.string.GOALS_COMPLETE))
+                setOuterBottomTextColor(ContextCompat.getColor(context, R.color.structure6))
+            }
 
             transferBalanceButton.setOnClickListener {
                 listener.onTransferButtonClicked()

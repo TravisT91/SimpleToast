@@ -24,32 +24,35 @@ class GoalDetailIncompleteHeaderSection(private val context: Context,
     override fun onBindItemViewHolder(p0: RecyclerView.ViewHolder, p1: Int) {
         (p0 as ViewHolder).apply {
 
-            val showZeros = goalIncompleteHeaderModel.fundAmount.compareTo(BigDecimal.ZERO) != 0
-            circularProgressBarWithTexts.setInnerTopText(StringUtils.formatCurrencyStringFractionDigitsReducedHeight(
-                    amount = goalIncompleteHeaderModel.fundAmount.toFloat(),
-                    fractionDigitsPercentHeight = .5f,
-                    showZeroDigits = showZeros
-            ))
+            goalIncompleteHeaderModel.apply {
 
-            circularProgressBarWithTexts.setProgress(goalIncompleteHeaderModel.progress)
+                val showZeros = fundAmount.compareTo(BigDecimal.ZERO) != 0
+                circularProgressBarWithTexts.setInnerTopText(StringUtils.formatCurrencyStringFractionDigitsReducedHeight(
+                        amount = fundAmount.toFloat(),
+                        fractionDigitsPercentHeight = .5f,
+                        showZeroDigits = showZeros
+                ))
 
-            val goalAmountFormatted = String.format(context.getString(R.string.GOAL_DETAIL_GOAL_AMOUNT_FORMAT),
-                    StringUtils.formatCurrencyString(goalIncompleteHeaderModel.goalAmount.toFloat(), true))
-            circularProgressBarWithTexts.setInnerBottomText(goalAmountFormatted)
+                circularProgressBarWithTexts.setProgress(progress)
 
-            if (goalIncompleteHeaderModel.isPaused) {
-                circularProgressBarWithTexts.setOuterBottomText(context.getString(R.string.GOALS_PAUSED))
+                val goalAmountFormatted = String.format(context.getString(R.string.GOAL_DETAIL_GOAL_AMOUNT_FORMAT),
+                        StringUtils.formatCurrencyString(goalAmount.toFloat(), true))
+                circularProgressBarWithTexts.setInnerBottomText(goalAmountFormatted)
 
-                if (goalIncompleteHeaderModel.errorState == GoalDetailState.ErrorState.ERROR) {
-                    circularProgressBarWithTexts.setProgressColor(ContextCompat.getColor(context, R.color.goalErrorProgressColor))
+                if (isPaused) {
+                    circularProgressBarWithTexts.setOuterBottomText(context.getString(R.string.GOALS_PAUSED))
+
+                    if (errorState == GoalDetailState.ErrorState.ERROR) {
+                        circularProgressBarWithTexts.setProgressColor(ContextCompat.getColor(context, R.color.goalErrorProgressColor))
+                    }
+                } else {
+                    val frequencyAmountAndCompleteDate = String.format(context.getString(R.string.GOAL_DETAIL_FREQUENCY_AMOUNT_COMPLETE_DATE_FORMAT),
+                            StringUtils.formatCurrencyStringWithFractionDigits(frequencyAmount.toFloat(), true),
+                            payPlanType.toString().toLowerCase(),
+                            DisplayDateTimeUtils.getMediumFormatted(goalCompleteDate))
+                    circularProgressBarWithTexts.setOuterBottomText(frequencyAmountAndCompleteDate)
+
                 }
-            } else {
-                val frequencyAmountAndCompleteDate = String.format(context.getString(R.string.GOAL_DETAIL_FREQUENCY_AMOUNT_COMPLETE_DATE_FORMAT),
-                        StringUtils.formatCurrencyStringWithFractionDigits(goalIncompleteHeaderModel.frequencyAmount.toFloat(), true),
-                        goalIncompleteHeaderModel.payPlanType.toString().toLowerCase(),
-                        DisplayDateTimeUtils.getMediumFormatted(goalIncompleteHeaderModel.goalCompleteDate))
-                circularProgressBarWithTexts.setOuterBottomText(frequencyAmountAndCompleteDate)
-
             }
         }
     }

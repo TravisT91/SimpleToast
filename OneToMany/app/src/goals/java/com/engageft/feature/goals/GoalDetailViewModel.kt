@@ -19,6 +19,7 @@ import java.lang.IllegalArgumentException
 import java.math.BigDecimal
 
 class GoalDetailViewModel(var goalId: Long): GoalDeleteViewModel() {
+
     enum class RecurringTransferStatus {
         PAUSE_RESUME_FAILURE
     }

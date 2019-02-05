@@ -59,116 +59,120 @@ class GoalDetailFragment: BaseEngagePageFragment() {
             recyclerView.adapter = sectionedAdapter
             recyclerView.layoutManager = LinearLayoutManager(context!!)
 
-            viewModelGoalDetail.goalDetailStatesListObservable.observe(viewLifecycleOwner, Observer {
-                updateRecyclerView(it)
-            })
+            viewModelGoalDetail.apply {
+                goalDetailStatesListObservable.observe(viewLifecycleOwner, Observer {
+                    updateRecyclerView(it)
+                })
 
-            viewModelGoalDetail.goalScreenTitleObservable.observe(viewLifecycleOwner, Observer {
-                toolbarController.setToolbarTitle(it.capitalize())
-            })
+                goalScreenTitleObservable.observe(viewLifecycleOwner, Observer {
+                    toolbarController.setToolbarTitle(it.capitalize())
+                })
 
-            viewModelGoalDetail.goalRecurringTransferObservable.observe(viewLifecycleOwner, Observer {
-                if (it == GoalDetailViewModel.RecurringTransferStatus.PAUSE_RESUME_FAILURE) {
-                    // revert toggle switch state
-                    updateRecyclerView(viewModelGoalDetail.goalDetailStatesListObservable.value!!)
-                }
-            })
+                goalRecurringTransferObservable.observe(viewLifecycleOwner, Observer {
+                    if (it == GoalDetailViewModel.RecurringTransferStatus.PAUSE_RESUME_FAILURE) {
+                        // revert toggle switch state
+                        updateRecyclerView(viewModelGoalDetail.goalDetailStatesListObservable.value!!)
+                    }
+                })
 
-            viewModelGoalDetail.deleteStatusObservable.observe(viewLifecycleOwner, Observer {
-                binding.root.findNavController().popBackStack()
-            })
+                deleteStatusObservable.observe(viewLifecycleOwner, Observer {
+                    binding.root.findNavController().popBackStack()
+                })
+            }
         }
 
         return binding.root
     }
 
     private fun updateRecyclerView(goalDetailStateList: List<GoalDetailState>) {
-        sectionedAdapter.removeAllSections()
+        sectionedAdapter.apply {
+            removeAllSections()
 
-        for (goalDetailState in goalDetailStateList) {
-            when (goalDetailState) {
-                is GoalDetailState.ErrorItem -> {
-                    sectionedAdapter.addSection(ErrorStateSection(getString(R.string.GOAL_ERROR_TITLE), getString(R.string.GOAL_ERROR_DESCRIPTION), object : ErrorStateSection.OnErrorSectionInteractionListener {
-                        override fun onErrorSectionClicked() {
-                            // TODO: EDIT GOAL task
-                            Toast.makeText(context!!, "On Error section clicked!", Toast.LENGTH_SHORT).show()
-                        }
-                    }))
-                }
-                is GoalDetailState.GoalIncompleteHeaderItem -> {
-                    // header section
-                    sectionedAdapter.addSection(GoalDetailIncompleteHeaderSection(context!!, goalDetailState.goalIncompleteHeaderModel))
+            for (goalDetailState in goalDetailStateList) {
+                when (goalDetailState) {
+                    is GoalDetailState.ErrorItem -> {
+                        addSection(ErrorStateSection(getString(R.string.GOAL_ERROR_TITLE), getString(R.string.GOAL_ERROR_DESCRIPTION), object : ErrorStateSection.OnErrorSectionInteractionListener {
+                            override fun onErrorSectionClicked() {
+                                // TODO: EDIT GOAL task
+                                Toast.makeText(context!!, "On Error section clicked!", Toast.LENGTH_SHORT).show()
+                            }
+                        }))
+                    }
+                    is GoalDetailState.GoalIncompleteHeaderItem -> {
+                        // header section
+                        addSection(GoalDetailIncompleteHeaderSection(context!!, goalDetailState.goalIncompleteHeaderModel))
 
-                    sectionedAdapter.addSection(HorizontalRuleSection())
-                }
-                is GoalDetailState.GoalCompleteHeaderItem -> {
-                    sectionedAdapter.addSection(GoalDetailCompleteHeaderSection(context!!, goalDetailState.fundAmount, object:  GoalDetailCompleteHeaderSection.OnButtonClickListener {
-                        override fun onTransferButtonClicked() {
-                            // TODO(aHashimi): FOTM-575 single transfer
-                            Toast.makeText(context!!, "onTransferButtonClicked!", Toast.LENGTH_SHORT).show()
-                        }
-                    }))
+                        addSection(HorizontalRuleSection())
+                    }
+                    is GoalDetailState.GoalCompleteHeaderItem -> {
+                        addSection(GoalDetailCompleteHeaderSection(context!!, goalDetailState.fundAmount, object:  GoalDetailCompleteHeaderSection.OnButtonClickListener {
+                            override fun onTransferButtonClicked() {
+                                // TODO(aHashimi): FOTM-575 single transfer
+                                Toast.makeText(context!!, "onTransferButtonClicked!", Toast.LENGTH_SHORT).show()
+                            }
+                        }))
 
-                    sectionedAdapter.addSection(HorizontalRuleSection())
-                }
-                is GoalDetailState.SingleTransferItem -> {
-                    sectionedAdapter.addSection(SelectableLabelsSection(
-                            context!!,
-                            R.style.GoalDetailItemTextStyle,
-                            object: SelectableLabelsSection.OnSelectableLabelInteractionListener {
-                                override fun onLabelClicked(labelId: Int) {
-                                    // TODO(aHashimi): FOTM-575 single transfer
-                                    Toast.makeText(context!!, "on transfer item clicked!", Toast.LENGTH_SHORT).show()
-                                }
-                            }).addLabel(TRANSFER_LABEL_ID, getString(R.string.GOAL_DETAIL_TRANSFER)))
+                        addSection(HorizontalRuleSection())
+                    }
+                    is GoalDetailState.SingleTransferItem -> {
+                        addSection(SelectableLabelsSection(
+                                context!!,
+                                R.style.GoalDetailItemTextStyle,
+                                object: SelectableLabelsSection.OnSelectableLabelInteractionListener {
+                                    override fun onLabelClicked(labelId: Int) {
+                                        // TODO(aHashimi): FOTM-575 single transfer
+                                        Toast.makeText(context!!, "on transfer item clicked!", Toast.LENGTH_SHORT).show()
+                                    }
+                                }).addLabel(TRANSFER_LABEL_ID, getString(R.string.GOAL_DETAIL_TRANSFER)))
 
-                    sectionedAdapter.addSection(HorizontalRuleSectionIndentStart())
-                }
-                is GoalDetailState.GoalPauseItem -> {
-                    val goalPaused = if (goalDetailState.errorState == GoalDetailState.ErrorState.ERROR) false else goalDetailState.isGoalPaused
-                    sectionedAdapter.addSection(GOAL_PAUSE_RESUME_SECTION, ToggleableLabelSection(context!!, listOf(ToggleableLabelSection.LabelItem(
-                            labelText = getString(R.string.GOAL_DETAIL_RECURRING_TRANSFER),
-                            isChecked = !goalPaused,
-                            disableSection = goalDetailState.errorState == GoalDetailState.ErrorState.ERROR)),
-                            styleId = R.style.GoalDetailItemTextStyle,
-                            listener = object : ToggleableLabelSection.OnToggleInteractionListener {
-                                override fun onChecked(labelId: Int, isChecked: Boolean) {
-                                    promptPauseConfirmation(!isChecked)
-                                }
-                            }))
+                        addSection(HorizontalRuleSectionIndentStart())
+                    }
+                    is GoalDetailState.GoalPauseItem -> {
+                        val goalPaused = if (goalDetailState.errorState == GoalDetailState.ErrorState.ERROR) false else goalDetailState.isGoalPaused
+                        addSection(GOAL_PAUSE_RESUME_SECTION, ToggleableLabelSection(context!!, listOf(ToggleableLabelSection.LabelItem(
+                                labelText = getString(R.string.GOAL_DETAIL_RECURRING_TRANSFER),
+                                isChecked = !goalPaused,
+                                disableSection = goalDetailState.errorState == GoalDetailState.ErrorState.ERROR)),
+                                styleId = R.style.GoalDetailItemTextStyle,
+                                listener = object : ToggleableLabelSection.OnToggleInteractionListener {
+                                    override fun onChecked(labelId: Int, isChecked: Boolean) {
+                                        promptPauseConfirmation(!isChecked)
+                                    }
+                                }))
 
-                    sectionedAdapter.addSection(HorizontalRuleSectionIndentStart())
-                }
-                is GoalDetailState.EditItem -> {
-                    sectionedAdapter.addSection(SelectableLabelsSection(
-                            context!!,
-                            R.style.GoalDetailItemTextStyle,
-                            object : SelectableLabelsSection.OnSelectableLabelInteractionListener {
-                                override fun onLabelClicked(labelId: Int) {
-                                    // TODO(aHashimi): FOTM-837
-                                    Toast.makeText(context!!, "on edit item clicked!", Toast.LENGTH_SHORT).show()
-                                }
+                        addSection(HorizontalRuleSectionIndentStart())
+                    }
+                    is GoalDetailState.EditItem -> {
+                        addSection(SelectableLabelsSection(
+                                context!!,
+                                R.style.GoalDetailItemTextStyle,
+                                object : SelectableLabelsSection.OnSelectableLabelInteractionListener {
+                                    override fun onLabelClicked(labelId: Int) {
+                                        // TODO(aHashimi): FOTM-837
+                                        Toast.makeText(context!!, "on edit item clicked!", Toast.LENGTH_SHORT).show()
+                                    }
 
-                            })
-                            .addLabel(EDIT_LABEL_ID, getString(R.string.GOAL_DETAIL_EDIT)))
-                    sectionedAdapter.addSection(HorizontalRuleSectionIndentStart())
-                }
-                is GoalDetailState.DeleteItem -> {
-                    sectionedAdapter.addSection(SelectableLabelsSection(
-                            context!!,
-                            R.style.GoalDetailItemTextStyle,
-                            object: SelectableLabelsSection.OnSelectableLabelInteractionListener {
-                                override fun onLabelClicked(labelId: Int) {
-                                    onDeleteGoal()
-                                }
-                            })
-                            .addLabel(DELETE_LABEL_ID, getString(R.string.GOAL_DETAIL_DELETE)))
-                    sectionedAdapter.addSection(HorizontalRuleSection())
+                                })
+                                .addLabel(EDIT_LABEL_ID, getString(R.string.GOAL_DETAIL_EDIT)))
+                        addSection(HorizontalRuleSectionIndentStart())
+                    }
+                    is GoalDetailState.DeleteItem -> {
+                        addSection(SelectableLabelsSection(
+                                context!!,
+                                R.style.GoalDetailItemTextStyle,
+                                object: SelectableLabelsSection.OnSelectableLabelInteractionListener {
+                                    override fun onLabelClicked(labelId: Int) {
+                                        onDeleteGoal()
+                                    }
+                                })
+                                .addLabel(DELETE_LABEL_ID, getString(R.string.GOAL_DETAIL_DELETE)))
+                        addSection(HorizontalRuleSection())
+                    }
                 }
             }
-        }
 
-        sectionedAdapter.notifyDataSetChanged()
+            notifyDataSetChanged()
+        }
     }
 
     private fun promptPauseConfirmation(pauseGoal: Boolean) {
