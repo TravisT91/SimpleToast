@@ -16,15 +16,15 @@ android {
         applicationId "com.engageft.fis.pscu"
         minSdkVersion rootProject.minSdkVersion
         targetSdkVersion rootProject.targetSdkVersion
-        versionCode 1
-        versionName "0.0"
+//        versionCode 1
+//        versionName "0.0"
         // Below is the version string that tracks real releases for this app. When creating a build for
         // QA or release, increment and use the version string below. the master branch should always
         // use 0.0 with versionCode = 1
         //
         // first number is Major release, second is feature release, third is bug update release.
-//        versionCode 7
-//        versionName "0.6.0"
+        versionCode 8
+        versionName "0.7.0"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         multiDexEnabled true
 
