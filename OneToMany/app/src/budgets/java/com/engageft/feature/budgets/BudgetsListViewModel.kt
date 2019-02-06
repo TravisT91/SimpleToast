@@ -123,6 +123,6 @@ class BudgetsListViewModel : BaseEngageViewModel() {
         val dateTime = DateTime.now()
         val dayOfMonth = dateTime.dayOfMonth.toFloat()
         val daysInMonth = dateTime.dayOfMonth().maximumValue.toFloat()
-        return (dayOfMonth - 1) / (daysInMonth - 1) // on 1st, returns 0.0f; on last, returns 1.0f
+        return dayOfMonth / daysInMonth
     }
 }
