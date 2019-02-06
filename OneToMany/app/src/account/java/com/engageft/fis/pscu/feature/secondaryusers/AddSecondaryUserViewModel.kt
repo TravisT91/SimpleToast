@@ -1,6 +1,5 @@
 package com.engageft.fis.pscu.feature.secondaryusers
 
-import android.util.Log
 import androidx.databinding.Observable
 import androidx.databinding.ObservableField
 import androidx.lifecycle.MutableLiveData
@@ -140,13 +139,13 @@ class AddSecondaryUserViewModel : BaseEngageViewModel() {
                     .subscribe({ response ->
                         dismissProgressOverlay()
                         if (response.isSuccess) {
-                            // TODO(jhutchins): navigate success
+                            // TODO(jhutchins): FOTM-700, navigate success
                         } else {
-                            // TODO(jhutchins): navigate failure
+                            // TODO(jhutchins): FOTM-700, navigate failure
                         }
 
                     }) { e ->
-                        // TODO(jhutchins): navigate failure
+                        // TODO(jhutchins): FOTM-700, navigate failure
                         dismissProgressOverlay()
                         handleThrowable(e)
                     }
@@ -190,10 +189,6 @@ class AddSecondaryUserViewModel : BaseEngageViewModel() {
         } else {
             AddButtonState.VISIBLE_ENABLED
         }
-        Log.e("Joey", "first ${firstNameValidationObservable.value} last ${lastNameValidationObservable.value} phone ${phoneNumberValidationObservable.value} dob ${dobValidationObservable.value} " +
-                "ssn ${ssnValidationObservable.value} ssnVisibility ${ssnVisibilityObservable.value}")
-        Log.e("Joey", "first ${firstName.get()!!} last ${lastName.get()!!} phone ${phoneNumber.get()!!} dob ${dob.get()!!} " +
-                "ssn ${ssn.get()!!}")
     }
 
     fun validateFirstName(conditionallyIfError: Boolean) {
