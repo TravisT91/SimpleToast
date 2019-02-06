@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+        <import type="android.view.View"/>
+        <variable
+            name="viewModel"
+            type="com.engageft.feature.goals.GoalEditViewModel"/>
+        <variable
+            name="palette"
+            type="com.engageft.fis.pscu.feature.branding.Palette"/>
+    </data>
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:fillViewport="true">
+
+        <androidx.appcompat.widget.LinearLayoutCompat
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <androidx.appcompat.widget.LinearLayoutCompat
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/cellBackground"
+                android:orientation="vertical">
+
+                <include layout="@layout/view_horizontal_divider" />
+
+                <com.engageft.apptoolbox.view.TextInputWithLabel
+                    style="@style/BottomSheetListInputWithLabelStyle"
+                    InputWithLabel.setThemeWithPalette="@{true}"
+                    android:id="@+id/goalNameInputWithLabel"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingStart="16dp"
+                    android:paddingEnd="16dp"
+                    android:paddingTop="16dp"
+                    app:labelText="@string/GOALS_ADD_GOAL_NAME_LABEL"
+                    app:inputText="@={viewModel.goalName}">
+                </com.engageft.apptoolbox.view.TextInputWithLabel>
+
+                <com.engageft.apptoolbox.view.CurrencyInputWithLabel
+                    style="@style/CurrencyInputWithLabelStyle"
+                    InputWithLabel.setThemeWithPalette="@{true}"
+                    android:id="@+id/goalAmountInputWithLabel"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingStart="16dp"
+                    android:paddingEnd="16dp"
+                    android:paddingTop="16dp"
+                    app:labelText="@string/GOALS_ADD_AMOUNT_LABEL"
+                    app:inputText="@={viewModel.goalAmount}"/>
+
+                <com.engageft.apptoolbox.view.CurrencyInputWithLabel
+                    style="@style/CurrencyInputWithLabelStyle"
+                    InputWithLabel.setThemeWithPalette="@{true}"
+                    android:id="@+id/frequencyAmountInputWithLabel"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingStart="16dp"
+                    android:paddingEnd="16dp"
+                    android:paddingTop="16dp"
+                    app:labelText="@string/GOALS_ADD_AMOUNT_LABEL"
+                    app:inputText="@={viewModel.frequencyAmount}"/>
+
+                <com.engageft.apptoolbox.view.BottomSheetListInputWithLabel
+                    style="@style/BottomSheetListInputWithLabelStyle"
+                    InputWithLabel.setThemeWithPalette="@{true}"
+                    android:id="@+id/frequencyBottomSheet"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingStart="16dp"
+                    android:paddingEnd="16dp"
+                    android:paddingTop="16dp"
+                    app:labelText="@string/GOALS_ADD_FREQUENCY_LABEL"
+                    app:inputText="@={viewModel.frequencyType}"
+                    app:bottomSheetDialogTitle="@string/GOALS_ADD_FREQUENCY_SELECTION_TITLE"
+                    app:bottomSheetDialogSubtitle="@string/GOALS_ADD_FREQUENCY_SELECTION_SUBTITLE"
+                    app:bottomSheetDialogStyle="@style/ListOptionBottomSheetDialogFragmentStyle"/>
+
+                <com.engageft.apptoolbox.view.DatePickerInputWithLabel
+                    style="@style/BottomSheetListInputWithLabelStyle"
+                    InputWithLabel.setThemeWithPalette="@{true}"
+                    android:id="@+id/startDateBottomSheet"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingStart="16dp"
+                    android:paddingEnd="16dp"
+                    android:paddingTop="16dp"
+                    android:visibility="@{viewModel.showNextRunDate.get() ? View.VISIBLE : View.GONE}"
+                    app:labelText="@string/GOALS_ADD_MONTHLY_LABEL"
+                    app:inputText="@={viewModel.nextRunDate}" />
+
+                <com.engageft.apptoolbox.view.BottomSheetListInputWithLabel
+                    style="@style/BottomSheetListInputWithLabelStyle"
+                    InputWithLabel.setThemeWithPalette="@{true}"
+                    android:id="@+id/daysOfWeekBottomSheet"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingStart="16dp"
+                    android:paddingEnd="16dp"
+                    android:paddingTop="16dp"
+                    android:visibility="@{viewModel.showDayOfWeek.get() ? View.VISIBLE : View.GONE}"
+                    app:labelText="@string/GOALS_ADD_WEEKLY_LABEL"
+                    app:inputText="@={viewModel.dayOfWeek}"
+                    app:bottomSheetDialogTitle="@string/GOALS_ADD_WEEKLY_SELECTION_TITLE"
+                    app:bottomSheetDialogStyle="@style/ListOptionBottomSheetDialogFragmentStyle"/>
+
+            </androidx.appcompat.widget.LinearLayoutCompat>
+
+            <com.engageft.apptoolbox.view.PillButton
+                style="@style/ButtonPillPrimaryFilledDefault"
+                PillButton.setThemeFilled="@{true}"
+                android:id="@+id/nextButton"
+                android:layout_gravity="center"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="40dp"
+                android:layout_marginBottom="16dp"
+                android:text="@string/GOALS_NEXT_BUTTON"/>
+
+        </androidx.appcompat.widget.LinearLayoutCompat>
+
+    </ScrollView>
+
+</layout>

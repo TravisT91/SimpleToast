@@ -148,10 +148,11 @@ class GoalDetailFragment: BaseEngagePageFragment() {
                                 R.style.GoalDetailItemTextStyle,
                                 object : SelectableLabelsSection.OnSelectableLabelInteractionListener {
                                     override fun onLabelClicked(labelId: Int) {
-                                        // TODO(aHashimi): FOTM-837
-                                        Toast.makeText(context!!, "on edit item clicked!", Toast.LENGTH_SHORT).show()
+                                        binding.root.findNavController().navigate(R.id.action_goalDetailFragment_to_goalEditFragment,
+                                                Bundle().apply {
+                                                    putLong(GOAL_ID_KEY, viewModelGoalDetail.goalId)
+                                                })
                                     }
-
                                 })
                                 .addLabel(EDIT_LABEL_ID, getString(R.string.GOAL_DETAIL_EDIT)))
                         addSection(HorizontalRuleSectionIndentStart())
