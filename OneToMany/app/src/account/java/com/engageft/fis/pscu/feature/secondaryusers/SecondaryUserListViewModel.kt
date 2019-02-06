@@ -71,7 +71,7 @@ class SecondaryUserListViewModel: BaseEngageViewModel() {
                                         CardStatusUtils.productCardModelStatusFromDebitCardInfo(account.debitCardInfo)))
                                 account.debitCardInfo.status
                             }
-                            if (debitCardInfo.cardPermissionsInfo.isAllowSecondary) {
+                            if (debitCardInfo.cardPermissionsInfo.isCardSecondaryAddAllowable) {
                                 secondaryAccountList.add(SecondaryUserListItem.AddUserType())
                             }
                             secondaryAccountList.add(SecondaryUserListItem.CardFooterType(debitCardInfo.cardPermissionsInfo.cardSecondaryMaxCount))

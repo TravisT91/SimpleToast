@@ -1,20 +1,14 @@
 package com.engageft.feature.goals.utils
 
 import android.content.Context
-import com.engageft.engagekit.EngageService
-import com.engageft.engagekit.tools.AuthManager
 import com.engageft.engagekit.utils.BackendDateTimeUtils
-import com.engageft.engagekit.utils.PayPlanInfoUtils
 import com.engageft.fis.pscu.R
 import com.ob.ws.dom.utility.GoalInfo
-import com.ob.ws.dom.utility.GoalTargetInfo
 import com.ob.ws.dom.utility.PayPlanInfo
-import org.joda.time.DateTime
 import utilGen1.DisplayDateTimeUtils
 import utilGen1.PayPlanUtils
 import utilGen1.StringUtils
 import java.math.BigDecimal
-import java.util.ArrayList
 
 // "$6 of $29"
 fun GoalInfo.getGoalInfoProgressString(context: Context): String {

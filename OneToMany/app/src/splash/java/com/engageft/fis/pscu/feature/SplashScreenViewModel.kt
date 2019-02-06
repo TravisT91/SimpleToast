@@ -60,12 +60,10 @@ class SplashScreenViewModel : BaseViewModel() {
                                             SplashNavigationEvent.LOGGED_IN
                                         } else {
                                             EngageService.getInstance().authManager.logout()
-                                            MoEngageUtils.logout()
                                             SplashNavigationEvent.NOT_LOGGED_IN
                                         }
                                     }, { _ ->
                                         EngageService.getInstance().authManager.logout()
-                                        MoEngageUtils.logout()
                                         value = SplashNavigationEvent.NOT_LOGGED_IN
                                     })
                     )

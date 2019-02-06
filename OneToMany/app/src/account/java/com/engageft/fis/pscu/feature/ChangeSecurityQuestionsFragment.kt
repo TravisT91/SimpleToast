@@ -72,8 +72,6 @@ class ChangeSecurityQuestionsFragment : BaseEngagePageFragment() {
         override fun onDialogFragmentPositiveButtonClicked() {
             // We are in the SecurityQuestionsActivity if this is the case.
             EngageService.getInstance().authManager.logout()
-            MoEngageUtils.logout()
-            BrandingManager.clearBranding()
             activity!!.finish()
             findNavController().navigate(R.id.action_changeSecurityQuestionsFragment2_to_notAuthenticatedActivity2)
         }
