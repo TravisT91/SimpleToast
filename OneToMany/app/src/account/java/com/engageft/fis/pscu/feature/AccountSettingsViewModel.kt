@@ -35,11 +35,11 @@ class AccountSettingsViewModel : BaseEngageViewModel() {
                     progressOverlayShownObservable.value = false
                     if (response is LoginResponse) {
                         val debitCardInfo = LoginResponseUtils.getCurrentCard(response)
-                        if (debitCardInfo.cardPermissionsInfo.isEnableCardStatements
-                                && debitCardInfo.cardPermissionsInfo.isAllowCardStatements) {
+                        if (debitCardInfo.cardPermissionsInfo.isCardStatementsEnabled
+                                && debitCardInfo.cardPermissionsInfo.isCardStatementsAllowable) {
                             cardStatementsEnable.set(true)
                         }
-                        if (debitCardInfo.cardPermissionsInfo.isEnableSecondary) {
+                        if (debitCardInfo.cardPermissionsInfo.isCardSecondaryEnabled) {
                             cardSecondaryEnable.set(true)
                         }
                     } else {
