@@ -48,7 +48,9 @@ class GoalsListSection(private val context: Context,
 
             if (goalModel.goalInfo.isAchieved) {
                 circularTrackingPanel.apply {
-                    showDrawableWithinProgressBar(ContextCompat.getDrawable(context, R.drawable.ic_success_check_mark)!!)
+                    ContextCompat.getDrawable(context, R.drawable.ic_success_check_mark)?.let { drawable ->
+                        showDrawableWithinProgressBar(drawable)
+                    }
                     setProgress(100)
                     showProgressBar(true)
                     setProgressColor(ContextCompat.getColor(context, R.color.white))
@@ -60,7 +62,9 @@ class GoalsListSection(private val context: Context,
                     showCenteredTitleAndRemoveLeftTextViews()
                 }
             } else if (goalModel.goalInfo.payPlan.isPaused) {
-                circularTrackingPanel.showDrawableWithinProgressBar(ContextCompat.getDrawable(context, R.drawable.ic_pause)!!)
+                ContextCompat.getDrawable(context, R.drawable.ic_pause)?.let { drawable ->
+                    circularTrackingPanel.showDrawableWithinProgressBar(drawable)
+                }
 
                 // check if the goal's end date has passed
                 if (!goalModel.goalInfo.isAchieved && goalModel.goalInfo.estimatedCompleteDate.isNotBlank()) {
@@ -69,7 +73,9 @@ class GoalsListSection(private val context: Context,
                         if (date.isBeforeNow) {
                             circularTrackingPanel.setTopRightTextColor(Palette.errorColor)
                             circularTrackingPanel.setProgressColor(ContextCompat.getColor(context, R.color.goalErrorProgressColor))
-                            circularTrackingPanel.showDrawableWithinProgressBar(ContextCompat.getDrawable(context, R.drawable.ic_goal_error)!!)
+                            ContextCompat.getDrawable(context, R.drawable.ic_goal_error)?.let { drawable ->
+                                circularTrackingPanel.showDrawableWithinProgressBar(drawable)
+                            }
                         }
                     }
                 }
