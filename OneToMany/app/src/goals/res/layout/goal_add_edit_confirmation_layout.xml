@@ -38,7 +38,7 @@
 
     <androidx.appcompat.widget.AppCompatTextView
         style="@style/Body"
-        android:id="@+id/recurrenceTypeTextView"
+        android:id="@+id/recurrenceDescriptionTextView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:paddingTop="4dp"
@@ -64,7 +64,7 @@
     <com.engageft.apptoolbox.view.PillButton
         style="@style/ButtonPillPrimaryFilledDefault"
         PillButton.setThemeFilled="@{true}"
-        android:id="@+id/createTransferButton"
+        android:id="@+id/saveButton"
         android:layout_marginTop="32dp"
         android:layout_marginBottom="20dp"
         android:layout_width="wrap_content"

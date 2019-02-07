@@ -85,8 +85,8 @@ class GoalEditFragment: BaseEngagePageFragment() {
 
             daysOfWeekBottomSheet.dialogOptions = ArrayList(DisplayDateTimeUtils.daysOfWeekList())
 
-            startDateBottomSheet.minimumDate = DateTime.now().plusDays(1)
-            startDateBottomSheet.maximumDate = DateTime.now().plusDays(30)
+            nextRunDateDatePicker.minimumDate = DateTime.now().plusDays(1)
+            nextRunDateDatePicker.maximumDate = DateTime.now().plusDays(30)
 
             goalAmountInputWithLabel.currencyCode = EngageAppConfig.currencyCode
             frequencyAmountInputWithLabel.currencyCode = EngageAppConfig.currencyCode
@@ -96,7 +96,6 @@ class GoalEditFragment: BaseEngagePageFragment() {
             }
 
             viewModelGoalEdit.apply {
-                refreshGoalDetail()
 
                 nextButtonStateObservable.observe(viewLifecycleOwner, Observer {
                     if (it == GoalEditViewModel.ButtonState.SHOW) {

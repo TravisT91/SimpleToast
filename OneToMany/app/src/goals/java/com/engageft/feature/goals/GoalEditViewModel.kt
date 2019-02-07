@@ -1,6 +1,5 @@
 package com.engageft.feature.goals
 
-import android.os.Parcelable
 import androidx.databinding.Observable
 import androidx.databinding.ObservableField
 import androidx.lifecycle.MutableLiveData
@@ -8,8 +7,8 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.engageft.apptoolbox.util.CurrencyUtils
 import com.engageft.engagekit.EngageService
-import com.engageft.engagekit.utils.BackendDateTimeUtils
 import com.engageft.engagekit.utils.LoginResponseUtils
+import com.engageft.engagekit.utils.PayPlanInfoUtils
 import com.engageft.fis.pscu.config.EngageAppConfig
 import com.engageft.fis.pscu.feature.BaseEngageViewModel
 import com.ob.ws.dom.GoalsResponse
@@ -70,7 +69,7 @@ class GoalEditViewModel(val goalId: Long): BaseEngageViewModel() {
                 validateFormAndButtonState()
             }
         })
-        showNextRunDate.addOnPropertyChangedCallback(object: Observable.OnPropertyChangedCallback() {
+        nextRunDate.addOnPropertyChangedCallback(object: Observable.OnPropertyChangedCallback() {
             override fun onPropertyChanged(sender: Observable?, propertyId: Int) {
                 validateFormAndButtonState()
             }
@@ -80,10 +79,12 @@ class GoalEditViewModel(val goalId: Long): BaseEngageViewModel() {
                 validateFormAndButtonState()
             }
         })
+
+        initData()
     }
 
     fun validateFormAndButtonState() {
-        if (isFormValid()) {
+        if (isFormValid() && hasUnsavedChanges()) {
             nextButtonStateObservable.value = ButtonState.SHOW
             setupGoalModelInfo()
         } else {
@@ -99,7 +100,7 @@ class GoalEditViewModel(val goalId: Long): BaseEngageViewModel() {
                 goalAmount = amountGoal,
                 frequencyAmount = amountFrequency,
                 recurrenceType = getRecurrenceType(),
-                startDate = if (nextRunDate.get()!!.isEmpty()) null else DateTime(nextRunDate),
+                startDate = if (nextRunDate.get()!!.isEmpty()) null else DisplayDateTimeUtils.mediumDateFormatter.parseDateTime(nextRunDate.get()!!),
                 dayOfWeek = DisplayDateTimeUtils.getDayOfWeekNumber(dayOfWeek.get()!!),
                 hasCompleteDate = false)
     }
@@ -131,7 +132,7 @@ class GoalEditViewModel(val goalId: Long): BaseEngageViewModel() {
         return false
     }
 
-    fun refreshGoalDetail() {
+    private fun initData() {
         showProgressOverlayDelayed()
         compositeDisposable.add(EngageService.getInstance().loginResponseAsObservable
                 .subscribeOn(Schedulers.io())
@@ -180,18 +181,18 @@ class GoalEditViewModel(val goalId: Long): BaseEngageViewModel() {
         goalAmount.set(StringUtils.formatCurrencyStringWithFractionDigits(goalInfo.amount.toString(), true))
         frequencyAmount.set(StringUtils.formatCurrencyStringWithFractionDigits(goalInfo.fundAmount.toString(), true))
         when(goalInfo.payPlan.recurrenceType) {
-            PAYPLAN_TYPE_DAY -> {
+            PayPlanInfoUtils.PAY_PLAN_DAY -> {
                 frequencyType.set(FREQUENCY_TYPE_DAILY)
                 showDayOfWeek.set(false)
                 showNextRunDate.set(false)
             }
-            PAYPLAN_TYPE_WEEK -> {
+            PayPlanInfoUtils.PAY_PLAN_WEEK -> {
                 frequencyType.set(FREQUENCY_TYPE_WEEKLY)
                 dayOfWeek.set(DisplayDateTimeUtils.getDayOfWeekStringForNumber(goalInfo.payPlan.dayOfWeek))
                 showDayOfWeek.set(true)
                 showNextRunDate.set(false)
             }
-            PAYPLAN_TYPE_MONTH -> {
+            PayPlanInfoUtils.PAY_PLAN_MONTH -> {
                 frequencyType.set(FREQUENCY_TYPE_MONTHLY)
                 showDayOfWeek.set(false)
                 showNextRunDate.set(true)
@@ -220,10 +221,10 @@ class GoalEditViewModel(val goalId: Long): BaseEngageViewModel() {
     private fun hasFrequencyTypeChanged(): Boolean {
         when (frequencyType.get()!!) {
             FREQUENCY_TYPE_DAILY -> {
-                return goalInfo.payPlan.recurrenceType != PAYPLAN_TYPE_DAY
+                return goalInfo.payPlan.recurrenceType != PayPlanInfoUtils.PAY_PLAN_DAY
             }
             FREQUENCY_TYPE_WEEKLY -> {
-                if (goalInfo.payPlan.recurrenceType != PAYPLAN_TYPE_WEEK || (goalInfo.payPlan.dayOfWeek != null
+                if (goalInfo.payPlan.recurrenceType != PayPlanInfoUtils.PAY_PLAN_WEEK || (goalInfo.payPlan.dayOfWeek != null
                                 && dayOfWeek.get()!!.isNotEmpty() && dayOfWeek.get() != DisplayDateTimeUtils.getDayOfWeekStringForNumber(goalInfo.payPlan.dayOfWeek))) {
                     return true
                 }
@@ -235,7 +236,7 @@ class GoalEditViewModel(val goalId: Long): BaseEngageViewModel() {
                     dateFormat = DisplayDateTimeUtils.yearMonthDayFormatter.print(date).toString()
                 }
 
-                if (goalInfo.payPlan.recurrenceType != PAYPLAN_TYPE_MONTH || (nextRunDate.get()!!.isNotEmpty()
+                if (goalInfo.payPlan.recurrenceType != PayPlanInfoUtils.PAY_PLAN_MONTH || (nextRunDate.get()!!.isNotEmpty()
                                 && dateFormat != goalInfo.payPlan.nextRunDate)) {
                     return true
                 }
@@ -247,12 +248,12 @@ class GoalEditViewModel(val goalId: Long): BaseEngageViewModel() {
     private fun getRecurrenceType(): String {
         return when (frequencyType.get()!!) {
             FREQUENCY_TYPE_WEEKLY -> {
-                PAYPLAN_TYPE_WEEK
+                PayPlanInfoUtils.PAY_PLAN_WEEK
             }
             FREQUENCY_TYPE_MONTHLY -> {
-                PAYPLAN_TYPE_MONTH
+                PayPlanInfoUtils.PAY_PLAN_MONTH
             }
-            else -> PAYPLAN_TYPE_DAY
+            else -> PayPlanInfoUtils.PAY_PLAN_DAY
         }
     }
 
@@ -260,10 +261,6 @@ class GoalEditViewModel(val goalId: Long): BaseEngageViewModel() {
         const val FREQUENCY_TYPE_DAILY = "Daily"
         const val FREQUENCY_TYPE_WEEKLY = "Weekly"
         const val FREQUENCY_TYPE_MONTHLY = "Monthly"
-
-        const val PAYPLAN_TYPE_DAY = "DAY"
-        const val PAYPLAN_TYPE_WEEK = "WEEK"
-        const val PAYPLAN_TYPE_MONTH = "MONTH"
     }
 }
 
