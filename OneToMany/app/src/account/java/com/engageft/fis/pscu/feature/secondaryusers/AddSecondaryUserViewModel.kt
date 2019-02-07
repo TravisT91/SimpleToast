@@ -5,6 +5,7 @@ import androidx.databinding.ObservableField
 import androidx.lifecycle.MutableLiveData
 import com.engageft.apptoolbox.util.isDigitsOnly
 import com.engageft.engagekit.EngageService
+import com.engageft.engagekit.aac.SingleLiveEvent
 import com.engageft.engagekit.rest.request.SecondaryUserRequest
 import com.engageft.engagekit.utils.LoginResponseUtils
 import com.engageft.fis.pscu.feature.BaseEngageViewModel
@@ -32,6 +33,12 @@ class AddSecondaryUserViewModel : BaseEngageViewModel() {
     val dobValidationObservable = MutableLiveData<DOBValidationError>()
     val ssnValidationObservable = MutableLiveData<SSNValidationError>()
     val ssnVisibilityObservable = MutableLiveData<Boolean>()
+    val navigationObservable = SingleLiveEvent<NavigationEvent>()
+
+    enum class NavigationEvent {
+        SUCCESS,
+        ERROR
+    }
 
     enum class AddButtonState {
         GONE,
@@ -139,13 +146,12 @@ class AddSecondaryUserViewModel : BaseEngageViewModel() {
                     .subscribe({ response ->
                         dismissProgressOverlay()
                         if (response.isSuccess) {
-                            // TODO(jhutchins): FOTM-700, navigate success
+                            navigationObservable.value = NavigationEvent.SUCCESS
                         } else {
-                            // TODO(jhutchins): FOTM-700, navigate failure
+                            navigationObservable.value = NavigationEvent.ERROR
                         }
 
                     }) { e ->
-                        // TODO(jhutchins): FOTM-700, navigate failure
                         dismissProgressOverlay()
                         handleThrowable(e)
                     }

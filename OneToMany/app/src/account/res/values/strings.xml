@@ -128,4 +128,8 @@
     <string name="secondary_users_add_error_dob_under_13">@string/ENROLLMENT_CARD_DOB_UNDER_13</string>
     <string name="secondary_users_add_error_dob_invalid">@string/ENROLLMENT_CARD_DOB_INVALID</string>
     <string name="secondary_users_add_error_ssn_invalid">@string/ENROLLMENT_VERIFY_IDENTITY_ERROR_MESSAGE</string>
+
+    <string name="secondary_users_add_success_title">New account added!</string>
+    <string name="secondary_users_add_success_subtitle">A new card should arrive at the primary account\'s address within 7-10 days.</string>
+    <string name="secondary_users_add_success_button">Done</string>
 </resources>

@@ -165,6 +165,17 @@ class AddSecondaryUserFragment : BaseEngagePageFragment() {
             }
         })
 
+        addSecondaryViewModel.navigationObservable.observe(this, Observer { navigationEvent ->
+            when (navigationEvent) {
+                AddSecondaryUserViewModel.NavigationEvent.SUCCESS -> {
+                    findNavController().navigate(R.id.action_addSecondaryUserFragment_to_addSecondarySuccessFragment)
+                }
+                AddSecondaryUserViewModel.NavigationEvent.ERROR -> {
+                    findNavController().navigate(R.id.action_addSecondaryUserFragment_to_addSecondaryErrorFragment)
+                }
+            }
+        })
+
         binding.firstNameInput.addEditTextFocusChangeListener(View.OnFocusChangeListener { v, hasFocus ->
             if (!hasFocus) {
                 addSecondaryViewModel.validateFirstName(false)
