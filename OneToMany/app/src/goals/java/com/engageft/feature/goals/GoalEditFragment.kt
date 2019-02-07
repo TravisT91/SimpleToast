@@ -9,6 +9,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
+import androidx.navigation.findNavController
 import androidx.navigation.fragment.findNavController
 import com.engageft.apptoolbox.BaseViewModel
 import com.engageft.apptoolbox.NavigationOverrideClickListener
@@ -90,12 +91,16 @@ class GoalEditFragment: BaseEngagePageFragment() {
             goalAmountInputWithLabel.currencyCode = EngageAppConfig.currencyCode
             frequencyAmountInputWithLabel.currencyCode = EngageAppConfig.currencyCode
 
+            nextButton.setOnClickListener {
+                navigateToNextStep()
+            }
+
             viewModelGoalEdit.apply {
                 refreshGoalDetail()
 
                 nextButtonStateObservable.observe(viewLifecycleOwner, Observer {
                     if (it == GoalEditViewModel.ButtonState.SHOW) {
-                        nextButton.visibility = View.GONE
+                        nextButton.visibility = View.VISIBLE
                     } else {
                         nextButton.visibility = View.GONE
                     }
@@ -120,9 +125,16 @@ class GoalEditFragment: BaseEngagePageFragment() {
     override fun onOptionsItemSelected(item: MenuItem?): Boolean {
         when(item?.itemId){
             R.id.menu_item_next -> run {
-
+                navigateToNextStep()
             }
         }
         return super.onOptionsItemSelected(item)
+    }
+
+    private fun navigateToNextStep() {
+        binding.root.findNavController().navigate(R.id.action_goalEditFragment_to_goalEditConfirmationFragment,
+                Bundle().apply {
+                    putParcelable(GoalsAddStep1Fragment.GOAL_DATA_PARCELABLE_KEY, viewModelGoalEdit.goalInfoModel)
+                })
     }
 }

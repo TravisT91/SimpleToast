@@ -5,6 +5,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
+import android.widget.LinearLayout
+import android.widget.TextView
 import androidx.core.content.res.ResourcesCompat
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
@@ -55,8 +57,14 @@ class GoalsAddEditConfirmationFragment: BaseEngagePageFragment() {
 
     private fun setUpViewData(goalInfoModel: GoalInfoModel) {
         binding.apply {
+            val imageIcon = confirmationLayout.findViewById<View>(R.id.imageViewLayout)
+                    .findViewById<ImageView>(R.id.imageViewIcon)
+            val headerTextView = confirmationLayout.findViewById<TextView>(R.id.headerTextView)
+            val subHeaderTextView = confirmationLayout.findViewById<TextView>(R.id.subHeaderTextView)
+            val descriptionTextView = confirmationLayout.findViewById<TextView>(R.id.descriptionTextView)
+
             if (goalInfoModel.hasCompleteDate) {
-                imageViewLayout.findViewById<ImageView>(R.id.imageViewIcon).setImageResource(R.drawable.ic_calendar)
+                imageIcon.setImageResource(R.drawable.ic_calendar)
                 headerTextView.text = getString(R.string.GOALS_ADD_COMPLETE_DATE_CONFIRMATION_HEADER)
                 subHeaderTextView.text = DisplayDateTimeUtils.getMediumFormatted(goalInfoModel.goalCompleteDate!!)
                 descriptionTextView.text = String.format(
@@ -66,7 +74,7 @@ class GoalsAddEditConfirmationFragment: BaseEngagePageFragment() {
                 val pair = Pair(first = test, second = ResourcesCompat.getFont(context!!, R.font.font_medium)!!)
                 subHeaderTextView.setTextSizeAndFont(pair)
             } else {
-                imageViewLayout.findViewById<ImageView>(R.id.imageViewIcon).setImageResource(R.drawable.ic_plant)
+                imageIcon.findViewById<ImageView>(R.id.imageViewIcon).setImageResource(R.drawable.ic_plant)
                 headerTextView.text = getString(R.string.GOALS_ADD_FREQUENCY_AMOUNT_CONFIRMATION_HEADER)
 
                 val amountWithCurrencySymbol = StringUtils.formatCurrencyStringWithFractionDigits(goalInfoModel.frequencyAmount.toString(), true)

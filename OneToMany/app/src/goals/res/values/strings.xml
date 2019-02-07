@@ -55,4 +55,6 @@
     <string name="GOAL_RESUME">resume</string>
     <string name="GOAL_ERROR_TITLE">This goal is past its end date</string>
     <string name="GOAL_ERROR_DESCRIPTION">To continue setting aside money in this goal, you must edit when you need it by. Tap to edit.</string>
+    <string name="GOAL_EDIT_CONFIRMATION_COMPLETE_DATE_EFFECT_DESCRIPTION">This change will directly effect the date your goal will be reached.</string>
+    <string name="GOAL_EDIT_CONFIRMATION_HEADER">You\'ll now set-aside</string>
 </resources>

@@ -40,6 +40,7 @@
                     android:paddingStart="16dp"
                     android:paddingEnd="16dp"
                     android:paddingTop="16dp"
+                    app:clearIcon="@drawable/ic_clear"
                     app:labelText="@string/GOALS_ADD_GOAL_NAME_LABEL"
                     app:inputText="@={viewModel.goalName}">
                 </com.engageft.apptoolbox.view.TextInputWithLabel>

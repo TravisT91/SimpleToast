@@ -1,5 +1,6 @@
 package com.engageft.feature.goals
 
+import android.os.Parcelable
 import androidx.databinding.Observable
 import androidx.databinding.ObservableField
 import androidx.lifecycle.MutableLiveData
@@ -25,6 +26,9 @@ import java.math.BigDecimal
 class GoalEditViewModel(val goalId: Long): BaseEngageViewModel() {
 
     private lateinit var goalInfo: GoalInfo
+
+    lateinit var goalInfoModel: GoalInfoModel
+    private set
 
     var goalName = ObservableField("")
     var goalAmount = ObservableField("")
@@ -81,9 +85,23 @@ class GoalEditViewModel(val goalId: Long): BaseEngageViewModel() {
     fun validateFormAndButtonState() {
         if (isFormValid()) {
             nextButtonStateObservable.value = ButtonState.SHOW
+            setupGoalModelInfo()
         } else {
             nextButtonStateObservable.value = ButtonState.HIDE
         }
+    }
+
+    private fun setupGoalModelInfo() {
+        val amountGoal = BigDecimal(CurrencyUtils.getNonFormattedDecimalAmountString(EngageAppConfig.currencyCode, goalAmount.get()!!))
+        val amountFrequency = BigDecimal(CurrencyUtils.getNonFormattedDecimalAmountString(EngageAppConfig.currencyCode, frequencyAmount.get()!!))
+        goalInfoModel = GoalInfoModel(
+                goalName = goalName.get()!!,
+                goalAmount = amountGoal,
+                frequencyAmount = amountFrequency,
+                recurrenceType = getRecurrenceType(),
+                startDate = if (nextRunDate.get()!!.isEmpty()) null else DateTime(nextRunDate),
+                dayOfWeek = DisplayDateTimeUtils.getDayOfWeekNumber(dayOfWeek.get()!!),
+                hasCompleteDate = false)
     }
 
     private fun onFrequencyTypeChanged() {
@@ -103,8 +121,8 @@ class GoalEditViewModel(val goalId: Long): BaseEngageViewModel() {
         }
     }
 
-    private fun isFormValid() = (goalName.get()!!.isNotEmpty() && goalAmount.get()!!.isNotEmpty()
-            && hasFrequencyType() && nextRunDate.get()!!.isNotEmpty())
+    private fun isFormValid() = (goalName.get()!!.isNotEmpty() && goalAmount.get()!!.isNotEmpty() &&
+            frequencyAmount.get()!!.isNotEmpty() && hasFrequencyType())
 
     private fun hasFrequencyType(): Boolean {
         if (frequencyType.get()!! == FREQUENCY_TYPE_DAILY) return true
@@ -205,8 +223,8 @@ class GoalEditViewModel(val goalId: Long): BaseEngageViewModel() {
                 return goalInfo.payPlan.recurrenceType != PAYPLAN_TYPE_DAY
             }
             FREQUENCY_TYPE_WEEKLY -> {
-                if (dayOfWeek.get()!!.isNotEmpty() && dayOfWeek.get() != DisplayDateTimeUtils.getDayOfWeekStringForNumber(goalInfo.payPlan.dayOfWeek)
-                        || goalInfo.payPlan.recurrenceType != PAYPLAN_TYPE_WEEK) {
+                if (goalInfo.payPlan.recurrenceType != PAYPLAN_TYPE_WEEK || (goalInfo.payPlan.dayOfWeek != null
+                                && dayOfWeek.get()!!.isNotEmpty() && dayOfWeek.get() != DisplayDateTimeUtils.getDayOfWeekStringForNumber(goalInfo.payPlan.dayOfWeek))) {
                     return true
                 }
             }
@@ -224,6 +242,18 @@ class GoalEditViewModel(val goalId: Long): BaseEngageViewModel() {
             }
         }
         return false
+    }
+
+    private fun getRecurrenceType(): String {
+        return when (frequencyType.get()!!) {
+            FREQUENCY_TYPE_WEEKLY -> {
+                PAYPLAN_TYPE_WEEK
+            }
+            FREQUENCY_TYPE_MONTHLY -> {
+                PAYPLAN_TYPE_MONTH
+            }
+            else -> PAYPLAN_TYPE_DAY
+        }
     }
 
     companion object {

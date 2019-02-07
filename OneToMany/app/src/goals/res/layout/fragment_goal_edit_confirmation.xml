@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout>
+    <data>
+        <variable
+            name="viewModel"
+            type="com.engageft.feature.goals.GoalsAddEditConfirmationViewModel"/>
+        <variable
+            name="palette"
+            type="com.engageft.fis.pscu.feature.branding.Palette"/>
+    </data>
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:fillViewport="true"
+        xmlns:android="http://schemas.android.com/apk/res/android">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:orientation="vertical">
+
+            <include
+                layout="@layout/goal_add_edit_confirmation_layout"
+                android:id="@+id/confirmationLayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+
+            <TextView
+                style="@style/BodyMedium"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/primary"
+                android:paddingTop="8dp"
+                android:paddingBottom="16dp"
+                android:paddingStart="16dp"
+                android:paddingEnd="16dp"
+                android:lineSpacingExtra="8sp"
+                android:text="@string/GOAL_DELETE_CANCEL"
+                android:gravity="center_horizontal" />
+
+        </LinearLayout>
+
+    </ScrollView>
+</layout>
+
