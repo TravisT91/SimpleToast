@@ -48,11 +48,6 @@ class GoalDetailFragment: BaseEngagePageFragment() {
         return viewModelGoalDetail
     }
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setHasOptionsMenu(true)
-    }
-
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         binding = FragmentGoalDetailBinding.inflate(inflater, container, false).apply {
             viewModel = viewModel
@@ -80,7 +75,7 @@ class GoalDetailFragment: BaseEngagePageFragment() {
                     }
                 })
 
-                deleteStatusObservable.observe(viewLifecycleOwner, Observer {
+                deleteSuccessObservable.observe(viewLifecycleOwner, Observer {
                     binding.root.findNavController().popBackStack()
                 })
             }

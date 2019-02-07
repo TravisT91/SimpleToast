@@ -49,7 +49,7 @@ class GoalDeleteFragment: BaseEngagePageFragment() {
             }
         }
 
-        viewModelDelete.deleteStatusObservable.observe(viewLifecycleOwner, Observer {
+        viewModelDelete.deleteSuccessObservable.observe(viewLifecycleOwner, Observer {
             binding.root.findNavController().popBackStack(R.id.goalDetailFragment, true)
         })
 
