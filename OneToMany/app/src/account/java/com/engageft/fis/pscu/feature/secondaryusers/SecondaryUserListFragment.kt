@@ -72,6 +72,9 @@ class SecondaryUserListFragment: BaseEngagePageFragment() {
                     ResourcesCompat.getFont(context!!, R.font.font_bold)!!,
                     Palette.primaryColor,
                     getString(R.string.secondary_users_splash_title_substring))
+            buttonAddAccount.setOnClickListener {
+                findNavController().navigate(R.id.action_secondaryUserListFragment_to_addSecondaryUserFragment)
+            }
         }
 
         secondaryUserListViewModel.apply {
