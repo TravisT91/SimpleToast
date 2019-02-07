@@ -15,16 +15,20 @@ import com.engageft.apptoolbox.adapter.HorizontalRuleSectionIndentStart
 import com.engageft.apptoolbox.adapter.SelectableLabelsSection
 import com.engageft.apptoolbox.view.InformationDialogFragment
 import com.engageft.feature.budgets.extension.isZero
+import com.engageft.feature.goals.utils.GoalConstants.DELETE_LABEL_ID
+import com.engageft.feature.goals.utils.GoalConstants.EDIT_LABEL_ID
+import com.engageft.feature.goals.utils.GoalConstants.GOAL_FUND_AMOUNT_KEY
+import com.engageft.feature.goals.utils.GoalConstants.GOAL_ID_DEFAULT
+import com.engageft.feature.goals.utils.GoalConstants.GOAL_ID_KEY
+import com.engageft.feature.goals.utils.GoalConstants.TRANSFER_LABEL_ID
 import com.engageft.fis.pscu.R
 import com.engageft.fis.pscu.databinding.FragmentGoalDetailBinding
 import com.engageft.fis.pscu.feature.BaseEngagePageFragment
-import com.engageft.fis.pscu.feature.recyclerview.toggleablelabel.ToggleableLabelSection
 import com.engageft.fis.pscu.feature.adapter.ErrorStateSection
 import com.engageft.fis.pscu.feature.branding.Palette
 import com.engageft.fis.pscu.feature.infoDialogYesNoNewInstance
+import com.engageft.fis.pscu.feature.recyclerview.toggleablelabel.ToggleableLabelSection
 import io.github.luizgrp.sectionedrecyclerviewadapter.SectionedRecyclerViewAdapter
-import java.lang.IllegalArgumentException
-import java.math.BigDecimal
 
 class GoalDetailFragment: BaseEngagePageFragment() {
 
@@ -227,16 +231,5 @@ class GoalDetailFragment: BaseEngagePageFragment() {
                         putSerializable(GOAL_FUND_AMOUNT_KEY, viewModelGoalDetail.fundAmount)
                     })
         }
-    }
-
-    companion object {
-        const val TRANSFER_LABEL_ID = 0
-        const val EDIT_LABEL_ID = 1
-        const val DELETE_LABEL_ID = 3
-
-        const val GOAL_ID_DEFAULT = -1L
-
-        const val GOAL_ID_KEY = "GOAL_ID_KEY"
-        const val GOAL_FUND_AMOUNT_KEY = "GOAL_FUND_AMOUNT_KEY"
     }
 }

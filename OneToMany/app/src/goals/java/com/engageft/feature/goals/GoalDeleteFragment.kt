@@ -9,8 +9,8 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.navigation.findNavController
 import com.engageft.apptoolbox.BaseViewModel
-import com.engageft.feature.goals.GoalDetailFragment.Companion.GOAL_FUND_AMOUNT_KEY
-import com.engageft.feature.goals.GoalDetailFragment.Companion.GOAL_ID_KEY
+import com.engageft.feature.goals.utils.GoalConstants.GOAL_FUND_AMOUNT_KEY
+import com.engageft.feature.goals.utils.GoalConstants.GOAL_ID_KEY
 import com.engageft.fis.pscu.R
 import com.engageft.fis.pscu.databinding.FragmentGoalDeleteBinding
 import com.engageft.fis.pscu.feature.BaseEngagePageFragment

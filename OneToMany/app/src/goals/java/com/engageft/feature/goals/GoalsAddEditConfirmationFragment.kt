@@ -12,6 +12,7 @@ import androidx.navigation.findNavController
 import com.engageft.apptoolbox.BaseViewModel
 import com.engageft.apptoolbox.util.applyRelativeSizeToSubstring
 import com.engageft.apptoolbox.util.setTextSizeAndFont
+import com.engageft.feature.goals.utils.GoalConstants.GOAL_DATA_PARCELABLE_KEY
 import com.engageft.fis.pscu.R
 import com.engageft.fis.pscu.databinding.FragmentGoalsAddEditConfirmationBinding
 import com.engageft.fis.pscu.feature.BaseEngagePageFragment
@@ -34,7 +35,7 @@ class GoalsAddEditConfirmationFragment: BaseEngagePageFragment() {
             viewModel = confirmationViewModel
             palette = Palette
 
-            arguments!!.get(GoalsAddStep1Fragment.GOAL_DATA_PARCELABLE_KEY)?.let { goalInfoModel ->
+            arguments!!.get(GOAL_DATA_PARCELABLE_KEY)?.let { goalInfoModel ->
                 confirmationViewModel.goalInfoModel = goalInfoModel as GoalInfoModel
             } ?: kotlin.run {
                 throw IllegalArgumentException("Must pass GoalInfoModel data")
