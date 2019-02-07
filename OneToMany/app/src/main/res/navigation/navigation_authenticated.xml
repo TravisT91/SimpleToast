@@ -563,7 +563,7 @@
     <fragment
         android:id="@+id/goalsAddStep2Fragment"
         android:name="com.engageft.feature.goals.GoalsAddStep2Fragment"
-        android:label="@string/GOALS_ADD_GOAL" >
+        android:label="@string/GOALS_ADD_GOAL">
         <argument
             android:name="@string/navigation_view_gone"
             android:defaultValue="true" />
