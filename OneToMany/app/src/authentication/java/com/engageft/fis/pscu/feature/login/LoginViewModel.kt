@@ -1,5 +1,6 @@
 package com.engageft.fis.pscu.feature.login
 
+import android.util.Log
 import androidx.databinding.Observable
 import androidx.databinding.ObservableField
 import androidx.lifecycle.MutableLiveData
@@ -89,12 +90,6 @@ class LoginViewModel : BaseEngageViewModel(), GateKeeperListener {
                 validatePassword()
             }
         })
-        rememberMe.addOnPropertyChangedCallback(object : Observable.OnPropertyChangedCallback(){
-            override fun onPropertyChanged(observable: Observable?, field: Int) {
-                // TODO(jhutchins): Maybe we don't need to do anything every time this value is
-                // changed?
-            }
-        })
         synchronizeTestMode(AuthenticationSharedPreferencesRepo.isUsingDemoServer())
         updatePrefilledUsernameAndRememberMe()
         updateDemoAccountButtonState()
@@ -113,9 +108,18 @@ class LoginViewModel : BaseEngageViewModel(), GateKeeperListener {
                 //showFingerprintAuthIfEnrolled()
             }
         })
+        Log.e("Joey", "isFirstUse? ${AuthenticationSharedPreferencesRepo.isFirstUse()}" )
         if (AuthenticationSharedPreferencesRepo.isFirstUse()) {
+            // firstUse flag tracks either the user logging in successfully at least once OR the user
+            // explicitly toggling the box off. In either case, we don't set the initial state of this switch
+            // for the user anymore.
             rememberMe.set(true)
-            AuthenticationSharedPreferencesRepo.clearFirstUse()
+            rememberMe.addOnPropertyChangedCallback(object : Observable.OnPropertyChangedCallback(){
+                override fun onPropertyChanged(observable: Observable?, field: Int) {
+                    AuthenticationSharedPreferencesRepo.clearFirstUse()
+                    rememberMe.removeOnPropertyChangedCallback(this)
+                }
+            })
         }
     }
 
