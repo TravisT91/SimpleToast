@@ -286,7 +286,7 @@ class DashboardViewModel : BaseEngageViewModel(), GateKeeperListener {
             val options = ArrayList<ExpandableViewListItem>()
 
             // The order of this logic matters as items are displayed in the order they're added to the list.
-            if (cardPermissionsInfo.isEnableCardPAN && cardPermissionsInfo.isAllowCardPAN) {
+            if (cardPermissionsInfo.isCardPanEnabled && cardPermissionsInfo.isCardPanAllowable) {
                 if (productCardViewModelDelegate.isShowingCardDetails()) {
                     options.add(ExpandableViewListItem.HideCardDetailsItem)
                 } else {
@@ -296,7 +296,7 @@ class DashboardViewModel : BaseEngageViewModel(), GateKeeperListener {
             if (accountPermissionsInfo.isFundingEnabled) {
                 options.add(ExpandableViewListItem.MoveMoneyItem)
             }
-            if (cardPermissionsInfo.isEnableLockCard) {
+            if (cardPermissionsInfo.isCardLockEnabled) {
                 val cardLocked = productCardViewModelDelegate.isLocked()
                 if (cardLocked) {
                     options.add(ExpandableViewListItem.UnlockCardItem)
@@ -304,17 +304,17 @@ class DashboardViewModel : BaseEngageViewModel(), GateKeeperListener {
                     options.add(ExpandableViewListItem.LockCardItem)
                 }
             }
-            if (cardPermissionsInfo.isEnableChangePIN && cardPermissionsInfo.isAllowChangePIN) {
+            if (cardPermissionsInfo.isCardPinChangeEnabled && cardPermissionsInfo.isCardPinChangeAllowable) {
                 options.add(ExpandableViewListItem.ChangeCardPinItem)
             }
-            if (cardPermissionsInfo.isEnableReplaceCard) {
-                options.add(ExpandableViewListItem.ReplaceCardItem(cardPermissionsInfo.isAllowReplaceCard))
+            if (cardPermissionsInfo.isCardReplaceEnabled) {
+                options.add(ExpandableViewListItem.ReplaceCardItem(cardPermissionsInfo.isCardReplaceAllowable))
             }
-            if (cardPermissionsInfo.isEnableLostStolenCard) {
-                options.add(ExpandableViewListItem.ReportLostStolenItem(cardPermissionsInfo.isAllowLostStolenCard))
+            if (cardPermissionsInfo.isCardLostEnabled) {
+                options.add(ExpandableViewListItem.ReportLostStolenItem(cardPermissionsInfo.isCardLostAllowable))
             }
-            if (cardPermissionsInfo.isEnableCancelCard) {
-                options.add(ExpandableViewListItem.CancelCardItem(cardPermissionsInfo.isAllowCancelCard))
+            if (cardPermissionsInfo.isCardCancelEnabled) {
+                options.add(ExpandableViewListItem.CancelCardItem(cardPermissionsInfo.isCardCancelAllowable))
             }
 
             // Now we alter the list based on its size. If the size is four or less, we keep the list as-is.

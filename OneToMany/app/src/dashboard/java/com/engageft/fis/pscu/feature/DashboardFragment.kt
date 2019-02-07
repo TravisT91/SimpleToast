@@ -97,7 +97,7 @@ class DashboardFragment : BaseEngagePageFragment(),
     }
 
     override fun createViewModel(): BaseViewModel? {
-        dashboardViewModel = ViewModelProviders.of(this).get(DashboardViewModel::class.java)
+        dashboardViewModel = ViewModelProviders.of(activity!!).get(DashboardViewModel::class.java)
         return dashboardViewModel
     }
 
@@ -380,7 +380,6 @@ class DashboardFragment : BaseEngagePageFragment(),
     }
 
     private fun initViewModel() {
-        dashboardViewModel = ViewModelProviders.of(activity!!).get(DashboardViewModel::class.java)
         dashboardViewModel.expirationDateFormatString = getString(R.string.MONTH_YEAR_FORMAT)
         dashboardViewModel.productCardViewModelDelegate.cardInfoModelObservable.observe(this, cardModelObserver)
         dashboardViewModel.productCardViewModelDelegate.cardStateObservable.observe(this, cardStateObserver)
