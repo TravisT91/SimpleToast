@@ -384,8 +384,8 @@ class DashboardExpandableView : ConstraintLayout {
 
         if (items.isNotEmpty()) {
             item1.visibility = View.VISIBLE
-            val item1Icon = findViewById<AppCompatImageView>(R.id.item1Icon)
-            val item1Label = findViewById<TextView>(R.id.item1Label)
+            val item1Icon = item1.findViewById<AppCompatImageView>(R.id.itemIcon)
+            val item1Label = item1.findViewById<TextView>(R.id.itemLabel)
             item1Icon.setImageDrawable(getIconForExpandableItem(items[0]))
             item1Label.text = getLabelForExpandableItem(items[0])
             item1.setOnClickListener(getClickListenerForExpandableItem(items[0]))
@@ -395,8 +395,8 @@ class DashboardExpandableView : ConstraintLayout {
 
         if (items.size > 1) {
             item2.visibility = View.VISIBLE
-            val item2Icon = findViewById<AppCompatImageView>(R.id.item2Icon)
-            val item2Label = findViewById<TextView>(R.id.item2Label)
+            val item2Icon = item2.findViewById<AppCompatImageView>(R.id.itemIcon)
+            val item2Label = item2.findViewById<TextView>(R.id.itemLabel)
             item2Icon.setImageDrawable(getIconForExpandableItem(items[1]))
             item2Label.text = getLabelForExpandableItem(items[1])
             item2.setOnClickListener(getClickListenerForExpandableItem(items[1]))
@@ -406,8 +406,8 @@ class DashboardExpandableView : ConstraintLayout {
 
         if (items.size > 2) {
             item3.visibility = View.VISIBLE
-            val item3Icon = findViewById<AppCompatImageView>(R.id.item3Icon)
-            val item3Label = findViewById<TextView>(R.id.item3Label)
+            val item3Icon = item3.findViewById<AppCompatImageView>(R.id.itemIcon)
+            val item3Label = item3.findViewById<TextView>(R.id.itemLabel)
             item3Icon.setImageDrawable(getIconForExpandableItem(items[2]))
             item3Label.text = getLabelForExpandableItem(items[2])
             item3.setOnClickListener(getClickListenerForExpandableItem(items[2]))
@@ -417,8 +417,8 @@ class DashboardExpandableView : ConstraintLayout {
 
         if (items.size > 3) {
             item4.visibility = View.VISIBLE
-            val item4Icon = findViewById<AppCompatImageView>(R.id.item4Icon)
-            val item4Label = findViewById<TextView>(R.id.item4Label)
+            val item4Icon = item4.findViewById<AppCompatImageView>(R.id.itemIcon)
+            val item4Label = item4.findViewById<TextView>(R.id.itemLabel)
             item4Icon.setImageDrawable(getIconForExpandableItem(items[3]))
             item4Label.text = getLabelForExpandableItem(items[3])
             item4.setOnClickListener(getClickListenerForExpandableItem(items[3]))

@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools">
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
@@ -45,117 +44,17 @@
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintEnd_toEndOf="parent">
 
-            <LinearLayout
-                android:id="@+id/item1Layout"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:paddingBottom="8dp"
-                android:paddingTop="8dp"
-                android:background="@drawable/selectable_item_background_structure2"
-                android:visibility="gone">
+            <include layout="@layout/card_view_action_layout"
+                android:id="@+id/item1Layout"/>
 
-                <androidx.appcompat.widget.AppCompatImageView
-                    android:id="@+id/item1Icon"
-                    android:layout_width="@dimen/dashboard_action_item_icon_width"
-                    android:layout_height="@dimen/dashboard_action_item_icon_height"
-                    android:scaleType="center"
-                    android:layout_marginEnd="8dp"
-                    app:srcCompat="@drawable/ic_dashboard_card_details_show"/>
+            <include layout="@layout/card_view_action_layout"
+                android:id="@+id/item2Layout"/>
 
-                <TextView
-                    android:id="@+id/item1Label"
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    style="@style/DashboardCardItemTextView"
-                    android:text="@string/OVERVIEW_SHOW_CARD_DETAILS"
-                    android:gravity="center_vertical"/>
+            <include layout="@layout/card_view_action_layout"
+                android:id="@+id/item3Layout"/>
 
-            </LinearLayout>
-
-            <LinearLayout
-                android:id="@+id/item2Layout"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:paddingBottom="8dp"
-                android:paddingTop="8dp"
-                android:background="@drawable/selectable_item_background_structure2"
-                android:visibility="gone">
-
-                <androidx.appcompat.widget.AppCompatImageView
-                    android:id="@+id/item2Icon"
-                    android:layout_width="@dimen/dashboard_action_item_icon_width"
-                    android:layout_height="@dimen/dashboard_action_item_icon_height"
-                    android:scaleType="center"
-                    android:layout_marginEnd="8dp"
-                    app:srcCompat="@drawable/ic_dashboard_move_money"/>
-
-                <TextView
-                    android:id="@+id/item2Label"
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    style="@style/DashboardCardItemTextView"
-                    android:text="@string/OVERVIEW_MOVE_MONEY"
-                    android:gravity="center_vertical"/>
-
-            </LinearLayout>
-
-            <LinearLayout
-                android:id="@+id/item3Layout"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:paddingBottom="8dp"
-                android:paddingTop="8dp"
-                android:background="@drawable/selectable_item_background_structure2"
-                android:visibility="gone">
-
-                <androidx.appcompat.widget.AppCompatImageView
-                    android:id="@+id/item3Icon"
-                    android:layout_width="@dimen/dashboard_action_item_icon_width"
-                    android:layout_height="@dimen/dashboard_action_item_icon_height"
-                    android:scaleType="center"
-                    android:layout_marginEnd="8dp"
-                    app:srcCompat="@drawable/ic_dashboard_card_lock"/>
-
-                <TextView
-                    android:id="@+id/item3Label"
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    style="@style/DashboardCardItemTextView"
-                    tools:text="@string/OVERVIEW_LOCK_MY_CARD"
-                    android:gravity="center_vertical"/>
-
-            </LinearLayout>
-
-            <LinearLayout
-                android:id="@+id/item4Layout"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:paddingBottom="8dp"
-                android:paddingTop="8dp"
-                android:background="@drawable/selectable_item_background_structure2"
-                android:visibility="gone">
-
-                <androidx.appcompat.widget.AppCompatImageView
-                    android:layout_width="@dimen/dashboard_action_item_icon_width"
-                    android:layout_height="@dimen/dashboard_action_item_icon_height"
-                    android:scaleType="center"
-                    android:id="@+id/item4Icon"
-                    android:layout_marginEnd="8dp"
-                    app:srcCompat="@drawable/ic_dashboard_more_options"/>
-
-                <TextView
-                    android:id="@+id/item4Label"
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    style="@style/DashboardCardItemTextView"
-                    android:text="@string/OVERVIEW_MORE_OPTIONS"
-                    android:gravity="center_vertical"/>
-
-            </LinearLayout>
+            <include layout="@layout/card_view_action_layout"
+                android:id="@+id/item4Layout"/>
 
         </LinearLayout>
 
