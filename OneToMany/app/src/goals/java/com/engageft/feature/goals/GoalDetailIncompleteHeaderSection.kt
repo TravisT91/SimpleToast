@@ -27,13 +27,13 @@ class GoalDetailIncompleteHeaderSection(private val context: Context,
                 circularProgressBarWithTexts.setInnerTopText(StringUtils.formatCurrencyStringFractionDigitsReducedHeight(
                         amount = fundAmount.toFloat(),
                         fractionDigitsPercentHeight = .5f,
-                        showZeroDigits = false
+                        showZeroDigits = true
                 ))
 
                 circularProgressBarWithTexts.setProgress(progress)
 
                 val goalAmountFormatted = String.format(context.getString(R.string.GOAL_DETAIL_GOAL_AMOUNT_FORMAT),
-                        StringUtils.formatCurrencyString(goalAmount.toFloat(), true))
+                        StringUtils.formatCurrencyStringWithFractionDigits(goalAmount.toFloat(), true))
                 circularProgressBarWithTexts.setInnerBottomText(goalAmountFormatted)
 
                 if (isPaused) {

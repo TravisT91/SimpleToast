@@ -58,7 +58,7 @@ class GoalDetailFragment: BaseEngagePageFragment() {
             viewModel = viewModel
             palette = Palette
 
-            viewModelGoalDetail.refreshGoalDetail(useCache = true)
+            viewModelGoalDetail.initGoalData(useCache = true)
 
             sectionedAdapter = SectionedRecyclerViewAdapter()
             recyclerView.adapter = sectionedAdapter

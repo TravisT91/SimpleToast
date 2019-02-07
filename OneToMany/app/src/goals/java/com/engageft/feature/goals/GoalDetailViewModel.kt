@@ -38,11 +38,11 @@ class GoalDetailViewModel(var goalId: Long): GoalDeleteViewModel() {
         onTransferAndDelete(goalId)
     }
 
-    fun refreshGoalDetail(useCache: Boolean) {
+    fun initGoalData(useCache: Boolean) {
         showProgressOverlayDelayed()
         compositeDisposable.add(EngageService.getInstance().loginResponseAsObservable
                 .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
+                .observeOn(Schedulers.computation())
                 .subscribe({ response ->
                     if (response is LoginResponse) {
                         initGoal(LoginResponseUtils.getCurrentCard(response), useCache)
@@ -96,7 +96,7 @@ class GoalDetailViewModel(var goalId: Long): GoalDeleteViewModel() {
                         .observeOn(AndroidSchedulers.mainThread())
                         .subscribe({ response ->
                             if (response.isSuccess) {
-                                refreshGoalDetail(false)
+                                initGoalData(useCache = false)
                             } else {
                                 dismissProgressOverlay()
                                 goalRecurringTransferObservable.value = RecurringTransferStatus.PAUSE_RESUME_FAILURE
@@ -128,7 +128,6 @@ class GoalDetailViewModel(var goalId: Long): GoalDeleteViewModel() {
                         errorState = GoalDetailState.ErrorState.ERROR
                     }
                 }
-
             }
 
             val recurrenceType : GoalDetailState.GoalIncompleteHeaderItem.PayPlanType = when (goalInfo.payPlan.recurrenceType) {
