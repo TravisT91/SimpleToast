@@ -65,10 +65,12 @@ class GoalsListSection(private val context: Context,
                 // check if the goal's end date has passed
                 if (!goalModel.goalInfo.isAchieved && goalModel.goalInfo.estimatedCompleteDate.isNotBlank()) {
                     val estimatedCompletionDate = BackendDateTimeUtils.getDateTimeForYMDString(goalModel.goalInfo.estimatedCompleteDate)
-                    if (estimatedCompletionDate.isBeforeNow) {
-                        circularTrackingPanel.setTopRightTextColor(Palette.errorColor)
-                        circularTrackingPanel.setProgressColor(ContextCompat.getColor(context, R.color.goalErrorProgressColor))
-                        circularTrackingPanel.showDrawableWithinProgressBar(ContextCompat.getDrawable(context, R.drawable.ic_goal_error)!!)
+                    estimatedCompletionDate?.let { date ->
+                        if (date.isBeforeNow) {
+                            circularTrackingPanel.setTopRightTextColor(Palette.errorColor)
+                            circularTrackingPanel.setProgressColor(ContextCompat.getColor(context, R.color.goalErrorProgressColor))
+                            circularTrackingPanel.showDrawableWithinProgressBar(ContextCompat.getDrawable(context, R.drawable.ic_goal_error)!!)
+                        }
                     }
                 }
             }

@@ -48,7 +48,7 @@
     <string name="GOAL_DELETE_BUTTON">Transfer &amp; delete</string>
     <string name="GOAL_DELETE_CANCEL">Cancel</string>
     <string name="GOAL_DELETE_ALERT_TITLE_FORMAT">Delete %s?</string>
-    <string name="GOAL_DELETE_ALERT_MESSAGE_FORMAT">Are you sure that you want to delete this goal?</string>
+    <string name="GOAL_DELETE_ALERT_MESSAGE_FORMAT">Are you sure you want to delete this goal?</string>
     <string name="GOAL_PAUSE_ALERT_TITLE">Continue?</string>
     <string name="GOAL_PAUSE_ALERT_MESSAGE_FORMAT">Are you sure you want to %s contributions to this goal?</string>
     <string name="GOAL_PAUSE">pause</string>
