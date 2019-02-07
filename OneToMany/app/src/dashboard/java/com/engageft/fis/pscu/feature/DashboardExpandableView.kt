@@ -8,13 +8,12 @@ import android.os.Parcelable
 import android.util.AttributeSet
 import android.view.LayoutInflater
 import android.view.View
+import android.view.View.OnClickListener
 import android.view.ViewGroup
 import android.view.animation.AccelerateDecelerateInterpolator
 import android.view.animation.AccelerateInterpolator
 import android.view.animation.AlphaAnimation
-import android.widget.LinearLayout
 import android.widget.TextView
-import androidx.annotation.StringRes
 import androidx.appcompat.widget.AppCompatImageButton
 import androidx.appcompat.widget.AppCompatImageView
 import androidx.constraintlayout.widget.ConstraintLayout
@@ -372,58 +371,23 @@ class DashboardExpandableView : ConstraintLayout {
     }
 
     fun setExpandableListItems(items: List<ExpandableViewListItem>) {
-        val item1 = findViewById<LinearLayout>(R.id.item1Layout)
-        val item2 = findViewById<LinearLayout>(R.id.item2Layout)
-        val item3 = findViewById<LinearLayout>(R.id.item3Layout)
-        val item4 = findViewById<LinearLayout>(R.id.item4Layout)
+        (actionsView as? ViewGroup)?.let { parentLayout ->
+            parentLayout.removeAllViews()
 
-        item1.visibility = if (items.isNotEmpty()) View.VISIBLE else View.GONE
-        item2.visibility = if (items.size > 1) View.VISIBLE else View.GONE
-        item3.visibility = if (items.size > 2) View.VISIBLE else View.GONE
-        item4.visibility = if (items.size > 3) View.VISIBLE else View.GONE
+            if (items.isNotEmpty()) {
+                val layoutInflater = LayoutInflater.from(context)
+                for (i in 0 until items.size) {
+                    val itemLayout = layoutInflater.inflate(R.layout.card_view_action_layout, parentLayout, false)
 
-        if (items.isNotEmpty()) {
-            item1.visibility = View.VISIBLE
-            val item1Icon = item1.findViewById<AppCompatImageView>(R.id.itemIcon)
-            val item1Label = item1.findViewById<TextView>(R.id.itemLabel)
-            item1Icon.setImageDrawable(getIconForExpandableItem(items[0]))
-            item1Label.text = getLabelForExpandableItem(items[0])
-            item1.setOnClickListener(getClickListenerForExpandableItem(items[0]))
-        } else {
-            item1.visibility = View.GONE
-        }
+                    val itemIcon = itemLayout.findViewById<AppCompatImageView>(R.id.itemIcon)
+                    itemIcon.setImageDrawable(getIconForExpandableItem(items[i]))
+                    val itemLabel = itemLayout.findViewById<TextView>(R.id.itemLabel)
+                    itemLabel.text = getLabelForExpandableItem(items[i])
+                    itemLayout.setOnClickListener(getClickListenerForExpandableItem(items[i]))
 
-        if (items.size > 1) {
-            item2.visibility = View.VISIBLE
-            val item2Icon = item2.findViewById<AppCompatImageView>(R.id.itemIcon)
-            val item2Label = item2.findViewById<TextView>(R.id.itemLabel)
-            item2Icon.setImageDrawable(getIconForExpandableItem(items[1]))
-            item2Label.text = getLabelForExpandableItem(items[1])
-            item2.setOnClickListener(getClickListenerForExpandableItem(items[1]))
-        } else {
-            item2.visibility = View.GONE
-        }
-
-        if (items.size > 2) {
-            item3.visibility = View.VISIBLE
-            val item3Icon = item3.findViewById<AppCompatImageView>(R.id.itemIcon)
-            val item3Label = item3.findViewById<TextView>(R.id.itemLabel)
-            item3Icon.setImageDrawable(getIconForExpandableItem(items[2]))
-            item3Label.text = getLabelForExpandableItem(items[2])
-            item3.setOnClickListener(getClickListenerForExpandableItem(items[2]))
-        } else {
-            item3.visibility = View.GONE
-        }
-
-        if (items.size > 3) {
-            item4.visibility = View.VISIBLE
-            val item4Icon = item4.findViewById<AppCompatImageView>(R.id.itemIcon)
-            val item4Label = item4.findViewById<TextView>(R.id.itemLabel)
-            item4Icon.setImageDrawable(getIconForExpandableItem(items[3]))
-            item4Label.text = getLabelForExpandableItem(items[3])
-            item4.setOnClickListener(getClickListenerForExpandableItem(items[3]))
-        } else {
-            item4.visibility = View.GONE
+                    parentLayout.addView(itemLayout)
+                }
+            }
         }
     }
 

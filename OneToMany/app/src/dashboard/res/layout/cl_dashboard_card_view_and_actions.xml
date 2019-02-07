@@ -32,6 +32,7 @@
             app:cardValidMask="@string/PRODUCTCARDVIEW_CARD_VALID_MASK"
             android:elevation="8dp"/>
 
+        <!-- card action layout rows are added to this layout dynamically -->
         <LinearLayout
             android:id="@+id/layout_card_actions"
             android:layout_width="@dimen/dashboard_action_list_width"
@@ -42,21 +43,7 @@
             android:paddingEnd="16dp"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintEnd_toEndOf="parent">
-
-            <include layout="@layout/card_view_action_layout"
-                android:id="@+id/item1Layout"/>
-
-            <include layout="@layout/card_view_action_layout"
-                android:id="@+id/item2Layout"/>
-
-            <include layout="@layout/card_view_action_layout"
-                android:id="@+id/item3Layout"/>
-
-            <include layout="@layout/card_view_action_layout"
-                android:id="@+id/item4Layout"/>
-
-        </LinearLayout>
+            app:layout_constraintEnd_toEndOf="parent"/>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>
