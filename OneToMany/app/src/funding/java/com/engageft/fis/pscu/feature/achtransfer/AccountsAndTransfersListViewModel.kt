@@ -180,7 +180,7 @@ class AccountsAndTransfersListViewModel: BaseEngageViewModel() {
 
     fun isAllowedToAddAccount(): Boolean {
         accountInfo?.let { currentAccountInfo ->
-            return currentAccountInfo.accountPermissionsInfo.isAllowAddAchAccount
+            return currentAccountInfo.accountPermissionsInfo.isFundingAddAchAllowable
         }
         return false
     }

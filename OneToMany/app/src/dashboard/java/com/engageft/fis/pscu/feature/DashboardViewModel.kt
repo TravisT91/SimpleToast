@@ -73,7 +73,7 @@ class DashboardViewModel : BaseEngageViewModel(), GateKeeperListener {
 
     // Balances
     fun clearAndRefreshBalancesAndNotifications() {
-        progressOverlayShownObservable.value = true
+        showProgressOverlayDelayed()
         EngageService.getInstance().clearLoginAndDashboardResponses()
         refreshBalancesAndNotifications()
     }
@@ -90,6 +90,8 @@ class DashboardViewModel : BaseEngageViewModel(), GateKeeperListener {
                         .observeOn(AndroidSchedulers.mainThread())
                         .subscribe({ response ->
                             if (response.isSuccess && response is LoginResponse) {
+                                var savingsBalanceEnabled = false
+
                                 val debitCardInfo = LoginResponseUtils.getCurrentCard(response)
                                 debitCardInfo?.apply {
                                     try {
@@ -99,6 +101,8 @@ class DashboardViewModel : BaseEngageViewModel(), GateKeeperListener {
                                         spendingBalanceObservable.value = BigDecimal.ZERO
                                         spendingBalanceStateObservable.value = DashboardBalanceState.ERROR
                                     }
+
+                                    savingsBalanceEnabled = cardPermissionsInfo.isSetAsideBalanceEnabled
 
                                     // Find the BrandingCard that matches the current card type. This could be null
                                     // and null is handled in the view.
@@ -111,14 +115,18 @@ class DashboardViewModel : BaseEngageViewModel(), GateKeeperListener {
                                     spendingBalanceStateObservable.value = DashboardBalanceState.ERROR
                                 }
 
-                                try { // TODO(kurt): hide savings entirely if no goals/savings (criteria for hiding TBD -- see FOTM-230)
-                                    val goalAmount = BigDecimal(response.goalsContributed)
-                                    val savingsAmount = BigDecimal(response.savingsContributed)
-                                    savingsBalanceObservable.value = goalAmount.plus(savingsAmount)
-                                    savingsBalanceStateObservable.value = DashboardBalanceState.AVAILABLE
-                                } catch (e: Throwable) {
-                                    savingsBalanceObservable.value = BigDecimal.ZERO
-                                    savingsBalanceStateObservable.value = DashboardBalanceState.ERROR
+                                if (savingsBalanceEnabled) {
+                                    try {
+                                        val goalAmount = BigDecimal(response.goalsContributed)
+                                        val savingsAmount = BigDecimal(response.savingsContributed)
+                                        savingsBalanceObservable.value = goalAmount.plus(savingsAmount)
+                                        savingsBalanceStateObservable.value = DashboardBalanceState.AVAILABLE
+                                    } catch (e: Throwable) {
+                                        savingsBalanceObservable.value = BigDecimal.ZERO
+                                        savingsBalanceStateObservable.value = DashboardBalanceState.ERROR
+                                    }
+                                } else {
+                                    savingsBalanceStateObservable.value = DashboardBalanceState.HIDDEN
                                 }
 
                                 updateNotifications(response)
