@@ -116,4 +116,16 @@
     <string name="secondary_users_splash_title_substring">secondary</string>
     <string name="secondary_users_splash_message">The number of accounts you may add is based on your card type.</string>
     <string name="secondary_users_splash_button_add">Add account</string>
+
+    <string name="secondary_users_add_header">Please provide the secondary account holder\'s information below.</string>
+    <string name="secondary_users_add_first_name_label">First name</string>
+    <string name="secondary_users_add_last_name_label">Last name</string>
+    <string name="secondary_users_add_phone_number_label">Phone number</string>
+    <string name="secondary_users_add_dob_label">Date of birth</string>
+    <string name="secondary_users_add_ssn_label">Social security number</string>
+    <string name="secondary_users_add_button_text">Add</string>
+    <string name="secondary_users_add_error_phone_not_ten">@string/PROFILE_INPUT_ERROR_PHONE_NOT_TEN</string>
+    <string name="secondary_users_add_error_dob_under_13">@string/ENROLLMENT_CARD_DOB_UNDER_13</string>
+    <string name="secondary_users_add_error_dob_invalid">@string/ENROLLMENT_CARD_DOB_INVALID</string>
+    <string name="secondary_users_add_error_ssn_invalid">@string/ENROLLMENT_VERIFY_IDENTITY_ERROR_MESSAGE</string>
 </resources>

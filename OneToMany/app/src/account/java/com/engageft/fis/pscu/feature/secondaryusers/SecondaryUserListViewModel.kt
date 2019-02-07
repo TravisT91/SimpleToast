@@ -92,10 +92,6 @@ class SecondaryUserListViewModel: BaseEngageViewModel() {
         )
     }
 
-    fun onAddSecondaryClicked() {
-        // TODO(jhutchins): FOTM-694
-    }
-
     private fun getCardTitleText(debitCardInfo: DebitCardInfo): String {
         val brandingCard = BrandingInfoRepo.cards?.find { card ->
             card.type == debitCardInfo.cardType
