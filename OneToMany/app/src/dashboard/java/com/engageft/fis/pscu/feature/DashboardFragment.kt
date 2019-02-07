@@ -270,9 +270,6 @@ class DashboardFragment : BaseEngagePageFragment(),
     private fun updateSavingsBalance(savingsBalance: BigDecimal?) {
         savingsBalance?.let {
             transactionsAdapter.savingsBalanceAmount = StringUtils.formatCurrencyStringFractionDigitsReducedHeight(savingsBalance.toFloat(), 0.5f, true)
-            transactionsAdapter.setSavingsBalanceVisibility(visible = true)
-        } ?: run {
-            transactionsAdapter.setSavingsBalanceVisibility(visible = false)
         }
     }
 
