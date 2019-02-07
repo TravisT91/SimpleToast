@@ -17,7 +17,7 @@ import com.engageft.apptoolbox.view.InformationDialogFragment
 import com.engageft.fis.pscu.R
 import com.engageft.fis.pscu.databinding.FragmentGoalDetailBinding
 import com.engageft.fis.pscu.feature.BaseEngagePageFragment
-import com.engageft.fis.pscu.feature.ToggleableLabelSection
+import com.engageft.fis.pscu.feature.recyclerview.toggleablelabel.ToggleableLabelSection
 import com.engageft.fis.pscu.feature.adapter.ErrorStateSection
 import com.engageft.fis.pscu.feature.branding.Palette
 import com.engageft.fis.pscu.feature.infoDialogYesNoNewInstance
@@ -129,7 +129,7 @@ class GoalDetailFragment: BaseEngagePageFragment() {
                     }
                     is GoalDetailState.GoalPauseItem -> {
                         val goalPaused = if (goalDetailState.errorState == GoalDetailState.ErrorState.ERROR) false else goalDetailState.isGoalPaused
-                        addSection(ToggleableLabelSection(context!!, listOf(ToggleableLabelSection.LabelItem(
+                        addSection(ToggleableLabelSection(listOf(ToggleableLabelSection.LabelItem(
                                 labelText = getString(R.string.GOAL_DETAIL_RECURRING_TRANSFER),
                                 isChecked = !goalPaused,
                                 disableSection = goalDetailState.errorState == GoalDetailState.ErrorState.ERROR)),
