@@ -108,7 +108,6 @@ class LoginViewModel : BaseEngageViewModel(), GateKeeperListener {
                 //showFingerprintAuthIfEnrolled()
             }
         })
-        Log.e("Joey", "isFirstUse? ${AuthenticationSharedPreferencesRepo.isFirstUse()}" )
         if (AuthenticationSharedPreferencesRepo.isFirstUse()) {
             // firstUse flag tracks either the user logging in successfully at least once OR the user
             // explicitly toggling the box off. In either case, we don't set the initial state of this switch
