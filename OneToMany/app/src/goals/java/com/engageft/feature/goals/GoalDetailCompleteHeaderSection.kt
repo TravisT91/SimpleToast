@@ -4,7 +4,6 @@ import android.content.Context
 import android.view.View
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
-import com.engageft.apptoolbox.view.CircularProgressBarWithTexts
 import com.engageft.apptoolbox.view.PillButton
 import com.engageft.fis.pscu.R
 import io.github.luizgrp.sectionedrecyclerviewadapter.SectionParameters

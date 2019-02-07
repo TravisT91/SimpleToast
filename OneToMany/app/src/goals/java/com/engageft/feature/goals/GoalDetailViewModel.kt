@@ -123,9 +123,12 @@ class GoalDetailViewModel(var goalId: Long): GoalDeleteViewModel() {
             // check if goal is in Error state
             if (goalInfo.payPlan.isPaused && goalInfo.estimatedCompleteDate.isNotBlank()) {
                 val estimatedCompletionDate = BackendDateTimeUtils.getDateTimeForYMDString(goalInfo.estimatedCompleteDate)
-                if (estimatedCompletionDate.isBeforeNow) {
-                    errorState = GoalDetailState.ErrorState.ERROR
+                estimatedCompletionDate?.let { date ->
+                    if (date.isBeforeNow) {
+                        errorState = GoalDetailState.ErrorState.ERROR
+                    }
                 }
+
             }
 
             val recurrenceType : GoalDetailState.GoalIncompleteHeaderItem.PayPlanType = when (goalInfo.payPlan.recurrenceType) {

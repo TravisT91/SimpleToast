@@ -8,12 +8,12 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
-    <com.engageft.apptoolbox.view.CircularProgressBarWithTexts
+    <com.engageft.feature.goals.CircularProgressBarWithTexts
         style="@style/LotusCircularProgressBarWithTexts"
         android:id="@+id/circularProgressBarWithTexts"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content">
-    </com.engageft.apptoolbox.view.CircularProgressBarWithTexts>
+    </com.engageft.feature.goals.CircularProgressBarWithTexts>
 
     <com.engageft.apptoolbox.view.PillButton
         style="@style/ButtonPillPrimaryFilledDefault"

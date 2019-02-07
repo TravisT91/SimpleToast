@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <declare-styleable name="CircularProgressBarWithTexts">
+        <!-- progressbar -->
+        <attr name="progressBarProgressColor"/>
+        <attr name="progressBarBackgroundColor"/>
+        <attr name="progress"/>
+        <attr name="progressDrawables"/>
+        <!-- text -->
+        <attr name="innerTopText" format="string"/>
+        <attr name="innerBottomText" format="string"/>
+        <attr name="outerBottomText" format="string" />
+        <!-- textStyle -->
+        <attr name="innerTopTextStyle"/>
+        <attr name="innerBottomTextStyle"/>
+        <attr name="outerBottomTextStyle"/>
+        <!-- textColors -->
+        <attr name="innerTopTextColor" format="reference"/>
+        <attr name="innerBottomTextColor" format="reference"/>
+        <attr name="outerBottomTextColor" format="reference" />
+    </declare-styleable>
+</resources>
