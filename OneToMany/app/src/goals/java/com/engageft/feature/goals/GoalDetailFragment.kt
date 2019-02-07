@@ -14,6 +14,7 @@ import com.engageft.apptoolbox.adapter.HorizontalRuleSection
 import com.engageft.apptoolbox.adapter.HorizontalRuleSectionIndentStart
 import com.engageft.apptoolbox.adapter.SelectableLabelsSection
 import com.engageft.apptoolbox.view.InformationDialogFragment
+import com.engageft.feature.budgets.extension.isZero
 import com.engageft.fis.pscu.R
 import com.engageft.fis.pscu.databinding.FragmentGoalDetailBinding
 import com.engageft.fis.pscu.feature.BaseEngagePageFragment
@@ -53,11 +54,11 @@ class GoalDetailFragment: BaseEngagePageFragment() {
             viewModel = viewModel
             palette = Palette
 
-            viewModelGoalDetail.refreshGoalDetail(true)
+            viewModelGoalDetail.refreshGoalDetail(useCache = true)
 
             sectionedAdapter = SectionedRecyclerViewAdapter()
             recyclerView.adapter = sectionedAdapter
-            recyclerView.layoutManager = LinearLayoutManager(context!!)
+            recyclerView.layoutManager = LinearLayoutManager(context)
 
             viewModelGoalDetail.apply {
                 goalDetailStatesListObservable.observe(viewLifecycleOwner, Observer {
@@ -202,7 +203,7 @@ class GoalDetailFragment: BaseEngagePageFragment() {
     }
 
     private fun onDeleteGoal() {
-        if (viewModelGoalDetail.fundAmount.compareTo(BigDecimal.ZERO) == 0) {
+        if (viewModelGoalDetail.fundAmount.isZero()) {
             val title = String.format(getString(R.string.GOAL_DELETE_ALERT_TITLE_FORMAT),
                     viewModelGoalDetail.goalName.capitalize())
             fragmentDelegate.showDialog(infoDialogYesNoNewInstance(

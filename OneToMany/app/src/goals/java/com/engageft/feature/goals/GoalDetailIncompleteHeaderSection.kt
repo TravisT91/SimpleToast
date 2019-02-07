@@ -11,7 +11,6 @@ import io.github.luizgrp.sectionedrecyclerviewadapter.SectionParameters
 import io.github.luizgrp.sectionedrecyclerviewadapter.StatelessSection
 import utilGen1.DisplayDateTimeUtils
 import utilGen1.StringUtils
-import java.math.BigDecimal
 
 class GoalDetailIncompleteHeaderSection(private val context: Context,
                                         private val goalIncompleteHeaderModel: GoalDetailState.GoalIncompleteHeaderItem.GoalIncompleteHeaderModel)
@@ -26,11 +25,10 @@ class GoalDetailIncompleteHeaderSection(private val context: Context,
 
             goalIncompleteHeaderModel.apply {
 
-                val showZeros = fundAmount.compareTo(BigDecimal.ZERO) != 0
                 circularProgressBarWithTexts.setInnerTopText(StringUtils.formatCurrencyStringFractionDigitsReducedHeight(
                         amount = fundAmount.toFloat(),
                         fractionDigitsPercentHeight = .5f,
-                        showZeroDigits = showZeros
+                        showZeroDigits = false
                 ))
 
                 circularProgressBarWithTexts.setProgress(progress)
