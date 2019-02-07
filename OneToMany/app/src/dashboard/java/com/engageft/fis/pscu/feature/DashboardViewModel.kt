@@ -62,15 +62,13 @@ class DashboardViewModel : BaseEngageViewModel(), GateKeeperListener {
 
     val brandingCardObservable: MutableLiveData<BrandingCard> = MutableLiveData()
 
-    val expandableOptionsItems = MutableLiveData<List<ExpandableViewListItem>>()
+    val expandableOptionsItems = MutableLiveData<List<ExpandableViewListItem>>().apply {
+        value = listOf()
+    }
 
     private val dashboardGateKeeper = DashboardGateKeeper(compositeDisposable, this)
 
     private lateinit var debitCardInfo: DebitCardInfo
-
-    init {
-        expandableOptionsItems.value = ArrayList()
-    }
 
     // ProductCardView
     fun initCardView() {
