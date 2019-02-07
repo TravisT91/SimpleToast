@@ -13,11 +13,7 @@ import io.reactivex.schedulers.Schedulers
 
 open class GoalDeleteViewModel: BaseEngageViewModel() {
 
-    enum class DeleteStatus {
-        SUCCESS
-    }
-
-    val deleteStatusObservable = SingleLiveEvent<DeleteStatus>()
+    val deleteStatusObservable = SingleLiveEvent<Unit>()
 
     fun onTransferAndDelete(goalId: Long) {
         showProgressOverlayImmediate()
@@ -71,12 +67,12 @@ open class GoalDeleteViewModel: BaseEngageViewModel() {
                     } else {
                         dismissProgressOverlay()
                         // notify observer of success even if refresh failed
-                        deleteStatusObservable.value = DeleteStatus.SUCCESS
+                        deleteStatusObservable.call()
                     }
                 }, {
                     dismissProgressOverlay()
                     // notify observer of success even if refresh failed
-                    deleteStatusObservable.value = DeleteStatus.SUCCESS
+                    deleteStatusObservable.call()
                 })
         )
     }
@@ -89,11 +85,11 @@ open class GoalDeleteViewModel: BaseEngageViewModel() {
                         .subscribe({
                             dismissProgressOverlay()
                             // notify observer of success even if refresh failed
-                            deleteStatusObservable.value = DeleteStatus.SUCCESS
+                            deleteStatusObservable.call()
                         }, {
                             dismissProgressOverlay()
                             // notify observer of success even if refresh failed
-                            deleteStatusObservable.value = DeleteStatus.SUCCESS
+                            deleteStatusObservable.call()
                         })
         )
     }
