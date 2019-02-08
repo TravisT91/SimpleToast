@@ -11,7 +11,6 @@ import androidx.navigation.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.engageft.apptoolbox.BaseViewModel
 import com.engageft.apptoolbox.adapter.HorizontalRuleSection
-import com.engageft.apptoolbox.adapter.HorizontalRuleSectionIndentStart
 import com.engageft.apptoolbox.adapter.SelectableLabelsSection
 import com.engageft.apptoolbox.view.InformationDialogFragment
 import com.engageft.feature.budgets.extension.isZero
@@ -125,7 +124,7 @@ class GoalDetailFragment: BaseEngagePageFragment() {
                                     }
                                 }).addLabel(TRANSFER_LABEL_ID, getString(R.string.GOAL_DETAIL_TRANSFER)))
 
-                        addSection(HorizontalRuleSectionIndentStart())
+                        addSection(HorizontalRuleSection(layoutResId = R.layout.goals_horizontal_divider_indent_start))
                     }
                     is GoalDetailState.GoalPauseItem -> {
                         val goalPaused = if (goalDetailState.errorState == GoalDetailState.ErrorState.ERROR) false else goalDetailState.isGoalPaused
@@ -140,7 +139,7 @@ class GoalDetailFragment: BaseEngagePageFragment() {
                                     }
                                 }))
 
-                        addSection(HorizontalRuleSectionIndentStart())
+                        addSection(HorizontalRuleSection(layoutResId = R.layout.goals_horizontal_divider_indent_start))
                     }
                     is GoalDetailState.EditItem -> {
                         addSection(SelectableLabelsSection(
@@ -154,7 +153,7 @@ class GoalDetailFragment: BaseEngagePageFragment() {
 
                                 })
                                 .addLabel(EDIT_LABEL_ID, getString(R.string.GOAL_DETAIL_EDIT)))
-                        addSection(HorizontalRuleSectionIndentStart())
+                        addSection(HorizontalRuleSection(layoutResId = R.layout.goals_horizontal_divider_indent_start))
                     }
                     is GoalDetailState.DeleteItem -> {
                         addSection(SelectableLabelsSection(
