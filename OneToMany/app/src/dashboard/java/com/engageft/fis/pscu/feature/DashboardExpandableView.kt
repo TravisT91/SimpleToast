@@ -2,19 +2,22 @@ package com.engageft.fis.pscu.feature
 
 import android.animation.ValueAnimator
 import android.content.Context
+import android.graphics.drawable.Drawable
 import android.os.Parcel
 import android.os.Parcelable
 import android.util.AttributeSet
 import android.view.LayoutInflater
 import android.view.View
+import android.view.View.OnClickListener
 import android.view.ViewGroup
 import android.view.animation.AccelerateDecelerateInterpolator
 import android.view.animation.AccelerateInterpolator
 import android.view.animation.AlphaAnimation
-import android.widget.ImageView
 import android.widget.TextView
 import androidx.appcompat.widget.AppCompatImageButton
+import androidx.appcompat.widget.AppCompatImageView
 import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.core.content.ContextCompat
 import com.engageft.apptoolbox.BaseActivity
 import com.engageft.apptoolbox.view.ListBottomSheetDialogFragment
 import com.engageft.apptoolbox.view.ProductCardView
@@ -39,10 +42,6 @@ class DashboardExpandableView : ConstraintLayout {
     private lateinit var expandCollapseButton: AppCompatImageButton
     private lateinit var transparentBarBelowCardView: View
     private lateinit var shadowAboveTransparentBar: View
-    lateinit var overviewShowHideCardDetailsIcon: ImageView
-    lateinit var overviewShowHideCardDetailsLabel: TextView
-    lateinit var overviewLockUnlockCardIcon: ImageView
-    lateinit var overviewLockUnlockCardLabel: TextView
 
     var showingActions = false
         private set
@@ -149,46 +148,6 @@ class DashboardExpandableView : ConstraintLayout {
         expandCollapseButton = findViewById(R.id.btn_disclose_hide_card_actions)
         transparentBarBelowCardView = findViewById(R.id.view_bar_under_button_bottom_half)
         shadowAboveTransparentBar = findViewById(R.id.view_shadow_under_button_top_half)
-        overviewShowHideCardDetailsIcon = findViewById(R.id.overviewShowHideCardDetailsIcon)
-        overviewShowHideCardDetailsLabel = findViewById(R.id.overviewShowHideCardDetailsLabel)
-        overviewLockUnlockCardIcon = findViewById(R.id.overviewLockUnlockCardIcon)
-        overviewLockUnlockCardLabel = findViewById(R.id.overviewLockUnlockCardLabel)
-
-        findViewById<ViewGroup>(R.id.overviewShowHideCardDetailsLayout).apply {
-            if (DashboardConfig.CARD_MANAGEMENT_SHOW_CARD_DETAILS_ENABLED) {
-                setOnClickListener {
-                    listener?.onShowHideCardDetails()
-                }
-            } else {
-                visibility = View.GONE
-            }
-        }
-
-        findViewById<ViewGroup>(R.id.overviewMoveMoneyLayout).apply {
-            if (DashboardConfig.CARD_MANAGEMENT_MOVE_MONEY_ENABLED) {
-                setOnClickListener {
-                    listener?.onMoveMoney()
-                }
-            } else {
-                visibility = View.GONE
-            }
-        }
-
-        findViewById<ViewGroup>(R.id.overviewLockUnlockCardLayout).apply {
-            if (DashboardConfig.CARD_MANAGEMENT_LOCK_MY_CARD_ENABLED) {
-                setOnClickListener {
-                    listener?.onLockUnlockCard()
-                }
-            } else {
-                visibility = View.GONE
-            }
-        }
-
-        findViewById<ViewGroup>(R.id.overviewMoreOptionsLayout).apply {
-            setOnClickListener {
-                showMoreOptionsBottomNav()
-            }
-        }
 
         expandCollapseButton.setOnClickListener {
             showActions(!showingActions)
@@ -204,28 +163,17 @@ class DashboardExpandableView : ConstraintLayout {
         buttonRotationAnimationDurationMs = resources.getInteger(R.integer.dashboard_button_rotation_duration_ms).toLong()
     }
 
-    private fun showMoreOptionsBottomNav() {
-        val changeCardPinOption = context.getString(R.string.OVERVIEW_CHANGE_CARD_PIN)
-        val replaceCardOption = context.getString(R.string.OVERVIEW_REPLACE_CARD)
-        val reportLostStolenOption = context.getString(R.string.OVERVIEW_REPORT_LOST_STOLEN)
-        val cancelCardOption = context.getString(R.string.OVERVIEW_CANCEL_CARD)
-        val stringOptions = ArrayList<String>().apply {
-            add(changeCardPinOption)
-            add(replaceCardOption)
-            add(reportLostStolenOption)
-            add(cancelCardOption)
+    private fun showMoreOptionsBottomNav(items: List<ExpandableViewListItem>) {
+        val stringOptions = ArrayList<String>()
+        for (item in items) {
+            stringOptions.add(getLabelForExpandableItem(item))
         }
         val dialog = ListBottomSheetDialogFragment.newInstance(
                 object : ListBottomSheetDialogFragment.ListBottomSheetDialogListener{
                     override fun onOptionSelected(index: Int, optionText: CharSequence) {
-                        when (optionText) {
-                            changeCardPinOption -> listener?.onChangePin()
-                            replaceCardOption -> listener?.onReplaceCard()
-                            reportLostStolenOption -> listener?.onReportCardLostStolen()
-                            cancelCardOption -> listener?.onCancelCard()
-                        }
+                        val clickListener = getClickListenerForExpandableItem(items[index])
+                        clickListener.onClick(this@DashboardExpandableView)
                     }
-
                     override fun onDialogCancelled() {
                         // Do nothing.
                     }
@@ -422,6 +370,94 @@ class DashboardExpandableView : ConstraintLayout {
         expandCollapseButton.visibility = if (show) View.VISIBLE else View.INVISIBLE
     }
 
+    fun setExpandableListItems(items: List<ExpandableViewListItem>) {
+        (actionsView as? ViewGroup)?.let { parentLayout ->
+            parentLayout.removeAllViews()
+
+            if (items.isNotEmpty()) {
+                val layoutInflater = LayoutInflater.from(context)
+                for (i in 0 until items.size) {
+                    val itemLayout = layoutInflater.inflate(R.layout.card_view_action_layout, parentLayout, false)
+
+                    val itemIcon = itemLayout.findViewById<AppCompatImageView>(R.id.itemIcon)
+                    itemIcon.setImageDrawable(getIconForExpandableItem(items[i]))
+                    val itemLabel = itemLayout.findViewById<TextView>(R.id.itemLabel)
+                    itemLabel.text = getLabelForExpandableItem(items[i])
+                    itemLayout.setOnClickListener(getClickListenerForExpandableItem(items[i]))
+
+                    parentLayout.addView(itemLayout)
+                }
+            }
+        }
+    }
+
+    private fun getIconForExpandableItem(item: ExpandableViewListItem): Drawable {
+        val id = when (item) {
+            is ExpandableViewListItem.ShowCardDetailsItem -> { R.drawable.ic_dashboard_card_details_show }
+            is ExpandableViewListItem.HideCardDetailsItem -> { R.drawable.ic_dashboard_card_details_hide }
+            is ExpandableViewListItem.MoveMoneyItem -> { R.drawable.ic_dashboard_move_money }
+            is ExpandableViewListItem.LockCardItem -> { R.drawable.ic_dashboard_card_lock }
+            is ExpandableViewListItem.UnlockCardItem -> { R.drawable.ic_dashboard_card_unlock }
+            is ExpandableViewListItem.ChangeCardPinItem -> { R.drawable.ic_dashboard_change_pin }
+            is ExpandableViewListItem.ReplaceCardItem -> { R.drawable.ic_dashboard_replace_card }
+            is ExpandableViewListItem.ReportLostStolenItem -> { R.drawable.ic_dashboard_report_lost_stolen }
+            is ExpandableViewListItem.CancelCardItem -> { R.drawable.ic_dashboard_cancel_card }
+            is ExpandableViewListItem.MoreOptionsItem -> { R.drawable.ic_dashboard_more_options }
+        }
+        return ContextCompat.getDrawable(context, id)!!
+    }
+
+    private fun getLabelForExpandableItem(item: ExpandableViewListItem): String {
+        val id = when (item) {
+            is ExpandableViewListItem.ShowCardDetailsItem -> { R.string.OVERVIEW_SHOW_CARD_DETAILS }
+            is ExpandableViewListItem.HideCardDetailsItem -> { R.string.OVERVIEW_HIDE_CARD_DETAILS }
+            is ExpandableViewListItem.MoveMoneyItem -> { R.string.OVERVIEW_MOVE_MONEY }
+            is ExpandableViewListItem.LockCardItem -> { R.string.OVERVIEW_LOCK_MY_CARD }
+            is ExpandableViewListItem.UnlockCardItem -> { R.string.OVERVIEW_UNLOCK_MY_CARD }
+            is ExpandableViewListItem.ChangeCardPinItem -> { R.string.OVERVIEW_CHANGE_CARD_PIN }
+            is ExpandableViewListItem.ReplaceCardItem -> { R.string.OVERVIEW_REPLACE_CARD }
+            is ExpandableViewListItem.ReportLostStolenItem -> { R.string.OVERVIEW_REPORT_LOST_STOLEN }
+            is ExpandableViewListItem.CancelCardItem -> { R.string.OVERVIEW_CANCEL_CARD }
+            is ExpandableViewListItem.MoreOptionsItem -> { R.string.OVERVIEW_MORE_OPTIONS }
+        }
+        return context.getString(id)
+    }
+
+    private fun getClickListenerForExpandableItem(item: ExpandableViewListItem): OnClickListener {
+        return when (item) {
+            is ExpandableViewListItem.ShowCardDetailsItem -> { OnClickListener {
+                listener?.onShowCardDetails()
+            } }
+            is ExpandableViewListItem.HideCardDetailsItem -> { OnClickListener {
+                listener?.onHideCardDetails()
+            } }
+            is ExpandableViewListItem.MoveMoneyItem -> { OnClickListener {
+                listener?.onMoveMoney()
+            } }
+            is ExpandableViewListItem.LockCardItem -> { OnClickListener {
+                listener?.onLockCard()
+            } }
+            is ExpandableViewListItem.UnlockCardItem -> { OnClickListener {
+                listener?.onUnlockCard()
+            } }
+            is ExpandableViewListItem.ChangeCardPinItem -> { OnClickListener {
+                listener?.onChangePin()
+            } }
+            is ExpandableViewListItem.ReplaceCardItem -> { OnClickListener {
+                listener?.onReplaceCard()
+            } }
+            is ExpandableViewListItem.ReportLostStolenItem -> { OnClickListener {
+                listener?.onReportCardLostStolen()
+            } }
+            is ExpandableViewListItem.CancelCardItem -> { OnClickListener {
+                listener?.onCancelCard()
+            } }
+            is ExpandableViewListItem.MoreOptionsItem -> { OnClickListener {
+                showMoreOptionsBottomNav(item.options)
+            } }
+        }
+    }
+
     fun showCardViewMessageString(message: String) {
         cardView.showMessage(message)
     }
@@ -437,12 +473,27 @@ class DashboardExpandableView : ConstraintLayout {
         fun onCollapseStart()
         fun onCollapseEnd()
 
-        fun onShowHideCardDetails()
+        fun onShowCardDetails()
+        fun onHideCardDetails()
         fun onMoveMoney()
-        fun onLockUnlockCard()
+        fun onLockCard()
+        fun onUnlockCard()
         fun onChangePin()
         fun onReplaceCard()
         fun onReportCardLostStolen()
         fun onCancelCard()
     }
+}
+
+sealed class ExpandableViewListItem {
+    object ShowCardDetailsItem : ExpandableViewListItem()
+    object HideCardDetailsItem : ExpandableViewListItem()
+    object MoveMoneyItem : ExpandableViewListItem()
+    object LockCardItem : ExpandableViewListItem()
+    object UnlockCardItem : ExpandableViewListItem()
+    object ChangeCardPinItem : ExpandableViewListItem()
+    class ReplaceCardItem(val featureCurrentlyAvailable: Boolean) : ExpandableViewListItem()
+    class ReportLostStolenItem(val featureCurrentlyAvailable: Boolean) : ExpandableViewListItem()
+    class CancelCardItem(val featureCurrentlyAvailable: Boolean) : ExpandableViewListItem()
+    class MoreOptionsItem(val options: List<ExpandableViewListItem>) : ExpandableViewListItem()
 }
