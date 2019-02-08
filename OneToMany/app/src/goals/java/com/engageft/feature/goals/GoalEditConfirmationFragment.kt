@@ -13,6 +13,8 @@ import com.engageft.apptoolbox.BaseViewModel
 import com.engageft.apptoolbox.util.applyRelativeSizeToSubstring
 import com.engageft.apptoolbox.view.PillButton
 import com.engageft.engagekit.utils.PayPlanInfoUtils
+import com.engageft.feature.goals.utils.GoalConstants.FREQUENCY_SUBSTRING_RELATIVE_HEIGHT
+import com.engageft.feature.goals.utils.GoalConstants.GOAL_DATA_PARCELABLE_KEY
 import com.engageft.fis.pscu.R
 import com.engageft.fis.pscu.databinding.FragmentGoalEditConfirmationBinding
 import com.engageft.fis.pscu.feature.BaseEngagePageFragment
@@ -21,10 +23,10 @@ import utilGen1.DisplayDateTimeUtils
 import utilGen1.StringUtils
 
 class GoalEditConfirmationFragment: BaseEngagePageFragment() {
-    private lateinit var confirmationViewModel: GoalsAddEditConfirmationViewModel
+    private lateinit var confirmationViewModel: GoalAddConfirmationViewModel
 
     override fun createViewModel(): BaseViewModel? {
-        confirmationViewModel = ViewModelProviders.of(this).get(GoalsAddEditConfirmationViewModel::class.java)
+        confirmationViewModel = ViewModelProviders.of(this).get(GoalAddConfirmationViewModel::class.java)
         return confirmationViewModel
     }
 
@@ -35,7 +37,7 @@ class GoalEditConfirmationFragment: BaseEngagePageFragment() {
             viewModel = confirmationViewModel
             palette = Palette
 
-            arguments!!.get(GoalsAddStep1Fragment.GOAL_DATA_PARCELABLE_KEY)?.let { goalInfoModel ->
+            arguments!!.get(GOAL_DATA_PARCELABLE_KEY)?.let { goalInfoModel ->
                 confirmationViewModel.goalInfoModel = goalInfoModel as GoalInfoModel
             } ?: kotlin.run {
                 throw IllegalArgumentException("Must pass GoalInfoModel data")
@@ -60,15 +62,8 @@ class GoalEditConfirmationFragment: BaseEngagePageFragment() {
 
     private fun setUpViewData(goalInfoModel: GoalInfoModel) {
         binding.apply {
-            val imageLayout = confirmationLayout.findViewById<View>(R.id.imageViewLayout)
-            val saveButton = confirmationLayout.findViewById<PillButton>(R.id.saveButton)
-            imageLayout.findViewById<ImageView>(R.id.imageViewIcon).setImageResource(R.drawable.ic_plant)
-            saveButton.text = getString(R.string.GOAL_EDIT_CONFIRMATION_SAVE)
-
-            confirmationLayout.findViewById<TextView>(R.id.headerTextView).text = getString(R.string.GOAL_EDIT_CONFIRMATION_HEADER)
-            val subHeaderTextView = confirmationLayout.findViewById<TextView>(R.id.subHeaderTextView)
-            val recurrenceDescriptionTextView = confirmationLayout.findViewById<TextView>(R.id.recurrenceDescriptionTextView)
-            recurrenceDescriptionTextView.visibility = View.VISIBLE
+            imageViewLayout.findViewById<ImageView>(R.id.imageViewIcon).setImageResource(R.drawable.ic_plant)
+            headerTextView.text = getString(R.string.GOAL_EDIT_CONFIRMATION_HEADER)
 
             when (goalInfoModel.recurrenceType) {
                 PayPlanInfoUtils.PAY_PLAN_WEEK -> {
@@ -86,19 +81,21 @@ class GoalEditConfirmationFragment: BaseEngagePageFragment() {
                     }
 
                 }
-                else -> recurrenceDescriptionTextView.visibility = View.GONE
+                else -> {
+                    recurrenceDescriptionTextView.visibility = View.GONE
+                }
             }
 
             val amountWithCurrencySymbol = StringUtils.formatCurrencyStringWithFractionDigits(goalInfoModel.goalAmount.toString(), true)
             val amountPerRecurrenceFormat = String.format(getString(R.string.GOALS_RECURRENCE_FORMAT), amountWithCurrencySymbol, goalInfoModel.recurrenceType.toLowerCase())
             val splitStringArray = amountPerRecurrenceFormat.split(".")
             if (splitStringArray.size == 2) {
-                subHeaderTextView.text = amountPerRecurrenceFormat.applyRelativeSizeToSubstring(.7f, splitStringArray[1])
+                subHeaderTextView.text = amountPerRecurrenceFormat.applyRelativeSizeToSubstring(FREQUENCY_SUBSTRING_RELATIVE_HEIGHT, splitStringArray[1])
             } else {
                 subHeaderTextView.text = amountPerRecurrenceFormat
             }
 
-            confirmationLayout.findViewById<TextView>(R.id.descriptionTextView).text = String.format(getString(R.string.GOAL_EDIT_CONFIRMATION_COMPLETE_DATE_EFFECT_DESCRIPTION), goalInfoModel.goalName.capitalize())
+            descriptionTextView.text = String.format(getString(R.string.GOAL_EDIT_CONFIRMATION_COMPLETE_DATE_EFFECT_DESCRIPTION), goalInfoModel.goalName.capitalize())
         }
     }
 }

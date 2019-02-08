@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout xmlns:tools="http://schemas.android.com/tools">
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
     <data>
         <variable
             name="viewModel"
@@ -12,13 +13,11 @@
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:fillViewport="true"
-        xmlns:android="http://schemas.android.com/apk/res/android">
+        android:fillViewport="true">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            xmlns:tools="http://schemas.android.com/tools"
             android:gravity="center"
             android:orientation="vertical">
 
@@ -54,19 +53,6 @@
 
             <androidx.appcompat.widget.AppCompatTextView
                 style="@style/Body"
-                android:id="@+id/recurrenceDescriptionTextView"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:paddingTop="4dp"
-                android:paddingStart="16dp"
-                android:paddingEnd="16dp"
-                android:textColor="@color/textSecondary"
-                android:lineSpacingExtra="11sp"
-                android:gravity="center_horizontal"
-                tools:text="on Friday"/>
-
-            <androidx.appcompat.widget.AppCompatTextView
-                style="@style/Body"
                 android:id="@+id/descriptionTextView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -84,23 +70,8 @@
                 android:layout_marginBottom="20dp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/GOAL_EDIT_CONFIRMATION_SAVE"
-                android:onClick="@{() -> viewModel.onSaveGoal()}"/>
-
-            <TextView
-                style="@style/BodyMedium"
-                android:id="@+id/cancelButton"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textColor="@color/primary"
-                android:paddingTop="8dp"
-                android:paddingBottom="16dp"
-                android:paddingStart="16dp"
-                android:paddingEnd="16dp"
-                android:lineSpacingExtra="8sp"
-                android:text="@string/GOAL_DELETE_CANCEL"
-                android:gravity="center_horizontal" />
-
+                android:onClick="@{() -> viewModel.onSaveGoal()}"
+                android:text="@string/nav_drawer_title_goals"/>
         </LinearLayout>
 
     </ScrollView>

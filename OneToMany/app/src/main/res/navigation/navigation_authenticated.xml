@@ -594,7 +594,7 @@
 
     <fragment
         android:id="@+id/goalsAddEditConfirmationFragment"
-        android:name="com.engageft.feature.goals.GoalsAddEditConfirmationFragment"
+        android:name="com.engageft.feature.goals.GoalAddConfirmationFragment"
         android:label="@string/GOALS_ADD_GOAL" >
         <argument
             android:name="@string/navigation_view_gone"

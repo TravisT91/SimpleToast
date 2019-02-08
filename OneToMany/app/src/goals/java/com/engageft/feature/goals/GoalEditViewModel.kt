@@ -34,9 +34,12 @@ class GoalEditViewModel(val goalId: Long): BaseEngageViewModel() {
     var frequencyAmount = ObservableField("")
     var frequencyType = ObservableField("")
     var nextRunDate = ObservableField("")
+    var completeGoalDate = ObservableField("")
     var dayOfWeek = ObservableField("")
     var showNextRunDate = ObservableField(false)
     var showDayOfWeek = ObservableField(false)
+
+    var hasCompleteGoalDate = ObservableField(false)
 
     enum class ButtonState {
         SHOW,
@@ -80,7 +83,7 @@ class GoalEditViewModel(val goalId: Long): BaseEngageViewModel() {
             }
         })
 
-        initData()
+        initGoalData()
     }
 
     fun validateFormAndButtonState() {
@@ -132,7 +135,7 @@ class GoalEditViewModel(val goalId: Long): BaseEngageViewModel() {
         return false
     }
 
-    private fun initData() {
+    private fun initGoalData() {
         showProgressOverlayDelayed()
         compositeDisposable.add(EngageService.getInstance().loginResponseAsObservable
                 .subscribeOn(Schedulers.io())
@@ -179,7 +182,7 @@ class GoalEditViewModel(val goalId: Long): BaseEngageViewModel() {
     private fun setUpData(goalInfo: GoalInfo) {
         goalName.set(goalInfo.name)
         goalAmount.set(StringUtils.formatCurrencyStringWithFractionDigits(goalInfo.amount.toString(), true))
-        frequencyAmount.set(StringUtils.formatCurrencyStringWithFractionDigits(goalInfo.fundAmount.toString(), true))
+        frequencyAmount.set(StringUtils.formatCurrencyStringWithFractionDigits(goalInfo.payPlan.amount.toString(), true))
         when(goalInfo.payPlan.recurrenceType) {
             PayPlanInfoUtils.PAY_PLAN_DAY -> {
                 frequencyType.set(FREQUENCY_TYPE_DAILY)

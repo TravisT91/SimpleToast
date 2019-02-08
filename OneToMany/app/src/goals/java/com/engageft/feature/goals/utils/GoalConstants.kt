@@ -11,9 +11,10 @@ object GoalConstants {
 
     const val GOAL_FUND_AMOUNT_KEY = "GOAL_FUND_AMOUNT_KEY"
     const val GOAL_DATA_PARCELABLE_KEY = "GOAL_DATA_PARCELABLE_KEY"
-
     const val YES = "Yes"
     const val FREQUENCY_TYPE_DAILY = "Daily"
     const val FREQUENCY_TYPE_WEEKLY = "Weekly"
     const val FREQUENCY_TYPE_MONTHLY = "Monthly"
+
+    const val FREQUENCY_SUBSTRING_RELATIVE_HEIGHT = .7f
 }

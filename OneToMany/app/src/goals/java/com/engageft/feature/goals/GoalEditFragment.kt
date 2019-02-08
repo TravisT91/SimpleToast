@@ -14,6 +14,9 @@ import androidx.navigation.fragment.findNavController
 import com.engageft.apptoolbox.BaseViewModel
 import com.engageft.apptoolbox.NavigationOverrideClickListener
 import com.engageft.apptoolbox.view.InformationDialogFragment
+import com.engageft.feature.goals.utils.GoalConstants.GOAL_DATA_PARCELABLE_KEY
+import com.engageft.feature.goals.utils.GoalConstants.GOAL_ID_DEFAULT
+import com.engageft.feature.goals.utils.GoalConstants.GOAL_ID_KEY
 import com.engageft.fis.pscu.R
 import com.engageft.fis.pscu.config.EngageAppConfig
 import com.engageft.fis.pscu.databinding.FragmentGoalEditBinding
@@ -55,8 +58,8 @@ class GoalEditFragment: BaseEngagePageFragment() {
 
     override fun createViewModel(): BaseViewModel? {
         arguments!!.let {
-            val goalId = it.getLong(GoalDetailFragment.GOAL_ID_KEY, GoalDetailFragment.GOAL_ID_DEFAULT)
-            if (goalId == GoalDetailFragment.GOAL_ID_DEFAULT) {
+            val goalId = it.getLong(GOAL_ID_KEY, GOAL_ID_DEFAULT)
+            if (goalId == GOAL_ID_DEFAULT) {
                 throw IllegalArgumentException("Goal Id is not valid")
             } else {
                 viewModelGoalEdit = ViewModelProviders.of(this, GoalEditViewModelFactory(goalId)).get(GoalEditViewModel::class.java)
@@ -133,7 +136,7 @@ class GoalEditFragment: BaseEngagePageFragment() {
     private fun navigateToNextStep() {
         binding.root.findNavController().navigate(R.id.action_goalEditFragment_to_goalEditConfirmationFragment,
                 Bundle().apply {
-                    putParcelable(GoalsAddStep1Fragment.GOAL_DATA_PARCELABLE_KEY, viewModelGoalEdit.goalInfoModel)
+                    putParcelable(GOAL_DATA_PARCELABLE_KEY, viewModelGoalEdit.goalInfoModel)
                 })
     }
 }

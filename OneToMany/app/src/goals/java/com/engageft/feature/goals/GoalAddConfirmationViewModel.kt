@@ -21,7 +21,7 @@ import com.ob.ws.dom.utility.PayPlanInfo
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 
-class GoalsAddEditConfirmationViewModel: BaseEngageViewModel() {
+class GoalAddConfirmationViewModel: BaseEngageViewModel() {
     enum class GoalSuccessState {
         SUCCESS
     }
@@ -246,6 +246,6 @@ class GoalsAddEditConfirmationViewModel: BaseEngageViewModel() {
     }
 
     companion object {
-        private const val TAG = "GoalsAddEditConfirmationViewModel"
+        private const val TAG = "GoalAddConfirmationViewModel"
     }
 }

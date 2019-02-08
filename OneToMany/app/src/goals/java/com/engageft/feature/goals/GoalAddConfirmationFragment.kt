@@ -5,8 +5,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
-import android.widget.LinearLayout
-import android.widget.TextView
 import androidx.core.content.res.ResourcesCompat
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
@@ -16,24 +14,24 @@ import com.engageft.apptoolbox.util.applyRelativeSizeToSubstring
 import com.engageft.apptoolbox.util.setTextSizeAndFont
 import com.engageft.feature.goals.utils.GoalConstants.GOAL_DATA_PARCELABLE_KEY
 import com.engageft.fis.pscu.R
-import com.engageft.fis.pscu.databinding.FragmentGoalsAddEditConfirmationBinding
+import com.engageft.fis.pscu.databinding.FragmentGoalAddConfirmationBinding
 import com.engageft.fis.pscu.feature.BaseEngagePageFragment
 import com.engageft.fis.pscu.feature.branding.Palette
 import utilGen1.DisplayDateTimeUtils
 import utilGen1.StringUtils
 
-class GoalsAddEditConfirmationFragment: BaseEngagePageFragment() {
-    private lateinit var confirmationViewModel: GoalsAddEditConfirmationViewModel
+class GoalAddConfirmationFragment: BaseEngagePageFragment() {
+    private lateinit var confirmationViewModel: GoalAddConfirmationViewModel
 
     override fun createViewModel(): BaseViewModel? {
-        confirmationViewModel = ViewModelProviders.of(this).get(GoalsAddEditConfirmationViewModel::class.java)
+        confirmationViewModel = ViewModelProviders.of(this).get(GoalAddConfirmationViewModel::class.java)
         return confirmationViewModel
     }
 
-    private lateinit var binding: FragmentGoalsAddEditConfirmationBinding
+    private lateinit var binding: FragmentGoalAddConfirmationBinding
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        binding = FragmentGoalsAddEditConfirmationBinding.inflate(inflater, container, false).apply {
+        binding = FragmentGoalAddConfirmationBinding.inflate(inflater, container, false).apply {
             viewModel = confirmationViewModel
             palette = Palette
 
@@ -58,14 +56,8 @@ class GoalsAddEditConfirmationFragment: BaseEngagePageFragment() {
 
     private fun setUpViewData(goalInfoModel: GoalInfoModel) {
         binding.apply {
-            val imageIcon = confirmationLayout.findViewById<View>(R.id.imageViewLayout)
-                    .findViewById<ImageView>(R.id.imageViewIcon)
-            val headerTextView = confirmationLayout.findViewById<TextView>(R.id.headerTextView)
-            val subHeaderTextView = confirmationLayout.findViewById<TextView>(R.id.subHeaderTextView)
-            val descriptionTextView = confirmationLayout.findViewById<TextView>(R.id.descriptionTextView)
-
             if (goalInfoModel.hasCompleteDate) {
-                imageIcon.setImageResource(R.drawable.ic_calendar)
+                imageViewLayout.findViewById<ImageView>(R.id.imageViewIcon).setImageResource(R.drawable.ic_calendar)
                 headerTextView.text = getString(R.string.GOALS_ADD_COMPLETE_DATE_CONFIRMATION_HEADER)
                 subHeaderTextView.text = DisplayDateTimeUtils.getMediumFormatted(goalInfoModel.goalCompleteDate!!)
                 descriptionTextView.text = String.format(
@@ -75,7 +67,7 @@ class GoalsAddEditConfirmationFragment: BaseEngagePageFragment() {
                 val pair = Pair(first = test, second = ResourcesCompat.getFont(context!!, R.font.font_medium)!!)
                 subHeaderTextView.setTextSizeAndFont(pair)
             } else {
-                imageIcon.findViewById<ImageView>(R.id.imageViewIcon).setImageResource(R.drawable.ic_plant)
+                imageViewLayout.findViewById<ImageView>(R.id.imageViewIcon).setImageResource(R.drawable.ic_plant)
                 headerTextView.text = getString(R.string.GOALS_ADD_FREQUENCY_AMOUNT_CONFIRMATION_HEADER)
 
                 val amountWithCurrencySymbol = StringUtils.formatCurrencyStringWithFractionDigits(goalInfoModel.frequencyAmount.toString(), true)
