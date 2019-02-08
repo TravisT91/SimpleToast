@@ -7,17 +7,14 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
-import androidx.navigation.NavOptionsBuilder
 import androidx.navigation.findNavController
-import androidx.navigation.navOptions
 import com.engageft.apptoolbox.BaseViewModel
-import com.engageft.feature.goals.GoalDetailFragment.Companion.GOAL_FUND_AMOUNT_KEY
-import com.engageft.feature.goals.GoalDetailFragment.Companion.GOAL_ID_KEY
+import com.engageft.feature.goals.utils.GoalConstants.GOAL_FUND_AMOUNT_KEY
+import com.engageft.feature.goals.utils.GoalConstants.GOAL_ID_KEY
 import com.engageft.fis.pscu.R
 import com.engageft.fis.pscu.databinding.FragmentGoalDeleteBinding
 import com.engageft.fis.pscu.feature.BaseEngagePageFragment
 import com.engageft.fis.pscu.feature.branding.Palette
-import kotlinx.android.synthetic.main.fragment_goal_delete.*
 import utilGen1.StringUtils
 import java.math.BigDecimal
 
@@ -52,7 +49,7 @@ class GoalDeleteFragment: BaseEngagePageFragment() {
             }
         }
 
-        viewModelDelete.deleteStatusObservable.observe(viewLifecycleOwner, Observer {
+        viewModelDelete.deleteSuccessObservable.observe(viewLifecycleOwner, Observer {
             binding.root.findNavController().popBackStack(R.id.goalDetailFragment, true)
         })
 
@@ -65,6 +62,6 @@ class GoalDeleteFragment: BaseEngagePageFragment() {
         binding.imageViewLayout.findViewById<ImageView>(R.id.imageViewIcon).setImageResource(R.drawable.ic_goal_delete)
 
         val amountWithCurrencySymbol = StringUtils.formatCurrencyStringFractionDigitsReducedHeight(goadFundAmount.toString(), .5f, true)
-        subHeaderTextView.text = amountWithCurrencySymbol
+        binding.subHeaderTextView.text = amountWithCurrencySymbol
     }
 }

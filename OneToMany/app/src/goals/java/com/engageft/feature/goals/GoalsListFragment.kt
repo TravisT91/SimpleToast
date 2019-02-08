@@ -12,6 +12,7 @@ import androidx.lifecycle.ViewModelProviders
 import androidx.navigation.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.engageft.apptoolbox.BaseViewModel
+import com.engageft.feature.goals.utils.GoalConstants.GOAL_ID_KEY
 import com.engageft.fis.pscu.R
 import com.engageft.fis.pscu.databinding.FragmentGoalsListBinding
 import com.engageft.fis.pscu.feature.BaseEngagePageFragment
@@ -117,9 +118,4 @@ class GoalsListFragment : BaseEngagePageFragment() {
         }
         return super.onOptionsItemSelected(item)
     }
-
-    companion object {
-        const val GOAL_ID_KEY = "GOAL_ID_KEY"
-    }
-
 }

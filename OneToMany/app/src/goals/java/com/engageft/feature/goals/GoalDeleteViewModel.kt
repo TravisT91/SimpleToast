@@ -1,7 +1,7 @@
 package com.engageft.feature.goals
 
-import androidx.lifecycle.MutableLiveData
 import com.engageft.engagekit.EngageService
+import com.engageft.engagekit.aac.SingleLiveEvent
 import com.engageft.engagekit.rest.request.GoalRequest
 import com.engageft.engagekit.utils.LoginResponseUtils
 import com.engageft.engagekit.utils.engageApi
@@ -13,17 +13,13 @@ import io.reactivex.schedulers.Schedulers
 
 open class GoalDeleteViewModel: BaseEngageViewModel() {
 
-    enum class DeleteStatus {
-        SUCCESS
-    }
-
-    val deleteStatusObservable = MutableLiveData<DeleteStatus>()
+    val deleteSuccessObservable = SingleLiveEvent<Unit>()
 
     fun onTransferAndDelete(goalId: Long) {
         showProgressOverlayImmediate()
         compositeDisposable.add(EngageService.getInstance().loginResponseAsObservable
                 .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
+                .observeOn(Schedulers.computation())
                 .subscribe({ response ->
                     if (response is LoginResponse) {
                         // don't hide progress here yet
@@ -43,11 +39,11 @@ open class GoalDeleteViewModel: BaseEngageViewModel() {
         val request = GoalRequest(goalId)
         compositeDisposable.add(engageApi().postGoalRemove(request.fieldMap)
                         .subscribeOn(Schedulers.io())
-                        .observeOn(AndroidSchedulers.mainThread())
+                        .observeOn(Schedulers.computation())
                         .subscribe({ response ->
                             if (response.isSuccess) {
                                 // hide progressbar after loginResponse & goals refresh
-                                refreshData()
+                                refreshLoginResponse()
                             } else {
                                 dismissProgressOverlay()
                                 handleUnexpectedErrorResponse(response)
@@ -60,7 +56,7 @@ open class GoalDeleteViewModel: BaseEngageViewModel() {
     }
 
 
-    private fun refreshData() {
+    private fun refreshLoginResponse() {
         compositeDisposable.add(EngageService.getInstance().refreshLoginObservable()
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
@@ -70,13 +66,13 @@ open class GoalDeleteViewModel: BaseEngageViewModel() {
                         refreshGoals(LoginResponseUtils.getCurrentCard(response))
                     } else {
                         dismissProgressOverlay()
-                        // take user to Goals Success even if refresh is not successful
-                        deleteStatusObservable.value = DeleteStatus.SUCCESS
+                        // notify observer of success even if refresh failed
+                        deleteSuccessObservable.call()
                     }
                 }, {
                     dismissProgressOverlay()
-                    // take user to Goals Success even if refresh is not successful
-                    deleteStatusObservable.value = DeleteStatus.SUCCESS
+                    // notify observer of success even if refresh failed
+                    deleteSuccessObservable.call()
                 })
         )
     }
@@ -88,12 +84,12 @@ open class GoalDeleteViewModel: BaseEngageViewModel() {
                         .observeOn(AndroidSchedulers.mainThread())
                         .subscribe({
                             dismissProgressOverlay()
-                            // take user to Goals Success even if refresh is not successful
-                            deleteStatusObservable.value = DeleteStatus.SUCCESS
+                            // notify observer of success even if refresh failed
+                            deleteSuccessObservable.call()
                         }, {
                             dismissProgressOverlay()
-                            // take user to Goals Success even if refresh is not successful
-                            deleteStatusObservable.value = DeleteStatus.SUCCESS
+                            // notify observer of success even if refresh failed
+                            deleteSuccessObservable.call()
                         })
         )
     }

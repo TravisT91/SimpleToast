@@ -14,16 +14,21 @@ import com.engageft.apptoolbox.adapter.HorizontalRuleSection
 import com.engageft.apptoolbox.adapter.HorizontalRuleSectionIndentStart
 import com.engageft.apptoolbox.adapter.SelectableLabelsSection
 import com.engageft.apptoolbox.view.InformationDialogFragment
+import com.engageft.feature.budgets.extension.isZero
+import com.engageft.feature.goals.utils.GoalConstants.DELETE_LABEL_ID
+import com.engageft.feature.goals.utils.GoalConstants.EDIT_LABEL_ID
+import com.engageft.feature.goals.utils.GoalConstants.GOAL_FUND_AMOUNT_KEY
+import com.engageft.feature.goals.utils.GoalConstants.GOAL_ID_DEFAULT
+import com.engageft.feature.goals.utils.GoalConstants.GOAL_ID_KEY
+import com.engageft.feature.goals.utils.GoalConstants.TRANSFER_LABEL_ID
 import com.engageft.fis.pscu.R
 import com.engageft.fis.pscu.databinding.FragmentGoalDetailBinding
 import com.engageft.fis.pscu.feature.BaseEngagePageFragment
-import com.engageft.fis.pscu.feature.ToggleableLabelSection
 import com.engageft.fis.pscu.feature.adapter.ErrorStateSection
 import com.engageft.fis.pscu.feature.branding.Palette
 import com.engageft.fis.pscu.feature.infoDialogYesNoNewInstance
+import com.engageft.fis.pscu.feature.recyclerview.toggleablelabel.ToggleableLabelSection
 import io.github.luizgrp.sectionedrecyclerviewadapter.SectionedRecyclerViewAdapter
-import java.lang.IllegalArgumentException
-import java.math.BigDecimal
 
 class GoalDetailFragment: BaseEngagePageFragment() {
 
@@ -43,21 +48,16 @@ class GoalDetailFragment: BaseEngagePageFragment() {
         return viewModelGoalDetail
     }
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setHasOptionsMenu(true)
-    }
-
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         binding = FragmentGoalDetailBinding.inflate(inflater, container, false).apply {
             viewModel = viewModel
             palette = Palette
 
-            viewModelGoalDetail.refreshGoalDetail(true)
+            viewModelGoalDetail.initGoalData(useCache = true)
 
             sectionedAdapter = SectionedRecyclerViewAdapter()
             recyclerView.adapter = sectionedAdapter
-            recyclerView.layoutManager = LinearLayoutManager(context!!)
+            recyclerView.layoutManager = LinearLayoutManager(context)
 
             viewModelGoalDetail.apply {
                 goalDetailStatesListObservable.observe(viewLifecycleOwner, Observer {
@@ -75,7 +75,7 @@ class GoalDetailFragment: BaseEngagePageFragment() {
                     }
                 })
 
-                deleteStatusObservable.observe(viewLifecycleOwner, Observer {
+                deleteSuccessObservable.observe(viewLifecycleOwner, Observer {
                     binding.root.findNavController().popBackStack()
                 })
             }
@@ -129,7 +129,7 @@ class GoalDetailFragment: BaseEngagePageFragment() {
                     }
                     is GoalDetailState.GoalPauseItem -> {
                         val goalPaused = if (goalDetailState.errorState == GoalDetailState.ErrorState.ERROR) false else goalDetailState.isGoalPaused
-                        addSection(ToggleableLabelSection(context!!, listOf(ToggleableLabelSection.LabelItem(
+                        addSection(ToggleableLabelSection(listOf(ToggleableLabelSection.LabelItem(
                                 labelText = getString(R.string.GOAL_DETAIL_RECURRING_TRANSFER),
                                 isChecked = !goalPaused,
                                 disableSection = goalDetailState.errorState == GoalDetailState.ErrorState.ERROR)),
@@ -203,7 +203,7 @@ class GoalDetailFragment: BaseEngagePageFragment() {
     }
 
     private fun onDeleteGoal() {
-        if (viewModelGoalDetail.fundAmount.compareTo(BigDecimal.ZERO) == 0) {
+        if (viewModelGoalDetail.fundAmount.isZero()) {
             val title = String.format(getString(R.string.GOAL_DELETE_ALERT_TITLE_FORMAT),
                     viewModelGoalDetail.goalName.capitalize())
             fragmentDelegate.showDialog(infoDialogYesNoNewInstance(
@@ -227,16 +227,5 @@ class GoalDetailFragment: BaseEngagePageFragment() {
                         putSerializable(GOAL_FUND_AMOUNT_KEY, viewModelGoalDetail.fundAmount)
                     })
         }
-    }
-
-    companion object {
-        const val TRANSFER_LABEL_ID = 0
-        const val EDIT_LABEL_ID = 1
-        const val DELETE_LABEL_ID = 3
-
-        const val GOAL_ID_DEFAULT = -1L
-
-        const val GOAL_ID_KEY = "GOAL_ID_KEY"
-        const val GOAL_FUND_AMOUNT_KEY = "GOAL_FUND_AMOUNT_KEY"
     }
 }

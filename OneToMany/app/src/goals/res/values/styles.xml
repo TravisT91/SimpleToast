@@ -17,4 +17,27 @@
         <item name="android:layout_height">wrap_content</item>
         <item name="android:textColor">@color/selectable_item</item>
     </style>
+
+    <!-- Start of CircularProgressBarWithTexts -->
+    <style name="LotusCircularProgressBarWithTexts">
+        <item name="progressBarProgressColor">@color/success</item>
+        <item name="progressBarBackgroundColor">@color/structure2</item>
+        <item name="progressDrawables">@drawable/ic_progress_ring_6dp</item>
+        <item name="innerTopTextStyle">@style/ProgressBarWithTextsInnerTopTextStyle</item>
+        <item name="innerBottomTextStyle">@style/ProgressBarWithTextsInnerBottomTextStyle</item>
+        <item name="outerBottomTextStyle">@style/ProgressBarWithTextsOuterBottomTextStyle</item>
+    </style>
+
+    <style name="ProgressBarWithTextsInnerTopTextStyle" parent="LargeTitleQuiet">
+        <item name="android:textColor">@color/structure6</item>
+    </style>
+
+    <style name="ProgressBarWithTextsInnerBottomTextStyle" parent="Footnote">
+        <item name="android:textColor">@color/structure5</item>
+    </style>
+
+    <style name="ProgressBarWithTextsOuterBottomTextStyle" parent="BodyMedium">
+        <item name="android:textColor">@color/structure4</item>
+    </style>
+    <!-- End of CircularProgressBarWithTexts-->
 </resources>

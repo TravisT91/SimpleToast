@@ -62,6 +62,10 @@ class DashboardViewModel : BaseEngageViewModel(), GateKeeperListener {
 
     val brandingCardObservable: MutableLiveData<BrandingCard> = MutableLiveData()
 
+    val expandableOptionsItems = MutableLiveData<List<ExpandableViewListItem>>().apply {
+        value = listOf()
+    }
+
     private val dashboardGateKeeper = DashboardGateKeeper(compositeDisposable, this)
 
     private lateinit var debitCardInfo: DebitCardInfo
@@ -69,11 +73,30 @@ class DashboardViewModel : BaseEngageViewModel(), GateKeeperListener {
     // ProductCardView
     fun initCardView() {
         productCardViewModelDelegate.updateCardView()
+        refreshExpandableListItems()
+    }
+
+    fun refreshExpandableListItems() {
+        compositeDisposable.add(
+                EngageService.getInstance().loginResponseAsObservable
+                        .subscribeOn(Schedulers.io())
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .subscribe({ response ->
+                            if (response.isSuccess && response is LoginResponse) {
+                                updateExpandableViewOptions(response)
+                            } else {
+                                handleUnexpectedErrorResponse(response)
+                            }
+                        })
+                        { e ->
+                            handleThrowable(e)
+                        }
+        )
     }
 
     // Balances
     fun clearAndRefreshBalancesAndNotifications() {
-        progressOverlayShownObservable.value = true
+        showProgressOverlayDelayed()
         EngageService.getInstance().clearLoginAndDashboardResponses()
         refreshBalancesAndNotifications()
     }
@@ -90,6 +113,8 @@ class DashboardViewModel : BaseEngageViewModel(), GateKeeperListener {
                         .observeOn(AndroidSchedulers.mainThread())
                         .subscribe({ response ->
                             if (response.isSuccess && response is LoginResponse) {
+                                var savingsBalanceEnabled = false
+
                                 val debitCardInfo = LoginResponseUtils.getCurrentCard(response)
                                 debitCardInfo?.apply {
                                     try {
@@ -99,6 +124,8 @@ class DashboardViewModel : BaseEngageViewModel(), GateKeeperListener {
                                         spendingBalanceObservable.value = BigDecimal.ZERO
                                         spendingBalanceStateObservable.value = DashboardBalanceState.ERROR
                                     }
+
+                                    savingsBalanceEnabled = cardPermissionsInfo.isSetAsideBalanceEnabled
 
                                     // Find the BrandingCard that matches the current card type. This could be null
                                     // and null is handled in the view.
@@ -111,14 +138,18 @@ class DashboardViewModel : BaseEngageViewModel(), GateKeeperListener {
                                     spendingBalanceStateObservable.value = DashboardBalanceState.ERROR
                                 }
 
-                                try { // TODO(kurt): hide savings entirely if no goals/savings (criteria for hiding TBD -- see FOTM-230)
-                                    val goalAmount = BigDecimal(response.goalsContributed)
-                                    val savingsAmount = BigDecimal(response.savingsContributed)
-                                    savingsBalanceObservable.value = goalAmount.plus(savingsAmount)
-                                    savingsBalanceStateObservable.value = DashboardBalanceState.AVAILABLE
-                                } catch (e: Throwable) {
-                                    savingsBalanceObservable.value = BigDecimal.ZERO
-                                    savingsBalanceStateObservable.value = DashboardBalanceState.ERROR
+                                if (savingsBalanceEnabled) {
+                                    try {
+                                        val goalAmount = BigDecimal(response.goalsContributed)
+                                        val savingsAmount = BigDecimal(response.savingsContributed)
+                                        savingsBalanceObservable.value = goalAmount.plus(savingsAmount)
+                                        savingsBalanceStateObservable.value = DashboardBalanceState.AVAILABLE
+                                    } catch (e: Throwable) {
+                                        savingsBalanceObservable.value = BigDecimal.ZERO
+                                        savingsBalanceStateObservable.value = DashboardBalanceState.ERROR
+                                    }
+                                } else {
+                                    savingsBalanceStateObservable.value = DashboardBalanceState.HIDDEN
                                 }
 
                                 updateNotifications(response)
@@ -251,6 +282,72 @@ class DashboardViewModel : BaseEngageViewModel(), GateKeeperListener {
             } ?: run {
                 notificationsCountObservable.value = 0
             }
+        }
+    }
+
+    fun updateExpandableViewOptions(response: LoginResponse?) {
+        response?.let { loginResponse ->
+            val cardPermissionsInfo = LoginResponseUtils.getCurrentCard(loginResponse).cardPermissionsInfo
+            val accountPermissionsInfo = LoginResponseUtils.getCurrentAccountInfo(loginResponse).accountPermissionsInfo
+            val options = ArrayList<ExpandableViewListItem>()
+
+            // The order of this logic matters as items are displayed in the order they're added to the list.
+            if (cardPermissionsInfo.isCardPanEnabled && cardPermissionsInfo.isCardPanAllowable) {
+                if (productCardViewModelDelegate.isShowingCardDetails()) {
+                    options.add(ExpandableViewListItem.HideCardDetailsItem)
+                } else {
+                    options.add(ExpandableViewListItem.ShowCardDetailsItem)
+                }
+            }
+            if (accountPermissionsInfo.isFundingEnabled) {
+                options.add(ExpandableViewListItem.MoveMoneyItem)
+            }
+            if (cardPermissionsInfo.isCardLockEnabled) {
+                val cardLocked = productCardViewModelDelegate.isLocked()
+                if (cardLocked) {
+                    options.add(ExpandableViewListItem.UnlockCardItem)
+                } else {
+                    options.add(ExpandableViewListItem.LockCardItem)
+                }
+            }
+            if (cardPermissionsInfo.isCardPinChangeEnabled && cardPermissionsInfo.isCardPinChangeAllowable) {
+                options.add(ExpandableViewListItem.ChangeCardPinItem)
+            }
+            if (cardPermissionsInfo.isCardReplaceEnabled) {
+                options.add(ExpandableViewListItem.ReplaceCardItem(cardPermissionsInfo.isCardReplaceAllowable))
+            }
+            if (cardPermissionsInfo.isCardLostEnabled) {
+                options.add(ExpandableViewListItem.ReportLostStolenItem(cardPermissionsInfo.isCardLostAllowable))
+            }
+            if (cardPermissionsInfo.isCardCancelEnabled) {
+                options.add(ExpandableViewListItem.CancelCardItem(cardPermissionsInfo.isCardCancelAllowable))
+            }
+
+            // Now we alter the list based on its size. If the size is four or less, we keep the list as-is.
+            // If the size is exactly five, we remove the last two items and add them to a MoreOptionsItem.
+            // If the size is larger, we insert all items after four to the list.
+            if (options.size > 4) {
+                if (options.size == 5) {
+                    val itemFour = options.removeAt(3)
+                    val itemFive = options.removeAt(4)
+
+                    val moreOptionsList = ArrayList<ExpandableViewListItem>().apply {
+                        add(itemFour)
+                        add(itemFive)
+                    }
+                    options.add(ExpandableViewListItem.MoreOptionsItem(moreOptionsList))
+                } else {
+                    val moreOptionsList = ArrayList<ExpandableViewListItem>().apply {
+                        while (options.size > 3) {
+                            add(options.removeAt(3))
+                        }
+                    }
+                    options.add(ExpandableViewListItem.MoreOptionsItem(moreOptionsList))
+                }
+            }
+            expandableOptionsItems.value = options
+        } ?: kotlin.run {
+            expandableOptionsItems.value = ArrayList()
         }
     }
 

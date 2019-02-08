@@ -4,7 +4,6 @@ import android.content.Context
 import android.view.View
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
-import com.engageft.apptoolbox.view.CircularProgressBarWithTexts
 import com.engageft.apptoolbox.view.PillButton
 import com.engageft.fis.pscu.R
 import io.github.luizgrp.sectionedrecyclerviewadapter.SectionParameters
@@ -24,14 +23,12 @@ class GoalDetailCompleteHeaderSection(private val context: Context,
     override fun onBindItemViewHolder(p0: RecyclerView.ViewHolder, p1: Int) {
         (p0 as ViewHolder).apply {
 
-
             circularProgressBarWithTexts.apply {
 
-                val showZeros = fundAmount.compareTo(BigDecimal.ZERO) != 0
                 setInnerTopText(StringUtils.formatCurrencyStringFractionDigitsReducedHeight(
                         amount = fundAmount.toFloat(),
                         fractionDigitsPercentHeight = .5f,
-                        showZeroDigits = showZeros
+                        showZeroDigits = true
                 ))
 
                 setProgress(100)
@@ -51,9 +48,8 @@ class GoalDetailCompleteHeaderSection(private val context: Context,
     }
 
     inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-
-        var circularProgressBarWithTexts: CircularProgressBarWithTexts = itemView.findViewById(R.id.circularProgressBarWithTexts)
-        var transferBalanceButton: PillButton = itemView.findViewById(R.id.transferBalanceButton)
+        val circularProgressBarWithTexts: CircularProgressBarWithTexts = itemView.findViewById(R.id.circularProgressBarWithTexts)
+        val transferBalanceButton: PillButton = itemView.findViewById(R.id.transferBalanceButton)
     }
 
     interface OnButtonClickListener {

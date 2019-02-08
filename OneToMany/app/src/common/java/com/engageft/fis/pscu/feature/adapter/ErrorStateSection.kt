@@ -9,8 +9,10 @@ import com.engageft.fis.pscu.feature.branding.Palette
 import io.github.luizgrp.sectionedrecyclerviewadapter.SectionParameters
 import io.github.luizgrp.sectionedrecyclerviewadapter.StatelessSection
 
-class ErrorStateSection(val titleText: String, val descriptionText: String, private val listener: OnErrorSectionInteractionListener)
-    : StatelessSection(SectionParameters.builder().itemResourceId(R.layout.error_state_layout).build()) {
+class ErrorStateSection(private val titleText: String,
+                        private val descriptionText: String,
+                        private val listener: OnErrorSectionInteractionListener)
+    : StatelessSection(SectionParameters.builder().itemResourceId(R.layout.error_layout_shareable).build()) {
 
     override fun getContentItemsTotal(): Int {
         return 1
@@ -27,7 +29,7 @@ class ErrorStateSection(val titleText: String, val descriptionText: String, priv
         }
     }
 
-    internal inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+    private inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val titleTextView: TextView = itemView.findViewById(R.id.titleTextView)
         val descriptionTextView: TextView = itemView.findViewById(R.id.descriptionTextView)
         init {

@@ -7,6 +7,7 @@ import com.engageft.engagekit.EngageService
 import com.engageft.engagekit.rest.request.PayPlanPauseResumeRequest
 import com.engageft.engagekit.utils.BackendDateTimeUtils
 import com.engageft.engagekit.utils.LoginResponseUtils
+import com.engageft.engagekit.utils.PayPlanInfoUtils
 import com.engageft.engagekit.utils.engageApi
 import com.ob.ws.dom.GoalsResponse
 import com.ob.ws.dom.LoginResponse
@@ -37,11 +38,11 @@ class GoalDetailViewModel(var goalId: Long): GoalDeleteViewModel() {
         onTransferAndDelete(goalId)
     }
 
-    fun refreshGoalDetail(useCache: Boolean) {
+    fun initGoalData(useCache: Boolean) {
         showProgressOverlayDelayed()
         compositeDisposable.add(EngageService.getInstance().loginResponseAsObservable
                 .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
+                .observeOn(Schedulers.computation())
                 .subscribe({ response ->
                     if (response is LoginResponse) {
                         initGoal(LoginResponseUtils.getCurrentCard(response), useCache)
@@ -65,14 +66,13 @@ class GoalDetailViewModel(var goalId: Long): GoalDeleteViewModel() {
                             dismissProgressOverlay()
                             if (response.isSuccess && response is GoalsResponse) {
                                 var goalDetailStateList : List<GoalDetailState> = listOf()
-                                for (goalInfo in response.goals) {
-                                    if (goalInfo.goalId == goalId) {
-                                        fundAmount = goalInfo.fundAmount
-                                        goalName = goalInfo.name
-                                        this.goalInfo = goalInfo
-                                        goalDetailStateList = getGoalDetailStateList(goalInfo)
-                                        break
-                                    }
+                                response.goals.find { goalInfo ->
+                                    goalInfo.goalId == goalId
+                                }?.let { goalInfo ->
+                                    fundAmount = goalInfo.fundAmount
+                                    goalName = goalInfo.name
+                                    this.goalInfo = goalInfo
+                                    goalDetailStateList = getGoalDetailStateList(goalInfo)
                                 }
                                 goalScreenTitleObservable.value = goalName
                                 goalDetailStatesListObservable.value = goalDetailStateList
@@ -96,7 +96,7 @@ class GoalDetailViewModel(var goalId: Long): GoalDeleteViewModel() {
                         .observeOn(AndroidSchedulers.mainThread())
                         .subscribe({ response ->
                             if (response.isSuccess) {
-                                refreshGoalDetail(false)
+                                initGoalData(useCache = false)
                             } else {
                                 dismissProgressOverlay()
                                 goalRecurringTransferObservable.value = RecurringTransferStatus.PAUSE_RESUME_FAILURE
@@ -123,23 +123,24 @@ class GoalDetailViewModel(var goalId: Long): GoalDeleteViewModel() {
             // check if goal is in Error state
             if (goalInfo.payPlan.isPaused && goalInfo.estimatedCompleteDate.isNotBlank()) {
                 val estimatedCompletionDate = BackendDateTimeUtils.getDateTimeForYMDString(goalInfo.estimatedCompleteDate)
-                if (estimatedCompletionDate.isBeforeNow) {
-                    errorState = GoalDetailState.ErrorState.ERROR
+                estimatedCompletionDate?.let { date ->
+                    if (date.isBeforeNow) {
+                        errorState = GoalDetailState.ErrorState.ERROR
+                    }
                 }
             }
 
             val recurrenceType : GoalDetailState.GoalIncompleteHeaderItem.PayPlanType = when (goalInfo.payPlan.recurrenceType) {
-                PAYPLAN_TYPE_DAY -> GoalDetailState.GoalIncompleteHeaderItem.PayPlanType.DAY
-                PAYPLAN_TYPE_WEEK -> GoalDetailState.GoalIncompleteHeaderItem.PayPlanType.WEEK
-                PAYPLAN_TYPE_MONTH -> GoalDetailState.GoalIncompleteHeaderItem.PayPlanType.MONTH
-                else -> {
-                    throw IllegalArgumentException("payPlan is of wrong type")
-                }
+                PayPlanInfoUtils.PAY_PLAN_DAY -> GoalDetailState.GoalIncompleteHeaderItem.PayPlanType.DAY
+                PayPlanInfoUtils.PAY_PLAN_WEEK -> GoalDetailState.GoalIncompleteHeaderItem.PayPlanType.WEEK
+                PayPlanInfoUtils.PAY_PLAN_MONTH -> GoalDetailState.GoalIncompleteHeaderItem.PayPlanType.MONTH
+                else -> throw IllegalArgumentException("payPlan is of wrong type")
             }
-            val progress = if (goalInfo.amount != null && goalInfo.amount.toFloat() != 0f && goalInfo.fundAmount != null)
+            val progress = if (goalInfo.amount != null && goalInfo.amount.toFloat() != 0f && goalInfo.fundAmount != null) {
                 goalInfo.fundAmount.toFloat() / goalInfo.amount.toFloat()
-            else
+            } else {
                 0f
+            }
             val goalIncompleteHeaderModel = GoalDetailState.GoalIncompleteHeaderItem.GoalIncompleteHeaderModel(
                     fundAmount = goalInfo.fundAmount,
                     goalAmount = goalInfo.amount,
@@ -163,12 +164,6 @@ class GoalDetailViewModel(var goalId: Long): GoalDeleteViewModel() {
         }
 
         return goalDetailStateList
-    }
-
-    companion object {
-        private const val PAYPLAN_TYPE_DAY = "DAY"
-        private const val PAYPLAN_TYPE_WEEK = "WEEK"
-        private const val PAYPLAN_TYPE_MONTH = "MONTH"
     }
 }
 
