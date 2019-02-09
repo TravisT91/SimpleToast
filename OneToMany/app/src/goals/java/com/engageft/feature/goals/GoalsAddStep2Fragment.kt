@@ -97,7 +97,8 @@ class GoalsAddStep2Fragment : BaseEngagePageFragment() {
                 } else {
                     headerTextView.text = getString(R.string.GOALS_ADD_FREQUENCY_AMOUNT_HEADER)
 
-                    val frequency = PayPlanUtils.getPayPlanRecurrenceDisplayStringForRecurrenceType(context!!, goalInfoModel.recurrenceType).toLowerCase()
+                    val frequency = PayPlanUtils.getPayPlanRecurrenceDisplayStringForRecurrenceType(context!!,
+                            goalInfoModel.recurrenceType.toString()).toLowerCase()
                     val subHeaderString = String.format(
                             getString(R.string.GOALS_ADD_FREQUENCY_AMOUNT_SUB_HEADER_FORMAT),
                             frequency)

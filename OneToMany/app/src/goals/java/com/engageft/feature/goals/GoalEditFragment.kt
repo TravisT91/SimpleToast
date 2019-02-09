@@ -89,7 +89,10 @@ class GoalEditFragment: BaseEngagePageFragment() {
             daysOfWeekBottomSheet.dialogOptions = ArrayList(DisplayDateTimeUtils.daysOfWeekList())
 
             nextRunDateDatePicker.minimumDate = DateTime.now().plusDays(1)
-            nextRunDateDatePicker.maximumDate = DateTime.now().plusDays(30)
+            nextRunDateDatePicker.maximumDate = DateTime.now().plusMonths(1)
+            nextRunDateDatePicker.setDateFormat(getString(R.string.format_datetime_short))
+
+            goalCompleteDateDatePicker.setDateFormat(getString(R.string.format_datetime_short))
 
             goalAmountInputWithLabel.currencyCode = EngageAppConfig.currencyCode
             frequencyAmountInputWithLabel.currencyCode = EngageAppConfig.currencyCode

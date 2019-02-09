@@ -66,6 +66,7 @@
                     android:paddingStart="16dp"
                     android:paddingEnd="16dp"
                     android:paddingTop="16dp"
+                    android:visibility="@{!viewModel.hasCompleteGoalDate.get() ? View.VISIBLE : View.GONE}"
                     app:labelText="@string/GOAL_EDIT_FREQUENCY_AMOUNT"
                     app:inputText="@={viewModel.frequencyAmount}"/>
 
@@ -112,7 +113,31 @@
                     app:bottomSheetDialogTitle="@string/GOALS_ADD_WEEKLY_SELECTION_TITLE"
                     app:bottomSheetDialogStyle="@style/ListOptionBottomSheetDialogFragmentStyle"/>
 
+                <com.engageft.apptoolbox.view.DatePickerInputWithLabel
+                    style="@style/BottomSheetListInputWithLabelStyle"
+                    InputWithLabel.setThemeWithPalette="@{true}"
+                    android:id="@+id/goalCompleteDateDatePicker"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingStart="16dp"
+                    android:paddingEnd="16dp"
+                    android:paddingTop="16dp"
+                    android:visibility="@{viewModel.hasCompleteGoalDate.get() ? View.VISIBLE : View.GONE}"
+                    app:labelText="@string/GOAL_EDIT_COMPLETE_DATE_LABEL"
+                    app:inputText="@={viewModel.goalCompleteDate}" />
+
             </androidx.appcompat.widget.LinearLayoutCompat>
+
+            <androidx.appcompat.widget.AppCompatTextView
+                style="@style/Caption1"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textColor="@color/textSecondary"
+                android:paddingTop="16dp"
+                android:paddingEnd="16dp"
+                android:paddingStart="16dp"
+                android:visibility="@{viewModel.hasCompleteGoalDate.get() ? View.VISIBLE : View.GONE}"
+                android:text="@string/GOAL_EDIT_COMPLETE_DATE_FOOTER"/>
 
             <com.engageft.apptoolbox.view.PillButton
                 style="@style/ButtonPillPrimaryFilledDefault"

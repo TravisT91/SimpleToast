@@ -40,7 +40,7 @@
                 android:paddingTop="16dp"
                 android:paddingBottom="8dp"
                 android:gravity="center_horizontal"
-                tools:text="Start setting aside" />
+                android:text="@string/GOAL_EDIT_CONFIRMATION_HEADER"/>
 
             <androidx.appcompat.widget.AppCompatTextView
                 style="@style/LargeTitleMedium"
@@ -74,7 +74,7 @@
                 android:textColor="@color/textSecondary"
                 android:lineSpacingExtra="11sp"
                 android:gravity="center_horizontal"
-                tools:text="Set money aside toward Flying Home?" />
+                android:text="@string/GOAL_EDIT_CONFIRMATION_COMPLETE_DATE_EFFECT_DESCRIPTION" />
 
             <com.engageft.apptoolbox.view.PillButton
                 style="@style/ButtonPillPrimaryFilledDefault"
