@@ -7,6 +7,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.engageft.apptoolbox.util.CurrencyUtils
 import com.engageft.engagekit.EngageService
+import com.engageft.engagekit.utils.BackendDateTimeUtils
 import com.engageft.engagekit.utils.LoginResponseUtils
 import com.engageft.engagekit.utils.PayPlanInfoUtils
 import com.engageft.feature.budgets.extension.isEqualTo
@@ -138,15 +139,6 @@ class GoalEditViewModel(val goalId: Long): BaseEngageViewModel() {
         goalName.set(goalInfo.name)
         goalAmount.set(StringUtils.formatCurrencyStringWithFractionDigits(goalInfo.amount.toString(), true))
 
-        // user had set a complete goal date originally
-        if (!goalInfo.completeDate.isNullOrBlank()) {
-            hasCompleteGoalDate.set(true)
-            goalCompleteDate.set(DateTime(goalInfo.completeDate).toString(DisplayDateTimeUtils.shortDateFormatter))
-        } else {
-            hasCompleteGoalDate.set(false)
-            frequencyAmount.set(StringUtils.formatCurrencyStringWithFractionDigits(goalInfo.payPlan.amount.toString(), true))
-        }
-
         when(goalInfo.payPlan.recurrenceType) {
             PayPlanInfoUtils.PAY_PLAN_DAY -> {
                 frequencyType.set(FREQUENCY_TYPE_DAILY)
@@ -165,6 +157,26 @@ class GoalEditViewModel(val goalId: Long): BaseEngageViewModel() {
                 showNextRunDate.set(true)
                 nextRunDate.set(DateTime(goalInfo.payPlan.nextRunDate).toString(DisplayDateTimeUtils.shortDateFormatter))
             }
+        }
+
+        var isInErrorState = false
+        // check if goal is in Error state
+        if (goalInfo.payPlan.isPaused) {
+            val estimatedCompletionDate = BackendDateTimeUtils.getDateTimeForYMDString(goalInfo.estimatedCompleteDate)
+            estimatedCompletionDate?.let { date ->
+                if (date.isBeforeNow) {
+                    isInErrorState = true
+                }
+            }
+        }
+
+        // user had set a complete goal date originally
+        if (!goalInfo.completeDate.isNullOrBlank() || isInErrorState) {
+            hasCompleteGoalDate.set(true)
+            goalCompleteDate.set(DateTime(goalInfo.estimatedCompleteDate).toString(DisplayDateTimeUtils.shortDateFormatter))
+        } else {
+            hasCompleteGoalDate.set(false)
+            frequencyAmount.set(StringUtils.formatCurrencyStringWithFractionDigits(goalInfo.payPlan.amount.toString(), true))
         }
     }
 
@@ -255,7 +267,7 @@ class GoalEditViewModel(val goalId: Long): BaseEngageViewModel() {
     private fun hasFrequencyAmountOrGoalDateChanged() : Boolean {
         goalInfo?.let { goalInfo ->
             return if (hasCompleteGoalDate.get()!!) {
-                goalInfo.completeDate != getBackendFormatDateStringFromDisplayFormat(goalCompleteDate.get()!!)
+                goalInfo.estimatedCompleteDate != getBackendFormatDateStringFromDisplayFormat(goalCompleteDate.get()!!)
             } else {
                 val amountFrequency = if (frequencyAmount.get()!!.isNotEmpty()) {
                     BigDecimal(CurrencyUtils.getNonFormattedDecimalAmountString(EngageAppConfig.currencyCode, frequencyAmount.get()!!))
