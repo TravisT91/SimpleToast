@@ -21,10 +21,10 @@ import utilGen1.DisplayDateTimeUtils
 import utilGen1.StringUtils
 
 class GoalAddConfirmationFragment: BaseEngagePageFragment() {
-    private lateinit var confirmationViewModel: GoalAddConfirmationViewModel
+    private lateinit var confirmationViewModel: GoalAddEditConfirmationViewModel
 
     override fun createViewModel(): BaseViewModel? {
-        confirmationViewModel = ViewModelProviders.of(this).get(GoalAddConfirmationViewModel::class.java)
+        confirmationViewModel = ViewModelProviders.of(this).get(GoalAddEditConfirmationViewModel::class.java)
         return confirmationViewModel
     }
 
@@ -42,7 +42,7 @@ class GoalAddConfirmationFragment: BaseEngagePageFragment() {
             }
         }
 
-        confirmationViewModel.successStateObservable.observe(viewLifecycleOwner, Observer {
+        confirmationViewModel.addEditSuccessObservable.observe(viewLifecycleOwner, Observer {
             binding.root.findNavController().popBackStack(R.id.goalsAddStep1Fragment, true)
         })
 

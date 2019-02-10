@@ -95,7 +95,7 @@
                     android:paddingEnd="16dp"
                     android:paddingTop="16dp"
                     android:visibility="@{viewModel.showNextRunDate.get() ? View.VISIBLE : View.GONE}"
-                    app:labelText="@string/GOALS_ADD_MONTHLY_LABEL"
+                    app:labelText="@string/GOAL_EDIT_MONTHLY_DATE_LABEL"
                     app:inputText="@={viewModel.nextRunDate}" />
 
                 <com.engageft.apptoolbox.view.BottomSheetListInputWithLabel

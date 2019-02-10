@@ -56,6 +56,7 @@
     <string name="GOAL_ERROR_TITLE">This goal is past its end date</string>
     <string name="GOAL_ERROR_DESCRIPTION">To continue setting aside money in this goal, you must edit when you need it by. Tap to edit.</string>
     <string name="GOAL_EDIT_FREQUENCY_AMOUNT">Set-aside how much</string>
+    <string name="GOAL_EDIT_MONTHLY_DATE_LABEL">Next run date</string>
     <string name="GOAL_EDIT_COMPLETE_DATE_FOOTER">*Goals may complete earlier than your end date.</string>
     <string name="GOAL_EDIT_COMPLETE_DATE_LABEL">When do you need it by*</string>
     <string name="GOAL_EDIT_CONFIRMATION_COMPLETE_DATE_EFFECT_DESCRIPTION">This change will directly effect the date your goal will be reached.</string>

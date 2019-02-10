@@ -22,10 +22,10 @@ import utilGen1.PayPlanUtils
 import utilGen1.StringUtils
 
 class GoalEditConfirmationFragment: BaseEngagePageFragment() {
-    private lateinit var confirmationViewModel: GoalAddConfirmationViewModel
+    private lateinit var confirmationViewModel: GoalAddEditConfirmationViewModel
 
     override fun createViewModel(): BaseViewModel? {
-        confirmationViewModel = ViewModelProviders.of(this).get(GoalAddConfirmationViewModel::class.java)
+        confirmationViewModel = ViewModelProviders.of(this).get(GoalAddEditConfirmationViewModel::class.java)
         return confirmationViewModel
     }
 
@@ -50,7 +50,7 @@ class GoalEditConfirmationFragment: BaseEngagePageFragment() {
             }
         }
 
-        confirmationViewModel.successStateObservable.observe(viewLifecycleOwner, Observer {
+        confirmationViewModel.addEditSuccessObservable.observe(viewLifecycleOwner, Observer {
             binding.root.findNavController().popBackStack(R.id.goalDetailFragment, true)
         })
 

@@ -3,7 +3,7 @@
     <data>
         <variable
             name="viewModel"
-            type="com.engageft.feature.goals.GoalAddConfirmationViewModel"/>
+            type="com.engageft.feature.goals.GoalAddEditConfirmationViewModel"/>
         <variable
             name="palette"
             type="com.engageft.fis.pscu.feature.branding.Palette"/>

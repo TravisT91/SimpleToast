@@ -26,9 +26,8 @@ import java.math.BigDecimal
 
 class GoalEditViewModel(val goalId: Long): BaseEngageViewModel() {
 
-    private lateinit var goalInfo: GoalInfo
+    private var goalInfo: GoalInfo? = null
 
-    // todo must change lateinit
     lateinit var goalInfoModel: GoalInfoModel
     private set
 
@@ -94,18 +93,21 @@ class GoalEditViewModel(val goalId: Long): BaseEngageViewModel() {
     }
 
     fun hasUnsavedChanges(): Boolean {
-        val amountGoal = if (goalAmount.get()!!.isNotEmpty()) {
-            BigDecimal(CurrencyUtils.getNonFormattedDecimalAmountString(EngageAppConfig.currencyCode, goalAmount.get()!!))
-        } else {
-            BigDecimal.ZERO
+        goalInfo?.let { goalInfo ->
+            val amountGoal = if (goalAmount.get()!!.isNotEmpty()) {
+                BigDecimal(CurrencyUtils.getNonFormattedDecimalAmountString(EngageAppConfig.currencyCode, goalAmount.get()!!))
+            } else {
+                BigDecimal.ZERO
+            }
+
+            return goalName.get()!! != goalInfo.name
+                    || !goalInfo.amount.isEqualTo(amountGoal)
+                    || hasFrequencyTypeChanged()
+                    || hasFrequencyAmountOrGoalDateChanged()
         }
 
-        return goalName.get()!! != goalInfo.name
-                || !goalInfo.amount.isEqualTo(amountGoal)
-                || hasFrequencyTypeChanged()
-                || hasFrequencyAmountOrGoalDateChanged()
+        return false
     }
-
 
     private fun initGoal(debitCardInfo: DebitCardInfo) {
         compositeDisposable.add(
@@ -251,16 +253,20 @@ class GoalEditViewModel(val goalId: Long): BaseEngageViewModel() {
     }
 
     private fun hasFrequencyAmountOrGoalDateChanged() : Boolean {
-        return if (hasCompleteGoalDate.get()!!) {
-            goalInfo.completeDate != getBackendFormatDateStringFromDisplayFormat(goalCompleteDate.get()!!)
-        } else {
-            val amountFrequency = if (frequencyAmount.get()!!.isNotEmpty()) {
-                BigDecimal(CurrencyUtils.getNonFormattedDecimalAmountString(EngageAppConfig.currencyCode, frequencyAmount.get()!!))
+        goalInfo?.let { goalInfo ->
+            return if (hasCompleteGoalDate.get()!!) {
+                goalInfo.completeDate != getBackendFormatDateStringFromDisplayFormat(goalCompleteDate.get()!!)
             } else {
-                BigDecimal.ZERO
+                val amountFrequency = if (frequencyAmount.get()!!.isNotEmpty()) {
+                    BigDecimal(CurrencyUtils.getNonFormattedDecimalAmountString(EngageAppConfig.currencyCode, frequencyAmount.get()!!))
+                } else {
+                    BigDecimal.ZERO
+                }
+                !goalInfo.payPlan.amount.isEqualTo(amountFrequency)
             }
-            !goalInfo.payPlan.amount.isEqualTo(amountFrequency)
         }
+
+        return false
     }
 
     private fun getBackendFormatDateStringFromDisplayFormat(dateString: String): String {
@@ -269,23 +275,27 @@ class GoalEditViewModel(val goalId: Long): BaseEngageViewModel() {
     }
 
     private fun hasFrequencyTypeChanged(): Boolean {
-        val isNewFrequency = goalInfo.payPlan.recurrenceType != getRecurrenceType().toString()
-        if (isNewFrequency) return true
+        goalInfo?.let { goalInfo ->
+            val isNewFrequency = goalInfo.payPlan.recurrenceType != getRecurrenceType().toString()
+            if (isNewFrequency) return true
 
-        return when (frequencyType.get()!!) {
-            FREQUENCY_TYPE_WEEKLY -> {
-                dayOfWeek.get()!!.isNotEmpty() && goalInfo.payPlan.dayOfWeek != null &&
-                        dayOfWeek.get() != DisplayDateTimeUtils.getDayOfWeekStringForNumber(goalInfo.payPlan.dayOfWeek)
+            return when (frequencyType.get()!!) {
+                FREQUENCY_TYPE_WEEKLY -> {
+                    dayOfWeek.get()!!.isNotEmpty() && goalInfo.payPlan.dayOfWeek != null &&
+                            dayOfWeek.get() != DisplayDateTimeUtils.getDayOfWeekStringForNumber(goalInfo.payPlan.dayOfWeek)
 
-            }
-            FREQUENCY_TYPE_MONTHLY -> {
-                goalInfo.payPlan.recurrenceType != PayPlanInfoUtils.PAY_PLAN_MONTH || (nextRunDate.get()!!.isNotEmpty()
-                        && getBackendFormatDateStringFromDisplayFormat(nextRunDate.get()!!) != goalInfo.payPlan.nextRunDate)
-            }
-            else -> {
-                false
+                }
+                FREQUENCY_TYPE_MONTHLY -> {
+                    goalInfo.payPlan.recurrenceType != PayPlanInfoUtils.PAY_PLAN_MONTH || (nextRunDate.get()!!.isNotEmpty()
+                            && getBackendFormatDateStringFromDisplayFormat(nextRunDate.get()!!) != goalInfo.payPlan.nextRunDate)
+                }
+                else -> {
+                    false
+                }
             }
         }
+
+        return false
     }
 
     private fun getRecurrenceType(): PayPlanType {

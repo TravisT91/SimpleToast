@@ -1,7 +1,7 @@
 package com.engageft.feature.goals
 
-import androidx.lifecycle.MutableLiveData
 import com.engageft.engagekit.EngageService
+import com.engageft.engagekit.aac.SingleLiveEvent
 import com.engageft.engagekit.rest.request.GoalInfoRequest
 import com.engageft.engagekit.rest.request.GoalRequest
 import com.engageft.engagekit.rest.request.PayPlanAddUpdateRequest
@@ -22,18 +22,13 @@ import com.ob.ws.dom.utility.GoalTargetInfo
 import com.ob.ws.dom.utility.PayPlanInfo
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
-// todo rename back to addedit
-// todo schedulors.computation
-class GoalAddConfirmationViewModel: BaseEngageViewModel() {
-    // todo singleLiveEvent?
-    enum class GoalSuccessState {
-        SUCCESS
-    }
+
+class GoalAddEditConfirmationViewModel: BaseEngageViewModel() {
     enum class GoalEvent {
         ADD,
         EDIT
     }
-    val successStateObservable = MutableLiveData<GoalSuccessState>()
+    val addEditSuccessObservable = SingleLiveEvent<Unit>()
     lateinit var goalInfoModel: GoalInfoModel
 
     private var eventType: GoalEvent = GoalEvent.ADD
@@ -49,7 +44,7 @@ class GoalAddConfirmationViewModel: BaseEngageViewModel() {
         showProgressOverlayImmediate()
         compositeDisposable.add(EngageService.getInstance().loginResponseAsObservable
                 .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
+                .observeOn(Schedulers.computation())
                 .subscribe({ response ->
                     if (response is LoginResponse) {
                         // don't hide progressOverlay
@@ -76,7 +71,7 @@ class GoalAddConfirmationViewModel: BaseEngageViewModel() {
         compositeDisposable.add(
                 EngageService.getInstance().goalsObservable(debitCardInfo, true)
                         .subscribeOn(Schedulers.io())
-                        .observeOn(AndroidSchedulers.mainThread())
+                        .observeOn(Schedulers.computation())
                         .subscribe({ response ->
                             if (response.isSuccess && response is GoalsResponse) {
                                 response.goals.find { goalInfo ->
@@ -167,7 +162,7 @@ class GoalAddConfirmationViewModel: BaseEngageViewModel() {
 
         compositeDisposable.add(engageApi().postGoalAddUpdate(goalInfo)
                 .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
+                .observeOn(Schedulers.computation())
                 .subscribe({ response ->
                     // hide the progressOverlay if payPlanInfo is success
                     if (response.isSuccess && response is GoalResponse) {
@@ -194,7 +189,7 @@ class GoalAddConfirmationViewModel: BaseEngageViewModel() {
         compositeDisposable.add(
                 getPayPlanApiObservable(payPlanInfo, goalId, goalInfo)
                         .subscribeOn(Schedulers.io())
-                        .observeOn(AndroidSchedulers.mainThread())
+                        .observeOn(Schedulers.computation())
                         .subscribe({ response ->
                             if (response.isSuccess && response is PayPlanResponse) {
                                 refreshData()
@@ -253,7 +248,7 @@ class GoalAddConfirmationViewModel: BaseEngageViewModel() {
         compositeDisposable.add(
                 engageApi().postGoalRemove(request.fieldMap)
                         .subscribeOn(Schedulers.io())
-                        .observeOn(AndroidSchedulers.mainThread())
+                        .observeOn(Schedulers.computation())
                         .subscribe({
                             dismissProgressOverlay()
                             // don't show the backend error here since we want the user to see
@@ -276,13 +271,13 @@ class GoalAddConfirmationViewModel: BaseEngageViewModel() {
                         refreshGoals(LoginResponseUtils.getCurrentCard(response))
                     } else {
                         dismissProgressOverlay()
-                        // take user to Goals Success even if refresh is not successful
-                        successStateObservable.value = GoalSuccessState.SUCCESS
+                        // trigger success event
+                        addEditSuccessObservable.call()
                     }
                 }, { e ->
                     dismissProgressOverlay()
-                    // take user to Goals Success even if refresh is not successful
-                    successStateObservable.value = GoalSuccessState.SUCCESS
+                    // trigger success event
+                    addEditSuccessObservable.call()
                 })
         )
     }
@@ -294,17 +289,17 @@ class GoalAddConfirmationViewModel: BaseEngageViewModel() {
                         .observeOn(AndroidSchedulers.mainThread())
                         .subscribe({
                             dismissProgressOverlay()
-                            // take user to Goals Success even if refresh is not successful
-                            successStateObservable.value = GoalSuccessState.SUCCESS
+                            // trigger success event
+                            addEditSuccessObservable.call()
                         }, { e ->
                             dismissProgressOverlay()
-                            // take user to Goals Success even if refresh is not successful
-                            successStateObservable.value = GoalSuccessState.SUCCESS
+                            // trigger success event
+                            addEditSuccessObservable.call()
                         })
         )
     }
 
     companion object {
-        private const val TAG = "GoalAddConfirmationViewModel"
+        private const val TAG = "GoalAddEditConfirmationViewModel"
     }
 }
