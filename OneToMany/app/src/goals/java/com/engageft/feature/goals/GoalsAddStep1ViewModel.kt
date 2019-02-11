@@ -6,6 +6,12 @@ import androidx.databinding.ObservableField
 import androidx.lifecycle.MutableLiveData
 import com.engageft.apptoolbox.util.CurrencyUtils
 import com.engageft.engagekit.utils.PayPlanInfoUtils
+import com.engageft.feature.goals.utils.GoalConstants.FREQUENCY_TYPE_DAILY
+import com.engageft.feature.goals.utils.GoalConstants.FREQUENCY_TYPE_MONTHLY
+import com.engageft.feature.goals.utils.GoalConstants.FREQUENCY_TYPE_WEEKLY
+import com.engageft.feature.goals.utils.GoalConstants.GOAL_ID_DEFAULT
+import com.engageft.feature.goals.utils.GoalConstants.YES
+import com.engageft.feature.goals.utils.PayPlanType
 import com.engageft.fis.pscu.config.EngageAppConfig
 import com.engageft.fis.pscu.feature.BaseEngageViewModel
 import kotlinx.android.parcel.Parcelize
@@ -96,19 +102,19 @@ class GoalsAddStep1ViewModel: BaseEngageViewModel() {
         val amount = BigDecimal(CurrencyUtils.getNonFormattedDecimalAmountString(
                 currencyCode = EngageAppConfig.currencyCode,
                 stringWithCurrencySymbol = goalAmount.get()!!))
-        val recurrenceType: String
         var dayOfWeekInt = 0
         var startOnDate: DateTime? = null
+        val recurrenceType: PayPlanType
         when (frequency.get()!!) {
             FREQUENCY_TYPE_DAILY -> {
-                recurrenceType = PayPlanInfoUtils.PAY_PLAN_DAY
+                recurrenceType = PayPlanType.DAY
             }
             FREQUENCY_TYPE_WEEKLY -> {
-                recurrenceType = PayPlanInfoUtils.PAY_PLAN_WEEK
+                recurrenceType = PayPlanType.WEEK
                 dayOfWeekInt = DisplayDateTimeUtils.getDayOfWeekNumber(dayOfWeek.get()!!)
             }
             FREQUENCY_TYPE_MONTHLY -> {
-                recurrenceType = PayPlanInfoUtils.PAY_PLAN_MONTH
+                recurrenceType = PayPlanType.MONTH
                 startOnDate = DisplayDateTimeUtils.mediumDateFormatter.parseDateTime(startDate.get()!!)
             }
             else -> {
@@ -141,16 +147,10 @@ class GoalsAddStep1ViewModel: BaseEngageViewModel() {
         }
         return false
     }
-
-    private companion object {
-        const val YES = "Yes"
-        const val FREQUENCY_TYPE_DAILY = "Daily"
-        const val FREQUENCY_TYPE_WEEKLY = "Weekly"
-        const val FREQUENCY_TYPE_MONTHLY = "Monthly"
-    }
 }
 
 @Parcelize
-data class GoalInfoModel(val goalName: String, val goalAmount: BigDecimal, val recurrenceType: String,
-                         val startDate: DateTime?, val dayOfWeek: Int, val hasCompleteDate: Boolean,
-                         var goalCompleteDate: DateTime? = null, var frequencyAmount: BigDecimal? = null) : Parcelable
+data class GoalInfoModel(val goalId: Long = GOAL_ID_DEFAULT, val goalName: String, val goalAmount: BigDecimal,
+                         val recurrenceType: PayPlanType, val startDate: DateTime?, val dayOfWeek: Int,
+                         val hasCompleteDate: Boolean, var goalCompleteDate: DateTime? = null,
+                         var frequencyAmount: BigDecimal? = null) : Parcelable

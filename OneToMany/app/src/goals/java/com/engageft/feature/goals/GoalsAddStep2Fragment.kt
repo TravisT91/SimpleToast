@@ -16,7 +16,7 @@ import com.engageft.apptoolbox.BaseViewModel
 import com.engageft.apptoolbox.NavigationOverrideClickListener
 import com.engageft.apptoolbox.util.applyTypefaceToSubstring
 import com.engageft.apptoolbox.view.InformationDialogFragment
-import com.engageft.feature.goals.GoalsAddStep1Fragment.Companion.GOAL_DATA_PARCELABLE_KEY
+import com.engageft.feature.goals.utils.GoalConstants.GOAL_DATA_PARCELABLE_KEY
 import com.engageft.fis.pscu.R
 import com.engageft.fis.pscu.config.EngageAppConfig
 import com.engageft.fis.pscu.databinding.FragmentGoalsAddStep2Binding
@@ -97,7 +97,8 @@ class GoalsAddStep2Fragment : BaseEngagePageFragment() {
                 } else {
                     headerTextView.text = getString(R.string.GOALS_ADD_FREQUENCY_AMOUNT_HEADER)
 
-                    val frequency = PayPlanUtils.getPayPlanRecurrenceDisplayStringForRecurrenceType(context!!, goalInfoModel.recurrenceType).toLowerCase()
+                    val frequency = PayPlanUtils.getPayPlanRecurrenceDisplayStringForRecurrenceType(context!!,
+                            goalInfoModel.recurrenceType.toString()).toLowerCase()
                     val subHeaderString = String.format(
                             getString(R.string.GOALS_ADD_FREQUENCY_AMOUNT_SUB_HEADER_FORMAT),
                             frequency)

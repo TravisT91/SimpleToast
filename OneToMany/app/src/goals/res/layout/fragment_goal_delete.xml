@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout>
+    <data>
+        <variable
+            name="viewModel"
+            type="com.engageft.feature.goals.GoalDeleteViewModel"/>
+        <variable
+            name="palette"
+            type="com.engageft.fis.pscu.feature.branding.Palette"/>
+    </data>
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:fillViewport="true"
+        xmlns:android="http://schemas.android.com/apk/res/android">
+
+        <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:orientation="vertical">
+
+            <include
+                layout="@layout/imageview_with_circle_background"
+                android:id="@+id/imageViewLayout"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+
+            <androidx.appcompat.widget.AppCompatTextView
+                style="@style/Title1Quiet"
+                android:id="@+id/headerTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/textPrimary"
+                android:lineSpacingExtra="6sp"
+                android:paddingTop="16dp"
+                android:paddingBottom="8dp"
+                android:gravity="center_horizontal"
+                android:text="@string/GOAL_DELETE_HEADER" />
+
+            <androidx.appcompat.widget.AppCompatTextView
+                style="@style/LargeTitleMedium"
+                android:id="@+id/subHeaderTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/textPrimary"
+                android:lineSpacingExtra="10sp"
+                android:gravity="center_horizontal"
+                tools:text="$10.00"/>
+
+            <androidx.appcompat.widget.AppCompatTextView
+                style="@style/Body"
+                android:id="@+id/descriptionTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/GOAL_DELETE_DESCRIPTION"
+                android:textColor="@color/textSecondary"
+                android:lineSpacingExtra="11sp"
+                android:paddingTop="8dp"
+                android:paddingStart="80dp"
+                android:paddingEnd="80dp"
+                android:gravity="center_horizontal"/>
+
+            <com.engageft.apptoolbox.view.PillButton
+                style="@style/ButtonPillPrimaryFilledDefault"
+                PillButton.setThemeFilled="@{true}"
+                android:id="@+id/deleteButton"
+                android:layout_marginTop="30dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/GOAL_DELETE_BUTTON"/>
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/cancelButton"
+                style="@style/BodyMedium"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="24dp"
+                android:textSize="16sp"
+                android:textColor="@color/primary"
+                android:gravity="center_horizontal"
+                android:text="@string/GOAL_DELETE_CANCEL" />
+        </LinearLayout>
+    </ScrollView>
+</layout>
+

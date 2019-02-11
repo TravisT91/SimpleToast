@@ -15,23 +15,23 @@ import com.engageft.apptoolbox.BaseViewModel
 import com.engageft.apptoolbox.NavigationOverrideClickListener
 import com.engageft.apptoolbox.view.InformationDialogFragment
 import com.engageft.feature.goals.utils.GoalConstants.GOAL_DATA_PARCELABLE_KEY
+import com.engageft.feature.goals.utils.GoalConstants.GOAL_ID_DEFAULT
+import com.engageft.feature.goals.utils.GoalConstants.GOAL_ID_KEY
 import com.engageft.fis.pscu.R
 import com.engageft.fis.pscu.config.EngageAppConfig
-import com.engageft.fis.pscu.databinding.FragmentGoalsAddStep1Binding
+import com.engageft.fis.pscu.databinding.FragmentGoalEditBinding
 import com.engageft.fis.pscu.feature.BaseEngagePageFragment
 import com.engageft.fis.pscu.feature.branding.Palette
 import com.engageft.fis.pscu.feature.infoDialogGenericUnsavedChangesNewInstance
 import org.joda.time.DateTime
 import utilGen1.DisplayDateTimeUtils
 import utilGen1.PayPlanUtils
+import java.lang.IllegalArgumentException
 
-/**
- * Created by joeyhutchins on 8/24/18.
- * Copyright (c) 2018 Engage FT. All rights reserved.
- */
-class GoalsAddStep1Fragment : BaseEngagePageFragment() {
+class GoalEditFragment: BaseEngagePageFragment() {
 
-    private lateinit var addGoalViewModel: GoalsAddStep1ViewModel
+    private lateinit var viewModelGoalEdit: GoalEditViewModel
+    private lateinit var binding: FragmentGoalEditBinding
 
     private val unsavedChangesDialogListener = object : InformationDialogFragment.InformationDialogFragmentListener {
         override fun onDialogFragmentPositiveButtonClicked() {
@@ -47,7 +47,7 @@ class GoalsAddStep1Fragment : BaseEngagePageFragment() {
 
     private val navigationOverrideClickListener = object : NavigationOverrideClickListener {
         override fun onClick(): Boolean {
-            return if (addGoalViewModel.hasUnsavedChanges()) {
+            return if (viewModelGoalEdit.hasUnsavedChanges()) {
                 fragmentDelegate.showDialog(infoDialogGenericUnsavedChangesNewInstance(context = activity!!, listener = unsavedChangesDialogListener))
                 true
             } else {
@@ -57,8 +57,15 @@ class GoalsAddStep1Fragment : BaseEngagePageFragment() {
     }
 
     override fun createViewModel(): BaseViewModel? {
-        addGoalViewModel = ViewModelProviders.of(this).get(GoalsAddStep1ViewModel::class.java)
-        return addGoalViewModel
+        arguments!!.let {
+            val goalId = it.getLong(GOAL_ID_KEY, GOAL_ID_DEFAULT)
+            if (goalId == GOAL_ID_DEFAULT) {
+                throw IllegalArgumentException("Goal Id is not valid")
+            } else {
+                viewModelGoalEdit = ViewModelProviders.of(this, GoalEditViewModelFactory(goalId)).get(GoalEditViewModel::class.java)
+            }
+        }
+        return viewModelGoalEdit
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -66,52 +73,49 @@ class GoalsAddStep1Fragment : BaseEngagePageFragment() {
         setHasOptionsMenu(true)
     }
 
-    private lateinit var binding: FragmentGoalsAddStep1Binding
-
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        binding = FragmentGoalsAddStep1Binding.inflate(inflater, container, false).apply {
-            viewModel = addGoalViewModel
+        binding = FragmentGoalEditBinding.inflate(inflater, container, false).apply {
+            viewModel = viewModelGoalEdit
             palette = Palette
 
             upButtonOverrideProvider.setUpButtonOverride(navigationOverrideClickListener)
             backButtonOverrideProvider.setBackButtonOverride(navigationOverrideClickListener)
 
-            nextButton.setOnClickListener {
-                navigateToNextStep()
-            }
+            toolbarController.setToolbarTitle(getString(R.string.GOAL_DETAIL_EDIT))
 
             val frequencyOptionsList = PayPlanUtils.getRecurrenceTypeDisplayStringsForGoals(context!!)
             frequencyBottomSheet.dialogOptions = ArrayList(frequencyOptionsList)
 
             daysOfWeekBottomSheet.dialogOptions = ArrayList(DisplayDateTimeUtils.daysOfWeekList())
 
-            goalCompleteDateBottomSheet.dialogOptions = ArrayList(listOf(
-                    getString(R.string.GOALS_ADD_COMPLETE_DATE_YES),
-                    getString(R.string.GOALS_ADD_COMPLETE_DATE_NO)))
+            val minimumDate = DateTime.now().plusDays(1)
+            nextRunDateDatePicker.minimumDate = minimumDate
+            nextRunDateDatePicker.maximumDate = DateTime.now().plusMonths(1)
+            nextRunDateDatePicker.setDateFormat(getString(R.string.format_datetime_short))
 
-            startDateBottomSheet.minimumDate = DateTime.now().plusDays(1)
-            startDateBottomSheet.maximumDate = DateTime.now().plusMonths(1)
+            goalCompleteDateDatePicker.minimumDate = minimumDate
+            goalCompleteDateDatePicker.setDateFormat(getString(R.string.format_datetime_short))
 
-            amountInputWithLabel.currencyCode = EngageAppConfig.currencyCode
+            goalAmountInputWithLabel.currencyCode = EngageAppConfig.currencyCode
+            frequencyAmountInputWithLabel.currencyCode = EngageAppConfig.currencyCode
 
-            addGoalViewModel.nextButtonStateObservable.observe(viewLifecycleOwner, Observer {
-                if (it == GoalsAddStep1ViewModel.ButtonState.SHOW) {
-                    nextButton.visibility = View.VISIBLE
-                } else {
-                    nextButton.visibility = View.GONE
-                }
-                activity!!.invalidateOptionsMenu()
-            })
-        }
+            nextButton.setOnClickListener {
+                navigateToNextStep()
+            }
 
-        return binding.root
-    }
+            viewModelGoalEdit.apply {
 
-    private fun navigateToNextStep() {
-        binding.root.findNavController().navigate(R.id.action_goalsAddStep1Fragment_to_goalsAddStep2Fragment,
-                Bundle().apply {
-                    putParcelable(GOAL_DATA_PARCELABLE_KEY, addGoalViewModel.getGoalInfoModel())
+                nextButtonStateObservable.observe(viewLifecycleOwner, Observer {
+                    if (it == GoalEditViewModel.ButtonState.SHOW) {
+                        nextButton.visibility = View.VISIBLE
+                    } else {
+                        nextButton.visibility = View.GONE
+                    }
+                    activity!!.invalidateOptionsMenu()
                 })
+            }
+        }
+        return binding.root
     }
 
     override fun onCreateOptionsMenu(menu: Menu?, inflater: MenuInflater?) {
@@ -121,7 +125,7 @@ class GoalsAddStep1Fragment : BaseEngagePageFragment() {
 
     override fun onPrepareOptionsMenu(menu: Menu?) {
         val menuItem = menu!!.findItem(R.id.menu_item_next)
-        menuItem.isVisible = addGoalViewModel.nextButtonStateObservable.value == GoalsAddStep1ViewModel.ButtonState.SHOW
+        menuItem.isVisible = viewModelGoalEdit.nextButtonStateObservable.value == GoalEditViewModel.ButtonState.SHOW
         super.onPrepareOptionsMenu(menu)
     }
 
@@ -132,5 +136,12 @@ class GoalsAddStep1Fragment : BaseEngagePageFragment() {
             }
         }
         return super.onOptionsItemSelected(item)
+    }
+
+    private fun navigateToNextStep() {
+        binding.root.findNavController().navigate(R.id.action_goalEditFragment_to_goalEditConfirmationFragment,
+                Bundle().apply {
+                    putParcelable(GOAL_DATA_PARCELABLE_KEY, viewModelGoalEdit.goalInfoModel)
+                })
     }
 }
