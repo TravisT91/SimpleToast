@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+        <import type="android.view.View"/>
+        <variable
+            name="viewModel"
+            type="com.engageft.feature.goals.GoalSingleTransferViewModel"/>
+        <variable
+            name="palette"
+            type="com.engageft.fis.pscu.feature.branding.Palette"/>
+    </data>
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:fillViewport="true">
+
+        <androidx.appcompat.widget.LinearLayoutCompat
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/headerTextView"
+                style="@style/Body"
+                android:textColor="@color/textSecondary"
+                android:lineSpacingExtra="11sp"
+                android:padding="16dp"
+                android:text="@string/GOAL_SINGLE_TRANSFER_HEADER" />
+
+            <androidx.appcompat.widget.LinearLayoutCompat
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/cellBackground"
+                android:orientation="vertical">
+
+                <include layout="@layout/view_horizontal_divider" />
+
+                <com.engageft.apptoolbox.view.BottomSheetListInputWithLabel
+                    style="@style/BottomSheetListInputWithLabelStyle"
+                    InputWithLabel.setThemeWithPalette="@{true}"
+                    android:id="@+id/fromBottomSheet"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingStart="16dp"
+                    android:paddingEnd="16dp"
+                    android:paddingTop="16dp"
+                    app:labelText="@string/GOAL_SINGLE_TRANSFER_FROM_LABEL"
+                    app:inputText="@={viewModel.from}"
+                    app:bottomSheetDialogTitle="@string/GOAL_SINGLE_TRANSFER_FROM_SELECTION_TITLE"
+                    app:bottomSheetDialogStyle="@style/ListOptionBottomSheetDialogFragmentStyle">
+                </com.engageft.apptoolbox.view.BottomSheetListInputWithLabel>
+
+                <com.engageft.apptoolbox.view.BottomSheetListInputWithLabel
+                    style="@style/BottomSheetListInputWithLabelStyle"
+                    InputWithLabel.setThemeWithPalette="@{true}"
+                    android:id="@+id/toBottomSheet"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingStart="16dp"
+                    android:paddingEnd="16dp"
+                    android:paddingTop="16dp"
+                    app:labelText="@string/GOAL_SINGLE_TRANSFER_TO_LABEL"
+                    app:inputText="@={viewModel.to}"
+                    app:bottomSheetDialogStyle="@style/ListOptionBottomSheetDialogFragmentStyle"/>
+
+                <com.engageft.apptoolbox.view.CurrencyInputWithLabel
+                    style="@style/CurrencyInputWithLabelStyle"
+                    InputWithLabel.setThemeWithPalette="@{true}"
+                    android:id="@+id/amountInputWithLabel"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingStart="16dp"
+                    android:paddingEnd="16dp"
+                    android:paddingTop="16dp"
+                    app:labelText="@string/ach_bank_transfer_create_amount_label"
+                    app:inputText="@={viewModel.amount}"/>
+
+            </androidx.appcompat.widget.LinearLayoutCompat>
+
+            <com.engageft.apptoolbox.view.PillButton
+                style="@style/ButtonPillPrimaryFilledDefault"
+                PillButton.setThemeFilled="@{true}"
+                android:id="@+id/nextButton"
+                android:layout_gravity="center"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/pillButtonTopSpaceInFormsAndLists"
+                android:layout_margin="16dp"
+                android:text="@string/ach_bank_transfer_create_next_button"/>
+
+        </androidx.appcompat.widget.LinearLayoutCompat>
+
+    </ScrollView>
+
+</layout>

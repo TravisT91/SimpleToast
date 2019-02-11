@@ -105,8 +105,7 @@ class GoalDetailFragment: BaseEngagePageFragment() {
                     is GoalDetailState.GoalCompleteHeaderItem -> {
                         addSection(GoalDetailCompleteHeaderSection(context!!, goalDetailState.fundAmount, object:  GoalDetailCompleteHeaderSection.OnButtonClickListener {
                             override fun onTransferButtonClicked() {
-                                // TODO(aHashimi): FOTM-575 single transfer
-                                Toast.makeText(context!!, "onTransferButtonClicked!", Toast.LENGTH_SHORT).show()
+                                navigateToGoalTransfer()
                             }
                         }))
 
@@ -118,8 +117,7 @@ class GoalDetailFragment: BaseEngagePageFragment() {
                                 R.style.GoalDetailItemTextStyle,
                                 object: SelectableLabelsSection.OnSelectableLabelInteractionListener {
                                     override fun onLabelClicked(labelId: Int) {
-                                        // TODO(aHashimi): FOTM-575 single transfer
-                                        Toast.makeText(context!!, "on transfer item clicked!", Toast.LENGTH_SHORT).show()
+                                        navigateToGoalTransfer()
                                     }
                                 }).addLabel(TRANSFER_LABEL_ID, getString(R.string.GOAL_DETAIL_TRANSFER)))
 
@@ -173,6 +171,13 @@ class GoalDetailFragment: BaseEngagePageFragment() {
 
     private fun navigateToGoalEdit() {
         binding.root.findNavController().navigate(R.id.action_goalDetailFragment_to_goalEditFragment,
+                Bundle().apply {
+                    putLong(GOAL_ID_KEY, viewModelGoalDetail.goalId)
+                })
+    }
+
+    private fun navigateToGoalTransfer() {
+        binding.root.findNavController().navigate(R.id.action_goalDetailFragment_to_goalSingleTransferFragment,
                 Bundle().apply {
                     putLong(GOAL_ID_KEY, viewModelGoalDetail.goalId)
                 })
