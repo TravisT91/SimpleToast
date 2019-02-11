@@ -67,7 +67,7 @@ class GoalsListSection(private val context: Context,
                 }
 
                 // check if the goal's end date has passed
-                if (!goalModel.goalInfo.isAchieved && goalModel.goalInfo.estimatedCompleteDate.isNotBlank()) {
+                if (!goalModel.goalInfo.isAchieved) {
                     val estimatedCompletionDate = BackendDateTimeUtils.getDateTimeForYMDString(goalModel.goalInfo.estimatedCompleteDate)
                     estimatedCompletionDate?.let { date ->
                         if (date.isBeforeNow) {
