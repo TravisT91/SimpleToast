@@ -51,7 +51,7 @@ class GoalEditConfirmationFragment: BaseEngagePageFragment() {
         }
 
         confirmationViewModel.addEditSuccessObservable.observe(viewLifecycleOwner, Observer {
-            binding.root.findNavController().popBackStack(R.id.goalDetailFragment, false)
+            binding.root.findNavController().popBackStack(R.id.goalDetailFragment, true)
         })
 
         return binding.root
