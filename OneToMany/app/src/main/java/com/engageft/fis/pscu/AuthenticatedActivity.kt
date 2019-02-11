@@ -1,9 +1,9 @@
 package com.engageft.fis.pscu
 
 import android.os.Bundle
+import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProviders
 import com.engageft.apptoolbox.LotusActivityConfig
-import com.engageft.engagekit.EngageService
-import com.engageft.engagekit.utils.LoginResponseUtils
 import com.engageft.fis.pscu.feature.DashboardFragment
 import com.engageft.fis.pscu.feature.authentication.BaseAuthenticatedActivity
 
@@ -20,12 +20,18 @@ class AuthenticatedActivity : BaseAuthenticatedActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
         val menu = getNavigationMenu()!!
         val header = menu.findItem(R.id.menuCardNumberHeader)!!
-        val loginResponse = EngageService.getInstance().storageManager.loginResponse!!
-        val lastFour = LoginResponseUtils.getCurrentAccountInfo(loginResponse).debitCardInfo.lastFour
-        header.title = getString(R.string.nav_drawer_card_header_format, lastFour.toInt())
+
+        ViewModelProviders.of(this).get(AuthenticatedViewModel::class.java).apply {
+            goalsEnableStateObservable.observe(this@AuthenticatedActivity, Observer { goalsEnabled ->
+                menu.findItem(R.id.goalsListFragment)?.let { menuItem -> menuItem.isVisible = goalsEnabled }
+            })
+
+            lastFourCardDigitsObservable.observe(this@AuthenticatedActivity, Observer { fourDigits ->
+                header.title = getString(R.string.nav_drawer_card_header_format, fourDigits)
+            })
+        }
     }
 
     override fun onBackPressed() {
