@@ -17,4 +17,6 @@ object GoalConstants {
     const val FREQUENCY_TYPE_MONTHLY = "Monthly"
 
     const val FREQUENCY_SUBSTRING_RELATIVE_HEIGHT = .7f
+    const val AVAILABLE_BALANCE = "Available"
+    const val SINGLE_TRANSFER_ACCOUNT_FORMAT = "%s (%s)"
 }

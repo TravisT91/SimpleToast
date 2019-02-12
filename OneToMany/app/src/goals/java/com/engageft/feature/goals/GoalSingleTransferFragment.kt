@@ -15,6 +15,7 @@ import com.engageft.apptoolbox.NavigationOverrideClickListener
 import com.engageft.apptoolbox.view.InformationDialogFragment
 import com.engageft.feature.goals.utils.GoalConstants
 import com.engageft.fis.pscu.R
+import com.engageft.fis.pscu.config.EngageAppConfig
 import com.engageft.fis.pscu.databinding.FragmentGoalSingleTransferBinding
 import com.engageft.fis.pscu.feature.BaseEngagePageFragment
 import com.engageft.fis.pscu.feature.branding.Palette
@@ -73,11 +74,43 @@ class GoalSingleTransferFragment: BaseEngagePageFragment() {
             upButtonOverrideProvider.setUpButtonOverride(navigationOverrideClickListener)
             backButtonOverrideProvider.setBackButtonOverride(navigationOverrideClickListener)
 
+            amountInputWithLabel.currencyCode = EngageAppConfig.currencyCode
+            amountInputWithLabel.addEditTextFocusChangeListener(View.OnFocusChangeListener { v, hasFocus ->
+                if (!hasFocus) {
+                    viewModelTransfer.validateAmount(GoalSingleTransferViewModel.Event.ON_FOCUS_LOST)
+                }
+            })
+
             nextButton.setOnClickListener {
                 navigateToConfirmation()
             }
 
             viewModelTransfer.apply {
+
+                selectionOptionsListObservable.observe(viewLifecycleOwner, Observer { selectionList ->
+                    if (selectionList.isNotEmpty()) {
+                        val dialogOptions = ArrayList<CharSequence>()
+                        for (accountSelectionOptions in selectionList) {
+                            dialogOptions.add(accountSelectionOptions.accountNameAndBalance)
+                        }
+                        fromBottomSheet.dialogOptions = dialogOptions
+
+                    }
+                })
+
+                amountValidationStateObservable.observe(viewLifecycleOwner, Observer {
+                    when (it) {
+                        GoalSingleTransferViewModel.AmountErrorState.VALID -> {
+                            amountInputWithLabel.setErrorTexts(null)
+                        }
+                        GoalSingleTransferViewModel.AmountErrorState.EMPTY -> {
+                            amountInputWithLabel.setErrorTexts(null)
+                        }
+                        GoalSingleTransferViewModel.AmountErrorState.EXCEEDS -> {
+                            amountInputWithLabel.setErrorTexts(listOf(getString(R.string.GOAL_SINGLE_TRANSFER_AMOUNT_ERROR_MESSAGE)))
+                        }
+                    }
+                })
 
                 nextButtonStateObservable.observe(viewLifecycleOwner, Observer {
                     if (it == GoalSingleTransferViewModel.ButtonState.SHOW) {

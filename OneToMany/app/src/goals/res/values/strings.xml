@@ -74,4 +74,6 @@
     <string name="GOAL_SINGLE_TRANSFER_FROM_SELECTION_DESCRIPTION">Please select the account you would like to transfer money from.</string>
     <string name="GOAL_SINGLE_TRANSFER_CONFIRMATION_BUTTON">Transfer</string>
     <string name="GOAL_SINGLE_TRANSFER_CONFIRMATION_TEXT">Transfer this amount?</string>
+    <string name="GOAL_SINGLE_TRANSFER_AMOUNT_ERROR_MESSAGE">Amount is greater than the selected account</string>
+    <!--<string name="GOAL_SINGLE_TRANSFER_ACCOUNT_FORMAT">%s (%s)</string>-->
 </resources>

@@ -26,8 +26,11 @@
             <androidx.appcompat.widget.AppCompatTextView
                 android:id="@+id/headerTextView"
                 style="@style/Body"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
                 android:textColor="@color/textSecondary"
                 android:lineSpacingExtra="11sp"
+                android:gravity="center_horizontal"
                 android:padding="16dp"
                 android:text="@string/GOAL_SINGLE_TRANSFER_HEADER" />
 

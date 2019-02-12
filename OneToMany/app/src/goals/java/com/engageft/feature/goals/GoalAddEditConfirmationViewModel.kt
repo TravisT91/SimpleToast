@@ -218,6 +218,7 @@ class GoalAddEditConfirmationViewModel: BaseEngageViewModel() {
         )
     }
 
+    // todo delete goalInfo unused, ?
     private fun getPayPlanApiObservable(payPlanInfo: PayPlanInfo, goalId: Long, goalInfo: GoalInfo): io.reactivex.Observable<BasicResponse> {
         lateinit var observable: io.reactivex.Observable<BasicResponse>
         lateinit var request: PayPlanAddUpdateRequest
