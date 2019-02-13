@@ -49,12 +49,14 @@ class GoalSingleTransferViewModel(val goalId: Long): BaseEngageViewModel() {
 
     val nextButtonStateObservable = MutableLiveData<ButtonState>()
     val selectionOptionsListObservable = MutableLiveData<List<AccountSelectionOptions>>()
+    val fromEnableObservable = MutableLiveData<Boolean>()
     private val accountsList = mutableListOf<AccountSelectionOptions>()
-    private var fromSelectionType: TransferType? = null
+    var fromSelectionType: TransferType? = null
 
     val from = ObservableField("")
     val to = ObservableField("")
     val amount = ObservableField("")
+    var transferAmount: BigDecimal = BigDecimal.ZERO
 
     private lateinit var goalInfo: GoalInfo
     private lateinit var debitCardInfo: DebitCardInfo
@@ -159,6 +161,7 @@ class GoalSingleTransferViewModel(val goalId: Long): BaseEngageViewModel() {
 
     private fun validateForm() {
         if (from.get()!!.isNotEmpty() && to.get()!!.isNotEmpty() && isAmountValid(getNonFormattedAmount(amount.get()!!))) {
+            transferAmount = getNonFormattedAmount(amount.get()!!)
             nextButtonStateObservable.value = ButtonState.SHOW
         } else {
             nextButtonStateObservable.value = ButtonState.HIDE
@@ -171,9 +174,9 @@ class GoalSingleTransferViewModel(val goalId: Long): BaseEngageViewModel() {
         }?.let {
             to.set(it.accountNameAndBalance)
             fromSelectionType = if (it.optionType == TransferType.GOAL) {
-                TransferType.SPENDING_BALANCE
-            } else {
                 TransferType.GOAL
+            } else {
+                TransferType.SPENDING_BALANCE
             }
         }
     }
@@ -235,11 +238,12 @@ class GoalSingleTransferViewModel(val goalId: Long): BaseEngageViewModel() {
     }
 
     private fun determineState() {
+        val availableBalance = BigDecimal(debitCardInfo.currentBalance)
         // if goal is achieved there's only one option: to transfer back to balance.
         // OR if the spending balance is zero
-        val availableBalance = BigDecimal(debitCardInfo.currentBalance)
-        if ((goalInfo.isAchieved || availableBalance.isZero()) && !goalInfo.fundAmount.isZero()) {
-
+//        if ((goalInfo.isAchieved || availableBalance.isZero()) || (!goalInfo.fundAmount.isZero() && availableBalance.isZero())) {
+        if ((goalInfo.isAchieved || availableBalance.isZero())) {
+            fromEnableObservable.value = false
             fromSelectionType = TransferType.GOAL
 
             accountsList.find {
@@ -249,9 +253,23 @@ class GoalSingleTransferViewModel(val goalId: Long): BaseEngageViewModel() {
             accountsList.find {
                 it.optionType == TransferType.SPENDING_BALANCE
             }?.let { to.set(it.accountNameAndBalance) }
-        } else if (goalInfo.fundAmount.isZero() && availableBalance.isZero()) {
-            // todo observer it
-            dialogInfoObservable.value = DialogInfo(dialogType = DialogInfo.DialogType.OTHER)
+        } else {
+            if (goalInfo.fundAmount.isZero() && !availableBalance.isZero()) {
+                fromEnableObservable.value = false
+                fromSelectionType = TransferType.SPENDING_BALANCE
+
+                accountsList.find {
+                    it.optionType == TransferType.SPENDING_BALANCE
+                }?.let { from.set(it.accountNameAndBalance) }
+
+                accountsList.find {
+                    it.optionType == TransferType.GOAL
+                }?.let { to.set(it.accountNameAndBalance) }
+
+            } else if (goalInfo.fundAmount.isZero() && availableBalance.isZero()) {
+                // todo observer it
+                dialogInfoObservable.value = DialogInfo(dialogType = DialogInfo.DialogType.OTHER)
+            }
         }
     }
 
@@ -261,6 +279,7 @@ class GoalSingleTransferViewModel(val goalId: Long): BaseEngageViewModel() {
 
     data class AccountSelectionOptions(val optionType: GoalSingleTransferViewModel.TransferType, val accountNameAndBalance: String)
 }
+
 data class goalSingleTransferModel(val transferType: GoalSingleTransferViewModel.TransferType,
                                    val amount: BigDecimal,
                                    val goalId: Long)

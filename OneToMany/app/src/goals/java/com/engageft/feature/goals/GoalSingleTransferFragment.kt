@@ -9,17 +9,22 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
+import androidx.navigation.findNavController
 import androidx.navigation.fragment.findNavController
 import com.engageft.apptoolbox.BaseViewModel
 import com.engageft.apptoolbox.NavigationOverrideClickListener
 import com.engageft.apptoolbox.view.InformationDialogFragment
 import com.engageft.feature.goals.utils.GoalConstants
+import com.engageft.feature.goals.utils.GoalConstants.GOAL_ID_KEY
+import com.engageft.feature.goals.utils.GoalConstants.TRANSFER_AMOUNT_KEY
+import com.engageft.feature.goals.utils.GoalConstants.TRANSFER_FROM_KEY
 import com.engageft.fis.pscu.R
 import com.engageft.fis.pscu.config.EngageAppConfig
 import com.engageft.fis.pscu.databinding.FragmentGoalSingleTransferBinding
 import com.engageft.fis.pscu.feature.BaseEngagePageFragment
 import com.engageft.fis.pscu.feature.branding.Palette
 import com.engageft.fis.pscu.feature.infoDialogGenericUnsavedChangesNewInstance
+import java.math.BigDecimal
 
 class GoalSingleTransferFragment: BaseEngagePageFragment() {
 
@@ -81,6 +86,8 @@ class GoalSingleTransferFragment: BaseEngagePageFragment() {
                 }
             })
 
+            toBottomSheet.isEnabled = false
+
             nextButton.setOnClickListener {
                 navigateToConfirmation()
             }
@@ -112,6 +119,10 @@ class GoalSingleTransferFragment: BaseEngagePageFragment() {
                     }
                 })
 
+                fromEnableObservable.observe(viewLifecycleOwner, Observer {
+                    fromBottomSheet.isEnabled = it
+                })
+
                 nextButtonStateObservable.observe(viewLifecycleOwner, Observer {
                     if (it == GoalSingleTransferViewModel.ButtonState.SHOW) {
                         nextButton.visibility = View.VISIBLE
@@ -127,10 +138,12 @@ class GoalSingleTransferFragment: BaseEngagePageFragment() {
     }
 
     private fun navigateToConfirmation() {
-//        binding.root.findNavController().navigate(R.id.action_goalsAddStep2Fragment_to_goalsAddEditConfirmationFragment,
-//                Bundle().apply {
-//                    putParcelable(GoalConstants.GOAL_DATA_PARCELABLE_KEY, viewModelTransfer.getGoalData())
-//                })
+        binding.root.findNavController().navigate(R.id.action_goalSingleTransferFragment_to_goalSingleTransferConfirmationFragment,
+                Bundle().apply {
+                    putLong(GOAL_ID_KEY, viewModelTransfer.goalId)
+                    putSerializable(TRANSFER_AMOUNT_KEY, viewModelTransfer.transferAmount)
+                    putSerializable(TRANSFER_FROM_KEY, viewModelTransfer.fromSelectionType)
+                })
 
     }
 

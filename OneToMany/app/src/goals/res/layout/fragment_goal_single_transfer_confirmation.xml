@@ -38,6 +38,7 @@
                 android:paddingEnd="16dp"
                 android:paddingTop="16dp"
                 android:paddingBottom="8dp"
+                android:text="@string/GOAL_DELETE_HEADER"
                 android:gravity="center_horizontal"
                 tools:text="Start setting aside" />
 
@@ -49,7 +50,20 @@
                 android:textColor="@color/textPrimary"
                 android:lineSpacingExtra="10sp"
                 android:gravity="center_horizontal"
-                tools:text="$10.00/day"/>
+                tools:text="$10.00"/>
+
+            <androidx.appcompat.widget.AppCompatTextView
+                style="@style/Body"
+                android:id="@+id/nameTextView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingTop="4dp"
+                android:paddingStart="16dp"
+                android:paddingEnd="16dp"
+                android:textColor="@color/textSecondary"
+                android:lineSpacingExtra="11sp"
+                android:gravity="center_horizontal"
+                tools:text="back to available balance"/>
 
             <androidx.appcompat.widget.AppCompatTextView
                 style="@style/Body"
@@ -71,7 +85,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:onClick="@{() -> viewModel.transferFunds()}"
-                android:text="@string/nav_drawer_title_goals"/>
+                android:text="@string/GOAL_SINGLE_TRANSFER_CONFIRMATION_BUTTON"/>
         </LinearLayout>
 
     </ScrollView>
