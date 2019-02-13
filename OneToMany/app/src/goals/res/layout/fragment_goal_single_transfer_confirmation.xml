@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools">
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
     <data>
         <variable
             name="viewModel"
@@ -86,6 +87,18 @@
                 android:layout_height="wrap_content"
                 android:onClick="@{() -> viewModel.transferFunds()}"
                 android:text="@string/GOAL_SINGLE_TRANSFER_CONFIRMATION_BUTTON"/>
+
+            <com.engageft.apptoolbox.view.BottomSheetListInputWithLabel
+                style="@style/BottomSheetListInputWithLabelStyle"
+                InputWithLabel.setThemeWithPalette="@{true}"
+                android:id="@+id/deleteBottomSheet"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:visibility="visible"
+                app:bottomSheetDialogTitle="@string/GOAL_SINGLE_TRANSFER_FROM_SELECTION_TITLE"
+                app:bottomSheetDialogSubtitle="@string/GOAL_SINGLE_TRANSFER_FROM_SELECTION_DESCRIPTION"
+                app:bottomSheetDialogStyle="@style/ListOptionBottomSheetDialogFragmentStyle">
+            </com.engageft.apptoolbox.view.BottomSheetListInputWithLabel>
         </LinearLayout>
 
     </ScrollView>

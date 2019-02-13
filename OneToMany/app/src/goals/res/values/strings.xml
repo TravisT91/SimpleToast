@@ -78,4 +78,7 @@
     <string name="GOAL_SINGLE_TRANSFER_CONFIRMATION_TOWARD_BALANCE">back to available balance</string>
     <string name="GOAL_SINGLE_TRANSFER_CONFIRMATION_TOWARD_BALANCE_DESCRIPTION">Transferring this amount will effect the date that your goal is reached.</string>
     <string name="GOAL_SINGLE_TRANSFER_CONFIRMATION_BUTTON">Transfer</string>
+    <string name="GOAL_SINGLE_TRANSFER_CONFIRMATION_GOAL_DELETE_SUBTITLE">If you choose not to delete your goal, we will keep it for you, however, it will be closed.</string>
+    <string name="GOAL_SINGLE_TRANSFER_CONFIRMATION_GOAL_DELETE_YES">Yes, delete</string>
+    <string name="GOAL_SINGLE_TRANSFER_CONFIRMATION_GOAL_DELETE_NO">No, keep this goal</string>
 </resources>

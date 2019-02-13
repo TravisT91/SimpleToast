@@ -7,6 +7,7 @@ import com.engageft.engagekit.EngageService
 import com.engageft.engagekit.rest.request.GoalTransferBalanceRequest
 import com.engageft.engagekit.utils.LoginResponseUtils
 import com.engageft.engagekit.utils.engageApi
+import com.engageft.feature.budgets.extension.isEqualTo
 import com.engageft.fis.pscu.feature.BaseEngageViewModel
 import com.ob.ws.dom.BasicResponse
 import com.ob.ws.dom.GoalsResponse
@@ -17,8 +18,11 @@ import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 import java.math.BigDecimal
 
-class GoalSingleTransferConfirmationViewModel(val goalId: Long, val amount: BigDecimal, val transferFromType: GoalSingleTransferViewModel.TransferType): BaseEngageViewModel() {
+class GoalSingleTransferConfirmationViewModel(val goalId: Long, val transferAmount: BigDecimal, val transferFromType: GoalSingleTransferViewModel.TransferType): BaseEngageViewModel() {
     var goalNameObservable = MutableLiveData<String>()
+    var shouldPromptToDeleteGoalObservable = MutableLiveData<Boolean>()
+
+    var shouldDeleteGoal: Boolean = false
 
     init {
         initGoalData()
@@ -56,9 +60,13 @@ class GoalSingleTransferConfirmationViewModel(val goalId: Long, val amount: BigD
                                 }?.let { goalInfo ->
                                     if (transferFromType == GoalSingleTransferViewModel.TransferType.GOAL) {
                                         goalNameObservable.value = goalInfo.name
+                                        // check if user is transferring all fund amount from this goal
+                                        if (goalInfo.fundAmount.isEqualTo(transferAmount)) {
+                                            shouldPromptToDeleteGoalObservable.value = false
+                                        }
                                     }
                                 } ?: kotlin.run {
-                                    throw IllegalArgumentException("Goal not found")
+                                    throw IllegalStateException("Goal not found")
                                 }
                             } else {
                                 handleUnexpectedErrorResponse(response)
@@ -71,7 +79,7 @@ class GoalSingleTransferConfirmationViewModel(val goalId: Long, val amount: BigD
     }
 
     fun transferFunds() {
-        val request = GoalTransferBalanceRequest(goalId, amount.toString())
+        val request = GoalTransferBalanceRequest(goalId, transferAmount.toString())
         when (transferFromType) {
             GoalSingleTransferViewModel.TransferType.SPENDING_BALANCE -> oneTimeTransfer(engageApi().postGoalTransferToBalance(request.fieldMap))
             GoalSingleTransferViewModel.TransferType.GOAL -> oneTimeTransfer(engageApi().postGoalTransferToGoal(request.fieldMap))

@@ -173,7 +173,7 @@ class GoalSingleTransferViewModel(val goalId: Long): BaseEngageViewModel() {
             from != it.accountNameAndBalance
         }?.let {
             to.set(it.accountNameAndBalance)
-            fromSelectionType = if (it.optionType == TransferType.GOAL) {
+            fromSelectionType = if (it.optionType != TransferType.GOAL) {
                 TransferType.GOAL
             } else {
                 TransferType.SPENDING_BALANCE
@@ -236,12 +236,16 @@ class GoalSingleTransferViewModel(val goalId: Long): BaseEngageViewModel() {
                         })
         )
     }
+    enum class TransfrerState {
+        GOAL_COMPLETED,
+        GOAL_CLOSED,
+
+    }
 
     private fun determineState() {
         val availableBalance = BigDecimal(debitCardInfo.currentBalance)
         // if goal is achieved there's only one option: to transfer back to balance.
         // OR if the spending balance is zero
-//        if ((goalInfo.isAchieved || availableBalance.isZero()) || (!goalInfo.fundAmount.isZero() && availableBalance.isZero())) {
         if ((goalInfo.isAchieved || availableBalance.isZero())) {
             fromEnableObservable.value = false
             fromSelectionType = TransferType.GOAL

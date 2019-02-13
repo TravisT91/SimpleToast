@@ -54,6 +54,7 @@
                     app:labelText="@string/GOAL_SINGLE_TRANSFER_FROM_LABEL"
                     app:inputText="@={viewModel.from}"
                     app:bottomSheetDialogTitle="@string/GOAL_SINGLE_TRANSFER_FROM_SELECTION_TITLE"
+                    app:bottomSheetDialogSubtitle="@string/GOAL_SINGLE_TRANSFER_FROM_SELECTION_DESCRIPTION"
                     app:bottomSheetDialogStyle="@style/ListOptionBottomSheetDialogFragmentStyle">
                 </com.engageft.apptoolbox.view.BottomSheetListInputWithLabel>
 
@@ -79,7 +80,7 @@
                     android:paddingStart="16dp"
                     android:paddingEnd="16dp"
                     android:paddingTop="16dp"
-                    app:labelText="@string/ach_bank_transfer_create_amount_label"
+                    app:labelText="@string/GOAL_SINGLE_TRANSFER_AMOUNT_LABEL"
                     app:inputText="@={viewModel.amount}"/>
 
             </androidx.appcompat.widget.LinearLayoutCompat>
