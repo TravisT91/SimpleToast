@@ -27,6 +27,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="@string/DIRECT_DEPOSIT_HEADER_TEXT"
+                style="@style/Body"
                 parisStyle="@{palette.title4}"
                 android:lineSpacingExtra="4sp"
                 android:gravity="center"
@@ -48,6 +49,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:id="@+id/routingNumber"
+                    style="@style/TextInputWithLabelStyle"
                     InputWithLabel.setThemeWithPalette="@{true}"
                     app:labelText="@string/DIRECT_DEPOSIT_ROUTING_NUMBER"
                     app:inputText="@{viewModel.routingNumber}"/>
@@ -57,6 +59,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:id="@+id/accountNumber"
+                    style="@style/TextInputWithLabelStyle"
                     InputWithLabel.setThemeWithPalette="@{true}"
                     app:labelText="@string/DIRECT_DEPOSIT_ACCOUNT_NUMBER"
                     app:inputText="@{viewModel.accountNumber}"/>
@@ -66,6 +69,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:id="@+id/accountType"
+                    style="@style/TextInputWithLabelStyle"
                     InputWithLabel.setThemeWithPalette="@{true}"
                     app:labelText="@string/DIRECT_DEPOSIT_ACCOUNT_TYPE"
                     app:inputText="@{viewModel.accountType}"/>
@@ -75,6 +79,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:id="@+id/bankName"
+                    style="@style/TextInputWithLabelStyle"
                     InputWithLabel.setThemeWithPalette="@{true}"
                     app:labelText="@string/DIRECT_DEPOSIT_BANK_NAME"
                     app:inputText="@{viewModel.bankName}"/>

@@ -64,7 +64,7 @@ class GoalDetailFragment: BaseEngagePageFragment() {
                 })
 
                 goalScreenTitleObservable.observe(viewLifecycleOwner, Observer {
-                    toolbarController.setToolbarTitle(it.capitalize())
+                    toolbarController.setToolbarTitle(it)
                 })
 
                 goalRecurringTransferObservable.observe(viewLifecycleOwner, Observer {
@@ -212,7 +212,7 @@ class GoalDetailFragment: BaseEngagePageFragment() {
     private fun onDeleteGoal() {
         if (viewModelGoalDetail.fundAmount.isZero()) {
             val title = String.format(getString(R.string.GOAL_DELETE_ALERT_TITLE_FORMAT),
-                    viewModelGoalDetail.goalName.capitalize())
+                    viewModelGoalDetail.goalName)
             fragmentDelegate.showDialog(infoDialogYesNoNewInstance(
                     context = context!!,
                     title = title,

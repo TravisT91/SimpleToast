@@ -41,7 +41,7 @@ class GoalsListSection(private val context: Context,
             }
 
             circularTrackingPanel.setProgress(goalModel.progress)
-            circularTrackingPanel.setTopAndCenterLeftText(goalModel.goalInfo.name.capitalize())
+            circularTrackingPanel.setTopAndCenterLeftText(goalModel.goalInfo.name)
             circularTrackingPanel.setBottomLeftText(applyCustomTypefaceToSubStringProgressString(goalModel.goalInfo))
             circularTrackingPanel.setTopRightText(goalModel.goalInfo.getGoalInfoContributionString(context))
             circularTrackingPanel.setBottomRightText(goalModel.goalInfo.getGoalInfoCompletionDateString(context))
@@ -58,7 +58,6 @@ class GoalsListSection(private val context: Context,
                     setBottomRightTextStyle(R.style.progressBarSuccessBottomRightStyle)
                     setTopRightStyle(R.style.progressBarSuccessTitleStyle)
                     setCardAndBackgroundColor(Palette.successColor)
-                    setPanelElevation(0f)
                     showCenteredTitleAndRemoveLeftTextViews()
                 }
             } else if (goalModel.goalInfo.payPlan.isPaused) {
@@ -67,7 +66,7 @@ class GoalsListSection(private val context: Context,
                 }
 
                 // check if the goal's end date has passed
-                if (!goalModel.goalInfo.isAchieved && goalModel.goalInfo.estimatedCompleteDate.isNotBlank()) {
+                if (!goalModel.goalInfo.isAchieved) {
                     val estimatedCompletionDate = BackendDateTimeUtils.getDateTimeForYMDString(goalModel.goalInfo.estimatedCompleteDate)
                     estimatedCompletionDate?.let { date ->
                         if (date.isBeforeNow) {
