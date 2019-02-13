@@ -7,6 +7,7 @@ import androidx.core.content.res.ResourcesCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.engageft.apptoolbox.util.applyTypefaceToSubstring
 import com.engageft.apptoolbox.view.CircularTrackingPanel
+import com.engageft.engagekit.utils.BackendDateTimeUtils
 import com.engageft.fis.pscu.R
 import com.engageft.feature.goals.utils.getGoalInfoCompletionDateString
 import com.engageft.feature.goals.utils.getGoalInfoContributionString
@@ -33,23 +34,23 @@ class GoalsListSection(private val context: Context,
         val holder = viewHolder as ViewHolder
         holder.apply {
 
-            itemView.setOnClickListener {
-                listener.onGoalClicked(position.toLong())
-            }
-
             val goalModel = goalInfoList[position]
 
+            itemView.setOnClickListener {
+                listener.onGoalClicked(goalModel.goalInfo.goalId)
+            }
+
             circularTrackingPanel.setProgress(goalModel.progress)
-            circularTrackingPanel.setTopAndCenterLeftText(goalModel.goalInfo.name.capitalize())
+            circularTrackingPanel.setTopAndCenterLeftText(goalModel.goalInfo.name)
             circularTrackingPanel.setBottomLeftText(applyCustomTypefaceToSubStringProgressString(goalModel.goalInfo))
             circularTrackingPanel.setTopRightText(goalModel.goalInfo.getGoalInfoContributionString(context))
             circularTrackingPanel.setBottomRightText(goalModel.goalInfo.getGoalInfoCompletionDateString(context))
 
-            if (goalModel.goalInfo.payPlan != null && goalModel.goalInfo.payPlan.isPaused) {
-                circularTrackingPanel.showDrawableWithinProgressBar(ContextCompat.getDrawable(context, R.drawable.ic_pause)!!)
-            } else if (goalModel.goalInfo.isAchieved) {
+            if (goalModel.goalInfo.isAchieved) {
                 circularTrackingPanel.apply {
-                    showDrawableWithinProgressBar(ContextCompat.getDrawable(context, R.drawable.ic_success_check_mark)!!)
+                    ContextCompat.getDrawable(context, R.drawable.ic_success_check_mark)?.let { drawable ->
+                        showDrawableWithinProgressBar(drawable)
+                    }
                     setProgress(100)
                     showProgressBar(true)
                     setProgressColor(ContextCompat.getColor(context, R.color.white))
@@ -57,17 +58,27 @@ class GoalsListSection(private val context: Context,
                     setBottomRightTextStyle(R.style.progressBarSuccessBottomRightStyle)
                     setTopRightStyle(R.style.progressBarSuccessTitleStyle)
                     setCardAndBackgroundColor(Palette.successColor)
-                    setPanelElevation(0f)
                     showCenteredTitleAndRemoveLeftTextViews()
                 }
+            } else if (goalModel.goalInfo.payPlan.isPaused) {
+                ContextCompat.getDrawable(context, R.drawable.ic_pause)?.let { drawable ->
+                    circularTrackingPanel.showDrawableWithinProgressBar(drawable)
+                }
+
+                // check if the goal's end date has passed
+                if (!goalModel.goalInfo.isAchieved) {
+                    val estimatedCompletionDate = BackendDateTimeUtils.getDateTimeForYMDString(goalModel.goalInfo.estimatedCompleteDate)
+                    estimatedCompletionDate?.let { date ->
+                        if (date.isBeforeNow) {
+                            circularTrackingPanel.setTopRightTextColor(Palette.errorColor)
+                            circularTrackingPanel.setProgressColor(ContextCompat.getColor(context, R.color.goalErrorProgressColor))
+                            ContextCompat.getDrawable(context, R.drawable.ic_goal_error)?.let { drawable ->
+                                circularTrackingPanel.showDrawableWithinProgressBar(drawable)
+                            }
+                        }
+                    }
+                }
             }
-            //TODO(aHashimi): Waiting for Design about this state. https://engageft.atlassian.net/browse/FOTM-817
-//            else if (!goalInfo.isCompleted() && goalInfo.estimatedCompleteDate.isNotBlank()) {
-//                val estimatedCompletionDate = BackendDateTimeUtils.getDateTimeForYMDString(goalInfo.estimatedCompleteDate)
-//                if (estimatedCompletionDate != null && estimatedCompletionDate.isBeforeNow) {
-//                    circularTrackingPanel.showDrawableWithinProgressBar(ContextCompat.getDrawable(context, R.drawable.ic_information)!!)
-//                }
-//            }
         }
     }
 

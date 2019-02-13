@@ -6,6 +6,10 @@ import androidx.databinding.ObservableField
 import androidx.lifecycle.MutableLiveData
 import com.engageft.apptoolbox.util.CurrencyUtils
 import com.engageft.engagekit.utils.PayPlanInfoUtils
+import com.engageft.feature.goals.utils.GoalConstants.FREQUENCY_TYPE_DAILY
+import com.engageft.feature.goals.utils.GoalConstants.FREQUENCY_TYPE_MONTHLY
+import com.engageft.feature.goals.utils.GoalConstants.FREQUENCY_TYPE_WEEKLY
+import com.engageft.feature.goals.utils.GoalConstants.YES
 import com.engageft.fis.pscu.config.EngageAppConfig
 import com.engageft.fis.pscu.feature.BaseEngageViewModel
 import kotlinx.android.parcel.Parcelize
@@ -140,13 +144,6 @@ class GoalsAddStep1ViewModel: BaseEngageViewModel() {
             return true
         }
         return false
-    }
-
-    private companion object {
-        const val YES = "Yes"
-        const val FREQUENCY_TYPE_DAILY = "Daily"
-        const val FREQUENCY_TYPE_WEEKLY = "Weekly"
-        const val FREQUENCY_TYPE_MONTHLY = "Monthly"
     }
 }
 
