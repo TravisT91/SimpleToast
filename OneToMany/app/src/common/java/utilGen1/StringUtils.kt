@@ -12,6 +12,7 @@ import android.text.Spanned
 import android.text.TextUtils
 import android.text.style.ForegroundColorSpan
 import android.text.style.RelativeSizeSpan
+import android.text.style.SuperscriptSpan
 import androidx.core.content.ContextCompat
 import androidx.core.content.res.ResourcesCompat
 import com.engageft.apptoolbox.util.CurrencyUtils
@@ -21,6 +22,7 @@ import com.engageft.engagekit.utils.BackendDateTimeUtils
 import com.engageft.engagekit.utils.DebitCardInfoUtils
 import com.engageft.fis.pscu.OneToManyApplication
 import com.engageft.fis.pscu.R
+import com.engageft.fis.pscu.config.EngageAppConfig
 import com.ob.ws.dom.utility.AddressInfo
 import com.ob.ws.dom.utility.DebitCardInfo
 import org.joda.time.DateTime
@@ -253,13 +255,21 @@ object StringUtils {
 
     // Dashboard date amount status row, when give input like $225.00, make .00 some percent height of rest of text
     // TODO(kurt) This will need to be updated to deal with other currencies, some of which may be at end of string. Currently assumes that last two chars are fraction digits.
-    fun formatCurrencyStringFractionDigitsReducedHeight(amount: Float, fractionDigitsPercentHeight: Float, showZeroDigits: Boolean): CharSequence {
+    fun formatCurrencyStringFractionDigitsReducedHeight(amount: Float, fractionDigitsPercentHeight: Float, showZeroDigits: Boolean, superscriptCurrency: Boolean = true): CharSequence {
         val amountStringWithCurrency = formatCurrencyStringWithFractionDigits(amount, showZeroDigits)
         // TODO(jhutchins): Refactor this : https://engageft.atlassian.net/browse/SHOW-385
         if (amountStringWithCurrency.contains(CurrencyUtils.getCurrencySeparator("USD")) && amountStringWithCurrency.length >= 3) {
 //        if (amountStringWithCurrency.contains(CurrencyUtils.getCurrencySeparator(EngageConfig.CURRENCY)) && amountStringWithCurrency.length >= 3) {
             val spannableString = SpannableString(amountStringWithCurrency)
             spannableString.setSpan(RelativeSizeSpan(fractionDigitsPercentHeight), amountStringWithCurrency.length - 3, amountStringWithCurrency.length, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
+            if (superscriptCurrency) {
+                val currencySymbol = CurrencyUtils.getCurrencySymbol(EngageAppConfig.currencyCode)
+                val indexOfCurrencySymbol = amountStringWithCurrency.indexOf(currencySymbol)
+                if (currencySymbol.isNotBlank() && indexOfCurrencySymbol != -1) {
+                    spannableString.setSpan(SuperscriptSpan(), indexOfCurrencySymbol, indexOfCurrencySymbol + currencySymbol.length, Spannable.SPAN_INCLUSIVE_EXCLUSIVE)
+                    spannableString.setSpan(RelativeSizeSpan(0.45f), indexOfCurrencySymbol, indexOfCurrencySymbol + currencySymbol.length, Spannable.SPAN_INCLUSIVE_EXCLUSIVE)
+                }
+            }
             return spannableString
         } else {
             return amountStringWithCurrency
