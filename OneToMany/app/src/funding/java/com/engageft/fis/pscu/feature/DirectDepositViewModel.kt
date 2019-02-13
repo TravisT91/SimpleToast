@@ -47,7 +47,7 @@ class DirectDepositViewModel : BaseEngageViewModel() {
             routingNumber.value = it.routeNumber
             accountNumber.value = it.accountNumber
             accountType.value = accountTypeString
-            BrandingInfoRepo.financialInfo?.institutionName?.let{
+            BrandingInfoRepo.financialInfo?.sponsoringBank?.let{
                 brandingBankName -> bankName.value = brandingBankName
             }
             shouldShowPrintButton.value = true
