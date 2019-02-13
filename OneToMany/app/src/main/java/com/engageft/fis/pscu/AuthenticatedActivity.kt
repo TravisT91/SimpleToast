@@ -23,7 +23,7 @@ class AuthenticatedActivity : BaseAuthenticatedActivity() {
         val menu = getNavigationMenu()!!
         val header = menu.findItem(R.id.menuCardNumberHeader)!!
 
-        ViewModelProviders.of(this).get(AuthenticatedViewModel::class.java).apply {
+        ViewModelProviders.of(this).get(NavMenuViewModel::class.java).apply {
             goalsEnableStateObservable.observe(this@AuthenticatedActivity, Observer { goalsEnabled ->
                 menu.findItem(R.id.goalsListFragment)?.let { menuItem -> menuItem.isVisible = goalsEnabled }
             })

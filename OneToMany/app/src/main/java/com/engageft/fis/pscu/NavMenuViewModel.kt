@@ -8,17 +8,25 @@ import com.ob.ws.dom.LoginResponse
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 
-class AuthenticatedViewModel: BaseEngageViewModel() {
+class NavMenuViewModel: BaseEngageViewModel() {
     val lastFourCardDigitsObservable = MutableLiveData<Int>()
     val goalsEnableStateObservable = MutableLiveData<Boolean>()
 
     init {
-        showProgressOverlayDelayed()
+        goalsEnableStateObservable.value = false
+
+        //TODO(aHashimi): how should we show progressOverlay for activities if ever needed?
+
+        // Joey: I’ll start by saying this is acceptable for the short term, because we don’t have a means
+        // to get a long term solution yet.This will get the budgets enabled settings only once when
+        // this activity is first launched. The problem is if while this activity is alive, this setting
+        // changes on the backend, this viewModel will never know about it, and the activity will forever
+        // show the navigation. I think the ideal solution is a LiveData style observer on the LoginResponse,
+        // so whenever it changes, this ViewModel is notified and can update the menu. [something for future]
         compositeDisposable.add(EngageService.getInstance().loginResponseAsObservable
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe({ response ->
-                    dismissProgressOverlay()
                     if (response.isSuccess && response is LoginResponse) {
                         val currentAccountInfo = LoginResponseUtils.getCurrentAccountInfo(response)
                         // set the last four digits of card
@@ -30,7 +38,6 @@ class AuthenticatedViewModel: BaseEngageViewModel() {
                         handleUnexpectedErrorResponse(response)
                     }
                 }, { e ->
-                    dismissProgressOverlay()
                     handleThrowable(e)
                 })
         )
