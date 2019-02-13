@@ -22,6 +22,7 @@
         style="@style/DashboardCardItemTextView"
         android:lines="1"
         android:singleLine="true"
+        android:maxLines="1"
         tools:text="@string/OVERVIEW_LOCK_MY_CARD"
         android:gravity="center_vertical"/>
 
