@@ -4,31 +4,60 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.engageft.engagekit.EngageService
+import com.engageft.engagekit.aac.SingleLiveEvent
 import com.engageft.engagekit.rest.request.GoalTransferBalanceRequest
 import com.engageft.engagekit.utils.LoginResponseUtils
 import com.engageft.engagekit.utils.engageApi
 import com.engageft.feature.budgets.extension.isEqualTo
-import com.engageft.fis.pscu.feature.BaseEngageViewModel
 import com.ob.ws.dom.BasicResponse
 import com.ob.ws.dom.GoalsResponse
 import com.ob.ws.dom.LoginResponse
 import com.ob.ws.dom.utility.DebitCardInfo
+import com.ob.ws.dom.utility.GoalInfo
 import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 import java.math.BigDecimal
 
-class GoalSingleTransferConfirmationViewModel(val goalId: Long, val transferAmount: BigDecimal, val transferFromType: GoalSingleTransferViewModel.TransferType): BaseEngageViewModel() {
-    var goalNameObservable = MutableLiveData<String>()
-    var shouldPromptToDeleteGoalObservable = MutableLiveData<Boolean>()
+class GoalSingleTransferConfirmationViewModel(
+        val goalId: Long,
+        val transferAmount: BigDecimal,
+        val transferFromType: GoalSingleTransferViewModel.TransferType): GoalDeleteViewModel() {
 
-    var shouldDeleteGoal: Boolean = false
+
+    val transferSuccessObservable = SingleLiveEvent<Unit>()
+    val readyToSetViewsObservable = MutableLiveData<Unit>()
+    val promptToDeleteGoalObservable = MutableLiveData<Boolean>()
+    var goalName: String = ""
+
+    private lateinit var goalInfo: GoalInfo
 
     init {
         initGoalData()
     }
 
-    fun initGoalData() {
+    fun transferFunds() {
+        if (transferFromType == GoalSingleTransferViewModel.TransferType.GOAL && goalInfo.isAchieved
+                && goalInfo.fundAmount.isEqualTo(transferAmount)) {
+            promptToDeleteGoalObservable.value = true
+        } else {
+            transfer()
+        }
+    }
+
+    fun transfer() {
+        val request = GoalTransferBalanceRequest(goalId, transferAmount.toString())
+        when (transferFromType) {
+            GoalSingleTransferViewModel.TransferType.SPENDING_BALANCE -> oneTimeTransfer(engageApi().postGoalTransferToGoal(request.fieldMap))
+            GoalSingleTransferViewModel.TransferType.GOAL -> oneTimeTransfer(engageApi().postGoalTransferToBalance(request.fieldMap))
+        }
+    }
+
+    fun onDelete() {
+        onTransferAndDelete(goalId)
+    }
+
+    private fun initGoalData() {
         showProgressOverlayDelayed()
         compositeDisposable.add(EngageService.getInstance().loginResponseAsObservable
                 .subscribeOn(Schedulers.io())
@@ -58,13 +87,9 @@ class GoalSingleTransferConfirmationViewModel(val goalId: Long, val transferAmou
                                 response.goals.find { goalInfo ->
                                     goalInfo.goalId == goalId
                                 }?.let { goalInfo ->
-                                    if (transferFromType == GoalSingleTransferViewModel.TransferType.GOAL) {
-                                        goalNameObservable.value = goalInfo.name
-                                        // check if user is transferring all fund amount from this goal
-                                        if (goalInfo.fundAmount.isEqualTo(transferAmount)) {
-                                            shouldPromptToDeleteGoalObservable.value = false
-                                        }
-                                    }
+                                    this.goalInfo = goalInfo
+                                    goalName = goalInfo.name
+                                    readyToSetViewsObservable.value = Unit
                                 } ?: kotlin.run {
                                     throw IllegalStateException("Goal not found")
                                 }
@@ -78,14 +103,6 @@ class GoalSingleTransferConfirmationViewModel(val goalId: Long, val transferAmou
         )
     }
 
-    fun transferFunds() {
-        val request = GoalTransferBalanceRequest(goalId, transferAmount.toString())
-        when (transferFromType) {
-            GoalSingleTransferViewModel.TransferType.SPENDING_BALANCE -> oneTimeTransfer(engageApi().postGoalTransferToBalance(request.fieldMap))
-            GoalSingleTransferViewModel.TransferType.GOAL -> oneTimeTransfer(engageApi().postGoalTransferToGoal(request.fieldMap))
-        }
-    }
-
     private fun oneTimeTransfer(oneTimeTransferObservable: Observable<BasicResponse>) {
         showProgressOverlayImmediate()
 
@@ -94,7 +111,7 @@ class GoalSingleTransferConfirmationViewModel(val goalId: Long, val transferAmou
                 .observeOn(Schedulers.computation())
                 .subscribe({ response ->
                     if (response.isSuccess) {
-                        // todo refresh Login Response
+                        refreshLoginResponse(transferSuccessObservable)
                     } else {
                         dismissProgressOverlay()
                         handleUnexpectedErrorResponse(response)

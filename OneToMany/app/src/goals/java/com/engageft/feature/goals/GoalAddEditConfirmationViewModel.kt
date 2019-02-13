@@ -9,7 +9,6 @@ import com.engageft.engagekit.utils.BackendDateTimeUtils
 import com.engageft.engagekit.utils.LoginResponseUtils
 import com.engageft.engagekit.utils.PayPlanInfoUtils
 import com.engageft.engagekit.utils.engageApi
-import com.engageft.fis.pscu.feature.BaseEngageViewModel
 import com.engageft.fis.pscu.feature.handleBackendErrorForForms
 import com.ob.ws.dom.BasicResponse
 import com.ob.ws.dom.GoalResponse
@@ -20,10 +19,9 @@ import com.ob.ws.dom.utility.DebitCardInfo
 import com.ob.ws.dom.utility.GoalInfo
 import com.ob.ws.dom.utility.GoalTargetInfo
 import com.ob.ws.dom.utility.PayPlanInfo
-import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 
-class GoalAddEditConfirmationViewModel: BaseEngageViewModel() {
+class GoalAddEditConfirmationViewModel: BaseGoalsViewModel() {
     enum class GoalEvent {
         ADD,
         EDIT
@@ -192,7 +190,7 @@ class GoalAddEditConfirmationViewModel: BaseEngageViewModel() {
                         .observeOn(Schedulers.computation())
                         .subscribe({ response ->
                             if (response.isSuccess && response is PayPlanResponse) {
-                                refreshData()
+                                refreshLoginResponse(addEditSuccessObservable)
                             } else {
                                 if (eventType == GoalEvent.ADD) {
                                     // remove newly-created goal from the server, since it has no payPlan
@@ -257,45 +255,6 @@ class GoalAddEditConfirmationViewModel: BaseEngageViewModel() {
                         }, { e ->
                             dismissProgressOverlay()
                             handleThrowable(e)
-                        })
-        )
-    }
-
-
-    private fun refreshData() {
-        compositeDisposable.add(EngageService.getInstance().refreshLoginObservable()
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe({ response ->
-                    // if response is success hide progressOverlay after refreshing goals
-                    if (response is LoginResponse) {
-                        refreshGoals(LoginResponseUtils.getCurrentCard(response))
-                    } else {
-                        dismissProgressOverlay()
-                        // trigger success event
-                        addEditSuccessObservable.call()
-                    }
-                }, { e ->
-                    dismissProgressOverlay()
-                    // trigger success event
-                    addEditSuccessObservable.call()
-                })
-        )
-    }
-
-    private fun refreshGoals(debitCardInfo: DebitCardInfo) {
-        compositeDisposable.add(
-                EngageService.getInstance().goalsObservable(debitCardInfo, false)
-                        .subscribeOn(Schedulers.io())
-                        .observeOn(AndroidSchedulers.mainThread())
-                        .subscribe({
-                            dismissProgressOverlay()
-                            // trigger success event
-                            addEditSuccessObservable.call()
-                        }, { e ->
-                            dismissProgressOverlay()
-                            // trigger success event
-                            addEditSuccessObservable.call()
                         })
         )
     }

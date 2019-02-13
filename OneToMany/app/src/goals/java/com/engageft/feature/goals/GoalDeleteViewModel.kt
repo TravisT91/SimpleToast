@@ -11,7 +11,7 @@ import com.ob.ws.dom.utility.DebitCardInfo
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 
-open class GoalDeleteViewModel: BaseEngageViewModel() {
+open class GoalDeleteViewModel: BaseGoalsViewModel() {
 
     val deleteSuccessObservable = SingleLiveEvent<Unit>()
 
@@ -43,7 +43,7 @@ open class GoalDeleteViewModel: BaseEngageViewModel() {
                         .subscribe({ response ->
                             if (response.isSuccess) {
                                 // hide progressbar after loginResponse & goals refresh
-                                refreshLoginResponse()
+                                refreshLoginResponse(deleteSuccessObservable)
                             } else {
                                 dismissProgressOverlay()
                                 handleUnexpectedErrorResponse(response)
@@ -55,42 +55,43 @@ open class GoalDeleteViewModel: BaseEngageViewModel() {
         )
     }
 
+//
+//    private fun refreshLoginResponse() {
+//        compositeDisposable.add(EngageService.getInstance().refreshLoginObservable()
+//                .subscribeOn(Schedulers.io())
+//                .observeOn(AndroidSchedulers.mainThread())
+//                .subscribe({ response ->
+//                    // if response is success hide progressOverlay after refreshing goals
+//                    if (response is LoginResponse) {
+//                        refreshGoals(LoginResponseUtils.getCurrentCard(response))
+//                    } else {
+//                        dismissProgressOverlay()
+//                        // notify observer of success even if refresh failed
+//                        deleteSuccessObservable.call()
+//                    }
+//                }, {
+//                    dismissProgressOverlay()
+//                    // notify observer of success even if refresh failed
+//                    deleteSuccessObservable.call()
+//                })
+//        )
+//    }
+//
+//    private fun refreshGoals(debitCardInfo: DebitCardInfo) {
+//        compositeDisposable.add(
+//                EngageService.getInstance().goalsObservable(debitCardInfo, false)
+//                        .subscribeOn(Schedulers.io())
+//                        .observeOn(AndroidSchedulers.mainThread())
+//                        .subscribe({
+//                            dismissProgressOverlay()
+//                            // notify observer of success even if refresh failed
+//                            deleteSuccessObservable.call()
+//                        }, {
+//                            dismissProgressOverlay()
+//                            // notify observer of success even if refresh failed
+//                            deleteSuccessObservable.call()
+//                        })
+//        )
+//    }
 
-    private fun refreshLoginResponse() {
-        compositeDisposable.add(EngageService.getInstance().refreshLoginObservable()
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe({ response ->
-                    // if response is success hide progressOverlay after refreshing goals
-                    if (response is LoginResponse) {
-                        refreshGoals(LoginResponseUtils.getCurrentCard(response))
-                    } else {
-                        dismissProgressOverlay()
-                        // notify observer of success even if refresh failed
-                        deleteSuccessObservable.call()
-                    }
-                }, {
-                    dismissProgressOverlay()
-                    // notify observer of success even if refresh failed
-                    deleteSuccessObservable.call()
-                })
-        )
-    }
-
-    private fun refreshGoals(debitCardInfo: DebitCardInfo) {
-        compositeDisposable.add(
-                EngageService.getInstance().goalsObservable(debitCardInfo, false)
-                        .subscribeOn(Schedulers.io())
-                        .observeOn(AndroidSchedulers.mainThread())
-                        .subscribe({
-                            dismissProgressOverlay()
-                            // notify observer of success even if refresh failed
-                            deleteSuccessObservable.call()
-                        }, {
-                            dismissProgressOverlay()
-                            // notify observer of success even if refresh failed
-                            deleteSuccessObservable.call()
-                        })
-        )
-    }
 }
