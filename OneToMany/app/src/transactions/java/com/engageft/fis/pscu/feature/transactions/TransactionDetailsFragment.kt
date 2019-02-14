@@ -2,6 +2,9 @@ package com.engageft.fis.pscu.feature.transactions
 
 import android.os.Bundle
 import android.view.LayoutInflater
+import android.view.Menu
+import android.view.MenuInflater
+import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import android.view.animation.AlphaAnimation
@@ -123,42 +126,46 @@ class TransactionDetailsFragment : BaseEngageSubFragment() {
             }
 
             saveButton.setOnClickListener {
-                if(detailsViewModel.categoryHasChanged) {
-                    ListBottomSheetDialogFragment.newInstance(
-                            listener = object : ListBottomSheetDialogFragment.ListBottomSheetDialogListener{
-                                override fun onOptionSelected(index: Int, optionText: CharSequence) {
-                                    when(index){
-                                        0 -> detailsViewModel.saveChanges(true)
-                                        1 -> detailsViewModel.saveChanges(false)
-                                        else -> throw IndexOutOfBoundsException()
-                                    }
-                                }
-
-                                override fun onDialogCancelled() {
-                                    //intentionally left blank
-                                }
-
-                            },
-                            title = context!!.getString(R.string.TRANSACTION_CATEGORY_CHANGE_TITLE),
-                            subtitle = String.format(
-                                    context!!.getString(R.string.TRANSACTION_CATEGORY_CHANGE_SUBTITLE),
-                                    detailsViewModel.txCategory.value,
-                                    detailsViewModel.transaction.value?.store
-                                    ),
-                            options = listOf(
-                                    context!!.getString(R.string.TRANSACTION_CATEGORY_CHANGE_ALL_TRANSACTION),
-                                    context!!.getString(R.string.TRANSACTION_CATEGORY_CHANGE_ONLY_THIS))
-                                    .toCollection(ArrayList()),
-                            titleTextAppearance = R.style.ListOptionBottomSheetDialogFragmentStyle
-
-                    ).show(activity!!.supportFragmentManager,"setAllOrOnlyThisDialog")
-                } else {
-                    detailsViewModel.saveChanges(false)
-                }
+                saveChanges()
             }
         }
 
         return binding.root
+    }
+
+    private fun saveChanges() {
+        if (detailsViewModel.categoryHasChanged) {
+            ListBottomSheetDialogFragment.newInstance(
+                    listener = object : ListBottomSheetDialogFragment.ListBottomSheetDialogListener {
+                        override fun onOptionSelected(index: Int, optionText: CharSequence) {
+                            when (index) {
+                                0 -> detailsViewModel.saveChanges(true)
+                                1 -> detailsViewModel.saveChanges(false)
+                                else -> throw IndexOutOfBoundsException()
+                            }
+                        }
+
+                        override fun onDialogCancelled() {
+                            //intentionally left blank
+                        }
+
+                    },
+                    title = context!!.getString(R.string.TRANSACTION_CATEGORY_CHANGE_TITLE),
+                    subtitle = String.format(
+                            context!!.getString(R.string.TRANSACTION_CATEGORY_CHANGE_SUBTITLE),
+                            detailsViewModel.txCategory.value,
+                            detailsViewModel.transaction.value?.store
+                    ),
+                    options = listOf(
+                            context!!.getString(R.string.TRANSACTION_CATEGORY_CHANGE_ALL_TRANSACTION),
+                            context!!.getString(R.string.TRANSACTION_CATEGORY_CHANGE_ONLY_THIS))
+                            .toCollection(ArrayList()),
+                    titleTextAppearance = R.style.ListOptionBottomSheetDialogFragmentStyle
+
+            ).show(activity!!.supportFragmentManager, "setAllOrOnlyThisDialog")
+        } else {
+            detailsViewModel.saveChanges(false)
+        }
     }
 
 
@@ -177,10 +184,30 @@ class TransactionDetailsFragment : BaseEngageSubFragment() {
             } else {
                 visibility = View.GONE
             }
+            menu?.getItem(0)?.isVisible = hasChanges
         }
     }
 
     private fun onChangeSuccess() {
         binding.root.findNavController().popBackStack(R.id.transactionDetailsFragment, true)
+    }
+
+    private var menu: Menu? = null
+
+    override fun onCreateOptionsMenu(menu: Menu?, inflater: MenuInflater?) {
+        inflater?.inflate(R.menu.general_options_menu_save, menu)
+        menu?.getItem(0)?.isVisible = false
+        this.menu = menu
+        super.onCreateOptionsMenu(menu, inflater)
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem?): Boolean {
+        item?.let{
+            if (it.itemId == R.id.menu_item_save){
+                saveChanges()
+                return true
+            }
+        }
+        return super.onOptionsItemSelected(item)
     }
 }
