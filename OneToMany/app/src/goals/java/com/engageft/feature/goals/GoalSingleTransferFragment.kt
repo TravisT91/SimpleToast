@@ -13,6 +13,7 @@ import androidx.navigation.findNavController
 import androidx.navigation.fragment.findNavController
 import com.engageft.apptoolbox.BaseViewModel
 import com.engageft.apptoolbox.NavigationOverrideClickListener
+import com.engageft.apptoolbox.ViewUtils.newLotusInstance
 import com.engageft.apptoolbox.view.InformationDialogFragment
 import com.engageft.feature.goals.utils.GoalConstants
 import com.engageft.feature.goals.utils.GoalConstants.GOAL_ID_KEY
@@ -22,9 +23,9 @@ import com.engageft.fis.pscu.R
 import com.engageft.fis.pscu.config.EngageAppConfig
 import com.engageft.fis.pscu.databinding.FragmentGoalSingleTransferBinding
 import com.engageft.fis.pscu.feature.BaseEngagePageFragment
+import com.engageft.fis.pscu.feature.DialogInfo
 import com.engageft.fis.pscu.feature.branding.Palette
 import com.engageft.fis.pscu.feature.infoDialogGenericUnsavedChangesNewInstance
-import java.math.BigDecimal
 
 class GoalSingleTransferFragment: BaseEngagePageFragment() {
 
@@ -96,12 +97,7 @@ class GoalSingleTransferFragment: BaseEngagePageFragment() {
 
                 selectionOptionsListObservable.observe(viewLifecycleOwner, Observer { selectionList ->
                     if (selectionList.isNotEmpty()) {
-                        val dialogOptions = ArrayList<CharSequence>()
-                        for (accountSelectionOptions in selectionList) {
-                            dialogOptions.add(accountSelectionOptions.accountNameAndBalance)
-                        }
-                        fromBottomSheet.dialogOptions = dialogOptions
-
+                        fromBottomSheet.dialogOptions = selectionList
                     }
                 })
 
@@ -113,13 +109,13 @@ class GoalSingleTransferFragment: BaseEngagePageFragment() {
                         GoalSingleTransferViewModel.AmountErrorState.EMPTY -> {
                             amountInputWithLabel.setErrorTexts(null)
                         }
-                        GoalSingleTransferViewModel.AmountErrorState.EXCEEDS -> {
+                        GoalSingleTransferViewModel.AmountErrorState.INVALID -> {
                             amountInputWithLabel.setErrorTexts(listOf(getString(R.string.GOAL_SINGLE_TRANSFER_AMOUNT_ERROR_MESSAGE)))
                         }
                     }
                 })
 
-                fromEnableObservable.observe(viewLifecycleOwner, Observer {
+                selectionEnableObservable.observe(viewLifecycleOwner, Observer {
                     fromBottomSheet.isEnabled = it
                 })
 
@@ -130,6 +126,28 @@ class GoalSingleTransferFragment: BaseEngagePageFragment() {
                         nextButton.visibility = View.GONE
                     }
                     activity!!.invalidateOptionsMenu()
+                })
+
+                dialogInfoObservable.observe(viewLifecycleOwner, Observer {
+                    if (it.dialogType == DialogInfo.DialogType.OTHER) {
+                        fragmentDelegate.showDialog(InformationDialogFragment.newLotusInstance(
+                                message = getString(R.string.GOAL_SINGLE_TRANSFER_INSUFFICIENT_FUNDS_MESSAGE),
+                                buttonPositiveText = getString(R.string.dialog_information_ok_button),
+                                listener = object : InformationDialogFragment.InformationDialogFragmentListener {
+                                    override fun onDialogFragmentNegativeButtonClicked() {
+                                        root.findNavController().popBackStack()
+                                    }
+
+                                    override fun onDialogFragmentPositiveButtonClicked() {
+                                        root.findNavController().popBackStack()
+                                    }
+
+                                    override fun onDialogCancelled() {
+                                        root.findNavController().popBackStack()
+                                    }
+                                }
+                        ))
+                    }
                 })
             }
         }

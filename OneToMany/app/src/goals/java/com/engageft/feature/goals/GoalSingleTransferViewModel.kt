@@ -27,37 +27,47 @@ import utilGen1.StringUtils
 import java.lang.IllegalStateException
 import java.math.BigDecimal
 
-//todo: disable to and from fields when necessary
 class GoalSingleTransferViewModel(val goalId: Long): BaseEngageViewModel() {
     enum class ButtonState {
         SHOW,
         HIDE
     }
-
-    //todo put it outside of the class. rename TransferToType?
     enum class TransferType {
-        GOAL, SPENDING_BALANCE
+        GOAL,
+        SPENDING_BALANCE
     }
     enum class AmountErrorState {
-        EMPTY, VALID, EXCEEDS,
+        EMPTY,
+        VALID,
+        INVALID,
     }
-    val amountValidationStateObservable = MutableLiveData<AmountErrorState>()
-
+    enum class TransferState {
+        GOAL_COMPLETED,
+        GOAL_INSUFFICIENT_FUNDS,
+        ACCOUNT_INSUFFICIENT_FUNDS,
+        INSUFFICIENT_FUNDS,
+        DEFAULT
+    }
     enum class Event {
-        ON_TEXT_CHANGED, ON_FOCUS_LOST, ENFORCED_VALIDATION
+        ON_TEXT_CHANGED,
+        ON_FOCUS_LOST,
+        ENFORCED_VALIDATION
     }
 
+    val amountValidationStateObservable = MutableLiveData<AmountErrorState>()
     val nextButtonStateObservable = MutableLiveData<ButtonState>()
-    val selectionOptionsListObservable = MutableLiveData<List<AccountSelectionOptions>>()
-    val fromEnableObservable = MutableLiveData<Boolean>()
-    private val accountsList = mutableListOf<AccountSelectionOptions>()
-    var fromSelectionType: TransferType? = null
+    val selectionOptionsListObservable = MutableLiveData<ArrayList<CharSequence>>()
+    val selectionEnableObservable = MutableLiveData<Boolean>()
 
     val from = ObservableField("")
     val to = ObservableField("")
     val amount = ObservableField("")
-    var transferAmount: BigDecimal = BigDecimal.ZERO
 
+    var transferAmount: BigDecimal = BigDecimal.ZERO
+    var fromSelectionType: TransferType? = null
+
+    private var currentTransferState: TransferState = TransferState.DEFAULT
+    private val accountsList = mutableListOf<SelectionOptions>()
     private lateinit var goalInfo: GoalInfo
     private lateinit var debitCardInfo: DebitCardInfo
 
@@ -83,14 +93,6 @@ class GoalSingleTransferViewModel(val goalId: Long): BaseEngageViewModel() {
         }
     }
 
-    private fun getNonFormattedAmount(amount: String): BigDecimal {
-        return if (amount.isEmpty()) {
-            BigDecimal.ZERO
-        } else {
-            BigDecimal(CurrencyUtils.getNonFormattedDecimalAmountString(EngageAppConfig.currencyCode, amount))
-        }
-    }
-
     init {
         nextButtonStateObservable.value = ButtonState.HIDE
         amountValidationStateObservable.value = AmountErrorState.EMPTY
@@ -102,82 +104,39 @@ class GoalSingleTransferViewModel(val goalId: Long): BaseEngageViewModel() {
         initData()
     }
 
+    fun hasUnsavedChanges(): Boolean {
+        val hasPrePopulatedData = currentTransferState != TransferState.DEFAULT
+
+        return ((!hasPrePopulatedData && (to.get()!!.isNotEmpty() || from.get()!!.isNotEmpty())) || amount.get()!!.isNotEmpty())
+                || (hasPrePopulatedData && amount.get()!!.isNotEmpty())
+    }
+
     fun validateAmount(event: Event) {
-        fromSelectionType?.let {
-            if (amount.get()!!.isNotEmpty()) {
-                val transferAmount = getNonFormattedAmount(amount.get()!!)
+        if (amount.get()!!.isNotEmpty()) {
+            val transferAmount = getNonFormattedAmount(amount.get()!!)
 
-                var isInvalid = false
-                if (amountValidationStateObservable.value == AmountErrorState.EXCEEDS) {
-                    isInvalid = true
-                }
+            var shouldValid = false
+            if (amountValidationStateObservable.value == AmountErrorState.INVALID) {
+                shouldValid = true
+            }
 
-                when (event) {
-                    Event.ON_TEXT_CHANGED -> {
-                        if (isInvalid) {
-                            validateAmountBasedOnTransferType(transferAmount)
-                        }
-                    }
-                    Event.ON_FOCUS_LOST -> {
-                        if (!isInvalid) {
-                            validateAmountBasedOnTransferType(transferAmount)
-                        }
-                    }
-                    Event.ENFORCED_VALIDATION -> {
+            when (event) {
+                Event.ON_TEXT_CHANGED -> {
+                    if (shouldValid) {
                         validateAmountBasedOnTransferType(transferAmount)
                     }
                 }
-            } else {
-                amountValidationStateObservable.value = AmountErrorState.EMPTY
+                Event.ON_FOCUS_LOST -> {
+                    if (!shouldValid) {
+                        validateAmountBasedOnTransferType(transferAmount)
+                    }
+                }
+                Event.ENFORCED_VALIDATION -> {
+                    validateAmountBasedOnTransferType(transferAmount)
+                }
             }
-        }
-    }
-
-    private fun isAmountValid(amount: BigDecimal): Boolean {
-        var availableAmount = BigDecimal.ZERO
-
-        when (fromSelectionType) {
-            TransferType.GOAL ->  availableAmount = goalInfo.fundAmount
-            TransferType.SPENDING_BALANCE -> availableAmount = BigDecimal(debitCardInfo.currentBalance)
-        }
-
-        return amount.isLessThanOrEqualTo(availableAmount) && !amount.isZero()
-    }
-
-    private fun validateAmountBasedOnTransferType(transferAmount: BigDecimal) {
-        when (fromSelectionType) {
-            TransferType.GOAL ->  validateAmountAndNotifyObserver(goalInfo.fundAmount, transferAmount)
-            TransferType.SPENDING_BALANCE -> validateAmountAndNotifyObserver(BigDecimal(debitCardInfo.currentBalance), transferAmount)
-        }
-    }
-
-    private fun validateAmountAndNotifyObserver(availableAmount: BigDecimal, transferAmount: BigDecimal) {
-        if (transferAmount.isGreaterThan(availableAmount)) {
-            amountValidationStateObservable.value = AmountErrorState.EXCEEDS
-        } else if (transferAmount.isLessThanOrEqualTo(availableAmount)) {
-            amountValidationStateObservable.value = AmountErrorState.VALID
-        }
-    }
-
-    private fun validateForm() {
-        if (from.get()!!.isNotEmpty() && to.get()!!.isNotEmpty() && isAmountValid(getNonFormattedAmount(amount.get()!!))) {
-            transferAmount = getNonFormattedAmount(amount.get()!!)
-            nextButtonStateObservable.value = ButtonState.SHOW
         } else {
-            nextButtonStateObservable.value = ButtonState.HIDE
-        }
-    }
-
-    private fun populateToField(from: String) {
-        accountsList.find {
-            from != it.accountNameAndBalance
-        }?.let {
-            to.set(it.accountNameAndBalance)
-            fromSelectionType = if (it.optionType != TransferType.GOAL) {
-                TransferType.GOAL
-            } else {
-                TransferType.SPENDING_BALANCE
-            }
+            amountValidationStateObservable.value = AmountErrorState.EMPTY
         }
     }
 
@@ -191,11 +150,6 @@ class GoalSingleTransferViewModel(val goalId: Long): BaseEngageViewModel() {
                         // don't dismiss progressOverlay yet
                         val accountInfo = LoginResponseUtils.getCurrentAccountInfo(response)
                         debitCardInfo = accountInfo.debitCardInfo
-                        val accountTypeAndBalance = String.format(
-                                SINGLE_TRANSFER_ACCOUNT_FORMAT,
-                                AVAILABLE_BALANCE,
-                                StringUtils.formatCurrencyStringWithFractionDigits(debitCardInfo.currentBalance, true))
-                        accountsList.add(AccountSelectionOptions(TransferType.SPENDING_BALANCE, accountTypeAndBalance))
                         getGoal(goalId, debitCardInfo)
                     } else {
                         dismissProgressOverlay()
@@ -210,7 +164,7 @@ class GoalSingleTransferViewModel(val goalId: Long): BaseEngageViewModel() {
 
     private fun getGoal(goalId: Long, debitCardInfo: DebitCardInfo) {
         compositeDisposable.add(
-                EngageService.getInstance().goalsObservable(debitCardInfo, false)
+                EngageService.getInstance().goalsObservable(debitCardInfo, true)
                         .subscribeOn(Schedulers.io())
                         .observeOn(AndroidSchedulers.mainThread())
                         .subscribe({ response ->
@@ -218,12 +172,25 @@ class GoalSingleTransferViewModel(val goalId: Long): BaseEngageViewModel() {
                             if (response.isSuccess && response is GoalsResponse) {
                                 GoalsResponseUtils.getGoalInfoWithId(response, goalId)?.let { goalInfo ->
                                     this.goalInfo = goalInfo
+                                    val nameAndAmountList = ArrayList<CharSequence>()
+
                                     val goalNameAndBalance = String.format(SINGLE_TRANSFER_ACCOUNT_FORMAT,
                                             goalInfo.name,
                                             StringUtils.formatCurrencyStringWithFractionDigits(goalInfo.fundAmount.toFloat(), true))
-                                    accountsList.add(AccountSelectionOptions(TransferType.GOAL, goalNameAndBalance))
+
+                                    val accountAndBalance = String.format(
+                                            SINGLE_TRANSFER_ACCOUNT_FORMAT,
+                                            AVAILABLE_BALANCE,
+                                            StringUtils.formatCurrencyStringWithFractionDigits(debitCardInfo.currentBalance, true))
+
+                                    accountsList.add(SelectionOptions(TransferType.GOAL, goalNameAndBalance))
+                                    accountsList.add(SelectionOptions(TransferType.SPENDING_BALANCE, accountAndBalance))
+                                    nameAndAmountList.add(goalNameAndBalance)
+                                    nameAndAmountList.add(accountAndBalance)
+
                                     determineState()
-                                    selectionOptionsListObservable.value = accountsList
+
+                                    selectionOptionsListObservable.value = nameAndAmountList
                                 } ?: run {
                                     throw IllegalStateException("Goal not found")
                                 }
@@ -236,62 +203,94 @@ class GoalSingleTransferViewModel(val goalId: Long): BaseEngageViewModel() {
                         })
         )
     }
-    enum class TransfrerState {
-        GOAL_COMPLETED,
-        GOAL_CLOSED,
-
-    }
 
     private fun determineState() {
         val availableBalance = BigDecimal(debitCardInfo.currentBalance)
-        // if goal is achieved there's only one option: to transfer back to balance.
-        // OR if the spending balance is zero
-        if ((goalInfo.isAchieved || availableBalance.isZero())) {
-            fromEnableObservable.value = false
-            fromSelectionType = TransferType.GOAL
 
+        currentTransferState = when {
+            goalInfo.isAchieved -> TransferState.GOAL_COMPLETED
+            goalInfo.fundAmount.isZero() && availableBalance.isZero() -> TransferState.INSUFFICIENT_FUNDS
+            goalInfo.fundAmount.isZero() -> TransferState.GOAL_INSUFFICIENT_FUNDS
+            availableBalance.isZero() -> TransferState.ACCOUNT_INSUFFICIENT_FUNDS
+            else -> TransferState.DEFAULT
+        }
+
+        when (currentTransferState) {
+            TransferState.GOAL_COMPLETED -> populatePredeterminedTransfer(TransferType.GOAL)
+            TransferState.GOAL_INSUFFICIENT_FUNDS -> populatePredeterminedTransfer(TransferType.SPENDING_BALANCE)
+            TransferState.ACCOUNT_INSUFFICIENT_FUNDS -> populatePredeterminedTransfer(TransferType.GOAL)
+            TransferState.INSUFFICIENT_FUNDS -> dialogInfoObservable.value = DialogInfo(dialogType = DialogInfo.DialogType.OTHER)
+            else -> {} // left intentionally blank
+        }
+    }
+
+    private fun populatePredeterminedTransfer(transferFrom: TransferType) {
+        selectionEnableObservable.value = false
+        fromSelectionType = transferFrom
+
+        accountsList.find {
+            it.optionType == transferFrom
+        }?.let { from.set(it.nameAndBalance) }
+
+        accountsList.find {
+            it.optionType != transferFrom
+        }?.let { to.set(it.nameAndBalance) }
+    }
+
+    private fun populateToField(from: String) {
+        // only populate if it's in default state
+        if (currentTransferState == TransferState.DEFAULT) {
             accountsList.find {
-                it.optionType == TransferType.GOAL
-            }?.let { from.set(it.accountNameAndBalance) }
-
-            accountsList.find {
-                it.optionType == TransferType.SPENDING_BALANCE
-            }?.let { to.set(it.accountNameAndBalance) }
-        } else {
-            if (goalInfo.fundAmount.isZero() && !availableBalance.isZero()) {
-                fromEnableObservable.value = false
-                fromSelectionType = TransferType.SPENDING_BALANCE
-
-                accountsList.find {
-                    it.optionType == TransferType.SPENDING_BALANCE
-                }?.let { from.set(it.accountNameAndBalance) }
-
-                accountsList.find {
-                    it.optionType == TransferType.GOAL
-                }?.let { to.set(it.accountNameAndBalance) }
-
-            } else if (goalInfo.fundAmount.isZero() && availableBalance.isZero()) {
-                // todo observer it
-                dialogInfoObservable.value = DialogInfo(dialogType = DialogInfo.DialogType.OTHER)
+                from != it.nameAndBalance
+            }?.let {
+                to.set(it.nameAndBalance)
+                fromSelectionType = if (it.optionType != TransferType.GOAL) {
+                    TransferType.GOAL
+                } else {
+                    TransferType.SPENDING_BALANCE
+                }
             }
         }
     }
 
-    fun hasUnsavedChanges(): Boolean {
-        return to.get()!!.isNotEmpty() || from.get()!!.isNotEmpty() || amount.get()!!.isNotEmpty()
+    private fun isAmountValid(amount: BigDecimal): Boolean {
+        val goalFundAmountRemaining = goalInfo.amount - goalInfo.fundAmount
+        return when (fromSelectionType) {
+            TransferType.GOAL -> amount.isLessThanOrEqualTo(goalInfo.fundAmount) && !amount.isZero()
+            TransferType.SPENDING_BALANCE -> amount.isLessThanOrEqualTo(BigDecimal(debitCardInfo.currentBalance))
+                    && !amount.isGreaterThan(goalFundAmountRemaining) && !amount.isZero()
+            else  -> false
+        }
     }
 
-    data class AccountSelectionOptions(val optionType: GoalSingleTransferViewModel.TransferType, val accountNameAndBalance: String)
+    private fun validateAmountBasedOnTransferType(transferAmount: BigDecimal) {
+        if (isAmountValid(transferAmount)) {
+            amountValidationStateObservable.value = AmountErrorState.VALID
+        } else {
+            amountValidationStateObservable.value = AmountErrorState.INVALID
+        }
+    }
+
+    private fun validateForm() {
+        if (from.get()!!.isNotEmpty() && to.get()!!.isNotEmpty() && isAmountValid(getNonFormattedAmount(amount.get()!!))) {
+            transferAmount = getNonFormattedAmount(amount.get()!!)
+            nextButtonStateObservable.value = ButtonState.SHOW
+        } else {
+            nextButtonStateObservable.value = ButtonState.HIDE
+        }
+    }
+
+    private fun getNonFormattedAmount(amount: String): BigDecimal {
+        return if (amount.isEmpty()) {
+            BigDecimal.ZERO
+        } else {
+            BigDecimal(CurrencyUtils.getNonFormattedDecimalAmountString(EngageAppConfig.currencyCode, amount))
+        }
+    }
+
+    data class SelectionOptions(val optionType: GoalSingleTransferViewModel.TransferType, val nameAndBalance: String)
 }
 
-data class goalSingleTransferModel(val transferType: GoalSingleTransferViewModel.TransferType,
-                                   val amount: BigDecimal,
-                                   val goalId: Long)
-
-const val ONE_TIME_TRANSFER_MIN = 0.01
-const val ONE_TIME_TRANSFER_MAX = 1000000.00
-
-//todo make this to return a generic viewModel?
 class GoalSingleTransferViewModelFactory(private val goalId: Long) : ViewModelProvider.NewInstanceFactory() {
     override fun <T : ViewModel?> create(modelClass: Class<T>): T {
         @Suppress("UNCHECKED_CAST")

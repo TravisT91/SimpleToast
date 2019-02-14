@@ -53,7 +53,7 @@ class GoalSingleTransferConfirmationViewModel(
         }
     }
 
-    fun onDelete() {
+    fun onTransferAndDelete() {
         onTransferAndDelete(goalId)
     }
 
@@ -123,7 +123,7 @@ class GoalSingleTransferConfirmationViewModel(
         )
     }
 }
-class GoalSingleTransferConfirmationViewModelFactory(private val goalId: Long, val amount: BigDecimal, val transferType: GoalSingleTransferViewModel.TransferType) : ViewModelProvider.NewInstanceFactory() {
+class GoalSingleTransferConfirmationViewModelFactory(private val goalId: Long, val amount: BigDecimal, private val transferType: GoalSingleTransferViewModel.TransferType) : ViewModelProvider.NewInstanceFactory() {
     override fun <T : ViewModel?> create(modelClass: Class<T>): T {
         @Suppress("UNCHECKED_CAST")
         return GoalSingleTransferConfirmationViewModel(goalId, amount, transferType) as T

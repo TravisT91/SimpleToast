@@ -45,8 +45,6 @@ class GoalSingleTransferConfirmationFragment: BaseEngagePageFragment() {
             imageViewLayout.findViewById<ImageView>(R.id.imageViewIcon).setImageResource(R.drawable.ic_goal_transfer)
             subHeaderTextView.text = StringUtils.formatCurrencyStringFractionDigitsReducedHeight(viewModelConfirmation.transferAmount.toFloat(), GoalConstants.FREQUENCY_SUBSTRING_RELATIVE_HEIGHT, true)
 
-
-
             viewModelConfirmation.apply {
 
                 readyToSetViewsObservable.observe(viewLifecycleOwner, Observer {
@@ -72,7 +70,7 @@ class GoalSingleTransferConfirmationFragment: BaseEngagePageFragment() {
                         deleteBottomSheet.setOnListItemSelectionListener(object: BottomSheetListInputWithLabel.OnListItemSelectionListener {
                             override fun onItemSelected(index: Int) {
                                 if (index == 0) {
-                                    viewModelConfirmation.onDelete()
+                                    viewModelConfirmation.onTransferAndDelete()
                                 } else if (index == 1) {
                                     viewModelConfirmation.transfer()
                                 }

@@ -9,6 +9,7 @@ import com.engageft.engagekit.utils.BackendDateTimeUtils
 import com.engageft.engagekit.utils.LoginResponseUtils
 import com.engageft.engagekit.utils.PayPlanInfoUtils
 import com.engageft.engagekit.utils.engageApi
+import com.engageft.feature.budgets.extension.isZero
 import com.engageft.feature.goals.utils.PayPlanType
 import com.ob.ws.dom.GoalsResponse
 import com.ob.ws.dom.LoginResponse
@@ -116,7 +117,9 @@ class GoalDetailViewModel(var goalId: Long): GoalDeleteViewModel() {
 
         if (goalInfo.isAchieved) {
             goalDetailStateList.add(GoalDetailState.GoalCompleteHeaderItem(goalInfo.fundAmount))
-            goalDetailStateList.add(GoalDetailState.SingleTransferItem)
+            if (!goalInfo.fundAmount.isZero()) {
+                goalDetailStateList.add(GoalDetailState.SingleTransferItem)
+            }
             goalDetailStateList.add(GoalDetailState.DeleteItem)
         } else {
             var errorState = GoalDetailState.ErrorState.NONE
