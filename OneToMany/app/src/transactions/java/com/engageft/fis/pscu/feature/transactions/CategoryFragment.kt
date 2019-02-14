@@ -8,7 +8,6 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.engageft.apptoolbox.BaseViewModel
-import com.engageft.apptoolbox.NavigationOverrideClickListener
 import com.engageft.engagekit.BudgetCategory
 import com.engageft.fis.pscu.databinding.CategoryFragmentBinding
 import com.engageft.fis.pscu.feature.BaseEngageSubFragment
@@ -23,7 +22,7 @@ import com.engageft.fis.pscu.feature.transactions.adapter.CategoryAdapter
 class CategoryFragment : BaseEngageSubFragment() {
 
     var onCategorySelectedListener: ((String) -> Unit) = { _ -> }
-    var onBackClicked: NavigationOverrideClickListener? = null
+    val TAG = this::class.java.simpleName
 
     lateinit var categoryViewModel: CategoryViewModel
     lateinit var binding: CategoryFragmentBinding
@@ -33,7 +32,6 @@ class CategoryFragment : BaseEngageSubFragment() {
     }
 
     companion object {
-        const val TAG = "CATEGORY_FRAGMENT"
         const val ARG_CURRENTLY_SELECTED_SUB_CATEGORY = "ARG_CURRENTLY_SELECTED_SUB_CATEGORY"
     }
 
@@ -45,7 +43,7 @@ class CategoryFragment : BaseEngageSubFragment() {
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         binding = CategoryFragmentBinding.inflate(inflater, container, false)
 
-        categoryViewModel.categorys.observe(this@CategoryFragment, categoryObserver)
+        categoryViewModel.categories.observe(this@CategoryFragment, categoryObserver)
 
         return binding.root
     }

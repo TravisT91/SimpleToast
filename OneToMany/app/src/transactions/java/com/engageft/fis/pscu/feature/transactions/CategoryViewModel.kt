@@ -15,7 +15,7 @@ import com.engageft.fis.pscu.feature.BaseEngageViewModel
  */
 class CategoryViewModel: BaseEngageViewModel() {
 
-    val categorys = MutableLiveData<List<BudgetCategory>>().apply {
+    val categories = MutableLiveData<List<BudgetCategory>>().apply {
         value = EngageService.getInstance().storageManager.budgetCategories
     }
 }

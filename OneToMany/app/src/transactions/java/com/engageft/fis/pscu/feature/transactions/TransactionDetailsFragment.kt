@@ -9,13 +9,14 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.navigation.findNavController
 import com.engageft.apptoolbox.BaseViewModel
+import com.engageft.apptoolbox.view.ListBottomSheetDialogFragment
 import com.engageft.engagekit.EngageService
-import com.engageft.engagekit.aac.SingleLiveEvent
 import com.engageft.fis.pscu.R
 import com.engageft.fis.pscu.databinding.TransactionDetailsFragmentBinding
 import com.engageft.fis.pscu.feature.BaseEngageSubFragment
 import com.engageft.fis.pscu.feature.branding.Palette
 import com.engageft.fis.pscu.feature.transactions.utils.TransactionId
+import java.lang.IndexOutOfBoundsException
 import java.util.Locale
 
 /**
@@ -122,7 +123,29 @@ class TransactionDetailsFragment : BaseEngageSubFragment() {
             }
 
             saveButton.setOnClickListener {
-                detailsViewModel.saveChanges()
+                if(detailsViewModel.categoryHasChanged) {
+                    detailsViewModel.saveChanges(false)
+                } else {
+                    ListBottomSheetDialogFragment.newInstance(
+                            listener = object : ListBottomSheetDialogFragment.ListBottomSheetDialogListener{
+                                override fun onOptionSelected(index: Int, optionText: CharSequence) {
+                                    when(index){
+                                        0 -> detailsViewModel.saveChanges(true)
+                                        1 -> detailsViewModel.saveChanges(false)
+                                        else -> throw IndexOutOfBoundsException()
+                                    }
+                                }
+
+                                override fun onDialogCancelled() {
+                                    //intentionally left blank
+                                }
+
+                            },
+                            title = "Apply to all?",
+                            subtitle = "Change category to \"${detailsViewModel.txCategory.value}\" on this and all transactions from \"${detailsViewModel.transaction.value?.store}\"?",
+                            options = listOf("All transaction", "only this transaction").toCollection(ArrayList())
+                    ).show(activity!!.supportFragmentManager,"setAllOrOnlyThisDialog")
+                }
             }
         }
 

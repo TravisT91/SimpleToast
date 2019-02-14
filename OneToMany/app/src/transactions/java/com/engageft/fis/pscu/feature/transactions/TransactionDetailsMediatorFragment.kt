@@ -106,7 +106,6 @@ class TransactionDetailsMediatorFragment : BaseEngagePageFragment() {
                 transactionDetailsFragment.detailsViewModel.txCategory.postValue(category)
                 removeCategoryFragment()
             }
-            onBackClicked = this@TransactionDetailsMediatorFragment.onBackClicked
             arguments = Bundle().apply {
                 putString(
                         CategoryFragment.ARG_CURRENTLY_SELECTED_SUB_CATEGORY,

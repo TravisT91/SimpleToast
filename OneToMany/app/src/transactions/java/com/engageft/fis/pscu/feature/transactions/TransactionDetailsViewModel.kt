@@ -32,6 +32,8 @@ class TransactionDetailsViewModel(transactionId: TransactionId) : BaseEngageView
     private var originalNotes: String? = null
     private var originalIsOffBudget: Boolean? = null
 
+    var categoryHasChanged = false
+
     val repoLiveData: LiveData<Transaction> = TransactionRepository.getTransaction(
             accountId = accountId.toString(),
             cardId = cardId.toString(),
@@ -83,6 +85,9 @@ class TransactionDetailsViewModel(transactionId: TransactionId) : BaseEngageView
         transaction.value?.let {
 
             val categoryDidNotChange = (txCategory.value == originalCategory)
+            if (!categoryDidNotChange){
+                categoryHasChanged = true
+            }
             val offBudgetDidNotChange = (isOffBudget.value == originalIsOffBudget)
             val notesDidNotChange = (txNotes.value == originalNotes)
             val hasChanges =
@@ -98,11 +103,11 @@ class TransactionDetailsViewModel(transactionId: TransactionId) : BaseEngageView
         return false
     }
 
-    fun saveChanges() {
+    fun saveChanges(applyCategoryChangeToAllOfSameCategory: Boolean) {
         transaction.value?.let { transaction ->
             val changesIterable = ArrayList<ObservableSource<BasicResponse>>()
 
-            addCategoryUpdateIfChanged(changesIterable, transaction)
+            addCategoryUpdateIfChanged(changesIterable, transaction, applyCategoryChangeToAllOfSameCategory)
             addNoteUpdateIfChanged(changesIterable, transaction)
             addBudgetUpdateIfChanged(changesIterable, transaction)
 
@@ -140,7 +145,8 @@ class TransactionDetailsViewModel(transactionId: TransactionId) : BaseEngageView
 
     private fun addCategoryUpdateIfChanged
             (changesIterable: ArrayList<ObservableSource<BasicResponse>>,
-             transaction: Transaction) {
+             transaction: Transaction,
+             applyCategoryChangeToAllOfSameCategory: Boolean) {
 
         if (txCategory.value != originalCategory) {
             txCategory.value?.let {
@@ -151,7 +157,7 @@ class TransactionDetailsViewModel(transactionId: TransactionId) : BaseEngageView
                         engageService.transactionChangeCategoryObservable(
                                 transaction.transactionId,
                                 budgetCategory.name,
-                                true)
+                                applyCategoryChangeToAllOfSameCategory)
                                 .doOnNext { response ->
                                     if (response.isSuccess) {
                                         // must update originalCategory here, even though we update the repo version,
