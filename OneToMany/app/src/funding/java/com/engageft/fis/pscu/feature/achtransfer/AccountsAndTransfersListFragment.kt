@@ -137,11 +137,11 @@ class AccountsAndTransfersListFragment: BaseEngagePageFragment() {
                 activity?.invalidateOptionsMenu()
             })
 
-            achScheduledLoadListObservable.observe(this@AccountsAndTransfersListFragment, Observer {
+            achScheduledLoadListObservable.observe(viewLifecycleOwner, Observer {
                 recyclerViewAdapter.setScheduledLoadData(getString(R.string.ach_bank_transfer_scheduled), it)
             })
 
-            achHistoricalLoadListObservable.observe(this@AccountsAndTransfersListFragment, Observer {
+            achHistoricalLoadListObservable.observe(viewLifecycleOwner, Observer {
                 recyclerViewAdapter.setHistoricalLoadData(getString(R.string.ach_bank_transfer_recent_activity), it)
             })
         }
