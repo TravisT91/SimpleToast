@@ -66,7 +66,7 @@ class AccountsAndTransfersListViewModel: BaseEngageViewModel() {
     }
 
     private fun initBankAccountsListAndTransfersList() {
-        progressOverlayShownObservable.value = true
+        showProgressOverlayDelayed()
 
         compositeDisposable.add(EngageService.getInstance().loginResponseAsObservable
                 .subscribeOn(Schedulers.io())
@@ -86,11 +86,11 @@ class AccountsAndTransfersListViewModel: BaseEngageViewModel() {
                         getScheduledLoads(currentCard)
                         getHistoricalLoads(currentCard)
                     } else {
-                        progressOverlayShownObservable.value = false
+                        dismissProgressOverlay()
                         handleUnexpectedErrorResponse(response)
                     }
                 }, { e ->
-                    progressOverlayShownObservable.value = false
+                    dismissProgressOverlay()
                     handleThrowable(e)
                 })
         )
@@ -180,7 +180,7 @@ class AccountsAndTransfersListViewModel: BaseEngageViewModel() {
 
     private fun shouldHideProgressOverlay(apiCallDone: Boolean) {
         if (shouldHideProgressOverlay && apiCallDone) {
-            progressOverlayShownObservable.value = false
+            dismissProgressOverlay()
         }
         shouldHideProgressOverlay = true
     }
