@@ -92,7 +92,8 @@ class GoalDetailFragment: BaseEngagePageFragment() {
                     is GoalDetailState.ErrorItem -> {
                         addSection(ErrorStateSection(getString(R.string.GOAL_ERROR_TITLE), getString(R.string.GOAL_ERROR_DESCRIPTION), object : ErrorStateSection.OnErrorSectionInteractionListener {
                             override fun onErrorSectionClicked() {
-                                navigateToGoalEdit()
+                                // TODO: EDIT GOAL task FOTM-837
+                                Toast.makeText(context!!, "On Error section clicked!", Toast.LENGTH_SHORT).show()
                             }
                         }))
                     }
@@ -144,8 +145,10 @@ class GoalDetailFragment: BaseEngagePageFragment() {
                                 R.style.GoalDetailItemTextStyle,
                                 object : SelectableLabelsSection.OnSelectableLabelInteractionListener {
                                     override fun onLabelClicked(labelId: Int) {
-                                        navigateToGoalEdit()
+                                        // TODO(aHashimi): FOTM-837
+                                        Toast.makeText(context!!, "on edit item clicked!", Toast.LENGTH_SHORT).show()
                                     }
+
                                 })
                                 .addLabel(EDIT_LABEL_ID, getString(R.string.GOAL_DETAIL_EDIT)))
                         addSection(HorizontalRuleSection(layoutResId = R.layout.goals_horizontal_divider_indent_start))
@@ -167,13 +170,6 @@ class GoalDetailFragment: BaseEngagePageFragment() {
 
             notifyDataSetChanged()
         }
-    }
-
-    private fun navigateToGoalEdit() {
-        binding.root.findNavController().navigate(R.id.action_goalDetailFragment_to_goalEditFragment,
-                Bundle().apply {
-                    putLong(GOAL_ID_KEY, viewModelGoalDetail.goalId)
-                })
     }
 
     private fun navigateToGoalTransfer() {

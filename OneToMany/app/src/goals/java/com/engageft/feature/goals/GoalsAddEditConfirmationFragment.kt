@@ -14,24 +14,24 @@ import com.engageft.apptoolbox.util.applyRelativeSizeToSubstring
 import com.engageft.apptoolbox.util.setTextSizeAndFont
 import com.engageft.feature.goals.utils.GoalConstants.GOAL_DATA_PARCELABLE_KEY
 import com.engageft.fis.pscu.R
-import com.engageft.fis.pscu.databinding.FragmentGoalAddConfirmationBinding
+import com.engageft.fis.pscu.databinding.FragmentGoalsAddEditConfirmationBinding
 import com.engageft.fis.pscu.feature.BaseEngagePageFragment
 import com.engageft.fis.pscu.feature.branding.Palette
 import utilGen1.DisplayDateTimeUtils
 import utilGen1.StringUtils
 
-class GoalAddConfirmationFragment: BaseEngagePageFragment() {
-    private lateinit var confirmationViewModel: GoalAddEditConfirmationViewModel
+class GoalsAddEditConfirmationFragment: BaseEngagePageFragment() {
+    private lateinit var confirmationViewModel: GoalsAddEditConfirmationViewModel
 
     override fun createViewModel(): BaseViewModel? {
-        confirmationViewModel = ViewModelProviders.of(this).get(GoalAddEditConfirmationViewModel::class.java)
+        confirmationViewModel = ViewModelProviders.of(this).get(GoalsAddEditConfirmationViewModel::class.java)
         return confirmationViewModel
     }
 
-    private lateinit var binding: FragmentGoalAddConfirmationBinding
+    private lateinit var binding: FragmentGoalsAddEditConfirmationBinding
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        binding = FragmentGoalAddConfirmationBinding.inflate(inflater, container, false).apply {
+        binding = FragmentGoalsAddEditConfirmationBinding.inflate(inflater, container, false).apply {
             viewModel = confirmationViewModel
             palette = Palette
 
@@ -42,7 +42,7 @@ class GoalAddConfirmationFragment: BaseEngagePageFragment() {
             }
         }
 
-        confirmationViewModel.addEditSuccessObservable.observe(viewLifecycleOwner, Observer {
+        confirmationViewModel.successStateObservable.observe(viewLifecycleOwner, Observer {
             binding.root.findNavController().popBackStack(R.id.goalsAddStep1Fragment, true)
         })
 
@@ -71,7 +71,7 @@ class GoalAddConfirmationFragment: BaseEngagePageFragment() {
                 headerTextView.text = getString(R.string.GOALS_ADD_FREQUENCY_AMOUNT_CONFIRMATION_HEADER)
 
                 val amountWithCurrencySymbol = StringUtils.formatCurrencyStringWithFractionDigits(goalInfoModel.frequencyAmount.toString(), true)
-                val amountPerRecurrenceFormat = String.format(getString(R.string.GOALS_RECURRENCE_FORMAT), amountWithCurrencySymbol, goalInfoModel.recurrenceType.toString().toLowerCase())
+                val amountPerRecurrenceFormat = String.format(getString(R.string.GOALS_RECURRENCE_FORMAT), amountWithCurrencySymbol, goalInfoModel.recurrenceType.toLowerCase())
                 val splitStringArray = amountPerRecurrenceFormat.split(".")
                 if (splitStringArray.size == 2) {
                     subHeaderTextView.text = amountPerRecurrenceFormat.applyRelativeSizeToSubstring(.5f, splitStringArray[1])

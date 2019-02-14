@@ -55,17 +55,6 @@
     <string name="GOAL_RESUME">resume</string>
     <string name="GOAL_ERROR_TITLE">This goal is past its end date</string>
     <string name="GOAL_ERROR_DESCRIPTION">To continue setting aside money in this goal, you must edit when you need it by. Tap to edit.</string>
-    <string name="GOAL_EDIT_FREQUENCY_AMOUNT">Set-aside how much</string>
-    <string name="GOAL_EDIT_MONTHLY_DATE_LABEL">Next run date</string>
-    <string name="GOAL_EDIT_COMPLETE_DATE_FOOTER">*Goals may complete earlier than your end date.</string>
-    <string name="GOAL_EDIT_COMPLETE_DATE_LABEL">When do you need it by*</string>
-    <string name="GOAL_EDIT_CONFIRMATION_COMPLETE_DATE_EFFECT_DESCRIPTION">This change will directly effect the date your goal will be reached.</string>
-    <string name="GOAL_EDIT_CONFIRMATION_HEADER">You\'ll now set-aside</string>
-    <string name="GOAL_EDIT_CONFIRMATION_RECURRENCE_WEEK_FORMAT">on %s</string>
-    <string name="GOAL_EDIT_CONFIRMATION_GOAL_COMPLETE_DATE_FORMAT">until %s</string>
-    <string name="GOAL_EDIT_CONFIRMATION_GOAL_COMPLETE_DATE_WEEKLY_FORMAT">on %s until %s</string>
-    <string name="GOAL_EDIT_CONFIRMATION_RECURRENCE_MONTHLY_FORMAT">Starting on %s</string>
-    <string name="GOAL_EDIT_CONFIRMATION_SAVE">Save</string>
     <string name="GOAL_SINGLE_TRANSFER_HEADER">Transfer money toward this goal or back to your available balance.</string>
     <string name="GOAL_SINGLE_TRANSFER_FROM_LABEL">From</string>
     <string name="GOAL_SINGLE_TRANSFER_TO_LABEL">To</string>

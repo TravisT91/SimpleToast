@@ -594,7 +594,7 @@
 
     <fragment
         android:id="@+id/goalsAddEditConfirmationFragment"
-        android:name="com.engageft.feature.goals.GoalAddConfirmationFragment"
+        android:name="com.engageft.feature.goals.GoalsAddEditConfirmationFragment"
         android:label="@string/GOALS_ADD_GOAL" >
         <argument
             android:name="@string/navigation_view_gone"
@@ -651,13 +651,6 @@
             app:popEnterAnim="@anim/nav_pop_enter_anim"
             app:popExitAnim="@anim/nav_pop_exit_anim" />
         <action
-            android:id="@+id/action_goalDetailFragment_to_goalEditFragment"
-            app:destination="@id/goalEditFragment"
-            app:enterAnim="@anim/nav_enter_anim"
-            app:exitAnim="@anim/nav_exit_anim"
-            app:popEnterAnim="@anim/nav_pop_enter_anim"
-            app:popExitAnim="@anim/nav_pop_exit_anim"/>
-        <action
             android:id="@+id/action_goalDetailFragment_to_goalSingleTransferFragment"
             app:destination="@id/goalSingleTransferFragment"
             app:enterAnim="@anim/nav_enter_anim"
@@ -669,21 +662,6 @@
         android:id="@+id/goalDeleteFragment"
         android:name="com.engageft.feature.goals.GoalDeleteFragment"
         android:label="@string/GOAL_DELETE_TITLE"/>
-    <fragment
-        android:id="@+id/goalEditFragment"
-        android:name="com.engageft.feature.goals.GoalEditFragment">
-        <action
-            android:id="@+id/action_goalEditFragment_to_goalEditConfirmationFragment"
-            app:destination="@id/goalEditConfirmationFragment"
-            app:enterAnim="@anim/nav_enter_anim"
-            app:exitAnim="@anim/nav_exit_anim"
-            app:popEnterAnim="@anim/nav_pop_enter_anim"
-            app:popExitAnim="@anim/nav_pop_exit_anim"/>
-    </fragment>
-    <fragment
-        android:id="@+id/goalEditConfirmationFragment"
-        android:name="com.engageft.feature.goals.GoalEditConfirmationFragment"
-        android:label="@string/GOAL_DETAIL_EDIT"/>
     <fragment
         android:id="@+id/goalSingleTransferFragment"
         android:name="com.engageft.feature.goals.GoalSingleTransferFragment"
