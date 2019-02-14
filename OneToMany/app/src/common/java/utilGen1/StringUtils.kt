@@ -263,6 +263,10 @@ object StringUtils {
             val spannableString = SpannableString(amountStringWithCurrency)
             spannableString.setSpan(RelativeSizeSpan(fractionDigitsPercentHeight), amountStringWithCurrency.length - 3, amountStringWithCurrency.length, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
             if (superscriptCurrency) {
+                // Note that this should work for any currency symbol, regardless of position and length. "USD" is temporarily hardcoded above,
+                // pending resolution of SHOW-385. This block should not need updating for SHOW-385. However, it may be the case
+                // that other currencies should not be superscripted by default, as is currently the case because
+                // the "superscriptCurrency" param defaults to true.
                 val currencySymbol = CurrencyUtils.getCurrencySymbol(EngageAppConfig.currencyCode)
                 val indexOfCurrencySymbol = amountStringWithCurrency.indexOf(currencySymbol)
                 if (currencySymbol.isNotBlank() && indexOfCurrencySymbol != -1) {
