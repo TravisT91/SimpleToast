@@ -16,7 +16,6 @@ import com.ob.ws.dom.AchLoadsResponse
 import com.engageft.engagekit.rest.request.CardRequest
 import com.engageft.engagekit.utils.LoginResponseUtils
 import com.engageft.fis.pscu.feature.BaseEngageViewModel
-import com.ob.ws.dom.utility.AccountInfo
 import utilGen1.ScheduledLoadUtils
 /**
  * AccountsAndTransfersListViewModel
@@ -32,15 +31,17 @@ class AccountsAndTransfersListViewModel: BaseEngageViewModel() {
         private const val HISTORICAL_LOADS_LIST_MAX_COUNT = 5
     }
 
-    enum class BankAccountStatus {
-        NO_BANK_ACCOUNT,
-        UNVERIFIED_BANK_ACCOUNT,
-        VERIFIED_BANK_ACCOUNT
+    enum class AchButtonState {
+        HIDE,
+        CREATE_TRANSFER,
+        VERIFY_BANK
     }
 
     var achBankAccountId = 0L
-    var accountInfo: AccountInfo? = null
-    val achAccountsListAndStatusObservable = MutableLiveData<AchBankAccountListAndStatus>()
+    val achBankAccountsListObservable = MutableLiveData<List<AchAccountInfo>>()
+    val achButtonStateObservable = MutableLiveData<AchButtonState>()
+    val isAchEnabledObservable = MutableLiveData<Boolean>()
+    val isAllowAddAchAccountObservable = MutableLiveData<Boolean>()
     val achScheduledLoadListObservable = MutableLiveData<List<ScheduledLoad>>()
     val achHistoricalLoadListObservable = MutableLiveData<List<AchLoadInfo>>()
 
@@ -48,6 +49,8 @@ class AccountsAndTransfersListViewModel: BaseEngageViewModel() {
     private var shouldHideProgressOverlay = false
 
     init {
+        achButtonStateObservable.value = AchButtonState.HIDE
+
         initBankAccountsListAndTransfersList()
     }
 
@@ -59,12 +62,7 @@ class AccountsAndTransfersListViewModel: BaseEngageViewModel() {
     }
 
     fun isBankVerified(): Boolean {
-        achAccountsListAndStatusObservable.value?.let {
-            if (it.bankStatus == BankAccountStatus.VERIFIED_BANK_ACCOUNT) {
-                return true
-            }
-        }
-        return false
+        return achButtonStateObservable.value == AchButtonState.CREATE_TRANSFER
     }
 
     private fun initBankAccountsListAndTransfersList() {
@@ -77,10 +75,12 @@ class AccountsAndTransfersListViewModel: BaseEngageViewModel() {
                     // don't hide progressOverlay just yet
                     if (response is LoginResponse) {
                         loginResponse = response
-                        accountInfo = LoginResponseUtils.getCurrentAccountInfo(response)
+
+                        // the order of invoking the following methods don't matter
+
+                        initBankAccountStatusAndList(response)
+
                         val currentCard = LoginResponseUtils.getCurrentCard(response)
-                        // the order of invoking these methods don't matter
-                        initBankAccountStatusAndList(response.achAccountList)
                         // hide progress when the following two API calls are done.
                         shouldHideProgressOverlay = false
                         getScheduledLoads(currentCard)
@@ -143,31 +143,38 @@ class AccountsAndTransfersListViewModel: BaseEngageViewModel() {
         )
     }
 
-    private fun initBankAccountStatusAndList(achAccountInfoList: List<AchAccountInfo>) {
-        if (achAccountInfoList.isNotEmpty()) {
+    private fun initBankAccountStatusAndList(loginResponse: LoginResponse) {
+        val accountInfo = LoginResponseUtils.getCurrentAccountInfo(loginResponse)
+        accountInfo?.let { account ->
+            if (account.accountPermissionsInfo.isFundingAchEnabled) {
 
-            var verified = false
-            for (achAccountInfo in achAccountInfoList) {
+                if (loginResponse.achAccountList.isNotEmpty()) {
+                    loginResponse.achAccountList.find { achAccount ->
+                        achAccount.achAccountStatus == AchAccountStatus.VERIFIED
+                    }?.let { achAccountInfo ->
+                        achBankAccountId = achAccountInfo.achAccountId
+                        achBankAccountsListObservable.value = listOf(achAccountInfo)
+                        achButtonStateObservable.value = AchButtonState.CREATE_TRANSFER
+                    }
 
-                if (achAccountInfo.achAccountStatus == AchAccountStatus.VERIFIED) {
+                    loginResponse.achAccountList.find { achAccount ->
+                        achAccount.achAccountStatus == AchAccountStatus.UNVERIFIED
+                    }?.let { achAccountInfo ->
+                        achBankAccountId = achAccountInfo.achAccountId
+                        achBankAccountsListObservable.value = listOf(achAccountInfo)
+                        achButtonStateObservable.value = AchButtonState.VERIFY_BANK
+                    }
+                } else {
+                    achButtonStateObservable.value = AchButtonState.HIDE
 
-                    achAccountsListAndStatusObservable.value = AchBankAccountListAndStatus(
-                            bankStatus = BankAccountStatus.VERIFIED_BANK_ACCOUNT,
-                            achAccountInfoList = achAccountInfoList)
-                    verified = true
-                    break
+                    //TODO(aHashimi): Adding of multiple ACH bank accounts is not supported yet [on Frontend at least]
+                    // calling this here makes sense for now.
+                    isAllowAddAchAccountObservable.value = account.accountPermissionsInfo.isFundingAddAchAllowable
                 }
-                achBankAccountId = achAccountInfo.achAccountId
+            } else {
+                isAchEnabledObservable.value = false
+                achButtonStateObservable.value = AchButtonState.HIDE
             }
-            if (!verified) {
-                achAccountsListAndStatusObservable.value = AchBankAccountListAndStatus(
-                        bankStatus = BankAccountStatus.UNVERIFIED_BANK_ACCOUNT,
-                        achAccountInfoList = achAccountInfoList)
-            }
-        } else {
-            achAccountsListAndStatusObservable.value = AchBankAccountListAndStatus(
-                    bankStatus = BankAccountStatus.NO_BANK_ACCOUNT,
-                    achAccountInfoList = achAccountInfoList)
         }
     }
 
@@ -177,13 +184,4 @@ class AccountsAndTransfersListViewModel: BaseEngageViewModel() {
         }
         shouldHideProgressOverlay = true
     }
-
-    fun isAllowedToAddAccount(): Boolean {
-        accountInfo?.let { currentAccountInfo ->
-            return currentAccountInfo.accountPermissionsInfo.isFundingAddAchAllowable
-        }
-        return false
-    }
-
-    data class AchBankAccountListAndStatus(val bankStatus: BankAccountStatus, val achAccountInfoList: List<AchAccountInfo>)
 }

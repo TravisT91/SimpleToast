@@ -16,6 +16,8 @@ import com.engageft.fis.pscu.R
 import com.engageft.fis.pscu.databinding.FragmentAccountsAndTransfersListBinding
 import com.engageft.fis.pscu.feature.BaseEngagePageFragment
 import com.engageft.fis.pscu.feature.branding.Palette
+import com.ob.ws.dom.utility.AchAccountInfo
+
 /**
  * AccountsAndTransfersListFragment
  * </p>
@@ -52,7 +54,7 @@ class AccountsAndTransfersListFragment: BaseEngagePageFragment() {
 
                     object : AccountsAndTransfersListRecyclerViewAdapter.AchAccountInfoClickListener {
 
-                        override fun onAchAccounDetailClicked(achAccountInfoId: Long) {
+                        override fun onAchAccountDetailClicked(achAccountInfoId: Long) {
                             root.findNavController().navigate(R.id.action_accountsAndTransfersListFragment_to_achBankAccountDetailFragment,
                                     Bundle().apply {
                                         putLong(ACH_BANK_ACCOUNT_ID, achAccountInfoId)
@@ -60,12 +62,8 @@ class AccountsAndTransfersListFragment: BaseEngagePageFragment() {
                         }
 
                         override fun onAddBankAccountClicked() {
-                            //TODO(aHashimi): support multiple ACH account later: https://engageft.atlassian.net/browse/FOTM-588
-                            if (accountsAndTransfersListViewModel.isAllowedToAddAccount()) {
-                                root.findNavController().navigate(R.id.action_accountsAndTransfersListFragment_to_achBankAccountAddFragment)
-                            } else {
-                                //TODO(aHashimi): https://engageft.atlassian.net/browse/FOTM-588
-                            }
+                            //TODO(aHashimi): https://engageft.atlassian.net/browse/FOTM-588
+                            root.findNavController().navigate(R.id.action_accountsAndTransfersListFragment_to_achBankAccountAddFragment)
                         }
                     },
 
@@ -100,26 +98,43 @@ class AccountsAndTransfersListFragment: BaseEngagePageFragment() {
 
         accountsAndTransfersListViewModel.apply {
 
-            achAccountsListAndStatusObservable.observe(this@AccountsAndTransfersListFragment, Observer { achAccountListAndStatus ->
-
-                if (achAccountListAndStatus.bankStatus == AccountsAndTransfersListViewModel.BankAccountStatus.VERIFIED_BANK_ACCOUNT) {
-                    recyclerViewAdapter.setButtonTextAndVisibility(getString(R.string.ach_bank_transfer_create_transfer), true)
+            isAchEnabledObservable.observe(viewLifecycleOwner, Observer {
+                if (!it) {
+                    // hide
                     recyclerViewAdapter.removeHeaderAndNotifyAdapter()
-                } else {
-                    if (achAccountListAndStatus.bankStatus == AccountsAndTransfersListViewModel.BankAccountStatus.NO_BANK_ACCOUNT) {
-                        recyclerViewAdapter.setButtonTextAndVisibility("", false)
-                    } else {
-                        recyclerViewAdapter.setButtonTextAndVisibility(getString(R.string.ach_bank_transfer_verify_account), true)
-                    }
-                    // show header
+                    recyclerViewAdapter.removeAchAccountSection()
+                }
+            })
+
+            isAllowAddAchAccountObservable.observe(viewLifecycleOwner, Observer {
+                if (it) {
                     recyclerViewAdapter.setAccountHeaderData(getString(R.string.ach_bank_transfer_header_title),
                             getString(R.string.ach_bank_transfer_header_description))
-
+                    recyclerViewAdapter.setAchAccountData(listOf(AchAccountInfo()))
+                } else {
+                    recyclerViewAdapter.removeHeaderAndNotifyAdapter()
+                    recyclerViewAdapter.removeAchAccountSection()
                 }
+            })
 
+            achBankAccountsListObservable.observe(viewLifecycleOwner, Observer { achAccountsList ->
+                recyclerViewAdapter.removeHeaderAndNotifyAdapter()
+                recyclerViewAdapter.setAchAccountData(achAccountsList)
+            })
+
+            achButtonStateObservable.observe(viewLifecycleOwner, Observer {
+                when (it) {
+                    AccountsAndTransfersListViewModel.AchButtonState.HIDE -> {
+                        recyclerViewAdapter.setCreateTransferButtonState("", false)
+                    }
+                    AccountsAndTransfersListViewModel.AchButtonState.VERIFY_BANK -> {
+                        recyclerViewAdapter.setCreateTransferButtonState(getString(R.string.ach_bank_transfer_verify_account), true)
+                    }
+                    AccountsAndTransfersListViewModel.AchButtonState.CREATE_TRANSFER -> {
+                        recyclerViewAdapter.setCreateTransferButtonState(getString(R.string.ach_bank_transfer_create_transfer), true)
+                    }
+                }
                 activity?.invalidateOptionsMenu()
-
-                recyclerViewAdapter.setAchAccountData(achAccountListAndStatus.achAccountInfoList)
             })
 
             achScheduledLoadListObservable.observe(this@AccountsAndTransfersListFragment, Observer {
@@ -146,7 +161,7 @@ class AccountsAndTransfersListFragment: BaseEngagePageFragment() {
 
     override fun onPrepareOptionsMenu(menu: Menu?) {
         val menuItem = menu!!.findItem(R.id.add)
-        menuItem.isVisible = accountsAndTransfersListViewModel.isBankVerified()
+        menuItem.isVisible = accountsAndTransfersListViewModel.achButtonStateObservable.value == AccountsAndTransfersListViewModel.AchButtonState.CREATE_TRANSFER
         super.onPrepareOptionsMenu(menu)
     }
 
