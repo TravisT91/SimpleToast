@@ -36,4 +36,7 @@
 
     <!-- overview transactions list -->
     <dimen name="transactions_tab_indicator_height">3dp</dimen>
+
+    <!-- Onboarding pager margin -->
+    <dimen name="onboarding_pager_dot_margin">10dp</dimen>
 </resources>

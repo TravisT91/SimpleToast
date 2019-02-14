@@ -16,11 +16,13 @@
             android:layout_height="match_parent"
             android:background="@drawable/onboarding_background">
 
+            <!--If we don't add marginTop here, we lose the rounded corners of the background-->
             <androidx.viewpager.widget.ViewPager
                 android:id="@+id/viewPager"
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
                 android:layout_marginBottom="8dp"
+                android:layout_marginTop="8dp"
                 app:layout_constraintBottom_toTopOf="@+id/indicatorLayout"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
@@ -30,48 +32,14 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
-                app:layout_constraintBottom_toTopOf="@+id/getStartedButton"
+                app:layout_constraintBottom_toTopOf="@+id/viewPagerButton"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 android:layout_marginBottom="32dp">
-
-                <androidx.appcompat.widget.AppCompatImageView
-                    android:id="@+id/pageIndicator1ImageView"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginEnd="10dp"
-                    app:srcCompat="@drawable/pager_indicator_dot" />
-
-                <androidx.appcompat.widget.AppCompatImageView
-                    android:id="@+id/pageIndicator2ImageView"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginEnd="10dp"
-                    app:srcCompat="@drawable/pager_indicator_dot" />
-
-                <androidx.appcompat.widget.AppCompatImageView
-                    android:id="@+id/pageIndicator3ImageView"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginEnd="10dp"
-                    app:srcCompat="@drawable/pager_indicator_dot" />
-
-                <androidx.appcompat.widget.AppCompatImageView
-                    android:id="@+id/pageIndicator4ImageView"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginEnd="10dp"
-                    app:srcCompat="@drawable/pager_indicator_dot" />
-
-                <androidx.appcompat.widget.AppCompatImageView
-                    android:id="@+id/pageIndicator5ImageView"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    app:srcCompat="@drawable/pager_indicator_dot" />
             </LinearLayout>
 
             <com.engageft.apptoolbox.view.PillButton
-                android:id="@+id/getStartedButton"
+                android:id="@+id/viewPagerButton"
                 style="@style/ButtonPillPrimaryFilledDefault"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
