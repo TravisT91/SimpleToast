@@ -91,6 +91,7 @@ class TransactionDetailsFragment : BaseEngageSubFragment() {
             // To pop this fragment when changes are successfully made
             changeSuccess.observe(tdf, onChangeSuccessObserver)
         }
+        setHasOptionsMenu(true)
     }
 
     override fun onCreateView(
