@@ -103,7 +103,6 @@
                 android:layout_marginBottom="16dp"
                 android:lineSpacingExtra="11sp"
                 android:text="@string/secondary_users_splash_button_add"
-                android:onClick="@{() -> viewModel.onAddSecondaryClicked()}"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintBottom_toBottomOf="parent"

@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import androidx.core.content.res.ResourcesCompat
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.engageft.apptoolbox.BaseViewModel
 import com.engageft.apptoolbox.util.applyTypefaceAndColorToSubString
@@ -27,9 +28,11 @@ class SecondaryUserListFragment: BaseEngagePageFragment() {
 
     private val selectionListener = object : SecondaryUserListRecyclerViewAdapter.SecondaryUserListSelectionListener {
         override fun onItemClicked(secondaryUserListItem: SecondaryUserListItem) {
-            // TODO(jhutchins): In the case of add button clicked: FOTM-694
             // TODO(jhutchins): In the case of user clicked clicked: FOTM-694
             // In the case of header or footer clicked, do nothing.
+            when (secondaryUserListItem) {
+                is SecondaryUserListItem.AddUserType -> { findNavController().navigate(R.id.action_secondaryUserListFragment_to_addSecondaryUserFragment) }
+            }
         }
     }
 
@@ -69,6 +72,9 @@ class SecondaryUserListFragment: BaseEngagePageFragment() {
                     ResourcesCompat.getFont(context!!, R.font.font_bold)!!,
                     Palette.primaryColor,
                     getString(R.string.secondary_users_splash_title_substring))
+            buttonAddAccount.setOnClickListener {
+                findNavController().navigate(R.id.action_secondaryUserListFragment_to_addSecondaryUserFragment)
+            }
         }
 
         secondaryUserListViewModel.apply {

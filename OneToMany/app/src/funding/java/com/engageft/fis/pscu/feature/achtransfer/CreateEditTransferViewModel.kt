@@ -130,7 +130,7 @@ class CreateEditTransferViewModel: BaseEngageViewModel() {
                 .subscribe({ response ->
                     progressOverlayShownObservable.value = false
                     if (response is LoginResponse) {
-                        val isAchFundingAllowed = LoginResponseUtils.getCurrentAccountInfo(response).accountPermissionsInfo.isAchEnabled
+                        val isAchFundingAllowed = LoginResponseUtils.getCurrentAccountInfo(response).accountPermissionsInfo.isFundingAchEnabled
                         if (isAchFundingAllowed) {
                             //TODO(aHashimi): populate the To and From account fields since multiple cards and ACH out is not supported.
                             if (response.achAccountList.isNotEmpty()) {

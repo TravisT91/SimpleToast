@@ -31,7 +31,7 @@ object EngageAppConfig : BaseAppConfig() {
     }
 
     override val heapAppId: String = if (BuildConfig.DEBUG) "230876127" else "2688943769"
-    override val moEngageAppId: String = "TZA5EGIIKJIHIZPRPBP7Z2WY"
+    override val moEngageAppId: String = "YTI7RS4PJ1G1IVAEUV7YX8DN"
 }
 
 abstract class BaseAppConfig {
