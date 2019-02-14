@@ -24,4 +24,10 @@
     <string name="TRANSACTION_DETAILS_SAVE">Save</string>
 
     <string name="TRANSACTIONS_CATEGORIES_TITLE">Select category</string>
+
+    <string name="TRANSACTION_CATEGORY_CHANGE_TITLE">"Apply to all?"</string>
+    <string name="TRANSACTION_CATEGORY_CHANGE_ALL_TRANSACTION">"All transactions"</string>
+    <string name="TRANSACTION_CATEGORY_CHANGE_ONLY_THIS">"Only this transaction"</string>
+    <string name="TRANSACTION_CATEGORY_CHANGE_SUBTITLE">"Change category to \"%s\" on this and all transactions from \"%s2\"?"</string>
+
 </resources>

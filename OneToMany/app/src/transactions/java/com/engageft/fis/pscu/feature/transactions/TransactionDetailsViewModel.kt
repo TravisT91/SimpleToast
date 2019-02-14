@@ -85,9 +85,7 @@ class TransactionDetailsViewModel(transactionId: TransactionId) : BaseEngageView
         transaction.value?.let {
 
             val categoryDidNotChange = (txCategory.value == originalCategory)
-            if (!categoryDidNotChange){
-                categoryHasChanged = true
-            }
+            categoryHasChanged = !categoryDidNotChange
             val offBudgetDidNotChange = (isOffBudget.value == originalIsOffBudget)
             val notesDidNotChange = (txNotes.value == originalNotes)
             val hasChanges =

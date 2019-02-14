@@ -124,8 +124,6 @@ class TransactionDetailsFragment : BaseEngageSubFragment() {
 
             saveButton.setOnClickListener {
                 if(detailsViewModel.categoryHasChanged) {
-                    detailsViewModel.saveChanges(false)
-                } else {
                     ListBottomSheetDialogFragment.newInstance(
                             listener = object : ListBottomSheetDialogFragment.ListBottomSheetDialogListener{
                                 override fun onOptionSelected(index: Int, optionText: CharSequence) {
@@ -141,10 +139,21 @@ class TransactionDetailsFragment : BaseEngageSubFragment() {
                                 }
 
                             },
-                            title = "Apply to all?",
-                            subtitle = "Change category to \"${detailsViewModel.txCategory.value}\" on this and all transactions from \"${detailsViewModel.transaction.value?.store}\"?",
-                            options = listOf("All transaction", "only this transaction").toCollection(ArrayList())
+                            title = context!!.getString(R.string.TRANSACTION_CATEGORY_CHANGE_TITLE),
+                            subtitle = String.format(
+                                    context!!.getString(R.string.TRANSACTION_CATEGORY_CHANGE_SUBTITLE),
+                                    detailsViewModel.txCategory.value,
+                                    detailsViewModel.transaction.value?.store
+                                    ),
+                            options = listOf(
+                                    context!!.getString(R.string.TRANSACTION_CATEGORY_CHANGE_ALL_TRANSACTION),
+                                    context!!.getString(R.string.TRANSACTION_CATEGORY_CHANGE_ONLY_THIS))
+                                    .toCollection(ArrayList()),
+                            titleTextAppearance = R.style.ListOptionBottomSheetDialogFragmentStyle
+
                     ).show(activity!!.supportFragmentManager,"setAllOrOnlyThisDialog")
+                } else {
+                    detailsViewModel.saveChanges(false)
                 }
             }
         }
