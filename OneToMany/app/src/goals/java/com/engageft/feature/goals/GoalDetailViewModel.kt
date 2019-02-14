@@ -10,7 +10,6 @@ import com.engageft.engagekit.utils.LoginResponseUtils
 import com.engageft.engagekit.utils.PayPlanInfoUtils
 import com.engageft.engagekit.utils.engageApi
 import com.engageft.feature.budgets.extension.isZero
-import com.engageft.feature.goals.utils.PayPlanType
 import com.ob.ws.dom.GoalsResponse
 import com.ob.ws.dom.LoginResponse
 import com.ob.ws.dom.utility.DebitCardInfo
@@ -134,10 +133,10 @@ class GoalDetailViewModel(var goalId: Long): GoalDeleteViewModel() {
                 }
             }
 
-            val recurrenceType : PayPlanType = when (goalInfo.payPlan.recurrenceType) {
-                PayPlanInfoUtils.PAY_PLAN_DAY -> PayPlanType.DAY
-                PayPlanInfoUtils.PAY_PLAN_WEEK -> PayPlanType.WEEK
-                PayPlanInfoUtils.PAY_PLAN_MONTH -> PayPlanType.MONTH
+            val recurrenceType : GoalDetailState.GoalIncompleteHeaderItem.PayPlanType = when (goalInfo.payPlan.recurrenceType) {
+                PayPlanInfoUtils.PAY_PLAN_DAY -> GoalDetailState.GoalIncompleteHeaderItem.PayPlanType.DAY
+                PayPlanInfoUtils.PAY_PLAN_WEEK -> GoalDetailState.GoalIncompleteHeaderItem.PayPlanType.WEEK
+                PayPlanInfoUtils.PAY_PLAN_MONTH -> GoalDetailState.GoalIncompleteHeaderItem.PayPlanType.MONTH
                 else -> throw IllegalArgumentException("payPlan is of wrong type")
             }
             val progress = if (goalInfo.amount != null && goalInfo.amount.toFloat() != 0f && goalInfo.fundAmount != null) {
@@ -178,10 +177,16 @@ sealed class GoalDetailState {
     }
     class GoalCompleteHeaderItem(val fundAmount: BigDecimal) : GoalDetailState()
     class GoalIncompleteHeaderItem(val goalIncompleteHeaderModel: GoalIncompleteHeaderModel) : GoalDetailState() {
+        enum class PayPlanType {
+            DAY,
+            WEEK,
+            MONTH
+        }
+
         data class GoalIncompleteHeaderModel(val fundAmount: BigDecimal, val goalAmount: BigDecimal,
                                              val progress: Float, val frequencyAmount: BigDecimal,
                                              val isPaused: Boolean,
-                                             val payPlanType: PayPlanType,
+                                             val payPlanType: GoalDetailState.GoalIncompleteHeaderItem.PayPlanType,
                                              val goalCompleteDate: DateTime,
                                              val errorState: ErrorState = ErrorState.NONE)
     }

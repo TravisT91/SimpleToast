@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools">
+<layout>
     <data>
         <variable
             name="viewModel"
@@ -13,9 +12,11 @@
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:fillViewport="true">
+        xmlns:tools="http://schemas.android.com/tools"
+        android:fillViewport="true"
+        xmlns:android="http://schemas.android.com/apk/res/android">
 
-        <LinearLayout
+        <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center"
@@ -65,15 +66,13 @@
             <com.engageft.apptoolbox.view.PillButton
                 style="@style/ButtonPillPrimaryFilledDefault"
                 PillButton.setThemeFilled="@{true}"
-                android:id="@+id/saveButton"
-                android:layout_marginTop="32dp"
-                android:layout_marginBottom="20dp"
+                android:id="@+id/createTransferButton"
+                android:layout_margin="32dp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:onClick="@{() -> viewModel.onSaveGoal()}"
                 android:text="@string/nav_drawer_title_goals"/>
         </LinearLayout>
-
     </ScrollView>
 </layout>
 
