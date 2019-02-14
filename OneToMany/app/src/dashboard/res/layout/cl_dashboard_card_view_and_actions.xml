@@ -35,7 +35,7 @@
         <!-- card action layout rows are added to this layout dynamically -->
         <LinearLayout
             android:id="@+id/layout_card_actions"
-            android:layout_width="@dimen/dashboard_action_list_width"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="vertical"
             android:paddingStart="16dp"
