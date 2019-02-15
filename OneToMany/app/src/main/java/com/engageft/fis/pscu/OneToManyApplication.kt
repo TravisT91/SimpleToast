@@ -42,8 +42,8 @@ class OneToManyApplication : LotusApplication() {
 
         HeapUtils.initHeap(this)
         MoEngageUtils.initMoEngage()
-        EngageService.initService(BuildConfig.VERSION_CODE.toString(), this, EngageAppConfig.engageKitConfig, isTestBuild())
-        Log.i("OneToManyApplication", "isTestBuild? ${isTestBuild()}")
+        EngageService.initService(BuildConfig.VERSION_CODE.toString(), this, EngageAppConfig.engageKitConfig, EngageAppConfig.isTestBuild)
+        Log.i("OneToManyApplication", "isTestBuild? ${EngageAppConfig.isTestBuild}")
 
         initPalette()
 
@@ -87,7 +87,7 @@ class OneToManyApplication : LotusApplication() {
                                     Crashlytics.logException(IllegalStateException("handleUnexpectedErrorResponse: " + response.message))
                                 }
                             }, { e ->
-                        if (BuildConfig.DEBUG) {
+                        if (EngageAppConfig.isTestBuild) {
                             e.printStackTrace()
                         }
                         Crashlytics.logException(e)
@@ -112,9 +112,5 @@ class OneToManyApplication : LotusApplication() {
             font_light = ResourcesCompat.getFont(this@OneToManyApplication, R.font.font_light),
             font_medium = ResourcesCompat.getFont(this@OneToManyApplication, R.font.font_medium)
         )
-    }
-
-    private fun isTestBuild(): Boolean {
-        return BuildConfig.DEBUG || BuildConfig.BUILD_TYPE == "demo"
     }
 }

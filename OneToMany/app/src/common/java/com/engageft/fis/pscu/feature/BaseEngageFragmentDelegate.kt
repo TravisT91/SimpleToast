@@ -11,8 +11,8 @@ import androidx.navigation.findNavController
 import com.crashlytics.android.Crashlytics
 import com.engageft.apptoolbox.BaseFragmentDelegate
 import com.engageft.apptoolbox.view.InformationDialogFragment
-import com.engageft.fis.pscu.BuildConfig
 import com.engageft.fis.pscu.R
+import com.engageft.fis.pscu.config.EngageAppConfig
 import com.engageft.fis.pscu.feature.palettebindings.applyPaletteStyles
 
 /**
@@ -103,7 +103,7 @@ class BaseEngageFragmentDelegate(private val engageFragmentIm: BaseEngageFragmen
     }
 
     fun handleGenericThrowable(e: Throwable) {
-        if (BuildConfig.DEBUG) {
+        if (EngageAppConfig.isTestBuild) {
             e.printStackTrace()
         } else {
             Crashlytics.logException(e)
