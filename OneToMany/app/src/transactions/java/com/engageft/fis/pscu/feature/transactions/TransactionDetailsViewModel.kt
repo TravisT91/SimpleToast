@@ -1,5 +1,6 @@
 package com.engageft.fis.pscu.feature.transactions
 
+import android.text.SpannableString
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -19,6 +20,7 @@ import io.reactivex.schedulers.Schedulers
 import utilGen1.DisplayDateTimeUtils
 import utilGen1.StringUtils
 import utilGen1.StringUtils.formatCurrencyStringWithFractionDigits
+import java.math.BigDecimal
 import java.util.*
 import kotlin.math.absoluteValue
 
@@ -40,7 +42,7 @@ class TransactionDetailsViewModel(transactionId: TransactionId) : BaseEngageView
             transactionId = transactionId.id)
 
     val transaction = MutableLiveData<Transaction>()
-    val amount = MutableLiveData<String>().apply { value = "" }
+    val amount = MutableLiveData<SpannableString>().apply { value = SpannableString.valueOf("") }
     val txDate = MutableLiveData<String>().apply { value = "" }
     val txStore = MutableLiveData<String>().apply { value = "" }
     val txCategory = MutableLiveData<CharSequence>().apply {
@@ -59,12 +61,13 @@ class TransactionDetailsViewModel(transactionId: TransactionId) : BaseEngageView
     fun setTransaction(transaction: Transaction) {
         transaction.let {
 
-            val amount = formatCurrencyStringWithFractionDigits(
+            val amountPrefix = if(it.amount > BigDecimal.ZERO) "+" else "-"
+            val amount = amountPrefix + formatCurrencyStringWithFractionDigits(
                     it.amount.toFloat().absoluteValue, true)
             val date = DisplayDateTimeUtils.getMediumFormatted(it.date)
             val store = StringUtils.removeRedundantWhitespace(transaction.store)
 
-            this.amount.value = amount
+            this.amount.value = SpannableString.valueOf(amount)
             this.txDate.value = date
             this.txStore.value = store
 

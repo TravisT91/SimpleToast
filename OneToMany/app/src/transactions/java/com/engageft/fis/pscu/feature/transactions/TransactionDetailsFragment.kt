@@ -1,6 +1,7 @@
 package com.engageft.fis.pscu.feature.transactions
 
 import android.os.Bundle
+import android.text.TextUtils
 import android.view.LayoutInflater
 import android.view.Menu
 import android.view.MenuInflater
@@ -19,7 +20,12 @@ import com.engageft.fis.pscu.databinding.TransactionDetailsFragmentBinding
 import com.engageft.fis.pscu.feature.BaseEngageSubFragment
 import com.engageft.fis.pscu.feature.branding.Palette
 import com.engageft.fis.pscu.feature.transactions.utils.TransactionId
+import com.engageft.fis.pscu.feature.transactions.utils.TransactionUtils
+import com.ob.domain.lookup.TransactionType
+import kotlinx.android.synthetic.main.transaction_details_fragment.category
+import utilGen1.TransactionInfoUtils
 import java.lang.IndexOutOfBoundsException
+import java.math.BigDecimal
 import java.util.Locale
 
 /**
@@ -58,6 +64,35 @@ class TransactionDetailsFragment : BaseEngageSubFragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        setHasOptionsMenu(true)
+    }
+
+    override fun onCreateView(
+            inflater: LayoutInflater,
+            container: ViewGroup?,
+            savedInstanceState: Bundle?): View? {
+
+        binding = TransactionDetailsFragmentBinding.inflate(
+                inflater,
+                container,
+                false).apply {
+            palette = Palette
+            viewModel = detailsViewModel
+            setLifecycleOwner(this@TransactionDetailsFragment)
+
+            category.apply {
+                isEnabled = true
+                setMaxLines(Int.MAX_VALUE)
+            }
+
+            notes.setMaxLines(Int.MAX_VALUE)
+
+
+            saveButton.setOnClickListener {
+                saveChanges()
+            }
+        }
+
         detailsViewModel.apply {
 
             val tdf = this@TransactionDetailsFragment
@@ -66,6 +101,35 @@ class TransactionDetailsFragment : BaseEngageSubFragment() {
                 txNotes.observe(tdf, checkChangeObserver)
                 txCategory.observe(tdf, checkChangeObserver)
                 hasChanges.observe(tdf, onChangeObserver)
+
+                if (!TransactionUtils.showOffBudget(it)){
+                    binding.offBudgetFrame.visibility = View.GONE
+                }
+
+                val transactionType = TransactionUtils.getTransactionType(it)
+                if (!(transactionType == TransactionType.LOAD
+                        || transactionType == TransactionType.TRANSFER
+                        || transactionType == TransactionType.REVERSE_LOAD
+                        || transactionType == TransactionType.FEE
+                        || TextUtils.isEmpty(it.category))) {
+                    binding.apply {
+                        categoryFrame.setOnClickListener { _ ->
+                                val parent = this@TransactionDetailsFragment.parentFragment
+                                (parent as TransactionDetailsMediatorFragment).apply {
+                                    goToCategoryFragment()
+                                }
+                        }
+                        category.setEditTextOnClickListener {
+                            categoryFrame.performClick()
+                        }
+                    }
+                } else if (TextUtils.isEmpty(it.category)) {
+                    category.visibility = View.GONE
+                }
+
+                if (it.amount > BigDecimal.ZERO){
+                    binding.amount.setTextColor(Palette.successColor)
+                }
             })
 
             repoLiveData.observe(tdf, Observer {
@@ -90,45 +154,6 @@ class TransactionDetailsFragment : BaseEngageSubFragment() {
 
             // To pop this fragment when changes are successfully made
             changeSuccess.observe(tdf, onChangeSuccessObserver)
-        }
-        setHasOptionsMenu(true)
-    }
-
-    override fun onCreateView(
-            inflater: LayoutInflater,
-            container: ViewGroup?,
-            savedInstanceState: Bundle?): View? {
-
-        binding = TransactionDetailsFragmentBinding.inflate(
-                inflater,
-                container,
-                false).apply {
-            palette = Palette
-            viewModel = detailsViewModel
-            setLifecycleOwner(this@TransactionDetailsFragment)
-
-            category.apply {
-                isEnabled = true
-                setMaxLines(Int.MAX_VALUE)
-                setEditTextOnClickListener {
-                    categoryFrame.performClick()
-                }
-            }
-
-            notes.setMaxLines(Int.MAX_VALUE)
-
-            categoryFrame.apply {
-                setOnClickListener {
-                    val parent = this@TransactionDetailsFragment.parentFragment
-                    (parent as TransactionDetailsMediatorFragment).apply {
-                        goToCategoryFragment()
-                    }
-                }
-            }
-
-            saveButton.setOnClickListener {
-                saveChanges()
-            }
         }
 
         return binding.root
