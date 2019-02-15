@@ -1,5 +1,6 @@
 package com.engageft.fis.pscu
 
+import android.util.Log
 import androidx.core.content.ContextCompat
 import androidx.core.content.res.ResourcesCompat
 import com.crashlytics.android.Crashlytics
@@ -42,6 +43,7 @@ class OneToManyApplication : LotusApplication() {
         HeapUtils.initHeap(this)
         MoEngageUtils.initMoEngage()
         EngageService.initService(BuildConfig.VERSION_CODE.toString(), this, EngageAppConfig.engageKitConfig, isTestBuild())
+        Log.i("OneToManyApplication", "isTestBuild? ${isTestBuild()}")
 
         initPalette()
 

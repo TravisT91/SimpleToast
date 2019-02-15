@@ -34,18 +34,17 @@ android {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            matchingFallbacks = ['release']
         }
         debug {
             ext.heap = ["enabled": true]
             versionNameSuffix = "-debug"
+            matchingFallbacks = ['debug']
         }
         demo {
-            debuggable false
-            jniDebuggable false
-            renderscriptDebuggable false
-            minifyEnabled false
-            versionNameSuffix '(~demo)'
-            zipAlignEnabled true
+            initWith release
+            versionNameSuffix "-demo"
+            matchingFallbacks = ['release']
         }
     }
 
