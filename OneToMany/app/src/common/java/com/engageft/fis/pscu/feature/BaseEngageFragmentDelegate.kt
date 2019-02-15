@@ -10,8 +10,8 @@ import androidx.lifecycle.OnLifecycleEvent
 import androidx.navigation.findNavController
 import com.crashlytics.android.Crashlytics
 import com.engageft.apptoolbox.BaseFragmentDelegate
-import com.engageft.apptoolbox.BuildConfig
 import com.engageft.apptoolbox.view.InformationDialogFragment
+import com.engageft.fis.pscu.BuildConfig
 import com.engageft.fis.pscu.R
 import com.engageft.fis.pscu.feature.palettebindings.applyPaletteStyles
 

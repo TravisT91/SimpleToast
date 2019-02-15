@@ -6,7 +6,7 @@ import android.view.GestureDetector
 import android.view.MotionEvent
 import android.view.View
 import androidx.core.view.GestureDetectorCompat
-import com.engageft.engagekit.BuildConfig
+import com.engageft.fis.pscu.BuildConfig
 
 /**
  * EasterEggGestureDetector

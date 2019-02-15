@@ -41,7 +41,7 @@ class OneToManyApplication : LotusApplication() {
 
         HeapUtils.initHeap(this)
         MoEngageUtils.initMoEngage()
-        EngageService.initService(BuildConfig.VERSION_CODE.toString(), this, EngageAppConfig.engageKitConfig)
+        EngageService.initService(BuildConfig.VERSION_CODE.toString(), this, EngageAppConfig.engageKitConfig, isTestBuild())
 
         initPalette()
 
@@ -112,4 +112,7 @@ class OneToManyApplication : LotusApplication() {
         )
     }
 
+    private fun isTestBuild(): Boolean {
+        return BuildConfig.DEBUG || BuildConfig.BUILD_TYPE == "demo"
+    }
 }

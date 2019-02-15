@@ -35,10 +35,17 @@ android {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
-
         debug {
             ext.heap = ["enabled": true]
             versionNameSuffix = "-debug"
+        }
+        demo {
+            debuggable false
+            jniDebuggable false
+            renderscriptDebuggable false
+            minifyEnabled false
+            versionNameSuffix '(~demo)'
+            zipAlignEnabled true
         }
     }
 
@@ -87,10 +94,8 @@ dependencies {
     kapt "androidx.lifecycle:lifecycle-compiler:$rootProject.archLifecycleVersion"
     implementation 'com.google.firebase:firebase-core:16.0.6'
     implementation 'com.google.firebase:firebase-messaging:17.3.4'
-
     implementation "com.heapanalytics.android:heap-android-client:$rootProject.heapVersion"
     implementation 'com.moengage:moe-android-sdk:9.2.03'
-
     implementation 'com.eightbitlab:blurview:1.5.0'
     // For styling views programmatically
     implementation 'com.airbnb.android:paris:1.1.0'
@@ -99,16 +104,12 @@ dependencies {
     kapt 'com.airbnb.android:paris-processor:1.1.0'
     // For image loading
     implementation 'com.squareup.picasso:picasso:2.71828'
-
     // For input masking InputWithLabel objects.
     implementation 'com.redmadrobot:inputmask:3.4.4'
-
     implementation('com.crashlytics.sdk.android:crashlytics:2.9.6@aar') {
         transitive = true
     }
-
     implementation 'com.android.support:customtabs:28.0.0'
-
     // for printing webview contents
     implementation 'org.jsoup:jsoup:1.10.3'
 }
