@@ -20,7 +20,6 @@ import utilGen1.DisplayDateTimeUtils
 import utilGen1.StringUtils
 import utilGen1.StringUtils.formatCurrencyStringFractionDigitsReducedHeight
 import java.util.Locale
-import kotlin.math.absoluteValue
 
 class TransactionDetailsViewModel(transactionId: TransactionId) : BaseEngageViewModel() {
 
@@ -96,7 +95,7 @@ class TransactionDetailsViewModel(transactionId: TransactionId) : BaseEngageView
                     ( categoryDidNotChange
                             && offBudgetDidNotChange
                             && notesDidNotChange)
-                    .not()
+                            .not()
 
             this.hasChanges.postValue(hasChanges)
 
@@ -114,7 +113,7 @@ class TransactionDetailsViewModel(transactionId: TransactionId) : BaseEngageView
             addBudgetUpdateIfChanged(changesIterable, transaction)
 
             showProgressOverlayDelayed()
-            Observable.mergeDelayError(changesIterable)
+            compositeDisposable.add(Observable.mergeDelayError(changesIterable)
                     .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe(
@@ -141,7 +140,7 @@ class TransactionDetailsViewModel(transactionId: TransactionId) : BaseEngageView
                                     changeSuccess.call()
                                 }
                             }
-                    )
+                    ))
         }
     }
 
@@ -227,6 +226,11 @@ class TransactionDetailsViewModel(transactionId: TransactionId) : BaseEngageView
                                         // To update all transactions for this transaction's store:
                                         // TransactionRepository.updateStoreTransactionsOffBudget(transaction.store, isOffBudget.value!!)
                                     }
+                                    compositeDisposable.add(
+                                            EngageService.getInstance().refreshLoginObservable()
+                                            .subscribeOn(Schedulers.io())
+                                            .observeOn(AndroidSchedulers.mainThread())
+                                            .subscribe())
                                 }
                 )
             }
