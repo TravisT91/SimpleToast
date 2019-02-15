@@ -19,6 +19,7 @@ import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 import utilGen1.DisplayDateTimeUtils
 import utilGen1.StringUtils
+import utilGen1.StringUtils.formatCurrencyStringFractionDigitsReducedHeight
 import utilGen1.StringUtils.formatCurrencyStringWithFractionDigits
 import java.math.BigDecimal
 import java.util.*
@@ -62,8 +63,10 @@ class TransactionDetailsViewModel(transactionId: TransactionId) : BaseEngageView
         transaction.let {
 
             val amountPrefix = if(it.amount > BigDecimal.ZERO) "+" else "-"
-            val amount = amountPrefix + formatCurrencyStringWithFractionDigits(
-                    it.amount.toFloat().absoluteValue, true)
+//            val amount = amountPrefix + formatCurrencyStringFractionDigitsReducedHeight(
+//                    amount = it.amount.toFloat().absoluteValue,
+//                    showZeroDigits = true,
+//                    superscriptCurrecy = true)
             val date = DisplayDateTimeUtils.getMediumFormatted(it.date)
             val store = StringUtils.removeRedundantWhitespace(transaction.store)
 
