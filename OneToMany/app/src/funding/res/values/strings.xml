@@ -2,8 +2,7 @@
 <resources>
     <!-- Move Money -->
     <string name="TITLE_MOVE_MONEY">Move money</string>
-    <string name="MOVE_MONEY_BANK_TRANSFER">Bank transfer</string>
-    <string name="MOVE_MONEY_CREDIT_OR_DEBIT_CARD_LOAD">Credit or debit card load</string>
+    <string name="MOVE_MONEY_CARD_LOAD">Card load</string>
     <string name="MOVE_MONEY_DIRECT_DEPOSIT">Direct deposit</string>
     <string name="MOVE_MONEY_MOBILE_CHECK_DEPOSIT">Mobile check deposit</string>
 
