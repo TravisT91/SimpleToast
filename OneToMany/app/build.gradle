@@ -111,6 +111,8 @@ dependencies {
 
     // for printing webview contents
     implementation 'org.jsoup:jsoup:1.10.3'
+
+    implementation 'androidx.core:core-ktx:1.0.1'
 }
 
 apply plugin: 'com.google.gms.google-services'

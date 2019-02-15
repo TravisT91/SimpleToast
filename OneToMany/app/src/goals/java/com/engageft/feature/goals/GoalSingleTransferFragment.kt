@@ -7,6 +7,7 @@ import android.view.MenuInflater
 import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.os.bundleOf
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.navigation.findNavController
@@ -157,12 +158,9 @@ class GoalSingleTransferFragment: BaseEngagePageFragment() {
 
     private fun navigateToConfirmation() {
         binding.root.findNavController().navigate(R.id.action_goalSingleTransferFragment_to_goalSingleTransferConfirmationFragment,
-                Bundle().apply {
-                    putLong(GOAL_ID_KEY, viewModelTransfer.goalId)
-                    putSerializable(TRANSFER_AMOUNT_KEY, viewModelTransfer.transferAmount)
-                    putSerializable(TRANSFER_FROM_KEY, viewModelTransfer.fromSelectionType)
-                })
-
+                bundleOf(GOAL_ID_KEY to viewModelTransfer.goalId,
+                        TRANSFER_AMOUNT_KEY to viewModelTransfer.transferAmount,
+                        TRANSFER_FROM_KEY to viewModelTransfer.fromSelectionType))
     }
 
     override fun onCreateOptionsMenu(menu: Menu?, inflater: MenuInflater?) {
