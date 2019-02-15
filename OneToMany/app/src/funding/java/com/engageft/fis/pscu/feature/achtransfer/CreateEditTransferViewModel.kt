@@ -4,6 +4,7 @@ import androidx.databinding.Observable
 import androidx.databinding.ObservableField
 import androidx.lifecycle.MutableLiveData
 import com.engageft.engagekit.EngageService
+import com.engageft.engagekit.aac.SingleLiveEvent
 import com.engageft.engagekit.model.ScheduledLoad
 import com.engageft.engagekit.rest.request.ScheduledLoadRequest
 import com.engageft.engagekit.utils.LoginResponseUtils
@@ -32,16 +33,11 @@ class CreateEditTransferViewModel: BaseEngageViewModel() {
         HIDE
     }
 
-    enum class NavigationEvent {
-        DELETE_SUCCESS,
-        NONE
-    }
-
     data class CardInfo(var cardId: Long, var name: String, var lastFour: String)
     val fromAccountObservable = MutableLiveData<AchAccountInfo>()
     val toAccountObservable = MutableLiveData<CardInfo>()
 
-    val navigationEventObservable = MutableLiveData<NavigationEvent>()
+    val deleteSuccessObservable = SingleLiveEvent<Unit>()
 
     val buttonStateObservable: MutableLiveData<ButtonState> = MutableLiveData()
 
@@ -220,18 +216,12 @@ class CreateEditTransferViewModel: BaseEngageViewModel() {
                 if (scheduledLoad.isHasDuplicate) {
                     val request2 = ScheduledLoadRequest(scheduledLoad.scheduledLoadIdDup)
                     postCancelScheduledLoad(request2.fieldMap) { // successful
-
                         EngageService.getInstance().storageManager.clearForLoginWithDataLoad(false)
-
-                        navigationEventObservable.value = NavigationEvent.DELETE_SUCCESS
-                        navigationEventObservable.value = NavigationEvent.NONE
+                        deleteSuccessObservable.call()
                     }
                 } else { // Does not have duplicate
-
                     EngageService.getInstance().storageManager.clearForLoginWithDataLoad(false)
-
-                    navigationEventObservable.value = NavigationEvent.DELETE_SUCCESS
-                    navigationEventObservable.value = NavigationEvent.NONE
+                    deleteSuccessObservable.call()
                 }
 
                 EngageService.getInstance().storageManager.clearForLoginWithDataLoad(false)

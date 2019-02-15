@@ -162,7 +162,7 @@ class CreateEditTransferFragment: BaseEngagePageFragment() {
                 toAccount.set(String.format(getString(R.string.BANKACCOUNT_DESCRIPTION_FORMAT), it.name, it.lastFour))
             })
 
-            navigationEventObservable.observe(viewLifecycleOwner, Observer {
+            deleteSuccessObservable.observe(viewLifecycleOwner, Observer {
                 binding.root.findNavController().popBackStack(R.id.accountsAndTransfersListFragment, false)
             })
 
