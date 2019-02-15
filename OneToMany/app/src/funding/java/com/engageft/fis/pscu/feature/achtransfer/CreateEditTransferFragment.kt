@@ -144,7 +144,7 @@ class CreateEditTransferFragment: BaseEngagePageFragment() {
 
         createEditTransferViewModel.apply {
 
-            buttonStateObservable.observe(this@CreateEditTransferFragment, Observer {
+            buttonStateObservable.observe(viewLifecycleOwner, Observer {
                 when (it) {
                    CreateEditTransferViewModel.ButtonState.SHOW -> binding.nextButton.visibility = View.VISIBLE
                    CreateEditTransferViewModel.ButtonState.HIDE -> binding.nextButton.visibility = View.GONE
@@ -152,21 +152,21 @@ class CreateEditTransferFragment: BaseEngagePageFragment() {
                 activity?.invalidateOptionsMenu()
             })
 
-            fromAccountObservable.observe(this@CreateEditTransferFragment, Observer {
+            fromAccountObservable.observe(viewLifecycleOwner, Observer {
                 // format ACH bank name with last 4 digits
                 fromAccount.set(AchAccountInfoUtils.accountDescriptionForDisplay(context!!, it))
             })
 
-            toAccountObservable.observe(this@CreateEditTransferFragment, Observer {
+            toAccountObservable.observe(viewLifecycleOwner, Observer {
                 // format Card Info with last four
                 toAccount.set(String.format(getString(R.string.BANKACCOUNT_DESCRIPTION_FORMAT), it.name, it.lastFour))
             })
 
-            navigationEventObservable.observe(this@CreateEditTransferFragment, Observer {
+            navigationEventObservable.observe(viewLifecycleOwner, Observer {
                 binding.root.findNavController().popBackStack(R.id.accountsAndTransfersListFragment, false)
             })
 
-            dialogInfoObservable.observe(this@CreateEditTransferFragment, Observer {
+            dialogInfoObservable.observe(viewLifecycleOwner, Observer {
                 if (it.dialogType == DialogInfo.DialogType.OTHER) {
                     promptAchIsNotAllowed()
                 }

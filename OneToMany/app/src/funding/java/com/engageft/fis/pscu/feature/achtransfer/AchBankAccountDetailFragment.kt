@@ -81,7 +81,7 @@ class AchBankAccountDetailFragment: BaseEngagePageFragment() {
 
         achBankAccountDetailViewModel.apply {
 
-            checkingAccountTypeObservable.observe(this@AchBankAccountDetailFragment, Observer {
+            checkingAccountTypeObservable.observe(viewLifecycleOwner, Observer {
                 if (it) {
                     binding.accountTypeTextWithLabel.inputText = getString(R.string.TEXT_CHECKING)
                 } else {
@@ -89,7 +89,7 @@ class AchBankAccountDetailFragment: BaseEngagePageFragment() {
                 }
             })
 
-            navigationEventObservable.observe(this@AchBankAccountDetailFragment, Observer {
+            navigationEventObservable.observe(viewLifecycleOwner, Observer {
                 when (it) {
                     AchBankAccountNavigationEvent.DELETED_BANK_SUCCESS -> {
                         binding.root.findNavController().popBackStack()

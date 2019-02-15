@@ -74,7 +74,7 @@ class AchBankAccountVerifyFragment: BaseEngagePageFragment() {
         }
 
         verifyAchBankAccountViewModel.apply {
-            amount1ShowErrorObservable.observe(this@AchBankAccountVerifyFragment, Observer {
+            amount1ShowErrorObservable.observe(viewLifecycleOwner, Observer {
                 if (it) {
                     if (!binding.amountInputWithLabel1.isErrorEnabled) {
                         binding.amountInputWithLabel1.setErrorTexts(listOf(getString(R.string.ach_bank_account_verify_amount_error_message)))
@@ -84,7 +84,7 @@ class AchBankAccountVerifyFragment: BaseEngagePageFragment() {
                 }
             })
 
-            amount2ShowErrorObservable.observe(this@AchBankAccountVerifyFragment, Observer {
+            amount2ShowErrorObservable.observe(viewLifecycleOwner, Observer {
                 if (it) {
                     if (!binding.amountInputWithLabel2.isErrorEnabled) {
                         binding.amountInputWithLabel2.setErrorTexts(listOf(getString(R.string.ach_bank_account_verify_amount_error_message)))
@@ -94,7 +94,7 @@ class AchBankAccountVerifyFragment: BaseEngagePageFragment() {
                 }
             })
 
-            buttonStateObservable.observe(this@AchBankAccountVerifyFragment, Observer {
+            buttonStateObservable.observe(viewLifecycleOwner, Observer {
                 when (it) {
                     AchBankAccountVerifyViewModel.ButtonState.SHOW -> {
                         binding.submitButton.visibility = View.VISIBLE
@@ -106,7 +106,7 @@ class AchBankAccountVerifyFragment: BaseEngagePageFragment() {
                 activity?.invalidateOptionsMenu()
             })
 
-            navigationEventObservable.observe(this@AchBankAccountVerifyFragment, Observer {
+            navigationEventObservable.observe(viewLifecycleOwner, Observer {
                 if (it == AchBankAccountNavigationEvent.BANK_VERIFIED_SUCCESS) {
                     binding.root.findNavController().navigate(R.id.action_achBankAccountVerifyFragment_to_achBankAccountAddVerifySuccessFragment,
                             Bundle().apply {

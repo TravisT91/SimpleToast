@@ -123,12 +123,12 @@ class CreateEditTransferViewModel: BaseEngageViewModel() {
             }
         })
 
-        progressOverlayShownObservable.value = true
+        showProgressOverlayDelayed()
         compositeDisposable.add(EngageService.getInstance().loginResponseAsObservable
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe({ response ->
-                    progressOverlayShownObservable.value = false
+                    dismissProgressOverlay()
                     if (response is LoginResponse) {
                         val isAchFundingAllowed = LoginResponseUtils.getCurrentAccountInfo(response).accountPermissionsInfo.isFundingAchEnabled
                         if (isAchFundingAllowed) {
@@ -147,14 +147,14 @@ class CreateEditTransferViewModel: BaseEngageViewModel() {
                         handleUnexpectedErrorResponse(response)
                     }
                 }, { e ->
-                    progressOverlayShownObservable.value = false
+                    dismissProgressOverlay()
                     handleThrowable(e)
                 })
         )
     }
 
     fun initScheduledLoads(scheduledLoadId: Long) {
-        progressOverlayShownObservable.value = true
+        showProgressOverlayDelayed()
         compositeDisposable.add(EngageService.getInstance().loginResponseAsObservable
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
@@ -166,7 +166,7 @@ class CreateEditTransferViewModel: BaseEngageViewModel() {
                         dialogInfoObservable.value = DialogInfo()
                     }
                 }, { e ->
-                    progressOverlayShownObservable.value = false
+                    dismissProgressOverlay()
                     handleThrowable(e)
                 })
         )
@@ -178,7 +178,7 @@ class CreateEditTransferViewModel: BaseEngageViewModel() {
                         .subscribeOn(Schedulers.io())
                         .observeOn(AndroidSchedulers.mainThread())
                         .subscribe({ response ->
-                            progressOverlayShownObservable.value = false
+                            dismissProgressOverlay()
                             if (response.isSuccess && response is ScheduledLoadsResponse) {
                                 for (scheduledLoad in ScheduledLoadUtils.getScheduledLoads(response)) {
                                     if (scheduledLoad.scheduledLoadId == scheduledLoadId) {
@@ -190,7 +190,7 @@ class CreateEditTransferViewModel: BaseEngageViewModel() {
                                 handleUnexpectedErrorResponse(response)
                             }
                         }, { e ->
-                            progressOverlayShownObservable.value = false
+                            dismissProgressOverlay()
                             handleThrowable(e)
                         })
         )
@@ -212,7 +212,7 @@ class CreateEditTransferViewModel: BaseEngageViewModel() {
     }
 
     fun onDeleteScheduledLoad() {
-        progressOverlayShownObservable.value = true
+        showProgressOverlayImmediate()
 
         currentScheduledLoad?.let { scheduledLoad ->
             val request = ScheduledLoadRequest(scheduledLoad.scheduledLoadId)
@@ -314,11 +314,11 @@ class CreateEditTransferViewModel: BaseEngageViewModel() {
                     if (response.isSuccess) {
                         cancelLoadSuccessObserver()
                     } else {
-                        progressOverlayShownObservable.value = false
+                        dismissProgressOverlay()
                         handleUnexpectedErrorResponse(response)
                     }
                 }, { e ->
-                    progressOverlayShownObservable.value = false
+                    dismissProgressOverlay()
                     handleThrowable(e)
                 })
         )
