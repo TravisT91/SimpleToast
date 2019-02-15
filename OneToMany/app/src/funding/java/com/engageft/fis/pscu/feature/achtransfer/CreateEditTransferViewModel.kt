@@ -40,6 +40,7 @@ class CreateEditTransferViewModel: BaseEngageViewModel() {
     val deleteSuccessObservable = SingleLiveEvent<Unit>()
 
     val buttonStateObservable: MutableLiveData<ButtonState> = MutableLiveData()
+    val isInErrorStateObservable = MutableLiveData<Boolean>()
 
     val fromAccount = ObservableField("")
     val toAccount  = ObservableField("")
@@ -126,18 +127,17 @@ class CreateEditTransferViewModel: BaseEngageViewModel() {
                 .subscribe({ response ->
                     dismissProgressOverlay()
                     if (response is LoginResponse) {
-                        val isAchFundingAllowed = LoginResponseUtils.getCurrentAccountInfo(response).accountPermissionsInfo.isFundingAchEnabled
-                        if (isAchFundingAllowed) {
-                            //TODO(aHashimi): populate the To and From account fields since multiple cards and ACH out is not supported.
-                            if (response.achAccountList.isNotEmpty()) {
-                                // multiple ACH Banks aren't allowed
-                                achAccountInfo = response.achAccountList[0]
-                                fromAccountObservable.value = achAccountInfo
-                            }
-                            currentCard = LoginResponseUtils.getCurrentCard(response)
-                            toAccountObservable.value = getCardInfo(currentCard!!)
-                        } else {
-                            dialogInfoObservable.value = DialogInfo(dialogType = DialogInfo.DialogType.OTHER)
+                        if (response.achAccountList.isNotEmpty()) {
+                            // multiple ACH Banks aren't allowed
+                            achAccountInfo = response.achAccountList[0]
+                            fromAccountObservable.value = achAccountInfo
+                        }
+
+                        currentCard = LoginResponseUtils.getCurrentCard(response)
+
+                        currentCard?.let { debitCard ->
+                            toAccountObservable.value = getCardInfo(debitCard)
+                            isInErrorStateObservable.value = !debitCard.cardPermissionsInfo.isFundingAchAllowable
                         }
                     } else {
                         handleUnexpectedErrorResponse(response)

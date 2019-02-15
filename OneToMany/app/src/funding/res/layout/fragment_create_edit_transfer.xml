@@ -23,14 +23,21 @@
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
+            <include layout="@layout/error_layout_shareable"
+                android:id="@+id/errorStateLayout"
+                android:layout_marginBottom="32dp"
+                android:visibility="gone"
+                android:layout_height="wrap_content"
+                android:layout_width="match_parent" />
+
             <androidx.appcompat.widget.AppCompatTextView
-                android:id="@+id/titleTextView"
+                android:id="@+id/headerTextView"
                 style="@style/CreateTransferTitleTextStyle"
                 android:text="@string/ach_bank_transfer_create_title"
                 />
 
             <androidx.appcompat.widget.AppCompatTextView
-                android:id="@+id/subTitleTextView"
+                android:id="@+id/subHeaderTextView"
                 style="@style/CreateTransferSubtitleTextStyle"
                 android:text="@string/ach_bank_transfer_create_subTitle"/>
 
