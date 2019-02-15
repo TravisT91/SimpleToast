@@ -19,35 +19,22 @@
         tools:ignore="RtlSymmetry">
 
         <TextView
-            android:id="@+id/bankTransfer"
+            android:id="@+id/cardLoad"
             tools:style="@style/Body"
             parisStyle="@{palette.body}"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:paddingTop="@dimen/listItemPaddingTop"
             android:paddingBottom="@dimen/listItemPaddingBottom"
-            android:text="@string/MOVE_MONEY_BANK_TRANSFER"
+            android:text="@string/MOVE_MONEY_CARD_LOAD"
             android:background="@drawable/selectable_item_background_structure2"
             android:paddingStart="@dimen/listPaddingStart"
-            android:textColor="@color/structure6" />
+            android:textColor="@color/structure6"
+            android:visibility="gone"/>
 
         <include
-            layout="@layout/view_horizontal_divider_indent_start" />
-
-        <TextView
-            android:id="@+id/creditOrDebitCardLoad"
-            tools:style="@style/Body"
-            parisStyle="@{palette.body}"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:paddingTop="@dimen/listItemPaddingTop"
-            android:paddingBottom="@dimen/listItemPaddingBottom"
-            android:text="@string/MOVE_MONEY_CREDIT_OR_DEBIT_CARD_LOAD"
-            android:background="@drawable/selectable_item_background_structure2"
-            android:paddingStart="@dimen/listPaddingStart"
-            android:textColor="@color/structure6" />
-
-        <include
+            android:id="@+id/cardLoadDivider"
+            android:visibility="gone"
             layout="@layout/view_horizontal_divider_indent_start" />
 
         <TextView
@@ -61,9 +48,12 @@
             android:text="@string/MOVE_MONEY_MOBILE_CHECK_DEPOSIT"
             android:background="@drawable/selectable_item_background_structure2"
             android:paddingStart="@dimen/listPaddingStart"
-            android:textColor="@color/structure6" />
+            android:textColor="@color/structure6"
+            android:visibility="gone"/>
 
         <include
+            android:id="@+id/mobileCheckDepositDivider"
+            android:visibility="gone"
             layout="@layout/view_horizontal_divider_indent_start" />
 
         <TextView
@@ -77,7 +67,8 @@
             android:text="@string/MOVE_MONEY_DIRECT_DEPOSIT"
             android:background="@drawable/selectable_item_background_structure2"
             android:paddingStart="@dimen/listPaddingStart"
-            android:textColor="@color/structure6" />
+            android:textColor="@color/structure6"
+            android:visibility="gone"/>
 
     </LinearLayout>
 
