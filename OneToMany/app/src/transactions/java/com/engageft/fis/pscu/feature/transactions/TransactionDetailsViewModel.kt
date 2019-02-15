@@ -1,6 +1,5 @@
 package com.engageft.fis.pscu.feature.transactions
 
-import android.text.SpannableString
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -20,9 +19,7 @@ import io.reactivex.schedulers.Schedulers
 import utilGen1.DisplayDateTimeUtils
 import utilGen1.StringUtils
 import utilGen1.StringUtils.formatCurrencyStringFractionDigitsReducedHeight
-import utilGen1.StringUtils.formatCurrencyStringWithFractionDigits
-import java.math.BigDecimal
-import java.util.*
+import java.util.Locale
 import kotlin.math.absoluteValue
 
 class TransactionDetailsViewModel(transactionId: TransactionId) : BaseEngageViewModel() {
@@ -43,7 +40,7 @@ class TransactionDetailsViewModel(transactionId: TransactionId) : BaseEngageView
             transactionId = transactionId.id)
 
     val transaction = MutableLiveData<Transaction>()
-    val amount = MutableLiveData<SpannableString>().apply { value = SpannableString.valueOf("") }
+    val amount = MutableLiveData<CharSequence>().apply { value = ""}
     val txDate = MutableLiveData<String>().apply { value = "" }
     val txStore = MutableLiveData<String>().apply { value = "" }
     val txCategory = MutableLiveData<CharSequence>().apply {
@@ -62,15 +59,16 @@ class TransactionDetailsViewModel(transactionId: TransactionId) : BaseEngageView
     fun setTransaction(transaction: Transaction) {
         transaction.let {
 
-            val amountPrefix = if(it.amount > BigDecimal.ZERO) "+" else "-"
-//            val amount = amountPrefix + formatCurrencyStringFractionDigitsReducedHeight(
-//                    amount = it.amount.toFloat().absoluteValue,
-//                    showZeroDigits = true,
-//                    superscriptCurrecy = true)
+            val amount = formatCurrencyStringFractionDigitsReducedHeight(
+                    it.amount.toFloat(),
+                    .5f,
+                    true,
+                    true)
+
             val date = DisplayDateTimeUtils.getMediumFormatted(it.date)
             val store = StringUtils.removeRedundantWhitespace(transaction.store)
 
-            this.amount.value = SpannableString.valueOf(amount)
+            this.amount.value = amount
             this.txDate.value = date
             this.txStore.value = store
 
