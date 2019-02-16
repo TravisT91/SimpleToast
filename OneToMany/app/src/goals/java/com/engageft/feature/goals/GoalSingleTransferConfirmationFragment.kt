@@ -9,7 +9,8 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.navigation.findNavController
 import com.engageft.apptoolbox.BaseViewModel
-import com.engageft.apptoolbox.view.BottomSheetListInputWithLabel
+import com.engageft.apptoolbox.ViewUtils.newLotusButtonsStackedInstance
+import com.engageft.apptoolbox.view.InformationDialogFragment
 import com.engageft.feature.goals.utils.GoalConstants
 import com.engageft.feature.goals.utils.GoalConstants.GOAL_ID_DEFAULT
 import com.engageft.feature.goals.utils.GoalConstants.GOAL_ID_KEY
@@ -62,22 +63,7 @@ class GoalSingleTransferConfirmationFragment: BaseEngagePageFragment() {
 
                 promptToDeleteGoalObservable.observe(viewLifecycleOwner, Observer {
                     if (it) {
-                        deleteBottomSheet.dialogTitle = String.format(getString(R.string.GOAL_DELETE_ALERT_TITLE_FORMAT), goalName)
-                        val dialogOptionsList = ArrayList<CharSequence>()
-                        dialogOptionsList.add(getString(R.string.GOAL_SINGLE_TRANSFER_CONFIRMATION_GOAL_DELETE_YES))
-                        dialogOptionsList.add(getString(R.string.GOAL_SINGLE_TRANSFER_CONFIRMATION_GOAL_DELETE_NO))
-                        deleteBottomSheet.dialogOptions = dialogOptionsList
-                        deleteBottomSheet.setOnListItemSelectionListener(object: BottomSheetListInputWithLabel.OnListItemSelectionListener {
-                            override fun onItemSelected(index: Int) {
-                                if (index == 0) {
-                                    viewModelConfirmation.onTransferAndDelete()
-                                } else if (index == 1) {
-                                    viewModelConfirmation.transfer()
-                                }
-                            }
-                        })
-
-                        deleteBottomSheet.onEditTextPerformClick()
+                        showShouldDeleteGoalConfirmation()
                     }
                 })
 
@@ -92,5 +78,26 @@ class GoalSingleTransferConfirmationFragment: BaseEngagePageFragment() {
         }
 
         return binding.root
+    }
+
+    private fun showShouldDeleteGoalConfirmation() {
+        fragmentDelegate.showDialog(InformationDialogFragment.newLotusButtonsStackedInstance(
+                title = String.format(getString(R.string.GOAL_DELETE_ALERT_TITLE_FORMAT), viewModelConfirmation.goalName),
+                message = getString(R.string.GOAL_SINGLE_TRANSFER_CONFIRMATION_GOAL_DELETE_SUBTITLE),
+                buttonPositiveText = getString(R.string.GOAL_SINGLE_TRANSFER_CONFIRMATION_GOAL_DELETE_YES),
+                buttonNegativeText = getString(R.string.GOAL_SINGLE_TRANSFER_CONFIRMATION_GOAL_DELETE_NO),
+                listener = object : InformationDialogFragment.InformationDialogFragmentListener {
+                    override fun onDialogFragmentNegativeButtonClicked() {
+                        viewModelConfirmation.transfer()
+                    }
+
+                    override fun onDialogFragmentPositiveButtonClicked() {
+                        viewModelConfirmation.onTransferAndDelete()
+                    }
+
+                    override fun onDialogCancelled() {}
+
+                }
+        ))
     }
 }
