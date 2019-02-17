@@ -26,23 +26,18 @@ class GoalSingleTransferConfirmationViewModel(
 
 
     val transferSuccessObservable = SingleLiveEvent<Unit>()
-    val readyToSetViewsObservable = MutableLiveData<Unit>()
-    val promptToDeleteGoalObservable = MutableLiveData<Boolean>()
-    var goalName: String = ""
-
-    private lateinit var goalInfo: GoalInfo
+    val goalInfoObservable = MutableLiveData<GoalInfo>()
 
     init {
         initGoalData()
     }
 
-    fun transferFunds() {
-        if (transferFromType == GoalSingleTransferViewModel.TransferType.GOAL && goalInfo.isAchieved
-                && goalInfo.fundAmount.isEqualTo(transferAmount)) {
-            promptToDeleteGoalObservable.value = true
-        } else {
-            transfer()
-        }
+    fun shouldPromptToDeleteGoal(): Boolean {
+        return goalInfoObservable.value?.let { goalInfo ->
+            transferFromType == GoalSingleTransferViewModel.TransferType.GOAL
+                    && goalInfo.isAchieved
+                    && goalInfo.fundAmount.isEqualTo(transferAmount)
+        } ?: false
     }
 
     fun transfer() {
@@ -87,9 +82,7 @@ class GoalSingleTransferConfirmationViewModel(
                                 response.goals.find { goalInfo ->
                                     goalInfo.goalId == goalId
                                 }?.let { goalInfo ->
-                                    this.goalInfo = goalInfo
-                                    goalName = goalInfo.name
-                                    readyToSetViewsObservable.value = Unit
+                                    goalInfoObservable.value = goalInfo
                                 } ?: kotlin.run {
                                     throw IllegalStateException("Goal not found")
                                 }
