@@ -25,8 +25,6 @@ import com.engageft.fis.pscu.R
 import com.engageft.fis.pscu.databinding.DialogFragmentOnboardingViewpagerBinding
 import com.engageft.fis.pscu.feature.BaseEngageDialogFragment
 import com.engageft.fis.pscu.feature.branding.Palette
-import eightbitlab.com.blurview.RenderScriptBlur
-import kotlinx.android.synthetic.main.fragment_dashboard.*
 
 
 /**
@@ -59,7 +57,7 @@ class OnboardingDialogFragment : BaseEngageDialogFragment() {
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         dialog.window!!.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
-        binding = DataBindingUtil.inflate(layoutInflater, R.layout.dialog_fragment_onboarding_viewpager, container, false)
+        binding = DataBindingUtil.inflate(inflater, R.layout.dialog_fragment_onboarding_viewpager, container, false)
 
         unselectedDot = ContextCompat.getDrawable(context!!, R.drawable.pager_indicator_dot)!!
         selectedDot = ContextCompat.getDrawable(context!!, R.drawable.pager_indicator_dot_selected)!!
