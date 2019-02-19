@@ -166,7 +166,7 @@ class OnboardingDialogFragment : BaseEngageDialogFragment() {
             val item = items[position]
             when (item) {
                 is OnboardingListItems.DashboardOnboardingItem -> {
-                    fragment.icon = null
+                    fragment.icon = ContextCompat.getDrawable(context!!, R.drawable.ic_smart)
                     fragment.title = getString(R.string.ONBOARDING_DASHBOARD_TITLE_FORMAT).applyTypefaceAndColorToSubString(
                             ResourcesCompat.getFont(context!!, R.font.font_bold)!!,
                             Palette.primaryColor,
@@ -174,7 +174,7 @@ class OnboardingDialogFragment : BaseEngageDialogFragment() {
                     fragment.message = getString(R.string.ONBOARDING_DASHBOARD_MESSAGE)
                 }
                 is OnboardingListItems.CardOnboardingItem -> {
-                    fragment.icon = null
+                    fragment.icon = ContextCompat.getDrawable(context!!, R.drawable.ic_control)
                     fragment.title = getString(R.string.ONBOARDING_CARD_TITLE_FORMAT).applyTypefaceAndColorToSubString(
                             ResourcesCompat.getFont(context!!, R.font.font_bold)!!,
                             Palette.primaryColor,
@@ -182,7 +182,7 @@ class OnboardingDialogFragment : BaseEngageDialogFragment() {
                     fragment.message = getString(R.string.ONBOARDING_CARD_MESSAGE)
                 }
                 is OnboardingListItems.SearchOnboardingItem -> {
-                    fragment.icon = null
+                    fragment.icon = ContextCompat.getDrawable(context!!, R.drawable.ic_search)
                     fragment.title = getString(R.string.ONBOARDING_SEARCH_TITLE_FORMAT).applyTypefaceAndColorToSubString(
                             ResourcesCompat.getFont(context!!, R.font.font_bold)!!,
                             Palette.primaryColor,
