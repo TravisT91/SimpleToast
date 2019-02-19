@@ -43,18 +43,19 @@ class AchBankAccountAddViewModel: BaseEngageViewModel() {
         buttonStateObservable.value = ButtonState.HIDE
         routingNumberShowErrorObservable.value = false
 
+        showProgressOverlayDelayed()
         compositeDisposable.add(EngageService.getInstance().loginResponseAsObservable
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe({ response ->
-                    progressOverlayShownObservable.value = false
+                    dismissProgressOverlay()
                     if (response.isSuccess && response is LoginResponse) {
                         currentAccountInfo = LoginResponseUtils.getCurrentAccountInfo(response)
                     } else {
                         handleUnexpectedErrorResponse(response)
                     }
                 }, { e ->
-                    progressOverlayShownObservable.value = false
+                    dismissProgressOverlay()
                     handleThrowable(e)
                 })
         )
@@ -114,7 +115,7 @@ class AchBankAccountAddViewModel: BaseEngageViewModel() {
             currentAccountInfo?.let { accountInfo ->
                 val isChecking = accountType.get() == ACCOUNT_TYPE_CHECKING
 
-                progressOverlayShownObservable.value = true
+                showProgressOverlayDelayed()
 
                 val request = AchAccountCreateRequest(
                         isChecking,
@@ -127,7 +128,7 @@ class AchBankAccountAddViewModel: BaseEngageViewModel() {
                         .subscribeOn(Schedulers.io())
                         .observeOn(AndroidSchedulers.mainThread())
                         .subscribe({ response ->
-                            progressOverlayShownObservable.value = false
+                            dismissProgressOverlay()
                             if (response.isSuccess) {
                                 EngageService.getInstance().storageManager.clearForLoginWithDataLoad(false)
                                 navigationEventObservable.value = AchBankAccountNavigationEvent.BANK_ADDED_SUCCESS
@@ -136,7 +137,7 @@ class AchBankAccountAddViewModel: BaseEngageViewModel() {
                                 handleBackendErrorForForms(response, "$TAG: failed to add an ACH account")
                             }
                         }, { e ->
-                            progressOverlayShownObservable.value = false
+                            dismissProgressOverlay()
                             handleThrowable(e)
                         })
                 )

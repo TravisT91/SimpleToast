@@ -63,7 +63,7 @@ class AchBankAccountVerifyViewModel: BaseEngageViewModel() {
 
     fun onVerifyAccount() {
         if (getValidationStatusAndShowErrors()) {
-            progressOverlayShownObservable.value = true
+            showProgressOverlayDelayed()
             //TODO(aHashimi): When ThreatMatrix is setUp pass sessionID
             val request = AchAccountValidateRequest(
                     achAccountInfoId,
@@ -75,7 +75,7 @@ class AchBankAccountVerifyViewModel: BaseEngageViewModel() {
                             .subscribeOn(Schedulers.io())
                             .observeOn(AndroidSchedulers.mainThread())
                             .subscribe({ response ->
-                                progressOverlayShownObservable.value = false
+                                dismissProgressOverlay()
                                 if (response.isSuccess) {
                                     EngageService.getInstance().storageManager.clearForLoginWithDataLoad(false)
                                     navigationEventObservable.value = AchBankAccountNavigationEvent.BANK_VERIFIED_SUCCESS
@@ -84,7 +84,7 @@ class AchBankAccountVerifyViewModel: BaseEngageViewModel() {
                                     handleBackendErrorForForms(response, "$TAG: failed to verify ACH account")
                                 }
                             }, { e ->
-                                progressOverlayShownObservable.value = false
+                                dismissProgressOverlay()
                                 handleThrowable(e)
                             })
             )

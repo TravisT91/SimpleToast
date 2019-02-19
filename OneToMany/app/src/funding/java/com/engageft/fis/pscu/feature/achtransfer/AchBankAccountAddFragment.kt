@@ -95,7 +95,7 @@ class AchBankAccountAddFragment: BaseEngagePageFragment() {
 
         achBankAccountViewModel.apply {
 
-            buttonStateObservable.observe(this@AchBankAccountAddFragment, Observer {
+            buttonStateObservable.observe(viewLifecycleOwner, Observer {
                 when (it) {
                     AchBankAccountAddViewModel.ButtonState.SHOW -> {
                         binding.addButton.visibility = View.VISIBLE
@@ -107,7 +107,7 @@ class AchBankAccountAddFragment: BaseEngagePageFragment() {
                 activity?.invalidateOptionsMenu()
             })
 
-            routingNumberShowErrorObservable.observe(this@AchBankAccountAddFragment, Observer {
+            routingNumberShowErrorObservable.observe(viewLifecycleOwner, Observer {
                 if (it) {
                     if (!binding.routingNumberInputWithLabel.isErrorEnabled) {
                         binding.routingNumberInputWithLabel.setErrorTexts(listOf(getString(R.string.routing_number_validation_error_message)))
@@ -117,7 +117,7 @@ class AchBankAccountAddFragment: BaseEngagePageFragment() {
                 }
             })
 
-            navigationEventObservable.observe(this@AchBankAccountAddFragment, Observer {
+            navigationEventObservable.observe(viewLifecycleOwner, Observer {
                 when (it) {
                     AchBankAccountNavigationEvent.BANK_ADDED_SUCCESS -> {
                         binding.root.findNavController().navigate(
