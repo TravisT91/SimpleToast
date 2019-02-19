@@ -118,20 +118,6 @@
                     app:inputText="@={viewModel.date1}"
                     app:bottomSheetDialogStyle="@style/ListOptionBottomSheetDialogFragmentStyle"/>
 
-                <com.engageft.apptoolbox.view.DatePickerInputWithLabel
-                    style="@style/BottomSheetListInputWithLabelStyle"
-                    InputWithLabel.setThemeWithPalette="@{true}"
-                    android:id="@+id/date2BottomSheet"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:paddingStart="16dp"
-                    android:paddingEnd="16dp"
-                    android:paddingTop="16dp"
-                    android:visibility="@{viewModel.date2Show.get() ? View.VISIBLE : View.GONE}"
-                    app:inputText="@={viewModel.date2}"
-                    app:labelText="@string/ach_bank_transfer_create_bimonthly_second_label"
-                    app:bottomSheetDialogStyle="@style/ListOptionBottomSheetDialogFragmentStyle"/>
-
                 <com.engageft.apptoolbox.view.BottomSheetListInputWithLabel
                     style="@style/BottomSheetListInputWithLabelStyle"
                     InputWithLabel.setThemeWithPalette="@{true}"

@@ -114,7 +114,6 @@ class CreateEditTransferFragment: BaseEngagePageFragment() {
                     frequencyBottomSheet.isEnabled = false
                     daysOfWeekBottomSheet.isEnabled = false
                     date1BottomSheet.isEnabled = false
-                    date2BottomSheet.isEnabled = false
                 } else {
                     toolbarController.setToolbarTitle(getString(R.string.ach_bank_transfer_create_transfer))
                 }
@@ -130,8 +129,6 @@ class CreateEditTransferFragment: BaseEngagePageFragment() {
             val maxDate = DateTime.now().plusDays(60)
             date1BottomSheet.minimumDate = minDate
             date1BottomSheet.maximumDate = maxDate
-            date2BottomSheet.minimumDate = minDate
-            date2BottomSheet.maximumDate = maxDate
             amountInputWithLabel.currencyCode = EngageAppConfig.currencyCode
 
             nextButton.setOnClickListener {
@@ -218,12 +215,6 @@ class CreateEditTransferFragment: BaseEngagePageFragment() {
             null
         }
 
-        val date2 = if (createEditTransferViewModel.date2.get()!!.isNotEmpty()) {
-            DisplayDateTimeUtils.mediumDateFormatter.parseDateTime(createEditTransferViewModel.date2.get())
-        } else {
-            null
-        }
-
         binding.root.findNavController().navigate(R.id.action_createEditTransferFragment_to_createTransferConfirmationFragment,
                 CreateTransferConfirmationFragment.createBundle(
                         achAccountId = createEditTransferViewModel.achAccountInfo!!.achAccountId,
@@ -231,7 +222,6 @@ class CreateEditTransferFragment: BaseEngagePageFragment() {
                         frequency = frequencyType,
                         amount = CurrencyUtils.getNonFormattedDecimalAmountString(currencyCode = EngageAppConfig.currencyCode, stringWithCurrencySymbol = createEditTransferViewModel.amount.get()!!),
                         scheduledDate1 = date1,
-                        scheduledDate2 = date2,
                         dayOfWeek = createEditTransferViewModel.dayOfWeek.get()!!))
     }
 
