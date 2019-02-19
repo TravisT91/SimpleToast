@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:gravity="center"
+    android:background="@color/viewBackground"
+    android:paddingTop="24dp"
+    android:paddingBottom="24dp"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <com.engageft.feature.goals.CircularProgressBarWithTexts
+        style="@style/LotusCircularProgressBarWithTexts"
+        android:id="@+id/circularProgressBarWithTexts"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+    </com.engageft.feature.goals.CircularProgressBarWithTexts>
+
+    <com.engageft.apptoolbox.view.PillButton
+        style="@style/ButtonPillPrimaryFilledDefault"
+        android:id="@+id/transferBalanceButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:text="@string/GOAL_DETAIL_TRANSFER_BALANCE"/>
+
+</LinearLayout>

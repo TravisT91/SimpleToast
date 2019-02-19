@@ -7,12 +7,12 @@ import android.view.MenuInflater
 import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.navigation.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.engageft.apptoolbox.BaseViewModel
+import com.engageft.feature.goals.utils.GoalConstants.GOAL_ID_KEY
 import com.engageft.fis.pscu.R
 import com.engageft.fis.pscu.databinding.FragmentGoalsListBinding
 import com.engageft.fis.pscu.feature.BaseEngagePageFragment
@@ -71,7 +71,11 @@ class GoalsListFragment : BaseEngagePageFragment() {
 
             sectionedAdapter.addSection(GoalsListSection(context!!, goalItemModel.goalModelList, object : GoalsListSection.OnGoalListSectionListener {
                 override fun onGoalClicked(goalId: Long) {
-                    Toast.makeText(context, "$goalId is clicked!", Toast.LENGTH_SHORT).show()
+
+                    binding.root.findNavController().navigate(R.id.action_goalsListFragment_to_goalDetailScreenFragment,
+                            Bundle().apply {
+                                putLong(GOAL_ID_KEY, goalId)
+                            })
                 }
             }))
         } else {
@@ -114,5 +118,4 @@ class GoalsListFragment : BaseEngagePageFragment() {
         }
         return super.onOptionsItemSelected(item)
     }
-
 }

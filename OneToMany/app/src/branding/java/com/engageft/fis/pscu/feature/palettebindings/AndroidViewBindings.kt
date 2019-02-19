@@ -28,11 +28,13 @@ fun TextView.setParisStyle(style: Style?){
     }
 }
 
-@BindingAdapter("thumbCheckedColor", "trackCheckedColor", "thumbUncheckedColor", "trackUncheckedColor", requireAll = true)
+@BindingAdapter("thumbCheckedColor", "trackCheckedColor", "thumbUncheckedColor", "trackUncheckedColor",
+        "thumbDisabledColor", "trackDisabledColor", requireAll = true)
 fun SwitchCompat.setSwitchTintList(@ColorInt thumbCheckedColor: Int, @ColorInt trackCheckedColor: Int,
-                                   @ColorInt thumbUncheckedColor: Int, @ColorInt trackUncheckedColor: Int) {
-    this.thumbTintList = getSwitchColorStateList(thumbCheckedColor, thumbUncheckedColor)
-    this.trackTintList = getSwitchColorStateList(trackCheckedColor, trackUncheckedColor)
+                                   @ColorInt thumbUncheckedColor: Int, @ColorInt trackUncheckedColor: Int,
+                                   @ColorInt thumbDisabledColor: Int, @ColorInt trackDisabledColor: Int) {
+    this.thumbTintList = getSwitchColorStateList(thumbCheckedColor, thumbUncheckedColor, thumbDisabledColor)
+    this.trackTintList = getSwitchColorStateList(trackCheckedColor, trackUncheckedColor, trackDisabledColor)
 }
 
 
@@ -55,7 +57,11 @@ fun SwitchCompat.shouldApplyPaletteColors(shouldApply: Boolean){
 }
 
 fun SwitchCompat.applyPaletteColors() {
-    this.setSwitchTintList(Palette.successColor, lighten(Palette.successColor, .6f),
-            ContextCompat.getColor(context!!, R.color.structure2),
-            ContextCompat.getColor(context!!, android.R.color.darker_gray))
+    this.setSwitchTintList(
+            thumbCheckedColor = Palette.successColor,
+            trackCheckedColor = lighten(Palette.successColor, .6f),
+            thumbUncheckedColor = ContextCompat.getColor(context!!, R.color.structure3),
+            trackUncheckedColor = ContextCompat.getColor(context!!, R.color.structure2),
+            thumbDisabledColor = ContextCompat.getColor(context!!, R.color.structure2),
+            trackDisabledColor = ContextCompat.getColor(context!!, R.color.structure1))
 }
