@@ -48,22 +48,20 @@ class GoalSingleTransferConfirmationFragment: BaseEngagePageFragment() {
 
             viewModelConfirmation.apply {
 
-                readyToSetViewsObservable.observe(viewLifecycleOwner, Observer {
+                goalInfoObservable.observe(viewLifecycleOwner, Observer { goalInfo ->
                     when (transferFromType) {
                         GoalSingleTransferViewModel.TransferType.SPENDING_BALANCE -> {
-                            nameTextView.text = String.format(getString(R.string.GOAL_SINGLE_TRANSFER_CONFIRMATION_TOWARD_GOAL_FORMAT), goalName)
+                            nameTextView.text = String.format(getString(R.string.GOAL_SINGLE_TRANSFER_CONFIRMATION_TOWARD_GOAL_FORMAT), goalInfo.name)
                             descriptionTextView.text = getString(R.string.GOAL_SINGLE_TRANSFER_CONFIRMATION_TOWARD_GOAL_TEXT)
                         }
                         GoalSingleTransferViewModel.TransferType.GOAL -> {
                             nameTextView.text = getString(R.string.GOAL_SINGLE_TRANSFER_CONFIRMATION_TOWARD_BALANCE)
-                            descriptionTextView.text = getString(R.string.GOAL_SINGLE_TRANSFER_CONFIRMATION_TOWARD_BALANCE_DESCRIPTION)
+                            if (goalInfo.isAchieved) {
+                                descriptionTextView.text = getString(R.string.GOAL_SINGLE_TRANSFER_CONFIRMATION_TOWARD_GOAL_TEXT)
+                            } else {
+                                descriptionTextView.text = getString(R.string.GOAL_SINGLE_TRANSFER_CONFIRMATION_TOWARD_BALANCE_DESCRIPTION)
+                            }
                         }
-                    }
-                })
-
-                promptToDeleteGoalObservable.observe(viewLifecycleOwner, Observer {
-                    if (it) {
-                        showShouldDeleteGoalConfirmation()
                     }
                 })
 
@@ -74,6 +72,14 @@ class GoalSingleTransferConfirmationFragment: BaseEngagePageFragment() {
                 transferSuccessObservable.observe(viewLifecycleOwner, Observer {
                     root.findNavController().popBackStack(R.id.goalDetailFragment, true)
                 })
+
+                saveButton.setOnClickListener {
+                    if (shouldPromptToDeleteGoal()) {
+                        showShouldDeleteGoalConfirmation()
+                    } else {
+                        transfer()
+                    }
+                }
             }
         }
 
@@ -81,23 +87,25 @@ class GoalSingleTransferConfirmationFragment: BaseEngagePageFragment() {
     }
 
     private fun showShouldDeleteGoalConfirmation() {
-        fragmentDelegate.showDialog(InformationDialogFragment.newLotusButtonsStackedInstance(
-                title = String.format(getString(R.string.GOAL_DELETE_ALERT_TITLE_FORMAT), viewModelConfirmation.goalName),
-                message = getString(R.string.GOAL_SINGLE_TRANSFER_CONFIRMATION_GOAL_DELETE_SUBTITLE),
-                buttonPositiveText = getString(R.string.GOAL_SINGLE_TRANSFER_CONFIRMATION_GOAL_DELETE_YES),
-                buttonNegativeText = getString(R.string.GOAL_SINGLE_TRANSFER_CONFIRMATION_GOAL_DELETE_NO),
-                listener = object : InformationDialogFragment.InformationDialogFragmentListener {
-                    override fun onDialogFragmentNegativeButtonClicked() {
-                        viewModelConfirmation.transfer()
+        viewModelConfirmation.goalInfoObservable.value?.apply {
+            fragmentDelegate.showDialog(InformationDialogFragment.newLotusButtonsStackedInstance(
+                    title = String.format(getString(R.string.GOAL_DELETE_ALERT_TITLE_FORMAT), name),
+                    message = getString(R.string.GOAL_SINGLE_TRANSFER_CONFIRMATION_GOAL_DELETE_SUBTITLE),
+                    buttonPositiveText = getString(R.string.GOAL_SINGLE_TRANSFER_CONFIRMATION_GOAL_DELETE_YES),
+                    buttonNegativeText = getString(R.string.GOAL_SINGLE_TRANSFER_CONFIRMATION_GOAL_DELETE_NO),
+                    listener = object : InformationDialogFragment.InformationDialogFragmentListener {
+                        override fun onDialogFragmentNegativeButtonClicked() {
+                            viewModelConfirmation.transfer()
+                        }
+
+                        override fun onDialogFragmentPositiveButtonClicked() {
+                            viewModelConfirmation.onTransferAndDelete()
+                        }
+
+                        override fun onDialogCancelled() {}
+
                     }
-
-                    override fun onDialogFragmentPositiveButtonClicked() {
-                        viewModelConfirmation.onTransferAndDelete()
-                    }
-
-                    override fun onDialogCancelled() {}
-
-                }
-        ))
+            ))
+        }
     }
 }
