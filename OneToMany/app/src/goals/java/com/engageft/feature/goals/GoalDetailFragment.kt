@@ -15,6 +15,7 @@ import com.engageft.apptoolbox.adapter.HorizontalRuleSection
 import com.engageft.apptoolbox.adapter.SelectableLabelsSection
 import com.engageft.apptoolbox.view.InformationDialogFragment
 import com.engageft.feature.budgets.extension.isZero
+import com.engageft.feature.goals.utils.GoalConstants
 import com.engageft.feature.goals.utils.GoalConstants.DELETE_LABEL_ID
 import com.engageft.feature.goals.utils.GoalConstants.EDIT_LABEL_ID
 import com.engageft.feature.goals.utils.GoalConstants.GOAL_FUND_AMOUNT_KEY
@@ -107,7 +108,10 @@ class GoalDetailFragment: BaseEngagePageFragment() {
                     is GoalDetailState.GoalCompleteHeaderItem -> {
                         addSection(GoalDetailCompleteHeaderSection(context!!, goalDetailState.fundAmount, object:  GoalDetailCompleteHeaderSection.OnButtonClickListener {
                             override fun onTransferButtonClicked() {
-                                navigateToGoalTransfer()
+                                binding.root.findNavController().navigate(R.id.action_goalDetailFragment_to_goalSingleTransferConfirmationFragment,
+                                        bundleOf(GOAL_ID_KEY to viewModelGoalDetail.goalId,
+                                                GoalConstants.TRANSFER_AMOUNT_KEY to goalDetailState.fundAmount,
+                                                GoalConstants.TRANSFER_FROM_KEY to GoalSingleTransferViewModel.TransferType.GOAL))
                             }
                         }))
 

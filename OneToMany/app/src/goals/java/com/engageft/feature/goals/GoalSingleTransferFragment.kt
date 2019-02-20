@@ -111,6 +111,7 @@ class GoalSingleTransferFragment: BaseEngagePageFragment() {
                             amountInputWithLabel.setErrorTexts(null)
                         }
                         GoalSingleTransferViewModel.AmountErrorState.INVALID -> {
+                            //TODO(aHashimi): Chris to determine this:
                             amountInputWithLabel.setErrorTexts(listOf(getString(R.string.GOAL_SINGLE_TRANSFER_AMOUNT_ERROR_MESSAGE)))
                         }
                     }
