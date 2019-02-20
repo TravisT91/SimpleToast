@@ -96,12 +96,13 @@ class DashboardViewModel : BaseEngageViewModel(), GateKeeperListener {
 
     // Balances
     fun clearAndRefreshBalancesAndNotifications() {
-        showProgressOverlayDelayed()
         EngageService.getInstance().clearLoginAndDashboardResponses()
         refreshBalancesAndNotifications()
     }
 
     fun refreshBalancesAndNotifications() {
+        showProgressOverlayDelayed()
+
         spendingBalanceStateObservable.value = DashboardBalanceState.LOADING
         // only change savings state if already set. Otherwise it is currently hidden in UI, so don't show loading indicator
         if (savingsBalanceStateObservable.value == DashboardBalanceState.AVAILABLE) {
@@ -112,6 +113,7 @@ class DashboardViewModel : BaseEngageViewModel(), GateKeeperListener {
                         .subscribeOn(Schedulers.io())
                         .observeOn(AndroidSchedulers.mainThread())
                         .subscribe({ response ->
+                            dismissProgressOverlay()
                             if (response.isSuccess && response is LoginResponse) {
                                 var savingsBalanceEnabled = false
 
@@ -162,6 +164,7 @@ class DashboardViewModel : BaseEngageViewModel(), GateKeeperListener {
                             }
                         })
                         { e ->
+                            dismissProgressOverlay()
                             spendingBalanceObservable.value = BigDecimal.ZERO
                             spendingBalanceStateObservable.value = DashboardBalanceState.ERROR
                             savingsBalanceObservable.value = BigDecimal.ZERO
