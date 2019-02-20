@@ -18,7 +18,6 @@ import com.ob.ws.dom.utility.AchAccountInfo
 import com.ob.ws.dom.utility.DebitCardInfo
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
-import org.joda.time.DateTime
 import utilGen1.DisplayDateTimeUtils
 import utilGen1.ScheduledLoadUtils
 
@@ -238,10 +237,14 @@ class CreateEditTransferViewModel: BaseEngageViewModel() {
 
         when (scheduledLoad.typeString) {
             ScheduledLoad.SCHED_LOAD_TYPE_WEEKLY -> {
-                setFrequencyType(dateTime)
+                frequency.set(FREQUENCY_WEEKLY)
+                dayOfWeekShow.set(true)
+                dayOfWeek.set(dateTime.dayOfWeek().asText)
             }
             ScheduledLoad.SCHED_LOAD_TYPE_ALT_WEEKLY -> {
-                setFrequencyType(dateTime)
+                frequency.set(FREQUENCY_EVERY_OTHER_WEEK)
+                dayOfWeekShow.set(true)
+                dayOfWeek.set(dateTime.dayOfWeek().asText)
             }
             ScheduledLoad.SCHED_LOAD_TYPE_MONTHLY -> {
                 frequency.set(FREQUENCY_MONTHLY)
@@ -249,12 +252,6 @@ class CreateEditTransferViewModel: BaseEngageViewModel() {
                 date1.set(DisplayDateTimeUtils.getMediumFormatted(dateTime))
             }
         }
-    }
-
-    private fun setFrequencyType(dateTime: DateTime) {
-        frequency.set(FREQUENCY_WEEKLY)
-        dayOfWeekShow.set(true)
-        dayOfWeek.set(dateTime.dayOfWeek().asText)
     }
 
     private fun getCardInfo(debitCardInfo: DebitCardInfo) : CardInfo? {
