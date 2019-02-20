@@ -431,12 +431,8 @@ object StringUtils {
         return false
     }
 
-    fun removeRedundantWhitespace(input: String?): String {
-        input?.let {
-            return it.trim { it <= ' ' }.replace(" +".toRegex(), " ")
-        } ?: run {
-            return ""
-        }
+    fun removeRedundantWhitespace(input: String): String {
+        return input.trim { it <= ' ' }.replace(" +".toRegex(), " ")
     }
 
     fun fromHtml(htmlString: String): Spanned {
