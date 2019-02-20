@@ -329,7 +329,7 @@ class DashboardViewModel : BaseEngageViewModel(), GateKeeperListener {
             if (options.size > 4) {
                 if (options.size == 5) {
                     val itemFour = options.removeAt(3)
-                    val itemFive = options.removeAt(4)
+                    val itemFive = options.removeAt(3)
 
                     val moreOptionsList = ArrayList<ExpandableViewListItem>().apply {
                         add(itemFour)
