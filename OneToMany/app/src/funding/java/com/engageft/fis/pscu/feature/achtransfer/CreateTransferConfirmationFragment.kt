@@ -87,7 +87,7 @@ class CreateTransferConfirmationFragment: BaseEngagePageFragment() {
         private const val DAYS_IN_A_WEEK = 7
 
         fun createBundle(achAccountId: Long, cardId: Long, frequency: String, amount: String,
-                         scheduledDate1: DateTime?, dayOfWeek: String): Bundle {
+                         scheduledDate: DateTime?, dayOfWeek: String): Bundle {
 
             return Bundle().apply {
                 putLong(ACH_ACCOUNT_ID, achAccountId)
@@ -95,22 +95,21 @@ class CreateTransferConfirmationFragment: BaseEngagePageFragment() {
                 putString(TRANSFER_AMOUNT, amount)
                 putString(TRANSFER_FREQUENCY, frequency)
 
-                // convert day of week to DateTime()
                 when (frequency) {
                     ScheduledLoad.SCHED_LOAD_TYPE_WEEKLY -> {
-                        setDayOfWeek(dayOfWeek)
+                        putSerializable(TRANSFER_DATE1, getDayOfWeek(dayOfWeek))
                     }
                     ScheduledLoad.SCHED_LOAD_TYPE_ALT_WEEKLY -> {
-                        setDayOfWeek(dayOfWeek)
+                        putSerializable(TRANSFER_DATE1, getDayOfWeek(dayOfWeek))
                     }
                     ScheduledLoad.SCHED_LOAD_TYPE_MONTHLY -> {
-                        putSerializable(TRANSFER_DATE1, scheduledDate1)
+                        putSerializable(TRANSFER_DATE1, scheduledDate)
                     }
                 }
             }
         }
 
-        private fun Bundle.setDayOfWeek(dayOfWeek: String) {
+        private fun getDayOfWeek(dayOfWeek: String) : DateTime {
             val selectedDay = DisplayDateTimeUtils.getDayOfWeekNumber(dayOfWeek)
             val now = DateTime.now()
             val today: Int = DateTime.now().dayOfWeek + 1 // jodaTime is zero-based
@@ -119,7 +118,7 @@ class CreateTransferConfirmationFragment: BaseEngagePageFragment() {
             } else {
                 DAYS_IN_A_WEEK - today + selectedDay
             }
-            putSerializable(TRANSFER_DATE1, now.plusDays(nextRecurringDay))
+            return now.plusDays(nextRecurringDay)
         }
     }
 }

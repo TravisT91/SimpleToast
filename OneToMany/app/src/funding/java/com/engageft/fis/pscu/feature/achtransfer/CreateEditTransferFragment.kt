@@ -209,7 +209,7 @@ class CreateEditTransferFragment: BaseEngagePageFragment() {
     private fun navigateToConfirmationScreen() {
         val frequencyType = ScheduledLoadUtils.getFrequencyTypeStringForDisplayString(context!!, createEditTransferViewModel.frequency.get()!!)
 
-        val date1 = if (createEditTransferViewModel.date1.get()!!.isNotEmpty()) {
+        val date = if (createEditTransferViewModel.date1.get()!!.isNotEmpty()) {
             DisplayDateTimeUtils.mediumDateFormatter.parseDateTime(createEditTransferViewModel.date1.get())
         } else {
             null
@@ -221,7 +221,7 @@ class CreateEditTransferFragment: BaseEngagePageFragment() {
                         cardId = createEditTransferViewModel.currentCard!!.debitCardId,
                         frequency = frequencyType,
                         amount = CurrencyUtils.getNonFormattedDecimalAmountString(currencyCode = EngageAppConfig.currencyCode, stringWithCurrencySymbol = createEditTransferViewModel.amount.get()!!),
-                        scheduledDate1 = date1,
+                        scheduledDate = date,
                         dayOfWeek = createEditTransferViewModel.dayOfWeek.get()!!))
     }
 
