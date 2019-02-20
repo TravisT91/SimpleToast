@@ -65,11 +65,10 @@ class TransactionDetailsViewModel(transactionId: TransactionId) : BaseEngageView
                     true)
 
             val date = DisplayDateTimeUtils.getMediumFormatted(it.date)
-            val store = StringUtils.removeRedundantWhitespace(transaction.store)
 
             this.amount.value = amount
             this.txDate.value = date
-            this.txStore.value = store
+            this.txStore.value = transaction.store
 
             this.txCategory.value = it.subCategory
 
@@ -118,14 +117,12 @@ class TransactionDetailsViewModel(transactionId: TransactionId) : BaseEngageView
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe(
                             {
-
+                                //do nothing onNext
                             },
-
                             {
                                 dismissProgressOverlay()
                                 handleThrowable(it)
                             },
-
                             {
                                 //default values should have changed if not this means something
                                 //was unsuccessful
