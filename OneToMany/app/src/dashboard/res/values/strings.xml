@@ -40,4 +40,23 @@
 
     <!-- Transactions -->
     <string name="OVERVIEW_NO_TRANSACTIONS_PLACEHOLDER">Once you start spending, you\'ll see all transactions show up right here.</string>
+
+    <!-- Onboarding -->
+    <string name="ONBOARDING_DASHBOARD_TITLE_FORMAT">Your smart &amp; dynamic dashboard</string>
+    <string name="ONBOARDING_DASHBOARD_TITLE_SUBSTRING">smart &amp; dynamic</string>
+    <string name="ONBOARDING_DASHBOARD_MESSAGE">Smart enough to show you what you need, at exactly the right time.</string>
+    <string name="ONBOARDING_CARD_TITLE_FORMAT">Take complete control of your card.</string>
+    <string name="ONBOARDING_CARD_TITLE_SUBSTRING">complete</string>
+    <string name="ONBOARDING_CARD_MESSAGE">Tap just below your card to access all of your quick card controls.</string>
+    <string name="ONBOARDING_SEARCH_TITLE_FORMAT">Search across all of your transactions.</string>
+    <string name="ONBOARDING_SEARCH_TITLE_SUBSTRING">Search</string>
+    <string name="ONBOARDING_SEARCH_MESSAGE">Easily search transactions by name, amount, or even by category.</string>
+    <string name="ONBOARDING_BUDGETS_TITLE_FORMAT">Budgeting made simple &amp; easy!</string>
+    <string name="ONBOARDING_BUDGETS_TITLE_SUBSTRING">Budgeting</string>
+    <string name="ONBOARDING_BUDGETS_MESSAGE">See where your money is going month to month. You do the spending and EngageFT keeps track for you.</string>
+    <string name="ONBOARDING_GOALS_TITLE_FORMAT">Set-aside money toward your goals.</string>
+    <string name="ONBOARDING_GOALS_TITLE_SUBSTRING">goals.</string>
+    <string name="ONBOARDING_GOALS_MESSAGE">See where your money is going month to month. You do the spending and we keep track for you.</string>
+    <string name="ONBOARDING_PAGER_NEXT">Next</string>
+    <string name="ONBOARDING_PAGER_DONE">Got it!</string>
 </resources>

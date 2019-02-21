@@ -32,6 +32,7 @@ import com.engageft.fis.pscu.R
 import com.engageft.fis.pscu.databinding.FragmentDashboardBinding
 import com.engageft.fis.pscu.feature.adapter.DashboardTransactionsAdapter
 import com.engageft.fis.pscu.feature.authentication.AuthenticationDialogFragment
+import com.engageft.fis.pscu.feature.onboarding.OnboardingDialogFragment
 import com.engageft.fis.pscu.feature.palettebindings.applyBranding
 import com.engageft.fis.pscu.feature.search.SearchDialogFragment
 import com.engageft.fis.pscu.feature.transactions.adapter.TransactionListener
@@ -422,7 +423,8 @@ class DashboardFragment : BaseEngagePageFragment(),
                     Toast.makeText(context!!, "TODO: Navigate to Card Tracker", Toast.LENGTH_LONG).show()
                 }
                 DashboardNavigationEvent.SHOW_ONBOARDING_SPLASH -> {
-                    Toast.makeText(context!!, "TODO: Navigate to Onboarding Splash", Toast.LENGTH_LONG).show()
+                    val dialog = OnboardingDialogFragment()
+                    dialog.show(childFragmentManager, "onboarding")
                 }
                 DashboardNavigationEvent.SHOW_POST_30_DAYS_SPLASH -> {
                     Toast.makeText(context!!, "TODO: Navigate to Post 30 Days Splash", Toast.LENGTH_LONG).show()
