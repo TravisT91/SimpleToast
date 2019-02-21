@@ -32,6 +32,8 @@ object EngageAppConfig : BaseAppConfig() {
 
     override val heapAppId: String = if (BuildConfig.DEBUG) "230876127" else "2688943769"
     override val moEngageAppId: String = "YTI7RS4PJ1G1IVAEUV7YX8DN"
+    override val isTestBuild: Boolean
+        get() = BuildConfig.DEBUG || BuildConfig.BUILD_TYPE == "demo"
 }
 
 abstract class BaseAppConfig {
@@ -44,6 +46,8 @@ abstract class BaseAppConfig {
     open val supportEmail: String = "service@myengageft.com"
     open val supportTechnicalPhone: String = "18662392008"
     open val currencyCode: String = "USD"
+
+    open val isTestBuild = BuildConfig.DEBUG
 
     var isUsingProdEnvironment: Boolean
         set(value) {
