@@ -23,6 +23,7 @@ abstract class BaseEngagePageFragment : LotusPageFragment(), BaseEngageFragmentI
     protected val engageFragmentDelegate by lazy {
         BaseEngageFragmentDelegate(this)
     }
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         engageFragmentDelegate
