@@ -131,7 +131,7 @@ class TransactionDetailsFragment : BaseEngageSubFragment() {
                                 goToCategoryFragment()
                             }
                         }
-                        category.setEditTextOnClickListener {
+                        category.setOnClickListener {
                             categoryFrame.performClick()
                         }
                     }

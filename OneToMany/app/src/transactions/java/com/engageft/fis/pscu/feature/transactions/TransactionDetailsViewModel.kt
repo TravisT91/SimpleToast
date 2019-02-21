@@ -17,9 +17,9 @@ import io.reactivex.ObservableSource
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 import utilGen1.DisplayDateTimeUtils
-import utilGen1.StringUtils
 import utilGen1.StringUtils.formatCurrencyStringFractionDigitsReducedHeight
 import java.util.Locale
+import kotlin.collections.ArrayList
 
 class TransactionDetailsViewModel(transactionId: TransactionId) : BaseEngageViewModel() {
 
@@ -28,7 +28,7 @@ class TransactionDetailsViewModel(transactionId: TransactionId) : BaseEngageView
     private val cardId = storageManager.currentCard.debitCardId
 
     private var originalCategory: CharSequence? = null
-    private var originalNotes: String? = null
+    private var originalNotes: String = ""
     private var originalIsOffBudget: Boolean? = null
 
     var categoryHasChanged = false
@@ -72,11 +72,16 @@ class TransactionDetailsViewModel(transactionId: TransactionId) : BaseEngageView
 
             this.txCategory.value = it.subCategory
 
-            this.txNotes.value = it.note
+            it.note?.let { note ->
+                txNotes.value = note
+                originalNotes = note
+            } ?: kotlin.run {
+                txNotes.value = ""
+                originalNotes = ""
+            }
             this.isOffBudget.value = it.offBudget
 
             originalCategory = it.subCategory
-            originalNotes = it.note ?: ""
             originalIsOffBudget = it.offBudget
 
             this.transaction.postValue(it)
@@ -187,9 +192,9 @@ class TransactionDetailsViewModel(transactionId: TransactionId) : BaseEngageView
                                 .transactionUpdateNoteObservable(transaction.transactionId, it)
                                 .doOnNext { response ->
                                     if (response.isSuccess) {
-                                        originalNotes = txNotes.value
+                                        originalNotes = txNotes.value!!
                                         // Update in repo
-                                        transaction.note = txNotes.value
+                                        transaction.note = txNotes.value!!
                                         TransactionRepository.updateTransaction(transaction)
                                     }
                                 }
