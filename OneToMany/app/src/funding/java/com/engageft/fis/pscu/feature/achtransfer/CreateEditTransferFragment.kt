@@ -114,7 +114,6 @@ class CreateEditTransferFragment: BaseEngagePageFragment() {
                     frequencyBottomSheet.isEnabled = false
                     daysOfWeekBottomSheet.isEnabled = false
                     date1BottomSheet.isEnabled = false
-                    date2BottomSheet.isEnabled = false
                 } else {
                     toolbarController.setToolbarTitle(getString(R.string.ach_bank_transfer_create_transfer))
                 }
@@ -130,8 +129,6 @@ class CreateEditTransferFragment: BaseEngagePageFragment() {
             val maxDate = DateTime.now().plusDays(60)
             date1BottomSheet.minimumDate = minDate
             date1BottomSheet.maximumDate = maxDate
-            date2BottomSheet.minimumDate = minDate
-            date2BottomSheet.maximumDate = maxDate
             amountInputWithLabel.currencyCode = EngageAppConfig.currencyCode
 
             nextButton.setOnClickListener {
@@ -212,14 +209,8 @@ class CreateEditTransferFragment: BaseEngagePageFragment() {
     private fun navigateToConfirmationScreen() {
         val frequencyType = ScheduledLoadUtils.getFrequencyTypeStringForDisplayString(context!!, createEditTransferViewModel.frequency.get()!!)
 
-        val date1 = if (createEditTransferViewModel.date1.get()!!.isNotEmpty()) {
+        val date = if (createEditTransferViewModel.date1.get()!!.isNotEmpty()) {
             DisplayDateTimeUtils.mediumDateFormatter.parseDateTime(createEditTransferViewModel.date1.get())
-        } else {
-            null
-        }
-
-        val date2 = if (createEditTransferViewModel.date2.get()!!.isNotEmpty()) {
-            DisplayDateTimeUtils.mediumDateFormatter.parseDateTime(createEditTransferViewModel.date2.get())
         } else {
             null
         }
@@ -230,8 +221,7 @@ class CreateEditTransferFragment: BaseEngagePageFragment() {
                         cardId = createEditTransferViewModel.currentCard!!.debitCardId,
                         frequency = frequencyType,
                         amount = CurrencyUtils.getNonFormattedDecimalAmountString(currencyCode = EngageAppConfig.currencyCode, stringWithCurrencySymbol = createEditTransferViewModel.amount.get()!!),
-                        scheduledDate1 = date1,
-                        scheduledDate2 = date2,
+                        scheduledDate = date,
                         dayOfWeek = createEditTransferViewModel.dayOfWeek.get()!!))
     }
 
