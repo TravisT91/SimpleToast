@@ -3,11 +3,14 @@ package com.engageft.fis.pscu.feature.achtransfer
 import androidx.databinding.Observable
 import androidx.databinding.ObservableField
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProvider
 import com.engageft.engagekit.EngageService
 import com.engageft.engagekit.aac.SingleLiveEvent
 import com.engageft.engagekit.model.ScheduledLoad
 import com.engageft.engagekit.rest.request.ScheduledLoadRequest
 import com.engageft.engagekit.utils.LoginResponseUtils
+import com.engageft.feature.goals.GoalDetailViewModel
 import com.engageft.fis.pscu.feature.BaseEngageViewModel
 import com.engageft.fis.pscu.feature.DialogInfo
 import com.engageft.fis.pscu.feature.branding.BrandingInfoRepo
@@ -20,22 +23,30 @@ import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 import utilGen1.DisplayDateTimeUtils
 import utilGen1.ScheduledLoadUtils
+import java.math.BigDecimal
 
-class CreateEditTransferViewModel: BaseEngageViewModel() {
+class CreateEditTransferViewModel(val scheduledLoadId: Long): BaseEngageViewModel() {
 
     enum class FormMode {
         CREATE,
         EDIT
     }
-
     enum class ButtonState {
         SHOW,
         HIDE
     }
+    enum class FundSourceType {
+        DEBIT_CREDIT_CARD,
+        ACH_ACCOUNT
+    }
 
-    data class CardInfo(var cardId: Long, var name: String, var lastFour: String)
-    val fromAccountObservable = MutableLiveData<AchAccountInfo>()
-    val toAccountObservable = MutableLiveData<CardInfo>()
+    data class CardInfoModel(val cardId: Long, val name: String, val lastFour: String, val balance: BigDecimal)
+    data class AccountFundSourceModel(val cardId: Long, val lastFour: String, val name: String? = null, val sourceType: FundSourceType)
+
+//    val fromAccountObservable = MutableLiveData<AchAccountInfo>()
+    val fromAccountObservable = MutableLiveData<List<AccountFundSourceModel>>()
+    // todo: make this the List<CardInfo>(), rename
+    val toAccountObservable = MutableLiveData<List<CardInfoModel>>()
 
     val deleteSuccessObservable = SingleLiveEvent<Unit>()
 
@@ -58,6 +69,8 @@ class CreateEditTransferViewModel: BaseEngageViewModel() {
 
     private var currentScheduledLoad: ScheduledLoad? = null
     private var achAccountList: List<AchAccountInfo> = mutableListOf()
+
+    private var formMode = FormMode.CREATE
 
     init {
         buttonStateObservable.value = ButtonState.HIDE
@@ -120,25 +133,48 @@ class CreateEditTransferViewModel: BaseEngageViewModel() {
             }
         })
 
+//        showProgressOverlayDelayed()
+//        compositeDisposable.add(EngageService.getInstance().loginResponseAsObservable
+//                .subscribeOn(Schedulers.io())
+//                .observeOn(AndroidSchedulers.mainThread())
+//                .subscribe({ response ->
+//                    dismissProgressOverlay()
+//                    if (response is LoginResponse) {
+//                        // todo
+//                        if (response.achAccountList.isNotEmpty()) {
+//                            // multiple ACH Banks aren't allowed
+//                            achAccountInfo = response.achAccountList[0]
+//                            fromAccountObservable.value = achAccountInfo
+//                        }
+//
+//                        currentCard = LoginResponseUtils.getCurrentCard(response)
+//
+//                        currentCard?.let { debitCard ->
+//                            toAccountObservable.value = getCardInfo(debitCard)
+//                            isInErrorStateObservable.value = !debitCard.cardPermissionsInfo.isFundingAchAllowable
+//                        }
+//                    } else {
+//                        handleUnexpectedErrorResponse(response)
+//                    }
+//                }, { e ->
+//                    dismissProgressOverlay()
+//                    handleThrowable(e)
+//                })
+//        )
+        initData(scheduledLoadId)
+    }
+
+//    fun initScheduledLoads(scheduledLoadId: Long) {
+    private fun initData(scheduledLoadId: Long) {
         showProgressOverlayDelayed()
         compositeDisposable.add(EngageService.getInstance().loginResponseAsObservable
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe({ response ->
-                    dismissProgressOverlay()
+                    // don't hide the progressOverlay yet
                     if (response is LoginResponse) {
-                        if (response.achAccountList.isNotEmpty()) {
-                            // multiple ACH Banks aren't allowed
-                            achAccountInfo = response.achAccountList[0]
-                            fromAccountObservable.value = achAccountInfo
-                        }
-
-                        currentCard = LoginResponseUtils.getCurrentCard(response)
-
-                        currentCard?.let { debitCard ->
-                            toAccountObservable.value = getCardInfo(debitCard)
-                            isInErrorStateObservable.value = !debitCard.cardPermissionsInfo.isFundingAchAllowable
-                        }
+//                        getScheduledLoads(scheduledLoadId, LoginResponseUtils.getCurrentCard(response))
+                        getScheduledLoads(scheduledLoadId, response)
                     } else {
                         handleUnexpectedErrorResponse(response)
                     }
@@ -149,39 +185,33 @@ class CreateEditTransferViewModel: BaseEngageViewModel() {
         )
     }
 
-    fun initScheduledLoads(scheduledLoadId: Long) {
-        showProgressOverlayDelayed()
-        compositeDisposable.add(EngageService.getInstance().loginResponseAsObservable
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe({ response ->
-                    // don't hide the progressOverlay yet
-                    if (response is LoginResponse) {
-                        getScheduledLoads(scheduledLoadId, LoginResponseUtils.getCurrentCard(response))
-                    } else {
-                        dialogInfoObservable.value = DialogInfo()
-                    }
-                }, { e ->
-                    dismissProgressOverlay()
-                    handleThrowable(e)
-                })
-        )
-    }
-
-    private fun getScheduledLoads(scheduledLoadId: Long, currentCard: DebitCardInfo) {
+//    private fun getScheduledLoads(scheduledLoadId: Long, currentCard: DebitCardInfo) {
+    private fun getScheduledLoads(scheduledLoadId: Long, loginResponse: LoginResponse) {
+        val currentCard = LoginResponseUtils.getCurrentCard(loginResponse)
         compositeDisposable.add(
-                EngageService.getInstance().getScheduledLoadsResponseObservable(currentCard, false)
+                EngageService.getInstance().getScheduledLoadsResponseObservable(currentCard, true)
                         .subscribeOn(Schedulers.io())
                         .observeOn(AndroidSchedulers.mainThread())
                         .subscribe({ response ->
                             dismissProgressOverlay()
                             if (response.isSuccess && response is ScheduledLoadsResponse) {
-                                for (scheduledLoad in ScheduledLoadUtils.getScheduledLoads(response)) {
-                                    if (scheduledLoad.scheduledLoadId == scheduledLoadId) {
-                                        populateFields(scheduledLoad)
-                                        break
-                                    }
+                                ScheduledLoadUtils.getScheduledLoads(response).find { scheduleLoad ->
+                                    scheduledLoadId == scheduleLoad.scheduledLoadId
+                                }?.let { scheduledLoad ->
+                                    formMode = FormMode.EDIT
+                                    initCardsAndAccountsList(loginResponse, FormMode.EDIT)
+
+                                    populateFields(scheduledLoad)
+                                } ?: run {
+                                    formMode = FormMode.CREATE
+                                    initCardsAndAccountsList(loginResponse, FormMode.EDIT)
                                 }
+//                                for (scheduledLoad in ScheduledLoadUtils.getScheduledLoads(response)) {
+//                                    if (scheduledLoad.scheduledLoadId == scheduledLoadId) {
+//                                        populateFields(scheduledLoad)
+//                                        break
+//                                    }
+//                                }
                             } else {
                                 handleUnexpectedErrorResponse(response)
                             }
@@ -190,6 +220,44 @@ class CreateEditTransferViewModel: BaseEngageViewModel() {
                             handleThrowable(e)
                         })
         )
+    }
+
+    private val fundSourceHashMap: HashMap<String, FundSourceType> = HashMap()
+
+    private fun initCardsAndAccountsList(loginResponse: LoginResponse, formMode: FormMode) {
+        val cardsList = LoginResponseUtils.getAllCardsSorted(loginResponse)
+        val cardInfoModelList = mutableListOf<CardInfoModel>()
+
+        if (cardsList.isNotEmpty()) {
+            cardsList.forEach { debitCard ->
+                getCardInfo(debitCard)?.let { cardInfoModel ->
+                    cardInfoModelList.add(cardInfoModel)
+                }
+            }
+        } else {
+            throw IllegalStateException("Must have at least one debitCardInfo")
+        }
+
+        val achAccountsAndDebitCreditList = mutableListOf<AccountFundSourceModel>()
+
+        loginResponse.achAccountList.forEach { achAccountInfo ->
+            achAccountsAndDebitCreditList.add(AccountFundSourceModel(
+                    cardId = achAccountInfo.achAccountId,
+                    name = achAccountInfo.bankName,
+                    lastFour = achAccountInfo.accountLastDigits,
+                    sourceType = FundSourceType.ACH_ACCOUNT))
+        }
+
+        loginResponse.ccAccountList.forEach { ccAccountInfo ->
+            achAccountsAndDebitCreditList.add(AccountFundSourceModel(
+                    cardId = ccAccountInfo.ccAccountId,
+                    lastFour = ccAccountInfo.lastDigits,
+                    sourceType = FundSourceType.DEBIT_CREDIT_CARD
+            ))
+        }
+
+        toAccountObservable.value = cardInfoModelList
+        fromAccountObservable.value = achAccountsAndDebitCreditList
     }
 
     fun updateButtonState() {
@@ -229,23 +297,8 @@ class CreateEditTransferViewModel: BaseEngageViewModel() {
         }
     }
 
-    private var formMode = FormMode.CREATE
-
     private fun populateFields(scheduledLoad: ScheduledLoad) {
         currentScheduledLoad = scheduledLoad
-        formMode = FormMode.EDIT
-
-        for (achAccountInfo in achAccountList) {
-            if (achAccountInfo.achAccountId.toString() == scheduledLoad.achAccountId) {
-                // format and set from account
-                fromAccountObservable.value = achAccountInfo
-                break
-            }
-        }
-
-        currentCard?.let {
-            toAccountObservable.value = getCardInfo(it)
-        }
 
         amount.set(scheduledLoad.amount)
 
@@ -273,11 +326,14 @@ class CreateEditTransferViewModel: BaseEngageViewModel() {
         }
     }
 
-    private fun getCardInfo(debitCardInfo: DebitCardInfo) : CardInfo? {
+    private fun getCardInfo(debitCardInfo: DebitCardInfo) : CardInfoModel? {
         BrandingInfoRepo.cards?.let { brandingCardsList ->
             for (brandingCard in brandingCardsList) {
                 if (debitCardInfo.cardType == brandingCard.type) {
-                    return CardInfo(cardId = debitCardInfo.debitCardId, name = brandingCard.name, lastFour = debitCardInfo.lastFour)
+                    return CardInfoModel(cardId = debitCardInfo.debitCardId,
+                            name = brandingCard.name,
+                            lastFour = debitCardInfo.lastFour,
+                            balance = BigDecimal(debitCardInfo.currentBalance))
                 }
             }
         }
@@ -319,5 +375,11 @@ class CreateEditTransferViewModel: BaseEngageViewModel() {
         const val FREQUENCY_WEEKLY = "Once a week"
         const val FREQUENCY_MONTHLY = "Once a month"
         const val FREQUENCY_BIMONTHLY = "Twice a month"
+    }
+}
+class CreateEditTransferViewModelFactory(private val scheduleLoadId: Long) : ViewModelProvider.NewInstanceFactory() {
+    override fun <T : ViewModel?> create(modelClass: Class<T>): T {
+        @Suppress("UNCHECKED_CAST")
+        return CreateEditTransferViewModel(scheduleLoadId) as T
     }
 }

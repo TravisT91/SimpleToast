@@ -15,6 +15,8 @@ import com.engageft.apptoolbox.BaseViewModel
 import com.engageft.fis.pscu.R
 import com.engageft.fis.pscu.databinding.FragmentAccountsAndTransfersListBinding
 import com.engageft.fis.pscu.feature.BaseEngagePageFragment
+import com.engageft.fis.pscu.feature.achtransfer.CardLoadConstants.ACH_BANK_ACCOUNT_ID_KEY
+import com.engageft.fis.pscu.feature.achtransfer.CardLoadConstants.SCHEDULED_LOAD_ID_KEY
 import com.engageft.fis.pscu.feature.branding.Palette
 import com.ob.ws.dom.utility.AchAccountInfo
 
@@ -57,7 +59,7 @@ class AccountsAndTransfersListFragment: BaseEngagePageFragment() {
                         override fun onAchAccountDetailClicked(achAccountInfoId: Long) {
                             root.findNavController().navigate(R.id.action_accountsAndTransfersListFragment_to_achBankAccountDetailFragment,
                                     Bundle().apply {
-                                        putLong(ACH_BANK_ACCOUNT_ID, achAccountInfoId)
+                                        putLong(ACH_BANK_ACCOUNT_ID_KEY, achAccountInfoId)
                                     })
                         }
 
@@ -71,7 +73,7 @@ class AccountsAndTransfersListFragment: BaseEngagePageFragment() {
                         override fun onScheduledTransferClicked(scheduledLoadInfoId: Long) {
                             root.findNavController().navigate(R.id.action_accountsAndTransfersListFragment_to_createEditTransferFragment,
                                     Bundle().apply {
-                                        putLong(SCHEDULED_LOAD_ID, scheduledLoadInfoId)
+                                        putLong(SCHEDULED_LOAD_ID_KEY, scheduledLoadInfoId)
                                     })
 
                         }
@@ -87,7 +89,7 @@ class AccountsAndTransfersListFragment: BaseEngagePageFragment() {
                                 // the UI logic doesn't make sense and as a result this will need to change as well.
                                 root.findNavController().navigate(R.id.action_accountsAndTransfersListFragment_to_achBankAccountVerifyFragment,
                                         Bundle().apply {
-                                            putLong(ACH_BANK_ACCOUNT_ID, accountsAndTransfersListViewModel.achBankAccountId)
+                                            putLong(ACH_BANK_ACCOUNT_ID_KEY, accountsAndTransfersListViewModel.achBankAccountId)
                                         })
                             }
                         }
@@ -172,10 +174,5 @@ class AccountsAndTransfersListFragment: BaseEngagePageFragment() {
             }
         }
         return super.onOptionsItemSelected(item)
-    }
-
-    companion object {
-        const val ACH_BANK_ACCOUNT_ID = "ACH_BANK_ACCOUNT_ID"
-        const val SCHEDULED_LOAD_ID = "SCHEDULED_LOAD_ID"
     }
 }

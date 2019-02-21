@@ -9,7 +9,6 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProviders
 import androidx.navigation.findNavController
 import androidx.navigation.fragment.findNavController
 import com.engageft.apptoolbox.BaseViewModel
@@ -21,7 +20,7 @@ import com.engageft.fis.pscu.R
 import com.engageft.fis.pscu.config.EngageAppConfig
 import com.engageft.fis.pscu.databinding.FragmentCreateEditTransferBinding
 import com.engageft.fis.pscu.feature.BaseEngagePageFragment
-import com.engageft.fis.pscu.feature.achtransfer.AccountsAndTransfersListFragment.Companion.SCHEDULED_LOAD_ID
+import com.engageft.fis.pscu.feature.achtransfer.CardLoadConstants.SCHEDULED_LOAD_ID
 import com.engageft.fis.pscu.feature.branding.Palette
 import com.engageft.fis.pscu.feature.infoDialogGenericUnsavedChangesNewInstance
 import org.joda.time.DateTime
@@ -58,7 +57,8 @@ class CreateEditTransferFragment: BaseEngagePageFragment() {
     }
 
     override fun createViewModel(): BaseViewModel? {
-        createEditTransferViewModel = ViewModelProviders.of(this).get(CreateEditTransferViewModel::class.java)
+        val scheduleLoadId = arguments!!.getLong(CardLoadConstants.SCHEDULED_LOAD_ID_KEY, SCHEDULED_LOAD_ID)
+        createEditTransferViewModel = CreateEditTransferViewModelFactory(scheduleLoadId).create(CreateEditTransferViewModel::class.java)
         return createEditTransferViewModel
     }
 
@@ -74,50 +74,46 @@ class CreateEditTransferFragment: BaseEngagePageFragment() {
             viewModel = createEditTransferViewModel
             palette = Palette
 
-            arguments?.let {
-                val scheduledLoadId = it.getLong(SCHEDULED_LOAD_ID, SCHEDULED_LOAD_ID_DEFAULT)
+            //it's in EDIT MODE
+            if (createEditTransferViewModel.scheduledLoadId != SCHEDULED_LOAD_ID) {
 
-                //it's in EDIT MODE
-                if (scheduledLoadId != SCHEDULED_LOAD_ID_DEFAULT) {
+                toolbarController.setToolbarTitle(getString(R.string.ach_bank_transfer_edit_transfer_screen_title))
 
-                    toolbarController.setToolbarTitle(getString(R.string.ach_bank_transfer_edit_transfer_screen_title))
+//                    createEditTransferViewModel.initScheduledLoads(scheduledLoadId)
+                deleteButtonLayout.visibility = View.VISIBLE
+                headerTextView.visibility = View.GONE
+                subHeaderTextView.visibility = View.GONE
 
-                    createEditTransferViewModel.initScheduledLoads(scheduledLoadId)
-                    deleteButtonLayout.visibility = View.VISIBLE
-                    headerTextView.visibility = View.GONE
-                    subHeaderTextView.visibility = View.GONE
+                deleteButtonLayout.setOnClickListener {
+                    val infoDialog = InformationDialogFragment.newLotusInstance(title = getString(R.string.ach_bank_transfer_delete_transfer_title),
+                            message = String.format(getString(R.string.ach_bank_transfer_delete_transfer_message_format),
+                                    createEditTransferViewModel.frequency.get(), createEditTransferViewModel.fromAccount.get()),
+                            buttonPositiveText = getString(R.string.dialog_information_yes_button),
+                            buttonNegativeText = getString(R.string.dialog_information_no_button),
+                            listener = object : InformationDialogFragment.InformationDialogFragmentListener {
+                                override fun onDialogFragmentNegativeButtonClicked() {
+                                }
 
-                    deleteButtonLayout.setOnClickListener {
-                        val infoDialog = InformationDialogFragment.newLotusInstance(title = getString(R.string.ach_bank_transfer_delete_transfer_title),
-                                message = String.format(getString(R.string.ach_bank_transfer_delete_transfer_message_format),
-                                        createEditTransferViewModel.frequency.get(), createEditTransferViewModel.fromAccount.get()),
-                                buttonPositiveText = getString(R.string.dialog_information_yes_button),
-                                buttonNegativeText = getString(R.string.dialog_information_no_button),
-                                listener = object : InformationDialogFragment.InformationDialogFragmentListener {
-                                    override fun onDialogFragmentNegativeButtonClicked() {
-                                    }
+                                override fun onDialogFragmentPositiveButtonClicked() {
+                                    createEditTransferViewModel.onDeleteScheduledLoad()
+                                }
 
-                                    override fun onDialogFragmentPositiveButtonClicked() {
-                                        createEditTransferViewModel.onDeleteScheduledLoad()
-                                    }
+                                override fun onDialogCancelled() {
+                                }
 
-                                    override fun onDialogCancelled() {
-                                    }
-
-                                })
-                        infoDialog.positiveButtonTextColor = Palette.errorColor
-                        fragmentDelegate.showDialog(infoDialog)
-                    }
-
-                    // set fields to disabled in EDIT mode so user can't edit it but they can delete their recurring transfer
-                    amountInputWithLabel.isEnabled = false
-                    frequencyBottomSheet.isEnabled = false
-                    daysOfWeekBottomSheet.isEnabled = false
-                    date1BottomSheet.isEnabled = false
-                    date2BottomSheet.isEnabled = false
-                } else {
-                    toolbarController.setToolbarTitle(getString(R.string.ach_bank_transfer_create_transfer))
+                            })
+                    infoDialog.positiveButtonTextColor = Palette.errorColor
+                    fragmentDelegate.showDialog(infoDialog)
                 }
+
+                // set fields to disabled in EDIT mode so user can't edit it but they can delete their recurring transfer
+                amountInputWithLabel.isEnabled = false
+                frequencyBottomSheet.isEnabled = false
+                daysOfWeekBottomSheet.isEnabled = false
+                date1BottomSheet.isEnabled = false
+                date2BottomSheet.isEnabled = false
+            } else {
+                toolbarController.setToolbarTitle(getString(R.string.ach_bank_transfer_create_transfer))
             }
 
             accountFromBottomSheet.isEnabled = false
@@ -233,9 +229,5 @@ class CreateEditTransferFragment: BaseEngagePageFragment() {
                         scheduledDate1 = date1,
                         scheduledDate2 = date2,
                         dayOfWeek = createEditTransferViewModel.dayOfWeek.get()!!))
-    }
-
-    companion object {
-        private const val SCHEDULED_LOAD_ID_DEFAULT = -1L
     }
 }

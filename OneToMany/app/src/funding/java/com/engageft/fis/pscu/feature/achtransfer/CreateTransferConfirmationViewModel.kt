@@ -1,11 +1,14 @@
 package com.engageft.fis.pscu.feature.achtransfer
 
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProvider
 import com.engageft.engagekit.EngageService
 import com.engageft.engagekit.aac.SingleLiveEvent
 import com.engageft.engagekit.model.ScheduledLoad
 import com.engageft.engagekit.rest.request.FundingFundAchAccountRequest
 import com.engageft.engagekit.rest.request.ScheduledLoadAchAddRequest
 import com.engageft.engagekit.utils.BackendDateTimeUtils
+import com.engageft.feature.goals.GoalDetailViewModel
 import com.engageft.fis.pscu.feature.BaseEngageViewModel
 import com.engageft.fis.pscu.feature.handleBackendErrorForForms
 import com.ob.ws.dom.BasicResponse
@@ -36,7 +39,8 @@ class CreateTransferConfirmationViewModel: BaseEngageViewModel() {
 
     private fun getNewScheduleLoad() : ScheduledLoad {
         val scheduledLoad = ScheduledLoad()
-        scheduledLoad.isExternal = false
+        // todo shouldn't need it
+//        scheduledLoad.isExternal = false
         scheduledLoad.scheduledLoadType = ScheduledLoad.PLANNED_LOAD_METHOD_BANK_TRANSFER
         scheduledLoad.cardId = cardId.toString()
         scheduledLoad.achAccountId = achAccountInfoId.toString()
