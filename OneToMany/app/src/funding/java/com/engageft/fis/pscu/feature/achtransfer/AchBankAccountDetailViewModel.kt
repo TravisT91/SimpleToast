@@ -44,12 +44,12 @@ class AchBankAccountDetailViewModel: BaseEngageViewModel() {
     }
 
     private fun initData() {
-        progressOverlayShownObservable.value = true
+        showProgressOverlayDelayed()
         compositeDisposable.add(EngageService.getInstance().loginResponseAsObservable
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe({ response ->
-                    progressOverlayShownObservable.value = false
+                    dismissProgressOverlay()
                     if (response.isSuccess && response is LoginResponse) {
                         if (achAccountInfoId != 0L) {
                             achAccountInfo = LoginResponseUtils.getAchAccountInfoById(response, achAccountInfoId)
@@ -68,19 +68,19 @@ class AchBankAccountDetailViewModel: BaseEngageViewModel() {
                         handleUnexpectedErrorResponse(response)
                     }
                 }, { e ->
-                    progressOverlayShownObservable.value = false
+                    dismissProgressOverlay()
                     handleThrowable(e)
                 })
         )
     }
 
     fun onDeleteAccount() {
-        progressOverlayShownObservable.value = true
+        showProgressOverlayDelayed()
         compositeDisposable.add(engageApi().postDeleteAchAccount(AchAccountRequest(achAccountInfoId).fieldMap)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe({ response ->
-                    progressOverlayShownObservable.value = false
+                    dismissProgressOverlay()
                     if (response.isSuccess) {
                         val loginResponse = EngageService.getInstance().storageManager.loginResponse
                         if (loginResponse != null) {
@@ -93,11 +93,11 @@ class AchBankAccountDetailViewModel: BaseEngageViewModel() {
                         navigationEventObservable.value = AchBankAccountNavigationEvent.DELETED_BANK_SUCCESS
                         navigationEventObservable.value = AchBankAccountNavigationEvent.NONE
                     } else {
-                        progressOverlayShownObservable.value = false
+                        dismissProgressOverlay()
                         handleUnexpectedErrorResponse(response)
                     }
                 }, { e ->
-                    progressOverlayShownObservable.value = false
+                    dismissProgressOverlay()
                     handleThrowable(e)
                 })
         )

@@ -5,6 +5,7 @@ import android.view.View
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.engageft.apptoolbox.view.PillButton
+import com.engageft.feature.budgets.extension.isZero
 import com.engageft.fis.pscu.R
 import io.github.luizgrp.sectionedrecyclerviewadapter.SectionParameters
 import io.github.luizgrp.sectionedrecyclerviewadapter.StatelessSection
@@ -37,8 +38,13 @@ class GoalDetailCompleteHeaderSection(private val context: Context,
                 setOuterBottomTextColor(ContextCompat.getColor(this@GoalDetailCompleteHeaderSection.context, R.color.structure6))
             }
 
-            transferBalanceButton.setOnClickListener {
-                listener.onTransferButtonClicked()
+            // if goal is completed but money has been transferred back to account, hide transfer button
+            if (fundAmount.isZero()) {
+                transferBalanceButton.visibility = View.GONE
+            } else {
+                transferBalanceButton.setOnClickListener {
+                    listener.onTransferButtonClicked()
+                }
             }
         }
     }

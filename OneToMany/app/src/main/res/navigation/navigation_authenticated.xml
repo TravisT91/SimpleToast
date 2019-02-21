@@ -677,9 +677,39 @@
             app:exitAnim="@anim/nav_exit_anim"
             app:popEnterAnim="@anim/nav_pop_enter_anim"
             app:popExitAnim="@anim/nav_pop_exit_anim" />
+        <action
+            android:id="@+id/action_goalDetailFragment_to_goalSingleTransferFragment"
+            app:destination="@id/goalSingleTransferFragment"
+            app:enterAnim="@anim/nav_enter_anim"
+            app:exitAnim="@anim/nav_exit_anim"
+            app:popEnterAnim="@anim/nav_pop_enter_anim"
+            app:popExitAnim="@anim/nav_pop_exit_anim"/>
+        <action
+            android:id="@+id/action_goalDetailFragment_to_goalSingleTransferConfirmationFragment"
+            app:enterAnim="@anim/nav_enter_anim"
+            app:exitAnim="@anim/nav_exit_anim"
+            app:popEnterAnim="@anim/nav_pop_enter_anim"
+            app:popExitAnim="@anim/nav_pop_exit_anim"
+            app:destination="@id/goalSingleTransferConfirmationFragment" />
     </fragment>
     <fragment
         android:id="@+id/goalDeleteFragment"
         android:name="com.engageft.feature.goals.GoalDeleteFragment"
         android:label="@string/GOAL_DELETE_TITLE"/>
+    <fragment
+        android:id="@+id/goalSingleTransferFragment"
+        android:name="com.engageft.feature.goals.GoalSingleTransferFragment"
+        android:label="@string/GOAL_DETAIL_TRANSFER" >
+        <action
+            android:id="@+id/action_goalSingleTransferFragment_to_goalSingleTransferConfirmationFragment"
+            app:destination="@id/goalSingleTransferConfirmationFragment"
+            app:enterAnim="@anim/nav_enter_anim"
+            app:exitAnim="@anim/nav_exit_anim"
+            app:popEnterAnim="@anim/nav_pop_enter_anim"
+            app:popExitAnim="@anim/nav_pop_exit_anim"/>
+    </fragment>
+    <fragment
+        android:id="@+id/goalSingleTransferConfirmationFragment"
+        android:name="com.engageft.feature.goals.GoalSingleTransferConfirmationFragment"
+        android:label="@string/GOAL_DETAIL_TRANSFER" />
 </navigation>

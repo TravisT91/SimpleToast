@@ -55,4 +55,20 @@
     <string name="GOAL_RESUME">resume</string>
     <string name="GOAL_ERROR_TITLE">This goal is past its end date</string>
     <string name="GOAL_ERROR_DESCRIPTION">To continue setting aside money in this goal, you must edit when you need it by. Tap to edit.</string>
+    <string name="GOAL_SINGLE_TRANSFER_HEADER">Transfer money toward this goal or back to your available balance.</string>
+    <string name="GOAL_SINGLE_TRANSFER_FROM_LABEL">From</string>
+    <string name="GOAL_SINGLE_TRANSFER_TO_LABEL">To</string>
+    <string name="GOAL_SINGLE_TRANSFER_AMOUNT_LABEL">How much</string>
+    <string name="GOAL_SINGLE_TRANSFER_INSUFFICIENT_FUNDS_MESSAGE">There isn\'t sufficient funds in your balance to transfer to this goal.</string>
+    <string name="GOAL_SINGLE_TRANSFER_FROM_SELECTION_TITLE">From account</string>
+    <string name="GOAL_SINGLE_TRANSFER_FROM_SELECTION_DESCRIPTION">Please select the account you would like to transfer money from.</string>
+    <string name="GOAL_SINGLE_TRANSFER_AMOUNT_ERROR_MESSAGE">Please enter a valid amount</string>
+    <string name="GOAL_SINGLE_TRANSFER_CONFIRMATION_TOWARD_GOAL_FORMAT">toward %s</string>
+    <string name="GOAL_SINGLE_TRANSFER_CONFIRMATION_TOWARD_GOAL_TEXT">Transfer this amount?</string>
+    <string name="GOAL_SINGLE_TRANSFER_CONFIRMATION_TOWARD_BALANCE">back to available balance</string>
+    <string name="GOAL_SINGLE_TRANSFER_CONFIRMATION_TOWARD_BALANCE_DESCRIPTION">Transferring this amount will affect the date that your goal is reached.</string>
+    <string name="GOAL_SINGLE_TRANSFER_CONFIRMATION_BUTTON">Transfer</string>
+    <string name="GOAL_SINGLE_TRANSFER_CONFIRMATION_GOAL_DELETE_SUBTITLE">If you choose not to delete your goal, we will keep it for you, however, it will be closed.</string>
+    <string name="GOAL_SINGLE_TRANSFER_CONFIRMATION_GOAL_DELETE_YES">Yes, delete</string>
+    <string name="GOAL_SINGLE_TRANSFER_CONFIRMATION_GOAL_DELETE_NO">No, keep this goal</string>
 </resources>

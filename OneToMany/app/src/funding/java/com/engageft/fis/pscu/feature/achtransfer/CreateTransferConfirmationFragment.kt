@@ -65,10 +65,8 @@ class CreateTransferConfirmationFragment: BaseEngagePageFragment() {
             }
         }
 
-        createTransferViewModel.navigationEventObservable.observe(this, Observer {
-            if (it == CreateTransferConfirmationViewModel.NavigationEvent.TRANSFER_SUCCESS) {
-                binding.root.findNavController().popBackStack(R.id.accountsAndTransfersListFragment, false)
-            }
+        createTransferViewModel.createTransferSuccessObservable.observe(viewLifecycleOwner, Observer {
+            binding.root.findNavController().popBackStack(R.id.accountsAndTransfersListFragment, false)
         })
 
         createTransferViewModel.dialogInfoObservable.observe(this, Observer {

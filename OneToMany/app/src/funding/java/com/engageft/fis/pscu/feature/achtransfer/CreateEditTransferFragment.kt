@@ -7,6 +7,7 @@ import android.view.MenuInflater
 import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
+import android.widget.TextView
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.navigation.findNavController
@@ -20,7 +21,6 @@ import com.engageft.fis.pscu.R
 import com.engageft.fis.pscu.config.EngageAppConfig
 import com.engageft.fis.pscu.databinding.FragmentCreateEditTransferBinding
 import com.engageft.fis.pscu.feature.BaseEngagePageFragment
-import com.engageft.fis.pscu.feature.DialogInfo
 import com.engageft.fis.pscu.feature.achtransfer.AccountsAndTransfersListFragment.Companion.SCHEDULED_LOAD_ID
 import com.engageft.fis.pscu.feature.branding.Palette
 import com.engageft.fis.pscu.feature.infoDialogGenericUnsavedChangesNewInstance
@@ -84,8 +84,8 @@ class CreateEditTransferFragment: BaseEngagePageFragment() {
 
                     createEditTransferViewModel.initScheduledLoads(scheduledLoadId)
                     deleteButtonLayout.visibility = View.VISIBLE
-                    titleTextView.visibility = View.GONE
-                    subTitleTextView.visibility = View.GONE
+                    headerTextView.visibility = View.GONE
+                    subHeaderTextView.visibility = View.GONE
 
                     deleteButtonLayout.setOnClickListener {
                         val infoDialog = InformationDialogFragment.newLotusInstance(title = getString(R.string.ach_bank_transfer_delete_transfer_title),
@@ -137,58 +137,55 @@ class CreateEditTransferFragment: BaseEngagePageFragment() {
             nextButton.setOnClickListener {
                 navigateToConfirmationScreen()
             }
+
+            createEditTransferViewModel.apply {
+
+                buttonStateObservable.observe(viewLifecycleOwner, Observer {
+                    when (it) {
+                        CreateEditTransferViewModel.ButtonState.SHOW -> binding.nextButton.visibility = View.VISIBLE
+                        CreateEditTransferViewModel.ButtonState.HIDE -> binding.nextButton.visibility = View.GONE
+                    }
+                    activity?.invalidateOptionsMenu()
+                })
+
+                fromAccountObservable.observe(viewLifecycleOwner, Observer {
+                    // format ACH bank name with last 4 digits
+                    fromAccount.set(AchAccountInfoUtils.accountDescriptionForDisplay(context!!, it))
+                })
+
+                toAccountObservable.observe(viewLifecycleOwner, Observer {
+                    // format Card Info with last four
+                    toAccount.set(String.format(getString(R.string.BANKACCOUNT_DESCRIPTION_FORMAT), it.name, it.lastFour))
+                })
+
+                deleteSuccessObservable.observe(viewLifecycleOwner, Observer {
+                    binding.root.findNavController().popBackStack(R.id.accountsAndTransfersListFragment, false)
+                })
+
+                isInErrorStateObservable.observe(viewLifecycleOwner, Observer { showError ->
+                    if (showError) {
+                        accountFromBottomSheet.isEnabled = false
+                        accountToBottomSheet.isEnabled = false
+                        amountInputWithLabel.isEnabled = false
+                        frequencyBottomSheet.isEnabled = false
+                        headerTextView.visibility = View.GONE
+                        subHeaderTextView.visibility = View.GONE
+
+                        errorStateLayout.visibility = View.VISIBLE
+                        val errorTitleTextView = errorStateLayout.findViewById<TextView>(R.id.titleTextView)
+                        val messageTextView = errorStateLayout.findViewById<TextView>(R.id.descriptionTextView)
+                        errorTitleTextView.text = getString(R.string.ach_bank_transfer_create_error_title)
+                        messageTextView.text = getString(R.string.ach_bank_transfer_create_error_message)
+
+                    }
+                })
+            }
         }
 
         upButtonOverrideProvider.setUpButtonOverride(navigationOverrideClickListener)
         backButtonOverrideProvider.setBackButtonOverride(navigationOverrideClickListener)
 
-        createEditTransferViewModel.apply {
-
-            buttonStateObservable.observe(this@CreateEditTransferFragment, Observer {
-                when (it) {
-                   CreateEditTransferViewModel.ButtonState.SHOW -> binding.nextButton.visibility = View.VISIBLE
-                   CreateEditTransferViewModel.ButtonState.HIDE -> binding.nextButton.visibility = View.GONE
-                }
-                activity?.invalidateOptionsMenu()
-            })
-
-            fromAccountObservable.observe(this@CreateEditTransferFragment, Observer {
-                // format ACH bank name with last 4 digits
-                fromAccount.set(AchAccountInfoUtils.accountDescriptionForDisplay(context!!, it))
-            })
-
-            toAccountObservable.observe(this@CreateEditTransferFragment, Observer {
-                // format Card Info with last four
-                toAccount.set(String.format(getString(R.string.BANKACCOUNT_DESCRIPTION_FORMAT), it.name, it.lastFour))
-            })
-
-            navigationEventObservable.observe(this@CreateEditTransferFragment, Observer {
-                binding.root.findNavController().popBackStack(R.id.accountsAndTransfersListFragment, false)
-            })
-
-            dialogInfoObservable.observe(this@CreateEditTransferFragment, Observer {
-                if (it.dialogType == DialogInfo.DialogType.OTHER) {
-                    promptAchIsNotAllowed()
-                }
-            })
-        }
-
         return binding.root
-    }
-
-    private fun promptAchIsNotAllowed() {
-        fragmentDelegate.showDialog(InformationDialogFragment.newLotusInstance(
-                message = getString(R.string.ach_bank_transfer_create_ach_alert_message),
-                buttonPositiveText = getString(R.string.dialog_information_ok_button),
-                listener = object : InformationDialogFragment.InformationDialogFragmentListener {
-                    override fun onDialogFragmentNegativeButtonClicked() {}
-
-                    override fun onDialogFragmentPositiveButtonClicked() {
-                        binding.root.findNavController().popBackStack()
-                    }
-
-                    override fun onDialogCancelled() {}
-                }))
     }
 
     override fun onCreateOptionsMenu(menu: Menu?, inflater: MenuInflater?) {

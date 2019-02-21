@@ -1,7 +1,7 @@
 package com.engageft.fis.pscu.feature.achtransfer
 
-import androidx.lifecycle.MutableLiveData
 import com.engageft.engagekit.EngageService
+import com.engageft.engagekit.aac.SingleLiveEvent
 import com.engageft.engagekit.model.ScheduledLoad
 import com.engageft.engagekit.rest.request.FundingFundAchAccountRequest
 import com.engageft.engagekit.rest.request.ScheduledLoadAchAddRequest
@@ -16,10 +16,6 @@ import org.joda.time.DateTime
 
 class CreateTransferConfirmationViewModel: BaseEngageViewModel() {
 
-    enum class NavigationEvent {
-        TRANSFER_SUCCESS
-    }
-
     var frequencyType = ""
     var amount = ""
     var scheduledDate1: DateTime? = null
@@ -27,7 +23,7 @@ class CreateTransferConfirmationViewModel: BaseEngageViewModel() {
     var achAccountInfoId = -1L
     var cardId = -1L
 
-    val navigationEventObservable: MutableLiveData<NavigationEvent> = MutableLiveData()
+    val createTransferSuccessObservable = SingleLiveEvent<Unit>()
 
     fun onCreateUpdateTransfer() {
         // create transfer
@@ -59,7 +55,7 @@ class CreateTransferConfirmationViewModel: BaseEngageViewModel() {
     }
 
     private fun submitScheduleLoad(scheduledLoad: ScheduledLoad, sessionId: String = "") {
-        progressOverlayShownObservable.value = true
+        dismissProgressOverlayImmediate()
 
         val request = ScheduledLoadAchAddRequest(
                 scheduledLoad,
@@ -75,22 +71,22 @@ class CreateTransferConfirmationViewModel: BaseEngageViewModel() {
                 observable.subscribeOn(Schedulers.io())
                         .observeOn(AndroidSchedulers.mainThread())
                         .subscribe({ response ->
-                            progressOverlayShownObservable.value = false
+                            dismissProgressOverlay()
                             if (response.isSuccess) {
                                 EngageService.getInstance().clearLoginAndDashboardResponses()
-                                navigationEventObservable.value = NavigationEvent.TRANSFER_SUCCESS
+                                createTransferSuccessObservable.call()
                             } else {
                                 handleBackendErrorForForms(response, "$TAG: creating a recurring transfer failed.")
                             }
                         }, { e ->
-                            progressOverlayShownObservable.value = false
+                            dismissProgressOverlay()
                             handleThrowable(e)
                         })
         )
     }
 
     private fun executeOneTimeAchLoad(sessionId: String = "") {
-        progressOverlayShownObservable.value = true
+        showProgressOverlayImmediate()
 
         val request = FundingFundAchAccountRequest(
                 achAccountInfoId,
@@ -103,15 +99,15 @@ class CreateTransferConfirmationViewModel: BaseEngageViewModel() {
                         .subscribeOn(Schedulers.io())
                         .observeOn(AndroidSchedulers.mainThread())
                         .subscribe({ response ->
-                            progressOverlayShownObservable.value = false
+                            dismissProgressOverlay()
                             if (response.isSuccess) {
                                 EngageService.getInstance().clearLoginAndDashboardResponses()
-                                navigationEventObservable.value = NavigationEvent.TRANSFER_SUCCESS
+                                createTransferSuccessObservable.call()
                             } else {
                                 handleBackendErrorForForms(response, "$TAG: creating one-time transfer failed.")
                             }
                         }, { e ->
-                            progressOverlayShownObservable.value = false
+                            dismissProgressOverlay()
                             handleThrowable(e)
                         })
         )

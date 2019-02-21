@@ -124,7 +124,7 @@ class AccountsAndTransfersListRecyclerViewAdapter(
                         if (achAccountInfo.achAccountId == EMPTY_LIST_ACCOUNT_ID) {
                             achAccountClickListener.onAddBankAccountClicked()
                         } else {
-                            achAccountClickListener.onAchAccounDetailClicked(achAccountInfo.achAccountId)
+                            achAccountClickListener.onAchAccountDetailClicked(achAccountInfo.achAccountId)
                         }
                     }
                 }
@@ -171,7 +171,7 @@ class AccountsAndTransfersListRecyclerViewAdapter(
         }
     }
 
-    fun setButtonTextAndVisibility(text: String, showButton: Boolean) {
+    fun setCreateTransferButtonState(text: String, showButton: Boolean) {
         buttonText = text
         shouldShowButton = showButton
         notifyItemRangeChanged(mutableList.size, 1)
@@ -189,6 +189,18 @@ class AccountsAndTransfersListRecyclerViewAdapter(
     fun removeHeaderAndNotifyAdapter() {
         val oldList = mutableList.toList()
         removeHeader()
+        DiffUtil.calculateDiff(CustomDiffUtil(oldList, mutableList))
+                .dispatchUpdatesTo(this)
+    }
+
+    fun removeAchAccountSection() {
+        val oldList = mutableList.toList()
+        if (mutableList.size > 0) { // removes item if already in list
+            val first = mutableList[0]
+            if (first is AchAccountInfo) {
+                mutableList.removeAt(0)
+            }
+        }
         DiffUtil.calculateDiff(CustomDiffUtil(oldList, mutableList))
                 .dispatchUpdatesTo(this)
     }
@@ -383,7 +395,7 @@ class AccountsAndTransfersListRecyclerViewAdapter(
     }
 
     interface AchAccountInfoClickListener {
-        fun onAchAccounDetailClicked(achAccountInfoId: Long)
+        fun onAchAccountDetailClicked(achAccountInfoId: Long)
         fun onAddBankAccountClicked()
     }
 

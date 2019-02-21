@@ -4,6 +4,7 @@ import androidx.databinding.Observable
 import androidx.databinding.ObservableField
 import androidx.lifecycle.MutableLiveData
 import com.engageft.engagekit.EngageService
+import com.engageft.engagekit.aac.SingleLiveEvent
 import com.engageft.engagekit.model.ScheduledLoad
 import com.engageft.engagekit.rest.request.ScheduledLoadRequest
 import com.engageft.engagekit.utils.LoginResponseUtils
@@ -32,18 +33,14 @@ class CreateEditTransferViewModel: BaseEngageViewModel() {
         HIDE
     }
 
-    enum class NavigationEvent {
-        DELETE_SUCCESS,
-        NONE
-    }
-
     data class CardInfo(var cardId: Long, var name: String, var lastFour: String)
     val fromAccountObservable = MutableLiveData<AchAccountInfo>()
     val toAccountObservable = MutableLiveData<CardInfo>()
 
-    val navigationEventObservable = MutableLiveData<NavigationEvent>()
+    val deleteSuccessObservable = SingleLiveEvent<Unit>()
 
     val buttonStateObservable: MutableLiveData<ButtonState> = MutableLiveData()
+    val isInErrorStateObservable = MutableLiveData<Boolean>()
 
     val fromAccount = ObservableField("")
     val toAccount  = ObservableField("")
@@ -123,38 +120,37 @@ class CreateEditTransferViewModel: BaseEngageViewModel() {
             }
         })
 
-        progressOverlayShownObservable.value = true
+        showProgressOverlayDelayed()
         compositeDisposable.add(EngageService.getInstance().loginResponseAsObservable
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe({ response ->
-                    progressOverlayShownObservable.value = false
+                    dismissProgressOverlay()
                     if (response is LoginResponse) {
-                        val isAchFundingAllowed = LoginResponseUtils.getCurrentAccountInfo(response).accountPermissionsInfo.isFundingAchEnabled
-                        if (isAchFundingAllowed) {
-                            //TODO(aHashimi): populate the To and From account fields since multiple cards and ACH out is not supported.
-                            if (response.achAccountList.isNotEmpty()) {
-                                // multiple ACH Banks aren't allowed
-                                achAccountInfo = response.achAccountList[0]
-                                fromAccountObservable.value = achAccountInfo
-                            }
-                            currentCard = LoginResponseUtils.getCurrentCard(response)
-                            toAccountObservable.value = getCardInfo(currentCard!!)
-                        } else {
-                            dialogInfoObservable.value = DialogInfo(dialogType = DialogInfo.DialogType.OTHER)
+                        if (response.achAccountList.isNotEmpty()) {
+                            // multiple ACH Banks aren't allowed
+                            achAccountInfo = response.achAccountList[0]
+                            fromAccountObservable.value = achAccountInfo
+                        }
+
+                        currentCard = LoginResponseUtils.getCurrentCard(response)
+
+                        currentCard?.let { debitCard ->
+                            toAccountObservable.value = getCardInfo(debitCard)
+                            isInErrorStateObservable.value = !debitCard.cardPermissionsInfo.isFundingAchAllowable
                         }
                     } else {
                         handleUnexpectedErrorResponse(response)
                     }
                 }, { e ->
-                    progressOverlayShownObservable.value = false
+                    dismissProgressOverlay()
                     handleThrowable(e)
                 })
         )
     }
 
     fun initScheduledLoads(scheduledLoadId: Long) {
-        progressOverlayShownObservable.value = true
+        showProgressOverlayDelayed()
         compositeDisposable.add(EngageService.getInstance().loginResponseAsObservable
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
@@ -166,7 +162,7 @@ class CreateEditTransferViewModel: BaseEngageViewModel() {
                         dialogInfoObservable.value = DialogInfo()
                     }
                 }, { e ->
-                    progressOverlayShownObservable.value = false
+                    dismissProgressOverlay()
                     handleThrowable(e)
                 })
         )
@@ -178,7 +174,7 @@ class CreateEditTransferViewModel: BaseEngageViewModel() {
                         .subscribeOn(Schedulers.io())
                         .observeOn(AndroidSchedulers.mainThread())
                         .subscribe({ response ->
-                            progressOverlayShownObservable.value = false
+                            dismissProgressOverlay()
                             if (response.isSuccess && response is ScheduledLoadsResponse) {
                                 for (scheduledLoad in ScheduledLoadUtils.getScheduledLoads(response)) {
                                     if (scheduledLoad.scheduledLoadId == scheduledLoadId) {
@@ -190,7 +186,7 @@ class CreateEditTransferViewModel: BaseEngageViewModel() {
                                 handleUnexpectedErrorResponse(response)
                             }
                         }, { e ->
-                            progressOverlayShownObservable.value = false
+                            dismissProgressOverlay()
                             handleThrowable(e)
                         })
         )
@@ -212,7 +208,7 @@ class CreateEditTransferViewModel: BaseEngageViewModel() {
     }
 
     fun onDeleteScheduledLoad() {
-        progressOverlayShownObservable.value = true
+        showProgressOverlayImmediate()
 
         currentScheduledLoad?.let { scheduledLoad ->
             val request = ScheduledLoadRequest(scheduledLoad.scheduledLoadId)
@@ -220,18 +216,12 @@ class CreateEditTransferViewModel: BaseEngageViewModel() {
                 if (scheduledLoad.isHasDuplicate) {
                     val request2 = ScheduledLoadRequest(scheduledLoad.scheduledLoadIdDup)
                     postCancelScheduledLoad(request2.fieldMap) { // successful
-
                         EngageService.getInstance().storageManager.clearForLoginWithDataLoad(false)
-
-                        navigationEventObservable.value = NavigationEvent.DELETE_SUCCESS
-                        navigationEventObservable.value = NavigationEvent.NONE
+                        deleteSuccessObservable.call()
                     }
                 } else { // Does not have duplicate
-
                     EngageService.getInstance().storageManager.clearForLoginWithDataLoad(false)
-
-                    navigationEventObservable.value = NavigationEvent.DELETE_SUCCESS
-                    navigationEventObservable.value = NavigationEvent.NONE
+                    deleteSuccessObservable.call()
                 }
 
                 EngageService.getInstance().storageManager.clearForLoginWithDataLoad(false)
@@ -314,11 +304,11 @@ class CreateEditTransferViewModel: BaseEngageViewModel() {
                     if (response.isSuccess) {
                         cancelLoadSuccessObserver()
                     } else {
-                        progressOverlayShownObservable.value = false
+                        dismissProgressOverlay()
                         handleUnexpectedErrorResponse(response)
                     }
                 }, { e ->
-                    progressOverlayShownObservable.value = false
+                    dismissProgressOverlay()
                     handleThrowable(e)
                 })
         )
