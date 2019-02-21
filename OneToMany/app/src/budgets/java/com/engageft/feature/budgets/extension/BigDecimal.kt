@@ -19,6 +19,10 @@ fun BigDecimal.isLessThan(other: BigDecimal): Boolean {
     return this.compareTo(other) == -1
 }
 
+fun BigDecimal.isLessThanOrEqualTo(other: BigDecimal): Boolean {
+    return isLessThan(other) || isEqualTo(other)
+}
+
 fun BigDecimal.isGreaterThan(other: BigDecimal): Boolean {
     return this.compareTo(other) == 1
 }
