@@ -124,9 +124,9 @@ object ScheduledLoadUtils {
     fun getFrequencyDisplayStringForType(context: Context, type: String): String {
         return when (type) {
             ScheduledLoad.SCHED_LOAD_TYPE_ONCE -> context.getString(R.string.TRANSFER_ONCE_TEXT)
-            ScheduledLoad.SCHED_LOAD_TYPE_MONTHLY -> context.getString(R.string.TRANSFER_MONTHLY_TEXT)
-            ScheduledLoad.SCHED_LOAD_TYPE_TWICE_MONTHLY -> context.getString(R.string.TRANSFER_TWICE_MONTHLY_TEXT)
             ScheduledLoad.SCHED_LOAD_TYPE_WEEKLY -> context.getString(R.string.TRANSFER_WEEKLY_TEXT)
+            ScheduledLoad.SCHED_LOAD_TYPE_ALT_WEEKLY -> context.getString(R.string.TRANSFER_WEEKLY_ALTERNATE_TEXT)
+            ScheduledLoad.SCHED_LOAD_TYPE_MONTHLY -> context.getString(R.string.TRANSFER_MONTHLY_TEXT)
             else -> context.getString(R.string.TRANSFER_ONCE_TEXT)
         }
     }
@@ -135,7 +135,7 @@ object ScheduledLoadUtils {
         return when (displayString) {
             context.getString(R.string.TRANSFER_ONCE_TEXT) -> ScheduledLoad.SCHED_LOAD_TYPE_ONCE
             context.getString(R.string.TRANSFER_MONTHLY_TEXT) -> ScheduledLoad.SCHED_LOAD_TYPE_MONTHLY
-            context.getString(R.string.TRANSFER_TWICE_MONTHLY_TEXT) -> ScheduledLoad.SCHED_LOAD_TYPE_TWICE_MONTHLY
+            context.getString(R.string.TRANSFER_WEEKLY_ALTERNATE_TEXT) -> ScheduledLoad.SCHED_LOAD_TYPE_ALT_WEEKLY
             context.getString(R.string.TRANSFER_WEEKLY_TEXT) -> ScheduledLoad.SCHED_LOAD_TYPE_WEEKLY
             else -> ScheduledLoad.SCHED_LOAD_TYPE_ALT_WEEKLY
         }
@@ -154,8 +154,8 @@ object ScheduledLoadUtils {
         val displayStrings = ArrayList<String>()
         displayStrings.add(getFrequencyDisplayStringForType(context, ScheduledLoad.SCHED_LOAD_TYPE_ONCE))
         displayStrings.add(getFrequencyDisplayStringForType(context, ScheduledLoad.SCHED_LOAD_TYPE_WEEKLY))
+        displayStrings.add(getFrequencyDisplayStringForType(context, ScheduledLoad.SCHED_LOAD_TYPE_ALT_WEEKLY))
         displayStrings.add(getFrequencyDisplayStringForType(context, ScheduledLoad.SCHED_LOAD_TYPE_MONTHLY))
-        displayStrings.add(getFrequencyDisplayStringForType(context, ScheduledLoad.SCHED_LOAD_TYPE_TWICE_MONTHLY))
 
         return displayStrings
     }
@@ -204,27 +204,27 @@ object ScheduledLoadUtils {
     fun getTransferDetailSimpleText(context: Context, scheduledLoad: ScheduledLoad): String {
         val nextRunDate = BackendDateTimeUtils.parseDateTimeFromIso8601String(scheduledLoad.isoNextRunDate)
 
-        if (ScheduledLoad.SCHED_LOAD_TYPE_MONTHLY == scheduledLoad.typeString) {
-            if (scheduledLoad.isHasDuplicate) {
+        when {
+            ScheduledLoad.SCHED_LOAD_TYPE_TWICE_MONTHLY == scheduledLoad.typeString -> {
+                val scheduledDate = BackendDateTimeUtils.getDateTimeForMDYString(scheduledLoad.scheduleDate)
+                val scheduledDate2 = BackendDateTimeUtils.getDateTimeForMDYString(scheduledLoad.scheduleDate2)
+                return String.format(context.getString(R.string.TRANSFER_TWICE_MONTHLY_SIMPLE_LOAD_DESCRIPTION),
+                        DisplayDateTimeUtils.getDayOrdinal(context, scheduledDate!!),
+                        DisplayDateTimeUtils.getDayOrdinal(context, scheduledDate2!!))
+            }
+            ScheduledLoad.SCHED_LOAD_TYPE_MONTHLY == scheduledLoad.typeString -> return if (scheduledLoad.isHasDuplicate) {
                 // show as twice a month
                 val nextRunDateDup = BackendDateTimeUtils.parseDateTimeFromIso8601String(scheduledLoad.isoNextRunDateDup)
-                return String.format(context.getString(R.string.TRANSFER_TWICE_MONTHLY_SIMPLE_LOAD_DESCRIPTION),
+                String.format(context.getString(R.string.TRANSFER_TWICE_MONTHLY_SIMPLE_LOAD_DESCRIPTION),
                         DisplayDateTimeUtils.getDayOrdinal(context, nextRunDate!!),
                         DisplayDateTimeUtils.getDayOrdinal(context, nextRunDateDup!!))
             } else {
-                return String.format(context.getString(R.string.TRANSFER_MONTHLY_SIMPLE_LOAD_DESCRIPTION), DisplayDateTimeUtils.getDayOrdinal(context, nextRunDate!!))
+                String.format(context.getString(R.string.TRANSFER_MONTHLY_SIMPLE_LOAD_DESCRIPTION), DisplayDateTimeUtils.getDayOrdinal(context, nextRunDate!!))
             }
-        } else if (ScheduledLoad.SCHED_LOAD_TYPE_TWICE_MONTHLY == scheduledLoad.typeString) {
-            val scheduledDate = BackendDateTimeUtils.getDateTimeForMDYString(scheduledLoad.scheduleDate)
-            val scheduledDate2 = BackendDateTimeUtils.getDateTimeForMDYString(scheduledLoad.scheduleDate2)
-            return String.format(context.getString(R.string.TRANSFER_TWICE_MONTHLY_SIMPLE_LOAD_DESCRIPTION),
-                    DisplayDateTimeUtils.getDayOrdinal(context, scheduledDate!!),
-                    DisplayDateTimeUtils.getDayOrdinal(context, scheduledDate2!!))
-        } else if (ScheduledLoad.SCHED_LOAD_TYPE_WEEKLY == scheduledLoad.typeString) {
-            return String.format(context.getString(R.string.TRANSFER_WEEKLY_SIMPLE_LOAD_DESCRIPTION), nextRunDate!!.dayOfWeek().getAsText(Locale.getDefault()))
+            ScheduledLoad.SCHED_LOAD_TYPE_ALT_WEEKLY == scheduledLoad.typeString -> return String.format(context.getString(R.string.TRANSFER_ALT_WEEKLY_SIMPLE_LOAD_DESCRIPTION), nextRunDate!!.dayOfWeek().getAsText(Locale.getDefault()))
+            ScheduledLoad.SCHED_LOAD_TYPE_WEEKLY == scheduledLoad.typeString -> return String.format(context.getString(R.string.TRANSFER_WEEKLY_SIMPLE_LOAD_DESCRIPTION), nextRunDate!!.dayOfWeek().getAsText(Locale.getDefault()))
+            else -> return ""
         }
-
-        return ""
     }
 
     fun getAccountDetailText(context: Context, scheduledLoad: ScheduledLoad, loginResponse: LoginResponse): String {
