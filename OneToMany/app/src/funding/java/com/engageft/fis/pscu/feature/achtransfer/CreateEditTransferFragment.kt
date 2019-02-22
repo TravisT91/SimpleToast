@@ -27,6 +27,7 @@ import org.joda.time.DateTime
 import utilGen1.AchAccountInfoUtils
 import utilGen1.DisplayDateTimeUtils
 import utilGen1.ScheduledLoadUtils
+import utilGen1.StringUtils
 
 class CreateEditTransferFragment: BaseEngagePageFragment() {
 
@@ -79,7 +80,6 @@ class CreateEditTransferFragment: BaseEngagePageFragment() {
 
                 toolbarController.setToolbarTitle(getString(R.string.ach_bank_transfer_edit_transfer_screen_title))
 
-//                    createEditTransferViewModel.initScheduledLoads(scheduledLoadId)
                 deleteButtonLayout.visibility = View.VISIBLE
                 headerTextView.visibility = View.GONE
                 subHeaderTextView.visibility = View.GONE
@@ -143,7 +143,7 @@ class CreateEditTransferFragment: BaseEngagePageFragment() {
 
                 fromAccountObservable.observe(viewLifecycleOwner, Observer { fundSourceList ->
                     // format ACH bank name with last 4 digits
-                    val fromOptionsList = mutableListOf<CharSequence>()
+                    val fromOptionsList = ArrayList<CharSequence>()
                     var formattedString: String
                     fundSourceList.forEach { source ->
                         when (source.sourceType) {
@@ -164,15 +164,26 @@ class CreateEditTransferFragment: BaseEngagePageFragment() {
                         accountFromBottomSheet.isEnabled = false
                         accountFromBottomSheet.inputText = fromOptionsList[0]
                     } else {
-                        if (createEditTransferViewModel.formMode == CreateEditTransferViewModel.FormMode.EDIT) {
-
-                        }
+                        accountFromBottomSheet.dialogOptions = fromOptionsList
                     }
                 })
 
-                toAccountObservable.observe(viewLifecycleOwner, Observer {
+                toAccountObservable.observe(viewLifecycleOwner, Observer { cardList ->
                     // format Card Info with last four
-//                    toAccount.set(String.format(getString(R.string.BANKACCOUNT_DESCRIPTION_FORMAT), it.name, it.lastFour))
+                    val toOptionsList = ArrayList<CharSequence>()
+                    cardList.forEach { cardInfoModel ->
+                        toOptionsList.add(
+                                String.format(getString(R.string.BANKACCOUNT_DESCRIPTION_WITH_BALANCE_FORMAT),
+                                cardInfoModel.name, cardInfoModel.lastFour,
+                                StringUtils.formatCurrencyStringWithFractionDigits(cardInfoModel.balance.toString(), true)))
+                    }
+
+                    if (toOptionsList.isNotEmpty() && toOptionsList.size == 1) {
+                        accountToBottomSheet.isEnabled = false
+                        accountToBottomSheet.inputText = toOptionsList[0]
+                    } else {
+                        accountToBottomSheet.dialogOptions = toOptionsList
+                    }
                 })
 
                 deleteSuccessObservable.observe(viewLifecycleOwner, Observer {

@@ -232,11 +232,7 @@ class CreateEditTransferViewModel(val scheduledLoadId: Long): BaseEngageViewMode
                 loginResponse.ccAccountList.find { ccAccountInfo ->
                     scheduledLoad.ccAccountId.toLong() == ccAccountInfo.ccAccountId
                 }?.let { ccAccountInfo ->
-                    fundSourceList.add(AccountFundSourceModel(
-                            cardId = ccAccountInfo.ccAccountId,
-                            lastFour = ccAccountInfo.lastDigits,
-                            sourceType = FundSourceType.DEBIT_CREDIT_CARD
-                    ))
+                    fundSourceList.add(getFundSourceModelForCcAccount(ccAccountInfo))
                 } ?: run {
                     throw IllegalStateException("CcAccountId not found")
                 }
@@ -244,17 +240,38 @@ class CreateEditTransferViewModel(val scheduledLoadId: Long): BaseEngageViewMode
                 loginResponse.achAccountList.find { achAccountInfo ->
                     scheduledLoad.achAccountId.toLong() == achAccountInfo.achAccountId
                 }?.let { achAccountInfo ->
-                    fundSourceList.add(AccountFundSourceModel(
-                            cardId = achAccountInfo.achAccountId,
-                            name = achAccountInfo.bankName,
-                            lastFour = achAccountInfo.accountLastDigits,
-                            sourceType = FundSourceType.ACH_ACCOUNT))
+                    fundSourceList.add(getFundSourceModelForAchAccount(achAccountInfo))
                 }
             }
 
-
+            // fragment sets/disables To and From fields.
             toAccountObservable.value = cardInfoModelList
             fromAccountObservable.value = fundSourceList
+
+            amount.set(scheduledLoad.amount)
+
+            val dateTime = DisplayDateTimeUtils.shortDateFormatter.parseDateTime(scheduledLoad.scheduleDate)
+
+            when (scheduledLoad.typeString) {
+                ScheduledLoad.SCHED_LOAD_TYPE_WEEKLY -> {
+                    frequency.set(FREQUENCY_WEEKLY)
+                    dayOfWeekShow.set(true)
+                    dayOfWeek.set(dateTime.dayOfWeek().asText)
+                }
+                ScheduledLoad.SCHED_LOAD_TYPE_MONTHLY -> {
+                    frequency.set(FREQUENCY_MONTHLY)
+                    date1Show.set(true)
+                    date1.set(DisplayDateTimeUtils.getMediumFormatted(dateTime))
+                }
+                ScheduledLoad.SCHED_LOAD_TYPE_TWICE_MONTHLY -> {
+                    frequency.set(FREQUENCY_BIMONTHLY)
+                    date1Show.set(true)
+                    date2Show.set(true)
+                    date1.set(DisplayDateTimeUtils.getMediumFormatted(dateTime))
+                    val dateTime2 = DisplayDateTimeUtils.shortDateFormatter.parseDateTime(scheduledLoad.scheduleDate2)
+                    date2.set(DisplayDateTimeUtils.getMediumFormatted(dateTime2))
+                }
+            }
         }
     }
 
@@ -278,16 +295,12 @@ class CreateEditTransferViewModel(val scheduledLoadId: Long): BaseEngageViewMode
 
             loginResponse.achAccountList.forEach { achAccountInfo ->
                 if (achAccountInfo.achAccountStatus == AchAccountStatus.VERIFIED) {
-                    getFundSourceModel(fundSourceList, achAccountInfo)
+                    fundSourceList.add(getFundSourceModelForAchAccount(achAccountInfo))
                 }
             }
 
             loginResponse.ccAccountList.forEach { ccAccountInfo ->
-                fundSourceList.add(AccountFundSourceModel(
-                        cardId = ccAccountInfo.ccAccountId,
-                        lastFour = ccAccountInfo.lastDigits,
-                        sourceType = FundSourceType.DEBIT_CREDIT_CARD
-                ))
+                fundSourceList.add(getFundSourceModelForCcAccount(ccAccountInfo))
             }
 
             toAccountObservable.value = cardInfoModelList
@@ -295,12 +308,19 @@ class CreateEditTransferViewModel(val scheduledLoadId: Long): BaseEngageViewMode
         }
     }
 
-    private fun getFundSourceModel(achAccountInfo: AchAccountInfo) {
-        fundSourceList.add(AccountFundSourceModel(
+    private fun getFundSourceModelForAchAccount(achAccountInfo: AchAccountInfo): AccountFundSourceModel {
+        return AccountFundSourceModel(
                 cardId = achAccountInfo.achAccountId,
                 name = achAccountInfo.bankName,
                 lastFour = achAccountInfo.accountLastDigits,
-                sourceType = FundSourceType.ACH_ACCOUNT))
+                sourceType = FundSourceType.ACH_ACCOUNT)
+    }
+
+    private fun getFundSourceModelForCcAccount(ccAccountInfo: CcAccountInfo): AccountFundSourceModel {
+        return AccountFundSourceModel(
+                cardId = ccAccountInfo.ccAccountId,
+                lastFour = ccAccountInfo.lastDigits,
+                sourceType = FundSourceType.DEBIT_CREDIT_CARD)
     }
 
     fun updateButtonState() {
@@ -336,35 +356,6 @@ class CreateEditTransferViewModel(val scheduledLoadId: Long): BaseEngageViewMode
                 }
 
                 EngageService.getInstance().storageManager.clearForLoginWithDataLoad(false)
-            }
-        }
-    }
-
-    private fun populateFields(scheduledLoad: ScheduledLoad) {
-        currentScheduledLoad = scheduledLoad
-
-        amount.set(scheduledLoad.amount)
-
-        val dateTime = DisplayDateTimeUtils.shortDateFormatter.parseDateTime(scheduledLoad.scheduleDate)
-
-        when (scheduledLoad.typeString) {
-            ScheduledLoad.SCHED_LOAD_TYPE_WEEKLY -> {
-                frequency.set(FREQUENCY_WEEKLY)
-                dayOfWeekShow.set(true)
-                dayOfWeek.set(dateTime.dayOfWeek().asText)
-            }
-            ScheduledLoad.SCHED_LOAD_TYPE_MONTHLY -> {
-                frequency.set(FREQUENCY_MONTHLY)
-                date1Show.set(true)
-                date1.set(DisplayDateTimeUtils.getMediumFormatted(dateTime))
-            }
-            ScheduledLoad.SCHED_LOAD_TYPE_TWICE_MONTHLY -> {
-                frequency.set(FREQUENCY_BIMONTHLY)
-                date1Show.set(true)
-                date2Show.set(true)
-                date1.set(DisplayDateTimeUtils.getMediumFormatted(dateTime))
-                val dateTime2 = DisplayDateTimeUtils.shortDateFormatter.parseDateTime(scheduledLoad.scheduleDate2)
-                date2.set(DisplayDateTimeUtils.getMediumFormatted(dateTime2))
             }
         }
     }

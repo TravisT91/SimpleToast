@@ -49,6 +49,7 @@
 
     <!-- ACH Bank Transfer -->
     <string name="BANKACCOUNT_DESCRIPTION_FORMAT">%1$s (…%2$s)</string>
+    <string name="BANKACCOUNT_DESCRIPTION_WITH_BALANCE_FORMAT">%1$s (…%2$s) - %3$s</string>
     <string name="BANKACCOUNT_DESCRIPTION">Account</string>
     <string name="BANKACCOUNT_NAME_UNKNOWN">Unknown</string>
     <string name="TEXT_CHECKING">Checking</string>
