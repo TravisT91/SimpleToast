@@ -17,14 +17,11 @@ import com.ob.ws.dom.utility.AchAccountInfo
 import com.ob.ws.dom.utility.AchLoadInfo
 import org.joda.time.DateTime
 import utilGen1.DisplayDateTimeUtils
-import java.util.*
+import java.util.Locale
 
 /**
- * AccountsAndTransfersListRecyclerViewAdapter
- * </p>
- * RecyclerView adapter that displays different UI states based on user's ACH bank accounts, and transfers lists.
- * </p>
  * Created by Atia Hashimi 12/14/18
+ * Refactored by Joey Hutchins 2/21/19
  * Copyright (c) 2018 Engage FT. All rights reserved.
  */
 class AccountsAndTransfersListRecyclerViewAdapter(
@@ -38,8 +35,6 @@ class AccountsAndTransfersListRecyclerViewAdapter(
         const val VIEW_TYPE_CREDIT_DEBIT = 5
         const val VIEW_TYPE_TRANSFER = 6
         const val VIEW_TYPE_CREATE_TRANSFER = 7
-
-        const val EMPTY_LIST_ACCOUNT_ID: Long = 0L
     }
 
     private var items = listOf<SecondaryUserListItem>()
@@ -223,7 +218,7 @@ class AccountsAndTransfersListRecyclerViewAdapter(
                 }
             }
             is AccountsAndTransfersViewHolder.CreateTransferViewHolder -> {
-
+                // Nothing to do.
             }
         }
     }
@@ -234,139 +229,139 @@ class AccountsAndTransfersListRecyclerViewAdapter(
 //        DiffUtil.calculateDiff(SecondaryUserListRecyclerViewAdapter.SecondaryUserDiffUtil(oldList, items)).dispatchUpdatesTo(this)
     }
 
-    fun setCreateTransferButtonState(text: String, showButton: Boolean) {
-        buttonText = text
-        shouldShowButton = showButton
-        notifyItemRangeChanged(mutableList.size, 1)
-    }
-
-    fun setAccountHeaderData(headerText: String, headerSubText: String) {
-        val oldList = mutableList.toList()
-        removeHeader()
-        val pair = HeaderTextPair(headerText, headerSubText)
-        mutableList.add(0, pair)
-        DiffUtil.calculateDiff(CustomDiffUtil(oldList, mutableList))
-                .dispatchUpdatesTo(this)
-    }
-
-    fun removeHeaderAndNotifyAdapter() {
-        val oldList = mutableList.toList()
-        removeHeader()
-        DiffUtil.calculateDiff(CustomDiffUtil(oldList, mutableList))
-                .dispatchUpdatesTo(this)
-    }
-
-    fun removeAchAccountSection() {
-        val oldList = mutableList.toList()
-        if (mutableList.size > 0) { // removes item if already in list
-            val first = mutableList[0]
-            if (first is AchAccountInfo) {
-                mutableList.removeAt(0)
-            }
-        }
-        DiffUtil.calculateDiff(CustomDiffUtil(oldList, mutableList))
-                .dispatchUpdatesTo(this)
-    }
-
-    fun setAchAccountData(accountInfoList: List<AchAccountInfo>) {
-        val oldList = mutableList.toList()
-        var hasHeader = false
-        if (mutableList.size > 0) { // checks if header exists
-            val first = mutableList[0]
-            if (first is HeaderTextPair) {
-                hasHeader = true
-            }
-        }
-        val beginPosition = if (hasHeader) 1 else 0
-        if (mutableList.size > beginPosition) { // removes items if already in list
-            mutableList.removeAll { it is AchAccountInfo }
-        }
-
-        // check if list is empty, which means an AchAccountInfo doesn't exist
-        if (accountInfoList.isEmpty()) {
-            val placeholder = AchAccountInfo()
-            placeholder.achAccountId = EMPTY_LIST_ACCOUNT_ID
-            mutableList.add(beginPosition, placeholder)
-        } else {
-            mutableList.addAll(beginPosition, accountInfoList)
-        }
-        DiffUtil.calculateDiff(CustomDiffUtil(oldList, mutableList))
-                .dispatchUpdatesTo(this)
-    }
-
-    fun setScheduledLoadData(header: String, scheduledLoadList: List<ScheduledLoad>) {
-        val oldList = mutableList.toList()
-        // removes pre-existing items
-        removeExistingWithLabelItem<ScheduledLoad>()
-
-        var insertPosition = mutableList.size
-        if (scheduledLoadList.isNotEmpty()) {
-            // adds new data. scheduledLoad is added after AchAccountInfo
-            mutableList.forEachIndexed { index, any ->
-                if (any is HeaderTextPair || any is AchAccountInfo) {
-                    insertPosition = index + 1
-                }
-            }
-            mutableList.add(insertPosition, header)
-            mutableList.addAll(insertPosition + 1 , scheduledLoadList)
-        }
-        DiffUtil.calculateDiff(CustomDiffUtil(oldList, mutableList))
-                .dispatchUpdatesTo(this)
-    }
-
-    fun setHistoricalLoadData(header: String, historicalLoadList: List<AchLoadInfo>) {
-        val oldList = mutableList.toList()
-        // removes pre-existing items
-        removeExistingWithLabelItem<AchLoadInfo>()
-
-        val insertPosition = mutableList.size
-
-        if (historicalLoadList.isNotEmpty()) {
-            mutableList.add(insertPosition, header)
-            // it's always added to the end of adapter list
-            mutableList.addAll(insertPosition + 1 , historicalLoadList)
-        }
-
-        DiffUtil.calculateDiff(CustomDiffUtil(oldList, mutableList))
-                .dispatchUpdatesTo(this)
-    }
-
-    private inline fun <reified T> removeExistingWithLabelItem() {
-        var existingTransferLoadBegin = -1
-        kotlin.run search@{ //label to exit loop early
-            mutableList.forEachIndexed { index, any ->
-                if (any is T) {
-                    if (existingTransferLoadBegin == -1) {
-                        existingTransferLoadBegin = index
-                        return@search
-                    }
-                }
-            }
-        }
-        mutableList.removeAll { it is T }
-
-        // remove old label section
-        kotlin.run search@{
-            if (existingTransferLoadBegin != -1) {
-                mutableList.forEachIndexed { index, any ->
-                    // label found is the above the list items being removed
-                    if (any is String && index < existingTransferLoadBegin) {
-                        mutableList.removeAt(existingTransferLoadBegin - 1)
-                        return@search
-                    }
-                }
-            }
-        }
-    }
-
-    private fun removeHeader() {
-        if (mutableList.size > 0) { // removes item if already in list
-            val first = mutableList[0]
-            if (first is HeaderTextPair) {
-                mutableList.removeAt(0)
-            }
-        }
-    }
+//    fun setCreateTransferButtonState(text: String, showButton: Boolean) {
+//        buttonText = text
+//        shouldShowButton = showButton
+//        notifyItemRangeChanged(mutableList.size, 1)
+//    }
+//
+//    fun setAccountHeaderData(headerText: String, headerSubText: String) {
+//        val oldList = mutableList.toList()
+//        removeHeader()
+//        val pair = HeaderTextPair(headerText, headerSubText)
+//        mutableList.add(0, pair)
+//        DiffUtil.calculateDiff(CustomDiffUtil(oldList, mutableList))
+//                .dispatchUpdatesTo(this)
+//    }
+//
+//    fun removeHeaderAndNotifyAdapter() {
+//        val oldList = mutableList.toList()
+//        removeHeader()
+//        DiffUtil.calculateDiff(CustomDiffUtil(oldList, mutableList))
+//                .dispatchUpdatesTo(this)
+//    }
+//
+//    fun removeAchAccountSection() {
+//        val oldList = mutableList.toList()
+//        if (mutableList.size > 0) { // removes item if already in list
+//            val first = mutableList[0]
+//            if (first is AchAccountInfo) {
+//                mutableList.removeAt(0)
+//            }
+//        }
+//        DiffUtil.calculateDiff(CustomDiffUtil(oldList, mutableList))
+//                .dispatchUpdatesTo(this)
+//    }
+//
+//    fun setAchAccountData(accountInfoList: List<AchAccountInfo>) {
+//        val oldList = mutableList.toList()
+//        var hasHeader = false
+//        if (mutableList.size > 0) { // checks if header exists
+//            val first = mutableList[0]
+//            if (first is HeaderTextPair) {
+//                hasHeader = true
+//            }
+//        }
+//        val beginPosition = if (hasHeader) 1 else 0
+//        if (mutableList.size > beginPosition) { // removes items if already in list
+//            mutableList.removeAll { it is AchAccountInfo }
+//        }
+//
+//        // check if list is empty, which means an AchAccountInfo doesn't exist
+//        if (accountInfoList.isEmpty()) {
+//            val placeholder = AchAccountInfo()
+//            placeholder.achAccountId = EMPTY_LIST_ACCOUNT_ID
+//            mutableList.add(beginPosition, placeholder)
+//        } else {
+//            mutableList.addAll(beginPosition, accountInfoList)
+//        }
+//        DiffUtil.calculateDiff(CustomDiffUtil(oldList, mutableList))
+//                .dispatchUpdatesTo(this)
+//    }
+//
+//    fun setScheduledLoadData(header: String, scheduledLoadList: List<ScheduledLoad>) {
+//        val oldList = mutableList.toList()
+//        // removes pre-existing items
+//        removeExistingWithLabelItem<ScheduledLoad>()
+//
+//        var insertPosition = mutableList.size
+//        if (scheduledLoadList.isNotEmpty()) {
+//            // adds new data. scheduledLoad is added after AchAccountInfo
+//            mutableList.forEachIndexed { index, any ->
+//                if (any is HeaderTextPair || any is AchAccountInfo) {
+//                    insertPosition = index + 1
+//                }
+//            }
+//            mutableList.add(insertPosition, header)
+//            mutableList.addAll(insertPosition + 1 , scheduledLoadList)
+//        }
+//        DiffUtil.calculateDiff(CustomDiffUtil(oldList, mutableList))
+//                .dispatchUpdatesTo(this)
+//    }
+//
+//    fun setHistoricalLoadData(header: String, historicalLoadList: List<AchLoadInfo>) {
+//        val oldList = mutableList.toList()
+//        // removes pre-existing items
+//        removeExistingWithLabelItem<AchLoadInfo>()
+//
+//        val insertPosition = mutableList.size
+//
+//        if (historicalLoadList.isNotEmpty()) {
+//            mutableList.add(insertPosition, header)
+//            // it's always added to the end of adapter list
+//            mutableList.addAll(insertPosition + 1 , historicalLoadList)
+//        }
+//
+//        DiffUtil.calculateDiff(CustomDiffUtil(oldList, mutableList))
+//                .dispatchUpdatesTo(this)
+//    }
+//
+//    private inline fun <reified T> removeExistingWithLabelItem() {
+//        var existingTransferLoadBegin = -1
+//        kotlin.run search@{ //label to exit loop early
+//            mutableList.forEachIndexed { index, any ->
+//                if (any is T) {
+//                    if (existingTransferLoadBegin == -1) {
+//                        existingTransferLoadBegin = index
+//                        return@search
+//                    }
+//                }
+//            }
+//        }
+//        mutableList.removeAll { it is T }
+//
+//        // remove old label section
+//        kotlin.run search@{
+//            if (existingTransferLoadBegin != -1) {
+//                mutableList.forEachIndexed { index, any ->
+//                    // label found is the above the list items being removed
+//                    if (any is String && index < existingTransferLoadBegin) {
+//                        mutableList.removeAt(existingTransferLoadBegin - 1)
+//                        return@search
+//                    }
+//                }
+//            }
+//        }
+//    }
+//
+//    private fun removeHeader() {
+//        if (mutableList.size > 0) { // removes item if already in list
+//            val first = mutableList[0]
+//            if (first is HeaderTextPair) {
+//                mutableList.removeAt(0)
+//            }
+//        }
+//    }
 
     private fun formatAchIncomingBankTransferAmount(context: Context, amount: String): String {
         // TODO(aHashimi): when ACH out is supported this string format needs to change as well

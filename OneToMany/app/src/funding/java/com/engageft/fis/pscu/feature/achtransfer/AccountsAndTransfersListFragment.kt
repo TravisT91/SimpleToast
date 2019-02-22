@@ -19,11 +19,8 @@ import com.engageft.fis.pscu.feature.branding.Palette
 import com.ob.ws.dom.utility.AchAccountInfo
 
 /**
- * AccountsAndTransfersListFragment
- * </p>
- * Fragment for displaying and managing of Ach Bank accounts, scheduled transfers, and past transfers list.
- * </p>
  * Created by Atia Hashimi 12/14/18
+ * Refactored by Joey Hutchins 2/22/19
  * Copyright (c) 2018 Engage FT. All rights reserved.
  */
 class AccountsAndTransfersListFragment: BaseEngagePageFragment() {
