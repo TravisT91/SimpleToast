@@ -138,11 +138,11 @@ class AccountsAndTransfersListFragment: BaseEngagePageFragment() {
             })
 
             achScheduledLoadListObservable.observe(viewLifecycleOwner, Observer {
-                recyclerViewAdapter.setScheduledLoadData(getString(R.string.ach_bank_transfer_scheduled), it)
+                recyclerViewAdapter.setScheduledLoadData(getString(R.string.card_load_transfer_scheduled_header), it)
             })
 
             achHistoricalLoadListObservable.observe(viewLifecycleOwner, Observer {
-                recyclerViewAdapter.setHistoricalLoadData(getString(R.string.ach_bank_transfer_recent_activity), it)
+                recyclerViewAdapter.setHistoricalLoadData(getString(R.string.card_load_transfer_recent_activity_header), it)
             })
         }
 
