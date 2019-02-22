@@ -75,6 +75,8 @@
     <string name="card_load_transfer_from_card">card</string>
     <string name="card_load_bank_account_header">Bank account</string>
     <string name="card_load_credit_debit_header">Credit or Debit Card</string>
+    <string name="card_load_bank_account_title_format">%s (...%s)</string>
+    <string name="card_load_credit_debit_title_format">Card (...%s)</string>
     <!-- add ACH bank account -->
     <string name="ach_bank_account_add_account_title">Add account</string>
     <string name="ach_bank_transfer_detail_account">Account</string>
