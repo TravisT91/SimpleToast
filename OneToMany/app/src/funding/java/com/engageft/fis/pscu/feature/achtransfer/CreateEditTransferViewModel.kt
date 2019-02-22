@@ -43,9 +43,7 @@ class CreateEditTransferViewModel(val scheduledLoadId: Long): BaseEngageViewMode
     data class CardInfoModel(val cardId: Long, val name: String, val lastFour: String, val balance: BigDecimal)
     data class AccountFundSourceModel(val cardId: Long, val lastFour: String, val name: String? = null, val sourceType: FundSourceType)
 
-//    val fromAccountObservable = MutableLiveData<AchAccountInfo>()
     val fromAccountObservable = MutableLiveData<List<AccountFundSourceModel>>()
-    // todo: make this the List<CardInfo>(), rename
     val toAccountObservable = MutableLiveData<List<CardInfoModel>>()
 
     val deleteSuccessObservable = SingleLiveEvent<Unit>()
@@ -64,11 +62,10 @@ class CreateEditTransferViewModel(val scheduledLoadId: Long): BaseEngageViewMode
     var date1Show = ObservableField(false)
     var date2Show = ObservableField(false)
 
-//    var achAccountInfo: AchAccountInfo? = null
-//    var currentCard: DebitCardInfo? = null
+    var achAccountInfo: AchAccountInfo? = null
+    var currentCard: DebitCardInfo? = null
 
     private var currentScheduledLoad: ScheduledLoad? = null
-    private var achAccountList: List<AchAccountInfo> = mutableListOf()
 
     var formMode = FormMode.CREATE
 
@@ -133,38 +130,9 @@ class CreateEditTransferViewModel(val scheduledLoadId: Long): BaseEngageViewMode
             }
         })
 
-//        showProgressOverlayDelayed()
-//        compositeDisposable.add(EngageService.getInstance().loginResponseAsObservable
-//                .subscribeOn(Schedulers.io())
-//                .observeOn(AndroidSchedulers.mainThread())
-//                .subscribe({ response ->
-//                    dismissProgressOverlay()
-//                    if (response is LoginResponse) {
-//                        // todo
-//                        if (response.achAccountList.isNotEmpty()) {
-//                            // multiple ACH Banks aren't allowed
-//                            achAccountInfo = response.achAccountList[0]
-//                            fromAccountObservable.value = achAccountInfo
-//                        }
-//
-//                        currentCard = LoginResponseUtils.getCurrentCard(response)
-//
-//                        currentCard?.let { debitCard ->
-//                            toAccountObservable.value = getCardInfo(debitCard)
-//                            isInErrorStateObservable.value = !debitCard.cardPermissionsInfo.isFundingAchAllowable
-//                        }
-//                    } else {
-//                        handleUnexpectedErrorResponse(response)
-//                    }
-//                }, { e ->
-//                    dismissProgressOverlay()
-//                    handleThrowable(e)
-//                })
-//        )
         initData(scheduledLoadId)
     }
 
-//    fun initScheduledLoads(scheduledLoadId: Long) {
     private fun initData(scheduledLoadId: Long) {
         showProgressOverlayDelayed()
         compositeDisposable.add(EngageService.getInstance().loginResponseAsObservable
@@ -173,7 +141,6 @@ class CreateEditTransferViewModel(val scheduledLoadId: Long): BaseEngageViewMode
                 .subscribe({ response ->
                     // don't hide the progressOverlay yet
                     if (response is LoginResponse) {
-//                        getScheduledLoads(scheduledLoadId, LoginResponseUtils.getCurrentCard(response))
                         getScheduledLoads(scheduledLoadId, response)
                     } else {
                         handleUnexpectedErrorResponse(response)
@@ -185,7 +152,6 @@ class CreateEditTransferViewModel(val scheduledLoadId: Long): BaseEngageViewMode
         )
     }
 
-//    private fun getScheduledLoads(scheduledLoadId: Long, currentCard: DebitCardInfo) {
     private fun getScheduledLoads(scheduledLoadId: Long, loginResponse: LoginResponse) {
         val currentCard = LoginResponseUtils.getCurrentCard(loginResponse)
         compositeDisposable.add(
@@ -232,6 +198,7 @@ class CreateEditTransferViewModel(val scheduledLoadId: Long): BaseEngageViewMode
                 loginResponse.ccAccountList.find { ccAccountInfo ->
                     scheduledLoad.ccAccountId.toLong() == ccAccountInfo.ccAccountId
                 }?.let { ccAccountInfo ->
+//                    fundSourceType = FundSourceType.DEBIT_CREDIT_CARD
                     fundSourceList.add(getFundSourceModelForCcAccount(ccAccountInfo))
                 } ?: run {
                     throw IllegalStateException("CcAccountId not found")
@@ -240,11 +207,14 @@ class CreateEditTransferViewModel(val scheduledLoadId: Long): BaseEngageViewMode
                 loginResponse.achAccountList.find { achAccountInfo ->
                     scheduledLoad.achAccountId.toLong() == achAccountInfo.achAccountId
                 }?.let { achAccountInfo ->
+//                    fundSourceType = FundSourceType.ACH_ACCOUNT
                     fundSourceList.add(getFundSourceModelForAchAccount(achAccountInfo))
+                } ?: run {
+                    throw IllegalStateException("AchAccountInfo not found")
                 }
             }
 
-            // fragment sets/disables To and From fields.
+            // super annoying to set some fields here and some fields in View because View has to format the strings.
             toAccountObservable.value = cardInfoModelList
             fromAccountObservable.value = fundSourceList
 
@@ -371,7 +341,6 @@ class CreateEditTransferViewModel(val scheduledLoadId: Long): BaseEngageViewMode
                 }
             }
         }
-
         return null
     }
 

@@ -24,7 +24,6 @@ import com.engageft.fis.pscu.feature.achtransfer.CardLoadConstants.SCHEDULED_LOA
 import com.engageft.fis.pscu.feature.branding.Palette
 import com.engageft.fis.pscu.feature.infoDialogGenericUnsavedChangesNewInstance
 import org.joda.time.DateTime
-import utilGen1.AchAccountInfoUtils
 import utilGen1.DisplayDateTimeUtils
 import utilGen1.ScheduledLoadUtils
 import utilGen1.StringUtils
@@ -252,14 +251,14 @@ class CreateEditTransferFragment: BaseEngagePageFragment() {
             null
         }
 
-//        binding.root.findNavController().navigate(R.id.action_createEditTransferFragment_to_createTransferConfirmationFragment,
-//                CreateTransferConfirmationFragment.createBundle(
-//                        achAccountId = createEditTransferViewModel.achAccountInfo!!.achAccountId,
-//                        cardId = createEditTransferViewModel.currentCard!!.debitCardId,
-//                        frequency = frequencyType,
-//                        amount = CurrencyUtils.getNonFormattedDecimalAmountString(currencyCode = EngageAppConfig.currencyCode, stringWithCurrencySymbol = createEditTransferViewModel.amount.get()!!),
-//                        scheduledDate1 = date1,
-//                        scheduledDate2 = date2,
-//                        dayOfWeek = createEditTransferViewModel.dayOfWeek.get()!!))
+        binding.root.findNavController().navigate(R.id.action_createEditTransferFragment_to_createTransferConfirmationFragment,
+                CreateTransferConfirmationFragment.createBundle(
+                        achAccountId = createEditTransferViewModel.achAccountInfo!!.achAccountId,
+                        cardId = createEditTransferViewModel.currentCard!!.debitCardId,
+                        frequency = frequencyType,
+                        amount = CurrencyUtils.getNonFormattedDecimalAmountString(currencyCode = EngageAppConfig.currencyCode, stringWithCurrencySymbol = createEditTransferViewModel.amount.get()!!),
+                        scheduledDate1 = date1,
+                        scheduledDate2 = date2,
+                        dayOfWeek = createEditTransferViewModel.dayOfWeek.get()!!))
     }
 }
