@@ -22,7 +22,6 @@ class CreateTransferConfirmationViewModel: BaseEngageViewModel() {
     var frequencyType = ""
     var amount = ""
     var scheduledDate1: DateTime? = null
-    var scheduledDate2: DateTime? = null
     var achAccountInfoId = -1L
     var cardId = -1L
 
@@ -51,9 +50,6 @@ class CreateTransferConfirmationViewModel: BaseEngageViewModel() {
         scheduledDate1?.let {
             scheduledLoad.scheduleDate = BackendDateTimeUtils.getIso8601String(it)
         }
-        scheduledDate2?.let {
-            scheduledLoad.scheduleDate2 = BackendDateTimeUtils.getIso8601String(it)
-        }
 
         return scheduledLoad
     }
@@ -65,8 +61,8 @@ class CreateTransferConfirmationViewModel: BaseEngageViewModel() {
                 scheduledLoad,
                 sessionId)
         val observable: Observable<BasicResponse> = when (scheduledLoad.typeString) {
-            ScheduledLoad.SCHED_LOAD_TYPE_TWICE_MONTHLY -> EngageService.getInstance().engageApiInterface.postScheduledLoadACHAddTwiceMonthly(request.fieldMap)
             ScheduledLoad.SCHED_LOAD_TYPE_WEEKLY -> EngageService.getInstance().engageApiInterface.postScheduledLoadACHAddWeekly(request.fieldMap)
+            ScheduledLoad.SCHED_LOAD_TYPE_ALT_WEEKLY -> EngageService.getInstance().engageApiInterface.postScheduledLoadACHAddAltWeekly(request.fieldMap)
             ScheduledLoad.SCHED_LOAD_TYPE_MONTHLY -> EngageService.getInstance().engageApiInterface.postScheduledLoadACHAddMonthly(request.fieldMap)
             else -> EngageService.getInstance().engageApiInterface.postScheduledLoadACHAddMonthly(request.fieldMap)
         }

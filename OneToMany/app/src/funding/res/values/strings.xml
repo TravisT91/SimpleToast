@@ -28,13 +28,14 @@
     <!-- Move Money Strings -->
     <!-- transfer screens -->
     <string name="TRANSFER_MONTHLY_TEXT">Once a month</string>
-    <string name="TRANSFER_TWICE_MONTHLY_TEXT">Twice a month</string>
     <string name="TRANSFER_WEEKLY_TEXT">Once a week</string>
+    <string name="TRANSFER_WEEKLY_ALTERNATE_TEXT">Every other week</string>
     <string name="TRANSFER_ONCE_TEXT">One-time</string>
     <!-- plugs in day, bank and last 4 -->
     <string name="TRANSFER_MONTHLY_SIMPLE_LOAD_DESCRIPTION">%s of each month</string>
     <string name="TRANSFER_TWICE_MONTHLY_SIMPLE_LOAD_DESCRIPTION">%s and %s of each month</string>
     <string name="TRANSFER_WEEKLY_SIMPLE_LOAD_DESCRIPTION">every %s</string>
+    <string name="TRANSFER_ALT_WEEKLY_SIMPLE_LOAD_DESCRIPTION">every other %s</string>
     <string name="TRANSFER_ACCOUNT_DESCRIPTION_FORMAT">%1$s (…%2$s)</string>
 
     <!-- pay -->

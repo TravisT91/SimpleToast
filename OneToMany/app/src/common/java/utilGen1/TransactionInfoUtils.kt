@@ -60,8 +60,8 @@ object TransactionInfoUtils {
             TransactionType.PURCHASE, TransactionType.RETURN -> return EngageService.getInstance().storageManager.getBudgetCategoryDescription(
                     transactionInfo.subCategory,
                     Locale.getDefault().language,
-                    if (transactionInfo.isOffBudget) context.getString(R.string.TRANSACTION_LIST_OFFBUDGET_LABEL) else null)
-            else -> return EngageService.getInstance().storageManager.getBudgetCategoryDescription(transactionInfo.subCategory, Locale.getDefault().language, if (transactionInfo.isOffBudget) context.getString(R.string.TRANSACTION_LIST_OFFBUDGET_LABEL) else null)
+                    if (transactionInfo.isOffBudget) context.getString(R.string.TRANSACTION_LIST_OFF_BUDGET_LABEL) else null)
+            else -> return EngageService.getInstance().storageManager.getBudgetCategoryDescription(transactionInfo.subCategory, Locale.getDefault().language, if (transactionInfo.isOffBudget) context.getString(R.string.TRANSACTION_LIST_OFF_BUDGET_LABEL) else null)
         }
     }
 
@@ -79,19 +79,21 @@ object TransactionInfoUtils {
     }
 
     fun getTransactionStatusText(context: Context, transactionStatus: TransactionStatus): String {
-        when (transactionStatus) {
-            TransactionStatus.PENDING -> return context.getString(R.string.TRANSACTION_STATUS_PENDING_TEXT)
-            TransactionStatus.DECLINED -> return context.getString(R.string.TRANSACTION_STATUS_DECLINED_TEXT)
-            else -> return ""
+        return when (transactionStatus) {
+            TransactionStatus.PENDING ->
+                context.getString(R.string.TRANSACTION_STATUS_PENDING_TEXT)
+            TransactionStatus.DECLINED ->
+                context.getString(R.string.TRANSACTION_STATUS_DECLINED_TEXT)
+            else -> ""
         }
     }
 
     fun showOffBudget(transactionInfo: TransactionInfo): Boolean {
-        return if (isLoad(transactionInfo) || isFee(transactionInfo) || !transactionInfo.isDailyLiving || isStatusDeclined(transactionInfo) || isTransfer(transactionInfo)) {
-            false
-        } else {
-            true
-        }
+        return !(isLoad(transactionInfo) ||
+                        this.isFee(transactionInfo) ||
+                        !transactionInfo.isDailyLiving ||
+                        isStatusDeclined(transactionInfo) ||
+                        isTransfer(transactionInfo))
     }
 
     fun isLoad(transactionInfo: TransactionInfo): Boolean {

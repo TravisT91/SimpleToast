@@ -56,11 +56,9 @@ class CreateEditTransferViewModel(val scheduledLoadId: Long): BaseEngageViewMode
     val amount = ObservableField("")
     val frequency = ObservableField("")
     val date1 = ObservableField("")
-    val date2 = ObservableField("")
     val dayOfWeek = ObservableField("")
     var dayOfWeekShow = ObservableField(false)
     var date1Show = ObservableField(false)
-    var date2Show = ObservableField(false)
 
     var achAccountInfo: AchAccountInfo? = null
     var currentCard: DebitCardInfo? = null
@@ -90,35 +88,21 @@ class CreateEditTransferViewModel(val scheduledLoadId: Long): BaseEngageViewMode
                 when (frequency.get()) {
                     FREQUENCY_ONETIME -> {
                         date1Show.set(false)
-                        date2Show.set(false)
                         dayOfWeekShow.set(false)
-                    }
-                    FREQUENCY_WEEKLY -> {
-                        dayOfWeekShow.set(true)
-                        date1Show.set(false)
-                        date2Show.set(false)
                     }
                     FREQUENCY_MONTHLY -> {
                         date1Show.set(true)
-                        date2Show.set(false)
                         dayOfWeekShow.set(false)
                     }
-                    FREQUENCY_BIMONTHLY -> {
-                        date1Show.set(true)
-                        date2Show.set(true)
-                        dayOfWeekShow.set(false)
+                    else -> {
+                        dayOfWeekShow.set(true)
+                        date1Show.set(false)
                     }
                 }
             }
         })
 
         date1.addOnPropertyChangedCallback(object: Observable.OnPropertyChangedCallback() {
-            override fun onPropertyChanged(sender: Observable?, propertyId: Int) {
-                updateButtonState()
-            }
-        })
-
-        date2.addOnPropertyChangedCallback(object: Observable.OnPropertyChangedCallback() {
             override fun onPropertyChanged(sender: Observable?, propertyId: Int) {
                 updateButtonState()
             }
@@ -346,13 +330,9 @@ class CreateEditTransferViewModel(val scheduledLoadId: Long): BaseEngageViewMode
 
     private fun hasFrequencySelected(): Boolean {
         val frequencyType = frequency.get()!!
-        if (frequencyType == FREQUENCY_ONETIME
-                || (frequencyType == FREQUENCY_WEEKLY && dayOfWeek.get()!!.isNotEmpty())
+        return frequencyType == FREQUENCY_ONETIME
+                || (frequencyType == FREQUENCY_WEEKLY || frequencyType == FREQUENCY_EVERY_OTHER_WEEK && dayOfWeek.get()!!.isNotEmpty())
                 || (frequencyType == FREQUENCY_MONTHLY && date1.get()!!.isNotEmpty())
-                || (frequencyType == FREQUENCY_BIMONTHLY && date1.get()!!.isNotEmpty() && date2.get()!!.isNotEmpty())) {
-            return true
-        }
-        return false
     }
 
     private fun postCancelScheduledLoad(map: MutableMap<String, String>, cancelLoadSuccessObserver: () -> Unit) {
@@ -376,8 +356,8 @@ class CreateEditTransferViewModel(val scheduledLoadId: Long): BaseEngageViewMode
     private companion object {
         const val FREQUENCY_ONETIME = "One-time"
         const val FREQUENCY_WEEKLY = "Once a week"
+        const val FREQUENCY_EVERY_OTHER_WEEK = "Every other week"
         const val FREQUENCY_MONTHLY = "Once a month"
-        const val FREQUENCY_BIMONTHLY = "Twice a month"
     }
 }
 class CreateEditTransferViewModelFactory(private val scheduleLoadId: Long) : ViewModelProvider.NewInstanceFactory() {

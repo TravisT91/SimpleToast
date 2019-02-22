@@ -96,12 +96,13 @@ class DashboardViewModel : BaseEngageViewModel(), GateKeeperListener {
 
     // Balances
     fun clearAndRefreshBalancesAndNotifications() {
-        showProgressOverlayDelayed()
         EngageService.getInstance().clearLoginAndDashboardResponses()
         refreshBalancesAndNotifications()
     }
 
     fun refreshBalancesAndNotifications() {
+        showProgressOverlayDelayed()
+
         spendingBalanceStateObservable.value = DashboardBalanceState.LOADING
         // only change savings state if already set. Otherwise it is currently hidden in UI, so don't show loading indicator
         if (savingsBalanceStateObservable.value == DashboardBalanceState.AVAILABLE) {
@@ -112,6 +113,7 @@ class DashboardViewModel : BaseEngageViewModel(), GateKeeperListener {
                         .subscribeOn(Schedulers.io())
                         .observeOn(AndroidSchedulers.mainThread())
                         .subscribe({ response ->
+                            dismissProgressOverlay()
                             if (response.isSuccess && response is LoginResponse) {
                                 var savingsBalanceEnabled = false
 
@@ -162,6 +164,7 @@ class DashboardViewModel : BaseEngageViewModel(), GateKeeperListener {
                             }
                         })
                         { e ->
+                            dismissProgressOverlay()
                             spendingBalanceObservable.value = BigDecimal.ZERO
                             spendingBalanceStateObservable.value = DashboardBalanceState.ERROR
                             savingsBalanceObservable.value = BigDecimal.ZERO
@@ -173,13 +176,12 @@ class DashboardViewModel : BaseEngageViewModel(), GateKeeperListener {
 
     // Transactions
     fun clearAndRefreshAllTransactions() {
-        val repoTypes = listOf(TransactionRepository.TransactionRepoType.ALL_ACTIVITY, TransactionRepository.TransactionRepoType.DEPOSITS)
-        clearTransactions(repoTypes) { refreshTransactions(repoTypes) }
+        clearTransactions { refreshTransactions() }
     }
 
-    private fun clearTransactions(repoTypes: List<TransactionRepository.TransactionRepoType>, callBack: (() -> Unit)? = null) {
+    private fun clearTransactions(callBack: (() -> Unit)? = null) {
         compositeDisposable.add(
-                Observable.fromCallable { TransactionRepository.clearTransactions(repoTypes) }
+                Observable.fromCallable { TransactionRepository.clearAllTransactions() }
                         .subscribeOn(Schedulers.computation())
                         .observeOn(Schedulers.computation())
                         .subscribe {
@@ -190,7 +192,7 @@ class DashboardViewModel : BaseEngageViewModel(), GateKeeperListener {
         )
     }
 
-    private fun refreshTransactions(transactionTypes: List<TransactionRepository.TransactionRepoType>) {
+    private fun refreshTransactions() {
         compositeDisposable.add(
                 EngageService.getInstance().loginResponseAsObservable
                         .subscribeOn(Schedulers.io())
@@ -199,12 +201,8 @@ class DashboardViewModel : BaseEngageViewModel(), GateKeeperListener {
                             if (response.isSuccess && response is LoginResponse) {
                                 debitCardInfo = LoginResponseUtils.getCurrentCard(response)
                                 debitCardInfo.let {
-                                    if (transactionTypes.contains(TransactionRepository.TransactionRepoType.ALL_ACTIVITY)) {
-                                        allTransactionsListing = TransactionRepository.pagedTransactions(TransactionRepository.TransactionRepoType.ALL_ACTIVITY, debitCardInfo.debitCardId, null)
-                                    }
-                                    if (transactionTypes.contains(TransactionRepository.TransactionRepoType.DEPOSITS)) {
-                                        depositTransactionsListing = TransactionRepository.pagedTransactions(TransactionRepository.TransactionRepoType.DEPOSITS, debitCardInfo.debitCardId, TransactionType.LOAD.name)
-                                    }
+                                    allTransactionsListing = TransactionRepository.pagedTransactions(TransactionRepository.TransactionRepoType.ALL_ACTIVITY, debitCardInfo.debitCardId, null)
+                                    depositTransactionsListing = TransactionRepository.pagedTransactions(TransactionRepository.TransactionRepoType.DEPOSITS, debitCardInfo.debitCardId, TransactionType.LOAD.name)
 
                                     if (transactionsTabPosition == TRANSACTIONS_TAB_POSITION_ALL) {
                                         showAllActivity(reselect = true)
@@ -329,7 +327,7 @@ class DashboardViewModel : BaseEngageViewModel(), GateKeeperListener {
             if (options.size > 4) {
                 if (options.size == 5) {
                     val itemFour = options.removeAt(3)
-                    val itemFive = options.removeAt(4)
+                    val itemFive = options.removeAt(3)
 
                     val moreOptionsList = ArrayList<ExpandableViewListItem>().apply {
                         add(itemFour)

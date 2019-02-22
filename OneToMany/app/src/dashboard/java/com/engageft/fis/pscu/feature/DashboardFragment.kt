@@ -35,6 +35,7 @@ import com.engageft.fis.pscu.feature.authentication.AuthenticationDialogFragment
 import com.engageft.fis.pscu.feature.onboarding.OnboardingDialogFragment
 import com.engageft.fis.pscu.feature.palettebindings.applyBranding
 import com.engageft.fis.pscu.feature.search.SearchDialogFragment
+import com.engageft.fis.pscu.feature.transactions.TransactionDetailsFragment.Companion.ARG_TRANSACTION_ID
 import com.engageft.fis.pscu.feature.transactions.adapter.TransactionListener
 import com.engageft.fis.pscu.feature.utils.CardStatusUtils
 import com.ob.domain.lookup.DebitCardStatus
@@ -403,7 +404,9 @@ class DashboardFragment : BaseEngagePageFragment(),
             }
         }
 
-        dashboardViewModel.clearAndRefreshAllTransactions()
+        if (dashboardViewModel.transactions.value == null) {
+            dashboardViewModel.clearAndRefreshAllTransactions()
+        }
 
         dashboardViewModel.notificationsCountObservable.observe(this, notificationsObserver)
 
@@ -606,7 +609,9 @@ class DashboardFragment : BaseEngagePageFragment(),
 
     // TransactionsPagedAdapter.OnTransactionsAdapterListener
     override fun onTransactionSelected(transaction: Transaction) {
-        // TODO(kurt): Pass transactionInfo to TransactionDetailFragment through navigation bundle (see onMoveMoney(), above)
-        Toast.makeText(activity, "Transaction selected: " + transaction.store, Toast.LENGTH_SHORT).show()
+        val bundle = Bundle().apply {
+            putString(ARG_TRANSACTION_ID,transaction.transactionId)
+        }
+        binding.root.findNavController().navigate(R.id.action_dashboard_fragment_to_transactionDetail, bundle)
     }
 }

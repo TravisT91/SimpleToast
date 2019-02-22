@@ -1,5 +1,6 @@
 package com.engageft.fis.pscu
 
+import android.util.Log
 import androidx.core.content.ContextCompat
 import androidx.core.content.res.ResourcesCompat
 import com.crashlytics.android.Crashlytics
@@ -41,7 +42,8 @@ class OneToManyApplication : LotusApplication() {
 
         HeapUtils.initHeap(this)
         MoEngageUtils.initMoEngage()
-        EngageService.initService(BuildConfig.VERSION_CODE.toString(), this, EngageAppConfig.engageKitConfig)
+        EngageService.initService(BuildConfig.VERSION_CODE.toString(), this, EngageAppConfig.engageKitConfig, EngageAppConfig.isTestBuild)
+        Log.i("OneToManyApplication", "isTestBuild? ${EngageAppConfig.isTestBuild}")
 
         initPalette()
 
@@ -85,7 +87,7 @@ class OneToManyApplication : LotusApplication() {
                                     Crashlytics.logException(IllegalStateException("handleUnexpectedErrorResponse: " + response.message))
                                 }
                             }, { e ->
-                        if (BuildConfig.DEBUG) {
+                        if (EngageAppConfig.isTestBuild) {
                             e.printStackTrace()
                         }
                         Crashlytics.logException(e)
@@ -111,5 +113,4 @@ class OneToManyApplication : LotusApplication() {
             font_medium = ResourcesCompat.getFont(this@OneToManyApplication, R.font.font_medium)
         )
     }
-
 }

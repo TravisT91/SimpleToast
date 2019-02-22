@@ -115,7 +115,8 @@ class ChangeSecurityQuestionsFragment : BaseEngagePageFragment() {
                 ChangeSecurityQuestionsViewModel.ChangeSecurityQuestionsNavigation.CHANGE_SUCCESSFUL -> {
                     fragmentDelegate.showDialog(InformationDialogFragment.newLotusInstance(title = getString(R.string.SECURITY_QUESTIONS_SUCCESS_TITLE),
                             message = getString(R.string.SECURITY_QUESTIONS_SUCCESS_MESSAGE_CHANGE),
-                            buttonPositiveText = getString(R.string.SECURITY_QUESTIONS_SUCCESS_MESSAGE_OK), listener = object : InformationDialogFragment.InformationDialogFragmentListener {
+                            buttonPositiveText = getString(R.string.SECURITY_QUESTIONS_SUCCESS_MESSAGE_OK),
+                            listener = object : InformationDialogFragment.InformationDialogFragmentListener {
                         override fun onDialogCancelled() {
                             binding.root.findNavController().navigateUp()
                         }

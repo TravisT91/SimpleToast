@@ -3,9 +3,8 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <item
-        android:id="@+id/menu_item_share"
+        android:id="@+id/menu_item_save"
         app:showAsAction="ifRoom"
-        android:title="@string/MENU_SHARE"
-        android:icon="@android:drawable/ic_menu_share" />
+        android:title="@string/MENU_SAVE" />
 
 </menu>
