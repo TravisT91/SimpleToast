@@ -10,14 +10,14 @@ import com.engageft.engagekit.aac.SingleLiveEvent
 import com.engageft.engagekit.model.ScheduledLoad
 import com.engageft.engagekit.rest.request.ScheduledLoadRequest
 import com.engageft.engagekit.utils.LoginResponseUtils
-import com.engageft.feature.goals.GoalDetailViewModel
 import com.engageft.fis.pscu.feature.BaseEngageViewModel
-import com.engageft.fis.pscu.feature.DialogInfo
 import com.engageft.fis.pscu.feature.branding.BrandingInfoRepo
+import com.ob.domain.lookup.AchAccountStatus
 import com.ob.ws.dom.BasicResponse
 import com.ob.ws.dom.LoginResponse
 import com.ob.ws.dom.ScheduledLoadsResponse
 import com.ob.ws.dom.utility.AchAccountInfo
+import com.ob.ws.dom.utility.CcAccountInfo
 import com.ob.ws.dom.utility.DebitCardInfo
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
@@ -64,13 +64,13 @@ class CreateEditTransferViewModel(val scheduledLoadId: Long): BaseEngageViewMode
     var date1Show = ObservableField(false)
     var date2Show = ObservableField(false)
 
-    var achAccountInfo: AchAccountInfo? = null
-    var currentCard: DebitCardInfo? = null
+//    var achAccountInfo: AchAccountInfo? = null
+//    var currentCard: DebitCardInfo? = null
 
     private var currentScheduledLoad: ScheduledLoad? = null
     private var achAccountList: List<AchAccountInfo> = mutableListOf()
 
-    private var formMode = FormMode.CREATE
+    var formMode = FormMode.CREATE
 
     init {
         buttonStateObservable.value = ButtonState.HIDE
@@ -198,20 +198,13 @@ class CreateEditTransferViewModel(val scheduledLoadId: Long): BaseEngageViewMode
                                 ScheduledLoadUtils.getScheduledLoads(response).find { scheduleLoad ->
                                     scheduledLoadId == scheduleLoad.scheduledLoadId
                                 }?.let { scheduledLoad ->
+                                    currentScheduledLoad = scheduledLoad
                                     formMode = FormMode.EDIT
-                                    initCardsAndAccountsList(loginResponse, FormMode.EDIT)
-
-                                    populateFields(scheduledLoad)
+                                    populateDataFormModeEdit(loginResponse, scheduledLoad)
                                 } ?: run {
                                     formMode = FormMode.CREATE
-                                    initCardsAndAccountsList(loginResponse, FormMode.EDIT)
+                                    initDataFormModeCreate(loginResponse)
                                 }
-//                                for (scheduledLoad in ScheduledLoadUtils.getScheduledLoads(response)) {
-//                                    if (scheduledLoad.scheduledLoadId == scheduledLoadId) {
-//                                        populateFields(scheduledLoad)
-//                                        break
-//                                    }
-//                                }
                             } else {
                                 handleUnexpectedErrorResponse(response)
                             }
@@ -222,42 +215,92 @@ class CreateEditTransferViewModel(val scheduledLoadId: Long): BaseEngageViewMode
         )
     }
 
-    private val fundSourceHashMap: HashMap<String, FundSourceType> = HashMap()
+    private fun populateDataFormModeEdit(loginResponse: LoginResponse, scheduledLoad: ScheduledLoad) {
+        // ensure this method is invoked for the correct mode
+        if (formMode == FormMode.EDIT) {
 
-    private fun initCardsAndAccountsList(loginResponse: LoginResponse, formMode: FormMode) {
-        val cardsList = LoginResponseUtils.getAllCardsSorted(loginResponse)
-        val cardInfoModelList = mutableListOf<CardInfoModel>()
+            val cardInfoModelList = mutableListOf<CardInfoModel>()
+            val fundSourceList = mutableListOf<AccountFundSourceModel>()
 
-        if (cardsList.isNotEmpty()) {
-            cardsList.forEach { debitCard ->
-                getCardInfo(debitCard)?.let { cardInfoModel ->
-                    cardInfoModelList.add(cardInfoModel)
+            //TODO(aHashimi): this may have to change for multi-card
+            val currentCard = LoginResponseUtils.getCurrentCard(loginResponse)
+            getCardInfo(currentCard)?.let { cardInfoModel ->
+                cardInfoModelList.add(cardInfoModel)
+            }
+
+            if (scheduledLoad.ccAccountId.isNotEmpty()) {
+                loginResponse.ccAccountList.find { ccAccountInfo ->
+                    scheduledLoad.ccAccountId.toLong() == ccAccountInfo.ccAccountId
+                }?.let { ccAccountInfo ->
+                    fundSourceList.add(AccountFundSourceModel(
+                            cardId = ccAccountInfo.ccAccountId,
+                            lastFour = ccAccountInfo.lastDigits,
+                            sourceType = FundSourceType.DEBIT_CREDIT_CARD
+                    ))
+                } ?: run {
+                    throw IllegalStateException("CcAccountId not found")
+                }
+            } else if (scheduledLoad.achAccountId.isNotEmpty()) {
+                loginResponse.achAccountList.find { achAccountInfo ->
+                    scheduledLoad.achAccountId.toLong() == achAccountInfo.achAccountId
+                }?.let { achAccountInfo ->
+                    fundSourceList.add(AccountFundSourceModel(
+                            cardId = achAccountInfo.achAccountId,
+                            name = achAccountInfo.bankName,
+                            lastFour = achAccountInfo.accountLastDigits,
+                            sourceType = FundSourceType.ACH_ACCOUNT))
                 }
             }
-        } else {
-            throw IllegalStateException("Must have at least one debitCardInfo")
+
+
+            toAccountObservable.value = cardInfoModelList
+            fromAccountObservable.value = fundSourceList
         }
+    }
 
-        val achAccountsAndDebitCreditList = mutableListOf<AccountFundSourceModel>()
+    private fun initDataFormModeCreate(loginResponse: LoginResponse) {
+        // ensure this method is invoked for the correct mode
+        if (formMode == FormMode.CREATE) {
+            val cardInfoModelList = mutableListOf<CardInfoModel>()
+            val fundSourceList = mutableListOf<AccountFundSourceModel>()
 
-        loginResponse.achAccountList.forEach { achAccountInfo ->
-            achAccountsAndDebitCreditList.add(AccountFundSourceModel(
-                    cardId = achAccountInfo.achAccountId,
-                    name = achAccountInfo.bankName,
-                    lastFour = achAccountInfo.accountLastDigits,
-                    sourceType = FundSourceType.ACH_ACCOUNT))
+            val cardsList = LoginResponseUtils.getAllCardsSorted(loginResponse)
+
+            if (cardsList.isNotEmpty()) {
+                cardsList.forEach { debitCard ->
+                    getCardInfo(debitCard)?.let { cardInfoModel ->
+                        cardInfoModelList.add(cardInfoModel)
+                    }
+                }
+            } else {
+                throw IllegalStateException("Must have at least one DebitCardInfo")
+            }
+
+            loginResponse.achAccountList.forEach { achAccountInfo ->
+                if (achAccountInfo.achAccountStatus == AchAccountStatus.VERIFIED) {
+                    getFundSourceModel(fundSourceList, achAccountInfo)
+                }
+            }
+
+            loginResponse.ccAccountList.forEach { ccAccountInfo ->
+                fundSourceList.add(AccountFundSourceModel(
+                        cardId = ccAccountInfo.ccAccountId,
+                        lastFour = ccAccountInfo.lastDigits,
+                        sourceType = FundSourceType.DEBIT_CREDIT_CARD
+                ))
+            }
+
+            toAccountObservable.value = cardInfoModelList
+            fromAccountObservable.value = fundSourceList
         }
+    }
 
-        loginResponse.ccAccountList.forEach { ccAccountInfo ->
-            achAccountsAndDebitCreditList.add(AccountFundSourceModel(
-                    cardId = ccAccountInfo.ccAccountId,
-                    lastFour = ccAccountInfo.lastDigits,
-                    sourceType = FundSourceType.DEBIT_CREDIT_CARD
-            ))
-        }
-
-        toAccountObservable.value = cardInfoModelList
-        fromAccountObservable.value = achAccountsAndDebitCreditList
+    private fun getFundSourceModel(achAccountInfo: AchAccountInfo) {
+        fundSourceList.add(AccountFundSourceModel(
+                cardId = achAccountInfo.achAccountId,
+                name = achAccountInfo.bankName,
+                lastFour = achAccountInfo.accountLastDigits,
+                sourceType = FundSourceType.ACH_ACCOUNT))
     }
 
     fun updateButtonState() {

@@ -116,9 +116,6 @@ class CreateEditTransferFragment: BaseEngagePageFragment() {
                 toolbarController.setToolbarTitle(getString(R.string.ach_bank_transfer_create_transfer))
             }
 
-            accountFromBottomSheet.isEnabled = false
-            accountToBottomSheet.isEnabled = false
-
             frequencyBottomSheet.dialogOptions = ArrayList(ScheduledLoadUtils.getFrequencyDisplayStringsForTransfer(context!!))
             daysOfWeekBottomSheet.dialogOptions = ArrayList(DisplayDateTimeUtils.daysOfWeekList())
             // don't allow today's date as a selection
@@ -144,14 +141,38 @@ class CreateEditTransferFragment: BaseEngagePageFragment() {
                     activity?.invalidateOptionsMenu()
                 })
 
-                fromAccountObservable.observe(viewLifecycleOwner, Observer {
+                fromAccountObservable.observe(viewLifecycleOwner, Observer { fundSourceList ->
                     // format ACH bank name with last 4 digits
-                    fromAccount.set(AchAccountInfoUtils.accountDescriptionForDisplay(context!!, it))
+                    val fromOptionsList = mutableListOf<CharSequence>()
+                    var formattedString: String
+                    fundSourceList.forEach { source ->
+                        when (source.sourceType) {
+                            CreateEditTransferViewModel.FundSourceType.ACH_ACCOUNT -> {
+                                formattedString = String.format(getString(R.string.BANKACCOUNT_DESCRIPTION_FORMAT),
+                                        source.name, source.lastFour)
+                                fromOptionsList.add(formattedString)
+                            }
+                            CreateEditTransferViewModel.FundSourceType.DEBIT_CREDIT_CARD -> {
+                                formattedString = String.format(getString(R.string.BANKACCOUNT_DESCRIPTION_FORMAT),
+                                        getString(R.string.card_load_card_type), source.lastFour)
+                                fromOptionsList.add(formattedString)
+                            }
+                        }
+                    }
+
+                    if (fromOptionsList.isNotEmpty() && fromOptionsList.size == 1) {
+                        accountFromBottomSheet.isEnabled = false
+                        accountFromBottomSheet.inputText = fromOptionsList[0]
+                    } else {
+                        if (createEditTransferViewModel.formMode == CreateEditTransferViewModel.FormMode.EDIT) {
+
+                        }
+                    }
                 })
 
                 toAccountObservable.observe(viewLifecycleOwner, Observer {
                     // format Card Info with last four
-                    toAccount.set(String.format(getString(R.string.BANKACCOUNT_DESCRIPTION_FORMAT), it.name, it.lastFour))
+//                    toAccount.set(String.format(getString(R.string.BANKACCOUNT_DESCRIPTION_FORMAT), it.name, it.lastFour))
                 })
 
                 deleteSuccessObservable.observe(viewLifecycleOwner, Observer {
@@ -220,14 +241,14 @@ class CreateEditTransferFragment: BaseEngagePageFragment() {
             null
         }
 
-        binding.root.findNavController().navigate(R.id.action_createEditTransferFragment_to_createTransferConfirmationFragment,
-                CreateTransferConfirmationFragment.createBundle(
-                        achAccountId = createEditTransferViewModel.achAccountInfo!!.achAccountId,
-                        cardId = createEditTransferViewModel.currentCard!!.debitCardId,
-                        frequency = frequencyType,
-                        amount = CurrencyUtils.getNonFormattedDecimalAmountString(currencyCode = EngageAppConfig.currencyCode, stringWithCurrencySymbol = createEditTransferViewModel.amount.get()!!),
-                        scheduledDate1 = date1,
-                        scheduledDate2 = date2,
-                        dayOfWeek = createEditTransferViewModel.dayOfWeek.get()!!))
+//        binding.root.findNavController().navigate(R.id.action_createEditTransferFragment_to_createTransferConfirmationFragment,
+//                CreateTransferConfirmationFragment.createBundle(
+//                        achAccountId = createEditTransferViewModel.achAccountInfo!!.achAccountId,
+//                        cardId = createEditTransferViewModel.currentCard!!.debitCardId,
+//                        frequency = frequencyType,
+//                        amount = CurrencyUtils.getNonFormattedDecimalAmountString(currencyCode = EngageAppConfig.currencyCode, stringWithCurrencySymbol = createEditTransferViewModel.amount.get()!!),
+//                        scheduledDate1 = date1,
+//                        scheduledDate2 = date2,
+//                        dayOfWeek = createEditTransferViewModel.dayOfWeek.get()!!))
     }
 }
