@@ -10,15 +10,6 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
-        <include
-            android:id="@+id/itemDividerViewTop"
-            layout="@layout/view_horizontal_divider"
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-
         <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/dayDateTextView"
             style="@style/AchBankTransferDateTextStyle"
@@ -26,7 +17,7 @@
             android:layout_marginTop="16dp"
             app:layout_constraintBottom_toTopOf="@+id/monthDateTextView"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="@id/itemDividerViewTop"
+            app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintVertical_chainStyle="packed"
             tools:text="16" />
 
@@ -52,7 +43,7 @@
             app:layout_constraintEnd_toStartOf="@+id/amountTextView"
             app:layout_constraintStart_toEndOf="@+id/dayDateTextView"
             app:layout_constraintStart_toStartOf="@+id/transferSubTextView"
-            app:layout_constraintTop_toTopOf="@id/itemDividerViewTop"
+            app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintVertical_chainStyle="packed"
             tools:text="Recurring Transfer" />
 
@@ -78,7 +69,7 @@
             android:layout_marginBottom="16dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="@id/itemDividerViewTop"
+            app:layout_constraintTop_toTopOf="parent"
             tools:text="+$200.00" />
 
         <include

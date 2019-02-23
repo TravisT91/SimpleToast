@@ -1,6 +1,8 @@
 package com.engageft.fis.pscu.feature.achtransfer
 
 import android.content.Context
+import android.os.Build
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -9,11 +11,9 @@ import androidx.appcompat.widget.AppCompatTextView
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
-import com.engageft.engagekit.model.ScheduledLoad
+import com.engageft.apptoolbox.view.PillButton
 import com.engageft.fis.pscu.R
 import com.engageft.fis.pscu.feature.branding.Palette
-import com.ob.ws.dom.utility.AchAccountInfo
-import com.ob.ws.dom.utility.AchLoadInfo
 import org.joda.time.DateTime
 import utilGen1.DisplayDateTimeUtils
 import java.util.Locale
@@ -76,11 +76,11 @@ class AccountsAndTransfersListRecyclerViewAdapter(
             }
             VIEW_TYPE_CREDIT_DEBIT -> {
                 val view = LayoutInflater.from(parent.context).inflate(R.layout.card_load_credit_debit_item, parent, false)
-                AccountsAndTransfersViewHolder.HeaderViewHolder(viewHolderListener, view)
+                AccountsAndTransfersViewHolder.CreditDebitCardViewHolder(viewHolderListener, view)
             }
             VIEW_TYPE_TRANSFER -> {
                 val view = LayoutInflater.from(parent.context).inflate(R.layout.card_load_transfer_item, parent, false)
-                AccountsAndTransfersViewHolder.ScheduledLoadViewHolder(viewHolderListener, view)
+                AccountsAndTransfersViewHolder.CardLoadViewHolder(viewHolderListener, view)
             }
             VIEW_TYPE_CREATE_TRANSFER -> {
                 val view = LayoutInflater.from(parent.context).inflate(R.layout.card_load_create_transfer_item, parent, false)
@@ -93,7 +93,6 @@ class AccountsAndTransfersListRecyclerViewAdapter(
     }
 
     override fun onBindViewHolder(holder: AccountsAndTransfersViewHolder, position: Int) {
-        holder.itemPosition = position
         when (holder) {
             is AccountsAndTransfersViewHolder.CardLoadHeaderViewHolder -> {
                 // Nothing to do.
@@ -148,12 +147,15 @@ class AccountsAndTransfersListRecyclerViewAdapter(
                     labelText.text = String.format(itemView.context.getString(R.string.card_load_credit_debit_title_format), item.lastFour)
                 }
             }
-            is AccountsAndTransfersViewHolder.ScheduledLoadViewHolder -> {
+            is AccountsAndTransfersViewHolder.CardLoadViewHolder -> {
                 val item = items[position] as AccountsAndTransferListItem.TransferItem
                 when (item) {
                     is AccountsAndTransferListItem.TransferItem.ScheduledLoadItem -> {
                         val scheduledLoadItem = item as AccountsAndTransferListItem.TransferItem.ScheduledLoadItem
                         holder.apply {
+                            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                                itemView.foreground = ContextCompat.getDrawable(itemView.context, R.drawable.selectable_item_background_structure2)
+                            }
                             dayTextView.text = DisplayDateTimeUtils.getDayTwoDigits(scheduledLoadItem.nextRunDate)
                             monthTextView.text = DisplayDateTimeUtils.getMonthAbbr(scheduledLoadItem.nextRunDate)
                             val transferType = if (scheduledLoadItem.isAccount) itemView.context.getString(R.string.card_load_transfer_from_account) else itemView.context.getString(R.string.card_load_transfer_from_card)
@@ -162,11 +164,6 @@ class AccountsAndTransfersListRecyclerViewAdapter(
                                 is AccountsAndTransferListItem.TransferItem.ScheduledLoadItem.MonthlyItem -> {
                                     String.format(itemView.context.getString(R.string.TRANSFER_MONTHLY_SIMPLE_LOAD_DESCRIPTION),
                                             DisplayDateTimeUtils.getDayOrdinal(itemView.context, scheduledLoadItem.nextRunDate))
-                                }
-                                is AccountsAndTransferListItem.TransferItem.ScheduledLoadItem.TwiceMonthlyItem -> {
-                                    String.format(itemView.context.getString(R.string.TRANSFER_TWICE_MONTHLY_SIMPLE_LOAD_DESCRIPTION),
-                                            DisplayDateTimeUtils.getDayOrdinal(itemView.context, scheduledLoadItem.scheduleDate1),
-                                            DisplayDateTimeUtils.getDayOrdinal(itemView.context, scheduledLoadItem.scheduleDate2))
                                 }
                                 is AccountsAndTransferListItem.TransferItem.ScheduledLoadItem.WeeklyItem -> {
                                     String.format(itemView.context.getString(R.string.TRANSFER_WEEKLY_SIMPLE_LOAD_DESCRIPTION),
@@ -182,6 +179,9 @@ class AccountsAndTransfersListRecyclerViewAdapter(
                     }
                     is AccountsAndTransferListItem.TransferItem.RecentActivityItem -> {
                         holder.apply {
+                            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                                itemView.foreground = null
+                            }
                             dayTextView.text = DisplayDateTimeUtils.getDayTwoDigits(item.nextRunDate)
                             monthTextView.text = DisplayDateTimeUtils.getMonthAbbr(item.nextRunDate)
                             transferTextView.text = if (item.isAccount) itemView.context.getString(R.string.card_load_transfer_recent_bank) else itemView.context.getString(R.string.card_load_transfer_recent_card)
@@ -210,11 +210,9 @@ class AccountsAndTransfersListRecyclerViewAdapter(
     }
 
     sealed class AccountsAndTransfersViewHolder(private val viewHolderListener: ViewHolderListener, itemView: View) : RecyclerView.ViewHolder(itemView) {
-        var itemPosition = -1
-
         init {
             itemView.setOnClickListener {
-                viewHolderListener.onViewSelected(itemPosition)
+                viewHolderListener.onViewSelected(adapterPosition)
             }
         }
 
@@ -233,59 +231,21 @@ class AccountsAndTransfersListRecyclerViewAdapter(
         class CreditDebitCardViewHolder(viewHolderListener: ViewHolderListener, itemView: View) : AccountsAndTransfersViewHolder(viewHolderListener, itemView) {
             val labelText: AppCompatTextView = itemView.findViewById(R.id.cardLabel)
         }
-        class ScheduledLoadViewHolder(viewHolderListener: ViewHolderListener, itemView: View) : AccountsAndTransfersViewHolder(viewHolderListener, itemView) {
+        class CardLoadViewHolder(viewHolderListener: ViewHolderListener, itemView: View) : AccountsAndTransfersViewHolder(viewHolderListener, itemView) {
             val dayTextView: TextView = itemView.findViewById(R.id.dayDateTextView)
             val monthTextView: TextView = itemView.findViewById(R.id.monthDateTextView)
             val transferTextView: TextView = itemView.findViewById(R.id.transferTextView)
             val transferSubTextView: TextView = itemView.findViewById(R.id.transferSubTextView)
             val amountTextView: TextView = itemView.findViewById(R.id.amountTextView)
         }
-        class CreateTransferViewHolder(viewHolderListener: ViewHolderListener, itemView: View) : AccountsAndTransfersViewHolder(viewHolderListener, itemView)
-    }
-
-    private inner class HeaderTextPair(val headerText: String, val headerSubtext: String)
-
-    class CustomDiffUtil(private val oldList: List<Any>, private val newList: List<Any>) : DiffUtil.Callback() {
-        override fun areItemsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
-            // id are the same
-            val oldItem = oldList[oldItemPosition]
-            val newItem = newList[newItemPosition]
-            when(oldItem) {
-                is AchAccountInfo -> {
-                    return newItem is AchAccountInfo && newItem.achAccountId == oldItem.achAccountId
-                }
-                is ScheduledLoad -> {
-                    return newItem is ScheduledLoad && newItem.scheduledLoadId == oldItem.scheduledLoadId
-                }
-                is AchLoadInfo -> {
-                    return newItem is AchLoadInfo && newItem.loadId == oldItem.loadId
-                }
-                is HeaderTextPair -> {
-                    return newItem is HeaderTextPair && newItem.headerText == oldItem.headerText &&
-                            newItem.headerSubtext == oldItem.headerSubtext
-                }
-                is String -> {
-                    return oldItem == newItem
-                }
-                else -> {
-                    return oldItem == newItem
+        class CreateTransferViewHolder(viewHolderListener: ViewHolderListener, itemView: View) : AccountsAndTransfersViewHolder(viewHolderListener, itemView) {
+            init {
+                itemView.setOnClickListener(null)
+                itemView.findViewById<PillButton>(R.id.createTransferButton).setOnClickListener {
+                    viewHolderListener.onViewSelected(adapterPosition)
                 }
             }
         }
-
-        override fun getOldListSize(): Int {
-            return oldList.size
-        }
-
-        override fun getNewListSize(): Int {
-            return newList.size
-        }
-
-        override fun areContentsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
-            // if IDs are same have contents changed
-            return oldList[oldItemPosition] == newList[newItemPosition]
-        }
-
     }
 
     private class AccountsAndTransfersDiffUtil(private val oldList: List<AccountsAndTransferListItem>, private val newList: List<AccountsAndTransferListItem>) : DiffUtil.Callback() {
@@ -339,15 +299,6 @@ class AccountsAndTransfersListRecyclerViewAdapter(
                                         if (newItem is AccountsAndTransferListItem.TransferItem.ScheduledLoadItem.MonthlyItem) {
                                             oldItem.lastFour == newItem.lastFour && oldItem.nextRunDate == newItem.nextRunDate &&
                                                     oldItem.amount == newItem.amount && oldItem.isAccount == newItem.isAccount
-                                        } else {
-                                            false
-                                        }
-                                    }
-                                    is AccountsAndTransferListItem.TransferItem.ScheduledLoadItem.TwiceMonthlyItem -> {
-                                        if (newItem is AccountsAndTransferListItem.TransferItem.ScheduledLoadItem.TwiceMonthlyItem) {
-                                            oldItem.lastFour == newItem.lastFour && oldItem.nextRunDate == newItem.nextRunDate &&
-                                                    oldItem.amount == newItem.amount && oldItem.isAccount == newItem.isAccount &&
-                                                    oldItem.scheduleDate1 == newItem.scheduleDate1 && oldItem.scheduleDate2 == newItem.scheduleDate2
                                         } else {
                                             false
                                         }
@@ -455,15 +406,6 @@ class AccountsAndTransfersListRecyclerViewAdapter(
                                         if (newItem is AccountsAndTransferListItem.TransferItem.ScheduledLoadItem.MonthlyItem) {
                                             oldItem.lastFour == newItem.lastFour && oldItem.nextRunDate == newItem.nextRunDate &&
                                                     oldItem.amount == newItem.amount && oldItem.isAccount == newItem.isAccount
-                                        } else {
-                                            false
-                                        }
-                                    }
-                                    is AccountsAndTransferListItem.TransferItem.ScheduledLoadItem.TwiceMonthlyItem -> {
-                                        if (newItem is AccountsAndTransferListItem.TransferItem.ScheduledLoadItem.TwiceMonthlyItem) {
-                                            oldItem.lastFour == newItem.lastFour && oldItem.nextRunDate == newItem.nextRunDate &&
-                                                    oldItem.amount == newItem.amount && oldItem.isAccount == newItem.isAccount &&
-                                                    oldItem.scheduleDate1 == newItem.scheduleDate1 && oldItem.scheduleDate2 == newItem.scheduleDate2
                                         } else {
                                             false
                                         }
@@ -532,7 +474,7 @@ sealed class AccountsAndTransferListItem(val viewType: Int) {
         object ScheduledLoadHeader : HeaderItem()
         object RecentActivityHeaderItem : HeaderItem()
     }
-    class BankAccountItem(val bankName: String, val lastFour: String, val verified: Boolean) : AccountsAndTransferListItem(AccountsAndTransfersListRecyclerViewAdapter.VIEW_TYPE_BANK_ACCOUNT)
+    class BankAccountItem(val bankName: String, val lastFour: String, val verified: Boolean, val achAccountId: Long) : AccountsAndTransferListItem(AccountsAndTransfersListRecyclerViewAdapter.VIEW_TYPE_BANK_ACCOUNT)
     sealed class AddItem : AccountsAndTransferListItem(AccountsAndTransfersListRecyclerViewAdapter.VIEW_TYPE_ADD_ITEM) {
         object AddBankAccountItem : AddItem()
         object AddCreditDebitCardItem : AddItem()
@@ -540,7 +482,6 @@ sealed class AccountsAndTransferListItem(val viewType: Int) {
     sealed class TransferItem() : AccountsAndTransferListItem(AccountsAndTransfersListRecyclerViewAdapter.VIEW_TYPE_TRANSFER) {
         sealed class ScheduledLoadItem(val nextRunDate: DateTime, val lastFour: String, val isAccount: Boolean, val amount: String) : TransferItem() {
             class MonthlyItem(nextRunDate: DateTime, lastFour: String, isAccount: Boolean, amount: String): ScheduledLoadItem(nextRunDate, lastFour, isAccount, amount)
-            class TwiceMonthlyItem(nextRunDate: DateTime, lastFour: String, isAccount: Boolean, amount: String, val scheduleDate1: DateTime, val scheduleDate2: DateTime): ScheduledLoadItem(nextRunDate, lastFour, isAccount, amount)
             class WeeklyItem(nextRunDate: DateTime, lastFour: String, isAccount: Boolean, amount: String): ScheduledLoadItem(nextRunDate, lastFour, isAccount, amount)
             class AltWeeklyItem(nextRunDate: DateTime, lastFour: String, isAccount: Boolean, amount: String): ScheduledLoadItem(nextRunDate, lastFour, isAccount, amount)
         }
