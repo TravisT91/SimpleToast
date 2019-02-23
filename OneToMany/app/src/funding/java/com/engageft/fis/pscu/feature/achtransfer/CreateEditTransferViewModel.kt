@@ -1,15 +1,18 @@
 package com.engageft.fis.pscu.feature.achtransfer
 
+import android.os.Parcelable
 import androidx.databinding.Observable
 import androidx.databinding.ObservableField
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
+import com.engageft.apptoolbox.util.CurrencyUtils
 import com.engageft.engagekit.EngageService
 import com.engageft.engagekit.aac.SingleLiveEvent
 import com.engageft.engagekit.model.ScheduledLoad
 import com.engageft.engagekit.rest.request.ScheduledLoadRequest
 import com.engageft.engagekit.utils.LoginResponseUtils
+import com.engageft.fis.pscu.config.EngageAppConfig
 import com.engageft.fis.pscu.feature.BaseEngageViewModel
 import com.engageft.fis.pscu.feature.branding.BrandingInfoRepo
 import com.ob.domain.lookup.AchAccountStatus
@@ -21,11 +24,13 @@ import com.ob.ws.dom.utility.CcAccountInfo
 import com.ob.ws.dom.utility.DebitCardInfo
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
+import kotlinx.android.parcel.Parcelize
+import org.joda.time.DateTime
 import utilGen1.DisplayDateTimeUtils
 import utilGen1.ScheduledLoadUtils
 import java.math.BigDecimal
 
-class CreateEditTransferViewModel(val scheduledLoadId: Long): BaseEngageViewModel() {
+class CreateEditTransferViewModel(scheduledLoadId: Long): BaseEngageViewModel() {
 
     enum class FormMode {
         CREATE,
@@ -35,16 +40,14 @@ class CreateEditTransferViewModel(val scheduledLoadId: Long): BaseEngageViewMode
         SHOW,
         HIDE
     }
-    enum class FundSourceType {
-        DEBIT_CREDIT_CARD,
-        ACH_ACCOUNT
-    }
 
     data class CardInfoModel(val cardId: Long, val name: String, val lastFour: String, val balance: BigDecimal)
     data class AccountFundSourceModel(val cardId: Long, val lastFour: String, val name: String? = null, val sourceType: FundSourceType)
 
     val fromAccountObservable = MutableLiveData<List<AccountFundSourceModel>>()
     val toAccountObservable = MutableLiveData<List<CardInfoModel>>()
+
+    val formModeObservable = MutableLiveData<FormMode>()
 
     val deleteSuccessObservable = SingleLiveEvent<Unit>()
 
@@ -59,9 +62,6 @@ class CreateEditTransferViewModel(val scheduledLoadId: Long): BaseEngageViewMode
     val dayOfWeek = ObservableField("")
     var dayOfWeekShow = ObservableField(false)
     var date1Show = ObservableField(false)
-
-    var achAccountInfo: AchAccountInfo? = null
-    var currentCard: DebitCardInfo? = null
 
     private var currentScheduledLoad: ScheduledLoad? = null
 
@@ -155,6 +155,7 @@ class CreateEditTransferViewModel(val scheduledLoadId: Long): BaseEngageViewMode
                                     formMode = FormMode.CREATE
                                     initDataFormModeCreate(loginResponse)
                                 }
+                                formModeObservable.value = formMode
                             } else {
                                 handleUnexpectedErrorResponse(response)
                             }
@@ -178,6 +179,7 @@ class CreateEditTransferViewModel(val scheduledLoadId: Long): BaseEngageViewMode
                 cardInfoModelList.add(cardInfoModel)
             }
 
+            // todo use ScheduledLoad.PLANNED_LOAD_STANDARD_SCH
             if (scheduledLoad.ccAccountId.isNotEmpty()) {
                 loginResponse.ccAccountList.find { ccAccountInfo ->
                     scheduledLoad.ccAccountId.toLong() == ccAccountInfo.ccAccountId
@@ -212,18 +214,15 @@ class CreateEditTransferViewModel(val scheduledLoadId: Long): BaseEngageViewMode
                     dayOfWeekShow.set(true)
                     dayOfWeek.set(dateTime.dayOfWeek().asText)
                 }
+                ScheduledLoad.SCHED_LOAD_TYPE_ALT_WEEKLY -> {
+                    frequency.set(FREQUENCY_EVERY_OTHER_WEEK)
+                    dayOfWeekShow.set(true)
+                    dayOfWeek.set(dateTime.dayOfWeek().asText)
+                }
                 ScheduledLoad.SCHED_LOAD_TYPE_MONTHLY -> {
                     frequency.set(FREQUENCY_MONTHLY)
                     date1Show.set(true)
                     date1.set(DisplayDateTimeUtils.getMediumFormatted(dateTime))
-                }
-                ScheduledLoad.SCHED_LOAD_TYPE_TWICE_MONTHLY -> {
-                    frequency.set(FREQUENCY_BIMONTHLY)
-                    date1Show.set(true)
-                    date2Show.set(true)
-                    date1.set(DisplayDateTimeUtils.getMediumFormatted(dateTime))
-                    val dateTime2 = DisplayDateTimeUtils.shortDateFormatter.parseDateTime(scheduledLoad.scheduleDate2)
-                    date2.set(DisplayDateTimeUtils.getMediumFormatted(dateTime2))
                 }
             }
         }
@@ -277,19 +276,69 @@ class CreateEditTransferViewModel(val scheduledLoadId: Long): BaseEngageViewMode
                 sourceType = FundSourceType.DEBIT_CREDIT_CARD)
     }
 
+    lateinit var transferFundsModel: TransferFundsModel
+
     fun updateButtonState() {
         if (amount.get()!!.isNotEmpty() && hasFrequencySelected() && hasUnsavedChanges()) {
+            // init data
+            setTransferFundModel()
             buttonStateObservable.value = ButtonState.SHOW
         } else {
             buttonStateObservable.value = ButtonState.HIDE
         }
     }
 
-    fun hasUnsavedChanges(): Boolean {
-        if (formMode == FormMode.CREATE && (amount.get()!!.isNotEmpty() || frequency.get()!!.isNotEmpty())) {
-            return true
+    private fun setTransferFundModel() {
+        val transferAmount = BigDecimal(CurrencyUtils.getNonFormattedDecimalAmountString(EngageAppConfig.currencyCode, amount.get()!!))
+        val fundSource = fundSourceMediator[fromAccount.get()!!]
+        val fundDestination = fundDestinationMediator[toAccount.get()!!]
+
+        var date: DateTime? = null
+
+        val frequencyType: ScheduleLoadFrequencyType = when (frequency.get()!!) {
+            FREQUENCY_WEEKLY -> {
+                date = getDayOfWeek(dayOfWeek.get()!!)
+                ScheduleLoadFrequencyType.WEEKLY
+            }
+            FREQUENCY_EVERY_OTHER_WEEK -> {
+                date = getDayOfWeek(dayOfWeek.get()!!)
+                ScheduleLoadFrequencyType.EVERY_OTHER_WEEK }
+
+            FREQUENCY_MONTHLY -> {
+                date = DisplayDateTimeUtils.mediumDateFormatter.parseDateTime(date1.get()!!)
+                ScheduleLoadFrequencyType.MONTHLY
+            }
+            else -> {
+                ScheduleLoadFrequencyType.ONCE
+            }
         }
-        return false
+
+        if (fundSource != null && fundDestination != null) {
+            transferFundsModel = TransferFundsModel(
+                    fromId = fundSource.cardId,
+                    toId = fundDestination.cardId,
+                    amount = transferAmount,
+                    frequency = frequencyType,
+                    scheduleDate = date,
+                    fundSourceType = fundSource.sourceType)
+        }
+    }
+
+    private fun getDayOfWeek(dayOfWeek: String) : DateTime {
+        val selectedDay = DisplayDateTimeUtils.getDayOfWeekNumber(dayOfWeek)
+        val now = DateTime.now()
+        val today: Int = DateTime.now().dayOfWeek + 1 // jodaTime is zero-based
+        val nextRecurringDay = if (selectedDay > today) {
+            selectedDay - today
+        } else {
+            DAYS_IN_A_WEEK - today + selectedDay
+        }
+        return now.plusDays(nextRecurringDay)
+    }
+
+    fun hasUnsavedChanges(): Boolean {
+        return formMode == FormMode.CREATE && (amount.get()!!.isNotEmpty() || frequency.get()!!.isNotEmpty()
+                || fromAccount.get()!!.isNotEmpty() && toAccount.get()!!.isNotEmpty())
     }
 
     fun onDeleteScheduledLoad() {
@@ -353,7 +402,27 @@ class CreateEditTransferViewModel(val scheduledLoadId: Long): BaseEngageViewMode
         )
     }
 
+//    var selectedSource: AccountFundSourceModel? = null
+    lateinit var fundSourceMediator: HashMap<String, AccountFundSourceModel>
+    fun setFundSourceListMediator(mediatorHashmap: HashMap<String, AccountFundSourceModel>) {
+        fundSourceMediator = mediatorHashmap
+//        fromAccountObservable.value?.let { fundSourceList ->
+//            selectedSource = fundSourceList[index]
+//        }
+    }
+
+//    var selectedCard: CardInfoModel? = null
+    lateinit var fundDestinationMediator: HashMap<String, CardInfoModel>
+    fun setSelectedCard(mediatorHashmap: HashMap<String, CardInfoModel>) {
+        fundDestinationMediator = mediatorHashmap
+//        toAccountObservable.value?.let { cardList ->
+//            selectedCard = cardList[index]
+//        }
+    }
+
     private companion object {
+        private const val DAYS_IN_A_WEEK = 7
+
         const val FREQUENCY_ONETIME = "One-time"
         const val FREQUENCY_WEEKLY = "Once a week"
         const val FREQUENCY_EVERY_OTHER_WEEK = "Every other week"
@@ -366,3 +435,20 @@ class CreateEditTransferViewModelFactory(private val scheduleLoadId: Long) : Vie
         return CreateEditTransferViewModel(scheduleLoadId) as T
     }
 }
+
+enum class FundSourceType {
+    DEBIT_CREDIT_CARD,
+    ACH_ACCOUNT
+}
+// this enum matches EXACTLY the ScheduledLoadInfo frequency strings that we get from backend.
+// we're doing this to prevent errors passing frequencies around.
+enum class ScheduleLoadFrequencyType {
+    ONCE,
+    WEEKLY,
+    EVERY_OTHER_WEEK,
+    MONTHLY
+}
+@Parcelize
+data class TransferFundsModel(val fromId: Long, val toId: Long, val amount: BigDecimal,
+                         val frequency: ScheduleLoadFrequencyType, val scheduleDate: DateTime? = null,
+                         val fundSourceType: FundSourceType): Parcelable

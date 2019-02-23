@@ -8,18 +8,19 @@ import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+import androidx.core.os.bundleOf
 import androidx.lifecycle.Observer
 import androidx.navigation.findNavController
 import androidx.navigation.fragment.findNavController
 import com.engageft.apptoolbox.BaseViewModel
 import com.engageft.apptoolbox.NavigationOverrideClickListener
 import com.engageft.apptoolbox.ViewUtils.newLotusInstance
-import com.engageft.apptoolbox.util.CurrencyUtils
 import com.engageft.apptoolbox.view.InformationDialogFragment
 import com.engageft.fis.pscu.R
 import com.engageft.fis.pscu.config.EngageAppConfig
 import com.engageft.fis.pscu.databinding.FragmentCreateEditTransferBinding
 import com.engageft.fis.pscu.feature.BaseEngagePageFragment
+import com.engageft.fis.pscu.feature.achtransfer.CardLoadConstants.TRANSFER_FUNDS_BUNDLE_KEY
 import com.engageft.fis.pscu.feature.achtransfer.CardLoadConstants.SCHEDULED_LOAD_ID
 import com.engageft.fis.pscu.feature.branding.Palette
 import com.engageft.fis.pscu.feature.infoDialogGenericUnsavedChangesNewInstance
@@ -74,47 +75,6 @@ class CreateEditTransferFragment: BaseEngagePageFragment() {
             viewModel = createEditTransferViewModel
             palette = Palette
 
-            //it's in EDIT MODE
-            if (createEditTransferViewModel.scheduledLoadId != SCHEDULED_LOAD_ID) {
-
-                toolbarController.setToolbarTitle(getString(R.string.ach_bank_transfer_edit_transfer_screen_title))
-
-                deleteButtonLayout.visibility = View.VISIBLE
-                headerTextView.visibility = View.GONE
-                subHeaderTextView.visibility = View.GONE
-
-                deleteButtonLayout.setOnClickListener {
-                    val infoDialog = InformationDialogFragment.newLotusInstance(title = getString(R.string.ach_bank_transfer_delete_transfer_title),
-                            message = String.format(getString(R.string.ach_bank_transfer_delete_transfer_message_format),
-                                    createEditTransferViewModel.frequency.get(), createEditTransferViewModel.fromAccount.get()),
-                            buttonPositiveText = getString(R.string.dialog_information_yes_button),
-                            buttonNegativeText = getString(R.string.dialog_information_no_button),
-                            listener = object : InformationDialogFragment.InformationDialogFragmentListener {
-                                override fun onDialogFragmentNegativeButtonClicked() {
-                                }
-
-                                override fun onDialogFragmentPositiveButtonClicked() {
-                                    createEditTransferViewModel.onDeleteScheduledLoad()
-                                }
-
-                                override fun onDialogCancelled() {
-                                }
-
-                            })
-                    infoDialog.positiveButtonTextColor = Palette.errorColor
-                    fragmentDelegate.showDialog(infoDialog)
-                }
-
-                    // set fields to disabled in EDIT mode so user can't edit it but they can delete their recurring transfer
-                    amountInputWithLabel.isEnabled = false
-                    frequencyBottomSheet.isEnabled = false
-                    daysOfWeekBottomSheet.isEnabled = false
-                    date1BottomSheet.isEnabled = false
-                } else {
-                    toolbarController.setToolbarTitle(getString(R.string.ach_bank_transfer_create_transfer))
-                }
-            }
-
             frequencyBottomSheet.dialogOptions = ArrayList(ScheduledLoadUtils.getFrequencyDisplayStringsForTransfer(context!!))
             daysOfWeekBottomSheet.dialogOptions = ArrayList(DisplayDateTimeUtils.daysOfWeekList())
             // don't allow today's date as a selection
@@ -128,7 +88,32 @@ class CreateEditTransferFragment: BaseEngagePageFragment() {
                 navigateToConfirmationScreen()
             }
 
+//            accountFromBottomSheet.setOnListItemSelectionListener(object: BottomSheetListInputWithLabel.OnListItemSelectionListener {
+//                override fun onItemSelected(index: Int) {
+//                    // this index MUST match the fromAccounts list
+//                    createEditTransferViewModel.setFundSourceListMediator(index)
+//                }
+//            })
+//
+//            accountToBottomSheet.setOnListItemSelectionListener(object: BottomSheetListInputWithLabel.OnListItemSelectionListener {
+//                override fun onItemSelected(index: Int) {
+//                    // this index MUST match the fromAccounts list
+//                    createEditTransferViewModel.setSelectedCard(index)
+//                }
+//            })
+
             createEditTransferViewModel.apply {
+
+                formModeObservable.observe(viewLifecycleOwner, Observer { mode ->
+                    when (mode) {
+                        CreateEditTransferViewModel.FormMode.EDIT -> {
+                            setEditMode()
+                        }
+                        CreateEditTransferViewModel.FormMode.CREATE -> {
+                            toolbarController.setToolbarTitle(getString(R.string.ach_bank_transfer_create_transfer))
+                        }
+                    }
+                })
 
                 buttonStateObservable.observe(viewLifecycleOwner, Observer {
                     when (it) {
@@ -139,44 +124,52 @@ class CreateEditTransferFragment: BaseEngagePageFragment() {
                 })
 
                 fromAccountObservable.observe(viewLifecycleOwner, Observer { fundSourceList ->
+                    val fromFundSourceMediator = HashMap<String, CreateEditTransferViewModel.AccountFundSourceModel>()
                     // format ACH bank name with last 4 digits
                     val fromOptionsList = ArrayList<CharSequence>()
                     var formattedString: String
                     fundSourceList.forEach { source ->
-                        when (source.sourceType) {
-                            CreateEditTransferViewModel.FundSourceType.ACH_ACCOUNT -> {
-                                formattedString = String.format(getString(R.string.BANKACCOUNT_DESCRIPTION_FORMAT),
+                        formattedString = when (source.sourceType) {
+                            FundSourceType.ACH_ACCOUNT -> {
+                                String.format(getString(R.string.BANKACCOUNT_DESCRIPTION_FORMAT),
                                         source.name, source.lastFour)
-                                fromOptionsList.add(formattedString)
                             }
-                            CreateEditTransferViewModel.FundSourceType.DEBIT_CREDIT_CARD -> {
-                                formattedString = String.format(getString(R.string.BANKACCOUNT_DESCRIPTION_FORMAT),
+                            FundSourceType.DEBIT_CREDIT_CARD -> {
+                                String.format(getString(R.string.BANKACCOUNT_DESCRIPTION_FORMAT),
                                         getString(R.string.card_load_card_type), source.lastFour)
-                                fromOptionsList.add(formattedString)
                             }
                         }
+                        fromOptionsList.add(formattedString)
+                        fromFundSourceMediator[formattedString] = source
                     }
 
                     if (fromOptionsList.isNotEmpty() && fromOptionsList.size == 1) {
-                        accountFromBottomSheet.isEnabled = false
+                        accountFromBottomSheet.setEnable(false)
                         accountFromBottomSheet.inputText = fromOptionsList[0]
                     } else {
                         accountFromBottomSheet.dialogOptions = fromOptionsList
                     }
+
+                    createEditTransferViewModel.setFundSourceListMediator(fromFundSourceMediator)
                 })
 
                 toAccountObservable.observe(viewLifecycleOwner, Observer { cardList ->
+                    val toFundDestinationMediator = HashMap<String, CreateEditTransferViewModel.CardInfoModel>()
+
                     // format Card Info with last four
                     val toOptionsList = ArrayList<CharSequence>()
+                    var element: String
                     cardList.forEach { cardInfoModel ->
-                        toOptionsList.add(
-                                String.format(getString(R.string.BANKACCOUNT_DESCRIPTION_WITH_BALANCE_FORMAT),
+                        element = String.format(getString(R.string.BANKACCOUNT_DESCRIPTION_WITH_BALANCE_FORMAT),
                                 cardInfoModel.name, cardInfoModel.lastFour,
-                                StringUtils.formatCurrencyStringWithFractionDigits(cardInfoModel.balance.toString(), true)))
+                                StringUtils.formatCurrencyStringWithFractionDigits(cardInfoModel.balance.toString(), true))
+                        toOptionsList.add(element)
+                        toFundDestinationMediator[element] = cardInfoModel
                     }
 
+                    setSelectedCard(toFundDestinationMediator)
                     if (toOptionsList.isNotEmpty() && toOptionsList.size == 1) {
-                        accountToBottomSheet.isEnabled = false
+                        accountToBottomSheet.setEnable(false)
                         accountToBottomSheet.inputText = toOptionsList[0]
                     } else {
                         accountToBottomSheet.dialogOptions = toOptionsList
@@ -189,10 +182,10 @@ class CreateEditTransferFragment: BaseEngagePageFragment() {
 
                 isInErrorStateObservable.observe(viewLifecycleOwner, Observer { showError ->
                     if (showError) {
-                        accountFromBottomSheet.isEnabled = false
-                        accountToBottomSheet.isEnabled = false
-                        amountInputWithLabel.isEnabled = false
-                        frequencyBottomSheet.isEnabled = false
+                        accountFromBottomSheet.setEnable(false)
+                        accountToBottomSheet.setEnable(false)
+                        amountInputWithLabel.setEnable(false)
+                        frequencyBottomSheet.setEnable(false)
                         headerTextView.visibility = View.GONE
                         subHeaderTextView.visibility = View.GONE
 
@@ -211,6 +204,44 @@ class CreateEditTransferFragment: BaseEngagePageFragment() {
         backButtonOverrideProvider.setBackButtonOverride(navigationOverrideClickListener)
 
         return binding.root
+    }
+
+    private fun setEditMode() {
+        binding.apply {
+            toolbarController.setToolbarTitle(getString(R.string.ach_bank_transfer_edit_transfer_screen_title))
+
+            deleteButtonLayout.visibility = View.VISIBLE
+            headerTextView.visibility = View.GONE
+            subHeaderTextView.visibility = View.GONE
+
+            deleteButtonLayout.setOnClickListener {
+                val infoDialog = InformationDialogFragment.newLotusInstance(title = getString(R.string.ach_bank_transfer_delete_transfer_title),
+                        message = String.format(getString(R.string.ach_bank_transfer_delete_transfer_message_format),
+                                createEditTransferViewModel.frequency.get(), createEditTransferViewModel.fromAccount.get()),
+                        buttonPositiveText = getString(R.string.dialog_information_yes_button),
+                        buttonNegativeText = getString(R.string.dialog_information_no_button),
+                        listener = object : InformationDialogFragment.InformationDialogFragmentListener {
+                            override fun onDialogFragmentNegativeButtonClicked() {
+                            }
+
+                            override fun onDialogFragmentPositiveButtonClicked() {
+                                createEditTransferViewModel.onDeleteScheduledLoad()
+                            }
+
+                            override fun onDialogCancelled() {
+                            }
+
+                        })
+                infoDialog.positiveButtonTextColor = Palette.errorColor
+                fragmentDelegate.showDialog(infoDialog)
+            }
+
+            // set fields to disabled in EDIT mode so user can't edit it but they can delete their recurring transfer
+            amountInputWithLabel.setEnable(false)
+            frequencyBottomSheet.setEnable(false)
+            daysOfWeekBottomSheet.setEnable(false)
+            date1BottomSheet.setEnable(false)
+        }
     }
 
     override fun onCreateOptionsMenu(menu: Menu?, inflater: MenuInflater?) {
@@ -235,21 +266,18 @@ class CreateEditTransferFragment: BaseEngagePageFragment() {
     }
 
     private fun navigateToConfirmationScreen() {
-        val frequencyType = ScheduledLoadUtils.getFrequencyTypeStringForDisplayString(context!!, createEditTransferViewModel.frequency.get()!!)
-
-        val date = if (createEditTransferViewModel.date1.get()!!.isNotEmpty()) {
-            DisplayDateTimeUtils.mediumDateFormatter.parseDateTime(createEditTransferViewModel.date1.get())
-        } else {
-            null
-        }
+//        val frequencyType = ScheduledLoadUtils.getFrequencyTypeStringForDisplayString(context!!, createEditTransferViewModel.frequency.get()!!)
 
         binding.root.findNavController().navigate(R.id.action_createEditTransferFragment_to_createTransferConfirmationFragment,
-                CreateTransferConfirmationFragment.createBundle(
-                        achAccountId = createEditTransferViewModel.achAccountInfo!!.achAccountId,
-                        cardId = createEditTransferViewModel.currentCard!!.debitCardId,
-                        frequency = frequencyType,
-                        amount = CurrencyUtils.getNonFormattedDecimalAmountString(currencyCode = EngageAppConfig.currencyCode, stringWithCurrencySymbol = createEditTransferViewModel.amount.get()!!),
-                        scheduledDate = date,
-                        dayOfWeek = createEditTransferViewModel.dayOfWeek.get()!!))
+                bundleOf(TRANSFER_FUNDS_BUNDLE_KEY to createEditTransferViewModel.transferFundsModel))
+
+//        binding.root.findNavController().navigate(R.id.action_createEditTransferFragment_to_createTransferConfirmationFragment,
+//                CreateTransferConfirmationFragment.createBundle(
+//                        achAccountId = createEditTransferViewModel.achAccountInfo!!.achAccountId,
+//                        cardId = createEditTransferViewModel.currentCard!!.debitCardId,
+//                        frequency = frequencyType,
+//                        amount = CurrencyUtils.getNonFormattedDecimalAmountString(currencyCode = EngageAppConfig.currencyCode, stringWithCurrencySymbol = createEditTransferViewModel.amount.get()!!),
+//                        scheduledDate = date,
+//                        dayOfWeek = createEditTransferViewModel.dayOfWeek.get()!!))
     }
 }

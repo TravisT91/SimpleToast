@@ -6,114 +6,124 @@ import com.engageft.engagekit.EngageService
 import com.engageft.engagekit.aac.SingleLiveEvent
 import com.engageft.engagekit.model.ScheduledLoad
 import com.engageft.engagekit.rest.request.FundingFundAchAccountRequest
+import com.engageft.engagekit.rest.request.FundingFundFromCcAccountRequest
 import com.engageft.engagekit.rest.request.ScheduledLoadAchAddRequest
+import com.engageft.engagekit.rest.request.ScheduledLoadDebitAddRequest
 import com.engageft.engagekit.utils.BackendDateTimeUtils
-import com.engageft.feature.goals.GoalDetailViewModel
+import com.engageft.engagekit.utils.engageApi
 import com.engageft.fis.pscu.feature.BaseEngageViewModel
 import com.engageft.fis.pscu.feature.handleBackendErrorForForms
 import com.ob.ws.dom.BasicResponse
 import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
-import org.joda.time.DateTime
 
-class CreateTransferConfirmationViewModel: BaseEngageViewModel() {
-
-    var frequencyType = ""
-    var amount = ""
-    var scheduledDate1: DateTime? = null
-    var achAccountInfoId = -1L
-    var cardId = -1L
+class CreateTransferConfirmationViewModel(private val transferFundModel: TransferFundsModel): BaseEngageViewModel() {
 
     val createTransferSuccessObservable = SingleLiveEvent<Unit>()
 
     fun onCreateUpdateTransfer() {
-        // create transfer
-        if (frequencyType == ScheduledLoad.SCHED_LOAD_TYPE_ONCE) {
-            executeOneTimeAchLoad()
-        } else {
-            submitScheduleLoad(getNewScheduleLoad())
+        when (transferFundModel.fundSourceType) {
+            FundSourceType.DEBIT_CREDIT_CARD -> {
+                transferFromDebitSource(transferFundModel)
+            }
+            FundSourceType.ACH_ACCOUNT -> {
+                transferFromAchAccount(transferFundModel)
+            }
         }
     }
 
-    private fun getNewScheduleLoad() : ScheduledLoad {
+    private fun transferFromAchAccount(transferFundModel: TransferFundsModel) {
+        val scheduledLoad = getNewScheduleLoad(transferFundModel)
+        scheduledLoad.achAccountId = this.transferFundModel.fromId.toString()
+        //TODO(aHashimi): Pass ThreatMetrix sessionId
+        val request = ScheduledLoadAchAddRequest(scheduledLoad, "")
+
+        val observable: Observable<BasicResponse> = when (transferFundModel.frequency) {
+            ScheduleLoadFrequencyType.WEEKLY -> engageApi().postScheduledLoadACHAddWeekly(request.fieldMap)
+            ScheduleLoadFrequencyType.EVERY_OTHER_WEEK -> engageApi().postScheduledLoadACHAddAltWeekly(request.fieldMap)
+            ScheduleLoadFrequencyType.MONTHLY -> engageApi().postScheduledLoadACHAddMonthly(request.fieldMap)
+            ScheduleLoadFrequencyType.ONCE -> {
+                val req = FundingFundAchAccountRequest(
+                        transferFundModel.fromId,
+                        transferFundModel.amount.toString(),
+                        transferFundModel.toId,
+                        "")
+                engageApi().postFundAchAccount(req.fieldMap)
+            }
+        }
+
+        transfer(observable)
+    }
+
+    private fun transferFromDebitSource(transferFundModel: TransferFundsModel) {
+        val scheduledLoad = getNewScheduleLoad(transferFundModel)
+        scheduledLoad.ccAccountId = transferFundModel.fromId.toString()
+        //TODO(aHashimi): Pass ThreatMetrix sessionId
+        val request = ScheduledLoadDebitAddRequest(scheduledLoad, "")
+
+        val observable: Observable<BasicResponse> = when (transferFundModel.frequency) {
+            ScheduleLoadFrequencyType.WEEKLY -> engageApi().postScheduledLoadDebitAddWeekly(request.fieldMap)
+            ScheduleLoadFrequencyType.EVERY_OTHER_WEEK -> engageApi().postScheduledLoadDebitAddAltWeekly(request.fieldMap)
+            ScheduleLoadFrequencyType.MONTHLY -> engageApi().postScheduledLoadDebitAddMonthly(request.fieldMap)
+            ScheduleLoadFrequencyType.ONCE -> {
+                val req = FundingFundFromCcAccountRequest(
+                        transferFundModel.fromId,
+                        transferFundModel.amount.toString(),
+                        transferFundModel.toId,
+                        "")
+                engageApi().postFundingAddDebit(req.fieldMap)
+            }
+        }
+
+        transfer(observable)
+
+    }
+
+    private fun getNewScheduleLoad(fundsModel: TransferFundsModel) : ScheduledLoad {
         val scheduledLoad = ScheduledLoad()
-        // todo shouldn't need it
-//        scheduledLoad.isExternal = false
-        scheduledLoad.scheduledLoadType = ScheduledLoad.PLANNED_LOAD_METHOD_BANK_TRANSFER
-        scheduledLoad.cardId = cardId.toString()
-        scheduledLoad.achAccountId = achAccountInfoId.toString()
+        // this is not needed by backend but Retrofit serialization
+        scheduledLoad.scheduledLoadType = ScheduledLoad.PLANNED_LOAD_METHOD_ACH
+        scheduledLoad.cardId = fundsModel.toId.toString()
 
-        scheduledLoad.typeString = frequencyType
-        scheduledLoad.amount = amount
+        scheduledLoad.typeString = fundsModel.frequency.toString()
+        scheduledLoad.amount = fundsModel.amount.toString()
 
-        scheduledDate1?.let {
-            scheduledLoad.scheduleDate = BackendDateTimeUtils.getIso8601String(it)
+        fundsModel.scheduleDate?.let { scheduleDate ->
+            scheduledLoad.scheduleDate = BackendDateTimeUtils.getIso8601String(scheduleDate)
         }
 
         return scheduledLoad
     }
 
-    private fun submitScheduleLoad(scheduledLoad: ScheduledLoad, sessionId: String = "") {
-        dismissProgressOverlayImmediate()
+    private fun transfer(observable: Observable<BasicResponse>) {
+        showProgressOverlayDelayed()
 
-        val request = ScheduledLoadAchAddRequest(
-                scheduledLoad,
-                sessionId)
-        val observable: Observable<BasicResponse> = when (scheduledLoad.typeString) {
-            ScheduledLoad.SCHED_LOAD_TYPE_WEEKLY -> EngageService.getInstance().engageApiInterface.postScheduledLoadACHAddWeekly(request.fieldMap)
-            ScheduledLoad.SCHED_LOAD_TYPE_ALT_WEEKLY -> EngageService.getInstance().engageApiInterface.postScheduledLoadACHAddAltWeekly(request.fieldMap)
-            ScheduledLoad.SCHED_LOAD_TYPE_MONTHLY -> EngageService.getInstance().engageApiInterface.postScheduledLoadACHAddMonthly(request.fieldMap)
-            else -> EngageService.getInstance().engageApiInterface.postScheduledLoadACHAddMonthly(request.fieldMap)
-        }
-
-        compositeDisposable.add(
-                observable.subscribeOn(Schedulers.io())
-                        .observeOn(AndroidSchedulers.mainThread())
-                        .subscribe({ response ->
-                            dismissProgressOverlay()
-                            if (response.isSuccess) {
-                                EngageService.getInstance().clearLoginAndDashboardResponses()
-                                createTransferSuccessObservable.call()
-                            } else {
-                                handleBackendErrorForForms(response, "$TAG: creating a recurring transfer failed.")
-                            }
-                        }, { e ->
-                            dismissProgressOverlay()
-                            handleThrowable(e)
-                        })
-        )
-    }
-
-    private fun executeOneTimeAchLoad(sessionId: String = "") {
-        showProgressOverlayImmediate()
-
-        val request = FundingFundAchAccountRequest(
-                achAccountInfoId,
-                amount,
-                cardId,
-                sessionId
-        )
-        compositeDisposable.add(
-                EngageService.getInstance().engageApiInterface.postFundAchAccount(request.fieldMap)
-                        .subscribeOn(Schedulers.io())
-                        .observeOn(AndroidSchedulers.mainThread())
-                        .subscribe({ response ->
-                            dismissProgressOverlay()
-                            if (response.isSuccess) {
-                                EngageService.getInstance().clearLoginAndDashboardResponses()
-                                createTransferSuccessObservable.call()
-                            } else {
-                                handleBackendErrorForForms(response, "$TAG: creating one-time transfer failed.")
-                            }
-                        }, { e ->
-                            dismissProgressOverlay()
-                            handleThrowable(e)
-                        })
+        compositeDisposable.add(observable
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe({ response ->
+                    dismissProgressOverlay()
+                    if (response.isSuccess) {
+                        EngageService.getInstance().clearLoginAndDashboardResponses()
+                        createTransferSuccessObservable.call()
+                    } else {
+                        handleBackendErrorForForms(response, "$TAG: creating a recurring transfer failed.")
+                    }
+                }, { e ->
+                    dismissProgressOverlay()
+                    handleThrowable(e)
+                })
         )
     }
 
     private companion object {
         const val TAG = "CreateTransferConfirmationViewModel"
+    }
+}
+class CreateTransferConfirmationViewModelFactory(private val transferFundsModel: TransferFundsModel) : ViewModelProvider.NewInstanceFactory() {
+    override fun <T : ViewModel?> create(modelClass: Class<T>): T {
+        @Suppress("UNCHECKED_CAST")
+        return CreateTransferConfirmationViewModel(transferFundsModel) as T
     }
 }

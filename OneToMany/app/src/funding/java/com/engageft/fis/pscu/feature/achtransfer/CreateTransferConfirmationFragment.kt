@@ -5,10 +5,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProviders
 import androidx.navigation.findNavController
 import com.engageft.apptoolbox.BaseViewModel
-import com.engageft.engagekit.model.ScheduledLoad
 import com.engageft.fis.pscu.R
 import com.engageft.fis.pscu.databinding.FragmentCreateTransferConfirmBinding
 import com.engageft.fis.pscu.feature.BaseEngagePageFragment
@@ -22,8 +20,11 @@ import utilGen1.StringUtils
 class CreateTransferConfirmationFragment: BaseEngagePageFragment() {
     private lateinit var createTransferViewModel: CreateTransferConfirmationViewModel
 
+    private lateinit var transferFundsModel: TransferFundsModel
+
     override fun createViewModel(): BaseViewModel? {
-        createTransferViewModel = ViewModelProviders.of(this).get(CreateTransferConfirmationViewModel::class.java)
+        transferFundsModel = arguments!!.getParcelable(CardLoadConstants.TRANSFER_FUNDS_BUNDLE_KEY) as TransferFundsModel
+        createTransferViewModel = CreateTransferConfirmationViewModelFactory(transferFundsModel).create(CreateTransferConfirmationViewModel::class.java)
         return createTransferViewModel
     }
 
@@ -34,30 +35,29 @@ class CreateTransferConfirmationFragment: BaseEngagePageFragment() {
             viewModel = createTransferViewModel
             palette = Palette
 
-            arguments?.let { bundle ->
-                createTransferViewModel.achAccountInfoId = bundle.getLong(ACH_ACCOUNT_ID, -1L)
-                createTransferViewModel.cardId = bundle.getLong(CARD_ID, -1L)
-                createTransferViewModel.amount = bundle.getString(TRANSFER_AMOUNT, "")
-                createTransferViewModel.scheduledDate1 = bundle.getSerializable(TRANSFER_DATE1) as? DateTime
-                createTransferViewModel.frequencyType = bundle.getString(TRANSFER_FREQUENCY, "")
-            } ?: throw IllegalStateException("must pass data")
+            //todo display from Account
+            amountTextView.text = StringUtils.formatCurrencyStringFractionDigitsReducedHeight(transferFundsModel.amount.toString(), 0.5f, true)
 
-            amountTextView.text = StringUtils.formatCurrencyStringFractionDigitsReducedHeight(createTransferViewModel.amount, 0.5f, true)
-
-            when(createTransferViewModel.frequencyType) {
-                ScheduledLoad.SCHED_LOAD_TYPE_MONTHLY -> {
-                    frequencyTextView.text = String.format(getString(R.string.ach_bank_transfer_create_confirmation_frequency_format),
-                            getString(R.string.TRANSFER_MONTHLY_TEXT), DisplayDateTimeUtils.getMediumFormatted(DateTime(createTransferViewModel.scheduledDate1)))
+            when(transferFundsModel.frequency) {
+                ScheduleLoadFrequencyType.MONTHLY -> {
+                    transferFundsModel.scheduleDate?.let { date ->
+                        frequencyTextView.text = String.format(getString(R.string.ach_bank_transfer_create_confirmation_frequency_format),
+                                getString(R.string.TRANSFER_MONTHLY_TEXT), DisplayDateTimeUtils.getMediumFormatted(DateTime(date)))
+                    }
                 }
-                ScheduledLoad.SCHED_LOAD_TYPE_ALT_WEEKLY -> {
-                    frequencyTextView.text = String.format(getString(R.string.TRANSFER_ALT_WEEKLY_SIMPLE_LOAD_DESCRIPTION),
-                            DateTime(createTransferViewModel.scheduledDate1).dayOfWeek().asText)
+                ScheduleLoadFrequencyType.EVERY_OTHER_WEEK -> {
+                    transferFundsModel.scheduleDate?.let { date ->
+                        frequencyTextView.text = String.format(getString(R.string.TRANSFER_ALT_WEEKLY_SIMPLE_LOAD_DESCRIPTION),
+                                DateTime(date).dayOfWeek().asText)
+                    }
                 }
-                ScheduledLoad.SCHED_LOAD_TYPE_WEEKLY -> {
-                    frequencyTextView.text = String.format(getString(R.string.TRANSFER_WEEKLY_SIMPLE_LOAD_DESCRIPTION),
-                            DateTime(createTransferViewModel.scheduledDate1).dayOfWeek().asText)
+                ScheduleLoadFrequencyType.WEEKLY -> {
+                    transferFundsModel.scheduleDate?.let { date ->
+                        frequencyTextView.text = String.format(getString(R.string.TRANSFER_WEEKLY_SIMPLE_LOAD_DESCRIPTION),
+                                DateTime(date).dayOfWeek().asText)
+                    }
                 }
-                ScheduledLoad.SCHED_LOAD_TYPE_ONCE -> {
+                ScheduleLoadFrequencyType.ONCE -> {
                     titleTextView.text = getString(R.string.ach_bank_transfer_create_confirmation_transfer)
                     frequencyTextView.visibility = View.GONE
                 }
@@ -75,50 +75,5 @@ class CreateTransferConfirmationFragment: BaseEngagePageFragment() {
         })
 
         return binding.root
-    }
-
-    companion object {
-        const val CARD_ID = "CARD_ID"
-        const val ACH_ACCOUNT_ID = "ACH_ACCOUNT_ID"
-        const val TRANSFER_AMOUNT = "TRANSFER_AMOUNT"
-        const val TRANSFER_FREQUENCY = "TRANSFER_FREQUENCY"
-        const val TRANSFER_DATE1 = "TRANSFER_DATE1"
-
-        private const val DAYS_IN_A_WEEK = 7
-
-        fun createBundle(achAccountId: Long, cardId: Long, frequency: String, amount: String,
-                         scheduledDate: DateTime?, dayOfWeek: String): Bundle {
-
-            return Bundle().apply {
-                putLong(ACH_ACCOUNT_ID, achAccountId)
-                putLong(CARD_ID, cardId)
-                putString(TRANSFER_AMOUNT, amount)
-                putString(TRANSFER_FREQUENCY, frequency)
-
-                when (frequency) {
-                    ScheduledLoad.SCHED_LOAD_TYPE_WEEKLY -> {
-                        putSerializable(TRANSFER_DATE1, getDayOfWeek(dayOfWeek))
-                    }
-                    ScheduledLoad.SCHED_LOAD_TYPE_ALT_WEEKLY -> {
-                        putSerializable(TRANSFER_DATE1, getDayOfWeek(dayOfWeek))
-                    }
-                    ScheduledLoad.SCHED_LOAD_TYPE_MONTHLY -> {
-                        putSerializable(TRANSFER_DATE1, scheduledDate)
-                    }
-                }
-            }
-        }
-
-        private fun getDayOfWeek(dayOfWeek: String) : DateTime {
-            val selectedDay = DisplayDateTimeUtils.getDayOfWeekNumber(dayOfWeek)
-            val now = DateTime.now()
-            val today: Int = DateTime.now().dayOfWeek + 1 // jodaTime is zero-based
-            val nextRecurringDay = if (selectedDay > today) {
-                selectedDay - today
-            } else {
-                DAYS_IN_A_WEEK - today + selectedDay
-            }
-            return now.plusDays(nextRecurringDay)
-        }
     }
 }
