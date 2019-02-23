@@ -183,13 +183,16 @@ class AccountsAndTransfersListViewModel: BaseEngageViewModel() {
                                     val nextRunDate = BackendDateTimeUtils.parseDateTimeFromIso8601String(scheduledLoad.isoNextRunDate)
                                     when (scheduledLoad.typeString) {
                                         ScheduledLoad.SCHED_LOAD_TYPE_MONTHLY -> {
-                                            scheduledLoads.add(AccountsAndTransferListItem.TransferItem.ScheduledLoadItem.MonthlyItem(nextRunDate, "TODO", true, scheduledLoad.amount))
+                                            scheduledLoads.add(AccountsAndTransferListItem.TransferItem.ScheduledLoadItem.MonthlyItem(
+                                                    nextRunDate, "TODO", true, scheduledLoad.amount, scheduledLoad.scheduledLoadId))
                                         }
                                         ScheduledLoad.SCHED_LOAD_TYPE_ALT_WEEKLY -> {
-                                            scheduledLoads.add(AccountsAndTransferListItem.TransferItem.ScheduledLoadItem.WeeklyItem(nextRunDate, "TODO", true, scheduledLoad.amount))
+                                            scheduledLoads.add(AccountsAndTransferListItem.TransferItem.ScheduledLoadItem.WeeklyItem(
+                                                    nextRunDate, "TODO", true, scheduledLoad.amount, scheduledLoad.scheduledLoadId))
                                         }
                                         ScheduledLoad.SCHED_LOAD_TYPE_WEEKLY -> {
-                                            scheduledLoads.add(AccountsAndTransferListItem.TransferItem.ScheduledLoadItem.AltWeeklyItem(nextRunDate, "TODO", true, scheduledLoad.amount))
+                                            scheduledLoads.add(AccountsAndTransferListItem.TransferItem.ScheduledLoadItem.AltWeeklyItem(
+                                                    nextRunDate, "TODO", true, scheduledLoad.amount, scheduledLoad.scheduledLoadId))
                                         }
                                         else -> {
                                             handleUnexpectedErrorResponse(BasicResponse(false,

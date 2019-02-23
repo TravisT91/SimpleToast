@@ -480,10 +480,10 @@ sealed class AccountsAndTransferListItem(val viewType: Int) {
         object AddCreditDebitCardItem : AddItem()
     }
     sealed class TransferItem() : AccountsAndTransferListItem(AccountsAndTransfersListRecyclerViewAdapter.VIEW_TYPE_TRANSFER) {
-        sealed class ScheduledLoadItem(val nextRunDate: DateTime, val lastFour: String, val isAccount: Boolean, val amount: String) : TransferItem() {
-            class MonthlyItem(nextRunDate: DateTime, lastFour: String, isAccount: Boolean, amount: String): ScheduledLoadItem(nextRunDate, lastFour, isAccount, amount)
-            class WeeklyItem(nextRunDate: DateTime, lastFour: String, isAccount: Boolean, amount: String): ScheduledLoadItem(nextRunDate, lastFour, isAccount, amount)
-            class AltWeeklyItem(nextRunDate: DateTime, lastFour: String, isAccount: Boolean, amount: String): ScheduledLoadItem(nextRunDate, lastFour, isAccount, amount)
+        sealed class ScheduledLoadItem(val nextRunDate: DateTime, val lastFour: String, val isAccount: Boolean, val amount: String, val scheduledLoadId: Long) : TransferItem() {
+            class MonthlyItem(nextRunDate: DateTime, lastFour: String, isAccount: Boolean, amount: String, scheduledLoadId: Long): ScheduledLoadItem(nextRunDate, lastFour, isAccount, amount, scheduledLoadId)
+            class WeeklyItem(nextRunDate: DateTime, lastFour: String, isAccount: Boolean, amount: String, scheduledLoadId: Long): ScheduledLoadItem(nextRunDate, lastFour, isAccount, amount, scheduledLoadId)
+            class AltWeeklyItem(nextRunDate: DateTime, lastFour: String, isAccount: Boolean, amount: String, scheduledLoadId: Long): ScheduledLoadItem(nextRunDate, lastFour, isAccount, amount, scheduledLoadId)
         }
         class RecentActivityItem(val nextRunDate: DateTime, val lastFour: String, val isAccount: Boolean, val amount: String) : TransferItem()
     }

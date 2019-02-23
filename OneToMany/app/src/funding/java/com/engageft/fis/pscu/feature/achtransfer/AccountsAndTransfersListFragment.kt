@@ -46,6 +46,12 @@ class AccountsAndTransfersListFragment: BaseEngagePageFragment() {
                                 putLong(ACH_BANK_ACCOUNT_ID, secondaryUserListItem.achAccountId)
                             })
                 }
+                is AccountsAndTransferListItem.TransferItem.ScheduledLoadItem -> {
+                    findNavController().navigate(R.id.action_accountsAndTransfersListFragment_to_createEditTransferFragment,
+                            Bundle().apply {
+                                putLong(SCHEDULED_LOAD_ID, secondaryUserListItem.scheduledLoadId)
+                            })
+                }
                 is AccountsAndTransferListItem.CreditDebitCardItem -> {
                     // TODO(jhutchins): FOTM-1001 View Credit/Debit account
                 }
