@@ -10,6 +10,12 @@ import utilGen1.PayPlanUtils
 import utilGen1.StringUtils
 import java.math.BigDecimal
 
+enum class PayPlanType {
+    DAY,
+    WEEK,
+    MONTH
+}
+
 // "$6 of $29"
 fun GoalInfo.getGoalInfoProgressString(context: Context): String {
     return String.format(context.getString(R.string.GOALS_PROGRESS_FORMAT),
@@ -21,7 +27,7 @@ fun GoalInfo.getGoalInfoProgressString(context: Context): String {
 // if paused, "Paused", or like "$5/Daily", or if completed, total contributed like "$300"
 fun GoalInfo.getGoalInfoContributionString(context: Context): String {
     return if (isAchieved) {
-        StringUtils.formatCurrencyStringWithFractionDigits(fundAmount.toString(), false)
+        StringUtils.formatCurrencyStringWithFractionDigits(amount.toString(), false)
     } else {
         // technically payPlan shouldn't ever be null
         payPlan.getPayPlanInfoContributionString(context)

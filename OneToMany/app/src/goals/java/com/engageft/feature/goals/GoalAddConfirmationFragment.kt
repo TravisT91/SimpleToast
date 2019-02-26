@@ -20,11 +20,11 @@ import com.engageft.fis.pscu.feature.branding.Palette
 import utilGen1.DisplayDateTimeUtils
 import utilGen1.StringUtils
 
-class GoalsAddEditConfirmationFragment: BaseEngagePageFragment() {
-    private lateinit var confirmationViewModel: GoalsAddEditConfirmationViewModel
+class GoalAddConfirmationFragment: BaseEngagePageFragment() {
+    private lateinit var confirmationViewModel: GoalAddEditConfirmationViewModel
 
     override fun createViewModel(): BaseViewModel? {
-        confirmationViewModel = ViewModelProviders.of(this).get(GoalsAddEditConfirmationViewModel::class.java)
+        confirmationViewModel = ViewModelProviders.of(this).get(GoalAddEditConfirmationViewModel::class.java)
         return confirmationViewModel
     }
 
@@ -42,7 +42,7 @@ class GoalsAddEditConfirmationFragment: BaseEngagePageFragment() {
             }
         }
 
-        confirmationViewModel.successStateObservable.observe(viewLifecycleOwner, Observer {
+        confirmationViewModel.addEditSuccessObservable.observe(viewLifecycleOwner, Observer {
             binding.root.findNavController().popBackStack(R.id.goalsAddStep1Fragment, true)
         })
 
@@ -71,7 +71,7 @@ class GoalsAddEditConfirmationFragment: BaseEngagePageFragment() {
                 headerTextView.text = getString(R.string.GOALS_ADD_FREQUENCY_AMOUNT_CONFIRMATION_HEADER)
 
                 val amountWithCurrencySymbol = StringUtils.formatCurrencyStringWithFractionDigits(goalInfoModel.frequencyAmount.toString(), true)
-                val amountPerRecurrenceFormat = String.format(getString(R.string.GOALS_RECURRENCE_FORMAT), amountWithCurrencySymbol, goalInfoModel.recurrenceType.toLowerCase())
+                val amountPerRecurrenceFormat = String.format(getString(R.string.GOALS_RECURRENCE_FORMAT), amountWithCurrencySymbol, goalInfoModel.recurrenceType.toString().toLowerCase())
                 val splitStringArray = amountPerRecurrenceFormat.split(".")
                 if (splitStringArray.size == 2) {
                     subHeaderTextView.text = amountPerRecurrenceFormat.applyRelativeSizeToSubstring(.5f, splitStringArray[1])

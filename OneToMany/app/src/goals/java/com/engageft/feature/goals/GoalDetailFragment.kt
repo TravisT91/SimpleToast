@@ -94,8 +94,7 @@ class GoalDetailFragment: BaseEngagePageFragment() {
                     is GoalDetailState.ErrorItem -> {
                         addSection(ErrorStateSection(getString(R.string.GOAL_ERROR_TITLE), getString(R.string.GOAL_ERROR_DESCRIPTION), object : ErrorStateSection.OnErrorSectionInteractionListener {
                             override fun onErrorSectionClicked() {
-                                // TODO: EDIT GOAL task FOTM-837
-                                Toast.makeText(context!!, "On Error section clicked!", Toast.LENGTH_SHORT).show()
+                                navigateToGoalEdit()
                             }
                         }))
                     }
@@ -150,10 +149,8 @@ class GoalDetailFragment: BaseEngagePageFragment() {
                                 R.style.GoalDetailItemTextStyle,
                                 object : SelectableLabelsSection.OnSelectableLabelInteractionListener {
                                     override fun onLabelClicked(labelId: Int) {
-                                        // TODO(aHashimi): FOTM-837
-                                        Toast.makeText(context!!, "on edit item clicked!", Toast.LENGTH_SHORT).show()
+                                        navigateToGoalEdit()
                                     }
-
                                 })
                                 .addLabel(EDIT_LABEL_ID, getString(R.string.GOAL_DETAIL_EDIT)))
                         addSection(HorizontalRuleSection(layoutResId = R.layout.goals_horizontal_divider_indent_start))
@@ -180,6 +177,13 @@ class GoalDetailFragment: BaseEngagePageFragment() {
     private fun navigateToGoalTransfer() {
         binding.root.findNavController().navigate(R.id.action_goalDetailFragment_to_goalSingleTransferFragment,
                 bundleOf(GOAL_ID_KEY to viewModelGoalDetail.goalId))
+    }
+
+    private fun navigateToGoalEdit() {
+        binding.root.findNavController().navigate(R.id.action_goalDetailFragment_to_goalEditFragment,
+                Bundle().apply {
+                    putLong(GOAL_ID_KEY, viewModelGoalDetail.goalId)
+                })
     }
 
     private fun promptPauseConfirmation(pauseGoal: Boolean) {
