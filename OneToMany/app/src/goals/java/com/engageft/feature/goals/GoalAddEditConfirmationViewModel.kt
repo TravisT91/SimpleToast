@@ -1,5 +1,7 @@
 package com.engageft.feature.goals
 
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProvider
 import com.engageft.engagekit.EngageService
 import com.engageft.engagekit.aac.SingleLiveEvent
 import com.engageft.engagekit.rest.request.GoalInfoRequest
@@ -9,7 +11,8 @@ import com.engageft.engagekit.utils.BackendDateTimeUtils
 import com.engageft.engagekit.utils.LoginResponseUtils
 import com.engageft.engagekit.utils.PayPlanInfoUtils
 import com.engageft.engagekit.utils.engageApi
-import com.engageft.fis.pscu.feature.BaseEngageViewModel
+import com.engageft.feature.goals.utils.GoalConstants
+import com.engageft.feature.goals.utils.PayPlanType
 import com.engageft.fis.pscu.feature.handleBackendErrorForForms
 import com.ob.ws.dom.BasicResponse
 import com.ob.ws.dom.GoalResponse
@@ -20,22 +23,20 @@ import com.ob.ws.dom.utility.DebitCardInfo
 import com.ob.ws.dom.utility.GoalInfo
 import com.ob.ws.dom.utility.GoalTargetInfo
 import com.ob.ws.dom.utility.PayPlanInfo
-import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 
-class GoalAddEditConfirmationViewModel: BaseEngageViewModel() {
+class GoalAddEditConfirmationViewModel(val goalInfoModel: GoalInfoModel): BaseGoalsViewModel() {
     enum class GoalEvent {
         ADD,
         EDIT
     }
+
     val addEditSuccessObservable = SingleLiveEvent<Unit>()
-    lateinit var goalInfoModel: GoalInfoModel
 
     private var eventType: GoalEvent = GoalEvent.ADD
 
-    fun initGoalInfo(goalInfoModel: GoalInfoModel) {
-        this.goalInfoModel = goalInfoModel
-        if (goalInfoModel.goalId > 0) {
+    init {
+        if (goalInfoModel.goalId != GoalConstants.GOAL_ID_DEFAULT) {
             eventType = GoalEvent.EDIT
         }
     }
@@ -46,15 +47,18 @@ class GoalAddEditConfirmationViewModel: BaseEngageViewModel() {
                 .subscribeOn(Schedulers.io())
                 .observeOn(Schedulers.computation())
                 .subscribe({ response ->
+                    // don't hide progressOverlay
                     if (response is LoginResponse) {
-                        // don't hide progressOverlay
-                        val purseId = LoginResponseUtils.getCurrentCard(response).purseId
-                        if (eventType == GoalEvent.ADD) {
-                            val newGoalInfo = GoalInfo()
-                            newGoalInfo.purseId = purseId
-                            saveGoalInfo(getGoalInfo(newGoalInfo))
-                        } else {
-                            updateGoal(LoginResponseUtils.getCurrentCard(response))
+                        val currentCard = LoginResponseUtils.getCurrentCard(response)
+                        when (eventType) {
+                            GoalEvent.ADD -> {
+                                val newGoalInfo = GoalInfo()
+                                newGoalInfo.purseId = currentCard.purseId
+                                saveGoalInfo(adjustGoalInfo(newGoalInfo))
+                            }
+                            GoalEvent.EDIT -> {
+                                currentCard?.let { updateGoal(it) }
+                            }
                         }
                     } else {
                         dismissProgressOverlay()
@@ -77,7 +81,7 @@ class GoalAddEditConfirmationViewModel: BaseEngageViewModel() {
                                 response.goals.find { goalInfo ->
                                     goalInfo.goalId == goalInfoModel.goalId
                                 }?.let { goalInfo ->
-                                    saveGoalInfo(getGoalInfo(goalInfo))
+                                    saveGoalInfo(adjustGoalInfo(goalInfo))
                                 }
                             } else {
                                 dismissProgressOverlay()
@@ -90,29 +94,32 @@ class GoalAddEditConfirmationViewModel: BaseEngageViewModel() {
         )
     }
 
-    private fun getGoalInfo(goalInfo: GoalInfo) : GoalInfo {
+    private fun adjustGoalInfo(goalInfo: GoalInfo) : GoalInfo {
         return goalInfo.apply {
             name = goalInfoModel.goalName
             amount = goalInfoModel.goalAmount
-            this.purseId = purseId
 
-            if (eventType == GoalEvent.ADD) {
-                val goalTargetInfo = GoalTargetInfo()
-                goalTargetInfo.name = goalInfoModel.goalName
-                goalTargetInfo.amount = goalInfoModel.goalAmount
-
-                val goalTargetInfoList = ArrayList<GoalTargetInfo>()
-                goalTargetInfoList.add(goalTargetInfo)
-                goalTargets = goalTargetInfoList
-            } else {
-                if (goalTargets.isNotEmpty()) {
-                    val goalTargetInfo = goalInfo.goalTargets[0]
+            when (eventType) {
+                GoalEvent.ADD -> {
+                    val goalTargetInfo = GoalTargetInfo()
                     goalTargetInfo.name = goalInfoModel.goalName
                     goalTargetInfo.amount = goalInfoModel.goalAmount
+
+                    val goalTargetInfoList = ArrayList<GoalTargetInfo>()
+                    goalTargetInfoList.add(goalTargetInfo)
+                    goalTargets = goalTargetInfoList
+                }
+                GoalEvent.EDIT -> {
+                    if (goalTargets.isNotEmpty()) {
+                        // there's one Goal Target per goal
+                        val goalTargetInfo = goalInfo.goalTargets[0]
+                        goalTargetInfo.name = goalInfoModel.goalName
+                        goalTargetInfo.amount = goalInfoModel.goalAmount
+                    }
                 }
             }
 
-            this.payPlan = getPayPlanInfo(goalInfoModel.recurrenceType.toString())
+            this.payPlan = getPayPlanInfo(goalInfoModel.recurrenceType)
 
             if (goalInfoModel.hasCompleteDate) {
                 val goalDateString = BackendDateTimeUtils.getIso8601String(goalInfoModel.goalCompleteDate!!)
@@ -127,30 +134,27 @@ class GoalAddEditConfirmationViewModel: BaseEngageViewModel() {
         }
     }
 
-    private fun getPayPlanInfo(recurrenceType: String): PayPlanInfo {
+    private fun getPayPlanInfo(recurrenceType: PayPlanType): PayPlanInfo {
         val payPlanInfo = PayPlanInfo()
 
         when (recurrenceType) {
-            PayPlanInfoUtils.PAY_PLAN_MONTH -> {
+            PayPlanType.MONTH -> {
                 payPlanInfo.dayOfMonth = goalInfoModel.startDate!!.dayOfMonth
                 payPlanInfo.monthOfYear = null
                 payPlanInfo.dayOfWeek = null
             }
-            PayPlanInfoUtils.PAY_PLAN_WEEK -> {
+            PayPlanType.WEEK -> {
                 payPlanInfo.dayOfMonth = null
                 payPlanInfo.monthOfYear = null
                 payPlanInfo.dayOfWeek = goalInfoModel.dayOfWeek
             }
-            PayPlanInfoUtils.PAY_PLAN_DAY -> {
+            PayPlanType.DAY -> {
                 payPlanInfo.dayOfMonth = null
                 payPlanInfo.monthOfYear = null
                 payPlanInfo.dayOfWeek = null
             }
-            else -> {
-                throw IllegalArgumentException("Not a valid payPlan")
-            }
         }
-        payPlanInfo.recurrenceType = recurrenceType
+        payPlanInfo.recurrenceType = recurrenceType.toString()
         return payPlanInfo
     }
 
@@ -192,7 +196,7 @@ class GoalAddEditConfirmationViewModel: BaseEngageViewModel() {
                         .observeOn(Schedulers.computation())
                         .subscribe({ response ->
                             if (response.isSuccess && response is PayPlanResponse) {
-                                refreshData()
+                                refreshLoginResponse(addEditSuccessObservable)
                             } else {
                                 if (eventType == GoalEvent.ADD) {
                                     // remove newly-created goal from the server, since it has no payPlan
@@ -260,46 +264,14 @@ class GoalAddEditConfirmationViewModel: BaseEngageViewModel() {
         )
     }
 
-
-    private fun refreshData() {
-        compositeDisposable.add(EngageService.getInstance().refreshLoginObservable()
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe({ response ->
-                    // if response is success hide progressOverlay after refreshing goals
-                    if (response is LoginResponse) {
-                        refreshGoals(LoginResponseUtils.getCurrentCard(response))
-                    } else {
-                        dismissProgressOverlay()
-                        // trigger success event
-                        addEditSuccessObservable.call()
-                    }
-                }, { e ->
-                    dismissProgressOverlay()
-                    // trigger success event
-                    addEditSuccessObservable.call()
-                })
-        )
-    }
-
-    private fun refreshGoals(debitCardInfo: DebitCardInfo) {
-        compositeDisposable.add(
-                EngageService.getInstance().goalsObservable(debitCardInfo, false)
-                        .subscribeOn(Schedulers.io())
-                        .observeOn(AndroidSchedulers.mainThread())
-                        .subscribe({
-                            dismissProgressOverlay()
-                            // trigger success event
-                            addEditSuccessObservable.call()
-                        }, { e ->
-                            dismissProgressOverlay()
-                            // trigger success event
-                            addEditSuccessObservable.call()
-                        })
-        )
-    }
-
     companion object {
         private const val TAG = "GoalAddEditConfirmationViewModel"
+    }
+}
+
+class GoalAddEditConfirmationViewModelFactory(private val goalInfoModel: GoalInfoModel) : ViewModelProvider.NewInstanceFactory() {
+    override fun <T : ViewModel?> create(modelClass: Class<T>): T {
+        @Suppress("UNCHECKED_CAST")
+        return GoalAddEditConfirmationViewModel(goalInfoModel) as T
     }
 }

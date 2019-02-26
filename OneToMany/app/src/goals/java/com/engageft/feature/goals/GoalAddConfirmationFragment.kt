@@ -7,7 +7,6 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import androidx.core.content.res.ResourcesCompat
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProviders
 import androidx.navigation.findNavController
 import com.engageft.apptoolbox.BaseViewModel
 import com.engageft.apptoolbox.util.applyRelativeSizeToSubstring
@@ -24,7 +23,8 @@ class GoalAddConfirmationFragment: BaseEngagePageFragment() {
     private lateinit var confirmationViewModel: GoalAddEditConfirmationViewModel
 
     override fun createViewModel(): BaseViewModel? {
-        confirmationViewModel = ViewModelProviders.of(this).get(GoalAddEditConfirmationViewModel::class.java)
+        val goalInfModel = arguments!!.get(GOAL_DATA_PARCELABLE_KEY) as GoalInfoModel
+        confirmationViewModel = GoalAddEditConfirmationViewModelFactory(goalInfModel).create(GoalAddEditConfirmationViewModel::class.java)
         return confirmationViewModel
     }
 
@@ -35,16 +35,10 @@ class GoalAddConfirmationFragment: BaseEngagePageFragment() {
             viewModel = confirmationViewModel
             palette = Palette
 
-            arguments!!.get(GOAL_DATA_PARCELABLE_KEY)?.let { goalInfoModel ->
-                confirmationViewModel.goalInfoModel = goalInfoModel as GoalInfoModel
-            } ?: kotlin.run {
-                throw IllegalArgumentException("Must pass GoalInfoModel data")
-            }
+            confirmationViewModel.addEditSuccessObservable.observe(viewLifecycleOwner, Observer {
+                root.findNavController().popBackStack(R.id.goalsAddStep1Fragment, true)
+            })
         }
-
-        confirmationViewModel.addEditSuccessObservable.observe(viewLifecycleOwner, Observer {
-            binding.root.findNavController().popBackStack(R.id.goalsAddStep1Fragment, true)
-        })
 
         return binding.root
     }
