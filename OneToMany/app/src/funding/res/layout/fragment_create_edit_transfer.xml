@@ -59,7 +59,7 @@
                     android:paddingEnd="16dp"
                     android:paddingTop="16dp"
                     app:labelText="@string/ach_bank_transfer_create_from_label"
-                    app:inputText="@={viewModel.fromAccount}"
+                    app:inputText="@={viewModel.from}"
                     app:bottomSheetDialogTitle="@string/ach_bank_transfer_create_from_account"
                     app:bottomSheetDialogStyle="@style/ListOptionBottomSheetDialogFragmentStyle">
                 </com.engageft.apptoolbox.view.BottomSheetListInputWithLabel>
@@ -74,7 +74,7 @@
                     android:paddingEnd="16dp"
                     android:paddingTop="16dp"
                     app:labelText="@string/ach_bank_transfer_create_to_label"
-                    app:inputText="@={viewModel.toAccount}"
+                    app:inputText="@={viewModel.to}"
                     app:bottomSheetDialogTitle="@string/ach_bank_transfer_create_to_account"
                     app:bottomSheetDialogStyle="@style/ListOptionBottomSheetDialogFragmentStyle"/>
 
@@ -165,8 +165,8 @@
                 android:layout_gravity="center"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/pillButtonTopSpaceInFormsAndLists"
-                android:layout_margin="16dp"
+                android:layout_marginBottom="16dp"
+                android:layout_marginTop="40dp"
                 android:text="@string/ach_bank_transfer_create_next_button"/>
 
         </androidx.appcompat.widget.LinearLayoutCompat>

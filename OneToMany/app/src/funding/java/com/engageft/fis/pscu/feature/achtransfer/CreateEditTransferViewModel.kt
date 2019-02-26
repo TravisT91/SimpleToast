@@ -40,22 +40,24 @@ class CreateEditTransferViewModel(scheduledLoadId: Long): BaseEngageViewModel() 
         SHOW,
         HIDE
     }
+    enum class FundingState {
+        ERROR,
+        OK
+    }
 
     data class CardInfoModel(val cardId: Long, val name: String, val lastFour: String, val balance: BigDecimal)
-    data class AccountFundSourceModel(val cardId: Long, val lastFour: String, val name: String? = null, val sourceType: FundSourceType)
+    data class FundSourceModel(val cardId: Long, val lastFour: String, val name: String? = null, val sourceType: FundSourceType)
 
-    val fromAccountObservable = MutableLiveData<List<AccountFundSourceModel>>()
+    val fromAccountObservable = MutableLiveData<List<FundSourceModel>>()
     val toAccountObservable = MutableLiveData<List<CardInfoModel>>()
-
     val formModeObservable = MutableLiveData<FormMode>()
+    val buttonStateObservable: MutableLiveData<ButtonState> = MutableLiveData()
+    val fundingStateObservable = MutableLiveData<FundingState>()
 
     val deleteSuccessObservable = SingleLiveEvent<Unit>()
 
-    val buttonStateObservable: MutableLiveData<ButtonState> = MutableLiveData()
-    val isInErrorStateObservable = MutableLiveData<Boolean>()
-
-    val fromAccount = ObservableField("")
-    val toAccount  = ObservableField("")
+    val from = ObservableField("")
+    val to  = ObservableField("")
     val amount = ObservableField("")
     val frequency = ObservableField("")
     val date1 = ObservableField("")
@@ -63,15 +65,27 @@ class CreateEditTransferViewModel(scheduledLoadId: Long): BaseEngageViewModel() 
     var dayOfWeekShow = ObservableField(false)
     var date1Show = ObservableField(false)
 
-    private var currentScheduledLoad: ScheduledLoad? = null
-
     var formMode = FormMode.CREATE
+
+    private var currentScheduledLoad: ScheduledLoad? = null
+    private var debitCardList: MutableList<DebitCardInfo> = mutableListOf()
+
+    private var fundSourceMediator: HashMap<String, FundSourceModel> = HashMap()
+    private var fundDestinationMediator: HashMap<String, CardInfoModel> = HashMap()
 
     init {
         buttonStateObservable.value = ButtonState.HIDE
 
-        fromAccount.addOnPropertyChangedCallback(object: Observable.OnPropertyChangedCallback() {
+        from.addOnPropertyChangedCallback(object: Observable.OnPropertyChangedCallback() {
             override fun onPropertyChanged(sender: Observable?, propertyId: Int) {
+                isFundingAllowedToCard(to.get()!!)
+                updateButtonState()
+            }
+        })
+
+        to.addOnPropertyChangedCallback(object: Observable.OnPropertyChangedCallback() {
+            override fun onPropertyChanged(sender: Observable?, propertyId: Int) {
+                isFundingAllowedToCard(to.get()!!)
                 updateButtonState()
             }
         })
@@ -171,20 +185,18 @@ class CreateEditTransferViewModel(scheduledLoadId: Long): BaseEngageViewModel() 
         if (formMode == FormMode.EDIT) {
 
             val cardInfoModelList = mutableListOf<CardInfoModel>()
-            val fundSourceList = mutableListOf<AccountFundSourceModel>()
+            val fundSourceList = mutableListOf<FundSourceModel>()
 
-            //TODO(aHashimi): this may have to change for multi-card
+            //TODO(aHashimi): this may have to change for multi-card?
             val currentCard = LoginResponseUtils.getCurrentCard(loginResponse)
             getCardInfo(currentCard)?.let { cardInfoModel ->
                 cardInfoModelList.add(cardInfoModel)
             }
 
-            // todo use ScheduledLoad.PLANNED_LOAD_STANDARD_SCH
             if (scheduledLoad.ccAccountId.isNotEmpty()) {
                 loginResponse.ccAccountList.find { ccAccountInfo ->
                     scheduledLoad.ccAccountId.toLong() == ccAccountInfo.ccAccountId
                 }?.let { ccAccountInfo ->
-//                    fundSourceType = FundSourceType.DEBIT_CREDIT_CARD
                     fundSourceList.add(getFundSourceModelForCcAccount(ccAccountInfo))
                 } ?: run {
                     throw IllegalStateException("CcAccountId not found")
@@ -193,7 +205,6 @@ class CreateEditTransferViewModel(scheduledLoadId: Long): BaseEngageViewModel() 
                 loginResponse.achAccountList.find { achAccountInfo ->
                     scheduledLoad.achAccountId.toLong() == achAccountInfo.achAccountId
                 }?.let { achAccountInfo ->
-//                    fundSourceType = FundSourceType.ACH_ACCOUNT
                     fundSourceList.add(getFundSourceModelForAchAccount(achAccountInfo))
                 } ?: run {
                     throw IllegalStateException("AchAccountInfo not found")
@@ -232,12 +243,12 @@ class CreateEditTransferViewModel(scheduledLoadId: Long): BaseEngageViewModel() 
         // ensure this method is invoked for the correct mode
         if (formMode == FormMode.CREATE) {
             val cardInfoModelList = mutableListOf<CardInfoModel>()
-            val fundSourceList = mutableListOf<AccountFundSourceModel>()
+            val fundSourceList = mutableListOf<FundSourceModel>()
 
-            val cardsList = LoginResponseUtils.getAllCardsSorted(loginResponse)
+            debitCardList = LoginResponseUtils.getAllCardsSorted(loginResponse)
 
-            if (cardsList.isNotEmpty()) {
-                cardsList.forEach { debitCard ->
+            if (debitCardList.isNotEmpty()) {
+                debitCardList.forEach { debitCard ->
                     getCardInfo(debitCard)?.let { cardInfoModel ->
                         cardInfoModelList.add(cardInfoModel)
                     }
@@ -261,25 +272,59 @@ class CreateEditTransferViewModel(scheduledLoadId: Long): BaseEngageViewModel() 
         }
     }
 
-    private fun getFundSourceModelForAchAccount(achAccountInfo: AchAccountInfo): AccountFundSourceModel {
-        return AccountFundSourceModel(
+    private fun isFundingAllowedToCard(transferTo: String) {
+        // show funding allowable only in Create mode
+        if (formMode == FormMode.CREATE) {
+            // check if user has made a 'from' selection
+            fundSourceMediator[from.get()!!]?.let { accountFundSourceModel ->
+
+                fundDestinationMediator[transferTo]?.let { cardInfoModel ->
+                    debitCardList.find { debitCardInfo ->
+                        cardInfoModel.cardId == debitCardInfo.debitCardId
+                    }?.let { debitCardInfo ->
+
+                        when (accountFundSourceModel.sourceType) {
+                            FundSourceType.STANDARD_ACH -> {
+                                if (!debitCardInfo.cardPermissionsInfo.isFundingAchAllowable) {
+                                    fundingStateObservable.value = FundingState.ERROR
+                                } else {
+                                    fundingStateObservable.value = FundingState.OK
+                                }
+                            }
+                            FundSourceType.STANDARD_DEBIT -> {
+                                if (!debitCardInfo.cardPermissionsInfo.isFundingDebitCardAllowable) {
+                                    fundingStateObservable.value = FundingState.ERROR
+                                } else {
+                                    fundingStateObservable.value = FundingState.OK
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    private fun getFundSourceModelForAchAccount(achAccountInfo: AchAccountInfo): FundSourceModel {
+        return FundSourceModel(
                 cardId = achAccountInfo.achAccountId,
                 name = achAccountInfo.bankName,
                 lastFour = achAccountInfo.accountLastDigits,
-                sourceType = FundSourceType.ACH_ACCOUNT)
+                sourceType = FundSourceType.STANDARD_ACH)
     }
 
-    private fun getFundSourceModelForCcAccount(ccAccountInfo: CcAccountInfo): AccountFundSourceModel {
-        return AccountFundSourceModel(
+    private fun getFundSourceModelForCcAccount(ccAccountInfo: CcAccountInfo): FundSourceModel {
+        return FundSourceModel(
                 cardId = ccAccountInfo.ccAccountId,
                 lastFour = ccAccountInfo.lastDigits,
-                sourceType = FundSourceType.DEBIT_CREDIT_CARD)
+                sourceType = FundSourceType.STANDARD_DEBIT)
     }
 
     lateinit var transferFundsModel: TransferFundsModel
 
     fun updateButtonState() {
-        if (amount.get()!!.isNotEmpty() && hasFrequencySelected() && hasUnsavedChanges()) {
+        if (amount.get()!!.isNotEmpty() && hasFrequencySelected() && hasUnsavedChanges()
+                && fundingStateObservable.value != null && fundingStateObservable.value == FundingState.OK) {
             // init data
             setTransferFundModel()
             buttonStateObservable.value = ButtonState.SHOW
@@ -290,8 +335,8 @@ class CreateEditTransferViewModel(scheduledLoadId: Long): BaseEngageViewModel() 
 
     private fun setTransferFundModel() {
         val transferAmount = BigDecimal(CurrencyUtils.getNonFormattedDecimalAmountString(EngageAppConfig.currencyCode, amount.get()!!))
-        val fundSource = fundSourceMediator[fromAccount.get()!!]
-        val fundDestination = fundDestinationMediator[toAccount.get()!!]
+        val fundSource = fundSourceMediator[from.get()!!]
+        val fundDestination = fundDestinationMediator[to.get()!!]
 
         var date: DateTime? = null
 
@@ -317,6 +362,8 @@ class CreateEditTransferViewModel(scheduledLoadId: Long): BaseEngageViewModel() 
             transferFundsModel = TransferFundsModel(
                     fromId = fundSource.cardId,
                     toId = fundDestination.cardId,
+                    fromAccountName = fundSource.name,
+                    fromLastFour = fundSource.lastFour,
                     amount = transferAmount,
                     frequency = frequencyType,
                     scheduleDate = date,
@@ -338,7 +385,7 @@ class CreateEditTransferViewModel(scheduledLoadId: Long): BaseEngageViewModel() 
 
     fun hasUnsavedChanges(): Boolean {
         return formMode == FormMode.CREATE && (amount.get()!!.isNotEmpty() || frequency.get()!!.isNotEmpty()
-                || fromAccount.get()!!.isNotEmpty() && toAccount.get()!!.isNotEmpty())
+                || from.get()!!.isNotEmpty() && to.get()!!.isNotEmpty())
     }
 
     fun onDeleteScheduledLoad() {
@@ -402,22 +449,12 @@ class CreateEditTransferViewModel(scheduledLoadId: Long): BaseEngageViewModel() 
         )
     }
 
-//    var selectedSource: AccountFundSourceModel? = null
-    lateinit var fundSourceMediator: HashMap<String, AccountFundSourceModel>
-    fun setFundSourceListMediator(mediatorHashmap: HashMap<String, AccountFundSourceModel>) {
-        fundSourceMediator = mediatorHashmap
-//        fromAccountObservable.value?.let { fundSourceList ->
-//            selectedSource = fundSourceList[index]
-//        }
+    fun setFundSourceListMediator(mediatorHashMap: HashMap<String, FundSourceModel>) {
+        fundSourceMediator = mediatorHashMap
     }
 
-//    var selectedCard: CardInfoModel? = null
-    lateinit var fundDestinationMediator: HashMap<String, CardInfoModel>
-    fun setSelectedCard(mediatorHashmap: HashMap<String, CardInfoModel>) {
-        fundDestinationMediator = mediatorHashmap
-//        toAccountObservable.value?.let { cardList ->
-//            selectedCard = cardList[index]
-//        }
+    fun setSelectedCard(mediatorHashMap: HashMap<String, CardInfoModel>) {
+        fundDestinationMediator = mediatorHashMap
     }
 
     private companion object {
@@ -437,11 +474,11 @@ class CreateEditTransferViewModelFactory(private val scheduleLoadId: Long) : Vie
 }
 
 enum class FundSourceType {
-    DEBIT_CREDIT_CARD,
-    ACH_ACCOUNT
+    STANDARD_DEBIT,
+    STANDARD_ACH
 }
-// this enum matches EXACTLY the ScheduledLoadInfo frequency strings that we get from backend.
-// we're doing this to prevent errors passing frequencies around.
+// these enum match EXACTLY the ScheduledLoadInfo frequency strings that we get from backend.
+// we're doing this to prevent errors passing frequencies around as Strings.
 enum class ScheduleLoadFrequencyType {
     ONCE,
     WEEKLY,
@@ -449,6 +486,7 @@ enum class ScheduleLoadFrequencyType {
     MONTHLY
 }
 @Parcelize
-data class TransferFundsModel(val fromId: Long, val toId: Long, val amount: BigDecimal,
-                         val frequency: ScheduleLoadFrequencyType, val scheduleDate: DateTime? = null,
-                         val fundSourceType: FundSourceType): Parcelable
+data class TransferFundsModel(val fromId: Long, val toId: Long, val amount: BigDecimal, val fromLastFour: String,
+                              val frequency: ScheduleLoadFrequencyType, val scheduleDate: DateTime? = null,
+                              val fromAccountName: String? = null,
+                              val fundSourceType: FundSourceType): Parcelable

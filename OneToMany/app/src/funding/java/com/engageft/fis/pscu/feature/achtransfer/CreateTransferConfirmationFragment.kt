@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
 import androidx.lifecycle.Observer
 import androidx.navigation.findNavController
 import com.engageft.apptoolbox.BaseViewModel
@@ -35,33 +36,41 @@ class CreateTransferConfirmationFragment: BaseEngagePageFragment() {
             viewModel = createTransferViewModel
             palette = Palette
 
-            //todo display from Account
-            amountTextView.text = StringUtils.formatCurrencyStringFractionDigitsReducedHeight(transferFundsModel.amount.toString(), 0.5f, true)
+            imageViewLayout.findViewById<ImageView>(R.id.imageViewIcon).setImageResource(R.drawable.ic_transfer)
 
+            amountTextView.text = StringUtils.formatCurrencyStringFractionDigitsReducedHeight(transferFundsModel.amount.toString(), 0.5f, true)
+            val account = if (transferFundsModel.fundSourceType == FundSourceType.STANDARD_DEBIT) {
+                String.format(getString(R.string.BANKACCOUNT_DESCRIPTION_FORMAT),
+                        getString(R.string.card_load_card), transferFundsModel.fromLastFour)
+            } else {
+                // capitalize account name since it's a proper noun
+                String.format(getString(R.string.BANKACCOUNT_DESCRIPTION_FORMAT), transferFundsModel.fromAccountName?.capitalize(), transferFundsModel.fromLastFour)
+            }
+            var recurrenceType = ""
             when(transferFundsModel.frequency) {
                 ScheduleLoadFrequencyType.MONTHLY -> {
                     transferFundsModel.scheduleDate?.let { date ->
-                        frequencyTextView.text = String.format(getString(R.string.ach_bank_transfer_create_confirmation_frequency_format),
-                                getString(R.string.TRANSFER_MONTHLY_TEXT), DisplayDateTimeUtils.getMediumFormatted(DateTime(date)))
+                        recurrenceType = String.format(getString(R.string.ach_bank_transfer_create_confirmation_frequency_format),
+                                DisplayDateTimeUtils.getMediumFormatted(DateTime(date)))
                     }
                 }
                 ScheduleLoadFrequencyType.EVERY_OTHER_WEEK -> {
                     transferFundsModel.scheduleDate?.let { date ->
-                        frequencyTextView.text = String.format(getString(R.string.TRANSFER_ALT_WEEKLY_SIMPLE_LOAD_DESCRIPTION),
+                        recurrenceType = String.format(getString(R.string.TRANSFER_ALT_WEEKLY_SIMPLE_LOAD_DESCRIPTION),
                                 DateTime(date).dayOfWeek().asText)
                     }
                 }
                 ScheduleLoadFrequencyType.WEEKLY -> {
                     transferFundsModel.scheduleDate?.let { date ->
-                        frequencyTextView.text = String.format(getString(R.string.TRANSFER_WEEKLY_SIMPLE_LOAD_DESCRIPTION),
+                        recurrenceType = String.format(getString(R.string.TRANSFER_WEEKLY_SIMPLE_LOAD_DESCRIPTION),
                                 DateTime(date).dayOfWeek().asText)
                     }
                 }
                 ScheduleLoadFrequencyType.ONCE -> {
-                    titleTextView.text = getString(R.string.ach_bank_transfer_create_confirmation_transfer)
-                    frequencyTextView.visibility = View.GONE
+                    transferMessageTextView.visibility = View.GONE
                 }
             }
+            frequencyTextView.text = String.format(getString(R.string.card_load_transfer_from_format), recurrenceType, account)
         }
 
         createTransferViewModel.createTransferSuccessObservable.observe(viewLifecycleOwner, Observer {

@@ -43,7 +43,7 @@ class GoalSingleTransferConfirmationFragment: BaseEngagePageFragment() {
             viewModel = viewModelConfirmation
             palette = Palette
 
-            imageViewLayout.findViewById<ImageView>(R.id.imageViewIcon).setImageResource(R.drawable.ic_goal_transfer)
+            imageViewLayout.findViewById<ImageView>(R.id.imageViewIcon).setImageResource(R.drawable.ic_transfer)
             subHeaderTextView.text = StringUtils.formatCurrencyStringFractionDigitsReducedHeight(viewModelConfirmation.transferAmount.toFloat(), GoalConstants.FREQUENCY_SUBSTRING_RELATIVE_HEIGHT, true)
 
             viewModelConfirmation.apply {

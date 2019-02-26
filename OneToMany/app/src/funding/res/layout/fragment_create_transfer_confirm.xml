@@ -22,11 +22,11 @@
             android:gravity="center"
             android:orientation="vertical">
 
-            <androidx.appcompat.widget.AppCompatImageView
-                android:id="@+id/imageView"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                app:srcCompat="@drawable/ic_money" />
+            <include
+                layout="@layout/imageview_with_circle_background"
+                android:id="@+id/imageViewLayout"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
 
             <androidx.appcompat.widget.AppCompatTextView
                 android:id="@+id/titleTextView"
@@ -42,6 +42,12 @@
                 style="@style/CreateTransferConfirmationRecurringTextStyle"
                 android:id="@+id/frequencyTextView"
                 tools:text="twice a month starting Apr, 2018" />
+
+            <androidx.appcompat.widget.AppCompatTextView
+                style="@style/CreateTransferConfirmationRecurringTextStyle"
+                android:id="@+id/transferMessageTextView"
+                android:paddingTop="24dp"
+                android:text="@string/card_load_transfer_confirmation_message" />
 
             <com.engageft.apptoolbox.view.PillButton
                 style="@style/ButtonPillPrimaryFilledDefault"
