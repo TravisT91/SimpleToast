@@ -192,12 +192,14 @@ class DashboardFragment : BaseEngagePageFragment(),
         if (!binding.dashboardExpandableView.showingActions) {
             val id = item.itemId
 
-//            if (id == R.id.action_notifications) {
-//                //listener?.onAlertsNotificationsOptionsItem()
-//                return true
-//            } else if (id == R.id.action_search_transactions) {
+            if (id == R.id.action_notifications) {
+                // TODO(jhutchins): Someday when alerts are implemented...
+                //listener?.onAlertsNotificationsOptionsItem()
+                return false
+            } else if (id == R.id.action_search_transactions) {
                 SearchDialogFragment().show(activity!!.supportFragmentManager, "Search")
-            //}
+                return true
+            }
         }
 
         return super.onOptionsItemSelected(item)
