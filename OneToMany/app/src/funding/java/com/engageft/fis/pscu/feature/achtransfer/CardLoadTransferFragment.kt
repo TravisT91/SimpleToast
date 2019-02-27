@@ -29,9 +29,9 @@ import utilGen1.DisplayDateTimeUtils
 import utilGen1.ScheduledLoadUtils
 import utilGen1.StringUtils
 
-class CreateEditTransferFragment: BaseEngagePageFragment() {
+class CardLoadTransferFragment: BaseEngagePageFragment() {
 
-    private lateinit var createEditTransferViewModel: CreateEditTransferViewModel
+    private lateinit var viewModelTransfer: CardLoadTransferViewModel
     private lateinit var binding: FragmentCreateEditTransferBinding
 
     private val unsavedChangesDialogListener = object : InformationDialogFragment.InformationDialogFragmentListener {
@@ -48,7 +48,7 @@ class CreateEditTransferFragment: BaseEngagePageFragment() {
 
     private val navigationOverrideClickListener = object : NavigationOverrideClickListener {
         override fun onClick(): Boolean {
-            return if (createEditTransferViewModel.hasUnsavedChanges()) {
+            return if (viewModelTransfer.hasUnsavedChanges()) {
                 fragmentDelegate.showDialog(infoDialogGenericUnsavedChangesNewInstance(context = activity!!, listener = unsavedChangesDialogListener))
                 true
             } else {
@@ -59,8 +59,8 @@ class CreateEditTransferFragment: BaseEngagePageFragment() {
 
     override fun createViewModel(): BaseViewModel? {
         val scheduleLoadId = arguments!!.getLong(CardLoadConstants.SCHEDULED_LOAD_ID_KEY, SCHEDULED_LOAD_ID)
-        createEditTransferViewModel = CreateEditTransferViewModelFactory(scheduleLoadId).create(CreateEditTransferViewModel::class.java)
-        return createEditTransferViewModel
+        viewModelTransfer = CreateEditTransferViewModelFactory(scheduleLoadId).create(CardLoadTransferViewModel::class.java)
+        return viewModelTransfer
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -72,7 +72,7 @@ class CreateEditTransferFragment: BaseEngagePageFragment() {
         binding = FragmentCreateEditTransferBinding.inflate(inflater, container, false)
 
         binding.apply {
-            viewModel = createEditTransferViewModel
+            viewModel = viewModelTransfer
             palette = Palette
 
             frequencyBottomSheet.dialogOptions = ArrayList(ScheduledLoadUtils.getFrequencyDisplayStringsForTransfer(context!!))
@@ -88,14 +88,14 @@ class CreateEditTransferFragment: BaseEngagePageFragment() {
                 navigateToConfirmationScreen()
             }
 
-            createEditTransferViewModel.apply {
+            viewModelTransfer.apply {
 
                 formModeObservable.observe(viewLifecycleOwner, Observer { mode ->
                     when (mode) {
-                        CreateEditTransferViewModel.FormMode.EDIT -> {
+                        CardLoadTransferViewModel.FormMode.EDIT -> {
                             setEditMode()
                         }
-                        CreateEditTransferViewModel.FormMode.CREATE -> {
+                        CardLoadTransferViewModel.FormMode.CREATE -> {
                             toolbarController.setToolbarTitle(getString(R.string.ach_bank_transfer_create_transfer))
                         }
                     }
@@ -103,14 +103,14 @@ class CreateEditTransferFragment: BaseEngagePageFragment() {
 
                 buttonStateObservable.observe(viewLifecycleOwner, Observer {
                     when (it) {
-                        CreateEditTransferViewModel.ButtonState.SHOW -> binding.nextButton.visibility = View.VISIBLE
-                        CreateEditTransferViewModel.ButtonState.HIDE -> binding.nextButton.visibility = View.GONE
+                        CardLoadTransferViewModel.ButtonState.SHOW -> binding.nextButton.visibility = View.VISIBLE
+                        CardLoadTransferViewModel.ButtonState.HIDE -> binding.nextButton.visibility = View.GONE
                     }
                     activity?.invalidateOptionsMenu()
                 })
 
                 fromAccountObservable.observe(viewLifecycleOwner, Observer { fundSourceList ->
-                    val fromFundSourceMediator = HashMap<String, CreateEditTransferViewModel.FundSourceModel>()
+                    val fromFundSourceMediator = HashMap<String, CardLoadTransferViewModel.FundSourceModel>()
                     // format ACH bank name with last 4 digits
                     val fromOptionsList = ArrayList<CharSequence>()
                     var formattedString: String
@@ -136,11 +136,11 @@ class CreateEditTransferFragment: BaseEngagePageFragment() {
                         accountFromBottomSheet.dialogOptions = fromOptionsList
                     }
 
-                    createEditTransferViewModel.setFundSourceListMediator(fromFundSourceMediator)
+                    viewModelTransfer.setFundSourceListMediator(fromFundSourceMediator)
                 })
 
                 toAccountObservable.observe(viewLifecycleOwner, Observer { cardList ->
-                    val toFundDestinationMediator = HashMap<String, CreateEditTransferViewModel.CardInfoModel>()
+                    val toFundDestinationMediator = HashMap<String, CardLoadTransferViewModel.CardInfoModel>()
 
                     // format Card Info with last four
                     val toOptionsList = ArrayList<CharSequence>()
@@ -168,17 +168,17 @@ class CreateEditTransferFragment: BaseEngagePageFragment() {
 
                 fundingStateObservable.observe(viewLifecycleOwner, Observer { state ->
                     when (state) {
-                        CreateEditTransferViewModel.FundingState.ERROR -> {
+                        CardLoadTransferViewModel.FundingState.ERROR -> {
                             headerTextView.visibility = View.GONE
                             subHeaderTextView.visibility = View.GONE
 
                             errorStateLayout.visibility = View.VISIBLE
                             val errorTitleTextView = errorStateLayout.findViewById<TextView>(R.id.titleTextView)
                             val messageTextView = errorStateLayout.findViewById<TextView>(R.id.descriptionTextView)
-                            errorTitleTextView.text = getString(R.string.ach_bank_transfer_create_error_title)
-                            messageTextView.text = getString(R.string.ach_bank_transfer_create_error_message)
+                            errorTitleTextView.text = getString(R.string.card_load_transfer_error_title)
+                            messageTextView.text = getString(R.string.card_load_transfer_error_message)
                         }
-                        CreateEditTransferViewModel.FundingState.OK -> {
+                        CardLoadTransferViewModel.FundingState.OK -> {
                             errorStateLayout.visibility = View.GONE
                             headerTextView.visibility = View.VISIBLE
                             subHeaderTextView.visibility = View.VISIBLE
@@ -196,16 +196,19 @@ class CreateEditTransferFragment: BaseEngagePageFragment() {
 
     private fun setEditMode() {
         binding.apply {
-            toolbarController.setToolbarTitle(getString(R.string.ach_bank_transfer_edit_transfer_screen_title))
+            toolbarController.setToolbarTitle(getString(R.string.card_load_transfer_edit_screen_title))
 
             deleteButtonLayout.visibility = View.VISIBLE
             headerTextView.visibility = View.GONE
             subHeaderTextView.visibility = View.GONE
-
+            var frequency = ""
+            viewModelTransfer.frequency.get()?.let { frequency = it.toLowerCase() }
+            var from = ""
+            viewModelTransfer.from.get()?.let { from = it }
             deleteButtonLayout.setOnClickListener {
-                val infoDialog = InformationDialogFragment.newLotusInstance(title = getString(R.string.ach_bank_transfer_delete_transfer_title),
-                        message = String.format(getString(R.string.ach_bank_transfer_delete_transfer_message_format),
-                                createEditTransferViewModel.frequency.get(), createEditTransferViewModel.from.get()),
+                val infoDialog = InformationDialogFragment.newLotusInstance(
+                        title = getString(R.string.card_load_transfer_delete_title),
+                        message = String.format(getString(R.string.card_load_transfer_delete_message_format), frequency, from),
                         buttonPositiveText = getString(R.string.dialog_information_yes_button),
                         buttonNegativeText = getString(R.string.dialog_information_no_button),
                         listener = object : InformationDialogFragment.InformationDialogFragmentListener {
@@ -213,7 +216,7 @@ class CreateEditTransferFragment: BaseEngagePageFragment() {
                             }
 
                             override fun onDialogFragmentPositiveButtonClicked() {
-                                createEditTransferViewModel.onDeleteScheduledLoad()
+                                viewModelTransfer.onDeleteScheduledLoad()
                             }
 
                             override fun onDialogCancelled() {
@@ -241,8 +244,8 @@ class CreateEditTransferFragment: BaseEngagePageFragment() {
 
     override fun onPrepareOptionsMenu(menu: Menu?) {
         val menuItem = menu!!.findItem(R.id.submit)
-        menuItem.title = getString(R.string.ach_bank_transfer_create_next_button)
-        menuItem.isVisible = createEditTransferViewModel.buttonStateObservable.value == CreateEditTransferViewModel.ButtonState.SHOW
+        menuItem.title = getString(R.string.card_load_transfer_next_button)
+        menuItem.isVisible = viewModelTransfer.buttonStateObservable.value == CardLoadTransferViewModel.ButtonState.SHOW
         super.onPrepareOptionsMenu(menu)
     }
 
@@ -257,6 +260,6 @@ class CreateEditTransferFragment: BaseEngagePageFragment() {
 
     private fun navigateToConfirmationScreen() {
         binding.root.findNavController().navigate(R.id.action_createEditTransferFragment_to_createTransferConfirmationFragment,
-                bundleOf(TRANSFER_FUNDS_BUNDLE_KEY to createEditTransferViewModel.transferFundsModel))
+                bundleOf(TRANSFER_FUNDS_BUNDLE_KEY to viewModelTransfer.transferFundsModel))
     }
 }

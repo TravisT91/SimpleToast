@@ -18,14 +18,14 @@ import org.joda.time.DateTime
 import utilGen1.DisplayDateTimeUtils
 import utilGen1.StringUtils
 
-class CreateTransferConfirmationFragment: BaseEngagePageFragment() {
-    private lateinit var createTransferViewModel: CreateTransferConfirmationViewModel
+class CardLoadTransferConfirmationFragment: BaseEngagePageFragment() {
+    private lateinit var createTransferViewModel: CardLoadTransferConfirmationViewModel
 
     private lateinit var transferFundsModel: TransferFundsModel
 
     override fun createViewModel(): BaseViewModel? {
         transferFundsModel = arguments!!.getParcelable(CardLoadConstants.TRANSFER_FUNDS_BUNDLE_KEY) as TransferFundsModel
-        createTransferViewModel = CreateTransferConfirmationViewModelFactory(transferFundsModel).create(CreateTransferConfirmationViewModel::class.java)
+        createTransferViewModel = CreateTransferConfirmationViewModelFactory(transferFundsModel).create(CardLoadTransferConfirmationViewModel::class.java)
         return createTransferViewModel
     }
 
@@ -50,7 +50,7 @@ class CreateTransferConfirmationFragment: BaseEngagePageFragment() {
             when(transferFundsModel.frequency) {
                 ScheduleLoadFrequencyType.MONTHLY -> {
                     transferFundsModel.scheduleDate?.let { date ->
-                        recurrenceType = String.format(getString(R.string.ach_bank_transfer_create_confirmation_frequency_format),
+                        recurrenceType = String.format(getString(R.string.card_load_transfer_confirmation_frequency_format),
                                 DisplayDateTimeUtils.getMediumFormatted(DateTime(date)))
                     }
                 }
@@ -70,7 +70,7 @@ class CreateTransferConfirmationFragment: BaseEngagePageFragment() {
                     transferMessageTextView.visibility = View.GONE
                 }
             }
-            frequencyTextView.text = String.format(getString(R.string.card_load_transfer_from_format), recurrenceType, account)
+            frequencyTextView.text = String.format(getString(R.string.card_load_transfer_confirmation_from_format), recurrenceType, account)
         }
 
         createTransferViewModel.createTransferSuccessObservable.observe(viewLifecycleOwner, Observer {

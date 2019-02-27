@@ -18,7 +18,7 @@ import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 
-class CreateTransferConfirmationViewModel(private val transferFundModel: TransferFundsModel): BaseEngageViewModel() {
+class CardLoadTransferConfirmationViewModel(private val transferFundModel: TransferFundsModel): BaseEngageViewModel() {
 
     val createTransferSuccessObservable = SingleLiveEvent<Unit>()
 
@@ -114,12 +114,12 @@ class CreateTransferConfirmationViewModel(private val transferFundModel: Transfe
     }
 
     private companion object {
-        const val TAG = "CreateTransferConfirmationViewModel"
+        const val TAG = "CardLoadTransferConfirmationViewModel"
     }
 }
 class CreateTransferConfirmationViewModelFactory(private val transferFundsModel: TransferFundsModel) : ViewModelProvider.NewInstanceFactory() {
     override fun <T : ViewModel?> create(modelClass: Class<T>): T {
         @Suppress("UNCHECKED_CAST")
-        return CreateTransferConfirmationViewModel(transferFundsModel) as T
+        return CardLoadTransferConfirmationViewModel(transferFundsModel) as T
     }
 }

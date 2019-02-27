@@ -3,7 +3,7 @@
     <data>
         <variable
             name="viewModel"
-            type="com.engageft.fis.pscu.feature.achtransfer.CreateTransferConfirmationViewModel"/>
+            type="com.engageft.fis.pscu.feature.achtransfer.CardLoadTransferConfirmationViewModel"/>
         <variable
             name="palette"
             type="com.engageft.fis.pscu.feature.branding.Palette"/>
@@ -31,7 +31,7 @@
             <androidx.appcompat.widget.AppCompatTextView
                 android:id="@+id/titleTextView"
                 style="@style/CreateTransferConfirmationTitleTextStyle"
-                android:text="@string/ach_bank_transfer_create_start_transferring" />
+                android:text="@string/card_load_transfer_confirmation_start_transferring" />
 
             <androidx.appcompat.widget.AppCompatTextView
                 style="@style/CreateTransferConfirmationAmountTextStyle"

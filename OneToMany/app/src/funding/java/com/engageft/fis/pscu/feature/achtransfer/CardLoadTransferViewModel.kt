@@ -30,7 +30,7 @@ import utilGen1.DisplayDateTimeUtils
 import utilGen1.ScheduledLoadUtils
 import java.math.BigDecimal
 
-class CreateEditTransferViewModel(scheduledLoadId: Long): BaseEngageViewModel() {
+class CardLoadTransferViewModel(scheduledLoadId: Long): BaseEngageViewModel() {
 
     enum class FormMode {
         CREATE,
@@ -469,7 +469,7 @@ class CreateEditTransferViewModel(scheduledLoadId: Long): BaseEngageViewModel() 
 class CreateEditTransferViewModelFactory(private val scheduleLoadId: Long) : ViewModelProvider.NewInstanceFactory() {
     override fun <T : ViewModel?> create(modelClass: Class<T>): T {
         @Suppress("UNCHECKED_CAST")
-        return CreateEditTransferViewModel(scheduleLoadId) as T
+        return CardLoadTransferViewModel(scheduleLoadId) as T
     }
 }
 
