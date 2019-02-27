@@ -56,7 +56,7 @@
                 android:layout_margin="32dp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:onClick="@{() -> viewModel.onCreateUpdateTransfer()}"
+                android:onClick="@{() -> viewModel.onCreateTransfer()}"
                 android:text="@string/ach_bank_transfer_create_transfer"/>
         </LinearLayout>
     </ScrollView>

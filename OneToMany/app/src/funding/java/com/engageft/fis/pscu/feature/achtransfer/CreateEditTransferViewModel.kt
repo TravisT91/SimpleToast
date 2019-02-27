@@ -73,6 +73,8 @@ class CreateEditTransferViewModel(scheduledLoadId: Long): BaseEngageViewModel() 
     private var fundSourceMediator: HashMap<String, FundSourceModel> = HashMap()
     private var fundDestinationMediator: HashMap<String, CardInfoModel> = HashMap()
 
+    lateinit var transferFundsModel: TransferFundsModel
+
     init {
         buttonStateObservable.value = ButtonState.HIDE
 
@@ -187,7 +189,7 @@ class CreateEditTransferViewModel(scheduledLoadId: Long): BaseEngageViewModel() 
             val cardInfoModelList = mutableListOf<CardInfoModel>()
             val fundSourceList = mutableListOf<FundSourceModel>()
 
-            //TODO(aHashimi): this may have to change for multi-card?
+            //TODO(aHashimi): for multi-card compare ScheduledLoad.fundinglastdigits (it's new) to find out which card was transferred to
             val currentCard = LoginResponseUtils.getCurrentCard(loginResponse)
             getCardInfo(currentCard)?.let { cardInfoModel ->
                 cardInfoModelList.add(cardInfoModel)
@@ -319,8 +321,6 @@ class CreateEditTransferViewModel(scheduledLoadId: Long): BaseEngageViewModel() 
                 lastFour = ccAccountInfo.lastDigits,
                 sourceType = FundSourceType.STANDARD_DEBIT)
     }
-
-    lateinit var transferFundsModel: TransferFundsModel
 
     fun updateButtonState() {
         if (amount.get()!!.isNotEmpty() && hasFrequencySelected() && hasUnsavedChanges()

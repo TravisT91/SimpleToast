@@ -10,12 +10,10 @@ import com.engageft.engagekit.rest.request.FundingFundFromDebitRequest
 import com.engageft.engagekit.rest.request.ScheduledLoadAchAddRequest
 import com.engageft.engagekit.rest.request.ScheduledLoadDebitAddRequest
 import com.engageft.engagekit.utils.BackendDateTimeUtils
-import com.engageft.engagekit.utils.LoginResponseUtils
 import com.engageft.engagekit.utils.engageApi
 import com.engageft.fis.pscu.feature.BaseEngageViewModel
 import com.engageft.fis.pscu.feature.handleBackendErrorForForms
 import com.ob.ws.dom.BasicResponse
-import com.ob.ws.dom.LoginResponse
 import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
@@ -24,7 +22,7 @@ class CreateTransferConfirmationViewModel(private val transferFundModel: Transfe
 
     val createTransferSuccessObservable = SingleLiveEvent<Unit>()
 
-    fun onCreateUpdateTransfer() {
+    fun onCreateTransfer() {
         when (transferFundModel.fundSourceType) {
             FundSourceType.STANDARD_DEBIT -> {
                 transferFromDebitSource(transferFundModel)
@@ -38,7 +36,7 @@ class CreateTransferConfirmationViewModel(private val transferFundModel: Transfe
     private fun transferFromAchAccount(transferFundModel: TransferFundsModel) {
         val scheduledLoad = getNewScheduleLoad(transferFundModel)
         scheduledLoad.achAccountId = this.transferFundModel.fromId.toString()
-        //TODO(aHashimi): Pass ThreatMetrix sessionId
+        //TODO(aHashimi): Pass ThreatMetrix sessionId when integrated
         val request = ScheduledLoadAchAddRequest(scheduledLoad, "")
 
         val observable: Observable<BasicResponse> = when (transferFundModel.frequency) {
@@ -47,10 +45,9 @@ class CreateTransferConfirmationViewModel(private val transferFundModel: Transfe
             ScheduleLoadFrequencyType.MONTHLY -> engageApi().postScheduledLoadACHAddMonthly(request.fieldMap)
             ScheduleLoadFrequencyType.ONCE -> {
                 val req = FundingFundAchAccountRequest(
-                        transferFundModel.fromId,
-                        transferFundModel.amount.toString(),
-                        transferFundModel.toId,
-                        "")
+                        achAccountId = transferFundModel.fromId,
+                        cardId = transferFundModel.toId,
+                        amount = transferFundModel.amount.toString())
                 engageApi().postFundAchAccount(req.fieldMap)
             }
         }
@@ -61,54 +58,28 @@ class CreateTransferConfirmationViewModel(private val transferFundModel: Transfe
     private fun transferFromDebitSource(transferFundModel: TransferFundsModel) {
         val scheduledLoad = getNewScheduleLoad(transferFundModel)
         scheduledLoad.ccAccountId = transferFundModel.fromId.toString()
-        //TODO(aHashimi): Pass ThreatMetrix sessionId
-        val request = ScheduledLoadDebitAddRequest(scheduledLoad, "")
-        val observable: Observable<BasicResponse>
-        when (transferFundModel.frequency) {
-            ScheduleLoadFrequencyType.WEEKLY -> {
-                observable = engageApi().postScheduledLoadDebitAddWeekly(request.fieldMap)
-                transfer(observable)
-            }
-            ScheduleLoadFrequencyType.EVERY_OTHER_WEEK -> {
-                observable = engageApi().postScheduledLoadDebitAddAltWeekly(request.fieldMap)
-                transfer(observable)
-            }
-            ScheduleLoadFrequencyType.MONTHLY -> {
-                observable = engageApi().postScheduledLoadDebitAddMonthly(request.fieldMap)
-                transfer(observable)
-            }
+        //TODO(aHashimi): Pass ThreatMetrix sessionId when integrated
+        val request = ScheduledLoadDebitAddRequest(scheduledLoad)
+
+        val observable: Observable<BasicResponse> = when (transferFundModel.frequency) {
+            ScheduleLoadFrequencyType.WEEKLY -> engageApi().postScheduledLoadDebitAddWeekly(request.fieldMap)
+            ScheduleLoadFrequencyType.EVERY_OTHER_WEEK -> engageApi().postScheduledLoadDebitAddAltWeekly(request.fieldMap)
+            ScheduleLoadFrequencyType.MONTHLY -> engageApi().postScheduledLoadDebitAddMonthly(request.fieldMap)
             ScheduleLoadFrequencyType.ONCE -> {
-                onetimeTransferFromDebit(transferFundModel)
+                val req = FundingFundFromDebitRequest(
+                        ccAccountId = transferFundModel.fromId,
+                        cardId = transferFundModel.toId,
+                        amount = transferFundModel.amount)
+                engageApi().postFundingFundFromDebit(req.fieldMap)
             }
         }
-    }
-
-    private fun onetimeTransferFromDebit(transferFundModel: TransferFundsModel) {
-        compositeDisposable.add(EngageService.getInstance().loginResponseAsObservable
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe({ response ->
-                    if (response is LoginResponse) {
-                        val debitSource = LoginResponseUtils.getFundDebitSourceById(response, transferFundModel.fromId)
-                        val req = FundingFundFromDebitRequest(
-                                transferFundModel.amount.toInt(),
-                                transferFundModel.toId.toInt(),
-                                debitSource,
-                                "")
-                        transfer(engageApi().postFundingFundFromDebit(req.fieldMap))
-                    } else {
-                        handleUnexpectedErrorResponse(response)
-                    }
-                }, { e ->
-                    handleThrowable(e)
-                })
-        )
+        transfer(observable)
     }
 
     private fun getNewScheduleLoad(fundsModel: TransferFundsModel) : ScheduledLoad {
         val scheduledLoad = ScheduledLoad()
         // this is not needed by backend but Retrofit serialization
-        scheduledLoad.scheduledLoadType = ScheduledLoad.PLANNED_LOAD_METHOD_ACH
+        scheduledLoad.scheduledLoadType = ScheduledLoad.PLANNED_LOAD_METHOD_BANK_TRANSFER
         scheduledLoad.cardId = fundsModel.toId.toString()
 
         scheduledLoad.typeString = fundsModel.frequency.toString()
