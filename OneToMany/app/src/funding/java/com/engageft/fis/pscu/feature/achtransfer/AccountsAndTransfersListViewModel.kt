@@ -111,9 +111,8 @@ class AccountsAndTransfersListViewModel: BaseEngageViewModel() {
                                         null
                                     }
                                     AchAccountStatus.FAILED_VERIFICATION -> {
-                                        // Assuming just show this as UNVERIFIED??
-                                        hasOneUnverifiedAccount = true
-                                        AccountsAndTransferListItem.BankAccountItem(account.bankName, account.accountLastDigits, false, account.achAccountId)
+                                        // Don't show these.
+                                        null
                                     }
                                 }
                                 item?.let {
