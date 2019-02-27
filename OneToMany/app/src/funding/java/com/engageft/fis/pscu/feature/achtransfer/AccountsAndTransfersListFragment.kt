@@ -87,6 +87,7 @@ class AccountsAndTransfersListFragment: BaseEngagePageFragment() {
 
             swipeRefreshLayout.setOnRefreshListener {
                 accountsAndTransfersListViewModel.refreshViews()
+                swipeRefreshLayout.isRefreshing = false
             }
         }
 
