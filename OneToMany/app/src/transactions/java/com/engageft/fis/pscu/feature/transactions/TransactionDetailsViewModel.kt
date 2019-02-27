@@ -169,11 +169,24 @@ class TransactionDetailsViewModel(transactionId: TransactionId) : BaseEngageView
                                         originalCategory = txCategory.value
                                         // Update in repo
                                         val localeLanguage = Locale.getDefault().language
-                                        transaction.category = budgetCategory.parentCategory.name
-                                        transaction.categoryDescription = budgetCategory.parentCategory.getDescriptionForLocaleLanguage(localeLanguage)
-                                        transaction.subCategory = budgetCategory.name
-                                        transaction.subCategoryDescription = budgetCategory.getDescriptionForLocaleLanguage(localeLanguage)
+                                        val category = budgetCategory.parentCategory.name
+                                        val categoryDescription = budgetCategory.parentCategory.getDescriptionForLocaleLanguage(localeLanguage)
+                                        val subCategory = budgetCategory.name
+                                        val subCategoryDescription = budgetCategory.getDescriptionForLocaleLanguage(localeLanguage)
+                                        transaction.category = category
+                                        transaction.categoryDescription = categoryDescription
+                                        transaction.subCategory = subCategory
+                                        transaction.subCategoryDescription = subCategoryDescription
                                         TransactionRepository.updateTransaction(transaction)
+                                        if (applyCategoryChangeToAllOfSameCategory) {
+                                            TransactionRepository.updateStoreTransactionsCategory(
+                                                    transaction.store,
+                                                    category,
+                                                    categoryDescription,
+                                                    subCategory,
+                                                    subCategoryDescription
+                                            )
+                                        }
                                     }
                                 }
                 )
@@ -225,8 +238,6 @@ class TransactionDetailsViewModel(transactionId: TransactionId) : BaseEngageView
                                         // To just update this transaction:
                                         transaction.offBudget = isOffBudget.value!!
                                         TransactionRepository.updateTransaction(transaction)
-                                        // To update all transactions for this transaction's store:
-                                        // TransactionRepository.updateStoreTransactionsOffBudget(transaction.store, isOffBudget.value!!)
                                     }
                                     compositeDisposable.add(
                                             EngageService.getInstance().refreshLoginObservable()
