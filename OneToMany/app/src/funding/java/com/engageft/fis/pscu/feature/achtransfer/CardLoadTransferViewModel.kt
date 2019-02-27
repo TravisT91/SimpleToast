@@ -73,7 +73,7 @@ class CardLoadTransferViewModel(scheduledLoadId: Long): BaseEngageViewModel() {
     private var fundSourceMediator: HashMap<String, FundSourceModel> = HashMap()
     private var fundDestinationMediator: HashMap<String, CardInfoModel> = HashMap()
 
-    lateinit var transferFundsModel: TransferFundsModel
+    lateinit var cardLoadTransfer: CardLoadTransfer
 
     init {
         buttonStateObservable.value = ButtonState.HIDE
@@ -359,7 +359,7 @@ class CardLoadTransferViewModel(scheduledLoadId: Long): BaseEngageViewModel() {
         }
 
         if (fundSource != null && fundDestination != null) {
-            transferFundsModel = TransferFundsModel(
+            cardLoadTransfer = CardLoadTransfer(
                     fromId = fundSource.cardId,
                     toId = fundDestination.cardId,
                     fromAccountName = fundSource.name,
@@ -486,7 +486,7 @@ enum class ScheduleLoadFrequencyType {
     MONTHLY
 }
 @Parcelize
-data class TransferFundsModel(val fromId: Long, val toId: Long, val amount: BigDecimal, val fromLastFour: String,
-                              val frequency: ScheduleLoadFrequencyType, val scheduleDate: DateTime? = null,
-                              val fromAccountName: String? = null,
-                              val fundSourceType: FundSourceType): Parcelable
+data class CardLoadTransfer(val fromId: Long, val toId: Long, val amount: BigDecimal, val fromLastFour: String,
+                            val frequency: ScheduleLoadFrequencyType, val scheduleDate: DateTime? = null,
+                            val fromAccountName: String? = null,
+                            val fundSourceType: FundSourceType): Parcelable

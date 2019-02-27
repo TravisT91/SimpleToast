@@ -18,24 +18,24 @@ import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 
-class CardLoadTransferConfirmationViewModel(private val transferFundModel: TransferFundsModel): BaseEngageViewModel() {
+class CardLoadTransferConfirmationViewModel(private val cardLoadTransfer: CardLoadTransfer): BaseEngageViewModel() {
 
     val createTransferSuccessObservable = SingleLiveEvent<Unit>()
 
     fun onCreateTransfer() {
-        when (transferFundModel.fundSourceType) {
+        when (cardLoadTransfer.fundSourceType) {
             FundSourceType.STANDARD_DEBIT -> {
-                transferFromDebitSource(transferFundModel)
+                transferFromDebitSource(cardLoadTransfer)
             }
             FundSourceType.STANDARD_ACH -> {
-                transferFromAchAccount(transferFundModel)
+                transferFromAchAccount(cardLoadTransfer)
             }
         }
     }
 
-    private fun transferFromAchAccount(transferFundModel: TransferFundsModel) {
+    private fun transferFromAchAccount(transferFundModel: CardLoadTransfer) {
         val scheduledLoad = getNewScheduleLoad(transferFundModel)
-        scheduledLoad.achAccountId = this.transferFundModel.fromId.toString()
+        scheduledLoad.achAccountId = this.cardLoadTransfer.fromId.toString()
         //TODO(aHashimi): Pass ThreatMetrix sessionId when integrated
         val request = ScheduledLoadAchAddRequest(scheduledLoad, "")
 
@@ -55,7 +55,7 @@ class CardLoadTransferConfirmationViewModel(private val transferFundModel: Trans
         transfer(observable)
     }
 
-    private fun transferFromDebitSource(transferFundModel: TransferFundsModel) {
+    private fun transferFromDebitSource(transferFundModel: CardLoadTransfer) {
         val scheduledLoad = getNewScheduleLoad(transferFundModel)
         scheduledLoad.ccAccountId = transferFundModel.fromId.toString()
         //TODO(aHashimi): Pass ThreatMetrix sessionId when integrated
@@ -76,7 +76,7 @@ class CardLoadTransferConfirmationViewModel(private val transferFundModel: Trans
         transfer(observable)
     }
 
-    private fun getNewScheduleLoad(fundsModel: TransferFundsModel) : ScheduledLoad {
+    private fun getNewScheduleLoad(fundsModel: CardLoadTransfer) : ScheduledLoad {
         val scheduledLoad = ScheduledLoad()
         // this is not needed by backend but Retrofit serialization
         scheduledLoad.scheduledLoadType = ScheduledLoad.PLANNED_LOAD_METHOD_BANK_TRANSFER
@@ -117,7 +117,7 @@ class CardLoadTransferConfirmationViewModel(private val transferFundModel: Trans
         const val TAG = "CardLoadTransferConfirmationViewModel"
     }
 }
-class CreateTransferConfirmationViewModelFactory(private val transferFundsModel: TransferFundsModel) : ViewModelProvider.NewInstanceFactory() {
+class CreateTransferConfirmationViewModelFactory(private val transferFundsModel: CardLoadTransfer) : ViewModelProvider.NewInstanceFactory() {
     override fun <T : ViewModel?> create(modelClass: Class<T>): T {
         @Suppress("UNCHECKED_CAST")
         return CardLoadTransferConfirmationViewModel(transferFundsModel) as T

@@ -260,6 +260,6 @@ class CardLoadTransferFragment: BaseEngagePageFragment() {
 
     private fun navigateToConfirmationScreen() {
         binding.root.findNavController().navigate(R.id.action_createEditTransferFragment_to_createTransferConfirmationFragment,
-                bundleOf(TRANSFER_FUNDS_BUNDLE_KEY to viewModelTransfer.transferFundsModel))
+                bundleOf(TRANSFER_FUNDS_BUNDLE_KEY to viewModelTransfer.cardLoadTransfer))
     }
 }
