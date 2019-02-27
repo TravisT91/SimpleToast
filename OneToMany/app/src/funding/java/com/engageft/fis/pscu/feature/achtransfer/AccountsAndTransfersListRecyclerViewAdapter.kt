@@ -2,7 +2,6 @@ package com.engageft.fis.pscu.feature.achtransfer
 
 import android.content.Context
 import android.os.Build
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -259,10 +258,10 @@ class AccountsAndTransfersListRecyclerViewAdapter(
                 // We can cast:
                 return when (oldItem) {
                     is AccountsAndTransferListItem.CardLoadHeaderItem -> {
-                        return true
+                        true
                     }
                     is AccountsAndTransferListItem.HeaderItem -> {
-                        return when (oldItem) {
+                        when (oldItem) {
                             is AccountsAndTransferListItem.HeaderItem.BankAccountHeaderItem -> {
                                 newItem is AccountsAndTransferListItem.HeaderItem.BankAccountHeaderItem
                             }
@@ -279,10 +278,10 @@ class AccountsAndTransfersListRecyclerViewAdapter(
                     }
                     is AccountsAndTransferListItem.BankAccountItem -> {
                         newItem as AccountsAndTransferListItem.BankAccountItem
-                        return oldItem.bankName == newItem.bankName && oldItem.lastFour == newItem.lastFour && oldItem.verified == newItem.verified
+                        oldItem.bankName == newItem.bankName && oldItem.lastFour == newItem.lastFour && oldItem.verified == newItem.verified
                     }
                     is AccountsAndTransferListItem.AddItem -> {
-                        return when (oldItem) {
+                        when (oldItem) {
                             is AccountsAndTransferListItem.AddItem.AddBankAccountItem -> {
                                 newItem is AccountsAndTransferListItem.AddItem.AddBankAccountItem
                             }
@@ -292,9 +291,9 @@ class AccountsAndTransfersListRecyclerViewAdapter(
                         }
                     }
                     is AccountsAndTransferListItem.TransferItem -> {
-                        return when (oldItem) {
+                        when (oldItem) {
                             is AccountsAndTransferListItem.TransferItem.ScheduledLoadItem -> {
-                                return when (oldItem) {
+                                when (oldItem) {
                                     is AccountsAndTransferListItem.TransferItem.ScheduledLoadItem.MonthlyItem -> {
                                         if (newItem is AccountsAndTransferListItem.TransferItem.ScheduledLoadItem.MonthlyItem) {
                                             oldItem.lastFour == newItem.lastFour && oldItem.nextRunDate == newItem.nextRunDate &&
@@ -332,17 +331,14 @@ class AccountsAndTransfersListRecyclerViewAdapter(
                         }
                     }
                     is AccountsAndTransferListItem.VerifyBankAccountFooterItem -> {
-                        return true
+                        true
                     }
                     is AccountsAndTransferListItem.CreditDebitCardItem -> {
                         newItem as AccountsAndTransferListItem.CreditDebitCardItem
-                        return oldItem.lastFour == newItem.lastFour
+                        oldItem.lastFour == newItem.lastFour
                     }
                     is AccountsAndTransferListItem.CreateTransferItem -> {
-                        return true
-                    }
-                    else -> {
-                        throw IllegalStateException("Invalid list type")
+                        true
                     }
                 }
             }
@@ -366,10 +362,10 @@ class AccountsAndTransfersListRecyclerViewAdapter(
                 // We can cast:
                 return when (oldItem) {
                     is AccountsAndTransferListItem.CardLoadHeaderItem -> {
-                        return true
+                        true
                     }
                     is AccountsAndTransferListItem.HeaderItem -> {
-                        return when (oldItem) {
+                        when (oldItem) {
                             is AccountsAndTransferListItem.HeaderItem.BankAccountHeaderItem -> {
                                 newItem is AccountsAndTransferListItem.HeaderItem.BankAccountHeaderItem
                             }
@@ -386,10 +382,10 @@ class AccountsAndTransfersListRecyclerViewAdapter(
                     }
                     is AccountsAndTransferListItem.BankAccountItem -> {
                         newItem as AccountsAndTransferListItem.BankAccountItem
-                        return oldItem.bankName == newItem.bankName && oldItem.lastFour == newItem.lastFour && oldItem.verified == newItem.verified
+                        oldItem.bankName == newItem.bankName && oldItem.lastFour == newItem.lastFour && oldItem.verified == newItem.verified
                     }
                     is AccountsAndTransferListItem.AddItem -> {
-                        return when (oldItem) {
+                        when (oldItem) {
                             is AccountsAndTransferListItem.AddItem.AddBankAccountItem -> {
                                 newItem is AccountsAndTransferListItem.AddItem.AddBankAccountItem
                             }
@@ -399,9 +395,9 @@ class AccountsAndTransfersListRecyclerViewAdapter(
                         }
                     }
                     is AccountsAndTransferListItem.TransferItem -> {
-                        return when (oldItem) {
+                        when (oldItem) {
                             is AccountsAndTransferListItem.TransferItem.ScheduledLoadItem -> {
-                                return when (oldItem) {
+                                when (oldItem) {
                                     is AccountsAndTransferListItem.TransferItem.ScheduledLoadItem.MonthlyItem -> {
                                         if (newItem is AccountsAndTransferListItem.TransferItem.ScheduledLoadItem.MonthlyItem) {
                                             oldItem.lastFour == newItem.lastFour && oldItem.nextRunDate == newItem.nextRunDate &&
@@ -439,17 +435,14 @@ class AccountsAndTransfersListRecyclerViewAdapter(
                         }
                     }
                     is AccountsAndTransferListItem.VerifyBankAccountFooterItem -> {
-                        return true
+                        true
                     }
                     is AccountsAndTransferListItem.CreditDebitCardItem -> {
                         newItem as AccountsAndTransferListItem.CreditDebitCardItem
-                        return oldItem.lastFour == newItem.lastFour
+                        oldItem.lastFour == newItem.lastFour
                     }
                     is AccountsAndTransferListItem.CreateTransferItem -> {
-                        return true
-                    }
-                    else -> {
-                        throw IllegalStateException("Invalid list type")
+                        true
                     }
                 }
             }

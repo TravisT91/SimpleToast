@@ -18,6 +18,8 @@ import com.ob.ws.dom.utility.DebitCardInfo
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 import utilGen1.ScheduledLoadUtils
+import java.util.concurrent.atomic.AtomicInteger
+
 /**
  * AccountsAndTransfersListViewModel
  * </p>
@@ -43,7 +45,7 @@ class AccountsAndTransfersListViewModel: BaseEngageViewModel() {
     }
 
     // We keep 3 lists in memory to rebuild the observable any time one of the many API calls completes.
-    var loginResponseListSetion = ArrayList<AccountsAndTransferListItem>()
+    var loginResponseListSection = ArrayList<AccountsAndTransferListItem>()
     var scheduledLoadListSection = ArrayList<AccountsAndTransferListItem>()
     var historicalLoadListSection = ArrayList<AccountsAndTransferListItem>()
     var createTransferListSection = ArrayList<AccountsAndTransferListItem>()
@@ -57,13 +59,15 @@ class AccountsAndTransfersListViewModel: BaseEngageViewModel() {
 
     private var loginResponse: LoginResponse? = null
 
+    private val apiCallsCounter = AtomicInteger(0)
+
     init {
         createTransferButtonStateObservable.value = CreateTransferButtonState.GONE
     }
 
     private fun concatenateObservable() {
         accountsAndTransfersListObservable.value = ArrayList<AccountsAndTransferListItem>().apply {
-            addAll(loginResponseListSetion)
+            addAll(loginResponseListSection)
             addAll(scheduledLoadListSection)
             addAll(historicalLoadListSection)
             addAll(createTransferListSection)
@@ -71,6 +75,8 @@ class AccountsAndTransfersListViewModel: BaseEngageViewModel() {
     }
 
     fun refreshViews() {
+        showProgressOverlayDelayed()
+        apiCallsCounter.incrementAndGet()
         compositeDisposable.add(EngageService.getInstance().loginResponseAsObservable
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
@@ -136,7 +142,7 @@ class AccountsAndTransfersListViewModel: BaseEngageViewModel() {
                             }
                         }
 
-                        loginResponseListSetion = ArrayList<AccountsAndTransferListItem>().apply {
+                        loginResponseListSection = ArrayList<AccountsAndTransferListItem>().apply {
                             if (showCardLoadHeader) {
                                 add(AccountsAndTransferListItem.CardLoadHeaderItem)
                             }
@@ -157,6 +163,11 @@ class AccountsAndTransfersListViewModel: BaseEngageViewModel() {
                         val currentCard = LoginResponseUtils.getCurrentCard(response)
                         getScheduledLoads(currentCard)
                         getHistoricalLoads(currentCard)
+
+                        val numApiCallsRemaining = apiCallsCounter.decrementAndGet()
+                        if (numApiCallsRemaining < 1) {
+                            dismissProgressOverlay()
+                        }
                     } else {
                         handleUnexpectedErrorResponse(response)
                     }
@@ -168,6 +179,7 @@ class AccountsAndTransfersListViewModel: BaseEngageViewModel() {
 
     private fun getScheduledLoads(currentCard: DebitCardInfo) {
         // TODO(jhutchins): FOTM-1002 update for merging historical loads and scheduled loads.
+        apiCallsCounter.incrementAndGet()
         compositeDisposable.add(
                 EngageService.getInstance().getScheduledLoadsResponseObservable(currentCard, false)
                         .subscribeOn(Schedulers.io())
@@ -202,6 +214,11 @@ class AccountsAndTransfersListViewModel: BaseEngageViewModel() {
                                 }
                                 scheduledLoadListSection = scheduledLoads
                                 concatenateObservable()
+
+                                val numApiCallsRemaining = apiCallsCounter.decrementAndGet()
+                                if (numApiCallsRemaining < 1) {
+                                    dismissProgressOverlay()
+                                }
                             } else {
                                 handleUnexpectedErrorResponse(response)
                             }
@@ -213,6 +230,7 @@ class AccountsAndTransfersListViewModel: BaseEngageViewModel() {
 
     private fun getHistoricalLoads(currentCard: DebitCardInfo) {
         // TODO(jhutchins): FOTM-1002 update for merging historical loads and scheduled loads.
+        apiCallsCounter.incrementAndGet()
         val cardRequest = CardRequest(currentCard.debitCardId)
         compositeDisposable.add(
                 EngageService.getInstance().engageApiInterface.postListHistoricalLoads(cardRequest.fieldMap)
@@ -238,6 +256,11 @@ class AccountsAndTransfersListViewModel: BaseEngageViewModel() {
                                 }
                                 historicalLoadListSection = historicalLoads
                                 concatenateObservable()
+
+                                val numApiCallsRemaining = apiCallsCounter.decrementAndGet()
+                                if (numApiCallsRemaining < 1) {
+                                    dismissProgressOverlay()
+                                }
                             } else {
                                 handleUnexpectedErrorResponse(response)
                             }
@@ -246,39 +269,4 @@ class AccountsAndTransfersListViewModel: BaseEngageViewModel() {
                         })
         )
     }
-
-//    private fun initBankAccountStatusAndList(loginResponse: LoginResponse) {
-//        val accountInfo = LoginResponseUtils.getCurrentAccountInfo(loginResponse)
-//        accountInfo?.let { account ->
-//            if (account.accountPermissionsInfo.isFundingAchEnabled) {
-//
-//                if (loginResponse.achAccountList.isNotEmpty()) {
-//                    loginResponse.achAccountList.find { achAccount ->
-//                        achAccount.achAccountStatus == AchAccountStatus.VERIFIED
-//                    }?.let { achAccountInfo ->
-//                        achBankAccountId = achAccountInfo.achAccountId
-//                        achBankAccountsListObservable.value = listOf(achAccountInfo)
-//                        createTransferButtonStateObservable.value = CreateTransferButtonState.CREATE_TRANSFER
-//                    }
-//
-//                    loginResponse.achAccountList.find { achAccount ->
-//                        achAccount.achAccountStatus == AchAccountStatus.UNVERIFIED
-//                    }?.let { achAccountInfo ->
-//                        achBankAccountId = achAccountInfo.achAccountId
-//                        achBankAccountsListObservable.value = listOf(achAccountInfo)
-//                        createTransferButtonStateObservable.value = CreateTransferButtonState.VERIFY_BANK
-//                    }
-//                } else {
-//                    createTransferButtonStateObservable.value = CreateTransferButtonState.HIDE
-//
-//                    //TODO(aHashimi): Adding of multiple ACH bank accounts is not supported yet [on Frontend at least]
-//                    // calling this here makes sense for now.
-//                    isAllowAddAchAccountObservable.value = account.accountPermissionsInfo.isFundingAddAchAllowable
-//                }
-//            } else {
-//                isAchEnabledObservable.value = false
-//                createTransferButtonStateObservable.value = CreateTransferButtonState.HIDE
-//            }
-//        }
-//    }
 }

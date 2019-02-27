@@ -84,6 +84,10 @@ class AccountsAndTransfersListFragment: BaseEngagePageFragment() {
             recyclerViewAdapter = AccountsAndTransfersListRecyclerViewAdapter(selectionListener)
 
             recyclerView.adapter = recyclerViewAdapter
+
+            swipeRefreshLayout.setOnRefreshListener {
+                accountsAndTransfersListViewModel.refreshViews()
+            }
         }
 
         accountsAndTransfersListViewModel.apply {

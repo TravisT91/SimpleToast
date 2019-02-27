@@ -35,7 +35,7 @@ object ScheduledLoadUtils {
 
         return if (incomeLoads.size > 0) {
 //            mergeTwiceMonthlyLoads(incomeLoads)
-            val list = ArrayList<ScheduledLoad>()
+            val list = mutableListOf<ScheduledLoad>()
             for (load in incomeLoads) {
                 list.add(ScheduledLoad(load))
             }
@@ -72,7 +72,7 @@ object ScheduledLoadUtils {
 
         return if (scheduledLoads.size > 0) {
 //            mergeTwiceMonthlyLoads(scheduledLoads)
-            val list = ArrayList<ScheduledLoad>()
+            val list = mutableListOf<ScheduledLoad>()
             for (load in scheduledLoads) {
                 list.add(ScheduledLoad(load))
             }
