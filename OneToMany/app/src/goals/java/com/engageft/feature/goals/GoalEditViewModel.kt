@@ -89,7 +89,7 @@ class GoalEditViewModel(val goalId: Long): BaseEngageViewModel() {
             }
         })
 
-        initGoalData()
+        initData()
     }
 
     fun hasUnsavedChanges(): Boolean {
@@ -109,7 +109,26 @@ class GoalEditViewModel(val goalId: Long): BaseEngageViewModel() {
         return false
     }
 
-    private fun initGoal(debitCardInfo: DebitCardInfo) {
+    private fun initData() {
+        showProgressOverlayDelayed()
+        compositeDisposable.add(EngageService.getInstance().loginResponseAsObservable
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe({ response ->
+                    if (response is LoginResponse) {
+                        LoginResponseUtils.getCurrentCard(response)?.let { debitCard -> initGoalInfo(debitCard) }
+                    } else {
+                        dismissProgressOverlay()
+                        handleUnexpectedErrorResponse(response)
+                    }
+                }, { e ->
+                    dismissProgressOverlay()
+                    handleThrowable(e)
+                })
+        )
+    }
+
+    private fun initGoalInfo(debitCardInfo: DebitCardInfo) {
         compositeDisposable.add(
                 EngageService.getInstance().goalsObservable(debitCardInfo, false)
                         .subscribeOn(Schedulers.io())
@@ -169,8 +188,8 @@ class GoalEditViewModel(val goalId: Long): BaseEngageViewModel() {
 
     private fun validateFormAndButtonState() {
         if (isFormValid() && hasUnsavedChanges()) {
-            nextButtonStateObservable.value = ButtonState.SHOW
             setupGoalModelInfo()
+            nextButtonStateObservable.value = ButtonState.SHOW
         } else {
             nextButtonStateObservable.value = ButtonState.HIDE
         }
@@ -230,25 +249,6 @@ class GoalEditViewModel(val goalId: Long): BaseEngageViewModel() {
         if (frequencyType.get()!! == FREQUENCY_TYPE_WEEKLY && dayOfWeek.get()!!.isNotEmpty()) return true
         if (frequencyType.get()!! == FREQUENCY_TYPE_MONTHLY && nextRunDate.get()!!.isNotEmpty()) return true
         return false
-    }
-
-    private fun initGoalData() {
-        showProgressOverlayDelayed()
-        compositeDisposable.add(EngageService.getInstance().loginResponseAsObservable
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe({ response ->
-                    if (response is LoginResponse) {
-                        initGoal(LoginResponseUtils.getCurrentCard(response))
-                    } else {
-                        dismissProgressOverlay()
-                        handleUnexpectedErrorResponse(response)
-                    }
-                }, { e ->
-                    dismissProgressOverlay()
-                    handleThrowable(e)
-                })
-        )
     }
 
     private fun hasFrequencyAmountOrGoalDateChanged() : Boolean {

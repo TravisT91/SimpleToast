@@ -57,13 +57,11 @@ class GoalEditFragment: BaseEngagePageFragment() {
     }
 
     override fun createViewModel(): BaseViewModel? {
-        arguments!!.let {
-            val goalId = it.getLong(GOAL_ID_KEY, GOAL_ID_DEFAULT)
-            if (goalId == GOAL_ID_DEFAULT) {
-                throw IllegalArgumentException("Goal Id is not valid")
-            } else {
-                viewModelGoalEdit = ViewModelProviders.of(this, GoalEditViewModelFactory(goalId)).get(GoalEditViewModel::class.java)
-            }
+        val goalId = arguments!!.getLong(GOAL_ID_KEY, GOAL_ID_DEFAULT)
+        if (goalId == GOAL_ID_DEFAULT) {
+            throw IllegalArgumentException("Goal Id is not valid")
+        } else {
+            viewModelGoalEdit = ViewModelProviders.of(this, GoalEditViewModelFactory(goalId)).get(GoalEditViewModel::class.java)
         }
         return viewModelGoalEdit
     }

@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import androidx.core.content.res.ResourcesCompat
 import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProviders
 import androidx.navigation.findNavController
 import com.engageft.apptoolbox.BaseViewModel
 import com.engageft.apptoolbox.util.applyRelativeSizeToSubstring
@@ -24,7 +25,8 @@ class GoalAddConfirmationFragment: BaseEngagePageFragment() {
 
     override fun createViewModel(): BaseViewModel? {
         val goalInfModel = arguments!!.get(GOAL_DATA_PARCELABLE_KEY) as GoalInfoModel
-        confirmationViewModel = GoalAddEditConfirmationViewModelFactory(goalInfModel).create(GoalAddEditConfirmationViewModel::class.java)
+        confirmationViewModel = ViewModelProviders.of(this, GoalAddEditConfirmationViewModelFactory(goalInfModel))
+                .get(GoalAddEditConfirmationViewModel::class.java)
         return confirmationViewModel
     }
 
