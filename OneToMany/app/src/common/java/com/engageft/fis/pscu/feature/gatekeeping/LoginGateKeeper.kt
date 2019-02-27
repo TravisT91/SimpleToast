@@ -16,7 +16,7 @@ import io.reactivex.disposables.CompositeDisposable
 class LoginGateKeeper(compositeDisposable: CompositeDisposable, gateKeeperListener: GateKeeperListener) : BaseGateKeeper(gateKeeperListener) {
     override val gatedItems = arrayListOf(
             TwoFactorAuthGatedItem(compositeDisposable),
-//            RequireEmailConfirmationGatedItem(compositeDisposable),
+//            RequireEmailConfirmationGatedItem(compositeDisposable), TODO(jhutchins): FOTM-781 undo this change once a solution is made for this feature being broken on the backend.
             RequireAcceptTermsGatedItem(compositeDisposable),
             SecurityQuestionsGatedItem(compositeDisposable))
 }

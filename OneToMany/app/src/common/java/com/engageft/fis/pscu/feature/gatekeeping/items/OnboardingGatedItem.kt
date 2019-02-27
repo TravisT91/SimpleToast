@@ -1,10 +1,11 @@
 package com.engageft.fis.pscu.feature.gatekeeping.items
 
 import com.engageft.engagekit.EngageService
-import com.engageft.engagekit.model.AccountUIPropertNames
+import com.engageft.engagekit.model.AccountUIPropertyNames
 import com.engageft.engagekit.rest.request.GetUIPropertiesRequest
 import com.engageft.engagekit.utils.BackendDateTimeUtils
 import com.engageft.engagekit.utils.LoginResponseUtils
+import com.engageft.engagekit.utils.engageApi
 import com.engageft.fis.pscu.feature.gatekeeping.GatedItem
 import com.engageft.fis.pscu.feature.gatekeeping.GatedItemResultListener
 import com.ob.ws.dom.AccountUIPropertiesResponse
@@ -27,17 +28,17 @@ import io.reactivex.schedulers.Schedulers
 class OnboardingGatedItem(private val compositeDisposable: CompositeDisposable) : GatedItem() {
     private var hasBeenChecked = false
 
-    inner class FetchResponse(val propertyResponse: AccountUIPropertiesResponse, val loginResponse: BasicResponse)
+    inner class FetchResponse(val propertyResponse: BasicResponse, val loginResponse: BasicResponse)
 
     override fun checkItem(resultListener: GatedItemResultListener) {
         if (!hasBeenChecked) {
             hasBeenChecked = true
 
-            val propertyObservable = EngageService.getInstance().engageApiInterface.postGetUIProperties(GetUIPropertiesRequest().fieldMap)
+            val propertyObservable = engageApi().postGetUIProperties(GetUIPropertiesRequest().fieldMap)
             val loginResponseObservable = EngageService.getInstance().loginResponseAsObservable
 
             val zippedObservable = io.reactivex.Observable.zip(propertyObservable.subscribeOn(Schedulers.io()), loginResponseObservable.subscribeOn(Schedulers.io()),
-                    BiFunction<AccountUIPropertiesResponse, BasicResponse, FetchResponse> { propertyResponse, loginResponse ->
+                    BiFunction<BasicResponse, BasicResponse, FetchResponse> { propertyResponse, loginResponse ->
                         FetchResponse(propertyResponse, loginResponse)
                     })
 
@@ -47,7 +48,7 @@ class OnboardingGatedItem(private val compositeDisposable: CompositeDisposable) 
                     .subscribe({ finalResponse ->
                         // Let's check both calls succeeded:
                         var failed = false
-                        if (!finalResponse.propertyResponse.isSuccess) {
+                        if (!finalResponse.propertyResponse.isSuccess && finalResponse.propertyResponse is AccountUIPropertiesResponse) {
                             failed = true
                             resultListener.onItemError(null, finalResponse.propertyResponse.message)
                         }
@@ -56,23 +57,18 @@ class OnboardingGatedItem(private val compositeDisposable: CompositeDisposable) 
                             resultListener.onItemError(null, finalResponse.loginResponse.message)
                         }
                         if (!failed) {
-                            val propertyResponse = finalResponse.propertyResponse
+                            val propertyResponse = finalResponse.propertyResponse as AccountUIPropertiesResponse
                             val loginResponse = finalResponse.loginResponse as LoginResponse
 
                             var coreOnboardingProperty: AccountUIPropertyResponse? = null
                             var budgetsOnboardingProperty: AccountUIPropertyResponse? = null
                             var goalsOnboardingProperty: AccountUIPropertyResponse? = null
-                            propertyResponse.accountUIProperties?.let {
-                                for (property in it) {
-                                    if (property.propertyName == AccountUIPropertNames.coreOnboardingCompleteDate) {
-                                        coreOnboardingProperty = property
-                                    }
-                                    if (property.propertyName == AccountUIPropertNames.budgetsOnboardingCompleteDate) {
-                                        budgetsOnboardingProperty = property
-                                    }
-                                    if (property.propertyName == AccountUIPropertNames.goalsOnboardingCompleteDate) {
-                                        goalsOnboardingProperty = property
-                                    }
+                            propertyResponse.accountUIProperties?.forEach { property ->
+                                when (property.propertyName) {
+                                    AccountUIPropertyNames.coreOnboardingCompleteDate -> coreOnboardingProperty = property
+                                    AccountUIPropertyNames.budgetsOnboardingCompleteDate -> budgetsOnboardingProperty = property
+                                    AccountUIPropertyNames.goalsOnboardingCompleteDate -> goalsOnboardingProperty = property
+                                    else -> {}// Do nothing
                                 }
                             }
 
