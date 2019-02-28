@@ -585,6 +585,13 @@
             app:exitAnim="@anim/nav_exit_anim"
             app:popEnterAnim="@anim/nav_pop_enter_anim"
             app:popExitAnim="@anim/nav_pop_exit_anim" />
+        <action
+            android:id="@+id/action_secondaryUserListFragment_to_viewSecondaryUserFragment"
+            app:destination="@id/viewSecondaryUserFragment"
+            app:enterAnim="@anim/nav_enter_anim"
+            app:exitAnim="@anim/nav_exit_anim"
+            app:popEnterAnim="@anim/nav_pop_enter_anim"
+            app:popExitAnim="@anim/nav_pop_exit_anim" />
     </fragment>
 
     <fragment
@@ -670,6 +677,9 @@
     <fragment
         android:id="@+id/goalDetailFragment"
         android:name="com.engageft.feature.goals.GoalDetailFragment" >
+        <argument
+            android:name="@string/navigation_view_gone"
+            android:defaultValue="true" />
         <action
             android:id="@+id/action_goalDetailScreenFragment_to_goalDeleteFragment"
             app:destination="@id/goalDeleteFragment"
@@ -695,11 +705,18 @@
     <fragment
         android:id="@+id/goalDeleteFragment"
         android:name="com.engageft.feature.goals.GoalDeleteFragment"
-        android:label="@string/GOAL_DELETE_TITLE"/>
+        android:label="@string/GOAL_DELETE_TITLE">
+        <argument
+            android:name="@string/navigation_view_gone"
+            android:defaultValue="true" />
+    </fragment>
     <fragment
         android:id="@+id/goalSingleTransferFragment"
         android:name="com.engageft.feature.goals.GoalSingleTransferFragment"
         android:label="@string/GOAL_DETAIL_TRANSFER" >
+        <argument
+            android:name="@string/navigation_view_gone"
+            android:defaultValue="true" />
         <action
             android:id="@+id/action_goalSingleTransferFragment_to_goalSingleTransferConfirmationFragment"
             app:destination="@id/goalSingleTransferConfirmationFragment"
@@ -711,5 +728,17 @@
     <fragment
         android:id="@+id/goalSingleTransferConfirmationFragment"
         android:name="com.engageft.feature.goals.GoalSingleTransferConfirmationFragment"
-        android:label="@string/GOAL_DETAIL_TRANSFER" />
+        android:label="@string/GOAL_DETAIL_TRANSFER">
+        <argument
+            android:name="@string/navigation_view_gone"
+            android:defaultValue="true" />
+    </fragment>
+    <fragment
+        android:id="@+id/viewSecondaryUserFragment"
+        android:name="com.engageft.fis.pscu.feature.secondaryusers.ViewSecondaryUserFragment"
+        android:label="@string/fragment_title_view_secondary_user">
+        <argument
+            android:name="@string/navigation_view_gone"
+            android:defaultValue="true" />
+    </fragment>
 </navigation>

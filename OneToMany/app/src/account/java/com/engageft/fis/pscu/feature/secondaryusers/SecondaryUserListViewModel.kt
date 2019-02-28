@@ -68,8 +68,7 @@ class SecondaryUserListViewModel: BaseEngageViewModel() {
 
                             for (account in response.accountList) {
                                 secondaryAccountList.add(SecondaryUserListItem.ActiveSecondaryUserType("${account.firstName} ${account.lastName}",
-                                        CardStatusUtils.productCardModelStatusFromDebitCardInfo(account.debitCardInfo)))
-                                account.debitCardInfo.status
+                                        CardStatusUtils.productCardModelStatusFromDebitCardInfo(account.debitCardInfo), account.accountId, debitCardInfo.debitCardId))
                             }
                             if (debitCardInfo.cardPermissionsInfo.isCardSecondaryAddAllowable) {
                                 secondaryAccountList.add(SecondaryUserListItem.AddUserType())

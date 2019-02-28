@@ -30,6 +30,7 @@
     <string name="fragment_title_enrollment_terms">Terms of use</string>
     <string name="fragment_title_secondary_users">Secondary accounts</string>
     <string name="fragment_title_add_secondary_user">Add account</string>
+    <string name="fragment_title_view_secondary_user">Secondary user</string>
 
     <!-- Notifications -->
     <string name="channel_id">app_general_channel</string>

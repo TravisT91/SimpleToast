@@ -5,7 +5,7 @@
     <data>
         <variable
             name="viewModel"
-            type="com.engageft.fis.pscu.feature.secondaryusers.AddSecondaryUserViewModel"/>
+            type="com.engageft.fis.pscu.feature.secondaryusers.ViewSecondaryUserViewModel"/>
 
         <variable
             name="palette"
@@ -24,19 +24,6 @@
             android:orientation="vertical"
             android:background="@android:color/transparent">
 
-            <androidx.appcompat.widget.AppCompatTextView
-                style="@style/Body"
-                android:textColor="@color/structure5"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="25dp"
-                android:layout_marginBottom="25dp"
-                android:layout_marginStart="16dp"
-                android:layout_marginEnd="16dp"
-                android:lineSpacingExtra="11sp"
-                android:gravity="center"
-                android:text="@string/secondary_users_add_header"/>
-
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -48,7 +35,7 @@
                 android:focusableInTouchMode="true">
 
                 <com.engageft.apptoolbox.view.TextInputWithLabel
-                    android:id="@+id/firstNameInput"
+                    android:id="@+id/firstNameText"
                     style="@style/TextInputWithLabelStyle"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -58,7 +45,7 @@
                     app:maxLines="1"/>
 
                 <com.engageft.apptoolbox.view.TextInputWithLabel
-                    android:id="@+id/lastNameInput"
+                    android:id="@+id/lastNameText"
                     style="@style/TextInputWithLabelStyle"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -68,7 +55,7 @@
                     app:maxLines="1"/>
 
                 <com.engageft.apptoolbox.view.PhoneInputWithLabel
-                    android:id="@+id/phoneNumberInput"
+                    android:id="@+id/phoneNumberText"
                     style="@style/TextInputWithLabelStyle"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -77,37 +64,24 @@
                     app:labelText="@string/secondary_users_add_phone_number_label"/>
 
                 <com.engageft.apptoolbox.view.DateInputWithLabel
-                    android:id="@+id/dobInput"
+                    android:id="@+id/dobText"
                     style="@style/TextInputWithLabelStyle"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="20dp"
+                    app:inputText="@={viewModel.dob}"
                     app:labelText="@string/secondary_users_add_dob_label"/>
 
-                <com.engageft.apptoolbox.view.SSNInputWithLabel
-                    style="@style/PasswordInputWithLabelStyle"
-                    android:id="@+id/ssnInput"
+                <com.engageft.apptoolbox.view.TextInputWithLabel
+                    style="@style/TextInputWithLabelStyle"
+                    android:id="@+id/cardStatusText"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="20dp"
-                    android:visibility="gone"
-                    app:labelText="@string/secondary_users_add_ssn_label"
-                    app:inputText="@={viewModel.ssn}"/>
+                    app:labelText="@string/secondary_users_view_card_status_label"/>
             </LinearLayout>
 
-            <com.engageft.apptoolbox.view.PillButton
-                android:id="@+id/addButton"
-                style="@style/ButtonPillPrimaryFilledDefault"
-                PillButton.setThemeFilled="@{true}"
-                android:layout_gravity="center"
-                android:gravity="center"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
-                android:layout_marginBottom="16dp"
-                android:visibility="gone"
-                android:onClick="@{() -> viewModel.onAddClicked()}"
-                android:text="@string/secondary_users_add_button_text"/>
+            <!--TODO(jhutchins): Someday we might add a delete button?-->
         </LinearLayout>
     </androidx.core.widget.NestedScrollView>
 
