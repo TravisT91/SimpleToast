@@ -11,9 +11,10 @@ import com.engageft.apptoolbox.ToolbarVisibilityState
 import com.engageft.fis.pscu.R
 import com.engageft.fis.pscu.databinding.FragmentAchBankAccountAddVerifySuccessBinding
 import com.engageft.fis.pscu.feature.BaseEngagePageFragment
-import com.engageft.fis.pscu.feature.achtransfer.AchBankAccountAddFragment.Companion.ADDED_SUCCESS_TYPE
-import com.engageft.fis.pscu.feature.achtransfer.AchBankAccountAddFragment.Companion.SUCCESS_SCREEN_TYPE_KEY
-import com.engageft.fis.pscu.feature.achtransfer.AchBankAccountAddFragment.Companion.VERIFIED_SUCCESS_TYPE
+import com.engageft.fis.pscu.feature.achtransfer.CardLoadConstants.ADD_ACH_BANK_SUCCESS_TYPE
+import com.engageft.fis.pscu.feature.achtransfer.CardLoadConstants.ADD_CARD_SUCCESS_TYPE
+import com.engageft.fis.pscu.feature.achtransfer.CardLoadConstants.SUCCESS_SCREEN_TYPE_KEY
+import com.engageft.fis.pscu.feature.achtransfer.CardLoadConstants.VERIFIED_SUCCESS_TYPE
 import com.engageft.fis.pscu.feature.branding.Palette
 
 /**
@@ -53,7 +54,10 @@ class AchBankAccountAddVerifySuccessFragment: BaseEngagePageFragment() {
             arguments?.let { bundle ->
                 val successType = bundle.getInt(SUCCESS_SCREEN_TYPE_KEY, -1)
                 when (successType) {
-                    ADDED_SUCCESS_TYPE -> {
+                    ADD_CARD_SUCCESS_TYPE -> {
+                        //TODO FOTM-66
+                    }
+                    ADD_ACH_BANK_SUCCESS_TYPE -> {
                         titleTextView.text = getString(R.string.ach_bank_account_added_successful_title)
                         subTitleTextView.text = getString(R.string.ach_bank_account_added_successful_subtitle)
                         nextButton.text = getString(R.string.ach_bank_account_added_successful_done_button)

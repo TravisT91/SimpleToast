@@ -7,17 +7,21 @@ import android.view.MenuInflater
 import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.os.bundleOf
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
+import androidx.navigation.findNavController
 import androidx.navigation.fragment.findNavController
 import com.engageft.apptoolbox.BaseViewModel
 import com.engageft.apptoolbox.NavigationOverrideClickListener
+import com.engageft.apptoolbox.view.DateInputWithLabel
 import com.engageft.apptoolbox.view.InformationDialogFragment
 import com.engageft.fis.pscu.R
 import com.engageft.fis.pscu.databinding.FragmentCardLoadAddEditCardBinding
 import com.engageft.fis.pscu.feature.BaseEngagePageFragment
 import com.engageft.fis.pscu.feature.branding.Palette
 import com.engageft.fis.pscu.feature.infoDialogGenericUnsavedChangesNewInstance
+import com.redmadrobot.inputmask.MaskedTextChangedListener
 
 class CardLoadAddEditCardFragment: BaseEngagePageFragment() {
 
@@ -66,15 +70,17 @@ class CardLoadAddEditCardFragment: BaseEngagePageFragment() {
             upButtonOverrideProvider.setUpButtonOverride(navigationOverrideClickListener)
             backButtonOverrideProvider.setBackButtonOverride(navigationOverrideClickListener)
 
+            expirationDateInputWithLabel.dateFormat = DateInputWithLabel.DateFormat.MM_YY
+
             viewModelAddEdit.apply {
 
                 eventTypeObservable.observe(viewLifecycleOwner, Observer {
                     when (it) {
                         CardLoadAddEditCardViewModel.EventType.ADD -> {
-                            setUpViews()
+                            setUpAddMode()
                         }
                         CardLoadAddEditCardViewModel.EventType.EDIT -> {
-                            toolbarController.setToolbarTitle(getString(R.string.card_load_edit_card_screen_title))
+                            setUpEditMode()
                         }
                     }
                 })
@@ -83,11 +89,26 @@ class CardLoadAddEditCardFragment: BaseEngagePageFragment() {
         return binding.root
     }
 
-    private fun setUpViews() {
+    private fun setUpEditMode() {
+        toolbarController.setToolbarTitle(getString(R.string.card_load_edit_card_screen_title))
+
+        viewModelAddEdit.deleteCardSuccessObservable.observe(viewLifecycleOwner, Observer {
+            binding.root.findNavController().popBackStack()
+        })
+    }
+
+    private fun setUpAddMode() {
         toolbarController.setToolbarTitle(getString(R.string.card_load_add_card_screen_title))
 
         binding.apply {
+
             viewModelAddEdit.apply {
+
+                expirationDateInputWithLabel.addTextChangeListener(object : MaskedTextChangedListener.ValueListener {
+                    override fun onTextChanged(maskFilled: Boolean, extractedValue: String) {
+                        expirationDate.set(binding.expirationDateInputWithLabel.getInputTextWithMask().toString())
+                    }
+                })
 
                 numberInputWithLabel.addEditTextFocusChangeListener(View.OnFocusChangeListener { _, hasFocus ->
                     if (!hasFocus) {
@@ -159,6 +180,12 @@ class CardLoadAddEditCardFragment: BaseEngagePageFragment() {
                             expirationDateInputWithLabel.setErrorTexts(listOf(getString(R.string.card_load_add_edit_card_expiration_validation_message)))
                         }
                     }
+                })
+
+                addCardSuccessObservable.observe(viewLifecycleOwner, Observer {
+                    root.findNavController().navigate(
+                            R.id.action_cardLoadAddEditCardFragment_to_achBankAccountAddVerifySuccessFragment,
+                            bundleOf(CardLoadConstants.SUCCESS_SCREEN_TYPE_KEY to CardLoadConstants.ADD_ACH_BANK_SUCCESS_TYPE))
                 })
             }
         }

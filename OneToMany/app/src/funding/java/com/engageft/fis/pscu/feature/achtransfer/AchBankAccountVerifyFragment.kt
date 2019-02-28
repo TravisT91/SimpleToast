@@ -17,9 +17,10 @@ import com.engageft.fis.pscu.R
 import com.engageft.fis.pscu.config.EngageAppConfig
 import com.engageft.fis.pscu.databinding.FragmentAchBankAccountVerifyBinding
 import com.engageft.fis.pscu.feature.BaseEngagePageFragment
-import com.engageft.fis.pscu.feature.achtransfer.AchBankAccountAddFragment.Companion.SUCCESS_SCREEN_TYPE_KEY
-import com.engageft.fis.pscu.feature.achtransfer.AchBankAccountAddFragment.Companion.VERIFIED_SUCCESS_TYPE
+import com.engageft.fis.pscu.feature.achtransfer.CardLoadConstants.SUCCESS_SCREEN_TYPE_KEY
+import com.engageft.fis.pscu.feature.achtransfer.CardLoadConstants.VERIFIED_SUCCESS_TYPE
 import com.engageft.fis.pscu.feature.branding.Palette
+
 /**
  * AchBankAccountVerifyFragment
  * </p>

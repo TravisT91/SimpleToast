@@ -7,4 +7,9 @@ object CardLoadConstants {
     const val CARD_NUMBER_REQUIRED_LENGTH = 16
     const val CVV_NUMBER_MIN_LENGTH = 3
     const val CVV_NUMBER_MAX_LENGTH = 4
+
+    const val SUCCESS_SCREEN_TYPE_KEY = "SUCCESS_SCREEN_TYPE_KEY"
+    const val ADD_ACH_BANK_SUCCESS_TYPE = 0
+    const val ADD_CARD_SUCCESS_TYPE = 1
+    const val VERIFIED_SUCCESS_TYPE = 2
 }

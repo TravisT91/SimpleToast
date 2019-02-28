@@ -55,8 +55,7 @@
                     android:padding="16dp"
                     android:visibility="@{viewModel.showCvvNumber.get() ? View.VISIBLE : View.GONE}"
                     app:inputMask="[00]/[00]"
-                    app:labelText="@string/card_load_add_edit_card_expiration_label"
-                    app:inputText="@={viewModel.expirationDate}"/>
+                    app:labelText="@string/card_load_add_edit_card_expiration_label"/>
             </LinearLayout>
 
             <androidx.appcompat.widget.LinearLayoutCompat

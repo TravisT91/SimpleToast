@@ -1,13 +1,14 @@
 package com.engageft.fis.pscu.feature.achtransfer
 
+import android.util.Log
 import androidx.databinding.Observable
 import androidx.databinding.ObservableField
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.engageft.apptoolbox.util.isDigitsOnly
-import com.engageft.apptoolbox.util.removeWhitespaces
 import com.engageft.engagekit.EngageService
+import com.engageft.engagekit.aac.SingleLiveEvent
 import com.engageft.engagekit.rest.request.FundingAddDebitRequest
 import com.engageft.engagekit.rest.request.FundingDeleteDebitRequest
 import com.engageft.engagekit.utils.engageApi
@@ -24,6 +25,7 @@ import io.reactivex.schedulers.Schedulers
 import org.joda.time.DateTime
 import utilGen1.DisplayDateTimeUtils
 import java.lang.Exception
+import java.lang.IllegalArgumentException
 
 class CardLoadAddEditCardViewModel(val ccAccountId: Long): BaseEngageViewModel() {
     enum class EventType {
@@ -44,6 +46,9 @@ class CardLoadAddEditCardViewModel(val ccAccountId: Long): BaseEngageViewModel()
     val cvvValidationObservable = MutableLiveData<Validation>()
     val cardExpirationValidationObservable = MutableLiveData<Validation>()
     val buttonStateObservable = MutableLiveData<ButtonState>()
+
+    val addCardSuccessObservable = SingleLiveEvent<Unit>()
+    val deleteCardSuccessObservable = SingleLiveEvent<Unit>()
 
     var eventType = EventType.ADD
 
@@ -87,7 +92,57 @@ class CardLoadAddEditCardViewModel(val ccAccountId: Long): BaseEngageViewModel()
             eventType = EventType.EDIT
             populateData(ccAccountId)
         }
+
         eventTypeObservable.value = eventType
+    }
+
+    fun addCard() {
+        val expirationDate = getFormattedDate(expirationDate.get()!!)
+        expirationDate?.let { expDate ->
+            val twoDigitsMonth = DisplayDateTimeUtils.getMonthTwoDigits(expDate)
+            val twoDigitsYear = DisplayDateTimeUtils.getYearTwoDigits(expDate)
+
+            val request = FundingAddDebitRequest(cardNumber.get()!!, cvvNumber.get()!!, twoDigitsMonth, twoDigitsYear)
+            val observable = engageApi().postFundingAddDebit(request.fieldMap)
+            showProgressOverlayDelayed()
+        compositeDisposable.add(observable
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe({ response ->
+                    dismissProgressOverlay()
+                    if (response.isSuccess) {
+                        addCardSuccessObservable.call()
+                    } else {
+                        handleBackendErrorForForms(response, "$TAG: adding a debit/credit card failed")
+                    }
+                }, { e ->
+                    dismissProgressOverlay()
+                    handleThrowable(e)
+                }))
+        } ?: run {
+            throw IllegalArgumentException("expiration date is null")
+        }
+    }
+
+
+    fun deleteACard() {
+        showProgressOverlayImmediate()
+        val request = FundingDeleteDebitRequest(ccAccountId)
+        compositeDisposable.add(engageApi().postFundingDeleteDebit(request.fieldMap)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe({ response ->
+                    dismissProgressOverlay()
+                    if (response.isSuccess) {
+                        deleteCardSuccessObservable.call()
+                    } else {
+                        handleUnexpectedErrorResponse(response)
+                    }
+                }, { e ->
+                    dismissProgressOverlay()
+                    handleThrowable(e)
+                })
+        )
     }
 
     fun hasUnsavedChanges(): Boolean {
@@ -111,51 +166,6 @@ class CardLoadAddEditCardViewModel(val ccAccountId: Long): BaseEngageViewModel()
             }
         } else {
             cardNumberValidationObservable.value = Validation.EMPTY
-        }
-    }
-
-    private fun validateButtonState() {
-        if (isCardNumberValid(cardNumber.get()!!)
-                && isCvvValid(cvvNumber.get()!!)
-                && isExpirationDateValid(expirationDate.get()!!)) {
-            buttonStateObservable.value = ButtonState.SHOW
-        } else {
-            buttonStateObservable.value = ButtonState.HIDE
-        }
-    }
-    private fun isCardNumberValid(number: String): Boolean {
-        val newValue = number.removeWhitespaces()
-        return newValue.isDigitsOnly() && newValue.length == CARD_NUMBER_REQUIRED_LENGTH
-    }
-
-    private fun isCvvValid(cvv: String): Boolean {
-        return cvv.isDigitsOnly() && (cvv.length == CVV_NUMBER_MIN_LENGTH || cvv.length == CVV_NUMBER_MAX_LENGTH)
-    }
-
-    private fun isExpirationDateValid(expirationDate: String): Boolean {
-        val formatDate: DateTime? = try {
-           DisplayDateTimeUtils.expirationMonthYearFormatter.parseDateTime(expirationDate)
-        } catch(e: Exception) {
-            null
-        }
-
-        formatDate?.let { date ->  return date.isAfter(System.currentTimeMillis()) }
-        return false
-    }
-
-    private fun validateCardNumber() {
-        if (isCardNumberValid(cardNumber.get()!!)) {
-            cardNumberValidationObservable.value = Validation.VALID
-        } else {
-            cardNumberValidationObservable.value = Validation.INVALID
-        }
-    }
-
-    private fun validateCvv() {
-        if (isCvvValid(cvvNumber.get()!!)) {
-            cvvValidationObservable.value = Validation.VALID
-        } else {
-            cvvValidationObservable.value = Validation.INVALID
         }
     }
 
@@ -199,34 +209,6 @@ class CardLoadAddEditCardViewModel(val ccAccountId: Long): BaseEngageViewModel()
         }
     }
 
-    private fun validateExpirationDate() {
-        if (isExpirationDateValid(expirationDate.get()!!)) {
-            cardExpirationValidationObservable.value = Validation.VALID
-        } else {
-            cardExpirationValidationObservable.value = Validation.INVALID
-        }
-    }
-
-    fun addCard() {
-        showProgressOverlayDelayed()
-        val request = FundingAddDebitRequest("4851687452698865", "1524", "05", "22")
-        val observable = engageApi().postFundingAddDebit(request.fieldMap)
-        compositeDisposable.add(observable
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe({ response ->
-                    if (response.isSuccess) {
-
-                    } else {
-                        handleBackendErrorForForms(response, "TAG: adding a debit/credit card failed")
-                    }
-                }, { e ->
-                    dismissProgressOverlay()
-                    handleThrowable(e)
-                })
-        )
-    }
-
     private fun populateData(ccAccountId: Long) {
         compositeDisposable.add(EngageService.getInstance().loginResponseAsObservable
                 .subscribeOn(Schedulers.io())
@@ -253,24 +235,61 @@ class CardLoadAddEditCardViewModel(val ccAccountId: Long): BaseEngageViewModel()
         )
     }
 
-    fun deleteACard() {
-        val request = FundingDeleteDebitRequest(ccAccountId)
-        compositeDisposable.add(engageApi().postFundingDeleteDebit(request.fieldMap)
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe({ response ->
-                    if (response.isSuccess) {
-//                        response.ccAccountList.forEach { ccAccountInfo ->
-//                            ccAccountInfo.ccAccountId = 451
-//                        }
-                    } else {
-                        handleUnexpectedErrorResponse(response)
-                    }
-                }, { e ->
-                    dismissProgressOverlay()
-                    handleThrowable(e)
-                })
-        )
+    private fun validateButtonState() {
+        if (isCardNumberValid(cardNumber.get()!!)
+                && isCvvValid(cvvNumber.get()!!)
+                && isExpirationDateValid(expirationDate.get()!!)) {
+            buttonStateObservable.value = ButtonState.SHOW
+        } else {
+            buttonStateObservable.value = ButtonState.HIDE
+        }
+    }
+
+    private fun isCardNumberValid(number: String): Boolean {
+        return number.isDigitsOnly() && number.length == CARD_NUMBER_REQUIRED_LENGTH
+    }
+
+    private fun isCvvValid(cvv: String): Boolean {
+        return cvv.isDigitsOnly() && (cvv.length == CVV_NUMBER_MIN_LENGTH || cvv.length == CVV_NUMBER_MAX_LENGTH)
+    }
+
+    private fun isExpirationDateValid(expirationDate: String): Boolean {
+        val formatDate: DateTime? = getFormattedDate(expirationDate)
+
+        formatDate?.let { date ->  return date.isAfter(System.currentTimeMillis()) }
+        return false
+    }
+
+    private fun getFormattedDate(expirationDate: String): DateTime? {
+        return try {
+            DisplayDateTimeUtils.expirationMonthYearFormatter.parseDateTime(expirationDate)
+        } catch (e: Exception) {
+            null
+        }
+    }
+
+    private fun validateCardNumber() {
+        if (isCardNumberValid(cardNumber.get()!!)) {
+            cardNumberValidationObservable.value = Validation.VALID
+        } else {
+            cardNumberValidationObservable.value = Validation.INVALID
+        }
+    }
+
+    private fun validateCvv() {
+        if (isCvvValid(cvvNumber.get()!!)) {
+            cvvValidationObservable.value = Validation.VALID
+        } else {
+            cvvValidationObservable.value = Validation.INVALID
+        }
+    }
+
+    private fun validateExpirationDate() {
+        if (isExpirationDateValid(expirationDate.get()!!)) {
+            cardExpirationValidationObservable.value = Validation.VALID
+        } else {
+            cardExpirationValidationObservable.value = Validation.INVALID
+        }
     }
 
     companion object {
