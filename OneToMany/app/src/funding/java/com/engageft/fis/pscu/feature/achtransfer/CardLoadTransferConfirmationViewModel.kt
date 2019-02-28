@@ -6,9 +6,9 @@ import com.engageft.engagekit.EngageService
 import com.engageft.engagekit.aac.SingleLiveEvent
 import com.engageft.engagekit.model.ScheduledLoad
 import com.engageft.engagekit.rest.request.FundingFundAchAccountRequest
-import com.engageft.engagekit.rest.request.FundingFundFromDebitRequest
+import com.engageft.engagekit.rest.request.FundFromDebitCreditRequest
 import com.engageft.engagekit.rest.request.ScheduledLoadAchAddRequest
-import com.engageft.engagekit.rest.request.ScheduledLoadDebitAddRequest
+import com.engageft.engagekit.rest.request.ScheduledLoadDebitCreditAddRequest
 import com.engageft.engagekit.utils.BackendDateTimeUtils
 import com.engageft.engagekit.utils.engageApi
 import com.engageft.fis.pscu.feature.BaseEngageViewModel
@@ -59,14 +59,14 @@ class CardLoadTransferConfirmationViewModel(private val cardLoadTransfer: CardLo
         val scheduledLoad = getNewScheduleLoad(transferFundModel)
         scheduledLoad.ccAccountId = transferFundModel.fromId.toString()
         //TODO(aHashimi): Pass ThreatMetrix sessionId when integrated
-        val request = ScheduledLoadDebitAddRequest(scheduledLoad)
+        val request = ScheduledLoadDebitCreditAddRequest(scheduledLoad)
 
         val observable: Observable<BasicResponse> = when (transferFundModel.frequency) {
             ScheduleLoadFrequencyType.WEEKLY -> engageApi().postScheduledLoadDebitAddWeekly(request.fieldMap)
             ScheduleLoadFrequencyType.EVERY_OTHER_WEEK -> engageApi().postScheduledLoadDebitAddAltWeekly(request.fieldMap)
             ScheduleLoadFrequencyType.MONTHLY -> engageApi().postScheduledLoadDebitAddMonthly(request.fieldMap)
             ScheduleLoadFrequencyType.ONCE -> {
-                val req = FundingFundFromDebitRequest(
+                val req = FundFromDebitCreditRequest(
                         ccAccountId = transferFundModel.fromId,
                         cardId = transferFundModel.toId,
                         amount = transferFundModel.amount)
