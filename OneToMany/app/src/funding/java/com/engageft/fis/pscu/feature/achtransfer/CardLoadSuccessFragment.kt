@@ -4,34 +4,32 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
 import androidx.navigation.findNavController
 import com.engageft.apptoolbox.BaseViewModel
 import com.engageft.apptoolbox.NavigationOverrideClickListener
 import com.engageft.apptoolbox.ToolbarVisibilityState
 import com.engageft.fis.pscu.R
-import com.engageft.fis.pscu.databinding.FragmentAchBankAccountAddVerifySuccessBinding
+import com.engageft.fis.pscu.databinding.FragmentCardLoadSuccessBinding
 import com.engageft.fis.pscu.feature.BaseEngagePageFragment
-import com.engageft.fis.pscu.feature.achtransfer.CardLoadConstants.ADD_ACH_BANK_SUCCESS_TYPE
-import com.engageft.fis.pscu.feature.achtransfer.CardLoadConstants.ADD_CARD_SUCCESS_TYPE
 import com.engageft.fis.pscu.feature.achtransfer.CardLoadConstants.SUCCESS_SCREEN_TYPE_KEY
-import com.engageft.fis.pscu.feature.achtransfer.CardLoadConstants.VERIFIED_SUCCESS_TYPE
 import com.engageft.fis.pscu.feature.branding.Palette
 
 /**
- * AchBankAccountAddVerifySuccessFragment
+ * CardLoadSuccessFragment
  * </p>
- * Fragment for displaying success status of Adding or Verifying an ACH bank account.
+ * Success fragment for adding a debit/credit card, ACH bank account or verifying an ACH bank successfully.
  * </p>
  * Created by Atia Hashimi 12/20/18
  * Copyright (c) 2018 Engage FT. All rights reserved.
  */
-class AchBankAccountAddVerifySuccessFragment: BaseEngagePageFragment() {
+class CardLoadSuccessFragment: BaseEngagePageFragment() {
 
     override fun createViewModel(): BaseViewModel? {
         return null
     }
 
-    private lateinit var binding: FragmentAchBankAccountAddVerifySuccessBinding
+    private lateinit var binding: FragmentCardLoadSuccessBinding
 
     private val navigationOverrideClickListener = object : NavigationOverrideClickListener {
         override fun onClick(): Boolean {
@@ -41,7 +39,7 @@ class AchBankAccountAddVerifySuccessFragment: BaseEngagePageFragment() {
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        binding = FragmentAchBankAccountAddVerifySuccessBinding.inflate(inflater, container, false)
+        binding = FragmentCardLoadSuccessBinding.inflate(inflater, container, false)
 
         upButtonOverrideProvider.setUpButtonOverride(navigationOverrideClickListener)
         backButtonOverrideProvider.setBackButtonOverride(navigationOverrideClickListener)
@@ -51,21 +49,24 @@ class AchBankAccountAddVerifySuccessFragment: BaseEngagePageFragment() {
         binding.apply {
             palette = Palette
 
+            val imageView = imageViewLayout.findViewById<ImageView>(R.id.imageViewIcon)
             arguments?.let { bundle ->
-                val successType = bundle.getInt(SUCCESS_SCREEN_TYPE_KEY, -1)
+                val successType = bundle.getSerializable(SUCCESS_SCREEN_TYPE_KEY) as? SuccessType
                 when (successType) {
-                    ADD_CARD_SUCCESS_TYPE -> {
-                        //TODO FOTM-66
+                    SuccessType.ADD_CARD -> {
+                        imageView.setImageResource(R.drawable.ic_add_card)
+                        titleTextView.text = getString(R.string.card_load_add_confirmation_header)
+                        subTitleTextView.text = getString(R.string.card_load_add_confirmation_subHeader)
                     }
-                    ADD_ACH_BANK_SUCCESS_TYPE -> {
+                    SuccessType.ADD_ACH_ACCOUNT -> {
+                        imageView.setImageResource(R.drawable.ic_add_ach_bank)
                         titleTextView.text = getString(R.string.ach_bank_account_added_successful_title)
                         subTitleTextView.text = getString(R.string.ach_bank_account_added_successful_subtitle)
-                        nextButton.text = getString(R.string.ach_bank_account_added_successful_done_button)
                     }
-                    VERIFIED_SUCCESS_TYPE -> {
+                    SuccessType.VERIFIED_ACH_ACCOUNT -> {
+                        imageView.setImageResource(R.drawable.ic_bank_account_verified)
                         titleTextView.text = getString(R.string.ach_bank_account_verified_successful_title)
                         subTitleTextView.text = getString(R.string.ach_bank_account_verified_successful_subtitle)
-                        nextButton.text = getString(R.string.ach_bank_account_verified_successful_done_button)
                     }
                     else -> {
                         throw IllegalStateException("Unknown success type")
@@ -80,4 +81,9 @@ class AchBankAccountAddVerifySuccessFragment: BaseEngagePageFragment() {
         }
         return binding.root
     }
+}
+enum class SuccessType {
+    ADD_CARD,
+    ADD_ACH_ACCOUNT,
+    VERIFIED_ACH_ACCOUNT
 }

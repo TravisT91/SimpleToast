@@ -18,7 +18,6 @@ import com.engageft.apptoolbox.view.InformationDialogFragment
 import com.engageft.fis.pscu.R
 import com.engageft.fis.pscu.databinding.FragmentAchBankAccountAddBinding
 import com.engageft.fis.pscu.feature.BaseEngagePageFragment
-import com.engageft.fis.pscu.feature.achtransfer.CardLoadConstants.ADD_ACH_BANK_SUCCESS_TYPE
 import com.engageft.fis.pscu.feature.achtransfer.CardLoadConstants.SUCCESS_SCREEN_TYPE_KEY
 import com.engageft.fis.pscu.feature.branding.Palette
 import com.engageft.fis.pscu.feature.infoDialogGenericUnsavedChangesNewInstance
@@ -119,7 +118,7 @@ class AchBankAccountAddFragment: BaseEngagePageFragment() {
                     AchBankAccountNavigationEvent.BANK_ADDED_SUCCESS -> {
                         binding.root.findNavController().navigate(
                                 R.id.action_achBankAccountAddFragment_to_achBankAccountAddVerifySuccessFragment,
-                                bundleOf(SUCCESS_SCREEN_TYPE_KEY to ADD_ACH_BANK_SUCCESS_TYPE))
+                                bundleOf(SUCCESS_SCREEN_TYPE_KEY to SuccessType.ADD_ACH_ACCOUNT))
                     }
                 }
             })

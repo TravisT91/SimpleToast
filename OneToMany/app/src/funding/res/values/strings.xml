@@ -92,7 +92,6 @@
     <string name="ach_bank_account_added_successful_done_button">Done</string>
     <string name="ach_bank_account_verified_successful_title">Your bank account has been verified!</string>
     <string name="ach_bank_account_verified_successful_subtitle">You can now make transfers to and from your bank account.</string>
-    <string name="ach_bank_account_verified_successful_done_button">Got it!</string>
     <string name="routing_number_validation_error_message">Please enter 9 digits</string>
     <string name="ach_bank_transfer_create_title">Create a bank transfer</string>
     <string name="ach_bank_transfer_create_subTitle">You can transfer one-time, once a week, or once or twice a month</string>

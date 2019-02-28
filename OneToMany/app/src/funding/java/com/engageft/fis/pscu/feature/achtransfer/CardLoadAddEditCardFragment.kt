@@ -185,7 +185,7 @@ class CardLoadAddEditCardFragment: BaseEngagePageFragment() {
                 addCardSuccessObservable.observe(viewLifecycleOwner, Observer {
                     root.findNavController().navigate(
                             R.id.action_cardLoadAddEditCardFragment_to_achBankAccountAddVerifySuccessFragment,
-                            bundleOf(CardLoadConstants.SUCCESS_SCREEN_TYPE_KEY to CardLoadConstants.ADD_ACH_BANK_SUCCESS_TYPE))
+                            bundleOf(CardLoadConstants.SUCCESS_SCREEN_TYPE_KEY to SuccessType.ADD_CARD))
                 })
             }
         }

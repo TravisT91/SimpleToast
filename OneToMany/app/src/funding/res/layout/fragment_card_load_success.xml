@@ -19,12 +19,11 @@
             android:gravity="center"
             android:orientation="vertical">
 
-            <androidx.appcompat.widget.AppCompatImageView
-                android:id="@+id/imageView"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                app:srcCompat="@drawable/ic_money"
-                android:padding="16dp"/>
+            <include
+                layout="@layout/imageview_with_circle_background"
+                android:id="@+id/imageViewLayout"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
 
             <androidx.appcompat.widget.AppCompatTextView
                 style="@style/AchBankAccountAddVerifySuccessTitleStyle"
@@ -43,6 +42,7 @@
                 android:layout_margin="32dp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:text="@string/ach_bank_account_added_successful_done_button"
                 tools:text="Done"/>
         </LinearLayout>
     </ScrollView>

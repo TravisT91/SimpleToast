@@ -506,7 +506,7 @@
         <!-- TODO(aHashimi): there's an animation bug? https://engageft.atlassian.net/browse/FOTM-708 -->
         <action
             android:id="@+id/action_achBankAccountAddFragment_to_achBankAccountAddVerifySuccessFragment"
-            app:destination="@id/achBankAccountAddVerifySuccessFragment"
+            app:destination="@id/cardLoadSuccessFragment"
             app:popUpTo="@+id/accountsAndTransfersListFragment"
            />
     </fragment>
@@ -519,13 +519,13 @@
             android:defaultValue="true" />
         <action
             android:id="@+id/action_achBankAccountVerifyFragment_to_achBankAccountAddVerifySuccessFragment"
-            app:destination="@id/achBankAccountAddVerifySuccessFragment"
+            app:destination="@id/cardLoadSuccessFragment"
             app:popUpTo="@id/accountsAndTransfersListFragment"
           />
     </fragment>
     <fragment
-        android:id="@+id/achBankAccountAddVerifySuccessFragment"
-        android:name="com.engageft.fis.pscu.feature.achtransfer.AchBankAccountAddVerifySuccessFragment">
+        android:id="@+id/cardLoadSuccessFragment"
+        android:name="com.engageft.fis.pscu.feature.achtransfer.CardLoadSuccessFragment">
         <argument
             android:name="@string/navigation_view_gone"
             android:defaultValue="true" />
@@ -727,7 +727,7 @@
             android:defaultValue="true" />
         <action
             android:id="@+id/action_cardLoadAddEditCardFragment_to_achBankAccountAddVerifySuccessFragment"
-            app:destination="@id/achBankAccountAddVerifySuccessFragment"
+            app:destination="@id/cardLoadSuccessFragment"
             app:enterAnim="@anim/nav_enter_anim"
             app:exitAnim="@anim/nav_exit_anim"
             app:popEnterAnim="@anim/nav_pop_enter_anim"
