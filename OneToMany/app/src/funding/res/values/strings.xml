@@ -116,5 +116,15 @@
     <string name="ach_bank_transfer_edit_transfer_screen_title">Recurring transfer</string>
     <string name="ach_bank_transfer_delete_transfer_title">Delete transfer?</string>
     <string name="ach_bank_transfer_delete_transfer_message_format">Delete your recurring transfer %s from %s?</string>
+    <string name="card_load_add_card_screen_title">Add a card</string>
+    <string name="card_load_add_edit_card_number_label">Card number</string>
+    <string name="card_load_add_edit_card_cvv_label">CVV number</string>
+    <string name="card_load_add_edit_card_expiration_label">Expiration date MM/YY</string>
+    <string name="card_load_add_edit_card_number_validation_message">Card number must be 16 digits</string>
+    <string name="card_load_add_edit_card_cvv_validation_message">CVV must be 3 or 4 digits</string>
+    <string name="card_load_add_edit_card_expiration_validation_message">Please enter a valid expiration date</string>
+    <string name="card_load_edit_card_screen_title">Credit / Debit card</string>
+    <string name="card_load_add_confirmation_header">Your card was successfully added.</string>
+    <string name="card_load_add_confirmation_subHeader">You can now move money onto your card.</string>
     <!--End of Move Money strings-->
 </resources>

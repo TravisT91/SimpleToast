@@ -7,6 +7,7 @@ import android.view.MenuInflater
 import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.os.bundleOf
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.navigation.findNavController
@@ -15,6 +16,8 @@ import com.engageft.apptoolbox.BaseViewModel
 import com.engageft.fis.pscu.R
 import com.engageft.fis.pscu.databinding.FragmentAccountsAndTransfersListBinding
 import com.engageft.fis.pscu.feature.BaseEngagePageFragment
+import com.engageft.fis.pscu.feature.achtransfer.CardLoadConstants.CC_ACCOUNT_ID
+import com.engageft.fis.pscu.feature.achtransfer.CardLoadConstants.CC_ACCOUNT_ID_KEY
 import com.engageft.fis.pscu.feature.branding.Palette
 import com.ob.ws.dom.utility.AchAccountInfo
 
@@ -79,17 +82,23 @@ class AccountsAndTransfersListFragment: BaseEngagePageFragment() {
 
                     object : AccountsAndTransfersListRecyclerViewAdapter.CreateTransferButtonClickListener {
                         override fun onCreateTransferClicked() {
-                            if (accountsAndTransfersListViewModel.isBankVerified()) {
-                                root.findNavController().navigate(R.id.action_accountsAndTransfersListFragment_to_createEditTransferFragment)
-                            } else {
-                                // TODO(aHashimi): User can't add more than 1 Ach Bank account, when/if multiple ach bank accounts are added the UI and this logic needs to change.
-                                // As of now the user can't add more than ach bank account but this will need to change if it did because we're just relying on the first item.
-                                // the UI logic doesn't make sense and as a result this will need to change as well.
-                                root.findNavController().navigate(R.id.action_accountsAndTransfersListFragment_to_achBankAccountVerifyFragment,
-                                        Bundle().apply {
-                                            putLong(ACH_BANK_ACCOUNT_ID, accountsAndTransfersListViewModel.achBankAccountId)
-                                        })
-                            }
+                            //TODO FOTM-66 test REMOVE BEFORE MERGE
+                            root.findNavController().navigate(R.id.action_accountsAndTransfersListFragment_to_cardLoadAddEditCardFragment,
+                                    bundleOf(CC_ACCOUNT_ID_KEY to CC_ACCOUNT_ID))
+//                            root.findNavController().navigate(R.id.action_accountsAndTransfersListFragment_to_cardLoadAddEditCardFragment,
+//                                    bundleOf(CC_ACCOUNT_ID_KEY to CC_ACCOUNT_ID))
+
+//                            if (accountsAndTransfersListViewModel.isBankVerified()) {
+//                                root.findNavController().navigate(R.id.action_accountsAndTransfersListFragment_to_createEditTransferFragment)
+//                            } else {
+//                                // TODO(aHashimi): User can't add more than 1 Ach Bank account, when/if multiple ach bank accounts are added the UI and this logic needs to change.
+//                                // As of now the user can't add more than ach bank account but this will need to change if it did because we're just relying on the first item.
+//                                // the UI logic doesn't make sense and as a result this will need to change as well.
+//                                root.findNavController().navigate(R.id.action_accountsAndTransfersListFragment_to_achBankAccountVerifyFragment,
+//                                        Bundle().apply {
+//                                            putLong(ACH_BANK_ACCOUNT_ID, accountsAndTransfersListViewModel.achBankAccountId)
+//                                        })
+//                            }
                         }
                     })
 

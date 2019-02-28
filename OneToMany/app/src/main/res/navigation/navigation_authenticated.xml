@@ -488,6 +488,13 @@
             app:exitAnim="@anim/nav_exit_anim"
             app:popEnterAnim="@anim/nav_pop_enter_anim"
             app:popExitAnim="@anim/nav_pop_exit_anim"/>
+        <action
+            android:id="@+id/action_accountsAndTransfersListFragment_to_cardLoadAddEditCardFragment"
+            app:destination="@id/cardLoadAddEditCardFragment"
+            app:enterAnim="@anim/nav_enter_anim"
+            app:exitAnim="@anim/nav_exit_anim"
+            app:popEnterAnim="@anim/nav_pop_enter_anim"
+            app:popExitAnim="@anim/nav_pop_exit_anim"/>
     </fragment>
     <fragment
         android:id="@+id/achBankAccountAddFragment"
@@ -712,4 +719,18 @@
         android:id="@+id/goalSingleTransferConfirmationFragment"
         android:name="com.engageft.feature.goals.GoalSingleTransferConfirmationFragment"
         android:label="@string/GOAL_DETAIL_TRANSFER" />
+    <fragment
+        android:id="@+id/cardLoadAddEditCardFragment"
+        android:name="com.engageft.fis.pscu.feature.achtransfer.CardLoadAddEditCardFragment">
+        <argument
+            android:name="@string/navigation_view_gone"
+            android:defaultValue="true" />
+        <action
+            android:id="@+id/action_cardLoadAddEditCardFragment_to_achBankAccountAddVerifySuccessFragment"
+            app:destination="@id/achBankAccountAddVerifySuccessFragment"
+            app:enterAnim="@anim/nav_enter_anim"
+            app:exitAnim="@anim/nav_exit_anim"
+            app:popEnterAnim="@anim/nav_pop_enter_anim"
+            app:popExitAnim="@anim/nav_pop_exit_anim"/>
+    </fragment>
 </navigation>
