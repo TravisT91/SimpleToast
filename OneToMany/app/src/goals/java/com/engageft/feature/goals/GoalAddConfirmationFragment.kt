@@ -20,11 +20,13 @@ import com.engageft.fis.pscu.feature.branding.Palette
 import utilGen1.DisplayDateTimeUtils
 import utilGen1.StringUtils
 
-class GoalsAddEditConfirmationFragment: BaseEngagePageFragment() {
-    private lateinit var confirmationViewModel: GoalsAddEditConfirmationViewModel
+class GoalAddConfirmationFragment: BaseEngagePageFragment() {
+    private lateinit var confirmationViewModel: GoalAddEditConfirmationViewModel
 
     override fun createViewModel(): BaseViewModel? {
-        confirmationViewModel = ViewModelProviders.of(this).get(GoalsAddEditConfirmationViewModel::class.java)
+        val goalInfModel = arguments!!.get(GOAL_DATA_PARCELABLE_KEY) as GoalInfoModel
+        confirmationViewModel = ViewModelProviders.of(this, GoalAddEditConfirmationViewModelFactory(goalInfModel))
+                .get(GoalAddEditConfirmationViewModel::class.java)
         return confirmationViewModel
     }
 
@@ -35,16 +37,10 @@ class GoalsAddEditConfirmationFragment: BaseEngagePageFragment() {
             viewModel = confirmationViewModel
             palette = Palette
 
-            arguments!!.get(GOAL_DATA_PARCELABLE_KEY)?.let { goalInfoModel ->
-                confirmationViewModel.goalInfoModel = goalInfoModel as GoalInfoModel
-            } ?: kotlin.run {
-                throw IllegalArgumentException("Must pass GoalInfoModel data")
-            }
+            confirmationViewModel.addEditSuccessObservable.observe(viewLifecycleOwner, Observer {
+                root.findNavController().popBackStack(R.id.goalsAddStep1Fragment, true)
+            })
         }
-
-        confirmationViewModel.successStateObservable.observe(viewLifecycleOwner, Observer {
-            binding.root.findNavController().popBackStack(R.id.goalsAddStep1Fragment, true)
-        })
 
         return binding.root
     }
@@ -71,7 +67,7 @@ class GoalsAddEditConfirmationFragment: BaseEngagePageFragment() {
                 headerTextView.text = getString(R.string.GOALS_ADD_FREQUENCY_AMOUNT_CONFIRMATION_HEADER)
 
                 val amountWithCurrencySymbol = StringUtils.formatCurrencyStringWithFractionDigits(goalInfoModel.frequencyAmount.toString(), true)
-                val amountPerRecurrenceFormat = String.format(getString(R.string.GOALS_RECURRENCE_FORMAT), amountWithCurrencySymbol, goalInfoModel.recurrenceType.toLowerCase())
+                val amountPerRecurrenceFormat = String.format(getString(R.string.GOALS_RECURRENCE_FORMAT), amountWithCurrencySymbol, goalInfoModel.recurrenceType.toString().toLowerCase())
                 val splitStringArray = amountPerRecurrenceFormat.split(".")
                 if (splitStringArray.size == 2) {
                     subHeaderTextView.text = amountPerRecurrenceFormat.applyRelativeSizeToSubstring(.5f, splitStringArray[1])

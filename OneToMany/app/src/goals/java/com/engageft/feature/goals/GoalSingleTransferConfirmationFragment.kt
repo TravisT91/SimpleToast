@@ -12,7 +12,7 @@ import com.engageft.apptoolbox.BaseViewModel
 import com.engageft.apptoolbox.ViewUtils.newLotusButtonsStackedInstance
 import com.engageft.apptoolbox.view.InformationDialogFragment
 import com.engageft.feature.goals.utils.GoalConstants
-import com.engageft.feature.goals.utils.GoalConstants.GOAL_ID_DEFAULT
+import com.engageft.feature.goals.utils.GoalConstants.GOAL_ID
 import com.engageft.feature.goals.utils.GoalConstants.GOAL_ID_KEY
 import com.engageft.feature.goals.utils.GoalConstants.TRANSFER_AMOUNT_KEY
 import com.engageft.feature.goals.utils.GoalConstants.TRANSFER_FROM_KEY
@@ -28,7 +28,7 @@ class GoalSingleTransferConfirmationFragment: BaseEngagePageFragment() {
 
     override fun createViewModel(): BaseViewModel? {
         arguments!!.let { bundle ->
-            val goalId = bundle.getLong(GOAL_ID_KEY, GOAL_ID_DEFAULT)
+            val goalId = bundle.getLong(GOAL_ID_KEY, GOAL_ID)
             val transferType = bundle.getSerializable(TRANSFER_FROM_KEY) as GoalSingleTransferViewModel.TransferType
             val amount = bundle.getSerializable(TRANSFER_AMOUNT_KEY) as BigDecimal
             viewModelConfirmation = ViewModelProviders.of(this,

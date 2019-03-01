@@ -456,7 +456,7 @@
     <fragment
         android:id="@+id/accountsAndTransfersListFragment"
         android:name="com.engageft.fis.pscu.feature.achtransfer.AccountsAndTransfersListFragment"
-        android:label="@string/ach_bank_transfer_screen_title">
+        android:label="@string/fragment_title_card_load">
         <argument
             android:name="@string/navigation_view_gone"
             android:defaultValue="true" />
@@ -621,7 +621,7 @@
 
     <fragment
         android:id="@+id/goalsAddEditConfirmationFragment"
-        android:name="com.engageft.feature.goals.GoalsAddEditConfirmationFragment"
+        android:name="com.engageft.feature.goals.GoalAddConfirmationFragment"
         android:label="@string/GOALS_ADD_GOAL" >
         <argument
             android:name="@string/navigation_view_gone"
@@ -678,6 +678,13 @@
             app:popEnterAnim="@anim/nav_pop_enter_anim"
             app:popExitAnim="@anim/nav_pop_exit_anim" />
         <action
+            android:id="@+id/action_goalDetailFragment_to_goalEditFragment"
+            app:destination="@id/goalEditFragment"
+            app:enterAnim="@anim/nav_enter_anim"
+            app:exitAnim="@anim/nav_exit_anim"
+            app:popEnterAnim="@anim/nav_pop_enter_anim"
+            app:popExitAnim="@anim/nav_pop_exit_anim"/>
+        <action
             android:id="@+id/action_goalDetailFragment_to_goalSingleTransferFragment"
             app:destination="@id/goalSingleTransferFragment"
             app:enterAnim="@anim/nav_enter_anim"
@@ -712,4 +719,26 @@
         android:id="@+id/goalSingleTransferConfirmationFragment"
         android:name="com.engageft.feature.goals.GoalSingleTransferConfirmationFragment"
         android:label="@string/GOAL_DETAIL_TRANSFER" />
+    <fragment
+        android:id="@+id/goalEditFragment"
+        android:name="com.engageft.feature.goals.GoalEditFragment">
+        <argument
+            android:name="@string/navigation_view_gone"
+            android:defaultValue="true" />
+        <action
+            android:id="@+id/action_goalEditFragment_to_goalEditConfirmationFragment"
+            app:destination="@id/goalEditConfirmationFragment"
+            app:enterAnim="@anim/nav_enter_anim"
+            app:exitAnim="@anim/nav_exit_anim"
+            app:popEnterAnim="@anim/nav_pop_enter_anim"
+            app:popExitAnim="@anim/nav_pop_exit_anim"/>
+    </fragment>
+    <fragment
+        android:id="@+id/goalEditConfirmationFragment"
+        android:name="com.engageft.feature.goals.GoalEditConfirmationFragment"
+        android:label="@string/GOAL_DETAIL_EDIT">
+        <argument
+            android:name="@string/navigation_view_gone"
+            android:defaultValue="true" />
+    </fragment>
 </navigation>

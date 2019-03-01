@@ -1,13 +1,20 @@
 package com.engageft.fis.pscu.feature.gatekeeping.items
 
-import android.text.TextUtils
 import com.engageft.engagekit.EngageService
+import com.engageft.engagekit.model.AccountUIPropertyNames
+import com.engageft.engagekit.rest.request.GetUIPropertiesRequest
+import com.engageft.engagekit.utils.BackendDateTimeUtils
 import com.engageft.engagekit.utils.LoginResponseUtils
+import com.engageft.engagekit.utils.engageApi
 import com.engageft.fis.pscu.feature.gatekeeping.GatedItem
 import com.engageft.fis.pscu.feature.gatekeeping.GatedItemResultListener
+import com.ob.ws.dom.AccountUIPropertiesResponse
+import com.ob.ws.dom.AccountUIPropertyResponse
+import com.ob.ws.dom.BasicResponse
 import com.ob.ws.dom.LoginResponse
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
+import io.reactivex.functions.BiFunction
 import io.reactivex.schedulers.Schedulers
 
 /**
@@ -20,39 +27,108 @@ import io.reactivex.schedulers.Schedulers
  */
 class OnboardingGatedItem(private val compositeDisposable: CompositeDisposable) : GatedItem() {
     private var hasBeenChecked = false
+
+    inner class FetchResponse(val propertyResponse: BasicResponse, val loginResponse: BasicResponse)
+
     override fun checkItem(resultListener: GatedItemResultListener) {
         if (!hasBeenChecked) {
             hasBeenChecked = true
-            compositeDisposable.add(
-                    EngageService.getInstance().loginResponseAsObservable
-                            .subscribeOn(Schedulers.io())
-                            .observeOn(AndroidSchedulers.mainThread())
-                            .subscribe({ response ->
-                                if (response.isSuccess && response is LoginResponse) {
-                                    // Note(jhutchins):
-                                    // The onboardingCompleteDate, for some reason, is stored in the DebitCardInfo model.
-                                    // This is weird because we might have more than one card on this account.
-                                    // Will the onboardingCompleteDate be the same for every single DebitCardInfo?
-                                    // The answer is YES, according to Vipin Kumar. This was confirmed on 6-13-18.
-                                    // When asked why we store this date in the cards instead of at the account
-                                    // level (which makes sense), I was told it was done this way due to time
-                                    // constraints and this model was most quickly editable.
-                                    val debitCardInfo = LoginResponseUtils.getCurrentCard(response)
-                                    debitCardInfo?.let {
-                                        if (TextUtils.isEmpty(debitCardInfo.onboardingCompleteDate)) {
-                                            resultListener.onItemCheckFailed()
-                                        } else {
-                                            resultListener.onItemCheckPassed()
+
+            val propertyObservable = engageApi().postGetUIProperties(GetUIPropertiesRequest().fieldMap)
+            val loginResponseObservable = EngageService.getInstance().loginResponseAsObservable
+
+            val zippedObservable = io.reactivex.Observable.zip(propertyObservable.subscribeOn(Schedulers.io()), loginResponseObservable.subscribeOn(Schedulers.io()),
+                    BiFunction<BasicResponse, BasicResponse, FetchResponse> { propertyResponse, loginResponse ->
+                        FetchResponse(propertyResponse, loginResponse)
+                    })
+
+            compositeDisposable.add(zippedObservable
+                    .subscribeOn(Schedulers.single())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe({ finalResponse ->
+                        // Let's check both calls succeeded:
+                        var failed = false
+                        if (!finalResponse.propertyResponse.isSuccess && finalResponse.propertyResponse is AccountUIPropertiesResponse) {
+                            failed = true
+                            resultListener.onItemError(null, finalResponse.propertyResponse.message)
+                        }
+                        if (!finalResponse.loginResponse.isSuccess && finalResponse.loginResponse !is LoginResponse && !failed) {
+                            failed = true
+                            resultListener.onItemError(null, finalResponse.loginResponse.message)
+                        }
+                        if (!failed) {
+                            val propertyResponse = finalResponse.propertyResponse as AccountUIPropertiesResponse
+                            val loginResponse = finalResponse.loginResponse as LoginResponse
+
+                            var coreOnboardingProperty: AccountUIPropertyResponse? = null
+                            var budgetsOnboardingProperty: AccountUIPropertyResponse? = null
+                            var goalsOnboardingProperty: AccountUIPropertyResponse? = null
+                            propertyResponse.accountUIProperties?.forEach { property ->
+                                when (property.propertyName) {
+                                    AccountUIPropertyNames.coreOnboardingCompleteDate -> coreOnboardingProperty = property
+                                    AccountUIPropertyNames.budgetsOnboardingCompleteDate -> budgetsOnboardingProperty = property
+                                    AccountUIPropertyNames.goalsOnboardingCompleteDate -> goalsOnboardingProperty = property
+                                    else -> {}// Do nothing
+                                }
+                            }
+
+                            var showOnboarding = false
+                            coreOnboardingProperty?.let {
+                                val timestamp = try {
+                                    BackendDateTimeUtils.parseDateTimeFromIso8601String(it.propertyValue as String)
+                                } catch (e: Exception) {
+                                    null
+                                }
+                                if (timestamp == null) {
+                                    showOnboarding = true
+                                }
+                            } ?: kotlin.run {
+                                showOnboarding = true
+                            }
+
+                            if (!showOnboarding) {
+                                val debitCardInfo = LoginResponseUtils.getCurrentCard(loginResponse)
+                                if (debitCardInfo.cardPermissionsInfo.isBudgetsEnabled) {
+                                    budgetsOnboardingProperty?.let {
+                                        val timestamp = try {
+                                            BackendDateTimeUtils.parseDateTimeFromIso8601String(it.propertyValue as String)
+                                        } catch (e: Exception) {
+                                            null
+                                        }
+                                        if (timestamp == null) {
+                                            showOnboarding = true
                                         }
                                     } ?: kotlin.run {
-                                        resultListener.onItemCheckFailed()
+                                        showOnboarding = true
                                     }
-                                } else {
-                                    resultListener.onItemError(null, response.message)
                                 }
-                            }) { e ->
-                                resultListener.onItemError(e, null)
+
+                                if (!showOnboarding) {
+                                    if (debitCardInfo.cardPermissionsInfo.isGoalsEnabled) {
+                                        goalsOnboardingProperty?.let {
+                                            val timestamp = try {
+                                                BackendDateTimeUtils.parseDateTimeFromIso8601String(it.propertyValue as String)
+                                            } catch (e: Exception) {
+                                                null
+                                            }
+                                            if (timestamp == null) {
+                                                showOnboarding = true
+                                            }
+                                        } ?: kotlin.run {
+                                            showOnboarding = true
+                                        }
+                                    }
+                                }
                             }
+                            if (showOnboarding) {
+                                resultListener.onItemCheckFailed()
+                            } else {
+                                resultListener.onItemCheckPassed()
+                            }
+                        }
+                    }, { e ->
+                        resultListener.onItemError(e, null)
+                    })
             )
         } else {
             resultListener.onItemCheckPassed()
