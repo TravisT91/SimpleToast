@@ -10,27 +10,18 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
-        <include
-            android:id="@+id/itemDividerViewTop"
-            layout="@layout/view_horizontal_divider"
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-
-        <TextView
+        <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/dayDateTextView"
             style="@style/AchBankTransferDateTextStyle"
             android:layout_marginStart="16dp"
             android:layout_marginTop="16dp"
             app:layout_constraintBottom_toTopOf="@+id/monthDateTextView"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="@id/itemDividerViewTop"
+            app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintVertical_chainStyle="packed"
             tools:text="16" />
 
-        <TextView
+        <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/monthDateTextView"
             style="@style/AchBankTransferMonthTextStyle"
             android:layout_marginStart="16dp"
@@ -40,7 +31,7 @@
             app:layout_constraintTop_toBottomOf="@+id/dayDateTextView"
             tools:text="Jul" />
 
-        <TextView
+        <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/transferTextView"
             style="@style/AchBankTransferTitleTextStyle"
             android:layout_width="0dp"
@@ -52,11 +43,11 @@
             app:layout_constraintEnd_toStartOf="@+id/amountTextView"
             app:layout_constraintStart_toEndOf="@+id/dayDateTextView"
             app:layout_constraintStart_toStartOf="@+id/transferSubTextView"
-            app:layout_constraintTop_toTopOf="@id/itemDividerViewTop"
+            app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintVertical_chainStyle="packed"
             tools:text="Recurring Transfer" />
 
-        <TextView
+        <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/transferSubTextView"
             style="@style/AchBankTransferSubTitleTextStyle"
             android:layout_width="0dp"
@@ -70,7 +61,7 @@
             app:layout_constraintTop_toBottomOf="@+id/transferTextView"
             tools:text="2nd and 16th of each month" />
 
-        <TextView
+        <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/amountTextView"
             style="@style/AchBankTransferAmountTextStyle"
             android:layout_marginTop="16dp"
@@ -78,7 +69,7 @@
             android:layout_marginBottom="16dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="@id/itemDividerViewTop"
+            app:layout_constraintTop_toTopOf="parent"
             tools:text="+$200.00" />
 
         <include

@@ -78,6 +78,10 @@ class OnboardingDialogFragment : BaseEngageDialogFragment() {
             updatePagerButton()
         })
 
+        onboardingViewModel.dismissObservable.observe(viewLifecycleOwner, Observer {
+            dismiss()
+        })
+
         val pageChangeListener = object : ViewPager.OnPageChangeListener {
             override fun onPageScrolled(position: Int, positionOffset: Float, positionOffsetPixels: Int) {}
 
@@ -109,7 +113,7 @@ class OnboardingDialogFragment : BaseEngageDialogFragment() {
             if (pageIndicatorIndex == adapter.items.size -1) {
                 binding.viewPagerButton.text = getString(R.string.ONBOARDING_PAGER_DONE)
                 binding.viewPagerButton.setOnClickListener{
-                    dismiss()
+                    onboardingViewModel.onOnboardingTourComplete()
                 }
             } else {
                 binding.viewPagerButton.text = getString(R.string.ONBOARDING_PAGER_NEXT)

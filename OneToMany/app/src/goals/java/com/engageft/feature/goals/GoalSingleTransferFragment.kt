@@ -58,8 +58,8 @@ class GoalSingleTransferFragment: BaseEngagePageFragment() {
 
     override fun createViewModel(): BaseViewModel? {
         arguments!!.let {
-            val goalId = it.getLong(GoalConstants.GOAL_ID_KEY, GoalConstants.GOAL_ID_DEFAULT)
-            if (goalId == GoalConstants.GOAL_ID_DEFAULT) {
+            val goalId = it.getLong(GoalConstants.GOAL_ID_KEY, GoalConstants.GOAL_ID)
+            if (goalId == GoalConstants.GOAL_ID) {
                 throw IllegalArgumentException("Goal Id is not valid")
             } else {
                 viewModelTransfer = ViewModelProviders.of(this, GoalSingleTransferViewModelFactory(goalId)).get(GoalSingleTransferViewModel::class.java)
@@ -88,7 +88,7 @@ class GoalSingleTransferFragment: BaseEngagePageFragment() {
                 }
             })
 
-            toBottomSheet.isEnabled = false
+            toBottomSheet.setEnable(false)
 
             nextButton.setOnClickListener {
                 navigateToConfirmation()
@@ -118,7 +118,7 @@ class GoalSingleTransferFragment: BaseEngagePageFragment() {
                 })
 
                 selectionEnableObservable.observe(viewLifecycleOwner, Observer {
-                    fromBottomSheet.isEnabled = it
+                    fromBottomSheet.setEnable(it)
                 })
 
                 nextButtonStateObservable.observe(viewLifecycleOwner, Observer {
