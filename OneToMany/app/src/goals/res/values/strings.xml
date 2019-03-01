@@ -71,4 +71,15 @@
     <string name="GOAL_SINGLE_TRANSFER_CONFIRMATION_GOAL_DELETE_SUBTITLE">If you choose not to delete your goal, we will keep it for you, however, it will be closed.</string>
     <string name="GOAL_SINGLE_TRANSFER_CONFIRMATION_GOAL_DELETE_YES">Yes, delete</string>
     <string name="GOAL_SINGLE_TRANSFER_CONFIRMATION_GOAL_DELETE_NO">No, keep this goal</string>
+    <string name="GOAL_EDIT_FREQUENCY_AMOUNT">Set-aside how much</string>
+    <string name="GOAL_EDIT_MONTHLY_DATE_LABEL">Next run date</string>
+    <string name="GOAL_EDIT_COMPLETE_DATE_FOOTER">*Goals may complete earlier than your end date.</string>
+    <string name="GOAL_EDIT_COMPLETE_DATE_LABEL">When do you need it by*</string>
+    <string name="GOAL_EDIT_CONFIRMATION_COMPLETE_DATE_EFFECT_DESCRIPTION">This change will directly effect the date your goal will be reached.</string>
+    <string name="GOAL_EDIT_CONFIRMATION_HEADER">You\'ll now set-aside</string>
+    <string name="GOAL_EDIT_CONFIRMATION_RECURRENCE_WEEK_FORMAT">on %s</string>
+    <string name="GOAL_EDIT_CONFIRMATION_GOAL_COMPLETE_DATE_FORMAT">until %s</string>
+    <string name="GOAL_EDIT_CONFIRMATION_GOAL_COMPLETE_DATE_WEEKLY_FORMAT">on %s until %s</string>
+    <string name="GOAL_EDIT_CONFIRMATION_RECURRENCE_MONTHLY_FORMAT">Starting on %s</string>
+    <string name="GOAL_EDIT_CONFIRMATION_SAVE">Save</string>
 </resources>
