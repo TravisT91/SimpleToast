@@ -14,6 +14,7 @@ import androidx.navigation.findNavController
 import androidx.navigation.fragment.findNavController
 import com.engageft.apptoolbox.BaseViewModel
 import com.engageft.apptoolbox.NavigationOverrideClickListener
+import com.engageft.apptoolbox.ViewUtils.newLotusInstance
 import com.engageft.apptoolbox.view.DateInputWithLabel
 import com.engageft.apptoolbox.view.InformationDialogFragment
 import com.engageft.fis.pscu.R
@@ -84,6 +85,18 @@ class CardLoadAddEditCardFragment: BaseEngagePageFragment() {
                         }
                     }
                 })
+
+                buttonStateObservable.observe(viewLifecycleOwner, Observer {
+                    when (it) {
+                        CardLoadAddEditCardViewModel.ButtonState.SHOW -> {
+                            addButton.visibility = View.VISIBLE
+                        }
+                        CardLoadAddEditCardViewModel.ButtonState.HIDE -> {
+                            addButton.visibility = View.GONE
+                        }
+                    }
+                    activity?.invalidateOptionsMenu()
+                })
             }
         }
         return binding.root
@@ -92,9 +105,44 @@ class CardLoadAddEditCardFragment: BaseEngagePageFragment() {
     private fun setUpEditMode() {
         toolbarController.setToolbarTitle(getString(R.string.card_load_edit_card_screen_title))
 
-        viewModelAddEdit.deleteCardSuccessObservable.observe(viewLifecycleOwner, Observer {
-            binding.root.findNavController().popBackStack()
-        })
+        binding.apply {
+            cardNumberInputWithLabel.inputMask = "**** **** **** [0000]"
+            cardNumberInputWithLabel.setEnable(false)
+            expirationDateInputWithLabel.setEnable(false)
+
+            viewModelAddEdit.apply {
+                deleteCardSuccessObservable.observe(viewLifecycleOwner, Observer {
+                    root.findNavController().popBackStack()
+                })
+
+                cardExpirationDateObservable.observe(viewLifecycleOwner, Observer { expirationDate ->
+                    expirationDate?.let { expirationDateInputWithLabel.inputText = it }
+                })
+
+                deleteButtonLayout.setOnClickListener {
+                    val cardAndLastFour = String.format(getString(R.string.BANKACCOUNT_DESCRIPTION_FORMAT),
+                            getString(R.string.card_load_card), cardNumber.get())
+                    val deleteDialogInfo = InformationDialogFragment.newLotusInstance(
+                            title = getString(R.string.ach_bank_account_delete_confirmation_title),
+                            message = String.format(getString(R.string.ach_bank_account_delete_confirmation_message_format), cardAndLastFour),
+                            buttonPositiveText = getString(R.string.ach_bank_account_delete),
+                            buttonNegativeText = getString(R.string.dialog_information_cancel_button),
+                            listener = object : InformationDialogFragment.InformationDialogFragmentListener {
+                                override fun onDialogFragmentNegativeButtonClicked() {}
+
+                                override fun onDialogFragmentPositiveButtonClicked() {
+                                    viewModelAddEdit.deleteCard()
+                                }
+
+                                override fun onDialogCancelled() {}
+
+                            })
+
+                    deleteDialogInfo.positiveButtonTextColor = Palette.errorColor
+                    fragmentDelegate.showDialog(deleteDialogInfo)
+                }
+            }
+        }
     }
 
     private fun setUpAddMode() {
@@ -110,7 +158,7 @@ class CardLoadAddEditCardFragment: BaseEngagePageFragment() {
                     }
                 })
 
-                numberInputWithLabel.addEditTextFocusChangeListener(View.OnFocusChangeListener { _, hasFocus ->
+                cardNumberInputWithLabel.addEditTextFocusChangeListener(View.OnFocusChangeListener { _, hasFocus ->
                     if (!hasFocus) {
                         validateCardNumber(CardLoadAddEditCardViewModel.ValidationType.ON_FOCUS_LOST)
                     }
@@ -128,28 +176,16 @@ class CardLoadAddEditCardFragment: BaseEngagePageFragment() {
                     }
                 })
 
-                buttonStateObservable.observe(viewLifecycleOwner, Observer {
-                    when (it) {
-                        CardLoadAddEditCardViewModel.ButtonState.SHOW -> {
-                            addButton.visibility = View.VISIBLE
-                        }
-                        CardLoadAddEditCardViewModel.ButtonState.HIDE -> {
-                            addButton.visibility = View.GONE
-                        }
-                    }
-                    activity?.invalidateOptionsMenu()
-                })
-
                 cardNumberValidationObservable.observe(viewLifecycleOwner, Observer { validation ->
                     when (validation) {
                         CardLoadAddEditCardViewModel.Validation.EMPTY -> {
-                            numberInputWithLabel.setErrorTexts(null)
+                            cardNumberInputWithLabel.setErrorTexts(null)
                         }
                         CardLoadAddEditCardViewModel.Validation.VALID -> {
-                            numberInputWithLabel.setErrorTexts(null)
+                            cardNumberInputWithLabel.setErrorTexts(null)
                         }
                         CardLoadAddEditCardViewModel.Validation.INVALID -> {
-                            numberInputWithLabel.setErrorTexts(listOf(getString(R.string.card_load_add_edit_card_number_validation_message)))
+                            cardNumberInputWithLabel.setErrorTexts(listOf(getString(R.string.card_load_add_edit_card_number_validation_message)))
                         }
                     }
                 })
@@ -184,7 +220,7 @@ class CardLoadAddEditCardFragment: BaseEngagePageFragment() {
 
                 addCardSuccessObservable.observe(viewLifecycleOwner, Observer {
                     root.findNavController().navigate(
-                            R.id.action_cardLoadAddEditCardFragment_to_achBankAccountAddVerifySuccessFragment,
+                            R.id.action_cardLoadAddEditCardFragment_to_cardLoadSuccessFragment,
                             bundleOf(CardLoadConstants.SUCCESS_SCREEN_TYPE_KEY to SuccessType.ADD_CARD))
                 })
             }

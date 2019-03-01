@@ -125,5 +125,6 @@
     <string name="card_load_edit_card_screen_title">Credit / Debit card</string>
     <string name="card_load_add_confirmation_header">Your card was successfully added.</string>
     <string name="card_load_add_confirmation_subHeader">You can now move money onto your card.</string>
+    <string name="card_load_card">Card</string>
     <!--End of Move Money strings-->
 </resources>

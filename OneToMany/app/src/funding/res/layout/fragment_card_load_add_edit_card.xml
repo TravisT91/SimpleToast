@@ -30,7 +30,7 @@
 
                 <com.engageft.apptoolbox.view.CardInputWithLabel
                     style="@style/TextInputWithLabelStyle"
-                    android:id="@+id/numberInputWithLabel"
+                    android:id="@+id/cardNumberInputWithLabel"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:padding="16dp"
@@ -43,6 +43,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:padding="16dp"
+                    android:visibility="@{viewModel.showCvvNumber.get() ? View.VISIBLE : View.GONE}"
                     app:inputMask="[0000]"
                     app:labelText="@string/card_load_add_edit_card_cvv_label"
                     app:inputText="@={viewModel.cvvNumber}"/>
@@ -52,8 +53,9 @@
                     android:id="@+id/expirationDateInputWithLabel"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:padding="16dp"
-                    android:visibility="@{viewModel.showCvvNumber.get() ? View.VISIBLE : View.GONE}"
+                    android:paddingTop="16dp"
+                    android:paddingStart="16dp"
+                    android:paddingEnd="16dp"
                     app:inputMask="[00]/[00]"
                     app:labelText="@string/card_load_add_edit_card_expiration_label"/>
             </LinearLayout>

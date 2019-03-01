@@ -85,8 +85,6 @@ class AccountsAndTransfersListFragment: BaseEngagePageFragment() {
                             //TODO FOTM-66 test REMOVE BEFORE MERGE
                             root.findNavController().navigate(R.id.action_accountsAndTransfersListFragment_to_cardLoadAddEditCardFragment,
                                     bundleOf(CC_ACCOUNT_ID_KEY to CC_ACCOUNT_ID))
-//                            root.findNavController().navigate(R.id.action_accountsAndTransfersListFragment_to_cardLoadAddEditCardFragment,
-//                                    bundleOf(CC_ACCOUNT_ID_KEY to CC_ACCOUNT_ID))
 
 //                            if (accountsAndTransfersListViewModel.isBankVerified()) {
 //                                root.findNavController().navigate(R.id.action_accountsAndTransfersListFragment_to_createEditTransferFragment)
@@ -177,7 +175,10 @@ class AccountsAndTransfersListFragment: BaseEngagePageFragment() {
     override fun onOptionsItemSelected(item: MenuItem?): Boolean {
         when(item?.itemId){
             R.id.add -> run {
-                binding.root.findNavController().navigate(R.id.action_accountsAndTransfersListFragment_to_createEditTransferFragment)
+                //TODO FOTM-1001 test REMOVE BEFORE MERGE
+                binding.root.findNavController().navigate(R.id.action_accountsAndTransfersListFragment_to_cardLoadAddEditCardFragment,
+                        bundleOf(CC_ACCOUNT_ID_KEY to 199L))
+//                binding.root.findNavController().navigate(R.id.action_accountsAndTransfersListFragment_to_createEditTransferFragment)
             }
         }
         return super.onOptionsItemSelected(item)

@@ -1,6 +1,5 @@
 package com.engageft.fis.pscu.feature.achtransfer
 
-import android.util.Log
 import androidx.databinding.Observable
 import androidx.databinding.ObservableField
 import androidx.lifecycle.MutableLiveData
@@ -13,7 +12,6 @@ import com.engageft.engagekit.rest.request.FundingAddDebitRequest
 import com.engageft.engagekit.rest.request.FundingDeleteDebitRequest
 import com.engageft.engagekit.utils.engageApi
 import com.engageft.fis.pscu.feature.BaseEngageViewModel
-import com.engageft.fis.pscu.feature.achtransfer.CardLoadConstants.CARD_NUMBER_FORMAT
 import com.engageft.fis.pscu.feature.achtransfer.CardLoadConstants.CARD_NUMBER_REQUIRED_LENGTH
 import com.engageft.fis.pscu.feature.achtransfer.CardLoadConstants.CC_ACCOUNT_ID
 import com.engageft.fis.pscu.feature.achtransfer.CardLoadConstants.CVV_NUMBER_MAX_LENGTH
@@ -24,10 +22,8 @@ import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 import org.joda.time.DateTime
 import utilGen1.DisplayDateTimeUtils
-import java.lang.Exception
-import java.lang.IllegalArgumentException
 
-class CardLoadAddEditCardViewModel(val ccAccountId: Long): BaseEngageViewModel() {
+class CardLoadAddEditCardViewModel(private val ccAccountId: Long): BaseEngageViewModel() {
     enum class EventType {
         ADD, EDIT
     }
@@ -44,6 +40,7 @@ class CardLoadAddEditCardViewModel(val ccAccountId: Long): BaseEngageViewModel()
     val eventTypeObservable = MutableLiveData<EventType>()
     val cardNumberValidationObservable = MutableLiveData<Validation>()
     val cvvValidationObservable = MutableLiveData<Validation>()
+    val cardExpirationDateObservable = MutableLiveData<String>()
     val cardExpirationValidationObservable = MutableLiveData<Validation>()
     val buttonStateObservable = MutableLiveData<ButtonState>()
 
@@ -84,6 +81,7 @@ class CardLoadAddEditCardViewModel(val ccAccountId: Long): BaseEngageViewModel()
         cvvNumber.addOnPropertyChangedCallback(cvvNumberPropertyChangedCallback)
         expirationDate.addOnPropertyChangedCallback(expirationDateNumberPropertyChangedCallback)
 
+        buttonStateObservable.value = ButtonState.HIDE
         cardNumberValidationObservable.value = Validation.EMPTY
         cvvValidationObservable.value = Validation.EMPTY
         cardExpirationValidationObservable.value = Validation.EMPTY
@@ -125,8 +123,8 @@ class CardLoadAddEditCardViewModel(val ccAccountId: Long): BaseEngageViewModel()
     }
 
 
-    fun deleteACard() {
-        showProgressOverlayImmediate()
+    fun deleteCard() {
+        showProgressOverlayDelayed()
         val request = FundingDeleteDebitRequest(ccAccountId)
         compositeDisposable.add(engageApi().postFundingDeleteDebit(request.fieldMap)
                 .subscribeOn(Schedulers.io())
@@ -146,7 +144,8 @@ class CardLoadAddEditCardViewModel(val ccAccountId: Long): BaseEngageViewModel()
     }
 
     fun hasUnsavedChanges(): Boolean {
-        return false
+        return eventType == EventType.ADD && (cardNumber.get()!!.isNotEmpty()
+                || cvvNumber.get()!!.isNotEmpty() || expirationDate.get()!!.isNotEmpty())
     }
 
     fun validateCardNumber(validationType: ValidationType) {
@@ -218,8 +217,8 @@ class CardLoadAddEditCardViewModel(val ccAccountId: Long): BaseEngageViewModel()
                         response.ccAccountList.find { ccAccountInfo ->
                             ccAccountInfo.ccAccountId == ccAccountId
                         }?.let { ccAccount ->
-                            cardNumber.set(String.format(CARD_NUMBER_FORMAT, ccAccount.lastDigits))
-                            expirationDate.set(ccAccount.expiration)
+                            cardNumber.set(ccAccount.lastDigits)
+                            cardExpirationDateObservable.value = ccAccount.expiration
                             showCvvNumber.set(false)
                             showDeleteLayout.set(true)
                         } ?: run {
@@ -236,9 +235,8 @@ class CardLoadAddEditCardViewModel(val ccAccountId: Long): BaseEngageViewModel()
     }
 
     private fun validateButtonState() {
-        if (isCardNumberValid(cardNumber.get()!!)
-                && isCvvValid(cvvNumber.get()!!)
-                && isExpirationDateValid(expirationDate.get()!!)) {
+        if (eventType == EventType.ADD && isCardNumberValid(cardNumber.get()!!)
+                && isCvvValid(cvvNumber.get()!!) && isExpirationDateValid(expirationDate.get()!!)) {
             buttonStateObservable.value = ButtonState.SHOW
         } else {
             buttonStateObservable.value = ButtonState.HIDE

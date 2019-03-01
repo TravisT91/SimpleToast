@@ -505,10 +505,9 @@
             android:defaultValue="true" />
         <!-- TODO(aHashimi): there's an animation bug? https://engageft.atlassian.net/browse/FOTM-708 -->
         <action
-            android:id="@+id/action_achBankAccountAddFragment_to_achBankAccountAddVerifySuccessFragment"
+            android:id="@+id/action_achBankAccountAddFragment_to_cardLoadSuccessFragment"
             app:destination="@id/cardLoadSuccessFragment"
-            app:popUpTo="@+id/accountsAndTransfersListFragment"
-           />
+            app:popUpTo="@id/accountsAndTransfersListFragment" />
     </fragment>
     <fragment
         android:id="@+id/achBankAccountVerifyFragment"
@@ -518,10 +517,9 @@
             android:name="@string/navigation_view_gone"
             android:defaultValue="true" />
         <action
-            android:id="@+id/action_achBankAccountVerifyFragment_to_achBankAccountAddVerifySuccessFragment"
+            android:id="@+id/action_achBankAccountVerifyFragment_to_cardLoadSuccessFragment"
             app:destination="@id/cardLoadSuccessFragment"
-            app:popUpTo="@id/accountsAndTransfersListFragment"
-          />
+            app:popUpTo="@id/accountsAndTransfersListFragment" />
     </fragment>
     <fragment
         android:id="@+id/cardLoadSuccessFragment"
@@ -726,7 +724,7 @@
             android:name="@string/navigation_view_gone"
             android:defaultValue="true" />
         <action
-            android:id="@+id/action_cardLoadAddEditCardFragment_to_achBankAccountAddVerifySuccessFragment"
+            android:id="@+id/action_cardLoadAddEditCardFragment_to_cardLoadSuccessFragment"
             app:destination="@id/cardLoadSuccessFragment"
             app:enterAnim="@anim/nav_enter_anim"
             app:exitAnim="@anim/nav_exit_anim"
