@@ -451,7 +451,7 @@ class AccountsAndTransfersListRecyclerViewAdapter(
     }
 
     interface AccountsAndTransfersSelectionListener {
-        fun onItemClicked(secondaryUserListItem: AccountsAndTransferListItem)
+        fun onItemClicked(listItem: AccountsAndTransferListItem)
     }
 
     interface ViewHolderListener {
@@ -481,6 +481,6 @@ sealed class AccountsAndTransferListItem(val viewType: Int) {
         class RecentActivityItem(val nextRunDate: DateTime, val lastFour: String, val isAccount: Boolean, val amount: String) : TransferItem()
     }
     object VerifyBankAccountFooterItem : AccountsAndTransferListItem(AccountsAndTransfersListRecyclerViewAdapter.VIEW_TYPE_BANK_ACCOUNT_FOOTER)
-    class CreditDebitCardItem(val lastFour: String) : AccountsAndTransferListItem(AccountsAndTransfersListRecyclerViewAdapter.VIEW_TYPE_CREDIT_DEBIT)
+    class CreditDebitCardItem(val ccAccountId: Long, val lastFour: String) : AccountsAndTransferListItem(AccountsAndTransfersListRecyclerViewAdapter.VIEW_TYPE_CREDIT_DEBIT)
     object CreateTransferItem : AccountsAndTransferListItem(AccountsAndTransfersListRecyclerViewAdapter.VIEW_TYPE_CREATE_TRANSFER)
 }

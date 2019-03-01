@@ -32,13 +32,14 @@ class AccountsAndTransfersListFragment: BaseEngagePageFragment() {
     private lateinit var binding: FragmentAccountsAndTransfersListBinding
 
     private val selectionListener = object : AccountsAndTransfersListRecyclerViewAdapter.AccountsAndTransfersSelectionListener {
-        override fun onItemClicked(secondaryUserListItem: AccountsAndTransferListItem) {
-            when (secondaryUserListItem) {
+        override fun onItemClicked(listItem: AccountsAndTransferListItem) {
+            when (listItem) {
                 is AccountsAndTransferListItem.AddItem.AddBankAccountItem -> {
                     findNavController().navigate(R.id.action_accountsAndTransfersListFragment_to_achBankAccountAddFragment)
                 }
                 is AccountsAndTransferListItem.AddItem.AddCreditDebitCardItem -> {
-                    // TODO(jhutchins): FOTM-66 Add Credit/Debit account
+                    findNavController().navigate(R.id.action_accountsAndTransfersListFragment_to_cardLoadAddEditCardFragment,
+                            bundleOf(CC_ACCOUNT_ID_KEY to CC_ACCOUNT_ID))
                 }
                 is AccountsAndTransferListItem.CreateTransferItem -> {
                     findNavController().navigate(R.id.action_accountsAndTransfersListFragment_to_createEditTransferFragment)
@@ -46,17 +47,18 @@ class AccountsAndTransfersListFragment: BaseEngagePageFragment() {
                 is AccountsAndTransferListItem.BankAccountItem -> {
                     findNavController().navigate(R.id.action_accountsAndTransfersListFragment_to_achBankAccountDetailFragment,
                             Bundle().apply {
-                                putLong(ACH_BANK_ACCOUNT_ID, secondaryUserListItem.achAccountId)
+                                putLong(ACH_BANK_ACCOUNT_ID, listItem.achAccountId)
                             })
                 }
                 is AccountsAndTransferListItem.TransferItem.ScheduledLoadItem -> {
                     findNavController().navigate(R.id.action_accountsAndTransfersListFragment_to_createEditTransferFragment,
                             Bundle().apply {
-                                putLong(SCHEDULED_LOAD_ID, secondaryUserListItem.scheduledLoadId)
+                                putLong(SCHEDULED_LOAD_ID, listItem.scheduledLoadId)
                             })
                 }
                 is AccountsAndTransferListItem.CreditDebitCardItem -> {
-                    // TODO(jhutchins): FOTM-1001 View Credit/Debit account
+                    findNavController().navigate(R.id.action_accountsAndTransfersListFragment_to_cardLoadAddEditCardFragment,
+                            bundleOf(CC_ACCOUNT_ID_KEY to listItem.ccAccountId))
                 }
             }
         }
@@ -123,11 +125,6 @@ class AccountsAndTransfersListFragment: BaseEngagePageFragment() {
 
     override fun onOptionsItemSelected(item: MenuItem?): Boolean {
         when(item?.itemId){
-            R.id.add -> run {
-                //TODO FOTM-1001 test REMOVE BEFORE MERGE
-                binding.root.findNavController().navigate(R.id.action_accountsAndTransfersListFragment_to_cardLoadAddEditCardFragment,
-                        bundleOf(CC_ACCOUNT_ID_KEY to 199L))
-//                binding.root.findNavController().navigate(R.id.action_accountsAndTransfersListFragment_to_createEditTransferFragment)
             R.id.menu_add -> run {
                 findNavController().navigate(R.id.action_accountsAndTransfersListFragment_to_createEditTransferFragment)
             }

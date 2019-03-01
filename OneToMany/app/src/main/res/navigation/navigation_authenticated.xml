@@ -775,7 +775,6 @@
             android:name="@string/navigation_view_gone"
             android:defaultValue="true" />
     </fragment>
-        android:label="@string/GOAL_DETAIL_TRANSFER" />
     <fragment
         android:id="@+id/cardLoadAddEditCardFragment"
         android:name="com.engageft.fis.pscu.feature.achtransfer.CardLoadAddEditCardFragment">
@@ -788,6 +787,7 @@
             app:enterAnim="@anim/nav_enter_anim"
             app:exitAnim="@anim/nav_exit_anim"
             app:popEnterAnim="@anim/nav_pop_enter_anim"
-            app:popExitAnim="@anim/nav_pop_exit_anim"/>
+            app:popExitAnim="@anim/nav_pop_exit_anim"
+            app:popUpTo="@id/accountsAndTransfersListFragment"/>
     </fragment>
 </navigation>

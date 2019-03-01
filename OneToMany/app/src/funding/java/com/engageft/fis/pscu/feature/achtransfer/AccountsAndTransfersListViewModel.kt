@@ -134,7 +134,7 @@ class AccountsAndTransfersListViewModel: BaseEngageViewModel() {
                                 // TODO(jhutchins): Do we care about isActive or expiration dates to filter these out of the list?
                                 showCardLoadHeader = false
                                 showCreateTransfer = true
-                                creditDebitSection.add(AccountsAndTransferListItem.CreditDebitCardItem(account.lastDigits))
+                                creditDebitSection.add(AccountsAndTransferListItem.CreditDebitCardItem(account.ccAccountId, account.lastDigits))
                             }
                             if (accountInfo.accountPermissionsInfo.isFundingAddDebitCardAllowable) {
                                 creditDebitSection.add(AccountsAndTransferListItem.AddItem.AddCreditDebitCardItem)
