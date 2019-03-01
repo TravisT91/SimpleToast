@@ -21,7 +21,6 @@ import com.engageft.fis.pscu.feature.branding.Palette
  * Copyright (c) 2019 Engage FT. All rights reserved.
  */
 class SecondaryUserListFragment: BaseEngagePageFragment() {
-
     private lateinit var secondaryUserListViewModel: SecondaryUserListViewModel
     private lateinit var recyclerViewAdapter: SecondaryUserListRecyclerViewAdapter
     private lateinit var binding: FragmentSecondaryUsersListBinding
@@ -32,6 +31,13 @@ class SecondaryUserListFragment: BaseEngagePageFragment() {
             // In the case of header or footer clicked, do nothing.
             when (secondaryUserListItem) {
                 is SecondaryUserListItem.AddUserType -> { findNavController().navigate(R.id.action_secondaryUserListFragment_to_addSecondaryUserFragment) }
+                is SecondaryUserListItem.ActiveSecondaryUserType -> {
+                    findNavController().navigate(R.id.action_secondaryUserListFragment_to_viewSecondaryUserFragment,
+                            Bundle().apply {
+                                putLong(ViewSecondaryUserFragment.KEY_SECONDARY_USER_ID, secondaryUserListItem.userId)
+                                putLong(ViewSecondaryUserFragment.KEY_SECONDARY_CARD_ID, secondaryUserListItem.debitCardId)
+                            })
+                }
             }
         }
     }
