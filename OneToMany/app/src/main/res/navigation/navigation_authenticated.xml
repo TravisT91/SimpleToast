@@ -456,7 +456,7 @@
     <fragment
         android:id="@+id/accountsAndTransfersListFragment"
         android:name="com.engageft.fis.pscu.feature.achtransfer.AccountsAndTransfersListFragment"
-        android:label="@string/ach_bank_transfer_screen_title">
+        android:label="@string/fragment_title_card_load">
         <argument
             android:name="@string/navigation_view_gone"
             android:defaultValue="true" />
