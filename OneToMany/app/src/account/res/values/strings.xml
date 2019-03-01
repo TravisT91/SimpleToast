@@ -123,6 +123,7 @@
     <string name="secondary_users_add_phone_number_label">Phone number</string>
     <string name="secondary_users_add_dob_label">Date of birth</string>
     <string name="secondary_users_add_ssn_label">Social security number</string>
+    <string name="secondary_users_view_card_status_label">Card status</string>
     <string name="secondary_users_add_button_text">Add</string>
     <string name="secondary_users_add_error_phone_not_ten">@string/PROFILE_INPUT_ERROR_PHONE_NOT_TEN</string>
     <string name="secondary_users_add_error_dob_under_13">@string/ENROLLMENT_CARD_DOB_UNDER_13</string>
