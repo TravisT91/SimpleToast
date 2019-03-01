@@ -2,7 +2,7 @@ package com.engageft.feature.goals.utils
 
 object GoalConstants {
     const val GOAL_ID_KEY = "GOAL_ID_KEY"
-    const val GOAL_ID_DEFAULT = -1L
+    const val GOAL_ID = -1L
 
     const val TRANSFER_LABEL_ID = 0
     const val EDIT_LABEL_ID = 1

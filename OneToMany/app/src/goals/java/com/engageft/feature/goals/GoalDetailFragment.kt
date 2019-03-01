@@ -4,7 +4,6 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.core.os.bundleOf
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
@@ -19,7 +18,7 @@ import com.engageft.feature.goals.utils.GoalConstants
 import com.engageft.feature.goals.utils.GoalConstants.DELETE_LABEL_ID
 import com.engageft.feature.goals.utils.GoalConstants.EDIT_LABEL_ID
 import com.engageft.feature.goals.utils.GoalConstants.GOAL_FUND_AMOUNT_KEY
-import com.engageft.feature.goals.utils.GoalConstants.GOAL_ID_DEFAULT
+import com.engageft.feature.goals.utils.GoalConstants.GOAL_ID
 import com.engageft.feature.goals.utils.GoalConstants.GOAL_ID_KEY
 import com.engageft.feature.goals.utils.GoalConstants.TRANSFER_LABEL_ID
 import com.engageft.fis.pscu.R
@@ -39,8 +38,8 @@ class GoalDetailFragment: BaseEngagePageFragment() {
 
     override fun createViewModel(): BaseViewModel? {
         arguments!!.let {
-            val goalId = it.getLong(GOAL_ID_KEY, GOAL_ID_DEFAULT)
-            if (goalId == GOAL_ID_DEFAULT) {
+            val goalId = it.getLong(GOAL_ID_KEY, GOAL_ID)
+            if (goalId == GOAL_ID) {
                 throw IllegalArgumentException("Goal Id is not valid")
             } else {
                 viewModelGoalDetail = ViewModelProviders.of(this, GoalDetailViewModelFactory(goalId)).get(GoalDetailViewModel::class.java)
@@ -94,8 +93,7 @@ class GoalDetailFragment: BaseEngagePageFragment() {
                     is GoalDetailState.ErrorItem -> {
                         addSection(ErrorStateSection(getString(R.string.GOAL_ERROR_TITLE), getString(R.string.GOAL_ERROR_DESCRIPTION), object : ErrorStateSection.OnErrorSectionInteractionListener {
                             override fun onErrorSectionClicked() {
-                                // TODO: EDIT GOAL task FOTM-837
-                                Toast.makeText(context!!, "On Error section clicked!", Toast.LENGTH_SHORT).show()
+                                navigateToGoalEdit()
                             }
                         }))
                     }
@@ -150,10 +148,8 @@ class GoalDetailFragment: BaseEngagePageFragment() {
                                 R.style.GoalDetailItemTextStyle,
                                 object : SelectableLabelsSection.OnSelectableLabelInteractionListener {
                                     override fun onLabelClicked(labelId: Int) {
-                                        // TODO(aHashimi): FOTM-837
-                                        Toast.makeText(context!!, "on edit item clicked!", Toast.LENGTH_SHORT).show()
+                                        navigateToGoalEdit()
                                     }
-
                                 })
                                 .addLabel(EDIT_LABEL_ID, getString(R.string.GOAL_DETAIL_EDIT)))
                         addSection(HorizontalRuleSection(layoutResId = R.layout.goals_horizontal_divider_indent_start))
@@ -180,6 +176,13 @@ class GoalDetailFragment: BaseEngagePageFragment() {
     private fun navigateToGoalTransfer() {
         binding.root.findNavController().navigate(R.id.action_goalDetailFragment_to_goalSingleTransferFragment,
                 bundleOf(GOAL_ID_KEY to viewModelGoalDetail.goalId))
+    }
+
+    private fun navigateToGoalEdit() {
+        binding.root.findNavController().navigate(R.id.action_goalDetailFragment_to_goalEditFragment,
+                Bundle().apply {
+                    putLong(GOAL_ID_KEY, viewModelGoalDetail.goalId)
+                })
     }
 
     private fun promptPauseConfirmation(pauseGoal: Boolean) {

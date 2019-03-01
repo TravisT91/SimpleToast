@@ -1,308 +1,206 @@
 package com.engageft.fis.pscu.feature.achtransfer
 
 import android.content.Context
+import android.os.Build
+import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.recyclerview.widget.RecyclerView
-import android.view.LayoutInflater
 import android.widget.TextView
+import androidx.appcompat.widget.AppCompatTextView
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.DiffUtil
+import androidx.recyclerview.widget.RecyclerView
 import com.engageft.apptoolbox.view.PillButton
 import com.engageft.fis.pscu.R
-import com.ob.ws.dom.utility.AchLoadInfo
-import com.ob.ws.dom.utility.AchAccountInfo
-import com.engageft.engagekit.model.ScheduledLoad
-import com.ob.domain.lookup.AchAccountStatus
+import com.engageft.fis.pscu.feature.branding.Palette
 import org.joda.time.DateTime
-import utilGen1.AchAccountInfoUtils
 import utilGen1.DisplayDateTimeUtils
-import utilGen1.ScheduledLoadUtils
+import java.util.Locale
+
 /**
- * AccountsAndTransfersListRecyclerViewAdapter
- * </p>
- * RecyclerView adapter that displays different UI states based on user's ACH bank accounts, and transfers lists.
- * </p>
  * Created by Atia Hashimi 12/14/18
+ * Refactored by Joey Hutchins 2/21/19
  * Copyright (c) 2018 Engage FT. All rights reserved.
  */
 class AccountsAndTransfersListRecyclerViewAdapter(
-        private val context: Context,
-        private val achAccountClickListener: AchAccountInfoClickListener,
-        private val scheduledTransferClickListener: ScheduledLoadListClickListener,
-        private val onButtonClickListener: CreateTransferButtonClickListener): RecyclerView.Adapter<RecyclerView.ViewHolder>() {
-
-
-    private companion object {
-        const val TYPE_ACCOUNT = 0
-        const val TYPE_SCHEDULED_LOAD = 1
-        const val TYPE_HISTORICAL_LOAD = 2
-        const val TYPE_LABEL = 3
-        const val TYPE_ACH_ACCOUNT_HEADER = 4
-        const val TYPE_BUTTON = 5
-
-        const val EMPTY_LIST_ACCOUNT_ID: Long = 0L
+        private val selectionListener: AccountsAndTransfersSelectionListener): RecyclerView.Adapter<AccountsAndTransfersListRecyclerViewAdapter.AccountsAndTransfersViewHolder>() {
+    companion object {
+        const val VIEW_TYPE_CARD_LOAD_HEADER = 0
+        const val VIEW_TYPE_HEADER = 1
+        const val VIEW_TYPE_BANK_ACCOUNT = 2
+        const val VIEW_TYPE_ADD_ITEM = 3
+        const val VIEW_TYPE_BANK_ACCOUNT_FOOTER = 4
+        const val VIEW_TYPE_CREDIT_DEBIT = 5
+        const val VIEW_TYPE_TRANSFER = 6
+        const val VIEW_TYPE_CREATE_TRANSFER = 7
     }
 
-    private val mutableList = mutableListOf<Any>()
-    private var buttonText: String = ""
-    private var shouldShowButton: Boolean = false
+    private var items = listOf<AccountsAndTransferListItem>()
+
+    private val viewHolderListener = object : ViewHolderListener {
+        override fun onViewSelected(position: Int) {
+            selectionListener.onItemClicked(items[position])
+        }
+    }
 
     override fun getItemCount(): Int {
-        return mutableList.size + 1 // +1 for pillButton
+        return items.size
     }
 
     override fun getItemViewType(position: Int): Int {
-
-        if (position == mutableList.size) return TYPE_BUTTON // return pillButton viewType, last item
-
-        return when(mutableList[position]) {
-            is HeaderTextPair -> TYPE_ACH_ACCOUNT_HEADER
-            is AchAccountInfo -> TYPE_ACCOUNT
-            is ScheduledLoad -> TYPE_SCHEDULED_LOAD
-            is AchLoadInfo -> TYPE_HISTORICAL_LOAD
-            is String -> TYPE_LABEL
-            else -> TYPE_BUTTON
-        }
+        return items[position].viewType
     }
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): AccountsAndTransfersViewHolder {
         return when (viewType) {
-            TYPE_ACH_ACCOUNT_HEADER -> {
-                val view = LayoutInflater.from(parent.context).inflate(R.layout.ach_bank_account_header_item, parent, false)
-                AchAccountHeaderViewHolder(view)
+            VIEW_TYPE_CARD_LOAD_HEADER -> {
+                val view = LayoutInflater.from(parent.context).inflate(R.layout.card_load_transfer_header_item, parent, false)
+                AccountsAndTransfersViewHolder.CardLoadHeaderViewHolder(viewHolderListener, view)
             }
-            TYPE_ACCOUNT -> {
-                val view = LayoutInflater.from(parent.context).inflate(R.layout.ach_bank_account_list_item, parent, false)
-                BankAccountsViewHolder(view)
+            VIEW_TYPE_HEADER -> {
+                val view = LayoutInflater.from(parent.context).inflate(R.layout.card_load_header_item, parent, false)
+                AccountsAndTransfersViewHolder.HeaderViewHolder(viewHolderListener, view)
             }
-            TYPE_SCHEDULED_LOAD -> {
-                val view = LayoutInflater.from(parent.context).inflate(R.layout.ach_bank_transfer_load_item, parent, false)
-                ScheduledTransferViewHolder(view)
+            VIEW_TYPE_BANK_ACCOUNT -> {
+                val view = LayoutInflater.from(parent.context).inflate(R.layout.card_load_bank_item, parent, false)
+                AccountsAndTransfersViewHolder.BankAccountViewHolder(viewHolderListener, view)
             }
-            TYPE_HISTORICAL_LOAD -> {
-                val view = LayoutInflater.from(parent.context).inflate(R.layout.ach_bank_transfer_load_item, parent, false)
-                HistoricalTransferViewHolder(view)
+            VIEW_TYPE_ADD_ITEM -> {
+                val view = LayoutInflater.from(parent.context).inflate(R.layout.card_load_add_item, parent, false)
+                AccountsAndTransfersViewHolder.AddItemViewHolder(viewHolderListener, view)
             }
-            TYPE_LABEL -> {
-                val view = LayoutInflater.from(parent.context).inflate(R.layout.ach_bank_transfer_label_item, parent, false)
-                LabelSectionViewHolder(view)
+            VIEW_TYPE_BANK_ACCOUNT_FOOTER -> {
+                val view = LayoutInflater.from(parent.context).inflate(R.layout.card_load_verify_footer_item, parent, false)
+                AccountsAndTransfersViewHolder.VerifyBankAccountFooterViewHolder(viewHolderListener, view)
+            }
+            VIEW_TYPE_CREDIT_DEBIT -> {
+                val view = LayoutInflater.from(parent.context).inflate(R.layout.card_load_credit_debit_item, parent, false)
+                AccountsAndTransfersViewHolder.CreditDebitCardViewHolder(viewHolderListener, view)
+            }
+            VIEW_TYPE_TRANSFER -> {
+                val view = LayoutInflater.from(parent.context).inflate(R.layout.card_load_transfer_item, parent, false)
+                AccountsAndTransfersViewHolder.CardLoadViewHolder(viewHolderListener, view)
+            }
+            VIEW_TYPE_CREATE_TRANSFER -> {
+                val view = LayoutInflater.from(parent.context).inflate(R.layout.card_load_create_transfer_item, parent, false)
+                AccountsAndTransfersViewHolder.CreateTransferViewHolder(viewHolderListener, view)
             }
             else -> {
-                val view = LayoutInflater.from(parent.context).inflate(R.layout.ach_pill_button_item, parent, false)
-                ButtonViewHolder(view)
+                throw IllegalStateException("Unknown view type")
             }
         }
     }
 
-    override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
+    override fun onBindViewHolder(holder: AccountsAndTransfersViewHolder, position: Int) {
         when (holder) {
-            is AchAccountHeaderViewHolder -> {
-                holder.apply {
-                    val headerTextPair = mutableList[position] as HeaderTextPair
-                    titleTextView.text = headerTextPair.headerText
-                    subtitleTextView.text = headerTextPair.headerSubtext
+            is AccountsAndTransfersViewHolder.CardLoadHeaderViewHolder -> {
+                // Nothing to do.
+            }
+            is AccountsAndTransfersViewHolder.HeaderViewHolder -> {
+                val item = items[position] as AccountsAndTransferListItem.HeaderItem
+                when (item) {
+                    is AccountsAndTransferListItem.HeaderItem.BankAccountHeaderItem -> {
+                        holder.headerText.text = holder.itemView.context.getString(R.string.card_load_bank_account_header)
+                    }
+                    is AccountsAndTransferListItem.HeaderItem.CreditDebitHeaderItem -> {
+                        holder.headerText.text = holder.itemView.context.getString(R.string.card_load_credit_debit_header)
+                    }
+                    is AccountsAndTransferListItem.HeaderItem.ScheduledLoadHeader -> {
+                        holder.headerText.text = holder.itemView.context.getString(R.string.card_load_transfer_scheduled_header)
+                    }
+                    is AccountsAndTransferListItem.HeaderItem.RecentActivityHeaderItem -> {
+                        holder.headerText.text = holder.itemView.context.getString(R.string.card_load_transfer_recent_activity_header)
+                    }
                 }
             }
-            is BankAccountsViewHolder -> {
+            is AccountsAndTransfersViewHolder.BankAccountViewHolder -> {
+                val item = items[position] as AccountsAndTransferListItem.BankAccountItem
                 holder.apply {
-                    val achAccountInfo: AchAccountInfo = mutableList[position] as AchAccountInfo
-                    // check if item is empty placeholder achAccountInfo
-                    if (achAccountInfo.achAccountId == EMPTY_LIST_ACCOUNT_ID) {
-                        bankStatusTextView.visibility = View.GONE
-                        bankNameTextView.text = context.getString(R.string.ach_bank_transfer_add_bank)
-                        bankNameTextView.setTextColor(ContextCompat.getColor(context, R.color.textSecondary))
+                    bankNameText.text = String.format(itemView.context.getString(R.string.card_load_bank_account_title_format), item.bankName, item.lastFour)
+                    if (item.verified) {
+                        bankStatusText.text = holder.itemView.context.getString(R.string.ach_bank_transfer_status_verified)
+                        bankStatusText.setTextColor(ContextCompat.getColor(holder.itemView.context!!, R.color.structure5))
                     } else {
-                        bankNameTextView.text = AchAccountInfoUtils.accountDescriptionForDisplay(context, achAccountInfo)
-                        bankStatusTextView.text = when (achAccountInfo.achAccountStatus) {
-                            AchAccountStatus.VERIFIED -> context.getString(R.string.ach_bank_transfer_status_verified)
-                            else -> context.getString(R.string.ach_bank_transfer_status_unverified)
+                        bankStatusText.text = holder.itemView.context.getString(R.string.ach_bank_transfer_status_unverified)
+                        bankStatusText.setTextColor(Palette.errorColor)
+                    }
+                }
+            }
+            is AccountsAndTransfersViewHolder.AddItemViewHolder -> {
+                val item = items[position] as AccountsAndTransferListItem.AddItem
+                when (item) {
+                    is AccountsAndTransferListItem.AddItem.AddBankAccountItem -> {
+                        holder.buttonText.text = holder.itemView.context.getString(R.string.card_load_button_add_bank)
+                    }
+                    is AccountsAndTransferListItem.AddItem.AddCreditDebitCardItem -> {
+                        holder.buttonText.text = holder.itemView.context.getString(R.string.card_load_button_add_credit_debit)
+                    }
+                }
+            }
+            is AccountsAndTransfersViewHolder.VerifyBankAccountFooterViewHolder -> {
+                // Nothing to do.
+            }
+            is AccountsAndTransfersViewHolder.CreditDebitCardViewHolder -> {
+                val item = items[position] as AccountsAndTransferListItem.CreditDebitCardItem
+                holder.apply {
+                    labelText.text = String.format(itemView.context.getString(R.string.card_load_credit_debit_title_format), item.lastFour)
+                }
+            }
+            is AccountsAndTransfersViewHolder.CardLoadViewHolder -> {
+                val item = items[position] as AccountsAndTransferListItem.TransferItem
+                when (item) {
+                    is AccountsAndTransferListItem.TransferItem.ScheduledLoadItem -> {
+                        val scheduledLoadItem = item as AccountsAndTransferListItem.TransferItem.ScheduledLoadItem
+                        holder.apply {
+                            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                                itemView.foreground = ContextCompat.getDrawable(itemView.context, R.drawable.selectable_item_background_structure2)
+                            }
+                            dayTextView.text = DisplayDateTimeUtils.getDayTwoDigits(scheduledLoadItem.nextRunDate)
+                            monthTextView.text = DisplayDateTimeUtils.getMonthAbbr(scheduledLoadItem.nextRunDate)
+                            val transferType = if (scheduledLoadItem.isAccount) itemView.context.getString(R.string.card_load_transfer_from_account) else itemView.context.getString(R.string.card_load_transfer_from_card)
+                            transferTextView.text = String.format(itemView.context.getString(R.string.card_load_transfer_scheduled_title_format), transferType, scheduledLoadItem.lastFour)
+                            transferSubTextView.text = when (scheduledLoadItem) {
+                                is AccountsAndTransferListItem.TransferItem.ScheduledLoadItem.MonthlyItem -> {
+                                    String.format(itemView.context.getString(R.string.TRANSFER_MONTHLY_SIMPLE_LOAD_DESCRIPTION),
+                                            DisplayDateTimeUtils.getDayOrdinal(itemView.context, scheduledLoadItem.nextRunDate))
+                                }
+                                is AccountsAndTransferListItem.TransferItem.ScheduledLoadItem.WeeklyItem -> {
+                                    String.format(itemView.context.getString(R.string.TRANSFER_WEEKLY_SIMPLE_LOAD_DESCRIPTION),
+                                            scheduledLoadItem.nextRunDate.dayOfWeek().getAsText(Locale.getDefault()))
+                                }
+                                is AccountsAndTransferListItem.TransferItem.ScheduledLoadItem.AltWeeklyItem -> {
+                                    String.format(itemView.context.getString(R.string.TRANSFER_ALT_WEEKLY_SIMPLE_LOAD_DESCRIPTION),
+                                            scheduledLoadItem.nextRunDate.dayOfWeek().getAsText(Locale.getDefault()))
+                                }
+                            }
+                            amountTextView.text = formatAchIncomingBankTransferAmount(itemView.context, scheduledLoadItem.amount)
                         }
                     }
+                    is AccountsAndTransferListItem.TransferItem.RecentActivityItem -> {
+                        holder.apply {
+                            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                                itemView.foreground = null
+                            }
+                            dayTextView.text = DisplayDateTimeUtils.getDayTwoDigits(item.nextRunDate)
+                            monthTextView.text = DisplayDateTimeUtils.getMonthAbbr(item.nextRunDate)
+                            transferTextView.text = if (item.isAccount) itemView.context.getString(R.string.card_load_transfer_recent_bank) else itemView.context.getString(R.string.card_load_transfer_recent_card)
 
-                    holder.itemView.setOnClickListener {
-                        if (achAccountInfo.achAccountId == EMPTY_LIST_ACCOUNT_ID) {
-                            achAccountClickListener.onAddBankAccountClicked()
-                        } else {
-                            achAccountClickListener.onAchAccountDetailClicked(achAccountInfo.achAccountId)
+                            val transferType = if (item.isAccount) itemView.context.getString(R.string.card_load_transfer_from_account) else itemView.context.getString(R.string.card_load_transfer_from_card)
+                            transferSubTextView.text = String.format(itemView.context.getString(R.string.card_load_transfer_scheduled_title_format), transferType, item.lastFour)
                         }
                     }
                 }
             }
-            is LabelSectionViewHolder -> {
-                holder.labelTextView.text = mutableList[position] as String
-            }
-            is ScheduledTransferViewHolder -> {
-                holder.apply {
-                    val scheduledLoad = mutableList[position] as ScheduledLoad
-                    val scheduledDate = DateTime(scheduledLoad.isoNextRunDate)
-                    dayTextView.text = DisplayDateTimeUtils.getDayTwoDigits(scheduledDate)
-                    monthTextView.text = DisplayDateTimeUtils.getMonthAbbr(scheduledDate)
-
-                    transferTextView.text = context.getString(R.string.ach_bank_transfer_recurring_transfer)
-                    transferSubTextView.text = ScheduledLoadUtils.getTransferDetailSimpleText(context, scheduledLoad)
-                    amountTextView.text = formatAchIncomingBankTransferAmount(context, scheduledLoad.amountOrig)
-
-                    holder.itemView.setOnClickListener {
-                        scheduledTransferClickListener.onScheduledTransferClicked(scheduledLoad.scheduledLoadId)
-                    }
-                }
-            }
-            is HistoricalTransferViewHolder -> {
-                holder.apply {
-                    val achLoadInfo = mutableList[position] as AchLoadInfo
-
-                    val loadDate = DateTime(achLoadInfo.isoLoadDate)
-                    dayTextView.text = DisplayDateTimeUtils.getDayTwoDigits(loadDate)
-                    monthTextView.text = DisplayDateTimeUtils.getMonthAbbr(loadDate)
-
-                    transferTextView.text = context.getString(R.string.ach_bank_transfer)
-                    transferSubTextView.text = String.format(context.getString(R.string.ach_bank_transfer_from_format), achLoadInfo.achLastDigits)
-                    amountTextView.text = formatAchIncomingBankTransferAmount(context, achLoadInfo.amount)
-                }
-            }
-            is ButtonViewHolder -> {
-                holder.button.text = buttonText
-                holder.button.visibility = if (shouldShowButton) View.VISIBLE else View.GONE
-                holder.button.setOnClickListener {
-                    onButtonClickListener.onCreateTransferClicked()
-                }
+            is AccountsAndTransfersViewHolder.CreateTransferViewHolder -> {
+                // Nothing to do.
             }
         }
     }
 
-    fun setCreateTransferButtonState(text: String, showButton: Boolean) {
-        buttonText = text
-        shouldShowButton = showButton
-        notifyItemRangeChanged(mutableList.size, 1)
-    }
-
-    fun setAccountHeaderData(headerText: String, headerSubText: String) {
-        val oldList = mutableList.toList()
-        removeHeader()
-        val pair = HeaderTextPair(headerText, headerSubText)
-        mutableList.add(0, pair)
-        DiffUtil.calculateDiff(CustomDiffUtil(oldList, mutableList))
-                .dispatchUpdatesTo(this)
-    }
-
-    fun removeHeaderAndNotifyAdapter() {
-        val oldList = mutableList.toList()
-        removeHeader()
-        DiffUtil.calculateDiff(CustomDiffUtil(oldList, mutableList))
-                .dispatchUpdatesTo(this)
-    }
-
-    fun removeAchAccountSection() {
-        val oldList = mutableList.toList()
-        if (mutableList.size > 0) { // removes item if already in list
-            val first = mutableList[0]
-            if (first is AchAccountInfo) {
-                mutableList.removeAt(0)
-            }
-        }
-        DiffUtil.calculateDiff(CustomDiffUtil(oldList, mutableList))
-                .dispatchUpdatesTo(this)
-    }
-
-    fun setAchAccountData(accountInfoList: List<AchAccountInfo>) {
-        val oldList = mutableList.toList()
-        var hasHeader = false
-        if (mutableList.size > 0) { // checks if header exists
-            val first = mutableList[0]
-            if (first is HeaderTextPair) {
-                hasHeader = true
-            }
-        }
-        val beginPosition = if (hasHeader) 1 else 0
-        if (mutableList.size > beginPosition) { // removes items if already in list
-            mutableList.removeAll { it is AchAccountInfo }
-        }
-
-        // check if list is empty, which means an AchAccountInfo doesn't exist
-        if (accountInfoList.isEmpty()) {
-            val placeholder = AchAccountInfo()
-            placeholder.achAccountId = EMPTY_LIST_ACCOUNT_ID
-            mutableList.add(beginPosition, placeholder)
-        } else {
-            mutableList.addAll(beginPosition, accountInfoList)
-        }
-        DiffUtil.calculateDiff(CustomDiffUtil(oldList, mutableList))
-                .dispatchUpdatesTo(this)
-    }
-
-    fun setScheduledLoadData(header: String, scheduledLoadList: List<ScheduledLoad>) {
-        val oldList = mutableList.toList()
-        // removes pre-existing items
-        removeExistingWithLabelItem<ScheduledLoad>()
-
-        var insertPosition = mutableList.size
-        if (scheduledLoadList.isNotEmpty()) {
-            // adds new data. scheduledLoad is added after AchAccountInfo
-            mutableList.forEachIndexed { index, any ->
-                if (any is HeaderTextPair || any is AchAccountInfo) {
-                    insertPosition = index + 1
-                }
-            }
-            mutableList.add(insertPosition, header)
-            mutableList.addAll(insertPosition + 1 , scheduledLoadList)
-        }
-        DiffUtil.calculateDiff(CustomDiffUtil(oldList, mutableList))
-                .dispatchUpdatesTo(this)
-    }
-
-    fun setHistoricalLoadData(header: String, historicalLoadList: List<AchLoadInfo>) {
-        val oldList = mutableList.toList()
-        // removes pre-existing items
-        removeExistingWithLabelItem<AchLoadInfo>()
-
-        val insertPosition = mutableList.size
-
-        if (historicalLoadList.isNotEmpty()) {
-            mutableList.add(insertPosition, header)
-            // it's always added to the end of adapter list
-            mutableList.addAll(insertPosition + 1 , historicalLoadList)
-        }
-
-        DiffUtil.calculateDiff(CustomDiffUtil(oldList, mutableList))
-                .dispatchUpdatesTo(this)
-    }
-
-    private inline fun <reified T> removeExistingWithLabelItem() {
-        var existingTransferLoadBegin = -1
-        kotlin.run search@{ //label to exit loop early
-            mutableList.forEachIndexed { index, any ->
-                if (any is T) {
-                    if (existingTransferLoadBegin == -1) {
-                        existingTransferLoadBegin = index
-                        return@search
-                    }
-                }
-            }
-        }
-        mutableList.removeAll { it is T }
-
-        // remove old label section
-        kotlin.run search@{
-            if (existingTransferLoadBegin != -1) {
-                mutableList.forEachIndexed { index, any ->
-                    // label found is the above the list items being removed
-                    if (any is String && index < existingTransferLoadBegin) {
-                        mutableList.removeAt(existingTransferLoadBegin - 1)
-                        return@search
-                    }
-                }
-            }
-        }
-    }
-
-    private fun removeHeader() {
-        if (mutableList.size > 0) { // removes item if already in list
-            val first = mutableList[0]
-            if (first is HeaderTextPair) {
-                mutableList.removeAt(0)
-            }
-        }
+    fun setAccountsAndTransfersItems(items: List<AccountsAndTransferListItem>) {
+        val oldList = this.items
+        this.items = items
+        DiffUtil.calculateDiff(AccountsAndTransfersDiffUtil(oldList, items)).dispatchUpdatesTo(this)
     }
 
     private fun formatAchIncomingBankTransferAmount(context: Context, amount: String): String {
@@ -310,66 +208,138 @@ class AccountsAndTransfersListRecyclerViewAdapter(
         return String.format(context.getString(R.string.ach_bank_transfer_amount_incoming_format), amount)
     }
 
-    private class AchAccountHeaderViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        val titleTextView: TextView = itemView.findViewById(R.id.titleTextView)
-        val subtitleTextView: TextView = itemView.findViewById(R.id.subtitleTextView)
+    sealed class AccountsAndTransfersViewHolder(private val viewHolderListener: ViewHolderListener, itemView: View) : RecyclerView.ViewHolder(itemView) {
+        init {
+            itemView.setOnClickListener {
+                viewHolderListener.onViewSelected(adapterPosition)
+            }
+        }
+
+        class CardLoadHeaderViewHolder(viewHolderListener: ViewHolderListener, itemView: View) : AccountsAndTransfersViewHolder(viewHolderListener, itemView)
+        class HeaderViewHolder(viewHolderListener: ViewHolderListener, itemView: View) : AccountsAndTransfersViewHolder(viewHolderListener, itemView) {
+            val headerText: AppCompatTextView = itemView.findViewById(R.id.labelTextView)
+        }
+        class BankAccountViewHolder(viewHolderListener: ViewHolderListener, itemView: View) : AccountsAndTransfersViewHolder(viewHolderListener, itemView) {
+            val bankNameText: AppCompatTextView = itemView.findViewById(R.id.bankNameTextView)
+            val bankStatusText: AppCompatTextView = itemView.findViewById(R.id.bankStatusTextView)
+        }
+        class AddItemViewHolder(viewHolderListener: ViewHolderListener, itemView: View) : AccountsAndTransfersViewHolder(viewHolderListener, itemView) {
+            val buttonText: AppCompatTextView = itemView.findViewById(R.id.labelText)
+        }
+        class VerifyBankAccountFooterViewHolder(viewHolderListener: ViewHolderListener, itemView: View) : AccountsAndTransfersViewHolder(viewHolderListener, itemView)
+        class CreditDebitCardViewHolder(viewHolderListener: ViewHolderListener, itemView: View) : AccountsAndTransfersViewHolder(viewHolderListener, itemView) {
+            val labelText: AppCompatTextView = itemView.findViewById(R.id.cardLabel)
+        }
+        class CardLoadViewHolder(viewHolderListener: ViewHolderListener, itemView: View) : AccountsAndTransfersViewHolder(viewHolderListener, itemView) {
+            val dayTextView: TextView = itemView.findViewById(R.id.dayDateTextView)
+            val monthTextView: TextView = itemView.findViewById(R.id.monthDateTextView)
+            val transferTextView: TextView = itemView.findViewById(R.id.transferTextView)
+            val transferSubTextView: TextView = itemView.findViewById(R.id.transferSubTextView)
+            val amountTextView: TextView = itemView.findViewById(R.id.amountTextView)
+        }
+        class CreateTransferViewHolder(viewHolderListener: ViewHolderListener, itemView: View) : AccountsAndTransfersViewHolder(viewHolderListener, itemView) {
+            init {
+                itemView.setOnClickListener(null)
+                itemView.findViewById<PillButton>(R.id.createTransferButton).setOnClickListener {
+                    viewHolderListener.onViewSelected(adapterPosition)
+                }
+            }
+        }
     }
 
-    private class LabelSectionViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        val labelTextView: TextView = itemView.findViewById(R.id.labelTextView)
-    }
-
-    private class BankAccountsViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        val bankNameTextView: TextView = itemView.findViewById(R.id.bankNameTextView)
-        val bankStatusTextView: TextView = itemView.findViewById(R.id.bankStatusTextView)
-    }
-
-    private class ScheduledTransferViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        val dayTextView: TextView = itemView.findViewById(R.id.dayDateTextView)
-        val monthTextView: TextView = itemView.findViewById(R.id.monthDateTextView)
-        val transferTextView: TextView = itemView.findViewById(R.id.transferTextView)
-        val transferSubTextView: TextView = itemView.findViewById(R.id.transferSubTextView)
-        val amountTextView: TextView = itemView.findViewById(R.id.amountTextView)
-    }
-
-    private class HistoricalTransferViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        val dayTextView: TextView = itemView.findViewById(R.id.dayDateTextView)
-        val monthTextView: TextView = itemView.findViewById(R.id.monthDateTextView)
-        val transferTextView: TextView = itemView.findViewById(R.id.transferTextView)
-        val transferSubTextView: TextView = itemView.findViewById(R.id.transferSubTextView)
-        val amountTextView: TextView = itemView.findViewById(R.id.amountTextView)
-    }
-
-    private class ButtonViewHolder(itemView: View): RecyclerView.ViewHolder(itemView) {
-        val button: PillButton = itemView.findViewById(R.id.createTransferButton)
-    }
-
-    private inner class HeaderTextPair(val headerText: String, val headerSubtext: String)
-
-    class CustomDiffUtil(private val oldList: List<Any>, private val newList: List<Any>) : DiffUtil.Callback() {
+    private class AccountsAndTransfersDiffUtil(private val oldList: List<AccountsAndTransferListItem>, private val newList: List<AccountsAndTransferListItem>) : DiffUtil.Callback() {
         override fun areItemsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
-            // id are the same
             val oldItem = oldList[oldItemPosition]
             val newItem = newList[newItemPosition]
-            when(oldItem) {
-                is AchAccountInfo -> {
-                    return newItem is AchAccountInfo && newItem.achAccountId == oldItem.achAccountId
-                }
-                is ScheduledLoad -> {
-                    return newItem is ScheduledLoad && newItem.scheduledLoadId == oldItem.scheduledLoadId
-                }
-                is AchLoadInfo -> {
-                    return newItem is AchLoadInfo && newItem.loadId == oldItem.loadId
-                }
-                is HeaderTextPair -> {
-                    return newItem is HeaderTextPair && newItem.headerText == oldItem.headerText &&
-                            newItem.headerSubtext == oldItem.headerSubtext
-                }
-                is String -> {
-                    return oldItem == newItem
-                }
-                else -> {
-                    return oldItem == newItem
+            if (oldItem.viewType != newItem.viewType) {
+                return false
+            } else {
+                // if their viewTypes are the same, we can safely assume their child classes are the same.
+                // We can cast:
+                return when (oldItem) {
+                    is AccountsAndTransferListItem.CardLoadHeaderItem -> {
+                        true
+                    }
+                    is AccountsAndTransferListItem.HeaderItem -> {
+                        when (oldItem) {
+                            is AccountsAndTransferListItem.HeaderItem.BankAccountHeaderItem -> {
+                                newItem is AccountsAndTransferListItem.HeaderItem.BankAccountHeaderItem
+                            }
+                            is AccountsAndTransferListItem.HeaderItem.CreditDebitHeaderItem -> {
+                                newItem is AccountsAndTransferListItem.HeaderItem.CreditDebitHeaderItem
+                            }
+                            is AccountsAndTransferListItem.HeaderItem.ScheduledLoadHeader -> {
+                                newItem is AccountsAndTransferListItem.HeaderItem.ScheduledLoadHeader
+                            }
+                            is AccountsAndTransferListItem.HeaderItem.RecentActivityHeaderItem -> {
+                                newItem is AccountsAndTransferListItem.HeaderItem.RecentActivityHeaderItem
+                            }
+                        }
+                    }
+                    is AccountsAndTransferListItem.BankAccountItem -> {
+                        newItem as AccountsAndTransferListItem.BankAccountItem
+                        oldItem.bankName == newItem.bankName && oldItem.lastFour == newItem.lastFour && oldItem.verified == newItem.verified
+                    }
+                    is AccountsAndTransferListItem.AddItem -> {
+                        when (oldItem) {
+                            is AccountsAndTransferListItem.AddItem.AddBankAccountItem -> {
+                                newItem is AccountsAndTransferListItem.AddItem.AddBankAccountItem
+                            }
+                            is AccountsAndTransferListItem.AddItem.AddCreditDebitCardItem -> {
+                                newItem is AccountsAndTransferListItem.AddItem.AddCreditDebitCardItem
+                            }
+                        }
+                    }
+                    is AccountsAndTransferListItem.TransferItem -> {
+                        when (oldItem) {
+                            is AccountsAndTransferListItem.TransferItem.ScheduledLoadItem -> {
+                                when (oldItem) {
+                                    is AccountsAndTransferListItem.TransferItem.ScheduledLoadItem.MonthlyItem -> {
+                                        if (newItem is AccountsAndTransferListItem.TransferItem.ScheduledLoadItem.MonthlyItem) {
+                                            oldItem.lastFour == newItem.lastFour && oldItem.nextRunDate == newItem.nextRunDate &&
+                                                    oldItem.amount == newItem.amount && oldItem.isAccount == newItem.isAccount
+                                        } else {
+                                            false
+                                        }
+                                    }
+                                    is AccountsAndTransferListItem.TransferItem.ScheduledLoadItem.WeeklyItem -> {
+                                        if (newItem is AccountsAndTransferListItem.TransferItem.ScheduledLoadItem.WeeklyItem) {
+                                            oldItem.lastFour == newItem.lastFour && oldItem.nextRunDate == newItem.nextRunDate &&
+                                                    oldItem.amount == newItem.amount && oldItem.isAccount == newItem.isAccount
+                                        } else {
+                                            false
+                                        }
+                                    }
+                                    is AccountsAndTransferListItem.TransferItem.ScheduledLoadItem.AltWeeklyItem -> {
+                                        if (newItem is AccountsAndTransferListItem.TransferItem.ScheduledLoadItem.AltWeeklyItem) {
+                                            oldItem.lastFour == newItem.lastFour && oldItem.nextRunDate == newItem.nextRunDate &&
+                                                    oldItem.amount == newItem.amount && oldItem.isAccount == newItem.isAccount
+                                        } else {
+                                            false
+                                        }
+                                    }
+                                }
+                            }
+                            is AccountsAndTransferListItem.TransferItem.RecentActivityItem -> {
+                                if (newItem is AccountsAndTransferListItem.TransferItem.RecentActivityItem) {
+                                    oldItem.nextRunDate == newItem.nextRunDate && oldItem.lastFour == newItem.lastFour &&
+                                            oldItem.isAccount == newItem.isAccount && oldItem.amount == newItem.amount
+                                } else {
+                                    false
+                                }
+                            }
+                        }
+                    }
+                    is AccountsAndTransferListItem.VerifyBankAccountFooterItem -> {
+                        true
+                    }
+                    is AccountsAndTransferListItem.CreditDebitCardItem -> {
+                        newItem as AccountsAndTransferListItem.CreditDebitCardItem
+                        oldItem.lastFour == newItem.lastFour
+                    }
+                    is AccountsAndTransferListItem.CreateTransferItem -> {
+                        true
+                    }
                 }
             }
         }
@@ -383,25 +353,134 @@ class AccountsAndTransfersListRecyclerViewAdapter(
         }
 
         override fun areContentsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
-            // if IDs are same have contents changed
-            return oldList[oldItemPosition] == newList[newItemPosition]
+            val oldItem = oldList[oldItemPosition]
+            val newItem = newList[newItemPosition]
+            if (oldItem.viewType != newItem.viewType) {
+                return false
+            } else {
+                // if their viewTypes are the same, we can safely assume their child classes are the same.
+                // We can cast:
+                return when (oldItem) {
+                    is AccountsAndTransferListItem.CardLoadHeaderItem -> {
+                        true
+                    }
+                    is AccountsAndTransferListItem.HeaderItem -> {
+                        when (oldItem) {
+                            is AccountsAndTransferListItem.HeaderItem.BankAccountHeaderItem -> {
+                                newItem is AccountsAndTransferListItem.HeaderItem.BankAccountHeaderItem
+                            }
+                            is AccountsAndTransferListItem.HeaderItem.CreditDebitHeaderItem -> {
+                                newItem is AccountsAndTransferListItem.HeaderItem.CreditDebitHeaderItem
+                            }
+                            is AccountsAndTransferListItem.HeaderItem.ScheduledLoadHeader -> {
+                                newItem is AccountsAndTransferListItem.HeaderItem.ScheduledLoadHeader
+                            }
+                            is AccountsAndTransferListItem.HeaderItem.RecentActivityHeaderItem -> {
+                                newItem is AccountsAndTransferListItem.HeaderItem.RecentActivityHeaderItem
+                            }
+                        }
+                    }
+                    is AccountsAndTransferListItem.BankAccountItem -> {
+                        newItem as AccountsAndTransferListItem.BankAccountItem
+                        oldItem.bankName == newItem.bankName && oldItem.lastFour == newItem.lastFour && oldItem.verified == newItem.verified
+                    }
+                    is AccountsAndTransferListItem.AddItem -> {
+                        when (oldItem) {
+                            is AccountsAndTransferListItem.AddItem.AddBankAccountItem -> {
+                                newItem is AccountsAndTransferListItem.AddItem.AddBankAccountItem
+                            }
+                            is AccountsAndTransferListItem.AddItem.AddCreditDebitCardItem -> {
+                                newItem is AccountsAndTransferListItem.AddItem.AddCreditDebitCardItem
+                            }
+                        }
+                    }
+                    is AccountsAndTransferListItem.TransferItem -> {
+                        when (oldItem) {
+                            is AccountsAndTransferListItem.TransferItem.ScheduledLoadItem -> {
+                                when (oldItem) {
+                                    is AccountsAndTransferListItem.TransferItem.ScheduledLoadItem.MonthlyItem -> {
+                                        if (newItem is AccountsAndTransferListItem.TransferItem.ScheduledLoadItem.MonthlyItem) {
+                                            oldItem.lastFour == newItem.lastFour && oldItem.nextRunDate == newItem.nextRunDate &&
+                                                    oldItem.amount == newItem.amount && oldItem.isAccount == newItem.isAccount
+                                        } else {
+                                            false
+                                        }
+                                    }
+                                    is AccountsAndTransferListItem.TransferItem.ScheduledLoadItem.WeeklyItem -> {
+                                        if (newItem is AccountsAndTransferListItem.TransferItem.ScheduledLoadItem.WeeklyItem) {
+                                            oldItem.lastFour == newItem.lastFour && oldItem.nextRunDate == newItem.nextRunDate &&
+                                                    oldItem.amount == newItem.amount && oldItem.isAccount == newItem.isAccount
+                                        } else {
+                                            false
+                                        }
+                                    }
+                                    is AccountsAndTransferListItem.TransferItem.ScheduledLoadItem.AltWeeklyItem -> {
+                                        if (newItem is AccountsAndTransferListItem.TransferItem.ScheduledLoadItem.AltWeeklyItem) {
+                                            oldItem.lastFour == newItem.lastFour && oldItem.nextRunDate == newItem.nextRunDate &&
+                                                    oldItem.amount == newItem.amount && oldItem.isAccount == newItem.isAccount
+                                        } else {
+                                            false
+                                        }
+                                    }
+                                }
+                            }
+                            is AccountsAndTransferListItem.TransferItem.RecentActivityItem -> {
+                                if (newItem is AccountsAndTransferListItem.TransferItem.RecentActivityItem) {
+                                    oldItem.nextRunDate == newItem.nextRunDate && oldItem.lastFour == newItem.lastFour &&
+                                            oldItem.isAccount == newItem.isAccount && oldItem.amount == newItem.amount
+                                } else {
+                                    false
+                                }
+                            }
+                        }
+                    }
+                    is AccountsAndTransferListItem.VerifyBankAccountFooterItem -> {
+                        true
+                    }
+                    is AccountsAndTransferListItem.CreditDebitCardItem -> {
+                        newItem as AccountsAndTransferListItem.CreditDebitCardItem
+                        oldItem.lastFour == newItem.lastFour
+                    }
+                    is AccountsAndTransferListItem.CreateTransferItem -> {
+                        true
+                    }
+                }
+            }
         }
 
     }
 
-    interface ScheduledLoadListClickListener {
-        //TODO(aHashimi): FOTM-113, should pass object's ID?
-        fun onScheduledTransferClicked(scheduledLoadInfoId: Long)
+    interface AccountsAndTransfersSelectionListener {
+        fun onItemClicked(secondaryUserListItem: AccountsAndTransferListItem)
     }
 
-    interface AchAccountInfoClickListener {
-        fun onAchAccountDetailClicked(achAccountInfoId: Long)
-        fun onAddBankAccountClicked()
+    interface ViewHolderListener {
+        fun onViewSelected(position: Int)
     }
+}
 
-    interface CreateTransferButtonClickListener {
-        //TODO(aHashimi): FOTM-113
-        //TODO(aHashimi): supporting multiple ach accounts: which one's being verfied? https://engageft.atlassian.net/browse/FOTM-588
-        fun onCreateTransferClicked()
+sealed class AccountsAndTransferListItem(val viewType: Int) {
+    object CardLoadHeaderItem: AccountsAndTransferListItem(AccountsAndTransfersListRecyclerViewAdapter.VIEW_TYPE_CARD_LOAD_HEADER)
+    sealed class HeaderItem : AccountsAndTransferListItem(AccountsAndTransfersListRecyclerViewAdapter.VIEW_TYPE_HEADER) {
+        object BankAccountHeaderItem: HeaderItem()
+        object CreditDebitHeaderItem : HeaderItem()
+        object ScheduledLoadHeader : HeaderItem()
+        object RecentActivityHeaderItem : HeaderItem()
     }
+    class BankAccountItem(val bankName: String, val lastFour: String, val verified: Boolean, val achAccountId: Long) : AccountsAndTransferListItem(AccountsAndTransfersListRecyclerViewAdapter.VIEW_TYPE_BANK_ACCOUNT)
+    sealed class AddItem : AccountsAndTransferListItem(AccountsAndTransfersListRecyclerViewAdapter.VIEW_TYPE_ADD_ITEM) {
+        object AddBankAccountItem : AddItem()
+        object AddCreditDebitCardItem : AddItem()
+    }
+    sealed class TransferItem() : AccountsAndTransferListItem(AccountsAndTransfersListRecyclerViewAdapter.VIEW_TYPE_TRANSFER) {
+        sealed class ScheduledLoadItem(val nextRunDate: DateTime, val lastFour: String, val isAccount: Boolean, val amount: String, val scheduledLoadId: Long) : TransferItem() {
+            class MonthlyItem(nextRunDate: DateTime, lastFour: String, isAccount: Boolean, amount: String, scheduledLoadId: Long): ScheduledLoadItem(nextRunDate, lastFour, isAccount, amount, scheduledLoadId)
+            class WeeklyItem(nextRunDate: DateTime, lastFour: String, isAccount: Boolean, amount: String, scheduledLoadId: Long): ScheduledLoadItem(nextRunDate, lastFour, isAccount, amount, scheduledLoadId)
+            class AltWeeklyItem(nextRunDate: DateTime, lastFour: String, isAccount: Boolean, amount: String, scheduledLoadId: Long): ScheduledLoadItem(nextRunDate, lastFour, isAccount, amount, scheduledLoadId)
+        }
+        class RecentActivityItem(val nextRunDate: DateTime, val lastFour: String, val isAccount: Boolean, val amount: String) : TransferItem()
+    }
+    object VerifyBankAccountFooterItem : AccountsAndTransferListItem(AccountsAndTransfersListRecyclerViewAdapter.VIEW_TYPE_BANK_ACCOUNT_FOOTER)
+    class CreditDebitCardItem(val lastFour: String) : AccountsAndTransferListItem(AccountsAndTransfersListRecyclerViewAdapter.VIEW_TYPE_CREDIT_DEBIT)
+    object CreateTransferItem : AccountsAndTransferListItem(AccountsAndTransfersListRecyclerViewAdapter.VIEW_TYPE_CREATE_TRANSFER)
 }

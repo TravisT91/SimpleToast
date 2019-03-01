@@ -10,11 +10,10 @@
         android:id="@+id/createTransferButton"
         style="@style/ButtonPillPrimaryFilledDefault"
         android:layout_margin="@dimen/pillButtonTopSpaceInFormsAndLists"
+        android:layout_marginBottom="16dp"
         android:layout_height="wrap_content"
         android:layout_width="wrap_content"
         android:visibility="visible"
-        tools:text="Add a Something"
-        xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:tools="http://schemas.android.com/tools" />
+        android:text="@string/ach_bank_transfer_create_transfer" />
 
 </androidx.appcompat.widget.LinearLayoutCompat>

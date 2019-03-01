@@ -67,7 +67,6 @@ class SecondaryUserListRecyclerViewAdapter(private val selectionListener: Second
     }
 
     override fun onBindViewHolder(holder: SecondaryUserViewHolder, position: Int) {
-        holder.itemPosition = position
         when (holder) {
             is SecondaryUserViewHolder.ActiveUserViewHolder -> {
                 val item = items[position] as SecondaryUserListItem.ActiveSecondaryUserType
@@ -105,11 +104,9 @@ class SecondaryUserListRecyclerViewAdapter(private val selectionListener: Second
     }
 
     sealed class SecondaryUserViewHolder(private val viewHolderListener: ViewHolderListener, itemView: View) : RecyclerView.ViewHolder(itemView) {
-        var itemPosition = -1
-
         init {
             itemView.setOnClickListener {
-                viewHolderListener.onViewSelected(itemPosition)
+                viewHolderListener.onViewSelected(adapterPosition)
             }
         }
 

@@ -10,6 +10,12 @@ import utilGen1.PayPlanUtils
 import utilGen1.StringUtils
 import java.math.BigDecimal
 
+enum class PayPlanType {
+    DAY,
+    WEEK,
+    MONTH
+}
+
 // "$6 of $29"
 fun GoalInfo.getGoalInfoProgressString(context: Context): String {
     return String.format(context.getString(R.string.GOALS_PROGRESS_FORMAT),
