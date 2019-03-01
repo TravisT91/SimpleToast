@@ -60,7 +60,7 @@
                     android:paddingTop="16dp"
                     app:labelText="@string/card_load_transfer_from_label"
                     app:inputText="@={viewModel.from}"
-                    app:bottomSheetDialogTitle="@string/card_load_transfer_from_account"
+                    app:bottomSheetDialogTitle="@string/card_load_transfer_from_account_label"
                     app:bottomSheetDialogStyle="@style/ListOptionBottomSheetDialogFragmentStyle">
                 </com.engageft.apptoolbox.view.BottomSheetListInputWithLabel>
 
@@ -75,7 +75,7 @@
                     android:paddingTop="16dp"
                     app:labelText="@string/card_load_transfer_to_label"
                     app:inputText="@={viewModel.to}"
-                    app:bottomSheetDialogTitle="@string/card_load_transfer_to_account"
+                    app:bottomSheetDialogTitle="@string/card_load_transfer_to_account_label"
                     app:bottomSheetDialogStyle="@style/ListOptionBottomSheetDialogFragmentStyle"/>
 
                 <com.engageft.apptoolbox.view.CurrencyInputWithLabel

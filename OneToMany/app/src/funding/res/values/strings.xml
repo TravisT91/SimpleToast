@@ -112,8 +112,8 @@
     <string name="card_load_transfer_weekly_label">Transfer day of the week</string>
     <string name="card_load_transfer_weekly_title">Day of week</string>
     <string name="card_load_transfer_monthly_label">First transfer date</string>
-    <string name="card_load_transfer_from_account">From account</string>
-    <string name="card_load_transfer_to_account">To account</string>
+    <string name="card_load_transfer_from_account_label">From account</string>
+    <string name="card_load_transfer_to_account_label">To account</string>
     <string name="card_load_transfer_frequency_title">How often?</string>
     <string name="card_load_transfer_next_button">Next</string>
     <string name="card_load_transfer_error_title">Error</string>

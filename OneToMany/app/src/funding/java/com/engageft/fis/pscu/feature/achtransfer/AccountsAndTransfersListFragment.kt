@@ -18,7 +18,6 @@ import com.engageft.fis.pscu.feature.BaseEngagePageFragment
 import com.engageft.fis.pscu.feature.achtransfer.CardLoadConstants.ACH_BANK_ACCOUNT_ID_KEY
 import com.engageft.fis.pscu.feature.achtransfer.CardLoadConstants.SCHEDULED_LOAD_ID_KEY
 import com.engageft.fis.pscu.feature.branding.Palette
-import com.ob.ws.dom.utility.AchAccountInfo
 
 /**
  * Created by Atia Hashimi 12/14/18
@@ -46,13 +45,13 @@ class AccountsAndTransfersListFragment: BaseEngagePageFragment() {
                 is AccountsAndTransferListItem.BankAccountItem -> {
                     findNavController().navigate(R.id.action_accountsAndTransfersListFragment_to_achBankAccountDetailFragment,
                             Bundle().apply {
-                                putLong(ACH_BANK_ACCOUNT_ID, secondaryUserListItem.achAccountId)
+                                putLong(ACH_BANK_ACCOUNT_ID_KEY, secondaryUserListItem.achAccountId)
                             })
                 }
                 is AccountsAndTransferListItem.TransferItem.ScheduledLoadItem -> {
                     findNavController().navigate(R.id.action_accountsAndTransfersListFragment_to_createEditTransferFragment,
                             Bundle().apply {
-                                putLong(SCHEDULED_LOAD_ID, secondaryUserListItem.scheduledLoadId)
+                                putLong(SCHEDULED_LOAD_ID_KEY, secondaryUserListItem.scheduledLoadId)
                             })
                 }
                 is AccountsAndTransferListItem.CreditDebitCardItem -> {
