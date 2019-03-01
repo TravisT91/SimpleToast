@@ -88,7 +88,7 @@ class GoalSingleTransferFragment: BaseEngagePageFragment() {
                 }
             })
 
-            toBottomSheet.isEnabled = false
+            toBottomSheet.setEnable(false)
 
             nextButton.setOnClickListener {
                 navigateToConfirmation()
@@ -118,7 +118,7 @@ class GoalSingleTransferFragment: BaseEngagePageFragment() {
                 })
 
                 selectionEnableObservable.observe(viewLifecycleOwner, Observer {
-                    fromBottomSheet.isEnabled = it
+                    fromBottomSheet.setEnable(it)
                 })
 
                 nextButtonStateObservable.observe(viewLifecycleOwner, Observer {
