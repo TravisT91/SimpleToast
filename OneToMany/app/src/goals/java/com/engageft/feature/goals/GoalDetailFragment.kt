@@ -4,7 +4,6 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.core.os.bundleOf
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
@@ -19,7 +18,7 @@ import com.engageft.feature.goals.utils.GoalConstants
 import com.engageft.feature.goals.utils.GoalConstants.DELETE_LABEL_ID
 import com.engageft.feature.goals.utils.GoalConstants.EDIT_LABEL_ID
 import com.engageft.feature.goals.utils.GoalConstants.GOAL_FUND_AMOUNT_KEY
-import com.engageft.feature.goals.utils.GoalConstants.GOAL_ID_DEFAULT
+import com.engageft.feature.goals.utils.GoalConstants.GOAL_ID
 import com.engageft.feature.goals.utils.GoalConstants.GOAL_ID_KEY
 import com.engageft.feature.goals.utils.GoalConstants.TRANSFER_LABEL_ID
 import com.engageft.fis.pscu.R
@@ -39,8 +38,8 @@ class GoalDetailFragment: BaseEngagePageFragment() {
 
     override fun createViewModel(): BaseViewModel? {
         arguments!!.let {
-            val goalId = it.getLong(GOAL_ID_KEY, GOAL_ID_DEFAULT)
-            if (goalId == GOAL_ID_DEFAULT) {
+            val goalId = it.getLong(GOAL_ID_KEY, GOAL_ID)
+            if (goalId == GOAL_ID) {
                 throw IllegalArgumentException("Goal Id is not valid")
             } else {
                 viewModelGoalDetail = ViewModelProviders.of(this, GoalDetailViewModelFactory(goalId)).get(GoalDetailViewModel::class.java)

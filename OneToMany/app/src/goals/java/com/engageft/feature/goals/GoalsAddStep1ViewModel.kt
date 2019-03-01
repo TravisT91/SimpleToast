@@ -5,11 +5,10 @@ import androidx.databinding.Observable
 import androidx.databinding.ObservableField
 import androidx.lifecycle.MutableLiveData
 import com.engageft.apptoolbox.util.CurrencyUtils
-import com.engageft.engagekit.utils.PayPlanInfoUtils
 import com.engageft.feature.goals.utils.GoalConstants.FREQUENCY_TYPE_DAILY
 import com.engageft.feature.goals.utils.GoalConstants.FREQUENCY_TYPE_MONTHLY
 import com.engageft.feature.goals.utils.GoalConstants.FREQUENCY_TYPE_WEEKLY
-import com.engageft.feature.goals.utils.GoalConstants.GOAL_ID_DEFAULT
+import com.engageft.feature.goals.utils.GoalConstants.GOAL_ID
 import com.engageft.feature.goals.utils.GoalConstants.YES
 import com.engageft.feature.goals.utils.PayPlanType
 import com.engageft.fis.pscu.config.EngageAppConfig
@@ -150,7 +149,7 @@ class GoalsAddStep1ViewModel: BaseEngageViewModel() {
 }
 
 @Parcelize
-data class GoalInfoModel(val goalId: Long = GOAL_ID_DEFAULT, val goalName: String, val goalAmount: BigDecimal,
+data class GoalInfoModel(val goalId: Long = GOAL_ID, val goalName: String, val goalAmount: BigDecimal,
                          val recurrenceType: PayPlanType, val startDate: DateTime?, val dayOfWeek: Int,
                          val hasCompleteDate: Boolean, var goalCompleteDate: DateTime? = null,
                          var frequencyAmount: BigDecimal? = null) : Parcelable

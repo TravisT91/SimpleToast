@@ -15,7 +15,7 @@ import com.engageft.apptoolbox.BaseViewModel
 import com.engageft.apptoolbox.NavigationOverrideClickListener
 import com.engageft.apptoolbox.view.InformationDialogFragment
 import com.engageft.feature.goals.utils.GoalConstants.GOAL_DATA_PARCELABLE_KEY
-import com.engageft.feature.goals.utils.GoalConstants.GOAL_ID_DEFAULT
+import com.engageft.feature.goals.utils.GoalConstants.GOAL_ID
 import com.engageft.feature.goals.utils.GoalConstants.GOAL_ID_KEY
 import com.engageft.fis.pscu.R
 import com.engageft.fis.pscu.config.EngageAppConfig
@@ -57,8 +57,8 @@ class GoalEditFragment: BaseEngagePageFragment() {
     }
 
     override fun createViewModel(): BaseViewModel? {
-        val goalId = arguments!!.getLong(GOAL_ID_KEY, GOAL_ID_DEFAULT)
-        if (goalId == GOAL_ID_DEFAULT) {
+        val goalId = arguments!!.getLong(GOAL_ID_KEY, GOAL_ID)
+        if (goalId == GOAL_ID) {
             throw IllegalArgumentException("Goal Id is not valid")
         } else {
             viewModelGoalEdit = ViewModelProviders.of(this, GoalEditViewModelFactory(goalId)).get(GoalEditViewModel::class.java)

@@ -36,7 +36,7 @@ class GoalAddEditConfirmationViewModel(val goalInfoModel: GoalInfoModel): BaseGo
     private var eventType: GoalEvent = GoalEvent.ADD
 
     init {
-        if (goalInfoModel.goalId != GoalConstants.GOAL_ID_DEFAULT) {
+        if (goalInfoModel.goalId != GoalConstants.GOAL_ID) {
             eventType = GoalEvent.EDIT
         }
     }
@@ -57,7 +57,7 @@ class GoalAddEditConfirmationViewModel(val goalInfoModel: GoalInfoModel): BaseGo
                                 saveGoalInfo(adjustGoalInfo(newGoalInfo))
                             }
                             GoalEvent.EDIT -> {
-                                currentCard?.let { updateGoal(it) }
+                                updateGoal(currentCard)
                             }
                         }
                     } else {
@@ -82,6 +82,8 @@ class GoalAddEditConfirmationViewModel(val goalInfoModel: GoalInfoModel): BaseGo
                                     goalInfo.goalId == goalInfoModel.goalId
                                 }?.let { goalInfo ->
                                     saveGoalInfo(adjustGoalInfo(goalInfo))
+                                } ?: run {
+                                    handleUnexpectedErrorResponse(BasicResponse(false, "failed to find goal that we are currently editing."))
                                 }
                             } else {
                                 dismissProgressOverlay()

@@ -722,6 +722,9 @@
     <fragment
         android:id="@+id/goalEditFragment"
         android:name="com.engageft.feature.goals.GoalEditFragment">
+        <argument
+            android:name="@string/navigation_view_gone"
+            android:defaultValue="true" />
         <action
             android:id="@+id/action_goalEditFragment_to_goalEditConfirmationFragment"
             app:destination="@id/goalEditConfirmationFragment"
@@ -733,5 +736,9 @@
     <fragment
         android:id="@+id/goalEditConfirmationFragment"
         android:name="com.engageft.feature.goals.GoalEditConfirmationFragment"
-        android:label="@string/GOAL_DETAIL_EDIT"/>
+        android:label="@string/GOAL_DETAIL_EDIT">
+        <argument
+            android:name="@string/navigation_view_gone"
+            android:defaultValue="true" />
+    </fragment>
 </navigation>
