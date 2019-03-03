@@ -11,7 +11,6 @@ import com.engageft.engagekit.aac.SingleLiveEvent
 import com.engageft.engagekit.rest.request.FundingAddDebitRequest
 import com.engageft.engagekit.rest.request.FundingDeleteDebitRequest
 import com.engageft.engagekit.utils.engageApi
-import com.engageft.fis.pscu.feature.BaseEngageViewModel
 import com.engageft.fis.pscu.feature.achtransfer.CardLoadConstants.CARD_NUMBER_REQUIRED_LENGTH
 import com.engageft.fis.pscu.feature.achtransfer.CardLoadConstants.CC_ACCOUNT_ID
 import com.engageft.fis.pscu.feature.achtransfer.CardLoadConstants.CVV_NUMBER_MAX_LENGTH
@@ -23,7 +22,7 @@ import io.reactivex.schedulers.Schedulers
 import org.joda.time.DateTime
 import utilGen1.DisplayDateTimeUtils
 
-class CardLoadAddEditCardViewModel(private val ccAccountId: Long): BaseEngageViewModel() {
+class CardLoadAddEditCardViewModel(private val ccAccountId: Long): BaseCardLoadViewModel() {
     enum class EventType {
         ADD, EDIT
     }
@@ -109,7 +108,8 @@ class CardLoadAddEditCardViewModel(private val ccAccountId: Long): BaseEngageVie
                 .subscribe({ response ->
                     dismissProgressOverlay()
                     if (response.isSuccess) {
-                        addCardSuccessObservable.call()
+                        EngageService.getInstance().storageManager.clearForLoginWithDataLoad(false)
+                        refreshLoginResponse(addCardSuccessObservable)
                     } else {
                         handleBackendErrorForForms(response, "$TAG: adding a debit/credit card failed")
                     }
@@ -122,7 +122,6 @@ class CardLoadAddEditCardViewModel(private val ccAccountId: Long): BaseEngageVie
         }
     }
 
-
     fun deleteCard() {
         showProgressOverlayDelayed()
         val request = FundingDeleteDebitRequest(ccAccountId)
@@ -132,7 +131,8 @@ class CardLoadAddEditCardViewModel(private val ccAccountId: Long): BaseEngageVie
                 .subscribe({ response ->
                     dismissProgressOverlay()
                     if (response.isSuccess) {
-                        deleteCardSuccessObservable.call()
+                        EngageService.getInstance().storageManager.clearForLoginWithDataLoad(false)
+                        refreshLoginResponse(deleteCardSuccessObservable)
                     } else {
                         handleUnexpectedErrorResponse(response)
                     }

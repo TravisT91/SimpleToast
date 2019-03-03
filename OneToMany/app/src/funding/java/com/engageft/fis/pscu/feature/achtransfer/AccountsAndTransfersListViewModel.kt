@@ -12,8 +12,6 @@ import com.ob.ws.dom.AchLoadsResponse
 import com.ob.ws.dom.BasicResponse
 import com.ob.ws.dom.LoginResponse
 import com.ob.ws.dom.ScheduledLoadsResponse
-import com.ob.ws.dom.utility.AchAccountInfo
-import com.ob.ws.dom.utility.AchLoadInfo
 import com.ob.ws.dom.utility.DebitCardInfo
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
@@ -50,15 +48,6 @@ class AccountsAndTransfersListViewModel: BaseEngageViewModel() {
     var historicalLoadListSection = ArrayList<AccountsAndTransferListItem>()
     var createTransferListSection = ArrayList<AccountsAndTransferListItem>()
 
-    var achBankAccountId = 0L
-    val achBankAccountsListObservable = MutableLiveData<List<AchAccountInfo>>()
-    val isAchEnabledObservable = MutableLiveData<Boolean>()
-    val isAllowAddAchAccountObservable = MutableLiveData<Boolean>()
-    val achScheduledLoadListObservable = MutableLiveData<List<ScheduledLoad>>()
-    val achHistoricalLoadListObservable = MutableLiveData<List<AchLoadInfo>>()
-
-    private var loginResponse: LoginResponse? = null
-
     private val apiCallsCounter = AtomicInteger(0)
 
     init {
@@ -82,7 +71,6 @@ class AccountsAndTransfersListViewModel: BaseEngageViewModel() {
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe({ response ->
                     if (response is LoginResponse) {
-                        loginResponse = response
 
                         val accountInfo = LoginResponseUtils.getCurrentAccountInfo(response)!!
                         val isAchEnabled = accountInfo.accountPermissionsInfo.isFundingAchEnabled

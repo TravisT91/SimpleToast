@@ -5,9 +5,9 @@ import androidx.databinding.ObservableField
 import androidx.lifecycle.MutableLiveData
 import com.engageft.apptoolbox.util.CurrencyUtils
 import com.engageft.engagekit.EngageService
+import com.engageft.engagekit.aac.SingleLiveEvent
 import com.engageft.engagekit.rest.request.AchAccountValidateRequest
 import com.engageft.fis.pscu.config.EngageAppConfig
-import com.engageft.fis.pscu.feature.BaseEngageViewModel
 import com.engageft.fis.pscu.feature.handleBackendErrorForForms
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
@@ -19,7 +19,7 @@ import io.reactivex.schedulers.Schedulers
  * Created by Atia Hashimi 12/20/18
  * Copyright (c) 2018 Engage FT. All rights reserved.
  */
-class AchBankAccountVerifyViewModel: BaseEngageViewModel() {
+class AchBankAccountVerifyViewModel: BaseCardLoadViewModel() {
 
     enum class ButtonState {
         SHOW,
@@ -32,7 +32,7 @@ class AchBankAccountVerifyViewModel: BaseEngageViewModel() {
     val amount2: ObservableField<String> = ObservableField("")
     var achAccountInfoId: Long = 0L
 
-    val navigationEventObservable = MutableLiveData<AchBankAccountNavigationEvent>()
+    val bankVerifySuccessObservable = SingleLiveEvent<Unit>()
     val buttonStateObservable = MutableLiveData<ButtonState>()
     val amount1ShowErrorObservable = MutableLiveData<Boolean>()
     val amount2ShowErrorObservable = MutableLiveData<Boolean>()
@@ -78,8 +78,7 @@ class AchBankAccountVerifyViewModel: BaseEngageViewModel() {
                                 dismissProgressOverlay()
                                 if (response.isSuccess) {
                                     EngageService.getInstance().storageManager.clearForLoginWithDataLoad(false)
-                                    navigationEventObservable.value = AchBankAccountNavigationEvent.BANK_VERIFIED_SUCCESS
-                                    navigationEventObservable.value = AchBankAccountNavigationEvent.NONE
+                                    refreshLoginResponse(bankVerifySuccessObservable)
                                 } else {
                                     handleBackendErrorForForms(response, "$TAG: failed to verify ACH account")
                                 }

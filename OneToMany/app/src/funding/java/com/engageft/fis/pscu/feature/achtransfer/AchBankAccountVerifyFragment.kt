@@ -107,11 +107,9 @@ class AchBankAccountVerifyFragment: BaseEngagePageFragment() {
                 activity?.invalidateOptionsMenu()
             })
 
-            navigationEventObservable.observe(viewLifecycleOwner, Observer {
-                if (it == AchBankAccountNavigationEvent.BANK_VERIFIED_SUCCESS) {
-                    binding.root.findNavController().navigate(R.id.action_achBankAccountVerifyFragment_to_cardLoadSuccessFragment,
-                            bundleOf(SUCCESS_SCREEN_TYPE_KEY to SuccessType.VERIFIED_ACH_ACCOUNT))
-                }
+            bankVerifySuccessObservable.observe(viewLifecycleOwner, Observer {
+                binding.root.findNavController().navigate(R.id.action_achBankAccountVerifyFragment_to_cardLoadSuccessFragment,
+                        bundleOf(SUCCESS_SCREEN_TYPE_KEY to SuccessType.VERIFIED_ACH_ACCOUNT))
             })
         }
 

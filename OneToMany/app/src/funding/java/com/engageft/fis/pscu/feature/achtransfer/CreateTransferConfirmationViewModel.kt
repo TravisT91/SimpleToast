@@ -6,7 +6,6 @@ import com.engageft.engagekit.model.ScheduledLoad
 import com.engageft.engagekit.rest.request.FundingFundAchAccountRequest
 import com.engageft.engagekit.rest.request.ScheduledLoadAchAddRequest
 import com.engageft.engagekit.utils.BackendDateTimeUtils
-import com.engageft.fis.pscu.feature.BaseEngageViewModel
 import com.engageft.fis.pscu.feature.handleBackendErrorForForms
 import com.ob.ws.dom.BasicResponse
 import io.reactivex.Observable
@@ -14,7 +13,7 @@ import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 import org.joda.time.DateTime
 
-class CreateTransferConfirmationViewModel: BaseEngageViewModel() {
+class CreateTransferConfirmationViewModel: BaseCardLoadViewModel() {
 
     var frequencyType = ""
     var amount = ""
@@ -70,7 +69,7 @@ class CreateTransferConfirmationViewModel: BaseEngageViewModel() {
                             dismissProgressOverlay()
                             if (response.isSuccess) {
                                 EngageService.getInstance().clearLoginAndDashboardResponses()
-                                createTransferSuccessObservable.call()
+                                refreshLoginResponse(createTransferSuccessObservable)
                             } else {
                                 handleBackendErrorForForms(response, "$TAG: creating a recurring transfer failed.")
                             }
@@ -98,7 +97,7 @@ class CreateTransferConfirmationViewModel: BaseEngageViewModel() {
                             dismissProgressOverlay()
                             if (response.isSuccess) {
                                 EngageService.getInstance().clearLoginAndDashboardResponses()
-                                createTransferSuccessObservable.call()
+                                refreshLoginResponse(createTransferSuccessObservable)
                             } else {
                                 handleBackendErrorForForms(response, "$TAG: creating one-time transfer failed.")
                             }

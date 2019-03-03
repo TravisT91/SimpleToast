@@ -93,7 +93,6 @@
                 android:layout_marginTop="32dp"
                 android:onClick="@{() -> viewModel.addCard()}"
                 android:text="@string/ach_bank_account_button_add"/>
-
         </LinearLayout>
 
     </ScrollView>

@@ -113,14 +113,9 @@ class AchBankAccountAddFragment: BaseEngagePageFragment() {
                 }
             })
 
-            navigationEventObservable.observe(viewLifecycleOwner, Observer {
-                when (it) {
-                    AchBankAccountNavigationEvent.BANK_ADDED_SUCCESS -> {
-                        binding.root.findNavController().navigate(
-                                R.id.action_achBankAccountAddFragment_to_cardLoadSuccessFragment,
-                                bundleOf(SUCCESS_SCREEN_TYPE_KEY to SuccessType.ADD_ACH_ACCOUNT))
-                    }
-                }
+            bankAddSuccessObservable.observe(viewLifecycleOwner, Observer {
+                binding.root.findNavController().navigate(R.id.action_achBankAccountAddFragment_to_cardLoadSuccessFragment,
+                        bundleOf(SUCCESS_SCREEN_TYPE_KEY to SuccessType.ADD_ACH_ACCOUNT))
             })
         }
 

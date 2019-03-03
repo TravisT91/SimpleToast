@@ -8,7 +8,6 @@ import com.engageft.engagekit.aac.SingleLiveEvent
 import com.engageft.engagekit.model.ScheduledLoad
 import com.engageft.engagekit.rest.request.ScheduledLoadRequest
 import com.engageft.engagekit.utils.LoginResponseUtils
-import com.engageft.fis.pscu.feature.BaseEngageViewModel
 import com.engageft.fis.pscu.feature.DialogInfo
 import com.engageft.fis.pscu.feature.branding.BrandingInfoRepo
 import com.ob.ws.dom.BasicResponse
@@ -21,7 +20,7 @@ import io.reactivex.schedulers.Schedulers
 import utilGen1.DisplayDateTimeUtils
 import utilGen1.ScheduledLoadUtils
 
-class CreateEditTransferViewModel: BaseEngageViewModel() {
+class CreateEditTransferViewModel: BaseCardLoadViewModel() {
 
     enum class FormMode {
         CREATE,
@@ -201,14 +200,12 @@ class CreateEditTransferViewModel: BaseEngageViewModel() {
                     val request2 = ScheduledLoadRequest(scheduledLoad.scheduledLoadIdDup)
                     postCancelScheduledLoad(request2.fieldMap) { // successful
                         EngageService.getInstance().storageManager.clearForLoginWithDataLoad(false)
-                        deleteSuccessObservable.call()
+                        refreshLoginResponse(deleteSuccessObservable)
                     }
                 } else { // Does not have duplicate
                     EngageService.getInstance().storageManager.clearForLoginWithDataLoad(false)
-                    deleteSuccessObservable.call()
+                    refreshLoginResponse(deleteSuccessObservable)
                 }
-
-                EngageService.getInstance().storageManager.clearForLoginWithDataLoad(false)
             }
         }
     }

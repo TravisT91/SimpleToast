@@ -84,6 +84,7 @@ class AccountsAndTransfersListFragment: BaseEngagePageFragment() {
         binding.apply {
             viewModel = accountsAndTransfersListViewModel
             palette = Palette
+            accountsAndTransfersListViewModel.refreshViews()
 
             recyclerView.layoutManager = LinearLayoutManager(context!!)
             recyclerViewAdapter = AccountsAndTransfersListRecyclerViewAdapter(selectionListener)
@@ -105,11 +106,6 @@ class AccountsAndTransfersListFragment: BaseEngagePageFragment() {
         }
 
         return binding.root
-    }
-
-    override fun onResume() {
-        super.onResume()
-        accountsAndTransfersListViewModel.refreshViews()
     }
 
     override fun onCreateOptionsMenu(menu: Menu?, inflater: MenuInflater?) {

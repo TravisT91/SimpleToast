@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.os.bundleOf
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.navigation.findNavController
@@ -73,9 +74,7 @@ class AchBankAccountDetailFragment: BaseEngagePageFragment() {
 
             verifyAccountButton.setOnClickListener {
                 binding.root.findNavController().navigate(R.id.action_achBankAccountDetailFragment_to_achBankAccountVerifyFragment,
-                        Bundle().apply {
-                            putLong(ACH_BANK_ACCOUNT_ID, achBankAccountDetailViewModel.achAccountInfoId)
-                        })
+                        bundleOf(ACH_BANK_ACCOUNT_ID to achBankAccountDetailViewModel.achAccountInfoId))
             }
         }
 
@@ -89,12 +88,8 @@ class AchBankAccountDetailFragment: BaseEngagePageFragment() {
                 }
             })
 
-            navigationEventObservable.observe(viewLifecycleOwner, Observer {
-                when (it) {
-                    AchBankAccountNavigationEvent.DELETED_BANK_SUCCESS -> {
-                        binding.root.findNavController().popBackStack()
-                    }
-                }
+            bankDeleteSuccessObservable.observe(viewLifecycleOwner, Observer {
+                binding.root.findNavController().popBackStack()
             })
         }
 
