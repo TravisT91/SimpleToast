@@ -49,13 +49,13 @@ class AccountsAndTransfersListFragment: BaseEngagePageFragment() {
                 is AccountsAndTransferListItem.BankAccountItem -> {
                     findNavController().navigate(R.id.action_accountsAndTransfersListFragment_to_achBankAccountDetailFragment,
                             Bundle().apply {
-                                putLong(ACH_BANK_ACCOUNT_ID_KEY, secondaryUserListItem.achAccountId)
+                                putLong(ACH_BANK_ACCOUNT_ID_KEY, listItem.achAccountId)
                             })
                 }
                 is AccountsAndTransferListItem.TransferItem.ScheduledLoadItem -> {
                     findNavController().navigate(R.id.action_accountsAndTransfersListFragment_to_createEditTransferFragment,
                             Bundle().apply {
-                                putLong(SCHEDULED_LOAD_ID_KEY, secondaryUserListItem.scheduledLoadId)
+                                putLong(SCHEDULED_LOAD_ID_KEY, listItem.scheduledLoadId)
                             })
                 }
                 is AccountsAndTransferListItem.CreditDebitCardItem -> {

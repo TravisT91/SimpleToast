@@ -74,7 +74,7 @@ class AchBankAccountDetailFragment: BaseEngagePageFragment() {
 
             verifyAccountButton.setOnClickListener {
                 binding.root.findNavController().navigate(R.id.action_achBankAccountDetailFragment_to_achBankAccountVerifyFragment,
-                        bundleOf(ACH_BANK_ACCOUNT_ID to achBankAccountDetailViewModel.achAccountInfoId))
+                        bundleOf(ACH_BANK_ACCOUNT_ID_KEY to achBankAccountDetailViewModel.achAccountInfoId))
             }
         }
 
