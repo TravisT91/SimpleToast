@@ -129,6 +129,8 @@ class CardLoadTransferFragment: BaseEngagePageFragment() {
                         fromFundSourceMediator[formattedString] = source
                     }
 
+                    setFundSourceListMediator(fromFundSourceMediator)
+
                     if (fromOptionsList.isNotEmpty() && fromOptionsList.size == 1) {
                         accountFromBottomSheet.setEnable(false)
                         accountFromBottomSheet.inputText = fromOptionsList[0]
@@ -136,7 +138,6 @@ class CardLoadTransferFragment: BaseEngagePageFragment() {
                         accountFromBottomSheet.dialogOptions = fromOptionsList
                     }
 
-                    viewModelTransfer.setFundSourceListMediator(fromFundSourceMediator)
                 })
 
                 toAccountObservable.observe(viewLifecycleOwner, Observer { cardList ->
@@ -154,6 +155,7 @@ class CardLoadTransferFragment: BaseEngagePageFragment() {
                     }
 
                     setSelectedCard(toFundDestinationMediator)
+
                     if (toOptionsList.isNotEmpty() && toOptionsList.size == 1) {
                         accountToBottomSheet.setEnable(false)
                         accountToBottomSheet.inputText = toOptionsList[0]

@@ -384,8 +384,13 @@ class CardLoadTransferViewModel(scheduledLoadId: Long): BaseEngageViewModel() {
     }
 
     fun hasUnsavedChanges(): Boolean {
+        // one item in the list means auto-populated
+        val fromCardsList = fromAccountObservable.value ?: mutableListOf()
+        val toCardsList = toAccountObservable.value ?: mutableListOf()
+
         return formMode == FormMode.CREATE && (amount.get()!!.isNotEmpty() || frequency.get()!!.isNotEmpty()
-                || from.get()!!.isNotEmpty() && to.get()!!.isNotEmpty())
+                || (fromCardsList.size > 1 && from.get()!!.isNotEmpty())
+                || (toCardsList.size > 1 && to.get()!!.isNotEmpty()))
     }
 
     fun onDeleteScheduledLoad() {
@@ -427,7 +432,7 @@ class CardLoadTransferViewModel(scheduledLoadId: Long): BaseEngageViewModel() {
     private fun hasFrequencySelected(): Boolean {
         val frequencyType = frequency.get()!!
         return frequencyType == FREQUENCY_ONETIME
-                || (frequencyType == FREQUENCY_WEEKLY || frequencyType == FREQUENCY_EVERY_OTHER_WEEK && dayOfWeek.get()!!.isNotEmpty())
+                || ((frequencyType == FREQUENCY_WEEKLY || frequencyType == FREQUENCY_EVERY_OTHER_WEEK) && dayOfWeek.get()!!.isNotEmpty())
                 || (frequencyType == FREQUENCY_MONTHLY && date1.get()!!.isNotEmpty())
     }
 
