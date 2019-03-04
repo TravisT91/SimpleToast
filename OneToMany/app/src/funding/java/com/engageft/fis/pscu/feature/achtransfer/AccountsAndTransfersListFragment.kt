@@ -15,6 +15,8 @@ import com.engageft.apptoolbox.BaseViewModel
 import com.engageft.fis.pscu.R
 import com.engageft.fis.pscu.databinding.FragmentAccountsAndTransfersListBinding
 import com.engageft.fis.pscu.feature.BaseEngagePageFragment
+import com.engageft.fis.pscu.feature.achtransfer.CardLoadConstants.ACH_BANK_ACCOUNT_ID_KEY
+import com.engageft.fis.pscu.feature.achtransfer.CardLoadConstants.SCHEDULED_LOAD_ID_KEY
 import com.engageft.fis.pscu.feature.branding.Palette
 
 /**
@@ -43,13 +45,13 @@ class AccountsAndTransfersListFragment: BaseEngagePageFragment() {
                 is AccountsAndTransferListItem.BankAccountItem -> {
                     findNavController().navigate(R.id.action_accountsAndTransfersListFragment_to_achBankAccountDetailFragment,
                             Bundle().apply {
-                                putLong(ACH_BANK_ACCOUNT_ID, secondaryUserListItem.achAccountId)
+                                putLong(ACH_BANK_ACCOUNT_ID_KEY, secondaryUserListItem.achAccountId)
                             })
                 }
                 is AccountsAndTransferListItem.TransferItem.ScheduledLoadItem -> {
                     findNavController().navigate(R.id.action_accountsAndTransfersListFragment_to_createEditTransferFragment,
                             Bundle().apply {
-                                putLong(SCHEDULED_LOAD_ID, secondaryUserListItem.scheduledLoadId)
+                                putLong(SCHEDULED_LOAD_ID_KEY, secondaryUserListItem.scheduledLoadId)
                             })
                 }
                 is AccountsAndTransferListItem.CreditDebitCardItem -> {
@@ -125,10 +127,5 @@ class AccountsAndTransfersListFragment: BaseEngagePageFragment() {
             }
         }
         return super.onOptionsItemSelected(item)
-    }
-
-    companion object {
-        const val ACH_BANK_ACCOUNT_ID = "ACH_BANK_ACCOUNT_ID"
-        const val SCHEDULED_LOAD_ID = "SCHEDULED_LOAD_ID"
     }
 }
