@@ -50,6 +50,7 @@
 
     <!-- ACH Bank Transfer -->
     <string name="BANKACCOUNT_DESCRIPTION_FORMAT">%1$s (…%2$s)</string>
+    <string name="BANKACCOUNT_DESCRIPTION_WITH_BALANCE_FORMAT">%1$s (…%2$s) - %3$s</string>
     <string name="BANKACCOUNT_DESCRIPTION">Account</string>
     <string name="BANKACCOUNT_NAME_UNKNOWN">Unknown</string>
     <string name="TEXT_CHECKING">Checking</string>
@@ -77,6 +78,7 @@
     <string name="card_load_bank_account_title_format">%1$s (&#8230;%2$s)</string>
     <string name="card_load_credit_debit_title_format">Card (&#8230;%s)</string>
     <!-- add ACH bank account -->
+    <string name="ach_bank_transfer_from_format">From account …%s</string>
     <string name="ach_bank_account_add_account_title">Add account</string>
     <string name="ach_bank_transfer_detail_account">Account</string>
     <string name="ach_bank_account_name_label">Bank name</string>
@@ -100,6 +102,29 @@
     <string name="ach_bank_account_verified_successful_title">Your bank account has been verified!</string>
     <string name="ach_bank_account_verified_successful_subtitle">You can now make transfers to and from your bank account.</string>
     <string name="routing_number_validation_error_message">Please enter 9 digits</string>
+    <string name="card_load_transfer_create_title">Create a bank transfer</string>
+    <string name="card_load_transfer_create_subTitle">You can transfer one-time, once a week, every other week or once month</string>
+    <string name="card_load_transfer_from_label">From</string>
+    <string name="card_load_transfer_to_label">To</string>
+    <string name="card_load_transfer_amount_label">How much</string>
+    <string name="card_load_transfer_frequency_label">How often</string>
+    <string name="card_load_transfer_weekly_label">Transfer day of the week</string>
+    <string name="card_load_transfer_weekly_title">Day of week</string>
+    <string name="card_load_transfer_monthly_label">First transfer date</string>
+    <string name="card_load_transfer_from_account_label">From account</string>
+    <string name="card_load_transfer_to_account_label">To account</string>
+    <string name="card_load_transfer_frequency_title">How often?</string>
+    <string name="card_load_transfer_next_button">Next</string>
+    <string name="card_load_transfer_error_title">Error</string>
+    <string name="card_load_transfer_error_message">Your card can\'t be funded at this time.</string>
+    <string name="card_load_transfer_edit_screen_title">Recurring transfer</string>
+    <string name="card_load_transfer_delete_title">Delete transfer?</string>
+    <string name="card_load_transfer_delete_message_format">Delete your recurring transfer %s from %s?</string>
+    <string name="card_load_transfer_confirmation_from_format">%s from %s</string>
+    <string name="card_load_transfer_confirmation_start_transferring">Start transferring</string>
+    <string name="card_load_transfer_confirmation_frequency_format">once a month starting %s</string>
+    <string name="card_load_transfer_confirmation_message">Transfers typically take 3 – 5  business days.</string>
+    <string name="card_load_card">Card</string>
     <string name="ach_bank_transfer_create_title">Create a bank transfer</string>
     <string name="ach_bank_transfer_create_subTitle">You can transfer one-time, once a week, or once or twice a month</string>
     <string name="ach_bank_transfer_create_from_label">From</string>
@@ -132,6 +157,5 @@
     <string name="card_load_edit_card_screen_title">Credit / Debit card</string>
     <string name="card_load_add_confirmation_header">Your card was successfully added.</string>
     <string name="card_load_add_confirmation_subHeader">You can now move money onto your card.</string>
-    <string name="card_load_card">Card</string>
     <!--End of Move Money strings-->
 </resources>

@@ -14,7 +14,7 @@ import com.engageft.apptoolbox.view.InformationDialogFragment
 import com.engageft.fis.pscu.R
 import com.engageft.fis.pscu.databinding.FragmentAchBankAccountDetailBinding
 import com.engageft.fis.pscu.feature.BaseEngagePageFragment
-import com.engageft.fis.pscu.feature.achtransfer.AccountsAndTransfersListFragment.Companion.ACH_BANK_ACCOUNT_ID
+import com.engageft.fis.pscu.feature.achtransfer.CardLoadConstants.ACH_BANK_ACCOUNT_ID_KEY
 import com.engageft.fis.pscu.feature.branding.Palette
 
 /**
@@ -41,7 +41,7 @@ class AchBankAccountDetailFragment: BaseEngagePageFragment() {
             palette = Palette
 
             arguments?.let {
-                achBankAccountDetailViewModel.achAccountInfoId = it.getLong(AccountsAndTransfersListFragment.ACH_BANK_ACCOUNT_ID, 0)
+                achBankAccountDetailViewModel.achAccountInfoId = it.getLong(ACH_BANK_ACCOUNT_ID_KEY, 0)
             } ?: run {
                 throw IllegalStateException("must pass arguments")
             }
