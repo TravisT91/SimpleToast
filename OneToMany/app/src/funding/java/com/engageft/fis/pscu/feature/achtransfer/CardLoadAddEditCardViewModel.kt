@@ -46,13 +46,14 @@ class CardLoadAddEditCardViewModel(private val ccAccountId: Long): BaseCardLoadV
     val addCardSuccessObservable = SingleLiveEvent<Unit>()
     val deleteCardSuccessObservable = SingleLiveEvent<Unit>()
 
-    var eventType = EventType.ADD
 
     var cardNumber = ObservableField("")
     var cvvNumber = ObservableField("")
     var expirationDate = ObservableField("")
     var showCvvNumber = ObservableField(true)
     var showDeleteLayout = ObservableField(false)
+
+    private var eventType = EventType.ADD
 
     private val cardNumberPropertyChangedCallback = object: Observable.OnPropertyChangedCallback() {
         override fun onPropertyChanged(sender: Observable?, propertyId: Int) {
@@ -253,14 +254,14 @@ class CardLoadAddEditCardViewModel(private val ccAccountId: Long): BaseCardLoadV
 
     private fun isExpirationDateValid(expirationDate: String): Boolean {
         val formatDate: DateTime? = getFormattedDate(expirationDate)
-
-        formatDate?.let { date ->  return date.isAfter(System.currentTimeMillis()) }
+        formatDate?.let { date ->  return date.isAfterNow }
         return false
     }
 
     private fun getFormattedDate(expirationDate: String): DateTime? {
         return try {
             DisplayDateTimeUtils.expirationMonthYearFormatter.parseDateTime(expirationDate)
+                    .withCenturyOfEra(DateTime.now().centuryOfEra)
         } catch (e: Exception) {
             null
         }
