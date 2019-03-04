@@ -238,7 +238,7 @@ class ProfileFragment : BaseEngagePageFragment() {
             }
         })
         binding.zipcodeInput.setImeOptions(EditorInfo.IME_ACTION_GO)
-        binding.zipcodeInput.onImeAction(EditorInfo.IME_ACTION_DONE) { profileViewModel.onSaveClicked() }
+        binding.zipcodeInput.onImeAction(EditorInfo.IME_ACTION_GO) { profileViewModel.onSaveClicked() }
 
         return binding.root
     }
