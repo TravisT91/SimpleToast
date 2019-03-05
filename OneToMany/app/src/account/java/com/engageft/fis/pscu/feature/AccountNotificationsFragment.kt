@@ -22,6 +22,7 @@ import com.engageft.apptoolbox.view.InformationDialogFragment
 import com.engageft.fis.pscu.R
 import com.engageft.fis.pscu.databinding.FragmentAccountNotificationsBinding
 import com.engageft.fis.pscu.feature.branding.Palette
+import com.engageft.fis.pscu.feature.palettebindings.applyPaletteStyles
 import kotlinx.android.synthetic.main.fragment_account_notifications.*
 /**
  * AccountNotificationsFragment
@@ -51,7 +52,9 @@ class AccountNotificationsFragment: BaseEngagePageFragment() {
     private val navigationOverrideClickListener = object : NavigationOverrideClickListener {
         override fun onClick(): Boolean {
             return if (accountNotificationsViewModel.hasUnsavedChanges()) {
-                fragmentDelegate.showDialog(infoDialogGenericUnsavedChangesNewInstance(context = activity!!, listener = unsavedChangesDialogListener))
+                val dialog = infoDialogGenericUnsavedChangesNewInstance(context = activity!!, listener = unsavedChangesDialogListener)
+                dialog.applyPaletteStyles(context!!)
+                fragmentDelegate.showDialog(dialog)
                 true
             } else {
                 false

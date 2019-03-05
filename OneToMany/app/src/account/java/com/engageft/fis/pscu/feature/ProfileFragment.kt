@@ -17,6 +17,7 @@ import com.engageft.apptoolbox.ViewUtils.newLotusInstance
 import com.engageft.apptoolbox.view.InformationDialogFragment
 import com.engageft.fis.pscu.R
 import com.engageft.fis.pscu.databinding.FragmentProfileBinding
+import com.engageft.fis.pscu.feature.palettebindings.applyPaletteStyles
 import com.engageft.fis.pscu.feature.utils.StringUtils
 
 
@@ -34,7 +35,9 @@ class ProfileFragment : BaseEngagePageFragment() {
     private val navigationOverrideClickListener = object : NavigationOverrideClickListener {
         override fun onClick(): Boolean {
             return if (profileViewModel.hasUnsavedChanges()) {
-                fragmentDelegate.showDialog(infoDialogGenericUnsavedChangesNewInstance(context = activity!!, listener = unsavedChangesDialogListener))
+                val dialog = infoDialogGenericUnsavedChangesNewInstance(context = activity!!, listener = unsavedChangesDialogListener)
+                dialog.applyPaletteStyles(activity!!)
+                fragmentDelegate.showDialog(dialog)
                 true
             } else {
                 false

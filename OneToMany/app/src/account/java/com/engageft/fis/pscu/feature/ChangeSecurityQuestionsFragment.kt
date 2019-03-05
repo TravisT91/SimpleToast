@@ -16,11 +16,10 @@ import com.engageft.apptoolbox.NavigationOverrideClickListener
 import com.engageft.apptoolbox.ViewUtils.newLotusInstance
 import com.engageft.apptoolbox.view.InformationDialogFragment
 import com.engageft.engagekit.EngageService
-import com.engageft.fis.pscu.MoEngageUtils
 import com.engageft.fis.pscu.R
 import com.engageft.fis.pscu.databinding.FragmentChangeSecurityQuestionsBinding
-import com.engageft.fis.pscu.feature.branding.BrandingManager
 import com.engageft.fis.pscu.feature.branding.Palette
+import com.engageft.fis.pscu.feature.palettebindings.applyPaletteStyles
 
 
 /**
@@ -40,7 +39,9 @@ class ChangeSecurityQuestionsFragment : BaseEngagePageFragment() {
     private val navigationOverrideClickListener = object : NavigationOverrideClickListener {
         override fun onClick(): Boolean {
             return if (changeSecurityQuestionsViewModel.hasUnsavedChanges()) {
-                fragmentDelegate.showDialog(infoDialogGenericUnsavedChangesNewInstance(context = activity!!, listener = unsavedChangesDialogListener))
+                val dialog = infoDialogGenericUnsavedChangesNewInstance(context = activity!!, listener = unsavedChangesDialogListener)
+                dialog.applyPaletteStyles(activity!!)
+                fragmentDelegate.showDialog(dialog)
                 true
             } else if (changeSecurityQuestionsViewModel.modeObservable.value == ChangeSecurityQuestionsViewModel.ChangeSecurityQuestionsMode.CREATE) {
                 fragmentDelegate.showDialog(InformationDialogFragment.newLotusInstance(

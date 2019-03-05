@@ -13,6 +13,7 @@ import com.engageft.apptoolbox.view.InformationDialogFragment
 import com.engageft.fis.pscu.R
 import com.engageft.fis.pscu.feature.BaseEngagePageFragment
 import com.engageft.fis.pscu.feature.infoDialogGenericUnsavedChangesNewInstance
+import com.engageft.fis.pscu.feature.palettebindings.applyPaletteStyles
 
 /**
  * TransactionDetailsMediatorFragment
@@ -55,7 +56,7 @@ class TransactionDetailsMediatorFragment : BaseEngagePageFragment() {
                                 }
 
                             }
-                    ).show(
+                    ).apply { applyPaletteStyles(context!!) }.show(
                             this@TransactionDetailsMediatorFragment.childFragmentManager,
                             "unsavedDialog")
                     return true

@@ -21,6 +21,7 @@ import com.engageft.fis.pscu.databinding.FragmentGoalsAddStep1Binding
 import com.engageft.fis.pscu.feature.BaseEngagePageFragment
 import com.engageft.fis.pscu.feature.branding.Palette
 import com.engageft.fis.pscu.feature.infoDialogGenericUnsavedChangesNewInstance
+import com.engageft.fis.pscu.feature.palettebindings.applyPaletteStyles
 import org.joda.time.DateTime
 import utilGen1.DisplayDateTimeUtils
 import utilGen1.PayPlanUtils
@@ -48,7 +49,9 @@ class GoalsAddStep1Fragment : BaseEngagePageFragment() {
     private val navigationOverrideClickListener = object : NavigationOverrideClickListener {
         override fun onClick(): Boolean {
             return if (addGoalViewModel.hasUnsavedChanges()) {
-                fragmentDelegate.showDialog(infoDialogGenericUnsavedChangesNewInstance(context = activity!!, listener = unsavedChangesDialogListener))
+                val dialog = infoDialogGenericUnsavedChangesNewInstance(context = activity!!, listener = unsavedChangesDialogListener)
+                dialog.applyPaletteStyles(activity!!)
+                fragmentDelegate.showDialog(dialog)
                 true
             } else {
                 false

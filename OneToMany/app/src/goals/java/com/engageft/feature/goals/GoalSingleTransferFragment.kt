@@ -27,6 +27,7 @@ import com.engageft.fis.pscu.feature.BaseEngagePageFragment
 import com.engageft.fis.pscu.feature.DialogInfo
 import com.engageft.fis.pscu.feature.branding.Palette
 import com.engageft.fis.pscu.feature.infoDialogGenericUnsavedChangesNewInstance
+import com.engageft.fis.pscu.feature.palettebindings.applyPaletteStyles
 
 class GoalSingleTransferFragment: BaseEngagePageFragment() {
 
@@ -48,7 +49,9 @@ class GoalSingleTransferFragment: BaseEngagePageFragment() {
     private val navigationOverrideClickListener = object : NavigationOverrideClickListener {
         override fun onClick(): Boolean {
             return if (viewModelTransfer.hasUnsavedChanges()) {
-                fragmentDelegate.showDialog(infoDialogGenericUnsavedChangesNewInstance(context = activity!!, listener = unsavedChangesDialogListener))
+                val dialog = infoDialogGenericUnsavedChangesNewInstance(context = activity!!, listener = unsavedChangesDialogListener)
+                dialog.applyPaletteStyles(activity!!)
+                fragmentDelegate.showDialog(dialog)
                 true
             } else {
                 false

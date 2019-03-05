@@ -99,7 +99,7 @@ class BaseEngageFragmentDelegate(private val engageFragmentIm: BaseEngageFragmen
             }
         }
 
-        engageFragmentIm.getBaseFragmentDelegate().showDialog(infoDialogGenericSuccessTitleMessageNewInstance(view.context!!, listener = listener))
+        engageFragmentIm.getBaseFragmentDelegate().showDialog(infoDialogGenericSuccessTitleMessageNewInstance(view.context!!, listener = listener).apply { applyPaletteStyles(engageFragmentIm.getAndroidContext()) })
     }
 
     fun handleGenericThrowable(e: Throwable) {

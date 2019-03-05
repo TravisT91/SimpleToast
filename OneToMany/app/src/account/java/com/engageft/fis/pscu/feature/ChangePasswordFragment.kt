@@ -15,6 +15,7 @@ import com.engageft.apptoolbox.NavigationOverrideClickListener
 import com.engageft.apptoolbox.view.InformationDialogFragment
 import com.engageft.fis.pscu.R
 import com.engageft.fis.pscu.databinding.FragmentChangePasswordBinding
+import com.engageft.fis.pscu.feature.palettebindings.applyPaletteStyles
 
 /**
  * ChangePasswordFragment
@@ -36,7 +37,9 @@ class ChangePasswordFragment: BaseEngagePageFragment() {
     private val navigationOverrideClickListener = object : NavigationOverrideClickListener {
         override fun onClick(): Boolean {
             return if (changePasswordViewModel.hasUnsavedChanges()) {
-                fragmentDelegate.showDialog(infoDialogGenericUnsavedChangesNewInstance(context = activity!!, listener = unsavedChangesDialogListener))
+                val dialog = infoDialogGenericUnsavedChangesNewInstance(context = activity!!, listener = unsavedChangesDialogListener)
+                dialog.applyPaletteStyles(activity!!)
+                fragmentDelegate.showDialog(dialog)
                 true
             } else {
                 false

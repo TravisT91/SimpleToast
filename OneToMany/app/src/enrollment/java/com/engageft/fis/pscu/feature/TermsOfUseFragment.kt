@@ -11,6 +11,7 @@ import com.engageft.apptoolbox.view.InformationDialogFragment
 import com.engageft.fis.pscu.R
 import com.engageft.fis.pscu.databinding.FragmentTermsOfUseBinding
 import com.engageft.fis.pscu.feature.branding.Palette
+import com.engageft.fis.pscu.feature.palettebindings.applyPaletteStyles
 
 /**
  * TermsOfUseFragment
@@ -46,7 +47,7 @@ class TermsOfUseFragment : BaseEngagePageFragment() {
 
                             override fun onDialogCancelled() {}
 
-                        }))
+                        }).apply { applyPaletteStyles(context!!) })
             }
         }
         return binding.root

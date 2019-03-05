@@ -14,6 +14,7 @@ import com.engageft.fis.pscu.R
 import com.engageft.fis.pscu.databinding.FragmentCardFeatureNotAvailableBinding
 import com.engageft.fis.pscu.feature.branding.BrandingInfoRepo
 import com.engageft.fis.pscu.feature.branding.Palette
+import com.engageft.fis.pscu.feature.palettebindings.applyPaletteStyles
 import utilGen1.StringUtils
 
 /**
@@ -99,7 +100,8 @@ class CardFeatureNotAvailableFragment: BaseEngagePageFragment() {
                 } ?: run {
                     val e  = IllegalStateException("Support number is null.")
                     engageFragmentDelegate.handleGenericThrowable(e)
-                    fragmentDelegate.showDialog(infoDialogGenericErrorTitleMessageNewInstance(context!!))
+                    fragmentDelegate.showDialog(infoDialogGenericErrorTitleMessageNewInstance(context!!)
+                            .apply { applyPaletteStyles(context!!) })
                 }
             }
         }
