@@ -55,17 +55,6 @@ class AuthExpiredPasswordDialog : BaseAuthExpiredDialog() {
             }
         })
 
-        authExpiredViewModel.loginButtonStateObservable.observe(this, Observer { buttonState ->
-            when (buttonState) {
-                AuthExpiredViewModel.LoginButtonState.GONE -> {
-//                    binding.buttonSignIn.visibility = View.GONE
-                }
-                AuthExpiredViewModel.LoginButtonState.VISIBLE_ENABLED -> {
-//                    binding.buttonSignIn.visibility = View.VISIBLE
-                }
-            }
-        })
-
         binding.passwordInput.setImeOptions(EditorInfo.IME_ACTION_GO)
         binding.passwordInput.onImeAction(EditorInfo.IME_ACTION_GO) { authExpiredViewModel.onSignInClicked() }
 
