@@ -51,6 +51,7 @@
                 android:background="@drawable/shape_circle">
 
                 <androidx.appcompat.widget.AppCompatImageView
+                    AppCompatImageView.setPalette="@{true}"
                     android:id="@+id/imageViewIcon"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"

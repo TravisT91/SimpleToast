@@ -11,6 +11,8 @@ import com.engageft.apptoolbox.ToolbarVisibilityState
 import com.engageft.fis.pscu.databinding.FragmentAddSecondarySuccessBinding
 import com.engageft.fis.pscu.feature.BaseEngagePageFragment
 import com.engageft.fis.pscu.feature.branding.Palette
+import com.engageft.fis.pscu.feature.palettebindings.setPalette
+import kotlinx.android.synthetic.main.fragment_welcome1.view.imageViewIcon
 
 /**
  * Created by joeyhutchins on 2/7/19.
@@ -38,6 +40,7 @@ class AddSecondarySuccessFragment : BaseEngagePageFragment() {
             toolbarController.setToolbarVisibility(ToolbarVisibilityState.INVISIBLE)
             backButtonOverrideProvider.setBackButtonOverride(navigationOverrideClickListener)
             upButtonOverrideProvider.setUpButtonOverride(navigationOverrideClickListener)
+            imageViewLayout.imageViewIcon.setPalette(true)
 
             doneButton.setOnClickListener {
                 binding.root.findNavController().popBackStack()

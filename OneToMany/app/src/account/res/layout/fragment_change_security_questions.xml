@@ -44,6 +44,7 @@
                 <com.engageft.apptoolbox.view.BottomSheetListInputWithLabel
                     android:id="@+id/questionsList1"
                     style="@style/BottomSheetListInputWithLabelStyle"
+                    InputWithLabel.setThemeWithPalette="@{true}"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="16dp"
@@ -56,6 +57,7 @@
                 <com.engageft.apptoolbox.view.TextInputWithLabel
                     android:id="@+id/answer1"
                     style="@style/TextInputWithLabelStyle"
+                    InputWithLabel.setThemeWithPalette="@{true}"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="16dp"
@@ -79,6 +81,7 @@
                 <com.engageft.apptoolbox.view.BottomSheetListInputWithLabel
                     android:id="@+id/questionsList2"
                     style="@style/BottomSheetListInputWithLabelStyle"
+                    InputWithLabel.setThemeWithPalette="@{true}"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="16dp"
@@ -91,6 +94,7 @@
                 <com.engageft.apptoolbox.view.TextInputWithLabel
                     android:id="@+id/answer2"
                     style="@style/TextInputWithLabelStyle"
+                    InputWithLabel.setThemeWithPalette="@{true}"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="16dp"
@@ -105,6 +109,7 @@
 
             <com.engageft.apptoolbox.view.PillButton
                 android:id="@+id/saveButton"
+                PillButton.setThemeFilled="@{true}"
                 style="@style/ButtonPillPrimaryFilledDefault"
                 android:layout_gravity="center"
                 android:gravity="center"

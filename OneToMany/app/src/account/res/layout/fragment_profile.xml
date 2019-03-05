@@ -31,6 +31,7 @@
                 <com.engageft.apptoolbox.view.TextInputWithLabel
                     android:id="@+id/legalNameInput"
                     style="@style/TextInputWithLabelStyle"
+                    InputWithLabel.setThemeWithPalette="@{true}"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="20dp"
@@ -42,6 +43,7 @@
                 <com.engageft.apptoolbox.view.EmailInputWithLabel
                     android:id="@+id/emailAddressInput"
                     style="@style/TextInputWithLabelStyle"
+                    InputWithLabel.setThemeWithPalette="@{true}"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="20dp"
@@ -51,6 +53,7 @@
                 <com.engageft.apptoolbox.view.PhoneInputWithLabel
                     android:id="@+id/phoneNumberInput"
                     style="@style/TextInputWithLabelStyle"
+                    InputWithLabel.setThemeWithPalette="@{true}"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="20dp"
@@ -60,6 +63,7 @@
                 <com.engageft.apptoolbox.view.TextInputWithLabel
                     android:id="@+id/streetAddressInput"
                     style="@style/TextInputWithLabelStyle"
+                    InputWithLabel.setThemeWithPalette="@{true}"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="20dp"
@@ -70,6 +74,7 @@
                 <com.engageft.apptoolbox.view.TextInputWithLabel
                     android:id="@+id/aptSuiteInput"
                     style="@style/TextInputWithLabelStyle"
+                    InputWithLabel.setThemeWithPalette="@{true}"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="20dp"
@@ -80,6 +85,7 @@
                 <com.engageft.apptoolbox.view.TextInputWithLabel
                     android:id="@+id/cityInput"
                     style="@style/TextInputWithLabelStyle"
+                    InputWithLabel.setThemeWithPalette="@{true}"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="20dp"
@@ -90,6 +96,7 @@
                 <com.engageft.apptoolbox.view.BottomSheetListInputWithLabel
                     android:id="@+id/stateInput"
                     style="@style/BottomSheetListInputWithLabelStyle"
+                    InputWithLabel.setThemeWithPalette="@{true}"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="20dp"
@@ -102,6 +109,7 @@
                 <com.engageft.apptoolbox.view.ZipCodeInputWithLabel
                     android:id="@+id/zipcodeInput"
                     style="@style/TextInputWithLabelStyle"
+                    InputWithLabel.setThemeWithPalette="@{true}"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="20dp"
