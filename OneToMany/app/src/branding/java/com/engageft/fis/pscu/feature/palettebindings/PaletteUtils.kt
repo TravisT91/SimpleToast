@@ -3,6 +3,7 @@ package com.engageft.fis.pscu.feature.palettebindings
 import android.annotation.SuppressLint
 import android.content.Context
 import android.content.res.ColorStateList
+import android.graphics.Color
 import android.graphics.Typeface
 import androidx.annotation.ColorInt
 import com.airbnb.paris.styles.Style
@@ -21,6 +22,19 @@ fun getTextStateList(@ColorInt pressedColor : Int, @ColorInt disabledColor : Int
     val s = arrayOf(intArrayOf(android.R.attr.state_pressed), intArrayOf(-android.R.attr.state_enabled), intArrayOf(android.R.attr.state_enabled))
     val c = intArrayOf(pressedColor, disabledColor, enabledColor)
     return ColorStateList(s,c)
+}
+
+fun getColor40PercentBlacker(@ColorInt color: Int) : Int {
+    val alpha = Color.alpha(color)
+    val red = Color.red(color)
+    val green = Color.green(color)
+    val blue = Color.blue(color)
+
+    val darkerRed = (red.toFloat() * 0.6f).toInt()
+    val darkerGreen = (green.toFloat() * 0.6f).toInt()
+    val darkerBlue = (blue.toFloat() * 0.6f).toInt()
+
+    return Color.argb(alpha, darkerRed, darkerGreen, darkerBlue)
 }
 
 fun getInputStateList(@ColorInt focusedColor: Int, @ColorInt notFocused : Int, @ColorInt pressedColor: Int, @ColorInt disabledColor : Int, @ColorInt enabledColor: Int) : ColorStateList {

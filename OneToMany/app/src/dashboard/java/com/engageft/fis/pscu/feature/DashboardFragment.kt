@@ -34,6 +34,7 @@ import com.engageft.fis.pscu.feature.adapter.DashboardTransactionsAdapter
 import com.engageft.fis.pscu.feature.authentication.AuthenticationDialogFragment
 import com.engageft.fis.pscu.feature.onboarding.OnboardingDialogFragment
 import com.engageft.fis.pscu.feature.palettebindings.applyBranding
+import com.engageft.fis.pscu.feature.palettebindings.setPaletteForPrimaryLink
 import com.engageft.fis.pscu.feature.search.SearchDialogFragment
 import com.engageft.fis.pscu.feature.transactions.TransactionDetailsFragment.Companion.ARG_TRANSACTION_ID
 import com.engageft.fis.pscu.feature.transactions.adapter.TransactionListener
