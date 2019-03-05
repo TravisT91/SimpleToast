@@ -39,7 +39,8 @@ class GoalSingleTransferViewModel(val goalId: Long): BaseEngageViewModel() {
     enum class AmountErrorState {
         EMPTY,
         VALID,
-        INVALID,
+        EXCEEDS_REMAINING_GOAL,
+        EXCEEDS_REMAINING_BALANCE,
     }
     enum class TransferState {
         GOAL_COMPLETED,
@@ -116,7 +117,8 @@ class GoalSingleTransferViewModel(val goalId: Long): BaseEngageViewModel() {
             val transferAmount = getNonFormattedAmount(amount.get()!!)
 
             var shouldValid = false
-            if (amountValidationStateObservable.value == AmountErrorState.INVALID) {
+            if (amountValidationStateObservable.value == AmountErrorState.EXCEEDS_REMAINING_BALANCE
+                    || amountValidationStateObservable.value == AmountErrorState.EXCEEDS_REMAINING_GOAL) {
                 shouldValid = true
             }
 
@@ -259,15 +261,30 @@ class GoalSingleTransferViewModel(val goalId: Long): BaseEngageViewModel() {
             TransferType.GOAL -> amount.isLessThanOrEqualTo(goalInfo.fundAmount) && !amount.isZero()
             TransferType.SPENDING_BALANCE -> amount.isLessThanOrEqualTo(BigDecimal(debitCardInfo.currentBalance))
                     && !amount.isGreaterThan(goalFundAmountRemaining) && !amount.isZero()
-            else  -> false
+            else -> false
         }
     }
 
     private fun validateAmountBasedOnTransferType(transferAmount: BigDecimal) {
-        if (isAmountValid(transferAmount)) {
-            amountValidationStateObservable.value = AmountErrorState.VALID
-        } else {
-            amountValidationStateObservable.value = AmountErrorState.INVALID
+        when (fromSelectionType) {
+            TransferType.GOAL -> {
+                if (transferAmount.isGreaterThan(goalInfo.fundAmount)) {
+                    amountValidationStateObservable.value = AmountErrorState.EXCEEDS_REMAINING_GOAL
+                } else {
+                    amountValidationStateObservable.value = AmountErrorState.VALID
+                }
+            }
+            TransferType.SPENDING_BALANCE -> {
+                val goalFundAmountRemaining = goalInfo.amount - goalInfo.fundAmount
+                val balance = BigDecimal(debitCardInfo.currentBalance)
+                if (transferAmount.isGreaterThan(balance)) {
+                    amountValidationStateObservable.value = AmountErrorState.EXCEEDS_REMAINING_BALANCE
+                } else if (!transferAmount.isGreaterThan(balance) && transferAmount.isGreaterThan(goalFundAmountRemaining)) {
+                    amountValidationStateObservable.value = AmountErrorState.EXCEEDS_REMAINING_GOAL
+                } else {
+                    amountValidationStateObservable.value = AmountErrorState.VALID
+                }
+            }
         }
     }
 
