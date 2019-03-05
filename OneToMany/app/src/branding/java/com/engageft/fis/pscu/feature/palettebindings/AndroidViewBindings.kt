@@ -1,10 +1,13 @@
 package com.engageft.fis.pscu.feature.palettebindings
 
+import android.content.res.ColorStateList
 import android.widget.Button
 import android.widget.TextView
 import androidx.annotation.ColorInt
+import androidx.appcompat.widget.AppCompatImageView
 import androidx.appcompat.widget.SwitchCompat
 import androidx.core.content.ContextCompat
+import androidx.core.widget.ImageViewCompat
 import androidx.databinding.BindingAdapter
 import com.airbnb.paris.extensions.style
 import com.airbnb.paris.styles.Style
@@ -64,4 +67,11 @@ fun SwitchCompat.applyPaletteColors() {
             trackUncheckedColor = ContextCompat.getColor(context!!, R.color.structure2),
             thumbDisabledColor = ContextCompat.getColor(context!!, R.color.structure2),
             trackDisabledColor = ContextCompat.getColor(context!!, R.color.structure1))
+}
+
+@BindingAdapter("AppCompatImageView.setPalette")
+fun AppCompatImageView.setPalette(shouldApply: Boolean){
+    if (shouldApply) {
+        ImageViewCompat.setImageTintList(this, ColorStateList.valueOf(Palette.primaryColor))
+    }
 }
