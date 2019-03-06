@@ -7,6 +7,8 @@ import androidx.recyclerview.widget.RecyclerView
 import com.engageft.apptoolbox.view.PillButton
 import com.engageft.feature.budgets.extension.isZero
 import com.engageft.fis.pscu.R
+import com.engageft.fis.pscu.feature.branding.Palette
+import com.engageft.fis.pscu.feature.palettebindings.setThemeFilled
 import io.github.luizgrp.sectionedrecyclerviewadapter.SectionParameters
 import io.github.luizgrp.sectionedrecyclerviewadapter.StatelessSection
 import utilGen1.StringUtils
@@ -32,11 +34,13 @@ class GoalDetailCompleteHeaderSection(private val context: Context,
                         showZeroDigits = true
                 ))
 
+                setProgressColor(Palette.successColor)
                 setProgress(100)
                 showInnerBottomText(false)
                 setOuterBottomText(this@GoalDetailCompleteHeaderSection.context.getString(R.string.GOALS_COMPLETE))
                 setOuterBottomTextColor(ContextCompat.getColor(this@GoalDetailCompleteHeaderSection.context, R.color.structure6))
             }
+            transferBalanceButton.setThemeFilled(true)
 
             // if goal is completed but money has been transferred back to account, hide transfer button
             if (fundAmount.isZero()) {

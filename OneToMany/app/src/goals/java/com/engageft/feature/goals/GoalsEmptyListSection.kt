@@ -33,6 +33,7 @@ class GoalsEmptyListSection(val context: Context) : StatelessSection(SectionPara
         )
 
         viewHolder.imageView.setImageDrawable(ContextCompat.getDrawable(context, R.drawable.ic_goals))
+        viewHolder.imageView.findViewById<AppCompatImageView>(R.id.imageViewIcon).setPalette(true)
         viewHolder.imageView.setPalette(true)
     }
 

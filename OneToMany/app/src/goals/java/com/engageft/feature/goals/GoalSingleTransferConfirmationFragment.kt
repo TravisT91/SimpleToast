@@ -5,6 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
+import androidx.appcompat.widget.AppCompatImageView
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.navigation.findNavController
@@ -20,6 +21,7 @@ import com.engageft.fis.pscu.databinding.FragmentGoalSingleTransferConfirmationB
 import com.engageft.fis.pscu.feature.BaseEngagePageFragment
 import com.engageft.fis.pscu.feature.branding.Palette
 import com.engageft.fis.pscu.feature.newInfoDialogStackedInstance
+import com.engageft.fis.pscu.feature.palettebindings.setPalette
 import utilGen1.StringUtils
 import java.math.BigDecimal
 
@@ -44,6 +46,7 @@ class GoalSingleTransferConfirmationFragment: BaseEngagePageFragment() {
             palette = Palette
 
             imageViewLayout.findViewById<ImageView>(R.id.imageViewIcon).setImageResource(R.drawable.ic_transfer)
+            imageViewLayout.findViewById<AppCompatImageView>(R.id.imageViewIcon).setPalette(true)
             subHeaderTextView.text = StringUtils.formatCurrencyStringFractionDigitsReducedHeight(viewModelConfirmation.transferAmount.toFloat(), GoalConstants.FREQUENCY_SUBSTRING_RELATIVE_HEIGHT, true)
 
             viewModelConfirmation.apply {

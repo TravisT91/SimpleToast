@@ -5,6 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
+import androidx.appcompat.widget.AppCompatImageView
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.navigation.findNavController
@@ -17,6 +18,7 @@ import com.engageft.fis.pscu.R
 import com.engageft.fis.pscu.databinding.FragmentGoalEditConfirmationBinding
 import com.engageft.fis.pscu.feature.BaseEngagePageFragment
 import com.engageft.fis.pscu.feature.branding.Palette
+import com.engageft.fis.pscu.feature.palettebindings.setPalette
 import utilGen1.DisplayDateTimeUtils
 import utilGen1.PayPlanUtils
 import utilGen1.StringUtils
@@ -41,6 +43,8 @@ class GoalEditConfirmationFragment: BaseEngagePageFragment() {
             cancelButton.setOnClickListener {
                 root.findNavController().popBackStack()
             }
+
+            imageViewLayout.findViewById<AppCompatImageView>(R.id.imageViewIcon).setPalette(true)
         }
 
         confirmationViewModel.addEditSuccessObservable.observe(viewLifecycleOwner, Observer {
