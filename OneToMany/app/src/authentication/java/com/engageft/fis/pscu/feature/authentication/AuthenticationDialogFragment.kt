@@ -24,8 +24,7 @@ import com.engageft.feature.PaletteBindings.setThemeWithPalette
 import com.engageft.fis.pscu.R
 import com.engageft.fis.pscu.feature.BaseEngageDialogFragment
 import com.engageft.fis.pscu.feature.branding.Palette
-import com.engageft.fis.pscu.feature.palettebindings.getColor40PercentBlacker
-import com.engageft.fis.pscu.feature.palettebindings.getTextStateList
+import com.engageft.fis.pscu.feature.palettebindings.getButtonColorStateList
 
 /**
  * AuthenticationDialogFragment
@@ -210,25 +209,13 @@ class AuthenticationDialogFragment : BaseEngageDialogFragment() {
         if (messageTextColor != NOT_SET) messageTextView.setTextColor(messageTextColor)
         if (errorTextColor != NOT_SET) errorTextView.setTextColor(errorTextColor)
         positiveButtonTextColor?.let { buttonPositive.setTextColor(positiveButtonTextColor) } ?: kotlin.run {
-            buttonPositive.setTextColor(getTextStateList(
-                    disabledColor = ContextCompat.getColor(this.context!!, com.engageft.apptoolbox.R.color.structure4),
-                    enabledColor = Palette.primaryColor,
-                    pressedColor = getColor40PercentBlacker(Palette.primaryColor)
-            ))
+            buttonPositive.setTextColor(getButtonColorStateList(this.context!!, Palette.primaryColor))
         }
         neutralButtonTextColor?.let { buttonNeutral.setTextColor(neutralButtonTextColor) } ?: kotlin.run {
-            buttonNeutral.setTextColor(getTextStateList(
-                    disabledColor = ContextCompat.getColor(this.context!!, com.engageft.apptoolbox.R.color.structure4),
-                    enabledColor = Palette.primaryColor,
-                    pressedColor = getColor40PercentBlacker(Palette.primaryColor)
-            ))
+            buttonNeutral.setTextColor(getButtonColorStateList(this.context!!, Palette.primaryColor))
         }
         negativeButtonTextColor?.let { buttonNegative.setTextColor(negativeButtonTextColor) } ?: kotlin.run {
-            buttonNegative.setTextColor(getTextStateList(
-                    disabledColor = ContextCompat.getColor(this.context!!, com.engageft.apptoolbox.R.color.structure4),
-                    enabledColor = Palette.primaryColor,
-                    pressedColor = getColor40PercentBlacker(Palette.primaryColor)
-            ))
+            buttonNegative.setTextColor(getButtonColorStateList(this.context!!, Palette.primaryColor))
         }
     }
 

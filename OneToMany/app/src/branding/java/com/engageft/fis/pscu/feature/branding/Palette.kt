@@ -401,7 +401,8 @@ object Palette {
                     BrandingColorType.WARNING -> warningColor = 0xFF673AB7.toInt()
                     BrandingColorType.ERROR -> errorColor = 0xFFFFEB3B.toInt()
                     BrandingColorType.INFO -> infoColor = 0xFFE91E63.toInt()
-                    BrandingColorType.PRIMARY -> primaryColor = 0xFF4CAF50.toInt()
+//                    BrandingColorType.PRIMARY -> primaryColor = 0xFF4CAF50.toInt()
+                    BrandingColorType.PRIMARY -> primaryColor = 0xFFFF0000.toInt()
                     BrandingColorType.SECONDARY -> secondaryColor = 0xFF84FFFF.toInt()
                 }
             }

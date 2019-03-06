@@ -6,6 +6,7 @@ import android.content.res.ColorStateList
 import android.graphics.Color
 import android.graphics.Typeface
 import androidx.annotation.ColorInt
+import androidx.core.content.ContextCompat
 import com.airbnb.paris.styles.Style
 import com.engageft.apptoolbox.R
 
@@ -21,7 +22,13 @@ import com.engageft.apptoolbox.R
 fun getTextStateList(@ColorInt pressedColor : Int, @ColorInt disabledColor : Int, @ColorInt enabledColor: Int) : ColorStateList {
     val s = arrayOf(intArrayOf(android.R.attr.state_pressed), intArrayOf(-android.R.attr.state_enabled), intArrayOf(android.R.attr.state_enabled))
     val c = intArrayOf(pressedColor, disabledColor, enabledColor)
-    return ColorStateList(s,c)
+    return ColorStateList(s, c)
+}
+
+fun getButtonColorStateList(context: Context, @ColorInt buttonColor: Int) : ColorStateList {
+    val s = arrayOf(intArrayOf(android.R.attr.state_pressed), intArrayOf(-android.R.attr.state_enabled), intArrayOf(android.R.attr.state_enabled))
+    val c = intArrayOf(getColor40PercentBlacker(buttonColor), ContextCompat.getColor(context, com.engageft.apptoolbox.R.color.structure4), buttonColor)
+    return ColorStateList(s, c)
 }
 
 fun getColor40PercentBlacker(@ColorInt color: Int) : Int {
@@ -37,7 +44,7 @@ fun getColor40PercentBlacker(@ColorInt color: Int) : Int {
     return Color.argb(alpha, darkerRed, darkerGreen, darkerBlue)
 }
 
-fun getInputStateList(@ColorInt focusedColor: Int, @ColorInt notFocused : Int, @ColorInt pressedColor: Int, @ColorInt disabledColor : Int, @ColorInt enabledColor: Int) : ColorStateList {
+fun getInputLabelColorStateList(@ColorInt focusedColor: Int, @ColorInt notFocused : Int, @ColorInt pressedColor: Int, @ColorInt disabledColor : Int, @ColorInt enabledColor: Int) : ColorStateList {
     val s = arrayOf(
             intArrayOf(android.R.attr.state_focused),
             intArrayOf(-android.R.attr.state_focused),
@@ -46,6 +53,17 @@ fun getInputStateList(@ColorInt focusedColor: Int, @ColorInt notFocused : Int, @
             intArrayOf(android.R.attr.state_enabled))
 
     val c = intArrayOf(focusedColor, notFocused, pressedColor, disabledColor, enabledColor)
+    return ColorStateList(s,c)
+}
+
+fun getInputLineColorStateList(@ColorInt focusedColor: Int, @ColorInt pressedColor: Int, @ColorInt disabledColor : Int, @ColorInt enabledColor: Int) : ColorStateList {
+    val s = arrayOf(
+            intArrayOf(android.R.attr.state_focused),
+            intArrayOf(android.R.attr.state_pressed),
+            intArrayOf(-android.R.attr.state_enabled),
+            intArrayOf(android.R.attr.state_enabled))
+
+    val c = intArrayOf(focusedColor, pressedColor, disabledColor, enabledColor)
     return ColorStateList(s,c)
 }
 

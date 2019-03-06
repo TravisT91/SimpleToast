@@ -5,8 +5,8 @@ import androidx.databinding.BindingAdapter
 import com.engageft.apptoolbox.view.BaseInputWithLabel
 import com.engageft.fis.pscu.R
 import com.engageft.fis.pscu.feature.branding.Palette
-import com.engageft.fis.pscu.feature.palettebindings.getColor40PercentBlacker
-import com.engageft.fis.pscu.feature.palettebindings.getInputStateList
+import com.engageft.fis.pscu.feature.palettebindings.getInputLabelColorStateList
+import com.engageft.fis.pscu.feature.palettebindings.getInputLineColorStateList
 import com.engageft.fis.pscu.feature.palettebindings.getTextStateList
 
 
@@ -24,14 +24,13 @@ fun BaseInputWithLabel.setThemeWithPalette(shouldTheme: Boolean){
     if (shouldTheme) {
 
         setLineTint(
-                getInputStateList(
+                getInputLineColorStateList(
                         enabledColor = ContextCompat.getColor(context, R.color.structure3),
                         disabledColor = ContextCompat.getColor(context, R.color.structure3),
                         pressedColor = Palette.primaryColor,
-                        focusedColor = Palette.primaryColor,
-                        notFocused = getColor40PercentBlacker(Palette.primaryColor)))
+                        focusedColor = Palette.primaryColor))
 
-        labelTextColor = getInputStateList(
+        labelTextColor = getInputLabelColorStateList(
                         enabledColor = ContextCompat.getColor(context, R.color.structure5),
                         disabledColor = ContextCompat.getColor(context, R.color.structure4),
                         pressedColor = Palette.primaryColor,

@@ -50,7 +50,7 @@ fun Button.shouldApplyPaletteColors(shouldApply: Boolean) {
 }
 fun Button.applyPaletteColors() {
     // TODO(jhutchins): Palette should provide click states.
-    this.setTextColor(getTextStateList(Palette.primaryColor, Palette.primaryColor, Palette.primaryColor))
+    this.setTextColor(getButtonColorStateList(context!!, Palette.primaryColor))
 }
 
 @BindingAdapter("SwitchCompat.applyPaletteColors")
@@ -80,10 +80,6 @@ fun AppCompatImageView.setPalette(shouldApply: Boolean){
 @BindingAdapter("AppCompatButton.setPaletteForPrimaryLink")
 fun AppCompatButton.setPaletteForPrimaryLink(shouldApply: Boolean){
     if (shouldApply) {
-        this.setTextColor(getTextStateList(
-            disabledColor = ContextCompat.getColor(this.context, com.engageft.apptoolbox.R.color.structure4),
-            enabledColor = Palette.primaryColor,
-            pressedColor = getColor40PercentBlacker(Palette.primaryColor)
-        ))
+        this.setTextColor(getButtonColorStateList(context!!, Palette.primaryColor))
     }
 }
