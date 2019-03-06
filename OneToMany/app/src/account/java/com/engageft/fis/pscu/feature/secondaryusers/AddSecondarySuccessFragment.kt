@@ -4,15 +4,16 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.appcompat.widget.AppCompatImageView
 import androidx.navigation.findNavController
 import com.engageft.apptoolbox.BaseViewModel
 import com.engageft.apptoolbox.NavigationOverrideClickListener
 import com.engageft.apptoolbox.ToolbarVisibilityState
+import com.engageft.fis.pscu.R
 import com.engageft.fis.pscu.databinding.FragmentAddSecondarySuccessBinding
 import com.engageft.fis.pscu.feature.BaseEngagePageFragment
 import com.engageft.fis.pscu.feature.branding.Palette
 import com.engageft.fis.pscu.feature.palettebindings.setPalette
-import kotlinx.android.synthetic.main.fragment_welcome1.view.imageViewIcon
 
 /**
  * Created by joeyhutchins on 2/7/19.
@@ -40,7 +41,8 @@ class AddSecondarySuccessFragment : BaseEngagePageFragment() {
             toolbarController.setToolbarVisibility(ToolbarVisibilityState.INVISIBLE)
             backButtonOverrideProvider.setBackButtonOverride(navigationOverrideClickListener)
             upButtonOverrideProvider.setUpButtonOverride(navigationOverrideClickListener)
-            imageViewLayout.imageViewIcon.setPalette(true)
+            val icon = imageViewLayout.findViewById<AppCompatImageView>(R.id.imageViewIcon)
+            icon.setPalette(true)
 
             doneButton.setOnClickListener {
                 binding.root.findNavController().popBackStack()
