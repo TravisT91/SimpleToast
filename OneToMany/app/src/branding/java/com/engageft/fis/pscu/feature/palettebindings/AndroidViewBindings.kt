@@ -1,6 +1,7 @@
 package com.engageft.fis.pscu.feature.palettebindings
 
 import android.content.res.ColorStateList
+import android.util.Log
 import android.widget.Button
 import android.widget.TextView
 import androidx.annotation.ColorInt
@@ -15,6 +16,7 @@ import com.airbnb.paris.styles.Style
 import com.engageft.fis.pscu.R
 import com.engageft.fis.pscu.feature.branding.Palette
 import com.engageft.fis.pscu.feature.utils.lighten
+import com.google.android.material.tabs.TabLayout
 
 /**
  * com.engageft.fis.pscu.feature.AndroidViewBindings
@@ -81,5 +83,14 @@ fun AppCompatImageView.setPalette(shouldApply: Boolean){
 fun AppCompatButton.setPaletteForPrimaryLink(shouldApply: Boolean){
     if (shouldApply) {
         this.setTextColor(getButtonColorStateList(context!!, Palette.primaryColor))
+    }
+}
+
+@BindingAdapter("TabLayout.setPalette")
+fun TabLayout.setPalette(shouldApply: Boolean){
+    Log.e("Joey", "setPalette")
+    if (shouldApply) {
+        this.setSelectedTabIndicatorColor(Palette.primaryColor)
+        this.setTabTextColors(ContextCompat.getColor(context, R.color.structure6), Palette.primaryColor)
     }
 }

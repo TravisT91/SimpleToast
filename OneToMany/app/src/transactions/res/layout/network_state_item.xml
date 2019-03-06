@@ -30,7 +30,8 @@
         tools:visibility="visible" />
     <ProgressBar
         android:id="@+id/progress_bar"
-        style="?android:attr/progressBarStyle"
+        android:indeterminateDrawable="@drawable/progress_indeterminate_background_lotus"
+        android:indeterminateTint="@color/info"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="center"/>

@@ -16,6 +16,7 @@
 
 package com.engageft.fis.pscu.feature.transactions.adapter
 
+import android.content.res.ColorStateList
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -26,6 +27,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.engageft.engagekit.repository.util.NetworkState
 import com.engageft.engagekit.repository.util.NetworkTaskStatus
 import com.engageft.fis.pscu.R
+import com.engageft.fis.pscu.feature.branding.Palette
 
 /**
  * A View Holder that can display a loading or have click action.
@@ -44,6 +46,7 @@ class NetworkStateItemViewHolder(view: View, retryCallback: (() -> Unit)?)
         }
     }
     fun bindTo(networkState: NetworkState?) {
+        progressBar.indeterminateTintList = ColorStateList.valueOf(Palette.infoColor)
         progressBar.visibility = toVisibility(networkState?.status == NetworkTaskStatus.RUNNING)
         errorMsg.visibility = toVisibility(networkState?.status == NetworkTaskStatus.FAILED)
         retry.visibility = toVisibility(networkState?.status == NetworkTaskStatus.FAILED)
