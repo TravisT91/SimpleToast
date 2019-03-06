@@ -6,7 +6,6 @@ import com.engageft.apptoolbox.view.BaseInputWithLabel
 import com.engageft.fis.pscu.R
 import com.engageft.fis.pscu.feature.branding.Palette
 import com.engageft.fis.pscu.feature.palettebindings.getInputStateList
-import com.engageft.fis.pscu.feature.palettebindings.getTextSizeAndTypefaceFromParisStyle
 import com.engageft.fis.pscu.feature.palettebindings.getTextStateList
 
 
@@ -31,11 +30,6 @@ fun BaseInputWithLabel.setThemeWithPalette(shouldTheme: Boolean){
                         focusedColor = Palette.primaryColor,
                         notFocused = ContextCompat.getColor(context, R.color.structure3)))
 
-        getTextSizeAndTypefaceFromParisStyle(context, Palette.Caption1).let{
-            errorTypeface = it.second
-            errorTextSize = it.first
-        }
-
         labelTextColor = getInputStateList(
                         enabledColor = ContextCompat.getColor(context, R.color.structure5),
                         disabledColor = ContextCompat.getColor(context, R.color.structure4),
@@ -49,6 +43,6 @@ fun BaseInputWithLabel.setThemeWithPalette(shouldTheme: Boolean){
                         disabledColor = ContextCompat.getColor(context, R.color.structure4),
                         enabledColor = ContextCompat.getColor(context, R.color.structure6)))
 
-        setInputAndLabelTypeface(getTextSizeAndTypefaceFromParisStyle(context, Palette.Body).second!!)
+        errorTextColor = Palette.errorColor
     }
 }
