@@ -27,7 +27,6 @@ import com.engageft.fis.pscu.feature.BaseEngagePageFragment
 import com.engageft.fis.pscu.feature.adapter.ErrorStateSection
 import com.engageft.fis.pscu.feature.branding.Palette
 import com.engageft.fis.pscu.feature.infoDialogYesNoNewInstance
-import com.engageft.fis.pscu.feature.palettebindings.applyPaletteStyles
 import com.engageft.fis.pscu.feature.recyclerview.toggleablelabel.ToggleableLabelSection
 import io.github.luizgrp.sectionedrecyclerviewadapter.SectionedRecyclerViewAdapter
 
@@ -209,7 +208,7 @@ class GoalDetailFragment: BaseEngagePageFragment() {
                         updateRecyclerView(viewModelGoalDetail.goalDetailStatesListObservable.value!!)
                     }
 
-                }).apply { applyPaletteStyles(context!!) })
+                }))
     }
 
     private fun onDeleteGoal() {
@@ -229,7 +228,7 @@ class GoalDetailFragment: BaseEngagePageFragment() {
 
                         override fun onDialogCancelled() {}
 
-                    }).apply { applyPaletteStyles(context!!) })
+                    }))
         } else {
             binding.root.findNavController().navigate(R.id.action_goalDetailScreenFragment_to_goalDeleteFragment,
                     Bundle().apply {

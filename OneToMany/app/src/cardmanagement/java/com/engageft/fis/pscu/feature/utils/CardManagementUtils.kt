@@ -4,7 +4,6 @@ import android.content.Context
 import com.engageft.apptoolbox.view.InformationDialogFragment
 import com.engageft.fis.pscu.R
 import com.engageft.fis.pscu.feature.infoDialogYesNoNewInstance
-import com.engageft.fis.pscu.feature.palettebindings.applyPaletteStyles
 
 fun informationDialogAlertConfirmation(context: Context, title: String, message: String, onPositiveButtonClicked: () -> Unit) : InformationDialogFragment {
     val completeMessage = message + "\n" + context.getString(R.string.alert_continue_confirmation_message)
@@ -19,5 +18,5 @@ fun informationDialogAlertConfirmation(context: Context, title: String, message:
 
                 override fun onDialogCancelled() {}
 
-            }).apply { applyPaletteStyles(context) }
+            })
 }

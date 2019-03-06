@@ -20,7 +20,6 @@ import com.engageft.fis.pscu.databinding.FragmentAddSecondaryUserBinding
 import com.engageft.fis.pscu.feature.BaseEngagePageFragment
 import com.engageft.fis.pscu.feature.branding.Palette
 import com.engageft.fis.pscu.feature.infoDialogGenericUnsavedChangesNewInstance
-import com.engageft.fis.pscu.feature.palettebindings.applyPaletteStyles
 import com.redmadrobot.inputmask.MaskedTextChangedListener
 
 /**
@@ -34,9 +33,7 @@ class AddSecondaryUserFragment : BaseEngagePageFragment() {
     private val navigationOverrideClickListener = object : NavigationOverrideClickListener {
         override fun onClick(): Boolean {
             return if (addSecondaryViewModel.hasUnsavedChanges()) {
-                val dialog = infoDialogGenericUnsavedChangesNewInstance(context = activity!!, listener = unsavedChangesDialogListener)
-                dialog.applyPaletteStyles(activity!!)
-                fragmentDelegate.showDialog(dialog)
+                fragmentDelegate.showDialog(infoDialogGenericUnsavedChangesNewInstance(context = activity!!, listener = unsavedChangesDialogListener))
                 true
             } else {
                 false

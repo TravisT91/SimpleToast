@@ -23,7 +23,6 @@ import com.engageft.fis.pscu.R
 import com.engageft.fis.pscu.databinding.FragmentCardPinBinding
 import com.engageft.fis.pscu.feature.branding.Palette
 import com.engageft.fis.pscu.feature.palettebindings.applyBranding
-import com.engageft.fis.pscu.feature.palettebindings.applyPaletteStyles
 import com.engageft.fis.pscu.feature.utils.CardStatusUtils
 import com.ob.domain.lookup.branding.BrandingCard
 
@@ -170,7 +169,7 @@ class CardPinFragment : BaseEngagePageFragment() {
                             }
                         }
 
-                        fragmentDelegate.showDialog(infoDialogGenericSuccessTitleMessageNewInstance(context!!, listener = listener).apply { applyPaletteStyles(context!!) })
+                        fragmentDelegate.showDialog(infoDialogGenericSuccessTitleMessageNewInstance(context!!, listener = listener))
                     }
                     else -> {}
                 }

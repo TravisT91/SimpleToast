@@ -14,7 +14,6 @@ import androidx.navigation.findNavController
 import androidx.navigation.fragment.findNavController
 import com.engageft.apptoolbox.BaseViewModel
 import com.engageft.apptoolbox.NavigationOverrideClickListener
-import com.engageft.apptoolbox.ViewUtils.newLotusInstance
 import com.engageft.apptoolbox.view.InformationDialogFragment
 import com.engageft.feature.goals.utils.GoalConstants
 import com.engageft.feature.goals.utils.GoalConstants.GOAL_ID_KEY
@@ -27,7 +26,7 @@ import com.engageft.fis.pscu.feature.BaseEngagePageFragment
 import com.engageft.fis.pscu.feature.DialogInfo
 import com.engageft.fis.pscu.feature.branding.Palette
 import com.engageft.fis.pscu.feature.infoDialogGenericUnsavedChangesNewInstance
-import com.engageft.fis.pscu.feature.palettebindings.applyPaletteStyles
+import com.engageft.fis.pscu.feature.newInfoDialogInstance
 
 class GoalSingleTransferFragment: BaseEngagePageFragment() {
 
@@ -49,9 +48,7 @@ class GoalSingleTransferFragment: BaseEngagePageFragment() {
     private val navigationOverrideClickListener = object : NavigationOverrideClickListener {
         override fun onClick(): Boolean {
             return if (viewModelTransfer.hasUnsavedChanges()) {
-                val dialog = infoDialogGenericUnsavedChangesNewInstance(context = activity!!, listener = unsavedChangesDialogListener)
-                dialog.applyPaletteStyles(activity!!)
-                fragmentDelegate.showDialog(dialog)
+                fragmentDelegate.showDialog(infoDialogGenericUnsavedChangesNewInstance(context = activity!!, listener = unsavedChangesDialogListener))
                 true
             } else {
                 false
@@ -135,7 +132,7 @@ class GoalSingleTransferFragment: BaseEngagePageFragment() {
 
                 dialogInfoObservable.observe(viewLifecycleOwner, Observer {
                     if (it.dialogType == DialogInfo.DialogType.OTHER) {
-                        fragmentDelegate.showDialog(InformationDialogFragment.newLotusInstance(
+                        fragmentDelegate.showDialog(newInfoDialogInstance(context!!,
                                 message = getString(R.string.GOAL_SINGLE_TRANSFER_INSUFFICIENT_FUNDS_MESSAGE),
                                 buttonPositiveText = getString(R.string.dialog_information_ok_button),
                                 listener = object : InformationDialogFragment.InformationDialogFragmentListener {

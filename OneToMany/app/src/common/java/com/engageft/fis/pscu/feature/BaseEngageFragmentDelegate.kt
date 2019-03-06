@@ -13,7 +13,6 @@ import com.engageft.apptoolbox.BaseFragmentDelegate
 import com.engageft.apptoolbox.view.InformationDialogFragment
 import com.engageft.fis.pscu.R
 import com.engageft.fis.pscu.config.EngageAppConfig
-import com.engageft.fis.pscu.feature.palettebindings.applyPaletteStyles
 
 /**
  * BaseEngageFragmentDelegate
@@ -35,32 +34,27 @@ class BaseEngageFragmentDelegate(private val engageFragmentIm: BaseEngageFragmen
                             DialogInfo.DialogType.GENERIC_ERROR -> {
                                 engageFragmentIm.getBaseFragmentDelegate().showDialog(infoDialogGenericErrorTitleMessageConditionalNewInstance(
                                         engageFragmentIm.getAndroidContext(),
-                                        dialogInfo)
-                                        .apply { applyPaletteStyles(engageFragmentIm.getAndroidContext()) })
+                                        dialogInfo))
                             }
                             DialogInfo.DialogType.SERVER_ERROR -> {
                                 engageFragmentIm.getBaseFragmentDelegate().showDialog(infoDialogGenericErrorTitleMessageConditionalNewInstance(
                                         engageFragmentIm.getAndroidContext(),
-                                        dialogInfo)
-                                        .apply { applyPaletteStyles(engageFragmentIm.getAndroidContext()) })
+                                        dialogInfo))
                             }
                             DialogInfo.DialogType.NO_INTERNET_CONNECTION -> {
                                 engageFragmentIm.getBaseFragmentDelegate().showDialog(infoDialogGenericErrorTitleMessageNewInstance(
                                         engageFragmentIm.getAndroidContext(),
-                                        message = engageFragmentIm.getAndroidContext().getString(R.string.alert_error_message_no_internet_connection))
-                                        .apply { applyPaletteStyles(engageFragmentIm.getAndroidContext()) })
+                                        message = engageFragmentIm.getAndroidContext().getString(R.string.alert_error_message_no_internet_connection)))
                             }
                             DialogInfo.DialogType.UNKNOWN_HOST -> {
                                 engageFragmentIm.getBaseFragmentDelegate().showDialog(infoDialogGenericErrorTitleMessageNewInstance(
                                         engageFragmentIm.getAndroidContext(),
-                                        message = engageFragmentIm.getAndroidContext().getString(R.string.alert_error_message_unknown_host))
-                                        .apply { applyPaletteStyles(engageFragmentIm.getAndroidContext()) })
+                                        message = engageFragmentIm.getAndroidContext().getString(R.string.alert_error_message_unknown_host)))
                             }
                             DialogInfo.DialogType.CONNECTION_TIMEOUT -> {
                                 engageFragmentIm.getBaseFragmentDelegate().showDialog(infoDialogGenericErrorTitleMessageNewInstance(
                                         engageFragmentIm.getAndroidContext(),
-                                        engageFragmentIm.getAndroidContext().getString(R.string.alert_error_message_connection_timeout))
-                                        .apply { applyPaletteStyles(engageFragmentIm.getAndroidContext()) })
+                                        engageFragmentIm.getAndroidContext().getString(R.string.alert_error_message_connection_timeout)))
                             }
                             DialogInfo.DialogType.OTHER -> {
                                 // Do nothing
@@ -99,7 +93,7 @@ class BaseEngageFragmentDelegate(private val engageFragmentIm: BaseEngageFragmen
             }
         }
 
-        engageFragmentIm.getBaseFragmentDelegate().showDialog(infoDialogGenericSuccessTitleMessageNewInstance(view.context!!, listener = listener).apply { applyPaletteStyles(engageFragmentIm.getAndroidContext()) })
+        engageFragmentIm.getBaseFragmentDelegate().showDialog(infoDialogGenericSuccessTitleMessageNewInstance(view.context!!, listener = listener))
     }
 
     fun handleGenericThrowable(e: Throwable) {
