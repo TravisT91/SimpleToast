@@ -4,6 +4,7 @@ import android.content.res.ColorStateList
 import android.widget.Button
 import android.widget.TextView
 import androidx.annotation.ColorInt
+import androidx.appcompat.widget.AppCompatButton
 import androidx.appcompat.widget.AppCompatImageView
 import androidx.appcompat.widget.SwitchCompat
 import androidx.core.content.ContextCompat
@@ -49,7 +50,7 @@ fun Button.shouldApplyPaletteColors(shouldApply: Boolean) {
 }
 fun Button.applyPaletteColors() {
     // TODO(jhutchins): Palette should provide click states.
-    this.setTextColor(getTextStateList(Palette.primaryColor, Palette.primaryColor, Palette.primaryColor))
+    this.setTextColor(getButtonColorStateList(context!!, Palette.primaryColor))
 }
 
 @BindingAdapter("SwitchCompat.applyPaletteColors")
@@ -73,5 +74,12 @@ fun SwitchCompat.applyPaletteColors() {
 fun AppCompatImageView.setPalette(shouldApply: Boolean){
     if (shouldApply) {
         ImageViewCompat.setImageTintList(this, ColorStateList.valueOf(Palette.primaryColor))
+    }
+}
+
+@BindingAdapter("AppCompatButton.setPaletteForPrimaryLink")
+fun AppCompatButton.setPaletteForPrimaryLink(shouldApply: Boolean){
+    if (shouldApply) {
+        this.setTextColor(getButtonColorStateList(context!!, Palette.primaryColor))
     }
 }
