@@ -10,32 +10,76 @@ import com.airbnb.paris.extensions.textSizeDp
 import com.airbnb.paris.extensions.textViewStyle
 import com.engageft.apptoolbox.R
 import com.engageft.fis.pscu.OneToManyApplication
+import com.engageft.fis.pscu.config.EngageAppConfig
 import com.ob.domain.lookup.branding.BrandingColorType
 import com.ob.domain.lookup.branding.BrandingInfo
 
-
 object Palette {
+    var useMockBranding = false
+
     private const val NOT_SET = 0
 
     //COLORS
     @ColorInt
     var primaryColor: Int = NOT_SET
         private set
+        get() {
+            return if (EngageAppConfig.isTestBuild && useMockBranding) {
+                0xFF4CAF50.toInt()
+            } else {
+                field
+            }
+        }
     @ColorInt
     var secondaryColor: Int = NOT_SET
         private set
+        get() {
+            return if (EngageAppConfig.isTestBuild && useMockBranding) {
+                0xFF84FFFF.toInt()
+            } else {
+                field
+            }
+        }
     @ColorInt
     var successColor: Int = NOT_SET
         private set
+        get() {
+            return if (EngageAppConfig.isTestBuild && useMockBranding) {
+                0xFF00BCD4.toInt()
+            } else {
+                field
+            }
+        }
     @ColorInt
     var warningColor: Int = NOT_SET
         private set
+        get() {
+            return if (EngageAppConfig.isTestBuild && useMockBranding) {
+                0xFF673AB7.toInt()
+            } else {
+                field
+            }
+        }
     @ColorInt
     var errorColor: Int = NOT_SET
         private set
+        get() {
+            return if (EngageAppConfig.isTestBuild && useMockBranding) {
+                0xFFFFEB3B.toInt()
+            } else {
+                field
+            }
+        }
     @ColorInt
     var infoColor: Int = NOT_SET
         private set
+        get() {
+            return if (EngageAppConfig.isTestBuild && useMockBranding) {
+                0xFFE91E63.toInt()
+            } else {
+                field
+            }
+        }
 
     enum class FontType(val fontName: String){
         ARIAL("Arial")
@@ -389,21 +433,12 @@ object Palette {
             this.forEach {
                 val color = Color.parseColor(it.value)
                 when(it.key){
-//                    BrandingColorType.SUCCESS -> successColor = color
-//                    BrandingColorType.WARNING -> warningColor = color
-//                    BrandingColorType.ERROR -> errorColor = color
-//                    BrandingColorType.INFO -> infoColor = color
-//                    BrandingColorType.PRIMARY -> primaryColor = color
-//                    BrandingColorType.SECONDARY -> secondaryColor = color
-
-                    // TODO(jhutchins): Remove this test overrides
-                    BrandingColorType.SUCCESS -> successColor = 0xFF00BCD4.toInt()
-                    BrandingColorType.WARNING -> warningColor = 0xFF673AB7.toInt()
-                    BrandingColorType.ERROR -> errorColor = 0xFFFFEB3B.toInt()
-                    BrandingColorType.INFO -> infoColor = 0xFFE91E63.toInt()
-//                    BrandingColorType.PRIMARY -> primaryColor = 0xFF4CAF50.toInt()
-                    BrandingColorType.PRIMARY -> primaryColor = 0xFFFF0000.toInt()
-                    BrandingColorType.SECONDARY -> secondaryColor = 0xFF84FFFF.toInt()
+                    BrandingColorType.SUCCESS -> successColor = color
+                    BrandingColorType.WARNING -> warningColor = color
+                    BrandingColorType.ERROR -> errorColor = color
+                    BrandingColorType.INFO -> infoColor = color
+                    BrandingColorType.PRIMARY -> primaryColor = color
+                    BrandingColorType.SECONDARY -> secondaryColor = color
                 }
             }
         }
