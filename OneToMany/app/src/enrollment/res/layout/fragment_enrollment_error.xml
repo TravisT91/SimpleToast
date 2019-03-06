@@ -49,6 +49,7 @@
             <com.engageft.apptoolbox.view.PillButton
                 android:id="@+id/tryAgainButton"
                 style="@style/ButtonPillPrimaryFilledDefault"
+                PillButton.setThemeFilled="@{true}"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="16dp"
@@ -63,6 +64,7 @@
             <com.engageft.apptoolbox.view.PillButton
                 android:id="@+id/callSupportButton"
                 style="@style/ButtonPillSecondaryOutlinedDefault"
+                PillButton.setThemeOutlined="@{true}"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"

@@ -58,6 +58,7 @@
                     <com.engageft.apptoolbox.view.TextInputWithLabel
                         android:id="@+id/emailInput"
                         style="@style/TextInputWithLabelStyle"
+                        InputWithLabel.setThemeWithPalette="@{true}"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="20dp"
@@ -67,6 +68,7 @@
                     <com.engageft.apptoolbox.view.PasswordInputWithLabel
                         android:id="@+id/passwordInput"
                         style="@style/PasswordInputWithLabelStyle"
+                        InputWithLabel.setThemeWithPalette="@{true}"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="20dp"
@@ -76,6 +78,7 @@
                     <com.engageft.apptoolbox.view.PasswordInputWithLabel
                         android:id="@+id/passwordConfirmInput"
                         style="@style/PasswordInputWithLabelStyle"
+                        InputWithLabel.setThemeWithPalette="@{true}"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="20dp"
@@ -114,6 +117,7 @@
                 <com.engageft.apptoolbox.view.PillButton
                     android:id="@+id/nextButton"
                     style="@style/ButtonPillPrimaryFilledDefault"
+                    PillButton.setThemeFilled="@{true}"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="16dp"

@@ -1,10 +1,14 @@
 package com.engageft.fis.pscu
 
 import android.os.Bundle
+import android.view.KeyEvent
+import android.widget.Toast
 import androidx.lifecycle.ViewModelProviders
 import com.engageft.apptoolbox.LotusActivity
 import com.engageft.apptoolbox.LotusActivityConfig
+import com.engageft.fis.pscu.config.EngageAppConfig
 import com.engageft.fis.pscu.feature.EnrollmentViewModel
+import com.engageft.fis.pscu.feature.branding.Palette
 
 /**
  * EnrollmentActivity
@@ -53,6 +57,43 @@ class EnrollmentActivity : LotusActivity() {
                                                                                 R.id.action_cardLinkedFragment_to_notAuthenticatedActivity3),
                 EnrollmentViewModel.EnrollmentNavigations.ActiveNavigations(R.id.action_cardActiveFragment_to_authenticatedActivity2,
                                                                                 R.id.action_cardActiveFragment_to_notAuthenticatedActivity3))
+    }
+
+    // Variables for tracking keycode easter eggs:
+    private var numVolumeUpPresses = 0
+    private var numVolumeDownPresses = 0
+    override fun onKeyDown(keyCode: Int, event: KeyEvent?): Boolean {
+        if (!EngageAppConfig.isTestBuild) {
+            return super.onKeyDown(keyCode, event)
+        } else {
+            when (keyCode) {
+                KeyEvent.KEYCODE_VOLUME_UP -> {
+                    numVolumeDownPresses = 0
+                    numVolumeUpPresses++
+                    if (numVolumeUpPresses > 2) {
+                        numVolumeUpPresses = 0
+
+                        Palette.useMockBranding = true
+                        Toast.makeText(this, "Mock branding applied!", Toast.LENGTH_SHORT).show()
+                    }
+                    return true
+                }
+                KeyEvent.KEYCODE_VOLUME_DOWN -> {
+                    numVolumeUpPresses = 0
+                    numVolumeDownPresses++
+                    if (numVolumeDownPresses > 2) {
+                        numVolumeDownPresses = 0
+
+                        Palette.useMockBranding = false
+                        Toast.makeText(this, "Mock branding removed!", Toast.LENGTH_SHORT).show()
+                    }
+                    return true
+                }
+                else -> {
+                    return false
+                }
+            }
+        }
     }
 }
 
