@@ -13,11 +13,9 @@ import androidx.lifecycle.ViewModelProviders
 import androidx.navigation.fragment.findNavController
 import com.engageft.apptoolbox.BaseViewModel
 import com.engageft.apptoolbox.NavigationOverrideClickListener
-import com.engageft.apptoolbox.ViewUtils.newLotusInstance
 import com.engageft.apptoolbox.view.InformationDialogFragment
 import com.engageft.fis.pscu.R
 import com.engageft.fis.pscu.databinding.FragmentProfileBinding
-import com.engageft.fis.pscu.feature.palettebindings.applyPaletteStyles
 import com.engageft.fis.pscu.feature.utils.StringUtils
 
 
@@ -35,9 +33,7 @@ class ProfileFragment : BaseEngagePageFragment() {
     private val navigationOverrideClickListener = object : NavigationOverrideClickListener {
         override fun onClick(): Boolean {
             return if (profileViewModel.hasUnsavedChanges()) {
-                val dialog = infoDialogGenericUnsavedChangesNewInstance(context = activity!!, listener = unsavedChangesDialogListener)
-                dialog.applyPaletteStyles(activity!!)
-                fragmentDelegate.showDialog(dialog)
+                fragmentDelegate.showDialog(infoDialogGenericUnsavedChangesNewInstance(context = activity!!, listener = unsavedChangesDialogListener))
                 true
             } else {
                 false
@@ -99,7 +95,8 @@ class ProfileFragment : BaseEngagePageFragment() {
                     }
                 }
                 var message = StringUtils.concatenateFromList(messages, "\n\n")
-                fragmentDelegate.showDialog(InformationDialogFragment.newLotusInstance(title = if (wasError) getString(R.string.PROFILE_ERROR_TITLE) else getString(R.string.PROFILE_SUCCESS_TITLE),
+                fragmentDelegate.showDialog(newInfoDialogInstance(context!!,
+                        title = if (wasError) getString(R.string.PROFILE_ERROR_TITLE) else getString(R.string.PROFILE_SUCCESS_TITLE),
                         message = message,
                         buttonPositiveText = getString(R.string.PROFILE_SUCCESS_MESSAGE_OK)))
             }

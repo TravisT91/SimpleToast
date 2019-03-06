@@ -19,7 +19,6 @@ import com.engageft.fis.pscu.databinding.FragmentAchBankAccountAddBinding
 import com.engageft.fis.pscu.feature.BaseEngagePageFragment
 import com.engageft.fis.pscu.feature.branding.Palette
 import com.engageft.fis.pscu.feature.infoDialogGenericUnsavedChangesNewInstance
-import com.engageft.fis.pscu.feature.palettebindings.applyPaletteStyles
 import utilGen1.AchAccountInfoUtils
 /**
  * AchBankAccountAddFragment
@@ -54,9 +53,7 @@ class AchBankAccountAddFragment: BaseEngagePageFragment() {
     private val navigationOverrideClickListener = object : NavigationOverrideClickListener {
         override fun onClick(): Boolean {
             if (achBankAccountViewModel.hasUnsavedChanges()) {
-                val dialog = infoDialogGenericUnsavedChangesNewInstance(context = activity!!, listener = unsavedChangesDialogListener)
-                dialog.applyPaletteStyles(activity!!)
-                fragmentDelegate.showDialog(dialog)
+                fragmentDelegate.showDialog(infoDialogGenericUnsavedChangesNewInstance(context = activity!!, listener = unsavedChangesDialogListener))
                 return true
             }
             return false

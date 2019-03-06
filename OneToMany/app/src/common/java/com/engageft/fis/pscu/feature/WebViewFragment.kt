@@ -30,7 +30,6 @@ import com.engageft.apptoolbox.util.MenuTint
 import com.engageft.apptoolbox.view.InformationDialogFragment
 import com.engageft.apptoolbox.view.ScrollToBottomWebView
 import com.engageft.fis.pscu.R
-import com.engageft.fis.pscu.feature.palettebindings.applyPaletteStyles
 import io.reactivex.observers.DisposableObserver
 import org.jsoup.Jsoup
 import java.io.File
@@ -150,7 +149,7 @@ class WebViewFragment : BaseEngagePageFragment() {
             if (!isNetworkAvailable()) {
                 fragmentDelegate.showDialog(infoDialogGenericErrorTitleMessageNewInstance(context!!,
                         message = getString(R.string.alert_error_message_no_internet_connection),
-                        listener = dialogInfoListener).apply { applyPaletteStyles(context!!) })
+                        listener = dialogInfoListener))
             } else {
                 fragmentDelegate.showProgressOverlay()
 
@@ -164,8 +163,7 @@ class WebViewFragment : BaseEngagePageFragment() {
                                     result?.let { url ->
                                         loadWebView(url)
                                     } ?: run {
-                                        fragmentDelegate.showDialog(infoDialogGenericErrorTitleMessageNewInstance(context!!, listener = dialogInfoListener)
-                                                .apply { applyPaletteStyles(context!!) })
+                                        fragmentDelegate.showDialog(infoDialogGenericErrorTitleMessageNewInstance(context!!, listener = dialogInfoListener))
                                     }
                                 }
                             }
@@ -227,8 +225,7 @@ class WebViewFragment : BaseEngagePageFragment() {
             if (infos.size > 0) {
                 startActivity(i)
             } else {
-                fragmentDelegate.showDialog(infoDialogGenericErrorTitleMessageNewInstance(context!!, message = getString(R.string.WEBVIEW_NO_EMAIL_CLIENT_FOUND))
-                        .apply { applyPaletteStyles(context!!) })
+                fragmentDelegate.showDialog(infoDialogGenericErrorTitleMessageNewInstance(context!!, message = getString(R.string.WEBVIEW_NO_EMAIL_CLIENT_FOUND)))
             }
 
             view.reload()
@@ -310,8 +307,7 @@ class WebViewFragment : BaseEngagePageFragment() {
 
             override fun onError(e: Throwable) {
                 engageFragmentDelegate.handleGenericThrowable(e)
-                fragmentDelegate.showDialog(infoDialogGenericErrorTitleMessageNewInstance(context!!, listener = dialogInfoListener)
-                        .apply { applyPaletteStyles(context!!) })
+                fragmentDelegate.showDialog(infoDialogGenericErrorTitleMessageNewInstance(context!!, listener = dialogInfoListener))
             }
 
             override fun onComplete() {}
@@ -342,7 +338,7 @@ class WebViewFragment : BaseEngagePageFragment() {
             override fun onDialogCancelled() {}
         }
         fragmentDelegate.showDialog(infoDialogYesNoNewInstance(context!!, title = getString(R.string.NO_PDF_APP_FOUND_TITLE),
-                message = getString(R.string.NO_PDF_APP_FOUND_MESSAGE), listener = listener).apply { applyPaletteStyles(context!!) })
+                message = getString(R.string.NO_PDF_APP_FOUND_MESSAGE), listener = listener))
     }
 
     // TODO(aHashimi): can we change this to LiveData's?
@@ -416,8 +412,7 @@ class WebViewFragment : BaseEngagePageFragment() {
             return doc.toString().replace("<h1", "<h3").replace("<h2", "<h3")
         } catch (e: IOException) {
             engageFragmentDelegate.handleGenericThrowable(e)
-            fragmentDelegate.showDialog(infoDialogGenericErrorTitleMessageNewInstance(context!!)
-                    .apply { applyPaletteStyles(context!!) })
+            fragmentDelegate.showDialog(infoDialogGenericErrorTitleMessageNewInstance(context!!))
             return null
         }
     }
@@ -429,8 +424,7 @@ class WebViewFragment : BaseEngagePageFragment() {
             webView.loadDataWithBaseURL(protocolAndHost, result, "text/html", "utf-8", null)
         } catch (e: MalformedURLException) {
             engageFragmentDelegate.handleGenericThrowable(e)
-            fragmentDelegate.showDialog(infoDialogGenericErrorTitleMessageNewInstance(context!!)
-                    .apply { applyPaletteStyles(context!!) })
+            fragmentDelegate.showDialog(infoDialogGenericErrorTitleMessageNewInstance(context!!))
         }
     }
 }
