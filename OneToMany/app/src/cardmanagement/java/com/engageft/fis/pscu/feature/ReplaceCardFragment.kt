@@ -12,7 +12,6 @@ import com.engageft.apptoolbox.view.InformationDialogFragment
 import com.engageft.fis.pscu.R
 import com.engageft.fis.pscu.databinding.FragmentReplaceCardBinding
 import com.engageft.fis.pscu.feature.branding.Palette
-import com.engageft.fis.pscu.feature.palettebindings.applyPaletteStyles
 import com.engageft.fis.pscu.feature.utils.informationDialogAlertConfirmation
 import utilGen1.StringUtils
 
@@ -60,7 +59,6 @@ class ReplaceCardFragment : BaseEngagePageFragment() {
                     replaceCardViewModel?.onOrderReplacementClicked()
                 }
 
-                dialogInfo.applyPaletteStyles(context!!)
                 fragmentDelegate.showDialog(dialogInfo)
             }
 
@@ -88,7 +86,6 @@ class ReplaceCardFragment : BaseEngagePageFragment() {
 
                 }
         )
-        dialog.applyPaletteStyles(context!!)
         fragmentDelegate.showDialog(dialog)
     }
 }

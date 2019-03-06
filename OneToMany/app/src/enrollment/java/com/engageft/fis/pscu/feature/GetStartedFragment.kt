@@ -11,7 +11,6 @@ import android.view.inputmethod.EditorInfo
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import com.engageft.apptoolbox.BaseViewModel
-import com.engageft.apptoolbox.ViewUtils.newLotusInstance
 import com.engageft.apptoolbox.view.DateInputWithLabel
 import com.engageft.apptoolbox.view.InformationDialogFragment
 import com.engageft.apptoolbox.view.ProductCardModel
@@ -120,12 +119,11 @@ class GetStartedFragment : BaseEngagePageFragment() {
                             // User exited dialog, keep them on this screen.
                         }
                     }
-                    fragmentDelegate.showDialog(InformationDialogFragment.newLotusInstance(
+                    fragmentDelegate.showDialog(newInfoDialogInstance(context!!,
                             title = getString(R.string.ENROLLMENT_GET_STARTED_UNDER_18_TITLE),
                             message = getString(R.string.ENROLLMENT_GET_STARTED_UNDER_18_MESSAGE),
                             buttonPositiveText = getString(R.string.ENROLLMENT_GET_STARTED_UNDER_18_POSITIVE),
                             buttonNegativeText = getString(R.string.ENROLLMENT_GET_STARTED_UNDER_18_NEGATIVE),
-                            layoutType = InformationDialogFragment.LayoutType.BUTTONS_SIDE_BY_SIDE,
                             listener = listener))
                 }
             }

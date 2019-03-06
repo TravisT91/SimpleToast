@@ -14,7 +14,6 @@ import com.engageft.fis.pscu.feature.BaseEngagePageFragment
 import com.engageft.fis.pscu.feature.DialogInfo
 import com.engageft.fis.pscu.feature.branding.Palette
 import com.engageft.fis.pscu.feature.infoDialogGenericErrorTitleMessageConditionalNewInstance
-import com.engageft.fis.pscu.feature.palettebindings.applyPaletteStyles
 import org.joda.time.DateTime
 import utilGen1.DisplayDateTimeUtils
 import utilGen1.StringUtils
@@ -81,7 +80,6 @@ class CardLoadTransferConfirmationFragment: BaseEngagePageFragment() {
         createTransferViewModel.dialogInfoObservable.observe(this, Observer {
             if (it.dialogType == DialogInfo.DialogType.SERVER_ERROR) {
                 infoDialogGenericErrorTitleMessageConditionalNewInstance(context!!, it)
-                        .apply { applyPaletteStyles(context!!) }
             }
         })
 

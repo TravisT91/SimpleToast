@@ -9,16 +9,14 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.navigation.findNavController
 import com.engageft.apptoolbox.BaseViewModel
-import com.engageft.apptoolbox.ViewUtils.newLotusInstance
 import com.engageft.apptoolbox.util.applyTypefaceAndColorToSubString
 import com.engageft.apptoolbox.util.applyTypefaceToSubstring
 import com.engageft.apptoolbox.view.InformationDialogFragment
 import com.engageft.fis.pscu.R
 import com.engageft.fis.pscu.databinding.FragmentCardLockUnlockBinding
 import com.engageft.fis.pscu.feature.branding.Palette
-import com.engageft.fis.pscu.feature.palettebindings.applyPaletteStyles
 import com.engageft.fis.pscu.feature.utils.informationDialogAlertConfirmation
-import kotlinx.android.synthetic.main.fragment_card_lock_unlock.*
+import kotlinx.android.synthetic.main.fragment_card_lock_unlock.statusTextView
 
 class CardLockUnlockFragment: BaseEngagePageFragment() {
 
@@ -54,8 +52,6 @@ class CardLockUnlockFragment: BaseEngagePageFragment() {
                 val dialogInfo = informationDialogAlertConfirmation(context!!,
                         title = title, message = message) { cardLockUnlockViewModel.onLockUnlock() }
 
-                dialogInfo.applyPaletteStyles(context!!)
-
                 fragmentDelegate.showDialog(dialogInfo)
             }
         }
@@ -86,7 +82,7 @@ class CardLockUnlockFragment: BaseEngagePageFragment() {
                         getString(R.string.CARD_STATUS_DISPLAY_LOCKED).toLowerCase()
                     }
                     val successMessage = String.format(getString(R.string.card_lock_unlock_success_message_format), successStatus)
-                    fragmentDelegate.showDialog(InformationDialogFragment.newLotusInstance(message = successMessage,
+                    fragmentDelegate.showDialog(newInfoDialogInstance(context!!, message = successMessage,
                             buttonPositiveText = getString(R.string.dialog_information_ok_button),
                             listener = object: InformationDialogFragment.InformationDialogFragmentListener {
                                 override fun onDialogFragmentNegativeButtonClicked() {
