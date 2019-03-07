@@ -4,6 +4,7 @@ import android.view.View
 import androidx.recyclerview.widget.RecyclerView
 import com.engageft.apptoolbox.view.PillButton
 import com.engageft.fis.pscu.R
+import com.engageft.fis.pscu.feature.palettebindings.setThemeFilled
 import io.github.luizgrp.sectionedrecyclerviewadapter.SectionParameters
 import io.github.luizgrp.sectionedrecyclerviewadapter.StatelessSection
 
@@ -25,6 +26,7 @@ class GoalsAddButtonSection(private val listener: OnButtonSectionListener) : Sta
         var button: PillButton = itemView.findViewById(R.id.addGoalButton)
 
         init {
+            button.setThemeFilled(true)
             button.setOnClickListener { listener.onButtonClicked() }
         }
     }

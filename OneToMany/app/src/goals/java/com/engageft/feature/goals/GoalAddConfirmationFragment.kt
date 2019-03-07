@@ -5,6 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
+import androidx.appcompat.widget.AppCompatImageView
 import androidx.core.content.res.ResourcesCompat
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
@@ -17,6 +18,7 @@ import com.engageft.fis.pscu.R
 import com.engageft.fis.pscu.databinding.FragmentGoalsAddEditConfirmationBinding
 import com.engageft.fis.pscu.feature.BaseEngagePageFragment
 import com.engageft.fis.pscu.feature.branding.Palette
+import com.engageft.fis.pscu.feature.palettebindings.setPalette
 import utilGen1.DisplayDateTimeUtils
 import utilGen1.StringUtils
 
@@ -36,6 +38,8 @@ class GoalAddConfirmationFragment: BaseEngagePageFragment() {
         binding = FragmentGoalsAddEditConfirmationBinding.inflate(inflater, container, false).apply {
             viewModel = confirmationViewModel
             palette = Palette
+
+            imageViewLayout.findViewById<AppCompatImageView>(R.id.imageViewIcon).setPalette(true)
 
             confirmationViewModel.addEditSuccessObservable.observe(viewLifecycleOwner, Observer {
                 root.findNavController().popBackStack(R.id.goalsAddStep1Fragment, true)

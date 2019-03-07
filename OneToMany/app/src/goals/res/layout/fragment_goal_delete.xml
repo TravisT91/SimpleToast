@@ -72,8 +72,11 @@
                 android:layout_height="wrap_content"
                 android:text="@string/GOAL_DELETE_BUTTON"/>
 
-            <androidx.appcompat.widget.AppCompatTextView
+            <androidx.appcompat.widget.AppCompatButton
                 android:id="@+id/cancelButton"
+                android:textAllCaps="false"
+                AppCompatButton.setPaletteForPrimaryLink="@{true}"
+                android:background="@null"
                 style="@style/BodyMedium"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"

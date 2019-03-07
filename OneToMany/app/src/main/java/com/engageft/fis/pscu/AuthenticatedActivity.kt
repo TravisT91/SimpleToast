@@ -3,6 +3,7 @@ package com.engageft.fis.pscu
 import android.os.Bundle
 import android.view.KeyEvent
 import android.widget.Toast
+import androidx.core.content.ContextCompat
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import com.engageft.apptoolbox.LotusActivityConfig
@@ -36,6 +37,8 @@ class AuthenticatedActivity : BaseAuthenticatedActivity() {
                 header.title = getString(R.string.nav_drawer_card_header_format, fourDigits)
             })
         }
+
+        setNavViewStyle()
     }
 
     override fun onBackPressed() {
@@ -71,6 +74,7 @@ class AuthenticatedActivity : BaseAuthenticatedActivity() {
                         numVolumeUpPresses = 0
 
                         Palette.useMockBranding = true
+                        setNavViewStyle()
                         Toast.makeText(this, "Mock branding applied!", Toast.LENGTH_SHORT).show()
                     }
                     return true
@@ -82,6 +86,7 @@ class AuthenticatedActivity : BaseAuthenticatedActivity() {
                         numVolumeDownPresses = 0
 
                         Palette.useMockBranding = false
+                        setNavViewStyle()
                         Toast.makeText(this, "Mock branding removed!", Toast.LENGTH_SHORT).show()
                     }
                     return true
@@ -91,5 +96,10 @@ class AuthenticatedActivity : BaseAuthenticatedActivity() {
                 }
             }
         }
+    }
+
+    private fun setNavViewStyle() {
+        setSideNavigationViewStyle(Palette.primaryColor, ContextCompat.getColorStateList(this, R.color.side_navigation_text)!!,
+                resources.getDimension(R.dimen.sideNavigationHorizontalPadding).toInt(), R.style.Body)
     }
 }
