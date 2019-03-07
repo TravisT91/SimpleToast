@@ -85,7 +85,7 @@ class AchBankAccountDetailViewModel: BaseCardLoadViewModel() {
                     if (response.isSuccess) {
                         val loginResponse = EngageService.getInstance().storageManager.loginResponse
                         val currentCard = LoginResponseUtils.getCurrentCard(loginResponse)
-                        EngageService.getInstance().storageManager.clearForLoginWithDataLoad(false)
+                        EngageService.getInstance().storageManager.removeLoginResponse()
                         EngageService.getInstance().storageManager.clearScheduledLoadsResponse(currentCard)
                         refreshLoginResponse(bankDeleteSuccessObservable)
                     } else {

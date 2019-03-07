@@ -109,7 +109,7 @@ class CardLoadAddEditCardViewModel(private val ccAccountId: Long): BaseCardLoadV
                 .subscribe({ response ->
                     dismissProgressOverlay()
                     if (response.isSuccess) {
-                        EngageService.getInstance().storageManager.clearForLoginWithDataLoad(false)
+                        EngageService.getInstance().storageManager.removeLoginResponse()
                         refreshLoginResponse(addCardSuccessObservable)
                     } else {
                         handleBackendErrorForForms(response, "$TAG: adding a debit/credit card failed")
@@ -132,7 +132,7 @@ class CardLoadAddEditCardViewModel(private val ccAccountId: Long): BaseCardLoadV
                 .subscribe({ response ->
                     dismissProgressOverlay()
                     if (response.isSuccess) {
-                        EngageService.getInstance().storageManager.clearForLoginWithDataLoad(false)
+                        EngageService.getInstance().storageManager.removeLoginResponse()
                         refreshLoginResponse(deleteCardSuccessObservable)
                     } else {
                         handleUnexpectedErrorResponse(response)

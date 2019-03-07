@@ -77,7 +77,7 @@ class AchBankAccountVerifyViewModel: BaseCardLoadViewModel() {
                             .subscribe({ response ->
                                 dismissProgressOverlay()
                                 if (response.isSuccess) {
-                                    EngageService.getInstance().storageManager.clearForLoginWithDataLoad(false)
+                                    EngageService.getInstance().storageManager.removeLoginResponse()
                                     refreshLoginResponse(bankVerifySuccessObservable)
                                 } else {
                                     handleBackendErrorForForms(response, "$TAG: failed to verify ACH account")

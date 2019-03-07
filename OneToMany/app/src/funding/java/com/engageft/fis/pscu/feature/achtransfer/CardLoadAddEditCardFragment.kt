@@ -14,7 +14,6 @@ import androidx.navigation.findNavController
 import androidx.navigation.fragment.findNavController
 import com.engageft.apptoolbox.BaseViewModel
 import com.engageft.apptoolbox.NavigationOverrideClickListener
-import com.engageft.apptoolbox.ViewUtils.newLotusInstance
 import com.engageft.apptoolbox.view.DateInputWithLabel
 import com.engageft.apptoolbox.view.InformationDialogFragment
 import com.engageft.fis.pscu.R
@@ -22,6 +21,7 @@ import com.engageft.fis.pscu.databinding.FragmentCardLoadAddEditCardBinding
 import com.engageft.fis.pscu.feature.BaseEngagePageFragment
 import com.engageft.fis.pscu.feature.branding.Palette
 import com.engageft.fis.pscu.feature.infoDialogGenericUnsavedChangesNewInstance
+import com.engageft.fis.pscu.feature.newInfoDialogInstance
 import com.redmadrobot.inputmask.MaskedTextChangedListener
 
 class CardLoadAddEditCardFragment: BaseEngagePageFragment() {
@@ -122,7 +122,8 @@ class CardLoadAddEditCardFragment: BaseEngagePageFragment() {
                 deleteButtonLayout.setOnClickListener {
                     val cardAndLastFour = String.format(getString(R.string.BANKACCOUNT_DESCRIPTION_FORMAT),
                             getString(R.string.card_load_card), cardNumber.get())
-                    val deleteDialogInfo = InformationDialogFragment.newLotusInstance(
+                    val deleteDialogInfo = newInfoDialogInstance(
+                            context = context!!,
                             title = getString(R.string.ach_bank_account_delete_confirmation_title),
                             message = String.format(getString(R.string.ach_bank_account_delete_confirmation_message_format), cardAndLastFour),
                             buttonPositiveText = getString(R.string.ach_bank_account_delete),

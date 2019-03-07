@@ -402,15 +402,15 @@ class CardLoadTransferViewModel(scheduledLoadId: Long): BaseEngageViewModel() {
                 if (scheduledLoad.isHasDuplicate) {
                     val request2 = ScheduledLoadRequest(scheduledLoad.scheduledLoadIdDup)
                     postCancelScheduledLoad(request2.fieldMap) { // successful
-                        EngageService.getInstance().storageManager.clearForLoginWithDataLoad(false)
+                        EngageService.getInstance().storageManager.removeLoginResponse()
                         deleteSuccessObservable.call()
                     }
                 } else { // Does not have duplicate
-                    EngageService.getInstance().storageManager.clearForLoginWithDataLoad(false)
+                    EngageService.getInstance().storageManager.removeLoginResponse()
                     deleteSuccessObservable.call()
                 }
 
-                EngageService.getInstance().storageManager.clearForLoginWithDataLoad(false)
+                EngageService.getInstance().storageManager.removeLoginResponse()
             }
         }
     }

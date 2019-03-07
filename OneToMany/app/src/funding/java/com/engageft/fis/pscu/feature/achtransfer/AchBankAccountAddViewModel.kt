@@ -131,7 +131,7 @@ class AchBankAccountAddViewModel: BaseCardLoadViewModel() {
                         .subscribe({ response ->
                             dismissProgressOverlay()
                             if (response.isSuccess) {
-                                EngageService.getInstance().storageManager.clearForLoginWithDataLoad(false)
+                                EngageService.getInstance().storageManager.removeLoginResponse()
                                 refreshLoginResponse(bankAddSuccessObservable)
                             } else {
                                 handleBackendErrorForForms(response, "$TAG: failed to add an ACH account")
@@ -166,11 +166,4 @@ class AchBankAccountAddViewModel: BaseCardLoadViewModel() {
         const val ACCOUNT_TYPE_CHECKING = "Checking"
         const val TAG = "AchBankAccountAddViewModel"
     }
-}
-
-enum class AchBankAccountNavigationEvent {
-    BANK_ADDED_SUCCESS,
-    BANK_VERIFIED_SUCCESS,
-    DELETED_BANK_SUCCESS,
-    NONE
 }
