@@ -32,14 +32,15 @@
             app:layout_constraintTop_toBottomOf="@+id/titleTextView"
             tools:text="Please enter your password/passcode." />
 
-        <EditText
+        <com.engageft.apptoolbox.view.PasswordInputWithLabel
             android:id="@+id/passwordPasscodeEditText"
+            style="@style/PasswordInputWithLabelStyle"
+            InputWithLabel.setThemeWithPalette="@{true}"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/dialogInfoTitleMessageMargins"
             android:layout_marginTop="@dimen/dialogInfoMessageTopMargin"
             android:layout_marginEnd="@dimen/dialogInfoTitleMessageMargins"
-            android:fontFamily="@font/font_regular"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/messageTextView" />
@@ -59,7 +60,7 @@
             tools:visibility="visible"
             android:visibility="invisible"/>
 
-        <Button
+        <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/buttonPositive"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -72,7 +73,7 @@
             android:text="@string/auth_dialog_button_continue"
             tools:background="null" />
 
-        <Button
+        <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/buttonNeutral"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -84,7 +85,7 @@
             tools:background="null"
             tools:text="@string/auth_dialog_button_forgot_password" />
 
-        <Button
+        <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/buttonNegative"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

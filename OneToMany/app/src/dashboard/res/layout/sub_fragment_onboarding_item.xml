@@ -18,6 +18,7 @@
             android:background="@drawable/onboarding_icon_background"
             app:layout_constraintVertical_chainStyle="packed">
             <androidx.appcompat.widget.AppCompatImageView
+                AppCompatImageView.setPalette="@{true}"
                 android:id="@+id/icon"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"

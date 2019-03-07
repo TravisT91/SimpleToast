@@ -1,12 +1,14 @@
 package com.engageft.fis.pscu.feature
 
 import android.content.Context
+import android.content.res.ColorStateList
 import android.os.Bundle
 import android.view.View
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleOwner
 import com.engageft.apptoolbox.BaseFragmentDelegate
 import com.engageft.apptoolbox.LotusPageFragment
+import com.engageft.fis.pscu.feature.branding.Palette
 
 /**
  * BaseEngagePageFragment
@@ -27,6 +29,9 @@ abstract class BaseEngagePageFragment : LotusPageFragment(), BaseEngageFragmentI
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         engageFragmentDelegate
+        fragmentDelegate.progressOverlay.apply {
+            progressBarTint = ColorStateList.valueOf(Palette.infoColor)
+        }
     }
 
     override fun getAndroidContext(): Context {

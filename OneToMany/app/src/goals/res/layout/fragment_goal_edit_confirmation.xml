@@ -87,8 +87,11 @@
                 android:text="@string/GOAL_EDIT_CONFIRMATION_SAVE"
                 android:onClick="@{() -> viewModel.onSaveGoal()}"/>
 
-            <TextView
+            <androidx.appcompat.widget.AppCompatButton
                 style="@style/BodyMedium"
+                AppCompatButton.setPaletteForPrimaryLink="@{true}"
+                android:textAllCaps="false"
+                android:background="@null"
                 android:id="@+id/cancelButton"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"

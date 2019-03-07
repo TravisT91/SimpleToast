@@ -13,6 +13,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.engageft.apptoolbox.view.PillButton
 import com.engageft.fis.pscu.R
 import com.engageft.fis.pscu.feature.branding.Palette
+import com.engageft.fis.pscu.feature.palettebindings.setThemeFilled
 import org.joda.time.DateTime
 import utilGen1.DisplayDateTimeUtils
 import java.util.Locale
@@ -174,6 +175,7 @@ class AccountsAndTransfersListRecyclerViewAdapter(
                                 }
                             }
                             amountTextView.text = formatAchIncomingBankTransferAmount(itemView.context, scheduledLoadItem.amount)
+                            amountTextView.setTextColor(Palette.successColor)
                         }
                     }
                     is AccountsAndTransferListItem.TransferItem.RecentActivityItem -> {
@@ -240,8 +242,11 @@ class AccountsAndTransfersListRecyclerViewAdapter(
         class CreateTransferViewHolder(viewHolderListener: ViewHolderListener, itemView: View) : AccountsAndTransfersViewHolder(viewHolderListener, itemView) {
             init {
                 itemView.setOnClickListener(null)
-                itemView.findViewById<PillButton>(R.id.createTransferButton).setOnClickListener {
-                    viewHolderListener.onViewSelected(adapterPosition)
+                itemView.findViewById<PillButton>(R.id.createTransferButton).apply {
+                    this.setOnClickListener {
+                        viewHolderListener.onViewSelected(adapterPosition)
+                    }
+                    this.setThemeFilled(true)
                 }
             }
         }

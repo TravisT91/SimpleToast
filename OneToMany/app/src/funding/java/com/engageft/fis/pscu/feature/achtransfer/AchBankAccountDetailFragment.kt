@@ -9,13 +9,13 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.navigation.findNavController
 import com.engageft.apptoolbox.BaseViewModel
-import com.engageft.apptoolbox.ViewUtils.newLotusInstance
 import com.engageft.apptoolbox.view.InformationDialogFragment
 import com.engageft.fis.pscu.R
 import com.engageft.fis.pscu.databinding.FragmentAchBankAccountDetailBinding
 import com.engageft.fis.pscu.feature.BaseEngagePageFragment
 import com.engageft.fis.pscu.feature.achtransfer.CardLoadConstants.ACH_BANK_ACCOUNT_ID_KEY
 import com.engageft.fis.pscu.feature.branding.Palette
+import com.engageft.fis.pscu.feature.newInfoDialogInstance
 
 /**
  * AchBankAccountDetailFragment
@@ -51,7 +51,7 @@ class AchBankAccountDetailFragment: BaseEngagePageFragment() {
                 val bankNameAndNumber = String.format(getString(R.string.TRANSFER_ACCOUNT_DESCRIPTION_FORMAT),
                         achBankAccountDetailViewModel.achAccountInfo!!.bankName, achBankAccountDetailViewModel.achAccountInfo!!.accountLastDigits)
 
-                val deleteDialogInfo = InformationDialogFragment.newLotusInstance(
+                val deleteDialogInfo = newInfoDialogInstance(context!!,
                         title = getString(R.string.ach_bank_account_delete_confirmation_title),
                         message = String.format(getString(R.string.ach_bank_account_delete_confirmation_message_format), bankNameAndNumber),
                         buttonPositiveText = getString(R.string.ach_bank_account_delete),

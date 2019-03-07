@@ -2,10 +2,10 @@ package com.engageft.feature.goals
 
 import android.content.Context
 import android.view.View
-import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.engageft.apptoolbox.view.PillButton
 import com.engageft.fis.pscu.R
+import com.engageft.fis.pscu.feature.branding.Palette
 import io.github.luizgrp.sectionedrecyclerviewadapter.SectionParameters
 import io.github.luizgrp.sectionedrecyclerviewadapter.StatelessSection
 import utilGen1.DisplayDateTimeUtils
@@ -31,6 +31,7 @@ class GoalDetailIncompleteHeaderSection(private val context: Context,
                 ))
 
                 circularProgressBarWithTexts.setProgress(progress)
+                circularProgressBarWithTexts.setProgressColor(Palette.successColor)
 
                 val goalAmountFormatted = String.format(context.getString(R.string.GOAL_DETAIL_GOAL_AMOUNT_FORMAT),
                         StringUtils.formatCurrencyStringWithFractionDigits(goalAmount.toFloat(), true))
@@ -40,7 +41,7 @@ class GoalDetailIncompleteHeaderSection(private val context: Context,
                     circularProgressBarWithTexts.setOuterBottomText(context.getString(R.string.GOALS_PAUSED))
 
                     if (errorState == GoalDetailState.ErrorState.ERROR) {
-                        circularProgressBarWithTexts.setProgressColor(ContextCompat.getColor(context, R.color.goalErrorProgressColor))
+                        circularProgressBarWithTexts.setProgressColor(Palette.errorColor)
                     }
                 } else {
                     val frequencyAmountAndCompleteDate = String.format(context.getString(R.string.GOAL_DETAIL_FREQUENCY_AMOUNT_COMPLETE_DATE_FORMAT),

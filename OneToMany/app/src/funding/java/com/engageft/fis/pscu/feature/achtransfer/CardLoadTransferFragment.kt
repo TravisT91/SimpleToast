@@ -14,16 +14,16 @@ import androidx.navigation.findNavController
 import androidx.navigation.fragment.findNavController
 import com.engageft.apptoolbox.BaseViewModel
 import com.engageft.apptoolbox.NavigationOverrideClickListener
-import com.engageft.apptoolbox.ViewUtils.newLotusInstance
 import com.engageft.apptoolbox.view.InformationDialogFragment
 import com.engageft.fis.pscu.R
 import com.engageft.fis.pscu.config.EngageAppConfig
 import com.engageft.fis.pscu.databinding.FragmentCreateEditTransferBinding
 import com.engageft.fis.pscu.feature.BaseEngagePageFragment
-import com.engageft.fis.pscu.feature.achtransfer.CardLoadConstants.TRANSFER_FUNDS_BUNDLE_KEY
 import com.engageft.fis.pscu.feature.achtransfer.CardLoadConstants.SCHEDULED_LOAD_ID
+import com.engageft.fis.pscu.feature.achtransfer.CardLoadConstants.TRANSFER_FUNDS_BUNDLE_KEY
 import com.engageft.fis.pscu.feature.branding.Palette
 import com.engageft.fis.pscu.feature.infoDialogGenericUnsavedChangesNewInstance
+import com.engageft.fis.pscu.feature.newInfoDialogInstance
 import org.joda.time.DateTime
 import utilGen1.DisplayDateTimeUtils
 import utilGen1.ScheduledLoadUtils
@@ -208,7 +208,7 @@ class CardLoadTransferFragment: BaseEngagePageFragment() {
             var from = ""
             viewModelTransfer.from.get()?.let { from = it }
             deleteButtonLayout.setOnClickListener {
-                val infoDialog = InformationDialogFragment.newLotusInstance(
+                val infoDialog = newInfoDialogInstance(context!!,
                         title = getString(R.string.card_load_transfer_delete_title),
                         message = String.format(getString(R.string.card_load_transfer_delete_message_format), frequency, from),
                         buttonPositiveText = getString(R.string.dialog_information_yes_button),

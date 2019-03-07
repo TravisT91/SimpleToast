@@ -12,6 +12,7 @@ import com.engageft.engagekit.EngageService
 import com.engageft.fis.pscu.R
 import com.engageft.fis.pscu.feature.branding.BrandingInfoRepo
 import com.engageft.fis.pscu.feature.palettebindings.applyBranding
+import com.engageft.fis.pscu.feature.palettebindings.setPalette
 import com.engageft.fis.pscu.feature.transactions.adapter.TransactionListener
 import com.engageft.fis.pscu.feature.transactions.adapter.TransactionsPagedAdapter
 import com.google.android.material.tabs.TabLayout
@@ -170,6 +171,7 @@ class DashboardTransactionsAdapter(private val compositeDisposable: CompositeDis
                     }
                 }
             })
+            transactionsTabLayout.setPalette(true)
         }
     }
 

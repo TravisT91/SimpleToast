@@ -11,6 +11,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         style="?android:attr/progressBarStyle"
+        android:indeterminateDrawable="@drawable/progress_indeterminate_background_lotus"
+        android:indeterminateTint="@color/info"
         android:visibility="gone"
         tools:visibility="visible"
         android:layout_gravity="center"/>

@@ -5,6 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
+import androidx.appcompat.widget.AppCompatImageView
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.navigation.findNavController
@@ -15,6 +16,7 @@ import com.engageft.fis.pscu.R
 import com.engageft.fis.pscu.databinding.FragmentGoalDeleteBinding
 import com.engageft.fis.pscu.feature.BaseEngagePageFragment
 import com.engageft.fis.pscu.feature.branding.Palette
+import com.engageft.fis.pscu.feature.palettebindings.setPalette
 import utilGen1.StringUtils
 import java.math.BigDecimal
 
@@ -39,6 +41,8 @@ class GoalDeleteFragment: BaseEngagePageFragment() {
                 goalId = getLong(GOAL_ID_KEY)
                 goadFundAmount = getSerializable(GOAL_FUND_AMOUNT_KEY) as BigDecimal
             }
+
+            imageViewLayout.findViewById<AppCompatImageView>(R.id.imageViewIcon).setPalette(true)
 
             deleteButton.setOnClickListener {
                 viewModelDelete.onTransferAndDelete(goalId)

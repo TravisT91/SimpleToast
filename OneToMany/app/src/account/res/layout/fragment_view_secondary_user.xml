@@ -37,6 +37,7 @@
                 <com.engageft.apptoolbox.view.TextInputWithLabel
                     android:id="@+id/firstNameText"
                     style="@style/TextInputWithLabelStyle"
+                    InputWithLabel.setThemeWithPalette="@{true}"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="20dp"
@@ -47,6 +48,7 @@
                 <com.engageft.apptoolbox.view.TextInputWithLabel
                     android:id="@+id/lastNameText"
                     style="@style/TextInputWithLabelStyle"
+                    InputWithLabel.setThemeWithPalette="@{true}"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="20dp"
@@ -57,6 +59,7 @@
                 <com.engageft.apptoolbox.view.PhoneInputWithLabel
                     android:id="@+id/phoneNumberText"
                     style="@style/TextInputWithLabelStyle"
+                    InputWithLabel.setThemeWithPalette="@{true}"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="20dp"
@@ -66,6 +69,7 @@
                 <com.engageft.apptoolbox.view.DateInputWithLabel
                     android:id="@+id/dobText"
                     style="@style/TextInputWithLabelStyle"
+                    InputWithLabel.setThemeWithPalette="@{true}"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="20dp"
@@ -74,6 +78,7 @@
 
                 <com.engageft.apptoolbox.view.TextInputWithLabel
                     style="@style/TextInputWithLabelStyle"
+                    InputWithLabel.setThemeWithPalette="@{true}"
                     android:id="@+id/cardStatusText"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"

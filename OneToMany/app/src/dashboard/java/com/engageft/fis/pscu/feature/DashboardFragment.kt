@@ -22,8 +22,6 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.engageft.apptoolbox.BaseViewModel
 import com.engageft.apptoolbox.ToolbarVisibilityState
-import com.engageft.apptoolbox.ViewUtils.newLotusInstance
-import com.engageft.apptoolbox.view.InformationDialogFragment
 import com.engageft.apptoolbox.view.ProductCardModel
 import com.engageft.engagekit.EngageService
 import com.engageft.engagekit.repository.transaction.vo.Transaction
@@ -231,7 +229,7 @@ class DashboardFragment : BaseEngagePageFragment(),
             }
             ProductCardViewCardState.ERROR -> {
                 fragmentDelegate.showDialog(
-                        InformationDialogFragment.newLotusInstance(
+                        newInfoDialogInstance(context!!,
                                 message = getString(R.string.OVERVIEW_CARD_ERROR_DIALOG_MESSAGE),
                                 buttonPositiveText = getString(R.string.dialog_information_ok_button)
                         )

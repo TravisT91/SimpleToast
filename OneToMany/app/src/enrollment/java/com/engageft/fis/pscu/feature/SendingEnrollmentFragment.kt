@@ -1,5 +1,6 @@
 package com.engageft.fis.pscu.feature
 
+import android.content.res.ColorStateList
 import android.os.Bundle
 import android.os.Handler
 import android.view.LayoutInflater
@@ -48,6 +49,7 @@ class SendingEnrollmentFragment : BaseEngagePageFragment() {
             upButtonOverrideProvider.setUpButtonOverride(navigationOverrideClickListener)
 
             progressBar.setProgress(progress)
+            progressBar.backgroundTintList = ColorStateList.valueOf(Palette.infoColor)
 
             var runnable: Runnable? = null
             runnable = Runnable {

@@ -5,7 +5,6 @@ import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.core.content.ContextCompat
 import androidx.core.content.res.ResourcesCompat
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
@@ -20,6 +19,7 @@ import com.engageft.engagekit.EngageService
 import com.engageft.fis.pscu.R
 import com.engageft.fis.pscu.config.EngageAppConfig
 import com.engageft.fis.pscu.databinding.FragmentStatementsBinding
+import com.engageft.fis.pscu.feature.branding.Palette
 import io.github.luizgrp.sectionedrecyclerviewadapter.SectionedRecyclerViewAdapter
 import org.joda.time.DateTime
 import utilGen1.DisplayDateTimeUtils
@@ -65,7 +65,7 @@ class StatementsFragment: BaseEngagePageFragment() {
         if (statementsList.isNotEmpty()) {
             val title = getString(R.string.statements_description)
                     .applyTypefaceAndColorToSubString(ResourcesCompat.getFont(context!!, R.font.font_bold)!!,
-                            ContextCompat.getColor(context!!, R.color.statementSubstringDescription), getString(R.string.statements_description_substring))
+                            Palette.primaryColor, getString(R.string.statements_description_substring))
             val availableDate = statementsViewModel.dayOfMonthStatementAvailable.toString() + DisplayDateTimeUtils.getOrdinal(context!!, statementsViewModel.dayOfMonthStatementAvailable)
             val subTitle = String.format(getString(R.string.statements_subDescription_format), availableDate)
 
@@ -112,7 +112,7 @@ class StatementsFragment: BaseEngagePageFragment() {
             binding.statementsLayout.gravity = Gravity.CENTER_VERTICAL
             val title = getString(R.string.statements_description_empty)
                     .applyTypefaceAndColorToSubString(ResourcesCompat.getFont(context!!, R.font.font_bold)!!,
-                            ContextCompat.getColor(context!!, R.color.statementSubstringDescription), getString(R.string.statements_description_empty_substring))
+                            Palette.primaryColor, getString(R.string.statements_description_empty_substring))
             val subTitle = getString(R.string.statements_subDescription_empty)
             sectionAdapter.addSection(HeaderLabelTitleWithSubtitleSection(title, subTitle, R.layout.statements_header_section))
         }

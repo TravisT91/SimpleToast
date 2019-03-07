@@ -4,7 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageView
+import androidx.appcompat.widget.AppCompatImageView
 import androidx.lifecycle.Observer
 import androidx.navigation.findNavController
 import com.engageft.apptoolbox.BaseViewModel
@@ -14,6 +14,7 @@ import com.engageft.fis.pscu.feature.BaseEngagePageFragment
 import com.engageft.fis.pscu.feature.DialogInfo
 import com.engageft.fis.pscu.feature.branding.Palette
 import com.engageft.fis.pscu.feature.infoDialogGenericErrorTitleMessageConditionalNewInstance
+import com.engageft.fis.pscu.feature.palettebindings.setPalette
 import org.joda.time.DateTime
 import utilGen1.DisplayDateTimeUtils
 import utilGen1.StringUtils
@@ -36,7 +37,10 @@ class CardLoadTransferConfirmationFragment: BaseEngagePageFragment() {
             viewModel = createTransferViewModel
             palette = Palette
 
-            imageViewLayout.findViewById<ImageView>(R.id.imageViewIcon).setImageResource(R.drawable.ic_transfer)
+            imageViewLayout.findViewById<AppCompatImageView>(R.id.imageViewIcon).apply {
+                setImageResource(R.drawable.ic_transfer)
+                setPalette(true)
+            }
 
             amountTextView.text = StringUtils.formatCurrencyStringFractionDigitsReducedHeight(cardLoadTransfer.amount.toString(), 0.5f, true)
             val account = if (cardLoadTransfer.fundSourceType == FundSourceType.STANDARD_DEBIT) {

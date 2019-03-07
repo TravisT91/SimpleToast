@@ -13,7 +13,6 @@ import androidx.lifecycle.ViewModelProviders
 import androidx.navigation.fragment.findNavController
 import com.engageft.apptoolbox.BaseViewModel
 import com.engageft.apptoolbox.NavigationOverrideClickListener
-import com.engageft.apptoolbox.ViewUtils.newLotusInstance
 import com.engageft.apptoolbox.view.InformationDialogFragment
 import com.engageft.fis.pscu.R
 import com.engageft.fis.pscu.databinding.FragmentProfileBinding
@@ -96,7 +95,8 @@ class ProfileFragment : BaseEngagePageFragment() {
                     }
                 }
                 var message = StringUtils.concatenateFromList(messages, "\n\n")
-                fragmentDelegate.showDialog(InformationDialogFragment.newLotusInstance(title = if (wasError) getString(R.string.PROFILE_ERROR_TITLE) else getString(R.string.PROFILE_SUCCESS_TITLE),
+                fragmentDelegate.showDialog(newInfoDialogInstance(context!!,
+                        title = if (wasError) getString(R.string.PROFILE_ERROR_TITLE) else getString(R.string.PROFILE_SUCCESS_TITLE),
                         message = message,
                         buttonPositiveText = getString(R.string.PROFILE_SUCCESS_MESSAGE_OK)))
             }
@@ -238,7 +238,7 @@ class ProfileFragment : BaseEngagePageFragment() {
             }
         })
         binding.zipcodeInput.setImeOptions(EditorInfo.IME_ACTION_GO)
-        binding.zipcodeInput.onImeAction(EditorInfo.IME_ACTION_DONE) { profileViewModel.onSaveClicked() }
+        binding.zipcodeInput.onImeAction(EditorInfo.IME_ACTION_GO) { profileViewModel.onSaveClicked() }
 
         return binding.root
     }
