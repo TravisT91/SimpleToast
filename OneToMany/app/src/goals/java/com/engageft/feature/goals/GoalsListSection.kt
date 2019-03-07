@@ -8,10 +8,10 @@ import androidx.recyclerview.widget.RecyclerView
 import com.engageft.apptoolbox.util.applyTypefaceToSubstring
 import com.engageft.apptoolbox.view.CircularTrackingPanel
 import com.engageft.engagekit.utils.BackendDateTimeUtils
-import com.engageft.fis.pscu.R
 import com.engageft.feature.goals.utils.getGoalInfoCompletionDateString
 import com.engageft.feature.goals.utils.getGoalInfoContributionString
 import com.engageft.feature.goals.utils.getGoalInfoProgressString
+import com.engageft.fis.pscu.R
 import com.engageft.fis.pscu.feature.branding.Palette
 import com.ob.ws.dom.utility.GoalInfo
 import io.github.luizgrp.sectionedrecyclerviewadapter.SectionParameters
@@ -41,6 +41,7 @@ class GoalsListSection(private val context: Context,
             }
 
             circularTrackingPanel.setProgress(goalModel.progress)
+            circularTrackingPanel.setProgressColor(Palette.successColor)
             circularTrackingPanel.setTopAndCenterLeftText(goalModel.goalInfo.name)
             circularTrackingPanel.setBottomLeftText(applyCustomTypefaceToSubStringProgressString(goalModel.goalInfo))
             circularTrackingPanel.setTopRightText(goalModel.goalInfo.getGoalInfoContributionString(context))

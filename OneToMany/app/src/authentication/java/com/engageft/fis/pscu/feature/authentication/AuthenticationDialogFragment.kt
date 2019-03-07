@@ -1,28 +1,30 @@
 package com.engageft.fis.pscu.feature.authentication
 
 import android.app.Dialog
+import android.content.res.ColorStateList
 import android.graphics.Typeface
 import android.os.Build
 import android.os.Bundle
-import android.os.Handler
 import android.text.InputType
 import android.view.LayoutInflater
 import android.view.View
-import android.widget.Button
-import android.widget.EditText
 import android.widget.TextView
 import android.widget.Toast
 import androidx.annotation.ColorInt
 import androidx.annotation.StyleRes
 import androidx.appcompat.app.AlertDialog
+import androidx.appcompat.widget.AppCompatButton
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import com.engageft.apptoolbox.BaseViewModel
 import com.engageft.apptoolbox.util.setTextSizeAndFont
-import com.engageft.apptoolbox.util.showKeyboard
+import com.engageft.apptoolbox.view.PasswordInputWithLabel
+import com.engageft.feature.PaletteBindings.setThemeWithPalette
 import com.engageft.fis.pscu.R
 import com.engageft.fis.pscu.feature.BaseEngageDialogFragment
+import com.engageft.fis.pscu.feature.branding.Palette
+import com.engageft.fis.pscu.feature.palettebindings.getButtonColorStateList
 
 /**
  * AuthenticationDialogFragment
@@ -41,11 +43,11 @@ class AuthenticationDialogFragment : BaseEngageDialogFragment() {
 
     private lateinit var titleTextView: TextView
     private lateinit var messageTextView: TextView
-    private lateinit var passwordPasscodeEditText: EditText
+    private lateinit var passwordPasscodeEditText: PasswordInputWithLabel
     private lateinit var errorTextView: TextView
-    private lateinit var buttonPositive: Button
-    private lateinit var buttonNeutral: Button
-    private lateinit var buttonNegative: Button
+    private lateinit var buttonPositive: AppCompatButton
+    private lateinit var buttonNeutral: AppCompatButton
+    private lateinit var buttonNegative: AppCompatButton
 
     var titleTextSizeAndFont: Pair<Float?, Typeface?>? = null
     var messageTextSizeAndFont: Pair<Float?, Typeface?>? = null
@@ -61,11 +63,11 @@ class AuthenticationDialogFragment : BaseEngageDialogFragment() {
     @ColorInt
     var errorTextColor: Int = NOT_SET
     @ColorInt
-    var positiveButtonTextColor: Int = NOT_SET
+    var positiveButtonTextColor: ColorStateList? = null
     @ColorInt
-    var neutralButtonTextColor: Int = NOT_SET
+    var neutralButtonTextColor: ColorStateList? = null
     @ColorInt
-    var negativeButtonTextColor: Int = NOT_SET
+    var negativeButtonTextColor: ColorStateList? = null
 
     private var authenticationSuccessFunction: (() -> Unit)? = null
 
@@ -90,6 +92,7 @@ class AuthenticationDialogFragment : BaseEngageDialogFragment() {
             titleTextView = findViewById(R.id.titleTextView)
             messageTextView = findViewById(R.id.messageTextView)
             passwordPasscodeEditText = findViewById(R.id.passwordPasscodeEditText)
+            passwordPasscodeEditText.setThemeWithPalette(true)
             errorTextView = findViewById(R.id.errorTextView)
             buttonPositive = findViewById(R.id.buttonPositive)
             buttonNeutral = findViewById(R.id.buttonNeutral)
@@ -108,7 +111,7 @@ class AuthenticationDialogFragment : BaseEngageDialogFragment() {
             when (viewModel.authMethodObservable.value) {
                 AuthenticationDialogViewModel.AuthMethod.BIOMETRIC -> viewModel.authenticateBiometric()
                 AuthenticationDialogViewModel.AuthMethod.PASSCODE -> viewModel.authenticatePasscode("test")
-                AuthenticationDialogViewModel.AuthMethod.PASSWORD -> viewModel.authenticatePassword(passwordPasscodeEditText.text.toString())
+                AuthenticationDialogViewModel.AuthMethod.PASSWORD -> viewModel.authenticatePassword(passwordPasscodeEditText.inputText.toString())
             }
         }
 
@@ -132,13 +135,11 @@ class AuthenticationDialogFragment : BaseEngageDialogFragment() {
                                 getString(R.string.auth_dialog_title_passcode),
                                 username
                         )
-                        passwordPasscodeEditText.text = null
-                        passwordPasscodeEditText.hint = getString(R.string.auth_dialog_input_hint_passcode)
+                        passwordPasscodeEditText.inputText = ""
+                        passwordPasscodeEditText.setLabelText(getString(R.string.auth_dialog_input_hint_passcode))
                         passwordPasscodeEditText.inputType = InputType.TYPE_CLASS_NUMBER or InputType.TYPE_TEXT_VARIATION_PASSWORD
                         passwordPasscodeEditText.requestFocus()
                         buttonNeutral.text = getString(R.string.auth_dialog_button_forgot_passcode)
-
-                        Handler().post { passwordPasscodeEditText.showKeyboard() }
                     }
                     AuthenticationDialogViewModel.AuthMethod.PASSWORD -> {
                         titleTextView.text = String.format(
@@ -146,13 +147,11 @@ class AuthenticationDialogFragment : BaseEngageDialogFragment() {
                                 getString(R.string.auth_dialog_title_password),
                                 username
                         )
-                        passwordPasscodeEditText.text = null
-                        passwordPasscodeEditText.hint = getString(R.string.auth_dialog_input_hint_password)
-                        passwordPasscodeEditText.inputType = InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_VARIATION_PASSWORD
+                        passwordPasscodeEditText.inputText = ""
+                        passwordPasscodeEditText.setLabelText(getString(R.string.auth_dialog_input_hint_password))
+                        passwordPasscodeEditText.inputType = InputType.TYPE_CLASS_NUMBER or InputType.TYPE_TEXT_VARIATION_PASSWORD
                         passwordPasscodeEditText.requestFocus()
                         buttonNeutral.text = getString(R.string.auth_dialog_button_forgot_password)
-
-                        Handler().post { passwordPasscodeEditText.showKeyboard() }
                     }
                 }
             })
@@ -209,9 +208,15 @@ class AuthenticationDialogFragment : BaseEngageDialogFragment() {
         if (titleTextColor != NOT_SET) titleTextView.setTextColor(titleTextColor)
         if (messageTextColor != NOT_SET) messageTextView.setTextColor(messageTextColor)
         if (errorTextColor != NOT_SET) errorTextView.setTextColor(errorTextColor)
-        if (positiveButtonTextColor != NOT_SET) buttonPositive.setTextColor(positiveButtonTextColor)
-        if (neutralButtonTextColor != NOT_SET) buttonNeutral.setTextColor(neutralButtonTextColor)
-        if (negativeButtonTextColor != NOT_SET) buttonNegative.setTextColor(negativeButtonTextColor)
+        positiveButtonTextColor?.let { buttonPositive.setTextColor(positiveButtonTextColor) } ?: kotlin.run {
+            buttonPositive.setTextColor(getButtonColorStateList(this.context!!, Palette.primaryColor))
+        }
+        neutralButtonTextColor?.let { buttonNeutral.setTextColor(neutralButtonTextColor) } ?: kotlin.run {
+            buttonNeutral.setTextColor(getButtonColorStateList(this.context!!, Palette.primaryColor))
+        }
+        negativeButtonTextColor?.let { buttonNegative.setTextColor(negativeButtonTextColor) } ?: kotlin.run {
+            buttonNegative.setTextColor(getButtonColorStateList(this.context!!, Palette.primaryColor))
+        }
     }
 
     private fun applyStyle(@StyleRes styleResId: Int) {

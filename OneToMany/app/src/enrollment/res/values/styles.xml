@@ -12,7 +12,7 @@
     </style>
 
     <style name="CircularProgressBar">
-        <item name="progressBarProgressColor">@color/secondary</item>
+        <item name="progressBarProgressColor">@color/info</item>
         <item name="progressBarBackgroundColor">@color/structure3</item>
         <item name="progressDrawables">@drawable/ic_progress_ring_6dp</item>
         <item name="innerDrawable">@drawable/ic_check</item>

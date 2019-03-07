@@ -20,11 +20,11 @@ import com.engageft.fis.pscu.feature.branding.Palette
 fun PillButton.setThemeFilled(isFilled: Boolean){
     if (isFilled){
         this.setColorStateList(
-                fillPressed = Palette.secondaryColor,
-                strokePressed = Palette.secondaryColor,
+                fillPressed = getColor40PercentBlacker(Palette.primaryColor),
+                strokePressed = getColor40PercentBlacker(Palette.primaryColor),
                 fillEnabled = Palette.primaryColor,
                 strokeEnabled = Palette.primaryColor,
-                fillDisabled = ContextCompat.getColor(this.context, R.color.structure2),
+                fillDisabled = ContextCompat.getColor(this.context, R.color.structure3),
                 strokeDisabled = ContextCompat.getColor(this.context, R.color.structure2))
         this.setTextColor(
                 getTextStateList(
@@ -39,15 +39,12 @@ fun PillButton.setThemeOutlined(isOutlined: Boolean){
     if (isOutlined){
         this.setColorStateList(
                 fillPressed = ContextCompat.getColor(this.context, android.R.color.transparent),
-                strokePressed = Palette.secondaryColor,
+                strokePressed = getColor40PercentBlacker(Palette.primaryColor),
                 fillEnabled = ContextCompat.getColor(this.context, android.R.color.transparent),
                 strokeEnabled = Palette.primaryColor,
                 fillDisabled = ContextCompat.getColor(this.context, android.R.color.transparent),
                 strokeDisabled = ContextCompat.getColor(this.context, R.color.structure2))
         this.setTextColor(
-                getTextStateList(
-                        pressedColor = Palette.secondaryColor,
-                        enabledColor = Palette.primaryColor,
-                        disabledColor = ContextCompat.getColor(this.context, R.color.structure4)))
+                getButtonColorStateList(this.context, Palette.primaryColor))
     }
 }

@@ -13,13 +13,10 @@ import androidx.navigation.findNavController
 import androidx.navigation.fragment.findNavController
 import com.engageft.apptoolbox.BaseViewModel
 import com.engageft.apptoolbox.NavigationOverrideClickListener
-import com.engageft.apptoolbox.ViewUtils.newLotusInstance
 import com.engageft.apptoolbox.view.InformationDialogFragment
 import com.engageft.engagekit.EngageService
-import com.engageft.fis.pscu.MoEngageUtils
 import com.engageft.fis.pscu.R
 import com.engageft.fis.pscu.databinding.FragmentChangeSecurityQuestionsBinding
-import com.engageft.fis.pscu.feature.branding.BrandingManager
 import com.engageft.fis.pscu.feature.branding.Palette
 
 
@@ -43,7 +40,7 @@ class ChangeSecurityQuestionsFragment : BaseEngagePageFragment() {
                 fragmentDelegate.showDialog(infoDialogGenericUnsavedChangesNewInstance(context = activity!!, listener = unsavedChangesDialogListener))
                 true
             } else if (changeSecurityQuestionsViewModel.modeObservable.value == ChangeSecurityQuestionsViewModel.ChangeSecurityQuestionsMode.CREATE) {
-                fragmentDelegate.showDialog(InformationDialogFragment.newLotusInstance(
+                fragmentDelegate.showDialog(newInfoDialogInstance(context!!,
                         title = getString(R.string.SECURITY_QUESTIONS_CREATE_BACK_TITLE),
                         message = getString(R.string.SECURITY_QUESTIONS_CREATE_BACK_MESSAGE),
                         buttonPositiveText = getString(R.string.SECURITY_QUESTIONS_CREATE_BACK_POSITIVE),
@@ -113,7 +110,7 @@ class ChangeSecurityQuestionsFragment : BaseEngagePageFragment() {
             when (navEvent) {
                 ChangeSecurityQuestionsViewModel.ChangeSecurityQuestionsNavigation.NONE -> {}
                 ChangeSecurityQuestionsViewModel.ChangeSecurityQuestionsNavigation.CHANGE_SUCCESSFUL -> {
-                    fragmentDelegate.showDialog(InformationDialogFragment.newLotusInstance(title = getString(R.string.SECURITY_QUESTIONS_SUCCESS_TITLE),
+                    fragmentDelegate.showDialog(newInfoDialogInstance(context!!, title = getString(R.string.SECURITY_QUESTIONS_SUCCESS_TITLE),
                             message = getString(R.string.SECURITY_QUESTIONS_SUCCESS_MESSAGE_CHANGE),
                             buttonPositiveText = getString(R.string.SECURITY_QUESTIONS_SUCCESS_MESSAGE_OK),
                             listener = object : InformationDialogFragment.InformationDialogFragmentListener {
@@ -129,7 +126,7 @@ class ChangeSecurityQuestionsFragment : BaseEngagePageFragment() {
                     }))
                 }
                 ChangeSecurityQuestionsViewModel.ChangeSecurityQuestionsNavigation.CREATE_SUCCESSFUL -> {
-                    fragmentDelegate.showDialog(InformationDialogFragment.newLotusInstance(title = getString(R.string.SECURITY_QUESTIONS_SUCCESS_TITLE),
+                    fragmentDelegate.showDialog(newInfoDialogInstance(context!!, title = getString(R.string.SECURITY_QUESTIONS_SUCCESS_TITLE),
                             message = getString(R.string.SECURITY_QUESTIONS_SUCCESS_MESSAGE_CREATE),
                             buttonPositiveText = getString(R.string.SECURITY_QUESTIONS_SUCCESS_MESSAGE_OK), listener = object : InformationDialogFragment.InformationDialogFragmentListener {
                         override fun onDialogCancelled() {

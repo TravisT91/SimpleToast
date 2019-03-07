@@ -15,7 +15,6 @@ import androidx.navigation.findNavController
 import androidx.transition.AutoTransition
 import androidx.transition.TransitionManager
 import com.engageft.apptoolbox.BaseViewModel
-import com.engageft.apptoolbox.ViewUtils.newLotusInstance
 import com.engageft.apptoolbox.view.InformationDialogFragment
 import com.engageft.engagekit.utils.DeviceUtils
 import com.engageft.fis.pscu.R
@@ -25,6 +24,7 @@ import com.engageft.fis.pscu.feature.DialogInfo
 import com.engageft.fis.pscu.feature.EasterEggGestureDetector
 import com.engageft.fis.pscu.feature.EasterEggGestureListener
 import com.engageft.fis.pscu.feature.infoDialogSimpleMessageNoTitle
+import com.engageft.fis.pscu.feature.newInfoDialogStackedInstance
 
 /**
  * LoginFragment
@@ -176,12 +176,11 @@ class LoginFragment : BaseEngagePageFragment() {
                                     vm.logout()
                                 }
                             }
-                            fragmentDelegate.showDialog(InformationDialogFragment.newLotusInstance(
+                            fragmentDelegate.showDialog(newInfoDialogStackedInstance(context!!,
                                     title = getString(R.string.login_confirm_email_alert_title),
                                     message = getString(R.string.login_confirm_email_alert_message),
                                     buttonPositiveText = getString(R.string.login_confirm_email_send_button),
                                     buttonNegativeText = getString(R.string.dialog_information_cancel_button),
-                                    layoutType = InformationDialogFragment.LayoutType.BUTTONS_STACKED,
                                     listener = listener))
                         }
                         LoginDialogInfo.LoginDialogType.EMAIL_VERIFICATION_SUCCESS -> {

@@ -1,16 +1,22 @@
 package com.engageft.fis.pscu.feature.palettebindings
 
+import android.content.res.ColorStateList
+import android.util.Log
 import android.widget.Button
 import android.widget.TextView
 import androidx.annotation.ColorInt
+import androidx.appcompat.widget.AppCompatButton
+import androidx.appcompat.widget.AppCompatImageView
 import androidx.appcompat.widget.SwitchCompat
 import androidx.core.content.ContextCompat
+import androidx.core.widget.ImageViewCompat
 import androidx.databinding.BindingAdapter
 import com.airbnb.paris.extensions.style
 import com.airbnb.paris.styles.Style
 import com.engageft.fis.pscu.R
 import com.engageft.fis.pscu.feature.branding.Palette
 import com.engageft.fis.pscu.feature.utils.lighten
+import com.google.android.material.tabs.TabLayout
 
 /**
  * com.engageft.fis.pscu.feature.AndroidViewBindings
@@ -46,7 +52,7 @@ fun Button.shouldApplyPaletteColors(shouldApply: Boolean) {
 }
 fun Button.applyPaletteColors() {
     // TODO(jhutchins): Palette should provide click states.
-    this.setTextColor(getTextStateList(Palette.primaryColor, Palette.primaryColor, Palette.primaryColor))
+    this.setTextColor(getButtonColorStateList(context!!, Palette.primaryColor))
 }
 
 @BindingAdapter("SwitchCompat.applyPaletteColors")
@@ -64,4 +70,27 @@ fun SwitchCompat.applyPaletteColors() {
             trackUncheckedColor = ContextCompat.getColor(context!!, R.color.structure2),
             thumbDisabledColor = ContextCompat.getColor(context!!, R.color.structure2),
             trackDisabledColor = ContextCompat.getColor(context!!, R.color.structure1))
+}
+
+@BindingAdapter("AppCompatImageView.setPalette")
+fun AppCompatImageView.setPalette(shouldApply: Boolean){
+    if (shouldApply) {
+        ImageViewCompat.setImageTintList(this, ColorStateList.valueOf(Palette.primaryColor))
+    }
+}
+
+@BindingAdapter("AppCompatButton.setPaletteForPrimaryLink")
+fun AppCompatButton.setPaletteForPrimaryLink(shouldApply: Boolean){
+    if (shouldApply) {
+        this.setTextColor(getButtonColorStateList(context!!, Palette.primaryColor))
+    }
+}
+
+@BindingAdapter("TabLayout.setPalette")
+fun TabLayout.setPalette(shouldApply: Boolean){
+    Log.e("Joey", "setPalette")
+    if (shouldApply) {
+        this.setSelectedTabIndicatorColor(Palette.primaryColor)
+        this.setTabTextColors(ContextCompat.getColor(context, R.color.structure6), Palette.primaryColor)
+    }
 }

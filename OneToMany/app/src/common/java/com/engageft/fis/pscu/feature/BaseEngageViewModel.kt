@@ -71,7 +71,7 @@ open class BaseEngageViewModel: BaseViewModel() {
                     e.printStackTrace()
                     // Just in case the user at the time doesn't report a bug to us.
                 } else {
-                    dialogInfoObservable.value = DialogInfo(dialogType = DialogInfo.DialogType.GENERIC_ERROR)
+                    dialogInfoObservable.postValue(DialogInfo(dialogType = DialogInfo.DialogType.GENERIC_ERROR))
                 }
                 Crashlytics.logException(e)
             }
@@ -98,7 +98,7 @@ fun BaseEngageViewModel.getBackendErrorForForms(response: BasicResponse): String
 fun BaseEngageViewModel.handleBackendErrorForForms(response: BasicResponse, contextualMessage: String) {
     val message = getBackendErrorForForms(response)
     if (message.isNotEmpty()) {
-        dialogInfoObservable.value = DialogInfo(dialogType = DialogInfo.DialogType.SERVER_ERROR, message = message)
+        dialogInfoObservable.postValue(DialogInfo(dialogType = DialogInfo.DialogType.SERVER_ERROR, message = message))
     } else {
         response.message = contextualMessage
         handleUnexpectedErrorResponse(response)
