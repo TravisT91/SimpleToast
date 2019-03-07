@@ -1,6 +1,5 @@
 package com.engageft.fis.pscu.feature.authentication
 
-import androidx.databinding.Observable
 import androidx.databinding.ObservableField
 import androidx.lifecycle.MutableLiveData
 import com.engageft.engagekit.EngageService
@@ -31,18 +30,11 @@ class AuthExpiredViewModel : BaseEngageViewModel() {
     }
 
     val navigationObservable = MutableLiveData<AuthExpiredNavigationEvent>()
-    val loginButtonStateObservable = MutableLiveData<LoginButtonState>()
 
     var password : ObservableField<String> = ObservableField("")
 
     init {
         navigationObservable.value = AuthExpiredNavigationEvent.NONE
-        loginButtonStateObservable.value = LoginButtonState.GONE
-        password.addOnPropertyChangedCallback(object : Observable.OnPropertyChangedCallback(){
-            override fun onPropertyChanged(observable: Observable?, field: Int) {
-                validatePassword()
-            }
-        })
     }
 
     fun onLogoutClicked() {
@@ -74,14 +66,5 @@ class AuthExpiredViewModel : BaseEngageViewModel() {
 
     fun onForgotPasswordClicked() {
         navigationObservable.value = AuthExpiredNavigationEvent.FORGOT_PASSWORD
-    }
-
-    private fun validatePassword() {
-        val passwordText = password.get()
-        if (!passwordText.isNullOrEmpty()) {
-            loginButtonStateObservable.value = LoginButtonState.VISIBLE_ENABLED
-        } else {
-            loginButtonStateObservable.value = LoginButtonState.GONE
-        }
     }
 }
