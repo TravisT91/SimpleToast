@@ -16,7 +16,7 @@ import com.engageft.apptoolbox.BaseViewModel
 import com.engageft.fis.pscu.R
 import com.engageft.fis.pscu.databinding.FragmentAccountsAndTransfersListBinding
 import com.engageft.fis.pscu.feature.BaseEngagePageFragment
-import com.engageft.fis.pscu.feature.achtransfer.CardLoadConstants.CC_ACCOUNT_ID
+import com.engageft.fis.pscu.feature.achtransfer.CardLoadConstants.CC_ACCOUNT_ID_CREATE_ACCOUNT
 import com.engageft.fis.pscu.feature.achtransfer.CardLoadConstants.CC_ACCOUNT_ID_KEY
 import com.engageft.fis.pscu.feature.achtransfer.CardLoadConstants.ACH_BANK_ACCOUNT_ID_KEY
 import com.engageft.fis.pscu.feature.achtransfer.CardLoadConstants.SCHEDULED_LOAD_ID_KEY
@@ -41,7 +41,7 @@ class AccountsAndTransfersListFragment: BaseEngagePageFragment() {
                 }
                 is AccountsAndTransferListItem.AddItem.AddCreditDebitCardItem -> {
                     findNavController().navigate(R.id.action_accountsAndTransfersListFragment_to_cardLoadAddEditCardFragment,
-                            bundleOf(CC_ACCOUNT_ID_KEY to CC_ACCOUNT_ID))
+                            bundleOf(CC_ACCOUNT_ID_KEY to CC_ACCOUNT_ID_CREATE_ACCOUNT))
                 }
                 is AccountsAndTransferListItem.CreateTransferItem -> {
                     findNavController().navigate(R.id.action_accountsAndTransfersListFragment_to_createEditTransferFragment)

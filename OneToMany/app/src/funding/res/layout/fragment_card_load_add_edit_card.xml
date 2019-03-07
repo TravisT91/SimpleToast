@@ -31,6 +31,7 @@
                 <com.engageft.apptoolbox.view.CardInputWithLabel
                     style="@style/TextInputWithLabelStyle"
                     android:id="@+id/cardNumberInputWithLabel"
+                    InputWithLabel.setThemeWithPalette="@{true}"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:padding="16dp"
@@ -40,6 +41,7 @@
                 <com.engageft.apptoolbox.view.NumberInputWithLabel
                     style="@style/TextInputWithLabelStyle"
                     android:id="@+id/cvvInputWithLabel"
+                    InputWithLabel.setThemeWithPalette="@{true}"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:padding="16dp"
@@ -51,6 +53,7 @@
                 <com.engageft.apptoolbox.view.DateInputWithLabel
                     style="@style/TextInputWithLabelStyle"
                     android:id="@+id/expirationDateInputWithLabel"
+                    InputWithLabel.setThemeWithPalette="@{true}"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:paddingTop="16dp"

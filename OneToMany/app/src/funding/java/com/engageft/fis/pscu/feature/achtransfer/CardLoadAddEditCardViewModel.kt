@@ -12,7 +12,7 @@ import com.engageft.engagekit.rest.request.FundingAddDebitRequest
 import com.engageft.engagekit.rest.request.FundingDeleteDebitRequest
 import com.engageft.engagekit.utils.engageApi
 import com.engageft.fis.pscu.feature.achtransfer.CardLoadConstants.CARD_NUMBER_REQUIRED_LENGTH
-import com.engageft.fis.pscu.feature.achtransfer.CardLoadConstants.CC_ACCOUNT_ID
+import com.engageft.fis.pscu.feature.achtransfer.CardLoadConstants.CC_ACCOUNT_ID_CREATE_ACCOUNT
 import com.engageft.fis.pscu.feature.achtransfer.CardLoadConstants.CVV_NUMBER_MAX_LENGTH
 import com.engageft.fis.pscu.feature.achtransfer.CardLoadConstants.CVV_NUMBER_MIN_LENGTH
 import com.engageft.fis.pscu.feature.handleBackendErrorForForms
@@ -86,7 +86,7 @@ class CardLoadAddEditCardViewModel(private val ccAccountId: Long): BaseCardLoadV
         cvvValidationObservable.value = Validation.EMPTY
         cardExpirationValidationObservable.value = Validation.EMPTY
 
-        if (ccAccountId != CC_ACCOUNT_ID) {
+        if (ccAccountId != CC_ACCOUNT_ID_CREATE_ACCOUNT) {
             eventType = EventType.EDIT
             populateData(ccAccountId)
         }

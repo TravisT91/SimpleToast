@@ -4,7 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageView
+import androidx.appcompat.widget.AppCompatImageView
 import androidx.navigation.findNavController
 import com.engageft.apptoolbox.BaseViewModel
 import com.engageft.apptoolbox.NavigationOverrideClickListener
@@ -14,6 +14,7 @@ import com.engageft.fis.pscu.databinding.FragmentCardLoadSuccessBinding
 import com.engageft.fis.pscu.feature.BaseEngagePageFragment
 import com.engageft.fis.pscu.feature.achtransfer.CardLoadConstants.SUCCESS_SCREEN_TYPE_KEY
 import com.engageft.fis.pscu.feature.branding.Palette
+import com.engageft.fis.pscu.feature.palettebindings.setPalette
 
 /**
  * CardLoadSuccessFragment
@@ -49,7 +50,9 @@ class CardLoadSuccessFragment: BaseEngagePageFragment() {
         binding.apply {
             palette = Palette
 
-            val imageView = imageViewLayout.findViewById<ImageView>(R.id.imageViewIcon)
+            val imageView = imageViewLayout.findViewById<AppCompatImageView>(R.id.imageViewIcon)
+            imageView.setPalette(true)
+
             arguments?.let { bundle ->
                 val successType = bundle.getSerializable(SUCCESS_SCREEN_TYPE_KEY) as? SuccessType
                 when (successType) {

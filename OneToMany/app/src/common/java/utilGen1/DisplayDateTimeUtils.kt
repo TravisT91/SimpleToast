@@ -53,7 +53,7 @@ object DisplayDateTimeUtils {
     private val monthFullFormatter = DateTimeFormat.forPattern("MMMM") // "November";
     private val monthAbbrFormatter = DateTimeFormat.forPattern("MMM") // "Nov";
     private val dayTwoDigitsFormatter = DateTimeFormat.forPattern("dd") // "15";
-    private val monthTwoDigitsFormatter = DateTimeFormat.forPattern("MM") // "15";
+    private val monthTwoDigitsFormatter = DateTimeFormat.forPattern("MM") // "03";
     private val yearTwoDigitsFormatter = DateTimeFormat.forPattern("YY") // "15";
 
     var MINIMUM_AGE_OF_USER_YEARS = 18
