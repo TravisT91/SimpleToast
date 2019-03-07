@@ -61,6 +61,7 @@ class OnboardingDialogFragment : BaseEngageDialogFragment() {
 
         unselectedDot = ContextCompat.getDrawable(context!!, R.drawable.pager_indicator_dot)!!
         selectedDot = ContextCompat.getDrawable(context!!, R.drawable.pager_indicator_dot_selected)!!
+        selectedDot.setTint(Palette.primaryColor)
 
         adapter = OnboardingPagerAdapter(childFragmentManager)
 

@@ -1,13 +1,16 @@
 package com.engageft.fis.pscu.feature.transactions.adapter
 
 import android.content.Context
+import android.content.res.ColorStateList
 import android.graphics.PorterDuff
 import android.view.View
+import android.widget.ProgressBar
 import android.widget.TextView
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.engageft.engagekit.repository.transaction.vo.Transaction
 import com.engageft.fis.pscu.R
+import com.engageft.fis.pscu.feature.branding.Palette
 import com.engageft.fis.pscu.feature.transactions.utils.TransactionUtils
 import com.ob.domain.lookup.TransactionStatus
 import utilGen1.StringUtils
@@ -23,7 +26,7 @@ import utilGen1.StringUtils
 class TransactionViewHolder(itemView: View, val context: Context, val listener: TransactionListener?) : RecyclerView.ViewHolder(itemView) {
     private var transaction: Transaction? = null
 
-    private val loadingView: View = itemView.findViewById(R.id.pb_loading)
+    private val loadingView: ProgressBar = itemView.findViewById(R.id.pb_loading)
 
     private val noTransactionsView: View = itemView.findViewById(R.id.rl_no_transactions)
     private val transactionsView: View = itemView.findViewById(R.id.cl_transactions)
@@ -47,6 +50,8 @@ class TransactionViewHolder(itemView: View, val context: Context, val listener: 
     fun bindTo(transaction: Transaction) {
         this.transaction = transaction
 
+        loadingView.indeterminateTintList = ColorStateList.valueOf(Palette.infoColor)
+
         loadingView.visibility = View.GONE
         noTransactionsView.visibility = View.GONE
         transactionsView.visibility = View.VISIBLE
@@ -61,7 +66,7 @@ class TransactionViewHolder(itemView: View, val context: Context, val listener: 
         val amountString = StringUtils.formatCurrencyStringWithFractionDigits(transactionAmount, true)
         if (transactionAmount > 0F) {
             amountTextView.text = "+$amountString"
-            amountTextView.setTextColor(ContextCompat.getColor(context, R.color.transactionAmountTextPositive))
+            amountTextView.setTextColor(Palette.successColor)
         } else {
             amountTextView.text = amountString
             amountTextView.setTextColor(ContextCompat.getColor(context, R.color.transactionAmountTextDefault))
