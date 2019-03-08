@@ -110,9 +110,11 @@ class GoalSingleTransferFragment: BaseEngagePageFragment() {
                         GoalSingleTransferViewModel.AmountErrorState.EMPTY -> {
                             amountInputWithLabel.setErrorTexts(null)
                         }
-                        GoalSingleTransferViewModel.AmountErrorState.INVALID -> {
-                            //TODO(aHashimi): Chris to determine this:
-                            amountInputWithLabel.setErrorTexts(listOf(getString(R.string.GOAL_SINGLE_TRANSFER_AMOUNT_ERROR_MESSAGE)))
+                        GoalSingleTransferViewModel.AmountErrorState.EXCEEDS_REMAINING_GOAL -> {
+                            amountInputWithLabel.setErrorTexts(listOf(getString(R.string.GOAL_SINGLE_TRANSFER_REMAINING_ERROR)))
+                        }
+                        GoalSingleTransferViewModel.AmountErrorState.EXCEEDS_REMAINING_BALANCE -> {
+                            amountInputWithLabel.setErrorTexts(listOf(getString(R.string.GOAL_SINGLE_TRANSFER_SPENDING_BALANCE_REMAINING_ERROR)))
                         }
                     }
                 })
