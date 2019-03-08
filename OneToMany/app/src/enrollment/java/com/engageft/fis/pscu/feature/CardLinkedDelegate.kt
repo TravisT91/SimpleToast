@@ -1,5 +1,6 @@
 package com.engageft.fis.pscu.feature
 
+import android.os.Handler
 import androidx.lifecycle.MutableLiveData
 import androidx.navigation.NavController
 import com.engageft.apptoolbox.view.ProductCardModel
@@ -43,22 +44,28 @@ class CardLinkedDelegate(private val viewModel: EnrollmentViewModel, private val
         if (viewModel.activationCardInfo.isParentActivationRequired) {
             navController.navigate(linkedNavigations.linkedToLogin)
         } else {
-            EngageService.getInstance().authManager.authToken = viewModel.activationResponse.token
-            viewModel.compositeDisposable.add(
-                    EngageService.getInstance().refreshLoginObservable()
-                            .subscribeOn(Schedulers.io())
-                            .observeOn(AndroidSchedulers.mainThread())
-                            .subscribe({ response ->
-                                if (response.isSuccess && response is LoginResponse) {
-                                    handleSuccessfulLoginResponse(response)
-                                    navController.navigate(linkedNavigations.linkedToDashboard)
-                                } else {
-                                    viewModel.handleUnexpectedErrorResponse(response)
+            viewModel.showProgressOverlayDelayed()
+            EngageService.getInstance().authManager.postAuthToken(viewModel.activationResponse.token)
+            // The auth state won't update immediately. We must delay the next API call
+            Handler().post {
+                viewModel.compositeDisposable.add(
+                        EngageService.getInstance().refreshLoginObservable()
+                                .subscribeOn(Schedulers.io())
+                                .observeOn(AndroidSchedulers.mainThread())
+                                .subscribe({ response ->
+                                    viewModel.dismissProgressOverlay()
+                                    if (response.isSuccess && response is LoginResponse) {
+                                        handleSuccessfulLoginResponse(response)
+                                        navController.navigate(linkedNavigations.linkedToDashboard)
+                                    } else {
+                                        viewModel.handleUnexpectedErrorResponse(response)
+                                    }
+                                }) { e ->
+                                    viewModel.dismissProgressOverlay()
+                                    viewModel.handleThrowable(e)
                                 }
-                            }) { e ->
-                                viewModel.handleThrowable(e)
-                            }
-            )
+                )
+            }
         }
     }
 
