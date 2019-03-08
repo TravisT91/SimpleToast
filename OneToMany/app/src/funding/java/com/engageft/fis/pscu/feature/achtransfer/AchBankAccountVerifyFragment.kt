@@ -8,6 +8,7 @@ import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.content.res.ResourcesCompat
+import androidx.core.os.bundleOf
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.navigation.findNavController
@@ -17,10 +18,10 @@ import com.engageft.fis.pscu.R
 import com.engageft.fis.pscu.config.EngageAppConfig
 import com.engageft.fis.pscu.databinding.FragmentAchBankAccountVerifyBinding
 import com.engageft.fis.pscu.feature.BaseEngagePageFragment
-import com.engageft.fis.pscu.feature.achtransfer.AchBankAccountAddFragment.Companion.SUCCESS_SCREEN_TYPE_KEY
-import com.engageft.fis.pscu.feature.achtransfer.AchBankAccountAddFragment.Companion.VERIFIED_SUCCESS_TYPE
 import com.engageft.fis.pscu.feature.achtransfer.CardLoadConstants.ACH_BANK_ACCOUNT_ID_KEY
+import com.engageft.fis.pscu.feature.achtransfer.CardLoadConstants.SUCCESS_SCREEN_TYPE_KEY
 import com.engageft.fis.pscu.feature.branding.Palette
+
 /**
  * AchBankAccountVerifyFragment
  * </p>
@@ -107,13 +108,9 @@ class AchBankAccountVerifyFragment: BaseEngagePageFragment() {
                 activity?.invalidateOptionsMenu()
             })
 
-            navigationEventObservable.observe(viewLifecycleOwner, Observer {
-                if (it == AchBankAccountNavigationEvent.BANK_VERIFIED_SUCCESS) {
-                    binding.root.findNavController().navigate(R.id.action_achBankAccountVerifyFragment_to_achBankAccountAddVerifySuccessFragment,
-                            Bundle().apply {
-                                putInt(SUCCESS_SCREEN_TYPE_KEY, VERIFIED_SUCCESS_TYPE)
-                            })
-                }
+            bankVerifySuccessObservable.observe(viewLifecycleOwner, Observer {
+                binding.root.findNavController().navigate(R.id.action_achBankAccountVerifyFragment_to_cardLoadSuccessFragment,
+                        bundleOf(SUCCESS_SCREEN_TYPE_KEY to SuccessType.VERIFIED_ACH_ACCOUNT))
             })
         }
 

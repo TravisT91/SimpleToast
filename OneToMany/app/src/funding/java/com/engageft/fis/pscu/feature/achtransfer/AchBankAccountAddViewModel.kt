@@ -4,16 +4,17 @@ import androidx.databinding.Observable
 import androidx.databinding.ObservableField
 import androidx.lifecycle.MutableLiveData
 import com.engageft.engagekit.EngageService
+import com.engageft.engagekit.aac.SingleLiveEvent
 import com.engageft.engagekit.rest.request.AchAccountCreateRequest
 import com.engageft.engagekit.utils.LoginResponseUtils
 import com.engageft.engagekit.utils.engageApi
-import com.engageft.fis.pscu.feature.BaseEngageViewModel
 import com.engageft.fis.pscu.feature.DialogInfo
 import com.engageft.fis.pscu.feature.handleBackendErrorForForms
 import com.ob.ws.dom.LoginResponse
 import com.ob.ws.dom.utility.AccountInfo
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
+
 /**
  * AchBankAccountAddViewModel
  * </p>
@@ -22,7 +23,7 @@ import io.reactivex.schedulers.Schedulers
  * Created by Atia Hashimi 12/20/18
  * Copyright (c) 2018 Engage FT. All rights reserved.
  */
-class AchBankAccountAddViewModel: BaseEngageViewModel() {
+class AchBankAccountAddViewModel: BaseCardLoadViewModel() {
     enum class ButtonState {
         SHOW,
         HIDE
@@ -33,7 +34,7 @@ class AchBankAccountAddViewModel: BaseEngageViewModel() {
     val accountNumber: ObservableField<String> = ObservableField("")
     val accountType: ObservableField<String> = ObservableField("")
 
-    val navigationEventObservable = MutableLiveData<AchBankAccountNavigationEvent>()
+    val bankAddSuccessObservable = SingleLiveEvent<Unit>()
     val buttonStateObservable = MutableLiveData<ButtonState>()
     val routingNumberShowErrorObservable = MutableLiveData<Boolean>()
 
@@ -130,9 +131,8 @@ class AchBankAccountAddViewModel: BaseEngageViewModel() {
                         .subscribe({ response ->
                             dismissProgressOverlay()
                             if (response.isSuccess) {
-                                EngageService.getInstance().storageManager.clearForLoginWithDataLoad(false)
-                                navigationEventObservable.value = AchBankAccountNavigationEvent.BANK_ADDED_SUCCESS
-                                navigationEventObservable.postValue(AchBankAccountNavigationEvent.NONE)
+                                EngageService.getInstance().storageManager.removeLoginResponse()
+                                refreshLoginResponse(bankAddSuccessObservable)
                             } else {
                                 handleBackendErrorForForms(response, "$TAG: failed to add an ACH account")
                             }
@@ -166,11 +166,4 @@ class AchBankAccountAddViewModel: BaseEngageViewModel() {
         const val ACCOUNT_TYPE_CHECKING = "Checking"
         const val TAG = "AchBankAccountAddViewModel"
     }
-}
-
-enum class AchBankAccountNavigationEvent {
-    BANK_ADDED_SUCCESS,
-    BANK_VERIFIED_SUCCESS,
-    DELETED_BANK_SUCCESS,
-    NONE
 }

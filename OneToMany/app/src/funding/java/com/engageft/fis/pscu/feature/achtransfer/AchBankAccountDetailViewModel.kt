@@ -3,16 +3,17 @@ package com.engageft.fis.pscu.feature.achtransfer
 import androidx.databinding.ObservableField
 import androidx.lifecycle.MutableLiveData
 import com.engageft.engagekit.EngageService
+import com.engageft.engagekit.aac.SingleLiveEvent
 import com.engageft.engagekit.rest.request.AchAccountRequest
 import com.engageft.engagekit.utils.LoginResponseUtils
 import com.engageft.engagekit.utils.engageApi
-import com.engageft.fis.pscu.feature.BaseEngageViewModel
 import com.ob.domain.lookup.AchAccountStatus
 import com.ob.ws.dom.LoginResponse
 import com.ob.ws.dom.utility.AccountInfo
 import com.ob.ws.dom.utility.AchAccountInfo
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
+
 /**
  * AchBankAccountDetailViewModel
  * </p>
@@ -21,7 +22,7 @@ import io.reactivex.schedulers.Schedulers
  * Created by Atia Hashimi 12/20/18
  * Copyright (c) 2018 Engage FT. All rights reserved.
  */
-class AchBankAccountDetailViewModel: BaseEngageViewModel() {
+class AchBankAccountDetailViewModel: BaseCardLoadViewModel() {
 
     private companion object {
         const val ACCOUNT_NUMBER_FORMAT = "*******%s"
@@ -32,7 +33,7 @@ class AchBankAccountDetailViewModel: BaseEngageViewModel() {
     val accountNumber: ObservableField<String> = ObservableField("")
     var showButton: ObservableField<Boolean> = ObservableField(false)
 
-    val navigationEventObservable = MutableLiveData<AchBankAccountNavigationEvent>()
+    val bankDeleteSuccessObservable = SingleLiveEvent<Unit>()
 
     var achAccountInfoId: Long = 0L
     var achAccountInfo: AchAccountInfo? = null
@@ -83,15 +84,10 @@ class AchBankAccountDetailViewModel: BaseEngageViewModel() {
                     dismissProgressOverlay()
                     if (response.isSuccess) {
                         val loginResponse = EngageService.getInstance().storageManager.loginResponse
-                        if (loginResponse != null) {
-                            EngageService.getInstance().storageManager.clearForLoginWithDataLoad(false)
-                            val currentCard = LoginResponseUtils.getCurrentCard(loginResponse)
-                            if (currentCard != null) {
-                                EngageService.getInstance().storageManager.clearScheduledLoadsResponse(currentCard)
-                            }
-                        }
-                        navigationEventObservable.value = AchBankAccountNavigationEvent.DELETED_BANK_SUCCESS
-                        navigationEventObservable.value = AchBankAccountNavigationEvent.NONE
+                        val currentCard = LoginResponseUtils.getCurrentCard(loginResponse)
+                        EngageService.getInstance().storageManager.removeLoginResponse()
+                        EngageService.getInstance().storageManager.clearScheduledLoadsResponse(currentCard)
+                        refreshLoginResponse(bankDeleteSuccessObservable)
                     } else {
                         dismissProgressOverlay()
                         handleUnexpectedErrorResponse(response)

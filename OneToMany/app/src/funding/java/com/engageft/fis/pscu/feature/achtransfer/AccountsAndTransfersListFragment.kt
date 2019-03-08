@@ -7,6 +7,7 @@ import android.view.MenuInflater
 import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.os.bundleOf
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.navigation.fragment.findNavController
@@ -15,6 +16,8 @@ import com.engageft.apptoolbox.BaseViewModel
 import com.engageft.fis.pscu.R
 import com.engageft.fis.pscu.databinding.FragmentAccountsAndTransfersListBinding
 import com.engageft.fis.pscu.feature.BaseEngagePageFragment
+import com.engageft.fis.pscu.feature.achtransfer.CardLoadConstants.CC_ACCOUNT_ID_CREATE_ACCOUNT
+import com.engageft.fis.pscu.feature.achtransfer.CardLoadConstants.CC_ACCOUNT_ID_KEY
 import com.engageft.fis.pscu.feature.achtransfer.CardLoadConstants.ACH_BANK_ACCOUNT_ID_KEY
 import com.engageft.fis.pscu.feature.achtransfer.CardLoadConstants.SCHEDULED_LOAD_ID_KEY
 import com.engageft.fis.pscu.feature.branding.Palette
@@ -31,13 +34,14 @@ class AccountsAndTransfersListFragment: BaseEngagePageFragment() {
     private lateinit var binding: FragmentAccountsAndTransfersListBinding
 
     private val selectionListener = object : AccountsAndTransfersListRecyclerViewAdapter.AccountsAndTransfersSelectionListener {
-        override fun onItemClicked(secondaryUserListItem: AccountsAndTransferListItem) {
-            when (secondaryUserListItem) {
+        override fun onItemClicked(listItem: AccountsAndTransferListItem) {
+            when (listItem) {
                 is AccountsAndTransferListItem.AddItem.AddBankAccountItem -> {
                     findNavController().navigate(R.id.action_accountsAndTransfersListFragment_to_achBankAccountAddFragment)
                 }
                 is AccountsAndTransferListItem.AddItem.AddCreditDebitCardItem -> {
-                    // TODO(jhutchins): FOTM-66 Add Credit/Debit account
+                    findNavController().navigate(R.id.action_accountsAndTransfersListFragment_to_cardLoadAddEditCardFragment,
+                            bundleOf(CC_ACCOUNT_ID_KEY to CC_ACCOUNT_ID_CREATE_ACCOUNT))
                 }
                 is AccountsAndTransferListItem.CreateTransferItem -> {
                     findNavController().navigate(R.id.action_accountsAndTransfersListFragment_to_createEditTransferFragment)
@@ -45,17 +49,18 @@ class AccountsAndTransfersListFragment: BaseEngagePageFragment() {
                 is AccountsAndTransferListItem.BankAccountItem -> {
                     findNavController().navigate(R.id.action_accountsAndTransfersListFragment_to_achBankAccountDetailFragment,
                             Bundle().apply {
-                                putLong(ACH_BANK_ACCOUNT_ID_KEY, secondaryUserListItem.achAccountId)
+                                putLong(ACH_BANK_ACCOUNT_ID_KEY, listItem.achAccountId)
                             })
                 }
                 is AccountsAndTransferListItem.TransferItem.ScheduledLoadItem -> {
                     findNavController().navigate(R.id.action_accountsAndTransfersListFragment_to_createEditTransferFragment,
                             Bundle().apply {
-                                putLong(SCHEDULED_LOAD_ID_KEY, secondaryUserListItem.scheduledLoadId)
+                                putLong(SCHEDULED_LOAD_ID_KEY, listItem.scheduledLoadId)
                             })
                 }
                 is AccountsAndTransferListItem.CreditDebitCardItem -> {
-                    // TODO(jhutchins): FOTM-1001 View Credit/Debit account
+                    findNavController().navigate(R.id.action_accountsAndTransfersListFragment_to_cardLoadAddEditCardFragment,
+                            bundleOf(CC_ACCOUNT_ID_KEY to listItem.ccAccountId))
                 }
             }
         }
@@ -81,6 +86,7 @@ class AccountsAndTransfersListFragment: BaseEngagePageFragment() {
         binding.apply {
             viewModel = accountsAndTransfersListViewModel
             palette = Palette
+            accountsAndTransfersListViewModel.refreshViews()
 
             recyclerView.layoutManager = LinearLayoutManager(context!!)
             recyclerViewAdapter = AccountsAndTransfersListRecyclerViewAdapter(selectionListener)
@@ -102,11 +108,6 @@ class AccountsAndTransfersListFragment: BaseEngagePageFragment() {
         }
 
         return binding.root
-    }
-
-    override fun onResume() {
-        super.onResume()
-        accountsAndTransfersListViewModel.refreshViews()
     }
 
     override fun onCreateOptionsMenu(menu: Menu?, inflater: MenuInflater?) {

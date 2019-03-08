@@ -7,6 +7,7 @@ import android.view.MenuInflater
 import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.os.bundleOf
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.navigation.findNavController
@@ -17,6 +18,7 @@ import com.engageft.apptoolbox.view.InformationDialogFragment
 import com.engageft.fis.pscu.R
 import com.engageft.fis.pscu.databinding.FragmentAchBankAccountAddBinding
 import com.engageft.fis.pscu.feature.BaseEngagePageFragment
+import com.engageft.fis.pscu.feature.achtransfer.CardLoadConstants.SUCCESS_SCREEN_TYPE_KEY
 import com.engageft.fis.pscu.feature.branding.Palette
 import com.engageft.fis.pscu.feature.infoDialogGenericUnsavedChangesNewInstance
 import utilGen1.AchAccountInfoUtils
@@ -29,12 +31,6 @@ import utilGen1.AchAccountInfoUtils
  * Copyright (c) 2018 Engage FT. All rights reserved.
  */
 class AchBankAccountAddFragment: BaseEngagePageFragment() {
-    companion object {
-        const val SUCCESS_SCREEN_TYPE_KEY = "SUCCESS_SCREEN_TYPE_KEY"
-        const val ADDED_SUCCESS_TYPE = 0
-        const val VERIFIED_SUCCESS_TYPE = 1
-    }
-
     private lateinit var achBankAccountViewModel: AchBankAccountAddViewModel
     private lateinit var binding: FragmentAchBankAccountAddBinding
 
@@ -117,16 +113,9 @@ class AchBankAccountAddFragment: BaseEngagePageFragment() {
                 }
             })
 
-            navigationEventObservable.observe(viewLifecycleOwner, Observer {
-                when (it) {
-                    AchBankAccountNavigationEvent.BANK_ADDED_SUCCESS -> {
-                        binding.root.findNavController().navigate(
-                                R.id.action_achBankAccountAddFragment_to_achBankAccountAddVerifySuccessFragment,
-                                Bundle().apply {
-                                    putInt(SUCCESS_SCREEN_TYPE_KEY, ADDED_SUCCESS_TYPE)
-                                })
-                    }
-                }
+            bankAddSuccessObservable.observe(viewLifecycleOwner, Observer {
+                binding.root.findNavController().navigate(R.id.action_achBankAccountAddFragment_to_cardLoadSuccessFragment,
+                        bundleOf(SUCCESS_SCREEN_TYPE_KEY to SuccessType.ADD_ACH_ACCOUNT))
             })
         }
 
