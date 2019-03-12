@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <data>
+        <variable name="viewModel" type="com.engageft.fis.pscu.feature.CreateAccountDelegate"/>
+        <variable
+            name="palette"
+            type="com.engageft.fis.pscu.feature.branding.Palette"/>
+    </data>
+
+    <androidx.core.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:fillViewport="true"
+        android:layout_height="match_parent"
+        android:isScrollContainer="true">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/parent"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/contentBox"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent">
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    style="@style/Title1Quiet"
+                    android:id="@+id/titleTextView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="24dp"
+                    android:layout_marginBottom="22dp"
+                    android:textColor="@color/structure6"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintBottom_toTopOf="@id/accountInputForm"
+                    android:text="@string/ENROLLMENT_CREATE_ACCOUNT_TITLE"/>
+
+                <LinearLayout
+                    android:id="@+id/accountInputForm"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintTop_toBottomOf="@id/titleTextView"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintBottom_toTopOf="@id/nextButton"
+                    android:orientation="vertical"
+                    android:background="@color/white"
+                    android:paddingStart="16dp"
+                    android:paddingEnd="16dp">
+
+                    <com.engageft.apptoolbox.view.TextInputWithLabel
+                        android:id="@+id/emailInput"
+                        style="@style/TextInputWithLabelStyle"
+                        InputWithLabel.setThemeWithPalette="@{true}"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="20dp"
+                        app:labelText="@string/ENROLLMENT_CREATE_ACCOUNT_EMAIL_LABEL"
+                        app:inputText="@={viewModel.emailInput}"/>
+
+                    <com.engageft.apptoolbox.view.PasswordInputWithLabel
+                        android:id="@+id/passwordInput"
+                        style="@style/PasswordInputWithLabelStyle"
+                        InputWithLabel.setThemeWithPalette="@{true}"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="20dp"
+                        app:labelText="@string/ENROLLMENT_CREATE_ACCOUNT_PASSWORD_LABEL"
+                        app:inputText="@={viewModel.passwordInput}"/>
+
+                    <com.engageft.apptoolbox.view.PasswordInputWithLabel
+                        android:id="@+id/passwordConfirmInput"
+                        style="@style/PasswordInputWithLabelStyle"
+                        InputWithLabel.setThemeWithPalette="@{true}"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="20dp"
+                        app:labelText="@string/ENROLLMENT_CREATE_ACCOUNT_CONFIRM_PASSWORD_LABEL"
+                        app:inputText="@={viewModel.passwordConfirmInput}"/>
+
+                    <!--TODO(jhutchins): Enable fingerprint auth FOTM-464-->
+                    <!--<FrameLayout-->
+                        <!--android:layout_width="match_parent"-->
+                        <!--android:layout_marginTop="20dp"-->
+                        <!--android:layout_height="wrap_content">-->
+
+                        <!--<TextView-->
+                            <!--android:id="@+id/touchId"-->
+                            <!--style="@style/Body"-->
+                            <!--parisStyle="@{palette.body}"-->
+                            <!--android:layout_width="match_parent"-->
+                            <!--android:layout_height="wrap_content"-->
+                            <!--android:paddingTop="@dimen/listItemPaddingTop"-->
+                            <!--android:paddingBottom="@dimen/listItemPaddingBottom"-->
+                            <!--android:text="@string/ENROLLMENT_CREATE_ACCOUNT_ENABLE_FINGERPRINT"-->
+                            <!--android:textColor="@color/accountSettingsItemTextColor" />-->
+
+                        <!--<Switch-->
+                            <!--android:id="@+id/touchIdSwitch"-->
+                            <!--android:layout_width="wrap_content"-->
+                            <!--android:layout_height="wrap_content"-->
+                            <!--android:layout_gravity="center_vertical|end"-->
+                            <!--switchButtonTint="@{palette.successColor}"-->
+                            <!--android:checked="true"-->
+                            <!--android:paddingEnd="@dimen/listPaddingStart" />-->
+
+                    <!--</FrameLayout>-->
+                </LinearLayout>
+
+                <com.engageft.apptoolbox.view.PillButton
+                    android:id="@+id/nextButton"
+                    style="@style/ButtonPillPrimaryFilledDefault"
+                    PillButton.setThemeFilled="@{true}"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="16dp"
+                    android:layout_marginBottom="16dp"
+                    app:layout_constraintTop_toBottomOf="@id/accountInputForm"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    android:onClick="@{() -> viewModel.onNextClicked()}"
+                    android:visibility="gone"
+                    android:text="@string/ENROLLMENT_NEXT"/>
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </androidx.core.widget.NestedScrollView>
+</layout>

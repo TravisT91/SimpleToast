@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="ENROLLMENT_CARD_NUMBER_LABEL">Card number</string>
+    <string name="ENROLLMENT_DOB_LABEL">Date of birth (MM/DD/YYYY)</string>
+    <string name="ENROLLMENT_CARD_NUMBER_HINT">Card number</string>
+    <string name="ENROLLMENT_CARD_NUMBER_PLACEHOLDER_LABEL">YOUR CARD HERE</string>
+    <string name="ENROLLMENT_NEXT">Next</string>
+    <string name="ENROLLMENT_CARD_NUMBER_INVALID">Please enter a valid 16-digit card number.</string>
+    <string name="ENROLLMENT_CARD_DOB_INVALID">Please enter a valid date of birth.</string>
+    <string name="ENROLLMENT_CARD_DOB_UNDER_13">Account user must be at least 13 years old.</string>
+    <string name="ENROLLMENT_GET_STARTED_ACTION_NEXT">@string/ENROLLMENT_NEXT</string>
+    <string name="ENROLLMENT_GET_STARTED_UNDER_18_TITLE">Cardholder under 18</string>
+    <string name="ENROLLMENT_GET_STARTED_UNDER_18_MESSAGE">A parent/legal guardian must activate your card. Are you the parent/legal guardian of the cardholder?</string>
+    <string name="ENROLLMENT_GET_STARTED_UNDER_18_POSITIVE">YES</string>
+    <string name="ENROLLMENT_GET_STARTED_UNDER_18_NEGATIVE">NO</string>
+    <string name="ENROLLMENT_CREATE_ACCOUNT_EMAIL_LABEL">Email</string>
+    <string name="ENROLLMENT_CREATE_ACCOUNT_PASSWORD_LABEL">Password</string>
+    <string name="ENROLLMENT_CREATE_ACCOUNT_CONFIRM_PASSWORD_LABEL">Confirm Password</string>
+    <string name="ENROLLMENT_CREATE_ACCOUNT_TITLE">Let\'s create a login</string>
+    <string name="ENROLLMENT_CREATE_ACCOUNT_ACTION_NEXT">@string/ENROLLMENT_NEXT</string>
+    <string name="ENROLLMENT_CREATE_ACCOUNT_ENABLE_FINGERPRINT">Enable fingerprint</string>
+    <string name="ENROLLMENT_TERMS_OF_USE_ACCEPT">Accept terms</string>
+    <string name="ENROLLMENT_TERMS_OF_USE_DECLINE">Decline</string>
+    <string name="ENROLLMENT_TERMS_OF_USE_ALERT_TITLE">Decline terms</string>
+    <string name="ENROLLMENT_TERMS_OF_USE_ALERT_MESSAGE">Are you sure you want to decline terms? Doing this will not allow you to continue.</string>
+    <string name="ENROLLMENT_VERIFY_IDENTITY_TITLE">Verify identity</string>
+    <string name="ENROLLMENT_VERIFY_IDENTITY_SSN_TEXT">Social security number</string>
+    <string name="ENROLLMENT_VERIFY_IDENTITY_HEADER">Please verify the cardholder\'s identity</string>
+    <string name="ENROLLMENT_VERIFY_IDENTITY_SUBHEADER">For security reasons, we\'ll need a few more things from you. This information is required by the USA PATRIOT Act.</string>
+    <string name="ENROLLMENT_VERIFY_IDENTITY_SUBHEADER_SUBSTRING">USA PATRIOT Act.</string>
+    <string name="ENROLLMENT_VERIFY_IDENTITY_NEXT_BUTTON">Next</string>
+    <string name="ENROLLMENT_VERIFY_IDENTITY_ERROR_MESSAGE">Please enter 9 digits.</string>
+    <string name="ENROLLMENT_SUBMISSION_ERROR_MESSAGE">There was a problem with your request. Please contact customer support</string>
+    <string name="ENROLLMENT_SUBMISSION_ERROR_CALL_SUPPORT">Call support</string>
+    <string name="ENROLLMENT_SUBMISSION_ERROR_TRY_AGAIN">Try again</string>
+    <string name="ENROLLMENT_SUBMISSION_SENDING">Sending…</string>
+    <string name="ENROLLMENT_SUBMISSION_SENDING_DESCRIPTION">This should only take a few moments.</string>
+    <string name="ENROLLMENT_SUBMISSION_SUCCESS">Success!</string>
+    <string name="ENROLLMENT_DONE">Done</string>
+    <string name="ENROLLMENT_CARD_LINKED">Your card is linked!</string>
+    <string name="ENROLLMENT_CARD_LINKED_SUBSTRING">linked!</string>
+    <string name="ENROLLMENT_CARD_ACTIVE">Your card is active!</string>
+    <string name="ENROLLMENT_CARD_ACTIVE_SUBSTRING">active!</string>
+    <string name="ENROLLMENT_SUCCESS_SUBTITLE">Find your new card on the dashboard.</string>
+</resources>

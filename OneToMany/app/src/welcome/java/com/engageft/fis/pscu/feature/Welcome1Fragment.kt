@@ -5,7 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.engageft.apptoolbox.BaseViewModel
-import com.engageft.apptoolbox.LotusFullScreenFragment
+import com.engageft.apptoolbox.LotusSubFragment
 import com.engageft.fis.pscu.R
 
 /**
@@ -16,8 +16,7 @@ import com.engageft.fis.pscu.R
  * Created by Atia Hashimi 11/6/2018.
  * Copyright (c) 2018 Engage FT. All rights reserved.
  */
-class Welcome1Fragment: LotusFullScreenFragment() {
-
+class Welcome1Fragment: LotusSubFragment() {
     override fun createViewModel(): BaseViewModel? {
         return null
     }

@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+    <data>
+        <import type="android.view.View"/>
+        <variable
+            name="viewModel"
+            type="com.engageft.fis.pscu.feature.achtransfer.AchBankAccountAddViewModel"/>
+        <variable
+            name="palette"
+            type="com.engageft.fis.pscu.feature.branding.Palette"/>
+    </data>
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:fillViewport="true">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                android:orientation="vertical"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/cellBackground">
+
+                <com.engageft.apptoolbox.view.TextInputWithLabel
+                    style="@style/TextInputWithLabelStyle"
+                    InputWithLabel.setThemeWithPalette="@{true}"
+                    android:id="@+id/accountNameInputWithLabel"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:padding="16dp"
+                    app:labelText="@string/ach_bank_account_name_label"
+                    app:inputText="@={viewModel.accountName}"/>
+
+                <com.engageft.apptoolbox.view.NumberInputWithLabel
+                    style="@style/TextInputWithLabelStyle"
+                    InputWithLabel.setThemeWithPalette="@{true}"
+                    android:id="@+id/routingNumberInputWithLabel"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:padding="16dp"
+                    app:inputMask="[000000000]"
+                    app:labelText="@string/ach_bank_account_routing_number_label"
+                app:inputText="@={viewModel.routingNumber}"/>
+
+                <com.engageft.apptoolbox.view.NumberInputWithLabel
+                    style="@style/TextInputWithLabelStyle"
+                    InputWithLabel.setThemeWithPalette="@{true}"
+                    android:id="@+id/accountNumberInputWithLabel"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:padding="16dp"
+                    app:labelText="@string/ach_bank_account_account_number_label"
+                    app:inputText="@={viewModel.accountNumber}"/>
+
+                <com.engageft.apptoolbox.view.BottomSheetListInputWithLabel
+                    style="@style/BottomSheetListInputWithLabelStyle"
+                    InputWithLabel.setThemeWithPalette="@{true}"
+                    android:id="@+id/accountTypeBottomSheet"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingStart="16dp"
+                    android:paddingEnd="16dp"
+                    android:paddingTop="16dp"
+                    app:labelText="@string/ach_bank_account_type_label"
+                    app:inputText="@={viewModel.accountType}"
+                    app:bottomSheetDialogTitle="@string/ach_bank_account_type_label"
+                    app:bottomSheetDialogStyle="@style/ListOptionBottomSheetDialogFragmentStyle"/>
+            </LinearLayout>
+
+            <com.engageft.apptoolbox.view.PillButton
+                style="@style/ButtonPillPrimaryFilledDefault"
+                PillButton.setThemeFilled="@{true}"
+                android:id="@+id/addButton"
+                android:layout_gravity="center"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="32dp"
+                android:text="@string/ach_bank_account_button_add"/>
+
+        </LinearLayout>
+
+    </ScrollView>
+
+</layout>
+
+

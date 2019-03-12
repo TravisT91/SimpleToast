@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+        <variable
+            name="viewModel"
+            type="com.engageft.fis.pscu.feature.ProfileViewModel"/>
+    </data>
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/viewBackground">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:background="@android:color/transparent">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:background="@color/profileInputBackground"
+                android:paddingLeft="16dp"
+                android:paddingRight="16dp"
+                android:focusable="true"
+                android:focusableInTouchMode="true">
+
+                <com.engageft.apptoolbox.view.TextInputWithLabel
+                    android:id="@+id/legalNameInput"
+                    style="@style/TextInputWithLabelStyle"
+                    InputWithLabel.setThemeWithPalette="@{true}"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="20dp"
+                    app:inputText="@={viewModel.legalName}"
+                    app:labelText="@string/PROFILE_LEGAL_NAME"
+                    app:maxLines="1"
+                    android:enabled="false"/>
+
+                <com.engageft.apptoolbox.view.EmailInputWithLabel
+                    android:id="@+id/emailAddressInput"
+                    style="@style/TextInputWithLabelStyle"
+                    InputWithLabel.setThemeWithPalette="@{true}"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="20dp"
+                    app:inputText="@={viewModel.emailAddress}"
+                    app:labelText="@string/PROFILE_EMAIL"/>
+
+                <com.engageft.apptoolbox.view.PhoneInputWithLabel
+                    android:id="@+id/phoneNumberInput"
+                    style="@style/TextInputWithLabelStyle"
+                    InputWithLabel.setThemeWithPalette="@{true}"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="20dp"
+                    app:inputText="@={viewModel.phoneNumber}"
+                    app:labelText="@string/PROFILE_PHONE"/>
+
+                <com.engageft.apptoolbox.view.TextInputWithLabel
+                    android:id="@+id/streetAddressInput"
+                    style="@style/TextInputWithLabelStyle"
+                    InputWithLabel.setThemeWithPalette="@{true}"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="20dp"
+                    app:maxLines="1"
+                    app:inputText="@={viewModel.streetAddress}"
+                    app:labelText="@string/PROFILE_STREET"/>
+
+                <com.engageft.apptoolbox.view.TextInputWithLabel
+                    android:id="@+id/aptSuiteInput"
+                    style="@style/TextInputWithLabelStyle"
+                    InputWithLabel.setThemeWithPalette="@{true}"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="20dp"
+                    app:maxLines="1"
+                    app:inputText="@={viewModel.aptSuite}"
+                    app:labelText="@string/PROFILE_APT_SUITE"/>
+
+                <com.engageft.apptoolbox.view.TextInputWithLabel
+                    android:id="@+id/cityInput"
+                    style="@style/TextInputWithLabelStyle"
+                    InputWithLabel.setThemeWithPalette="@{true}"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="20dp"
+                    app:maxLines="1"
+                    app:inputText="@={viewModel.city}"
+                    app:labelText="@string/PROFILE_CITY"/>
+
+                <com.engageft.apptoolbox.view.BottomSheetListInputWithLabel
+                    android:id="@+id/stateInput"
+                    style="@style/BottomSheetListInputWithLabelStyle"
+                    InputWithLabel.setThemeWithPalette="@{true}"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="20dp"
+                    app:inputText="@={viewModel.state}"
+                    app:labelText="@string/PROFILE_STATE"
+                    app:bottomSheetDialogOptions="@array/state_list_options"
+                    app:bottomSheetDialogTitle="@string/PROFILE_STATE_LIST_TITLE"
+                    app:bottomSheetDialogStyle="@style/ListOptionBottomSheetDialogFragmentStyle"/>
+
+                <com.engageft.apptoolbox.view.ZipCodeInputWithLabel
+                    android:id="@+id/zipcodeInput"
+                    style="@style/TextInputWithLabelStyle"
+                    InputWithLabel.setThemeWithPalette="@{true}"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="20dp"
+                    app:inputText="@={viewModel.zip}"
+                    app:labelText="@string/PROFILE_ZIP"/>
+            </LinearLayout>
+
+            <com.engageft.apptoolbox.view.PillButton
+                android:id="@+id/saveButton"
+                style="@style/ButtonPillPrimaryFilledDefault"
+                PillButton.setThemeFilled="@{true}"
+                android:layout_gravity="center"
+                android:gravity="center"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:layout_marginBottom="16dp"
+                android:onClick="@{() -> viewModel.onSaveClicked()}"
+                android:text="@string/SECURITY_QUESTIONS_BUTTON_SAVE"/>
+        </LinearLayout>
+
+    </ScrollView>
+
+</layout>

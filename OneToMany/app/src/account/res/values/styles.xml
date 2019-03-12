@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="CopyrightTextStyle" parent="Body">
+        <item name="android:padding">16dp</item>
+        <item name="android:lineSpacingExtra">6sp</item>
+    </style>
+    <style name="StatementsDescriptionStyle" parent="Title1Quiet">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:padding">16dp</item>
+        <item name="android:lineSpacingExtra">8sp</item>
+        <item name="android:textColor">@color/textPrimary</item>
+        <item name="android:gravity">center_horizontal</item>
+    </style>
+
+    <style name="StatementsSubDescriptionStyle" parent="BodyQuiet">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:paddingStart">16dp</item>
+        <item name="android:paddingEnd">16dp</item>
+        <item name="android:paddingBottom">16dp</item>
+        <item name="android:lineSpacingExtra">6sp</item>
+        <item name="android:gravity">center_horizontal</item>
+        <item name="android:textColor">@color/textPrimary</item>
+    </style>
+
+    <style name="StatementsListItemsTextAppearance" parent="Footnote">
+        <item name="android:textColor">@color/textPrimary</item>
+    </style>
+
+    <style name="NotificationsDescriptionStyle" parent="Body">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:paddingTop">16dp</item>
+        <item name="android:paddingEnd">16dp</item>
+        <item name="android:paddingStart">16dp</item>
+        <item name="android:paddingBottom">32dp</item>
+        <item name="android:lineSpacingExtra">8sp</item>
+        <item name="android:textColor">@color/textSecondary</item>
+        <item name="android:gravity">center_horizontal</item>
+    </style>
+
+    <style name="NotificationsPushStyle" parent="Body">
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textColor">@color/textPrimary</item>
+    </style>
+
+    <style name="NotificationsPushSubLabelStyle" parent="Caption1">
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textColor">@color/textSecondary</item>
+        <item name="android:paddingTop">4dp</item>
+    </style>
+
+    <style name="NotificationsSmsStyle" parent="Body">
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textColor">@color/textPrimary</item>
+    </style>
+
+    <style name="NotificationsSmsSubLabelStyle" parent="Caption1">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textColor">@color/textSecondary</item>
+        <item name="android:paddingTop">4dp</item>
+    </style>
+
+    <style name="NotificationsEmailStyle" parent="Body">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textColor">@color/textPrimary</item>
+    </style>
+
+    <style name="NotificationsFooterStyle" parent="Caption1">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textColor">@color/textSecondary</item>
+        <item name="android:padding">8dp</item>
+    </style>
+
+</resources>

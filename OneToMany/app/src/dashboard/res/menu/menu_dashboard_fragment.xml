@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <item
+        android:id="@+id/action_notifications"
+        android:icon="@drawable/alert_with_badge"
+        android:title="@string/OPTIONS_MENU_NOTIFICATIONS"
+        android:enabled="false"
+        android:visible="false"
+        app:showAsAction="always" />
+
+    <item android:id="@+id/action_search_transactions"
+        android:icon="@drawable/ic_option_dashboard_fragment_search"
+        android:title="@string/OPTIONS_MENU_SEARCH"
+        app:showAsAction="always"/>
+
+</menu>

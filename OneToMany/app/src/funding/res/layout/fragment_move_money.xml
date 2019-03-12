@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <variable
+            name="palette"
+            type="com.engageft.fis.pscu.feature.branding.Palette"/>
+
+    </data>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/cellBackground"
+        android:orientation="vertical"
+        tools:ignore="RtlSymmetry">
+
+        <TextView
+            android:id="@+id/cardLoad"
+            tools:style="@style/Body"
+            parisStyle="@{palette.body}"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingTop="@dimen/listItemPaddingTop"
+            android:paddingBottom="@dimen/listItemPaddingBottom"
+            android:text="@string/MOVE_MONEY_CARD_LOAD"
+            android:background="@drawable/selectable_item_background_structure2"
+            android:paddingStart="@dimen/listPaddingStart"
+            android:textColor="@color/structure6"
+            android:visibility="gone"/>
+
+        <include
+            android:id="@+id/cardLoadDivider"
+            android:visibility="gone"
+            layout="@layout/view_horizontal_divider_indent_start" />
+
+        <TextView
+            android:id="@+id/mobileCheckDeposit"
+            tools:style="@style/Body"
+            parisStyle="@{palette.body}"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingTop="@dimen/listItemPaddingTop"
+            android:paddingBottom="@dimen/listItemPaddingBottom"
+            android:text="@string/MOVE_MONEY_MOBILE_CHECK_DEPOSIT"
+            android:background="@drawable/selectable_item_background_structure2"
+            android:paddingStart="@dimen/listPaddingStart"
+            android:textColor="@color/structure6"
+            android:visibility="gone"/>
+
+        <include
+            android:id="@+id/mobileCheckDepositDivider"
+            android:visibility="gone"
+            layout="@layout/view_horizontal_divider_indent_start" />
+
+        <TextView
+            android:id="@+id/directDeposit"
+            tools:style="@style/Body"
+            parisStyle="@{palette.body}"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingTop="@dimen/listItemPaddingTop"
+            android:paddingBottom="@dimen/listItemPaddingBottom"
+            android:text="@string/MOVE_MONEY_DIRECT_DEPOSIT"
+            android:background="@drawable/selectable_item_background_structure2"
+            android:paddingStart="@dimen/listPaddingStart"
+            android:textColor="@color/structure6"
+            android:visibility="gone"/>
+
+    </LinearLayout>
+
+</layout>

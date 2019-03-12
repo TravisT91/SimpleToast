@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.appcompat.widget.AppCompatTextView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    style="@style/AchLabelTextStyle"
+    android:id="@+id/labelTextView"
+    android:textAllCaps="true"
+    tools:text="RECENT ACTIVITY">
+</androidx.appcompat.widget.AppCompatTextView>

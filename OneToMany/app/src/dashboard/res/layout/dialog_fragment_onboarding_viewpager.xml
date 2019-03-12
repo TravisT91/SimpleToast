@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/black_40">
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_marginTop="45dp"
+            android:layout_marginBottom="45dp"
+            android:layout_marginStart="20dp"
+            android:layout_marginEnd="20dp"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@drawable/onboarding_background">
+
+            <!--If we don't add marginTop here, we lose the rounded corners of the background-->
+            <androidx.viewpager.widget.ViewPager
+                android:id="@+id/viewPager"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_marginBottom="8dp"
+                android:layout_marginTop="8dp"
+                app:layout_constraintBottom_toTopOf="@+id/indicatorLayout"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <LinearLayout
+                android:id="@+id/indicatorLayout"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                app:layout_constraintBottom_toTopOf="@+id/viewPagerButton"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                android:layout_marginBottom="32dp">
+            </LinearLayout>
+
+            <com.engageft.apptoolbox.view.PillButton
+                android:id="@+id/viewPagerButton"
+                style="@style/ButtonPillPrimaryFilledDefault"
+                PillButton.setThemeFilled="@{true}"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginEnd="16dp"
+                android:layout_marginBottom="52dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                tools:text="Next" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </FrameLayout>
+</layout>
+
+

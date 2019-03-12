@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout>
+    <data>
+        <variable
+            name="palette"
+            type="com.engageft.fis.pscu.feature.branding.Palette"/>
+    </data>
+
+    <ScrollView xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:fillViewport="true"
+        xmlns:android="http://schemas.android.com/apk/res/android">
+
+        <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:orientation="vertical">
+
+            <include
+                layout="@layout/imageview_with_circle_background"
+                android:id="@+id/imageViewLayout"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+
+            <androidx.appcompat.widget.AppCompatTextView
+                style="@style/AchBankAccountAddVerifySuccessTitleStyle"
+                android:id="@+id/titleTextView"
+                tools:text="Your bank account has been verified!" />
+
+            <androidx.appcompat.widget.AppCompatTextView
+                style="@style/AchBankAccountAddVerifySuccessSubtitleStyle"
+                android:id="@+id/subTitleTextView"
+                tools:text="You can now make transfers to and from your bank account." />
+
+            <com.engageft.apptoolbox.view.PillButton
+                style="@style/ButtonPillPrimaryFilledDefault"
+                PillButton.setThemeFilled="@{true}"
+                android:id="@+id/nextButton"
+                android:layout_margin="32dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/ach_bank_account_added_successful_done_button"
+                tools:text="Done"/>
+        </LinearLayout>
+    </ScrollView>
+</layout>
+

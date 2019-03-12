@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:padding="32dp"
+    android:gravity="center">
+
+    <include
+        layout="@layout/imageview_with_circle_background"
+        android:id="@+id/iconView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="32dp"
+        android:layout_marginBottom="8dp" />
+
+    <TextView
+        style="@style/Title1Quiet"
+        android:id="@+id/headerTextView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textColor="@color/structure6"
+        android:gravity="center_horizontal"
+        android:lineSpacingExtra="8sp"
+        android:paddingBottom="16dp"
+        tools:text="Set money aside toward your goals."/>
+
+    <TextView
+        style="@style/Body"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="@color/structure5"
+        android:lineSpacingExtra="11sp"
+        android:gravity="center_horizontal"
+        android:text="@string/GOALS_EMPTY_LIST_SUB_HEADER"/>
+
+</LinearLayout>

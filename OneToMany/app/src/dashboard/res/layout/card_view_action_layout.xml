@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:paddingBottom="8dp"
+    android:paddingTop="8dp"
+    android:background="@drawable/selectable_item_background_structure2">
+
+    <androidx.appcompat.widget.AppCompatImageView
+        android:id="@+id/itemIcon"
+        android:layout_width="@dimen/dashboard_action_item_icon_width"
+        android:layout_height="@dimen/dashboard_action_item_icon_height"
+        android:scaleType="center"
+        android:layout_marginEnd="8dp" />
+
+    <TextView
+        android:id="@+id/itemLabel"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        style="@style/DashboardCardItemTextView"
+        android:lines="1"
+        android:maxLines="1"
+        tools:text="@string/OVERVIEW_LOCK_MY_CARD"
+        android:gravity="center_vertical"/>
+
+</LinearLayout>

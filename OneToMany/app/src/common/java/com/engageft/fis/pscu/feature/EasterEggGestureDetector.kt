@@ -6,7 +6,7 @@ import android.view.GestureDetector
 import android.view.MotionEvent
 import android.view.View
 import androidx.core.view.GestureDetectorCompat
-import com.engageft.engagekit.BuildConfig
+import com.engageft.fis.pscu.config.EngageAppConfig
 
 /**
  * EasterEggGestureDetector
@@ -29,11 +29,16 @@ class EasterEggGestureDetector(context: Context, viewToGestureDetect: View, priv
 
     init {
         // Only setup gesture detection if we're NOT in production.
-        if (BuildConfig.DEBUG) {
+        if (EngageAppConfig.isTestBuild) {
             viewToGestureDetect.setOnTouchListener(object : View.OnTouchListener{
                 override fun onTouch(v: View?, event: MotionEvent?): Boolean {
-                    gestureDetector.onTouchEvent(event)
-                    return true
+                    // Clone the touch event, do the gesture detector can consume it AND the views underneath
+                    // can consume it. If it's not cloned, only one view hierarchy reliably consumes the event
+                    // and breaks it's usage for the other. 
+                    event!!
+                    val motionEvent = MotionEvent.obtain(event.downTime, event.eventTime, event.action, event.x, event.y, event.metaState)
+                    gestureDetector.onTouchEvent(motionEvent)
+                    return false
                 }
             })
         }

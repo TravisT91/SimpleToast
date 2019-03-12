@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="budget_spent_text_normal">@color/structure5</color>
+</resources>

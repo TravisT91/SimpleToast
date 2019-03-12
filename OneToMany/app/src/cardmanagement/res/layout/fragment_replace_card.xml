@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+        <variable
+            name="Palette"
+            type="com.engageft.fis.pscu.feature.branding.Palette"/>
+        <variable
+            name="ReplaceCardViewModel"
+            type="com.engageft.fis.pscu.feature.ReplaceCardViewModel"/>
+    </data>
+
+    <ScrollView
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:paddingEnd="16dp"
+            android:paddingStart="16dp">
+
+            <TextView
+                android:id="@+id/title"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:text="@string/REPLACE_CARD_REPLACEMENT_QUESTION"
+                parisStyle="@{Palette.title1Quiet}"
+                android:textColor="@color/structure6"
+                tools:textSize="32sp"
+                tools:fontFamily="@font/font_light"
+                android:layout_marginBottom="16dp"/>
+
+            <TextView
+                android:id="@+id/addressHeader"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:lineSpacingExtra="11sp"
+                android:text="@string/REPLACE_CARD_ADDRESS_HEADER"
+                parisStyle="@{Palette.body}"
+                tools:textSize="16sp"
+                tools:fontFamily="@font/font_regular"
+                android:layout_marginBottom="16dp"/>
+
+            <TextView
+                android:id="@+id/address"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:lineSpacingExtra="11sp"
+                tools:text="888 Simple Ln.\nSan Diego CA, 92024"
+                android:text="@{ReplaceCardViewModel.address}"
+                parisStyle="@{Palette.bodyLoud}"
+                android:textColor="@color/structure6"
+                tools:textSize="16sp"
+                tools:fontFamily="@font/font_bold"
+                android:layout_marginBottom="16dp"/>
+
+            <TextView
+                android:id="@+id/estimatedArrivalText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/REPLACE_CARD_EXPECTED_ARRIVAL"
+                android:gravity="center"
+                parisStyle="@{Palette.body}"
+                android:textColor="@color/structure5"
+                tools:textSize="16sp"
+                tools:fontFamily="@font/font_regular"
+                android:layout_marginBottom="44dp"/>
+
+            <TextView
+                android:id="@+id/doNotKnowText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:lineSpacingExtra="11sp"
+                android:text="@string/REPLACE_CARD_DO_NOT_KNOW"
+                android:layout_marginBottom="42dp"/>
+
+            <com.engageft.apptoolbox.view.PillButton
+                android:id="@+id/orderReplacementButton"
+                style="@style/ButtonPillPrimaryFilledDefault"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:text="@string/REPLACE_CARD_ORDER_REPLACEMENT"
+                PillButton.setThemeFilled="@{true}" />
+
+        </LinearLayout>
+
+    </ScrollView>
+
+</layout>

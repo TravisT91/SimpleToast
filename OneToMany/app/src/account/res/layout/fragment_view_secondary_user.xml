@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+        <variable
+            name="viewModel"
+            type="com.engageft.fis.pscu.feature.secondaryusers.ViewSecondaryUserViewModel"/>
+
+        <variable
+            name="palette"
+            type="com.engageft.fis.pscu.feature.branding.Palette"/>
+    </data>
+
+    <androidx.core.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:fillViewport="true"
+        android:layout_height="match_parent"
+        android:isScrollContainer="true">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:background="@android:color/transparent">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:background="@color/white"
+                android:paddingLeft="16dp"
+                android:paddingRight="16dp"
+                android:focusable="true"
+                android:focusableInTouchMode="true">
+
+                <com.engageft.apptoolbox.view.TextInputWithLabel
+                    android:id="@+id/firstNameText"
+                    style="@style/TextInputWithLabelStyle"
+                    InputWithLabel.setThemeWithPalette="@{true}"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="20dp"
+                    app:inputText="@={viewModel.firstName}"
+                    app:labelText="@string/secondary_users_add_first_name_label"
+                    app:maxLines="1"/>
+
+                <com.engageft.apptoolbox.view.TextInputWithLabel
+                    android:id="@+id/lastNameText"
+                    style="@style/TextInputWithLabelStyle"
+                    InputWithLabel.setThemeWithPalette="@{true}"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="20dp"
+                    app:inputText="@={viewModel.lastName}"
+                    app:labelText="@string/secondary_users_add_last_name_label"
+                    app:maxLines="1"/>
+
+                <com.engageft.apptoolbox.view.PhoneInputWithLabel
+                    android:id="@+id/phoneNumberText"
+                    style="@style/TextInputWithLabelStyle"
+                    InputWithLabel.setThemeWithPalette="@{true}"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="20dp"
+                    app:inputText="@={viewModel.phoneNumber}"
+                    app:labelText="@string/secondary_users_add_phone_number_label"/>
+
+                <com.engageft.apptoolbox.view.DateInputWithLabel
+                    android:id="@+id/dobText"
+                    style="@style/TextInputWithLabelStyle"
+                    InputWithLabel.setThemeWithPalette="@{true}"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="20dp"
+                    app:inputText="@={viewModel.dob}"
+                    app:labelText="@string/secondary_users_add_dob_label"/>
+
+                <com.engageft.apptoolbox.view.TextInputWithLabel
+                    style="@style/TextInputWithLabelStyle"
+                    InputWithLabel.setThemeWithPalette="@{true}"
+                    android:id="@+id/cardStatusText"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="20dp"
+                    app:labelText="@string/secondary_users_view_card_status_label"/>
+            </LinearLayout>
+
+            <!--TODO(jhutchins): Someday we might add a delete button?-->
+        </LinearLayout>
+    </androidx.core.widget.NestedScrollView>
+
+</layout>

@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+        <variable
+            name="viewModel"
+            type="com.engageft.fis.pscu.feature.secondaryusers.AddSecondaryUserViewModel"/>
+
+        <variable
+            name="palette"
+            type="com.engageft.fis.pscu.feature.branding.Palette"/>
+    </data>
+
+    <androidx.core.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:fillViewport="true"
+        android:layout_height="match_parent"
+        android:isScrollContainer="true">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:background="@android:color/transparent">
+
+            <androidx.appcompat.widget.AppCompatTextView
+                style="@style/Body"
+                android:textColor="@color/structure5"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="25dp"
+                android:layout_marginBottom="25dp"
+                android:layout_marginStart="16dp"
+                android:layout_marginEnd="16dp"
+                android:lineSpacingExtra="11sp"
+                android:gravity="center"
+                android:text="@string/secondary_users_add_header"/>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:background="@color/white"
+                android:paddingLeft="16dp"
+                android:paddingRight="16dp"
+                android:focusable="true"
+                android:focusableInTouchMode="true">
+
+                <com.engageft.apptoolbox.view.TextInputWithLabel
+                    android:id="@+id/firstNameInput"
+                    style="@style/TextInputWithLabelStyle"
+                    InputWithLabel.setThemeWithPalette="@{true}"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="20dp"
+                    app:inputText="@={viewModel.firstName}"
+                    app:labelText="@string/secondary_users_add_first_name_label"
+                    app:maxLines="1"/>
+
+                <com.engageft.apptoolbox.view.TextInputWithLabel
+                    android:id="@+id/lastNameInput"
+                    style="@style/TextInputWithLabelStyle"
+                    InputWithLabel.setThemeWithPalette="@{true}"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="20dp"
+                    app:inputText="@={viewModel.lastName}"
+                    app:labelText="@string/secondary_users_add_last_name_label"
+                    app:maxLines="1"/>
+
+                <com.engageft.apptoolbox.view.PhoneInputWithLabel
+                    android:id="@+id/phoneNumberInput"
+                    style="@style/TextInputWithLabelStyle"
+                    InputWithLabel.setThemeWithPalette="@{true}"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="20dp"
+                    app:inputText="@={viewModel.phoneNumber}"
+                    app:labelText="@string/secondary_users_add_phone_number_label"/>
+
+                <com.engageft.apptoolbox.view.DateInputWithLabel
+                    android:id="@+id/dobInput"
+                    style="@style/TextInputWithLabelStyle"
+                    InputWithLabel.setThemeWithPalette="@{true}"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="20dp"
+                    app:labelText="@string/secondary_users_add_dob_label"/>
+
+                <com.engageft.apptoolbox.view.SSNInputWithLabel
+                    style="@style/PasswordInputWithLabelStyle"
+                    InputWithLabel.setThemeWithPalette="@{true}"
+                    android:id="@+id/ssnInput"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="20dp"
+                    android:visibility="gone"
+                    app:labelText="@string/secondary_users_add_ssn_label"
+                    app:inputText="@={viewModel.ssn}"/>
+            </LinearLayout>
+
+            <com.engageft.apptoolbox.view.PillButton
+                android:id="@+id/addButton"
+                style="@style/ButtonPillPrimaryFilledDefault"
+                PillButton.setThemeFilled="@{true}"
+                android:layout_gravity="center"
+                android:gravity="center"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:layout_marginBottom="16dp"
+                android:visibility="gone"
+                android:onClick="@{() -> viewModel.onAddClicked()}"
+                android:text="@string/secondary_users_add_button_text"/>
+        </LinearLayout>
+    </androidx.core.widget.NestedScrollView>
+
+</layout>

@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/ll_total_saved"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:gravity="center">
+
+    <TextView
+        style="@style/LargeTitleQuiet"
+        android:id="@+id/tv_goal_saved_amount"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:paddingBottom="4dp"
+        android:paddingStart="16dp"
+        android:paddingEnd="16dp"
+        android:textColor="@color/structure6"
+        android:gravity="center_horizontal"
+        tools:text="$530" />
+
+    <TextView
+        style="@style/Body"
+        android:id="@+id/tv_goal_saved_amount_label"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:paddingStart="16dp"
+        android:paddingEnd="16dp"
+        android:paddingBottom="24dp"
+        android:textColor="@color/structure6"
+        android:text="@string/GOALS_TOTAL_BALANCE"/>
+
+</LinearLayout>

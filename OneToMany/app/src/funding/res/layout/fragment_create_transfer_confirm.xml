@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout>
+    <data>
+        <variable
+            name="viewModel"
+            type="com.engageft.fis.pscu.feature.achtransfer.CardLoadTransferConfirmationViewModel"/>
+        <variable
+            name="palette"
+            type="com.engageft.fis.pscu.feature.branding.Palette"/>
+    </data>
+
+    <ScrollView xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:fillViewport="true"
+        xmlns:android="http://schemas.android.com/apk/res/android">
+
+        <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:orientation="vertical">
+
+            <include
+                layout="@layout/imageview_with_circle_background"
+                android:id="@+id/imageViewLayout"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/titleTextView"
+                style="@style/CreateTransferConfirmationTitleTextStyle"
+                android:text="@string/card_load_transfer_confirmation_start_transferring" />
+
+            <androidx.appcompat.widget.AppCompatTextView
+                style="@style/CreateTransferConfirmationAmountTextStyle"
+                android:id="@+id/amountTextView"
+                tools:text="$200.00" />
+
+            <androidx.appcompat.widget.AppCompatTextView
+                style="@style/CreateTransferConfirmationRecurringTextStyle"
+                android:id="@+id/frequencyTextView"
+                tools:text="twice a month starting Apr, 2018" />
+
+            <androidx.appcompat.widget.AppCompatTextView
+                style="@style/CreateTransferConfirmationRecurringTextStyle"
+                android:id="@+id/transferMessageTextView"
+                android:paddingTop="24dp"
+                android:text="@string/card_load_transfer_confirmation_message" />
+
+            <com.engageft.apptoolbox.view.PillButton
+                style="@style/ButtonPillPrimaryFilledDefault"
+                PillButton.setThemeFilled="@{true}"
+                android:id="@+id/createTransferButton"
+                android:layout_margin="32dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:onClick="@{() -> viewModel.onCreateTransfer()}"
+                android:text="@string/ach_bank_transfer_create_transfer"/>
+        </LinearLayout>
+    </ScrollView>
+</layout>
+

@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!--TODO(jhutchins): Refactor TransactionUtils: SHOW-384-->
+    <string name="TRANSACTION_TYPE_LOAD">Deposit</string>
+    <string name="TRANSACTION_TYPE_REVERSE_LOAD">Reverse Load</string>
+    <string name="TRANSACTION_TYPE_FEE">Card Fee</string>
+    <string name="TRANSACTION_TYPE_TRANSFER">Transfer</string>
+    <string name="TRANSACTION_TYPE_ATM">ATM Withdrawal</string>
+    <string name="TRANSACTION_TYPE_RETURN">Purchase Return</string>
+
+    <string name="TRANSACTION_LIST_OFF_BUDGET_LABEL">Off-Budget</string>
+
+    <string name="TRANSACTION_STATUS_PENDING_TEXT">Pending</string>
+    <string name="TRANSACTION_STATUS_DECLINED_TEXT">Declined</string>
+
+    <string name="TRANSACTIONS_NONE">No transactions</string>
+    <string name="TRANSACTIONS_PAY">Pay</string>
+
+    <string name="TRANSACTIONS_LOAD_ERROR_MESSAGE">Couldn\'t load transactions</string>
+    <string name="TRANSACTIONS_LOAD_RETRY">Try again</string>
+
+    <string name="TRANSACTION_DETAILS_TITLE">Transaction details</string>
+    <string name="TRANSACTION_DETAILS_INCLUDE_IN_BUDGET">Include in Budget</string>
+    <string name="TRANSACTION_DETAILS_SAVE">Save</string>
+
+    <string name="TRANSACTIONS_CATEGORIES_TITLE">Select category</string>
+
+    <string name="TRANSACTION_CATEGORY_CHANGE_TITLE">"Apply to all?"</string>
+    <string name="TRANSACTION_CATEGORY_CHANGE_ALL_TRANSACTION">"All transactions"</string>
+    <string name="TRANSACTION_CATEGORY_CHANGE_ONLY_THIS">"Only this transaction"</string>
+    <string name="TRANSACTION_CATEGORY_CHANGE_SUBTITLE">"Change category to \"%s\" on this and all transactions from \"%s2\"?"</string>
+
+</resources>

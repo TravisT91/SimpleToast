@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="dashboard_obscuring_overlay">#99000000</color>
+    <color name="dashboard_tinted_background">@color/structure1</color>
+    <color name="dashboard_cardview_background">@color/structure1</color>
+
+    <color name="transactionsPlaceholderText">@color/structure4</color>
+
+    <color name="dashboard_options_icon">@color/structure6</color>
+</resources>
